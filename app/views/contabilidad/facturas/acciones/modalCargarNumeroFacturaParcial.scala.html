@@ -1,0 +1,26 @@
+@(formBuscador: DynamicForm)
+@import helper._
+@implicitFieldConstructor = @{ FieldConstructor(simpleInput.render) } 
+																			
+@helper.form(action = controllers.contabilidad.routes.FacturasAccionesController.cargarNumeroFacturaParcial(), 'id -> "formCargarNumeroFacturaParcial") {	
+	
+	@views.html.tags.successError()
+	<div class="row">
+		<div class="col-sm-3">
+			<div class="form-group">
+				<label for="nfactura_modal" class="control-label">N° Factura</label> 
+				<input name="nfactura_modal" id="nfactura_modal" class="form-control date"/>
+			</div>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-sm-5"><br />
+			<button type="submit" class="btn btn-default" title="Agregar N° Factura"><i class="glyphicon glyphicon-arrow-right"></i> Cargar N° Factura</button>
+		</div>
+	</div>
+
+}
+<script>
+$( function(){ $('#nfactura_modal').mask("a-9999-99999999");})
+</script>
+@flash().clear()

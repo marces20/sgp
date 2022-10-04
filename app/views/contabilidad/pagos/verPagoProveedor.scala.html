@@ -1,0 +1,233 @@
+@(pagoForm: Form[Pago], pago:Pago)
+@import helper._
+@import utils._
+@import models.auth._
+@implicitFieldConstructor = @{ FieldConstructor(simpleInput.render) } 
+@scripts = {
+	<script src="@routes.Assets.at("javascripts/contabilidad/pagos.js")" type="text/javascript"></script>
+}
+
+@views.html.contabilidad.mainContabilidad("Ficha de pago",scripts) {
+	<div class="page-header">
+		<div class="row">
+			<div class="col-sm-3">
+				<h1>Ver pago @if(pago.expediente != null){@if(pago.expediente.emergencia){<span style="color:red;font-weight: bold;font-size:14px; ">(Emergencia Sanitaria)</span>}}</h1>
+			</div>
+			<div class="col-sm-9">
+				<div class="dropdown pull-right">
+					<div class="btn-group pull-right  btn-header">
+						<button class="btn btn-default dropdown-toggle" type="button" id="dropdownReportes" data-toggle="dropdown">
+							<i class="glyphicon glyphicon-list-alt"></i> Reportes <span class="caret"></span>
+						</button>
+						<ul class="dropdown-menu">
+							<li><a id="reporteCheque" href="@controllers.contabilidad.routes.PagosReportesController.reporteCheque(pago.id)">Reporte Cheque</a></li>
+						</ul>
+					</div>
+				</div>
+				<div class="dropdown pull-right">
+					<div class="btn-group pull-right  btn-header">
+						<button class="btn btn-default dropdown-toggle" type="button" id="dropdownReportes" data-toggle="dropdown">
+							<i class="glyphicon glyphicon-list-alt"></i> Acciones <span class="caret"></span>
+						</button>
+						<ul class="dropdown-menu">
+							@if(Permiso.check("pagosModificarNumeroFactura")) {
+							<li><a id="accionModificarNumeroFactura" data-url="@controllers.contabilidad.routes.PagosAccionesController.modalModificarNumeroFactura(pago.id)">Modificar N° Factura</a></li>
+							}
+							@if(Permiso.check("pagosModificarNumeroRecibo")) {
+							<li><a id="accionModificarNumeroRecibo" data-url="@controllers.contabilidad.routes.PagosAccionesController.modalModificarNumeroRecibo(pago.id)">Modificar N° Recibo</a></li>
+							}
+						</ul>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	
+	@views.html.tags.successError()
+	
+	<div class="row menu-acciones">
+		<div class="col-sm-5">
+			<a href="@controllers.contabilidad.routes.PagosController.crear()@UriTrack.get("?")"  class="btn btn-default"><i class="glyphicon glyphicon-plus-sign"></i> Nuevo</a>
+			<a href="@controllers.contabilidad.routes.PagosController.editar(pago.id)@UriTrack.get("&")"  class="btn btn-default"><i class="glyphicon glyphicon-edit"></i> Editar</a>
+			<a href="@controllers.contabilidad.routes.PagosController.duplicar(pago.id)@UriTrack.get("&")"  class="btn btn-default"><i class="glyphicon glyphicon-subtitles"></i> Duplicar</a>
+			<a href="@controllers.contabilidad.routes.PagosController.eliminar(pago.id)@UriTrack.get("&")"  class="btn btn-default delete-confirm-link"><i class="glyphicon glyphicon-trash icono-eliminar"></i> Eliminar</a>
+		</div>
+		<div class="col-sm-5">
+			@if(pagoForm("tipoCuenta").value != null){
+				<span style="color:red;font-size: 25px;font-weight: bold;">@pagoForm("tipoCuenta.nombre").value</span>
+			}
+		</div>
+		<div class="col-sm-2">
+			<a href="@UriTrack.getOnNull(controllers.contabilidad.routes.PagosController.index().absoluteURL())" class="btn btn-default"><i class="glyphicon glyphicon-list"></i></a>
+		</div>
+	</div>
+	
+	
+	
+	<div class="row">
+		<div class="col-sm-2">
+			<label class="control-label">Nombre</label>
+			<p class="form-control-static form-control">@pagoForm.field("nombre").value</p>
+		</div>
+		<div class="col-sm-2">
+			<label class="control-label">Referencia</label>
+			<p class="form-control-static form-control">@pagoForm.field("referencia").value</p>
+		</div>
+		<div class="col-sm-2">
+			<div class="form-group">
+				<label for=tipo_pago class="control-label">Tipo Pago</label>
+				<p class="form-control-static form-control">
+					@pago.tipo_pago match {
+				    	case "transferencia" => {Macro Online}
+				    	case "transferenciaInterbanking" => {Interbanking}
+				    	case "transferenciaMacroProveedores" => {Macro Proveedores}
+				    	case "cheque" => {Cheque}
+				    	case "debito" => {Debito}
+				    }
+				</p>
+			</div>
+		</div>
+		<div class="col-sm-2">
+			<label class="control-label">N° Cheque</label>
+			<p class="form-control-static form-control" id="inputNumeroCheque">@pagoForm.field("numero_cheque").value</p>
+		</div>
+		<div class="col-sm-2">
+			<label class="control-label">N° Factura</label>
+			<p class="form-control-static form-control" id="inputNumeroFactura">@pagoForm.field("factura.numero_factura").value</p>
+		</div>
+		<div class="col-sm-2">
+			<label class="control-label">N° Recibo</label>
+			<p class="form-control-static form-control" id="inputNumeroRecibo">@pagoForm.field("recibo").value</p>
+		</div>
+		
+	</div>	
+	<div class="row">	
+		<div class="col-sm-4">
+			<label class="control-label">Contraparte</label>
+			<p class="form-control-static form-control">
+				<a href="#" class="infoProveedor" data-url="@controllers.compras.routes.ProveedoresAccionesController.modalInformacionProveedor(pago.proveedor.id)">
+					@pagoForm.field("proveedor.nombre").value
+				</a>
+			</p>
+		</div>
+		<div class="col-sm-2">
+			<label class="control-label">Expediente</label>
+			<p class="form-control-static form-control">@pagoForm.field("expediente.expedienteEjercicio").value</p>
+		</div>
+		<div class="col-sm-2">
+			<label class="control-label">Periodo</label>
+			<p class="form-control-static form-control">@pagoForm.field("periodo.nombre").value</p>
+		</div>
+		<div class="col-sm-2">
+			<label class="control-label">N° orden de pago</label>
+			<p class="form-control-static form-control">@pagoForm.field("ordenPago.nombreCompleto").value</p>
+		</div>
+		
+	</div>
+	
+	<div class="row">
+		<div class="col-sm-4">
+			<label class="control-label">Paguese a</label>
+			<p class="form-control-static form-control">@pagoForm.field("paguese_a").value</p>
+		</div>
+		
+		<div class="col-sm-2">
+			<label class="control-label">Fecha pago</label>
+			<p class="form-control-static form-control">@pagoForm.field("fecha_pago").value</p>
+		</div>
+		<div class="col-sm-2">
+			<label class="control-label">Fecha Emision</label>
+			<p class="form-control-static form-control">@pagoForm.field("fecha_emision").value</p>
+		</div>
+		<div class="col-sm-2">
+			<label class="control-label">Fecha Conciliacion</label>
+			<p class="form-control-static form-control">@pagoForm.field("fecha_conciliacion").value</p>
+		</div>
+		<div class="col-sm-2">
+			<label class="control-label">Fecha Cancelacion</label>
+			<p class="form-control-static form-control">@pagoForm.field("fecha_cancelacion").value</p>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-sm-2">
+			<label class="control-label">Factura</label>
+			<p class="form-control-static form-control">@pagoForm.field("factura.nombre").value</p>
+		</div>
+		<div class="col-sm-2">
+			<label class="control-label">Cuenta propia</label>
+			<p class="form-control-static form-control">@pagoForm.field("cuentaPropia.numero").value</p>
+		</div>
+		<div class="col-sm-4">
+			<label class="control-label">Cuenta impuesto en factura</label>
+			<p class="form-control-static form-control">@pagoForm.field("cuentaImpuesto.nombre").value</p>
+		</div>
+		<div class="col-sm-2">
+			<!-- <div class="checkbox">
+				<label for="inputProfe" class="control-label"> 
+					PROFE
+					@checkbox(pagoForm("profe"), 'disabled -> "disabled")
+				</label>
+			</div> -->
+			<label class="control-label">Tipo Cuenta</label>
+			<p class="form-control-static form-control">@if(pago.tipoCuenta != null){@pago.tipoCuenta.nombre}</p> 
+		</div>
+		<div class="col-sm-2">
+			<div class="checkbox">
+				<label for="inputAPE class="control-label"> 
+					Agente Pago Externo
+					@checkbox(pagoForm("agente_pago_externo"), 'disabled -> "disabled")
+				</label>
+			</div> 
+		</div>
+		
+	</div>
+	<hr>
+	@views.html.contabilidad.pagos.tabsPago(false,pagoForm,pagoForm.get())
+	
+	<h4>Total Debito: 	<b>@utils.NumberUtils.moneda(pago.total)</b></h4>	
+	<h4>Total Credito: 	<b>@utils.NumberUtils.moneda(pago.total_credito)</b></h4>	
+	<h4>Estado actual: 	<b>@pago.estado.nombre</b></h4>
+	
+	<div class="row margin-bottom-25">	
+		@for(estado <- models.Estado.getSiguienteEstadoPorAprobar(pago.estado.orden,models.Estado.TIPO_PAGO)) {	
+			@if(estado.orden <= 4) {
+				@if(pago.estado.id == models.Estado.PAGO_ESTADO_BORRADOR && (pago.tipo_pago.compareTo("debito") == 0)){
+					<div class="col-sm-3">
+						<a href="@controllers.contabilidad.routes.PagosController.cambiarEstadoTransferenciaConciliado(pagoForm.field("id").value.toInt)@UriTrack.get("&")" class="btn btn-default">
+							<i class="glyphicon glyphicon-arrow-right"></i> @models.Estado.getEstado(models.Estado.PAGO_ESTADO_CONCILIADO,Estado.TIPO_PAGO).nombre
+						</a>
+					</div>
+				}else{
+					@if(pago.estado.id == models.Estado.PAGO_ESTADO_EN_CURSO && (pago.tipo_pago.compareTo("transferencia") == 0 || pago.tipo_pago.compareTo("transferenciaMacroProveedores") == 0 || pago.tipo_pago.compareTo("transferenciaInterbanking") == 0)) {
+						<div class="col-sm-3">
+							<a href="@controllers.contabilidad.routes.PagosController.cambiarEstadoTransferenciaConciliado(pagoForm.field("id").value.toInt)@UriTrack.get("&")" class="btn btn-default">
+								<i class="glyphicon glyphicon-arrow-right"></i> @models.Estado.getEstado(models.Estado.PAGO_ESTADO_CONCILIADO,Estado.TIPO_PAGO).nombre
+							</a>
+						</div>
+					
+					}else{
+						<div class="col-sm-3">
+							<a href="@controllers.contabilidad.routes.PagosController.cambiarEstado(pagoForm.field("id").value.toInt, estado.id.toLong)@UriTrack.get("&")" class="btn btn-default">
+								<i class="glyphicon glyphicon-arrow-right"></i> @estado.nombre
+							</a>
+						</div>
+					}
+				}
+			}
+		}
+		@if(pago.estado.id == models.Estado.PAGO_ESTADO_CANCELADO) {
+			<div class="col-sm-3">
+				<a href="@controllers.contabilidad.routes.PagosController.cambiarEstado(pagoForm.field("id").value.toInt, models.Estado.PAGO_ESTADO_BORRADOR)@UriTrack.get("&")" class="btn btn-default">
+					<i class="glyphicon glyphicon-arrow-right"></i> Volver a Borrador
+				</a>
+			</div>
+		}else{
+			<div class="col-sm-3">
+				<a href="@controllers.contabilidad.routes.PagosController.cambiarEstado(pagoForm.field("id").value.toInt, models.Estado.PAGO_ESTADO_CANCELADO)@UriTrack.get("&")" class="btn btn-default">
+					<i class="glyphicon glyphicon-minus-sign"></i> Cancelar Pago
+				</a>
+			</div>
+		}
+	</div>
+
+}

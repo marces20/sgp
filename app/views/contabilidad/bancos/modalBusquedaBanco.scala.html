@@ -1,0 +1,70 @@
+@(buscador: utils.pagination.Pagination[Banco], formBuscador: DynamicForm)
+@import helper._
+@implicitFieldConstructor = @{ FieldConstructor(simpleInput.render) } 
+
+<div id="modalBusquedaBancos" class="contenedorPaginador ajaxPaginador">
+<form action="@controllers.contabilidad.routes.BancosController.modalBuscar()" method="GET">
+	<div class="row">
+		<div class="col-sm-6">
+			<label class="control-label">Nombre</label>
+			@inputText(formBuscador("nombre"), 'class -> "form-control", 'autofocus -> "autofocus")
+			
+		</div>
+		<div class="col-sm-3">
+			<label class="control-label">&nbsp 
+			<button class="btn btn-primary form-control">Buscar</button>
+			</label>
+		</div>
+	</div>
+</form>
+
+@if(buscador.getTotalRowCount == 0) {
+	<div class="well">
+	    <em>No se encuentran Bancos</em>
+	</div>
+} else {
+    Mostrando @buscador.getDisplayXtoYofZ(" a "," de ") resultado(s). 
+    	
+	<table class="table table-striped table-bordered table-hover">
+		<thead>
+			<tr>
+				<th>Nombre</th>
+			</tr>
+		</thead>
+		<tbody>
+    	
+    @for(banco <- buscador.getList) {
+	<tr data-id="@banco.id" class="modalSeleccionBanco">
+		<td> @banco.nombre</td>
+	</tr>    
+    }
+    </tbody>
+    </table>
+    
+	<div class="pagination pull-right">
+	    @views.html.helpers.paginador(buscador, controllers.contabilidad.routes.BancosController.modalBuscar())
+	</div>	
+}
+</div>
+
+<script>
+$( function(){
+	var contenedor = $("#modalBusquedaBancos");
+	var url = "@controllers.contabilidad.routes.BancosController.get()"
+	contenedor.find('.modalSeleccionBanco').on('click', function(){
+		var id = $(this).attr('data-id');
+		$.get(url+"?id="+id, function(data){
+			$(document).trigger("modal.seleccion.banco.simple", data);
+		});
+	});
+	
+	contenedor.find('form').on('submit', function(){
+		var url = $(this).attr("action");
+		var query = $(this).serialize();
+		$.get(url+"?"+query, function(data){
+			contenedor.parent().html(data);
+		});
+		return false;
+	});
+});
+</script>

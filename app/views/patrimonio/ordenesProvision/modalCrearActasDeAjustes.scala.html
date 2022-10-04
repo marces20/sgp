@@ -1,0 +1,67 @@
+@(formBuscador: DynamicForm,ordenId:Long,actaForm: Form[ActaRecepcion])
+@import helper._
+@implicitFieldConstructor = @{ FieldConstructor(simpleInput.render) } 
+	
+@helper.form(action = controllers.patrimonio.routes.OrdenesProvisionController.crearActasDeAjustes(), 'id -> "formCrearActasDeAjustes") {	
+	
+	@views.html.tags.successError()
+	<input type="hidden" value="@ordenId" name="ordenId"/>
+<div class="row">
+	<div class="col-sm-3">
+		<div class="form-group has-required @if(actaForm.error("numero") != null) {has-error}">
+			<label for="nombre" class="control-label">Número</label>
+			@inputText(actaForm("numero"), 'class -> "form-control",'id->"numeroActa")
+			@actaForm("numero").error.map{ error =>
+				<div class="text-error">@error.message</div>
+			}
+		</div>
+	</div>
+
+	<div class="col-sm-3">
+		<div class="form-group has-required @if(actaForm.error("ejercicio_id") != null) {has-error}">
+			<label class="control-label">Ejercicio
+			@select(actaForm("ejercicio_id"), Ejercicio.getEjercicios().map { p => p.id.toString -> p.nombre}, 'class -> "form-control select", '_default -> "Seleccionar")
+			</label>
+			@actaForm("ejercicio_id").error.map{ error =>
+				<div class="text-error">@error.message</div>
+			}	
+		</div>
+	</div>
+	<div class="col-sm-3  has-required @if(actaForm.error("fecha") != null) {has-error}">
+		<label class="control-label">Fecha acta</label> 
+		<div class="form-group ">
+			@inputText(actaForm("fecha"),'class -> "form-control date", 'autocomplete -> "off",'id -> "fecha_acta_modal")
+		</div>
+		@actaForm("fecha").error.map{ error =>
+			<div class="text-error">@error.message</div>
+		}
+	</div>
+	<div class="col-sm-3">
+		<div class="checkbox">
+			<label class="control-label"> @checkbox(actaForm("cierre"), 'value -> "true") Acta de cierre</label>
+		</div>
+	</div>
+
+</div>
+ <div class="row">	
+	<div class="col-sm-2">
+		<div class="form-group">
+		<label for="nombre" class="control-label">&nbsp;</label>
+		<button  class="form-control btn btn-primary"> Guardar</button>
+		</div>
+	</div>	
+
+</div>	
+
+ 
+<script>
+$( function(){ 
+	$("#fecha_acta_modal").mask("99/99/9999");
+	$("#numeroActa").numeric_input();
+
+})
+</script>
+@flash().clear()
+}
+
+ 

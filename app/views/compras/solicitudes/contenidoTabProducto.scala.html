@@ -1,0 +1,20 @@
+@(formularioCarga: Boolean, solicitudForm: Form[Solicitud] = null,solicitud:Solicitud)
+@import java.util.List
+
+@if(solicitudForm.field("id").value == null || solicitudForm.field("id").value == ""){
+	<p>Para cargar productos primero debe dar de alta la solicitud</p>
+} else {
+	
+		<script>
+			$( function (){
+				$.get('@controllers.compras.routes.LineasSolicitudesController.index(solicitudForm.field("id").value.toLong, formularioCarga,solicitudForm.field("estado_id").value.toLong)', function(data){
+					$('#listaLineaProductos').parent().html(data);
+				})
+			});
+		</script>
+	
+}
+
+<div id="listaLineaProductos">
+
+</div>

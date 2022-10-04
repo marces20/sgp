@@ -1,0 +1,83 @@
+@(formBuscador: DynamicForm,id:Long)
+@import helper._
+@implicitFieldConstructor = @{ FieldConstructor(simpleInput.render) } 
+<style>
+form { display: block; margin: 20px auto; background: #eee; border-radius: 10px; padding: 15px }
+#progress { position:relative; width:400px; border: 1px solid #ddd; padding: 1px; border-radius: 3px; float: left;margin: 0 10px 0 0;}
+#bar { background-color: #B4F5B4; width:0%; height:20px; border-radius: 3px; }
+#percent { position:absolute; display:inline-block; top:3px; left:48%; }
+</style>
+
+<script src="@routes.Assets.at("plugins/ajax-file-upload/jquery.form.js")"></script>
+<form id="myForm" action="/patrimonio/recepciones/cargarRemitosMasivos" method="post" enctype="multipart/form-data">	
+	<div id="" class="contenedorPaginador ajaxPaginador">
+		
+			<div class="row margin-bottom-10">
+				<div class="col-sm-6">
+					@inputFile(formBuscador("myfile"), 'id -> "myfile")
+					<input type="hidden" id="idRecepcion" name="idRecepcion" value="@id" />
+				 
+				</div>
+				<div class="col-sm-6">
+					<a href="/assets/templates/remitosMasivos.xls" style="color:blue;">Descargar Template</a>
+				</div>
+			</div>
+		    <div class="row margin-bottom-10">
+		    	<div class="col-sm-12">
+		    		<input type="submit" class="btn btn-default" id="procesar" value="Procesar" />
+		    		<div id="progress">
+						<div id="bar"></div>
+						<div id="percent">0%</div >
+					</div>
+		    	</div>
+		    </div>
+	</div> 
+</form>
+
+    
+<div id="message"></div>
+
+<script>
+$(document).ready(function()
+{
+	 
+	var options = { 
+    beforeSend: function() 
+    {
+    	$("#progress").show();
+    	//clear everything
+    	$("#bar").width('0%');
+    	$("#message").html("");
+		$("#percent").html("0%");
+		$("#procesar").attr('disabled', 'disabled');
+    },
+    uploadProgress: function(event, position, total, percentComplete) 
+    {
+    	$("#bar").width(percentComplete+'%');
+    	$("#percent").html(percentComplete+'%');
+
+    
+    },
+    success: function() 
+    {
+        $("#bar").width('100%');
+    	$("#percent").html('100%');
+
+    },
+	complete: function(response) 
+	{
+		$("#message").html("<font color='green'>"+response.responseText+"</font>");
+	},
+	error: function()
+	{
+		$("#message").html("<font color='red'> ERROR: unable to upload files</font>");
+
+	}
+     
+}; 
+
+     $("#myForm").ajaxForm(options);
+
+});
+
+</script>  

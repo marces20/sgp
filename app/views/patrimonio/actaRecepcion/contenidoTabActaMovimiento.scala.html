@@ -1,0 +1,18 @@
+@(actaId: Long = null)
+@import java.util.List
+
+@if(actaId == null){
+	<p>No hay movimientos</p>
+} else {
+	<script>
+	$( function (){
+		$.get('@controllers.patrimonio.routes.ActasMovimientosController.index(actaId)', function(data){
+			$('#listaLineaActasMovimientos').parent().html(data);
+		})
+	});
+	</script>
+}
+
+<div id="listaLineaActasMovimientos">
+
+</div>

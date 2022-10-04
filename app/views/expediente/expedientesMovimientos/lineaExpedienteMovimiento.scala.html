@@ -1,0 +1,39 @@
+@(linea: ExpedienteMovimiento, editable: Boolean)
+
+@getExpedienteMovimientosOrdenpago(linea: ExpedienteMovimiento) = @{
+	var ops:String = new String()
+	if(linea != null && linea.expedienteMovimientosOrdenpago != null && linea.expedienteMovimientosOrdenpago.size() > 0){
+		for(olp <- linea.expedienteMovimientosOrdenpago) {
+			ops += olp.ordenPago.getNombreCompleto()+"\n" 
+		}
+	}
+	ops
+}
+ 
+			
+
+<tr data-id="@linea.id" @if(linea.cancelado){class="cancelada"}>
+	@if(editable){
+		<!--  <td><input type="checkbox" name="check_listado[]" value="@linea.id" class="check_listado notSeleccion" id="check-@linea.id"/></td>
+		<td class="accion-editar"><a class="btn btn-default btn-xs modificarExpedienteMovimiento" href="@controllers.expediente.routes.ExpedientesMovimientosController.editar(linea.id)"><i class="glyphicon glyphicon-edit"></i></a></td>
+		 -->
+	}
+	<td>@linea.organigrama.nombre</td>
+	<td>@linea.usuario.nombre</td>
+	<td>@utils.DateUtils.formatDate(linea.fecha_llegada,"dd/MM/yyyy HH:mm:ss")</td>
+	<td>@utils.DateUtils.formatDate(linea.fecha_salida,"dd/MM/yyyy HH:mm:ss")</td>
+	<td>@ExpedienteMovimiento.tiempoEnMovimiento(linea)</td>
+	<td>@if(linea.cancelado){CANCELADO}</td>
+	<td>
+		@if(linea != null && linea.expedienteMovimientosOrdenpago != null && linea.expedienteMovimientosOrdenpago.size() > 0){
+			<div class='tip-top pointer' style="display: inline;" title='@getExpedienteMovimientosOrdenpago(linea)'>
+				<i class="glyphicon glyphicon-tasks"></i></div>
+		}
+	</td>
+	<td>
+		@if(linea != null && linea.descripcion != null && !linea.descripcion.isEmpty()){
+			<div class='tip-top pointer' style="display: inline;" title='@linea.descripcion'>
+				<i class="glyphicon glyphicon-list-alt"></i></div>
+		}
+	</td>
+</tr>

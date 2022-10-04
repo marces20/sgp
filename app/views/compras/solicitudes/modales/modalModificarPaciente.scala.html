@@ -1,0 +1,81 @@
+@(formBuscador: Form[Solicitud])
+@import helper._
+@import utils._
+@import models.auth._
+@implicitFieldConstructor = @{ FieldConstructor(simpleInput.render) } 
+	
+@helper.form(action = controllers.compras.routes.SolicitudAccionesController.modificarPaciente(), 'id -> "formModificarPacienteDesdeModal") {	
+	
+	@views.html.tags.successError()
+	
+	<div class="row">
+		<div class="col-sm-6">
+			<label for="paciente" class="control-label">Paciente</label> 
+				<div class="input-group">
+				@inputText(formBuscador("cliente.nombre"),'class -> "form-control", 'id -> "paciente", 'autocomplete -> "off")
+				@inputText(formBuscador("cliente_id"),'hidden -> "hidden", 'id -> "paciente_id")
+				<span class="input-group-addon">
+					<a href="#" class="searchModal"
+								id="searchPaciente" 
+								data-title="Selección de paciente" 
+								data-url="@controllers.compras.routes.ClientesController.modalBuscar()"
+								data-height="650" 
+								data-width="700" 
+								data-listen="modal.seleccion.cliente.simple"
+								data-label="#paciente" 
+								data-field="#paciente_id">
+						<i class="glyphicon glyphicon-search"></i>
+					</a>
+				</span>
+				<!-- <span class="input-group-addon">
+					<a href="#" class="searchModal"
+								id="searchPacienteCarga" 
+								data-title="Carga de paciente" 
+								data-url="@controllers.compras.routes.ClientesController.modalCarga()" 
+								data-height="650" 
+								data-width="700" 
+								data-listen="modal.carga.cliente.simple" 
+								data-label="#paciente" 
+								data-field="#paciente_id">
+						<i class="glyphicon glyphicon-plus"></i>
+					</a>
+				</span> -->
+				
+                
+			</div>
+			
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-sm-5"><br />
+			@inputText(formBuscador("departamento_id"),'hidden -> "hidden")
+			@inputText(formBuscador("id"),'hidden -> "hidden")
+			@inputText(formBuscador("referencia") ,'hidden -> "hidden")
+			<button type="submit" class="btn btn-default" title="Modificar Paciente">
+			<i class="glyphicon glyphicon-arrow-right"></i> Modificar Paciente</button>
+		</div>
+	</div>
+
+}
+
+<script>
+$( function(){
+	
+	$('#searchPaciente,#searchPacienteCarga').modalSearch();
+	
+	if($("#paciente").length){
+		var options = {
+				script:"/suggestCliente/",
+				varname:"",
+				json:true,
+				shownoresults:true,
+				maxresults:6,
+				callback: function (obj) { 
+											$("#paciente").next().val(obj.id); 
+										 }
+			};
+		var as_json = new bsn.AutoSuggest('paciente', options);
+	}
+});
+</script>
+@flash().clear()

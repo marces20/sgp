@@ -1,0 +1,43 @@
+@(ejercicioForm: Form[Ejercicio])
+@import helper._
+@implicitFieldConstructor = @{ FieldConstructor(simpleInput.render) } 
+
+	<div class="row">
+		<div class="col-sm-4">
+			<div class="form-group @if(ejercicioForm.error("nombre") != null) {has-error}else{has-required}">
+				<label for="inputNombre" class="control-label">Nombre</label> 
+				@inputText(ejercicioForm("nombre"), 'class -> "form-control")
+				@ejercicioForm("nombre").error.map{ error =>
+					<div class="text-error">@error.message</div>
+				}
+			</div>
+		</div>
+		
+		<div class="col-sm-4">
+			<div class="form-group">
+				<label for="inputCodigo" class="control-label">Codigo</label> 
+				@inputText(ejercicioForm("code"), 'class -> "form-control")
+			</div>
+		</div>
+		<div class="col-sm-4">
+			<div class="form-group">
+				<label for="inputEstado" class="control-label">Estado</label> 
+				@inputText(ejercicioForm("estado"), 'class -> "form-control")
+			</div>
+		</div>
+		
+	</div>
+	<div class="row">
+		<div class="col-sm-4">
+			<div class="form-group">
+				<label for="inputFDesde" class="control-label">Fecha Comienzo</label> 
+				@inputText(ejercicioForm("date_start"), 'class -> "form-control")
+			</div>
+		</div>
+		<div class="col-sm-4">
+			<div class="form-group">
+				<label for="inputFHasta" class="control-label">Fecha Fin</label> 
+				@inputText(ejercicioForm("date_end"), 'class -> "form-control")
+			</div>
+		</div>
+	</div>

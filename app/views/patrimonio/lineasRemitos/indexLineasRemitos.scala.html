@@ -1,0 +1,90 @@
+@(buscador: utils.pagination.Pagination[RemitoLinea], formBuscador: DynamicForm)
+@import helper._
+@import models.auth._
+@import utils._
+@implicitFieldConstructor = @{ FieldConstructor(simpleInput.render) } 
+<div id="resultadoLineasRemitos" class="contenedorPaginador ajaxPaginador">
+@helper.form(action = controllers.patrimonio.routes.RemitosLineasController.index(), 'id -> "buscadorLineasRemitos") {
+<div class="row">	
+		
+	@inputText(formBuscador("remito_id"), 'type -> "hidden")
+
+	<div class="col-sm-5">
+		<label for="producto" class="control-label">Producto</label>
+		<div class="input-group">
+			@inputText(formBuscador("producto.nombre"), 'class -> "form-control", 'autofocus -> "autofocus", 'id -> "productoLinea")
+			@inputText(formBuscador("producto_id"), 'hidden -> "hidden", 'id -> "producto_id_linea")
+			<span class="input-group-addon"><a href="#" id="searchProductoLinea" data-title="Selección de producto" data-url="@controllers.compras.routes.ProductosController.modalBuscar()" data-height="650" data-width="700" data-listen="modal.seleccion.producto.simple" data-label="#productoLinea" data-field="#producto_id_linea"><i class="glyphicon glyphicon-search"></i></a></span>
+		</div>
+	</div>
+	
+	<div class="col-sm-2">
+		<div class="form-group">
+		<label for="nombre" class="control-label">&nbsp;</label>
+		<button  class="form-control btn btn-primary"><i class="glyphicon glyphicon-search"></i> Buscar</button>
+		</div>
+	</div>	
+	
+	
+</div>
+}
+
+
+   @if(buscador.getTotalRowCount == 0) {
+        
+       <div class="well">
+           <em>No se encuentran productos en este remitos.</em>
+       </div>
+        
+    } else {
+		
+		Mostrando @buscador.getDisplayXtoYofZ(" a "," de ") resultado(s).   
+		<table id="listaRemitos" class="table table-striped table-bordered table-hover">
+			<thead>
+				<tr>
+					<th>Producto</th>
+					<th>Precio</th>
+					<th width="50">Cantidad</th>	
+					<th width="50">UDM</th>	
+					<th width="50">Valor</th>			
+				</tr>
+			</thead>
+			<tbody>
+		        @for(linea <- buscador.getList) {
+				<tr class="pointer">
+					<td>@linea.lineaOrden.producto.nombre</td>
+					<td>@utils.NumberUtils.moneda(linea.lineaOrden.precio)</td>
+					<td>@linea.cantidad</td>
+					<td>@linea.lineaOrden.udm.nombre</td>
+					<td>@utils.NumberUtils.moneda(linea.getTotal())</td>
+				</tr>
+              	}
+			</tbody>
+		</table>
+		
+		<div class="pagination pull-right">
+		    @views.html.helpers.paginador(buscador, controllers.patrimonio.routes.RemitosLineasController.index())
+		</div>
+        
+    }
+</div>
+
+<script>
+$( function() {
+	$('#searchProductoLinea').modalSearch();
+	
+	var resultados = $('#resultadoLineasRemitos');
+
+	$('#contenedorRemitos').on('submit', '#buscadorLineasRemitos', function() {
+		
+		var $this = $(this);
+		var url = $(this).attr('action');
+		
+		$.get(url, $this.serialize(), function(data){
+			resultados.replaceWith(data);
+		});
+		
+		return false;
+	});
+});
+</script>

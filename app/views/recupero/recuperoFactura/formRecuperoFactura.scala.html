@@ -1,0 +1,123 @@
+@(recuperoFacturaForm: Form[models.recupero.RecuperoFactura])
+@import helper._
+@import utils._
+@implicitFieldConstructor = @{ FieldConstructor(simpleInput.render) } 
+	
+	
+	<div class="row menu-acciones">
+		<div class="col-sm-10">
+			<button type="submit" class="btn btn-default" title="Guardar orden"><i class="glyphicon glyphicon-floppy-disk"></i> Guardar</button>	
+																																   
+	    	<a href="@if(request().getHeader("referer")){ @request().getHeader("referer") } else {@controllers.recupero.routes.RecuperoFacturasController.index()@UriTrack.decode()}" title="Cancelar editar" class="btn btn-default"><i class="glyphicon glyphicon-floppy-remove"></i> Cancelar</a>
+	    </div>
+		<div class="col-sm-2">
+			<a href="@UriTrack.decode()" title="Volver al listado" class="btn btn-default"><i class="glyphicon glyphicon-list"></i></a> 
+			@if(recuperoFacturaForm.field("id").value){<a href="@controllers.recupero.routes.RecuperoFacturasController.ver(recuperoFacturaForm.field("id").value.toLong)@UriTrack.get("&")" title="Ver factura" class="btn btn-default"><i class="glyphicon glyphicon-align-justify"></i></a>}
+		</div>
+	</div>
+	
+	
+	@inputText(recuperoFacturaForm("id"), 'type -> "hidden", 'id -> "recuperoFacturaId")
+	<input type="hidden" name=@UriTrack.getKey() value="@UriTrack.code()" />
+	<div class="row">
+		<div class="col-sm-2">
+			<label class="control-label">Nombre</label> 
+			<div class="form-group @if(recuperoFacturaForm.error("nombre") != null) {has-error}">
+				@inputText(recuperoFacturaForm("nombre"), 'class -> "form-control",'readOnly -> "readOnly")
+				
+				@recuperoFacturaForm("nombre").error.map{ error =>
+					<div class="text-error">@error.message</div>
+				}
+			</div>
+		</div>
+		
+		<div class="col-sm-3">
+		 	<label class="control-label">Numero</label> 
+			<div class="input-group @if(recuperoFacturaForm.error("numero") != null || recuperoFacturaForm.error("puntoventa_id") != null) {has-error}else{has-required}">
+			    <span class="input-group-btn">
+			      @select(recuperoFacturaForm("serie"), options("C"->"C"), 'id -> "serie",'class -> "form-control select")
+			      <i class="input-group-addon" style="display:none"></i>
+			    </span>
+			    <span class="input-group-btn">
+			      @select(recuperoFacturaForm("puntoventa_id"),PuntoVenta.find.all().map { p => p.id.toString -> p.numero}, 
+					'class -> "form-control select", '_default -> "Seleccionar")
+			      <i class="input-group-addon" style="display:none"></i>
+			    </span>
+			    <span class="input-group-btn">
+			    <i class="input-group-addon" style="display:none"></i>
+			      @inputText(recuperoFacturaForm("numero"), 'class -> "form-control",'id->"numero_factura")
+			    </span>
+			   
+		  	</div>	
+		  	 @recuperoFacturaForm("puntoventa_id").error.map{ error =>
+					<div class="text-error">@error.message</div>
+				}
+				 @recuperoFacturaForm("numero").error.map{ error =>
+					<div class="text-error">@error.message</div>
+				}
+		</div>
+		
+		<div class="col-sm-4">
+			<label class="control-label">Cliente</label> 
+			<div class="input-group @if(recuperoFacturaForm.error("cliente_id") != null) {has-error}else{has-required}">	
+				@inputText(recuperoFacturaForm("cliente.nombre"), 'class -> "form-control", 'id -> "cliente_nombre")
+				@inputText(recuperoFacturaForm("cliente_id"), 'hidden -> "hidden", 'id -> "cliente_id")
+				<span class="input-group-addon">
+                	<a href="#" id="searchCliente" 
+                	data-title="Selección de cliente" 
+                	data-url="@controllers.compras.routes.ClientesController.modalBuscar()" 
+                	data-height="650" data-width="700" 
+                	data-listen="modal.seleccion.cliente.simple" 
+                	data-label="#cliente_nombre" data-field="#cliente_id" /> 
+                	<i class="glyphicon glyphicon-search"></i></a>
+                </span>
+                <span class="input-group-addon">
+                	<a href="#" id="searchPacienteCarga" 
+			                	data-title="Carga de paciente" 
+			                	data-url="@controllers.compras.routes.ClientesController.modalCarga()" 
+			                	data-height="650" 
+			                	data-width="700" 
+			                	data-listen="modal.carga.cliente.simple" 
+			                	data-label="#paciente" 
+			                	data-field="#paciente_id" /> 
+			                	<i class="glyphicon glyphicon-plus"></i></a>
+                </span>
+			</div>
+			@recuperoFacturaForm("cliente_id").error.map{ error =>
+				<div class="text-error">@error.message</div>
+			}
+		</div>
+	</div>	
+	<div class="row">	
+		<div class="col-sm-2">
+			<label for="expediente" class="control-label">Planilla</label> 
+			<div class="input-group @if(recuperoFacturaForm.error("planilla_id") != null) {has-error}else{has-required}">
+				@inputText(recuperoFacturaForm("planilla.recuperoPlanillaEjercicio"),'class -> "form-control", 'id -> "planilla")
+				@inputText(recuperoFacturaForm("planilla_id"),'hidden -> "hidden", 'id -> "planilla_id")
+
+				<span class="input-group-addon">
+				<a href="#" 
+				id="searchPlanilla" data-title="Selección de Planilla" 
+				data-url="@controllers.recupero.routes.RecuperoPlanillasController.modalBuscar()" 
+				data-height="650" data-width="700" 
+				data-listen="modal.seleccion.planilla.simple" 
+				data-label="#planilla" 
+				data-field="#planilla_id">
+				<i class="glyphicon glyphicon-search"></i></a></span>
+				
+			</div>
+			@recuperoFacturaForm("planilla_id").error.map{ error =>
+					<div class="text-error">@error.message</div>
+				}
+		</div>
+		<div class="col-sm-2">
+			<label class="control-label">Fecha factura</label> 
+			<div class="form-group @if(recuperoFacturaForm.error("fecha")  != null) {has-error}else{has-required}">
+				@inputText(recuperoFacturaForm("fecha"),'class -> "form-control date", 'autocomplete -> "off")
+			</div>
+			@recuperoFacturaForm("fecha").error.map{ error =>
+				<div class="text-error">@error.message</div>
+			}
+		</div>
+	</div>
+	 

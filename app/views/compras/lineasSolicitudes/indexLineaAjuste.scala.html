@@ -1,0 +1,134 @@
+@(paginador:  utils.pagination.Pagination[SolicitudLineaAjuste], editable: Boolean, solicitud: Solicitud)
+@import utils._
+@import models.auth._
+<div id="listaLineaAjustes" class="contenedorPaginador ajaxPaginador">
+
+<p>
+	<b>Ajustes</b>
+	@if(Permiso.check("solicitudAgregaLineaAjuste")) {
+		@if(solicitud != null && (solicitud.estado_id == 4 || solicitud.estado_id == 5)){
+		<a class="btn btn-default btn-xs" href="#" id="nuevoAjuste"><i class="glyphicon glyphicon-plus"></i> Nuevo</a>	 	
+		}
+	}
+</p>
+
+@if(paginador.getTotalRowCount() <= 0){
+	<p id="mensaje"><i class="glyphicon glyphicon-info-sign"></i> No existen ajustes en esta solicitud.<p>
+}
+
+<table id="listaDeAjustes" class="table table-striped table-bordered @if(paginador.getTotalRowCount() <= 0){hide}">
+	<thead>
+		<tr>
+			<th width="220">Codificación</th>
+			<th>Nombre de cuenta analítica</th>
+			<th>Producto</th>
+			<th>Cantidad</th>
+			<th>Precio</th>
+			<th>Total</th>
+			<th width="50">Observación</th>
+			@if(editable){
+				<!-- <th width="50"></th> -->
+			}
+		<tr>	
+	</thead>
+	<tbody>
+	@for(linea <- paginador.getList) {
+		@views.html.compras.lineasSolicitudes.lineaAjuste(linea, editable,solicitud)
+	}
+	</tbody>
+</table>
+
+Mostrando @paginador.getDisplayXtoYofZ(" a "," de ") resultado(s).
+<div class="pagination pull-right">
+    @views.html.helpers.paginador(paginador, controllers.compras.routes.AjustesSolicitudesController.index())
+</div>
+
+
+</div>
+
+<script>
+$( function(){
+	/**
+	 * Ventana de carga linea de Ajuste en solicitudes
+	 */
+	 
+	var contenedor = $("#listaLineaAjustes");
+
+	contenedor.on('click', '#nuevoAjuste', function(){
+		urlContenidoModal = '/compras/ajuste-solicitud/crear?solicitudId='+$('#solicitudId').val();
+		mostrarModal(urlContenidoModal);
+		return false;
+	});
+	
+	contenedor.on('click', '.eliminarAjuste', function(){
+		var url = $(this).attr('href');
+		$this = $(this);
+		$.get(url, function(data){
+			if(data.success){
+				$this.closest("tr").remove();
+			} else {
+				alert("No se puedo eliminar el registro.");
+			}
+		});
+		return false;
+	});
+	
+	function mostrarModal(url){
+		modalCargaAjustes = $('<div></div>').dialog({
+			resizable: false,
+		    title: "Cargar Ajuste",
+		    height: 500,
+		    width: 750,
+		    modal: true,
+		    open: function( event, ui ) {
+				$.get(url, function(data){
+					modalCargaAjustes.html(data);
+				});
+		    },
+		    close: function(event, ui ){
+		    	modalCargaAjustes.dialog('destroy');
+			}
+		  });
+		
+		modalCargaAjustes.on('click', '.cancelar', function(){
+			modalCargaAjustes.dialog('destroy');
+			return false;
+		});
+		
+		modalCargaAjustes.on('submit', function(e){
+			var href = $(e.target).attr('action');
+			var data = $(e.target).serialize();
+			
+			$("#btn-guardar-linea-ajuste-solicitudes").attr("disabled", true);
+			
+			$.post(href, data, function(resultado){
+				if(resultado.success && resultado.nuevo){
+					$('#listaDeAjustes').removeClass('hide');
+					$('#mensaje').remove();
+					$('#listaDeAjustes tbody').prepend(resultado.html);
+					modalCargaAjustes.dialog( "destroy" );
+				} else if(resultado.success && resultado.modificar){
+					$(resultado.html).insertAfter(lineaAjusteParaEditar);
+					lineaAjusteParaEditar.remove();
+					modalCargaAjustes.dialog( "destroy" );
+				} else {
+					modalCargaAjustes.html(resultado);
+				}
+				$("#btn-guardar-linea-ajuste-solicitudes").attr("disabled",false);
+			});
+			return false;
+		});
+		return modalCargaAjustes;
+	}
+	
+	
+	contenedor.find('form').on('submit', function(){
+		var url = $(this).attr("action");
+		var query = $(this).serialize();
+		$.get(url+"?"+query, function(data){
+			contenedor.parent().html(data);
+		});
+		return false;
+	});
+});
+</script>

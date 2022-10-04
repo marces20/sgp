@@ -1,0 +1,147 @@
+@(certificacionForm: Form[Certificacion], certificacion: Certificacion, paginadorFicha: utils.pagination.PaginadorFicha)
+@import utils._
+@import helper._
+@implicitFieldConstructor = @{ FieldConstructor(simpleInput.render) } 
+
+@paginadorFicha.setActual(certificacion.id.toString)
+@views.html.compras.mainCompras("Vista de certificacion Personal") {
+	<div class="page-header">
+		<div class="row">
+			<div class="col-sm-7">
+				<h1>Vista de certificacion Personal</h1>
+			</div>
+			<div class="col-sm-5">
+				<div class="dropdown pull-right">
+				 <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown">
+				 	<i class="glyphicon glyphicon-list-alt"></i>
+				    Reportes
+				    <span class="caret"></span>
+				  </button>
+				  <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
+				    
+				  </ul>
+				</div>
+				
+				<div class="dropdown pull-right btn-header">
+				 <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown">
+				 	<i class="glyphicon glyphicon-cog"></i>
+				    Acciones
+				    <span class="caret"></span>
+				  </button>
+				  <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
+				  	
+				  </ul>
+				</div>
+
+			</div>
+		</div>
+	</div>
+	
+@views.html.tags.successError()
+
+<div class="row menu-acciones">
+	<div class="col-sm-5">
+		<a href="@controllers.compras.routes.CertificacionesController.crear()@UriTrack.get("?")"  class="btn btn-default"><i class="glyphicon glyphicon-plus-sign"></i> Nuevo</a>
+		<a href="@controllers.compras.routes.CertificacionesController.editar(certificacion.id)@UriTrack.get("&")"  class="btn btn-default"><i class="glyphicon glyphicon-edit"></i> Editar</a>
+		<a href="@controllers.compras.routes.CertificacionesController.duplicar(certificacion.id)@UriTrack.get("&")"  class="btn btn-default"><i class="glyphicon glyphicon-subtitles"></i> Duplicar</a>
+		<a href="@controllers.compras.routes.CertificacionesController.eliminar(certificacion.id)@UriTrack.get("&")"  class="btn btn-default delete-confirm-link"><i class="glyphicon glyphicon-trash icono-eliminar"></i> Eliminar</a>
+	</div>
+	<div class="col-sm-4">
+		@if(certificacionForm("tipoCuenta").value != null){
+			<span style="color:red;font-size: 25px;font-weight: bold;">@certificacionForm("tipoCuenta.nombre").value</span>
+		}
+	</div>
+	<div class="col-sm-3">
+		<a href="@UriTrack.getOnNull(controllers.compras.routes.CertificacionesController.index().absoluteURL())" class="btn btn-default"><i class="glyphicon glyphicon-list"></i></a>
+		
+		@if(paginadorFicha.getLista().size() > 1){
+
+		<div class="btn-group">
+			@if(paginadorFicha.hasPrev()) {
+				<a  role="group" href="@controllers.compras.routes.CertificacionesController.ver(paginadorFicha.prev().toLong)@UriTrack.get("&")" class="btn btn-default"><i class="glyphicon glyphicon-chevron-left"></i></a>
+			}
+			<p style="padding-top: 3px" href=""  role="group" class="btn btn-default">@paginadorFicha.posicionActual() de @paginadorFicha.getLista().size()</p>
+			@if(paginadorFicha.hasNext()) {
+				<a  role="group" href="@controllers.compras.routes.CertificacionesController.ver(paginadorFicha.next().toLong)@UriTrack.get("&")" class="btn btn-default"><i class="glyphicon glyphicon-chevron-right"></i></a>
+			}  
+		</div>
+		}
+		
+	</div>
+</div>
+	<div class="row">
+		<div class="col-sm-2">
+			<label class="control-label">Referencia</label>
+			<p class="form-control-static form-control">@certificacion.nombre</p>
+		</div>
+		<div class="col-sm-4">
+			<label class="control-label">Proveedor</label> 
+			<p class="form-control-static form-control" style="height: 25px; overflow: hidden;">
+			<a href="#" class="infoProveedor" data-url="@controllers.compras.routes.ProveedoresAccionesController.modalInformacionProveedor(certificacion.proveedor.id)">
+					@certificacionForm("proveedor.nombre").value
+				</a>
+			</p>
+		</div>
+		<div class="col-sm-2">
+			<label>Expediente</label> 
+			<p class="form-control-static form-control">@certificacionForm("expediente.expedienteEjercicio").value</p>
+		</div>
+		<div class="col-sm-2">
+			<label class="control-label">Periodo</label>
+			<p class="form-control-static form-control">@certificacionForm("periodo.nombre").value</p>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-sm-2">
+			<label>Orden de Compras</label>
+			<p class="form-control-static form-control">@if(certificacion.orden != null){@certificacionForm("orden.nombre").value}</p>
+		</div>
+		<div class="col-sm-2">
+			<label class="control-label">Fecha certificacion</label>
+			<p class="form-control-static form-control">@certificacionForm("fecha_certificacion").value</p>
+		</div>
+		<div class="col-sm-2">
+			 <label class="control-label">Tipo Cuenta</label>
+			<p class="form-control-static form-control">@if(certificacion.tipoCuenta != null){@certificacion.tipoCuenta.nombre}</p>
+		</div>
+		<div class="col-sm-2">
+			<div class="checkbox">
+				<label class="control-label">Creacion Automatica
+				@checkbox(certificacionForm("creacion_automatica"), 'disabled -> "disabled")</label> 
+			</div>
+		</div>
+	</div>	
+	
+	@views.html.compras.certificaciones.tabsCertificacion(false, certificacionForm)
+	<h4>Base: 	   <b>@utils.NumberUtils.moneda(certificacion.getBase())</b></h4>	
+	<h4>Descuento: <b>@utils.NumberUtils.moneda(certificacion.getDescuento())</b></h4>	
+	<h4>Total: 	   <b>@utils.NumberUtils.moneda(certificacion.getTotal())</b></h4>	
+	<h4>Estado actual: 	<b>@certificacion.estado.nombre</b></h4>
+	<div class="row margin-bottom-25">	
+		@for(estado <- models.Estado.getSiguienteEstadoPorAprobar(certificacion.estado.orden,models.Estado.TIPO_CERTIFICACION)) {	
+			@if(estado.orden <= 4) {
+				<div class="col-sm-3">
+					<a href="@controllers.compras.routes.CertificacionesController.cambiarEstado(certificacionForm.field("id").value.toInt, estado.id.toLong)@UriTrack.get("&")" class="btn btn-default">
+						<i class="glyphicon glyphicon-arrow-right"></i> @estado.nombre
+					</a>
+				</div>
+				
+			}
+		}
+		@if(certificacion.estado.id == models.Estado.CERTIFICACION_ESTADO_CANCELADO) {
+			<div class="col-sm-3">
+				<a href="@controllers.compras.routes.CertificacionesController.cambiarEstado(certificacionForm.field("id").value.toInt, models.Estado.CERTIFICACION_ESTADO_BORRADOR)@UriTrack.get("&")" class="btn btn-default">
+					<i class="glyphicon glyphicon-arrow-right"></i> Volver a Borrador
+				</a>
+			</div>
+		}else{
+			<div class="col-sm-3">
+				<a href="@controllers.compras.routes.CertificacionesController.cambiarEstado(certificacionForm.field("id").value.toInt, models.Estado.CERTIFICACION_ESTADO_CANCELADO)@UriTrack.get("&")" class="btn btn-default">
+					<i class="glyphicon glyphicon-minus-sign"></i> Cancelar Certificacion
+				</a>
+			</div>
+		}
+	</div>
+}
+
+

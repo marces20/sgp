@@ -1,0 +1,117 @@
+@(provForm: Form[Proveedor],proveedor:Proveedor)
+@import helper._
+@implicitFieldConstructor = @{ FieldConstructor(simpleInput.render) } 
+@views.html.compras.mainCompras("Ver proveedor") {
+<div class="page-header">
+	<div class="row">
+		<div class="col-sm-9">
+			<h1>Ver proveedor</h1>
+		</div>
+		
+		<div class="col-sm-3">
+			<a href="@controllers.compras.routes.ProveedoresController.crear"  class="btn btn-default"><i class="glyphicon glyphicon-plus-sign"></i> Nuevo proveedor</a>
+			 
+		</div>
+	</div>
+</div>
+<div class="row menu-acciones">
+	<div class="col-sm-10">
+		<a href="@controllers.compras.routes.ProveedoresController.crear()"  class="btn btn-default"><i class="glyphicon glyphicon-plus-sign"></i> Nuevo</a>
+		<a href="@controllers.compras.routes.ProveedoresController.editar(proveedor.id)"  class="btn btn-default"><i class="glyphicon glyphicon-edit"></i> Editar</a>
+		<a href="@controllers.compras.routes.ProveedoresController.eliminar(proveedor.id)"  class="btn btn-default delete-confirm-link"><i class="glyphicon glyphicon-trash icono-eliminar"></i> Eliminar</a>
+	</div>
+	<div class="col-sm-2">
+		<a href="@controllers.compras.routes.ProveedoresController.index()" class="btn btn-default"><i class="glyphicon glyphicon-list"></i></a>
+	</div>
+</div>
+<div class="row">
+	<div class="col-sm-4">
+		<div class="form-group">
+			<label class="control-label">Nombre del proveedor</label>
+			<p class="form-control-static form-control">@provForm.field("nombre").value</p>
+		</div>
+	</div>
+	<div class="col-sm-3">
+		<div class="form-group">
+			<label class="control-label">Referencia</label>
+			<p class="form-control-static form-control">@provForm.field("referencia").value</p>
+		</div>
+	</div>
+
+	<div class="col-sm-4">
+		<div class="form-group">
+			<label class="control-label">Agente</label>
+			<p class="form-control-static form-control">@provForm.field("agente.apellido").value</p>
+		</div>
+	</div>
+</div>
+<div class="row">
+	<div class="col-sm-2">
+		<div class="form-group">
+			<label class="control-label">Cuit</label>
+			<p class="form-control-static form-control">@provForm.field("cuit").value</p>
+		</div>
+	</div>	
+	<div class="col-sm-2">
+		<div class="form-group">
+			<label class="control-label">DNI</label>
+			<p class="form-control-static form-control">@provForm.field("dni").value</p>
+		</div>
+	</div>		
+		
+	
+	
+	<div class="col-sm-2">
+		<div class="form-group">
+			<label class="control-label">Fecha vencimiento 322</label>
+			<p class="form-control-static form-control">@provForm.field("fecha_vencimiento_322").value</p>
+		</div>
+	</div>
+	<div class="col-sm-3">
+		<div class="form-group">
+			<label class="control-label">Proveedor Padre</label>
+			<p class="form-control-static form-control">@provForm.field("proveedor_padre.nombre").value</p>
+		</div>
+	</div>
+	
+</div>	
+<div class="row">
+	<div class="col-sm-2">
+		<div class="form-group">
+			<label class="control-label">Número de inscripción</label>
+			<p class="form-control-static form-control">@provForm.field("numero_inscripcion").value</p>
+		</div>
+	</div>
+	<div class="col-sm-offset-1  col-sm-2">
+		<div class="checkbox">
+			<label for="activo" class="control-label"> @checkbox(provForm("activo"), 'disabled -> "disabled") Activo</label>
+		</div>
+	</div>
+	
+	<div class="col-sm-offset-1  col-sm-2">
+		<div class="checkbox">
+			<label for="activo" class="control-label"> @checkbox(provForm("oficio"), 'disabled -> "disabled") Oficio</label>
+		</div>
+	</div>
+	
+</div>	
+	
+<ul class="nav nav-tabs">
+  <li class="active"><a href="#contenedorDirecciones" data-toggle="tab">Contactos del proveedor</a></li>
+  <li><a href="#contenedorObservaciones" data-toggle="tab">Observaciones</a></li>
+</ul>
+
+<div class="tab-content">
+	<div class="tab-pane active" id="contenedorDirecciones">
+		@if(provForm("id").value != null){
+			@views.html.compras.proveedores.contacto_proveedor(provForm,true) 
+		}
+	</div>
+	<div class="tab-pane" id="contenedorObservaciones">
+		<p class="form-control-static form-control">@provForm.field("observaciones").value</p>
+	</div>
+	
+</div>
+<br>
+@views.html.compras.proveedores.tabsAtributos(provForm, false)
+}

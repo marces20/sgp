@@ -1,0 +1,114 @@
+@(numeros: Map[String, List[Integer]], porcentajes: Map[String, List[Double]])
+@import helper._
+
+
+@views.html.dashboard.mainDashboard("Informes de profesionales médicos") {
+
+	
+	<div class="page-header">
+		<div class="row">
+			<div class="col-sm-7">
+				<h1>Rango etarios de profesionales médicos</h1>
+			</div>
+		</div>
+	</div>
+	
+	<style>
+	table {width: 500px}
+	table thead {padding: 20px; font-size: 16px}
+	table td {text-align: right}
+	</style>
+	
+	<table class="table-bordered">
+		<thead>
+			<tr>
+				<th colspan="5">Rango etario de Profesionales Médicos Del Parque de la Salud</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr>
+				<th></th>
+				<th>Menores de 35</th>
+				<th>Entre 36 y 45</th>
+				<th>Entre 46 y 55</th>
+				<th>Mayores de 55</th>
+			</tr>
+			<tr>
+				<th>Q</th>
+				<td>@numeros.get("parque").get(0)</td>
+				<td>@numeros.get("parque").get(1)</td>
+				<td>@numeros.get("parque").get(2)</td>
+				<td>@numeros.get("parque").get(3)</td>
+			</tr>
+			<tr>
+				<th>%</th>
+				<td>@porcentajes.get("parque").get(0)</td>
+				<td>@porcentajes.get("parque").get(1)</td>
+				<td>@porcentajes.get("parque").get(2)</td>
+				<td>@porcentajes.get("parque").get(3)</td>
+			</tr>
+		</tbody>
+	</table>
+	<br /><br />
+	<table class="table-bordered">
+		<thead>
+			<tr>
+				<th colspan="5">Rango etario de Profesionales Médicos Convenio Ministerio</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr>
+				<th></th>
+				<th>Menores de 35</th>
+				<th>Entre 36 y 45</th>
+				<th>Entre 46 y 55</th>
+				<th>Mayores de 55</th>
+			</tr>
+			<tr>
+				<th>Q</th>
+				<td>@numeros.get("ministerio").get(0)</td>
+				<td>@numeros.get("ministerio").get(1)</td>
+				<td>@numeros.get("ministerio").get(2)</td>
+				<td>@numeros.get("ministerio").get(3)</td>
+			</tr>
+			<tr>
+				<th>%</th>
+				<td>@porcentajes.get("ministerio").get(0)</td>
+				<td>@porcentajes.get("ministerio").get(1)</td>
+				<td>@porcentajes.get("ministerio").get(2)</td>
+				<td>@porcentajes.get("ministerio").get(3)</td>
+			</tr>
+		</tbody>
+	</table>
+	<br /><br />
+	<table class="table-bordered">
+		<thead>
+			<tr>
+				<th colspan="5">Rango etario de Profesionales Médicos Total General</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr>
+				<th></th>
+				<th>Menores de 35</th>
+				<th>Entre 36 y 45</th>
+				<th>Entre 46 y 55</th>
+				<th>Mayores de 55</th>
+			</tr>
+			<tr>
+				<th>Q</th>
+				<td>@numeros.get("totales").get(0)</td>
+				<td>@numeros.get("totales").get(1)</td>
+				<td>@numeros.get("totales").get(2)</td>
+				<td>@numeros.get("totales").get(3)</td>
+			</tr>
+			<tr>
+				<th>%</th>
+				<td>@porcentajes.get("totales").get(0)</td>
+				<td>@porcentajes.get("totales").get(1)</td>
+				<td>@porcentajes.get("totales").get(2)</td>
+				<td>@porcentajes.get("totales").get(3)</td>
+			</tr>
+		</tbody>
+	</table>
+}

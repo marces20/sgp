@@ -1,0 +1,23 @@
+@(recepcionForm: Form[Recepcion])
+@import helper._
+@import utils._
+@implicitFieldConstructor = @{ FieldConstructor(simpleInput.render) } 
+    
+@views.html.patrimonio.mainPatrimonio("Editar recepción") {
+
+	<div class="page-header">
+		<div class="row">
+			<div class="col-sm-10">
+				<h1>Editar recepción</h1>
+			</div>
+			
+			 
+		</div>
+	</div>
+	 
+    
+	@helper.form(action = controllers.patrimonio.routes.RecepcionesController.actualizar(), 'id -> "formEditarRecepcion") {
+		@views.html.patrimonio.recepciones.formRecepciones(recepcionForm) 
+	}
+	
+}

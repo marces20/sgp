@@ -1,0 +1,328 @@
+@(solicitudForm: Form[Solicitud],solicitud:Solicitud,searchIndex:String, paginadorFicha: utils.pagination.PaginadorFicha)
+@import helper._
+@import utils._
+@import models.auth._
+@implicitFieldConstructor = @{ FieldConstructor(simpleInput.render) } 
+@paginadorFicha.setActual(solicitud.id.toString)
+@scripts = {
+	<script src="@routes.Assets.at("javascripts/compras/solicitudes.js")" type="text/javascript"></script>
+}
+
+@views.html.compras.mainCompras("Vista Solicitud", scripts) {
+	<div class="page-header">
+		<div class="row">
+			<div class="col-sm-7">
+				<h1>Vista de solicitud @if(solicitud.expediente != null){@if(solicitud.expediente.emergencia){<span style="color:red;font-weight: bold;font-size:14px; ">(Emergencia Sanitaria)</span>}}</h1>
+			</div>
+			<div class="col-sm-5">
+			 	<div class="dropdown pull-right">
+				 <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown">
+				 	<i class="glyphicon glyphicon-list-alt"></i>
+				    Reportes
+				    <span class="caret"></span>
+				  </button>
+				  <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
+				  	@if(!Permiso.check("noVerPrecios")) {
+					    <li role="presentation" class="disabled"><a role="menuitem" tabindex="-1" href="#">Solicitud de compra</a></li>
+					    @if(Permiso.check("solicitudesVerReporteImputacionPreventva")) {
+					    	<li role="presentation"><a role="menuitem" tabindex="-1" href="@controllers.compras.routes.SolicitudesReportesController.reporteImputacionPreventiva(solicitudForm.field("id").value.toLong)">Imputaci&oacute;n preventiva</a></li>
+					    }
+					     @if(Permiso.check("solicitudesReportePedidoAbastecimiento")) {
+					    	<li role="presentation"><a role="menuitem" tabindex="-1" href="@controllers.compras.routes.SolicitudesReportesController.reportePedidoAbastecimiento(solicitudForm.field("id").value.toLong)">Pedido Abastecimiento</a></li>
+					    }
+					    <li role="presentation" class="disabled"><a role="menuitem" tabindex="-1" href="#">Exportaci&oacute;n de lineas</a></li>
+					    <li role="presentation" class="disabled"><a role="menuitem" tabindex="-1" href="#">Informe de ajuste preventiva</a></li>
+				  	}
+				  </ul>
+				</div>
+				<div class="dropdown pull-right btn-header">
+					<button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown"> <i class="glyphicon glyphicon-cog"></i> Acciones <span class="caret"></span> </button>
+					<ul class="dropdown-menu">
+				 	@if(Permiso.check("solicitudesModificarPaciente")) {
+				    	<li role="presentation">
+				    	<a role="menuitem" tabindex="-1" href="#" id="modificarPaciente" data-url="@controllers.compras.routes.SolicitudAccionesController.modalModificarPaciente(solicitudForm.field("id").value.toLong)">Modificar Paciente</a></li>
+				    }
+				    @if(Permiso.check("asignarUsuarios")) {
+				    	<li role="presentation">
+				    	<a role="menuitem" tabindex="-1" href="#" id="asignarUsuario" 
+				    		data-url="@controllers.compras.routes.SolicitudAccionesController.modalAsignarUsuario(solicitudForm.field("id").value.toLong)">Asignar Usuario</a></li>
+					}
+					</ul>
+				</div>
+				<div class="pull-right btn-header">
+					<a href="@controllers.compras.routes.SolicitudesController.crearSolicitud(searchIndex)"  class="btn btn-default"><i class="glyphicon glyphicon-plus-sign"></i> Nueva Solicitud</a>
+				</div>
+			</div> 
+		</div>
+	</div>
+	
+
+	
+	
+@views.html.tags.successError()
+
+	<div class="row menu-acciones">
+		<div class="col-sm-5">
+			<a href="@controllers.compras.routes.SolicitudesController.crearSolicitud(searchIndex)"  class="btn btn-default"><i class="glyphicon glyphicon-plus-sign"></i> Nuevo</a>
+			<a href="@controllers.compras.routes.SolicitudesController.editar(solicitudForm.field("id").value.toLong,searchIndex)"  class="btn btn-default"><i class="glyphicon glyphicon-edit"></i> Editar</a>
+			@if(Permiso.check("solicitudesDuplicar")) {
+				<a href="@controllers.compras.routes.SolicitudesController.duplicar(solicitudForm.field("id").value.toLong,searchIndex)"  class="btn btn-default"><i class="glyphicon glyphicon-subtitles"></i> Duplicar</a>
+			}
+			<a href="@controllers.compras.routes.SolicitudesController.eliminar(solicitudForm.field("id").value.toLong,searchIndex)"  class="btn btn-default delete-confirm-link"><i class="glyphicon glyphicon-trash icono-eliminar"></i> Eliminar</a>
+		</div>
+		<div class="col-sm-4">
+			@if(solicitudForm("asignacion_usuario_id").value != null){
+				<span style="color:red;font-size: 15px;font-weight: bold;">@solicitudForm("asignacion_usuario.nombre").value</span>
+			}
+		</div>
+		<div class="col-sm-3">
+			<a href="@controllers.compras.routes.SolicitudesController.redirectSearchIndex(searchIndex)" class="btn btn-default"><i class="glyphicon glyphicon-list"></i></a>
+			
+		@if(paginadorFicha.getLista().size() > 1){
+		<div class="btn-group">
+			@if(paginadorFicha.hasPrev()) {
+				<a  role="group" href="@controllers.compras.routes.SolicitudesController.ver(paginadorFicha.prev().toLong, searchIndex)@UriTrack.get("&")" class="btn btn-default"><i class="glyphicon glyphicon-chevron-left"></i></a>
+			} else {
+				<a  role="group" href="" class="btn btn-default disabled"><i class="glyphicon glyphicon-chevron-left"></i></a>
+			}
+			<p style="padding-top: 3px" href=""  role="group" class="btn btn-default">@paginadorFicha.posicionActual() de @paginadorFicha.getLista().size()</p>
+			@if(paginadorFicha.hasNext()) {
+				<a  role="group" href="@controllers.compras.routes.SolicitudesController.ver(paginadorFicha.next().toLong, searchIndex)@UriTrack.get("&")" class="btn btn-default"><i class="glyphicon glyphicon-chevron-right"></i></a>
+			} else {
+				<a  role="group" href="" class="btn btn-default disabled"><i class="glyphicon glyphicon-chevron-right"></i></a>
+			} 
+		</div>
+		}
+			
+		</div>
+		
+
+		
+	</div>
+	 
+	<input type="hidden" name="solicitudId" id="solicitudId" value="@solicitud.id"/>
+	<div class="row">
+		<div class="col-sm-2">
+			<div class="form-group">
+				<label class="control-label">Referencia</label>
+				<p class="form-control-static form-control">@solicitud.referencia</p>
+			</div>
+		</div>
+		
+		<div class="col-sm-3">
+			<label for="solicitante" class="control-label">Solicitante</label> 
+			<p class="form-control-static form-control">@if(solicitud.solicitante != null){@solicitud.solicitante.apellido}</p>
+		</div>
+		
+		<div class="col-sm-3">
+			<label for="servicio" class="control-label">Servicio</label>
+			<p class="form-control-static form-control">@if(solicitud.departamento != null){@solicitud.departamento.nombre}</p>
+		</div>
+		
+		<!-- <div class="col-sm-3">
+			<div class="form-group">
+				<label for="@solicitudForm("dirigida").id" class="control-label">Dirigido a</label>
+				<p class="form-control-static form-control">
+				@solicitud.dirigida match {
+				    case "compras" => {A Compras}
+				    case "patrimonio" => {A Patrimonio}
+				    case _ => {}
+				}
+				</p>
+			</div>
+		</div> -->
+		<div class="col-sm-3">
+			<div class="form-group">
+				<label for="inputDeposito" class="control-label">Institucion</label> 
+				<p class="form-control-static form-control">@if(solicitud.deposito != null){@solicitud.deposito.nombre}</p>
+			</div>
+		</div>
+	</div>
+	<div class="row">
+	
+		<div class="col-sm-2">
+			<div class="form-group">
+				<label class="control-label">Expediente</label>
+					<p class="form-control-static form-control">@if(solicitud.expediente != null){@solicitud.expediente.getExpedienteEjercicio()}</p>
+			</div>
+		</div>
+		
+		<div class="col-sm-3">
+			<div class="form-group">
+				<label for="inputCliente" class="control-label">
+					Paciente
+				</label>
+				<p class="form-control-static form-control" id="pacienteVer">
+				@if(solicitud.cliente != null){@solicitud.cliente.nombre}
+				</p>
+			</div>
+		</div>
+
+		<!-- <div class="col-sm-3">
+			<div class="form-group">
+				<label for="inputOrigen" class="control-label">Médico</label> 
+				<p class="form-control-static form-control">@solicitud.origen</p>
+			</div>
+		</div> -->
+		<div class="col-sm-3">
+			<div class="form-group">
+				<label for="inputMedico" class="control-label">Médico Solicitante</label> 
+				<p class="form-control-static form-control">@if(solicitud.medico != null){@solicitud.medico.apellido}</p>
+			</div>
+		</div>
+		<div class="col-sm-3">
+			<div class="form-group">
+				<label for="prioridad" class="control-label">Prioridad</label>
+				<p class="form-control-static form-control">
+					@solicitud.prioridad match {
+				    	case "baja" => {Baja}
+				    	case "media" => {Media}
+				    	case "alta" => {Alta}
+				    	case _ => {}
+					}
+				</p>
+			</div>
+		</div>
+	</div>
+	
+	<div class="row">
+		
+		<div class="col-sm-2">
+			<div class="form-group">
+				<label for="inputFechaStart" class="control-label">Fecha Solicitud</label> 
+				<p class="form-control-static form-control">@solicitudForm("date_start").value</p>
+			</div>
+		</div>
+		
+		<!-- <div class="col-sm-2">
+			<div class="form-group">
+				<label for="inputFechaEnd" class="control-label">Fecha Límite</label> 
+				<p class="form-control-static form-control">@solicitud.date_end</p>
+			</div>
+		</div> -->
+		<div class="col-sm-3">
+			<div class="col-sm-6">
+				<div class="form-group">
+					<label for="inputFechaImputacion" class="control-label">Fecha imp. preventiva</label> 
+					<p class="form-control-static form-control date">@solicitudForm("fecha_imputacion").value</p>
+				</div>
+			</div>
+			 
+			<div class="col-sm-6">
+				<div class="form-group">
+					<label class="control-label">Pedido Rismi</label>
+					<p class="form-control-static form-control">@solicitud.pedido_rismi_id</p>
+				</div>
+			</div>
+		</div>
+		<div class="col-sm-2">
+			<div class="form-group">
+				<label for="tipo_cuenta" class="control-label">Tipo Cuenta</label>
+				<p class="form-control-static form-control">
+					@if(solicitud.tipoCuenta != null){
+						@solicitud.tipoCuenta.nombre
+					}
+				</p>
+			</div>
+		</div>
+		
+		<div class="col-sm-3">
+			<!-- <div class="col-sm-4">
+				<div class="checkbox">
+					<label>
+						Profe @checkbox(solicitudForm("profe"), 'disabled -> "disabled")
+					</label>
+				</div> 
+			</div> -->
+			<div class="col-sm-4">
+				<div class="checkbox">
+					<label>
+						Repo Stock @checkbox(solicitudForm("repo_stock"), 'disabled -> "disabled")
+					</label>
+				</div> 
+			</div>
+			<div class="col-sm-4">
+				<div class="checkbox">
+					<label>
+						Recuperable Profe @checkbox(solicitudForm("recuperable"), 'disabled -> "disabled")
+					</label>
+				</div> 
+			</div>
+			<div class="col-sm-4">
+				<div class="checkbox">
+					<label>
+						Entregado @checkbox(solicitudForm("entregado"), 'disabled -> "disabled")
+					</label>
+				</div> 
+			</div>
+		</div>
+		
+		
+		
+	</div>
+
+	@views.html.compras.solicitudes.tabsSolicitud(false, solicitudForm)
+	@if(!Permiso.check("noVerPrecios")) {
+	<h4>Base: 	<b>@utils.NumberUtils.moneda(solicitud.total)</b></h4>	
+	<h4>Total Ajuste: 	<b>@utils.NumberUtils.moneda(solicitud.totalAjuste)</b></h4>
+	<h4>Total: 	<b>@utils.NumberUtils.moneda(solicitud.getTotalTotal())</b></h4>
+	}
+	<h4>Estado actual: 	<b>@solicitud.estado.nombre</b></h4>
+	
+	<div class="row margin-bottom-25">	
+		@for(estado <- models.Estado.getSiguienteEstadoPorAprobar(solicitud.estado.orden,models.Estado.TIPO_SOLICITUD)) {	
+			@if(estado.orden <= 7) {
+				@if(Permiso.check("verTodasLasSolicitudes") && solicitud.create_usuario.departamento_id == null){
+					@if(solicitud.estado_id == Estado.SOLICITUD_ESTADO_ENCURSO){
+						<div class="col-sm-3">
+							<a href="@controllers.compras.routes.SolicitudesController.cambiarEstado(solicitudForm.field("id").value.toInt, Estado.SOLICITUD_ESTADO_PREAPROBADO ,searchIndex)" class="btn btn-default btn-disable-onclick">
+								<i class="glyphicon glyphicon-arrow-right"></i> Pasar a preaprobado
+							</a>
+						</div>
+					}else{
+						@if(solicitud.estado_id == Estado.SOLICITUD_ESTADO_PREAPROBADO){
+							<div class="col-sm-3">
+								<a href="@controllers.compras.routes.SolicitudesController.cambiarEstado(solicitudForm.field("id").value.toInt, Estado.SOLICITUD_ESTADO_ADMINISTRACION ,searchIndex)" class="btn btn-default btn-disable-onclick">
+									<i class="glyphicon glyphicon-arrow-right"></i> Aprobado por Administración
+								</a>
+							</div>
+						}else{
+							<div class="col-sm-3">
+								<a href="@controllers.compras.routes.SolicitudesController.cambiarEstado(solicitudForm.field("id").value.toInt, estado.id.toLong,searchIndex)" class="btn btn-default btn-disable-onclick">
+									<i class="glyphicon glyphicon-arrow-right"></i> @estado.nombre
+								</a>
+							</div>
+						}
+					}
+				}else{
+					<div class="col-sm-3">
+						<a href="@controllers.compras.routes.SolicitudesController.cambiarEstado(solicitudForm.field("id").value.toInt, estado.id.toLong,searchIndex)" class="btn btn-default btn-disable-onclick">
+							<i class="glyphicon glyphicon-arrow-right"></i> @estado.nombre
+						</a>
+					</div>
+				}
+			}
+		}
+		@if(solicitud.estado.id == models.Estado.SOLICITUD_ESTADO_CANCELADO) {
+			<div class="col-sm-3">
+				<a href="@controllers.compras.routes.SolicitudesController.cambiarEstado(solicitudForm.field("id").value.toInt, models.Estado.SOLICITUD_ESTADO_BORRADOR,searchIndex)" class="btn btn-default btn-disable-onclick">
+					<i class="glyphicon glyphicon-arrow-right"></i> Volver a Borrador
+				</a>
+			</div>
+		}else{
+			<div class="col-sm-3">
+				<a href="@controllers.compras.routes.SolicitudesController.cambiarEstado(solicitudForm.field("id").value.toInt, models.Estado.SOLICITUD_ESTADO_CANCELADO,searchIndex)" class="btn btn-default btn-disable-onclick">
+					<i class="glyphicon glyphicon-minus-sign"></i> Cancelar Solicitud
+				</a>
+			</div>
+		}	 
+		
+		@if(solicitud.estado.id != models.Estado.SOLICITUD_ESTADO_RESERVADO && Permiso.check("solicitudesPasarReservado") ) {
+			<div class="col-sm-3">
+				<a href="@controllers.compras.routes.SolicitudesController.cambiarEstado(solicitudForm.field("id").value.toInt, models.Estado.SOLICITUD_ESTADO_RESERVADO,searchIndex)" class="btn btn-default btn-disable-onclick">
+					<i class="glyphicon glyphicon-registration-mark"></i> Reservado/Stock
+				</a>
+			</div>
+		}
+	</div>
+}

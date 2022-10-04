@@ -1,0 +1,15 @@
+@(agente:Agente,formularioCarga: Boolean,tipoLicencia:Long)
+
+@import java.util.List
+
+<script>
+	$( function (){
+		$.get('@controllers.rrhh.routes.AgentesAsistenciasLicenciasController.index(agente.id, formularioCarga,tipoLicencia)', function(data){
+			$('#listaLicencias').parent().html(data);
+		})
+	});
+</script>
+
+<div id="listaLicencias">
+
+</div>

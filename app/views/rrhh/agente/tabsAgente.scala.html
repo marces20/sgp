@@ -1,0 +1,62 @@
+@(formularioCarga: Boolean, agenteForm: Form[Agente] = null,agente:Agente,pl:List[models.haberes.PuestoLaboral])
+ 
+<div class="row">
+	<div class="col-sm-12">
+		<hr>
+		<h3>Datos Estudios</h3>
+	</div>
+</div>
+<div class="row">
+	<div class="col-sm-12">
+		@views.html.rrhh.agente.contenidoTabEstudio(formularioCarga, agenteForm, agente:Agente)
+	</div>
+</div>		
+<!-- <div class="row">
+	<div class="col-sm-12">
+		<hr>
+		<h3>Datos Hijos</h3>
+	</div>
+</div>
+<div class="row">
+	<div class="col-sm-12">
+		@views.html.rrhh.agente.contenidoTabHijo(formularioCarga, agenteForm, agente:Agente)
+	</div>
+</div>	 -->
+
+<div class="row">
+	<div class="col-sm-12">
+		<hr>
+		<h3>Datos Familiares</h3>
+	</div>
+</div>
+<div class="row">
+	<div class="col-sm-12">
+		@views.html.rrhh.agente.contenidoTabFamilia(formularioCarga, agenteForm, agente:Agente)
+	</div>
+</div>	
+
+<div class="row">
+	<div class="col-sm-12">
+		<hr>
+		<h3>Datos RUL</h3>
+	</div>
+</div>
+<div class="row">
+	<div class="col-sm-12">
+		@views.html.rrhh.agente.contenidoTabRul(formularioCarga, agenteForm, agente:Agente)
+	</div>
+</div>	
+
+@if(pl != null && pl.size() > 0){
+<div class="row">
+	<div class="col-sm-12">
+		<hr>
+		<h3>Datos Puestos Laborales</h3>
+	</div>
+</div>
+<div class="row">
+	<div class="col-sm-12">
+		@views.html.rrhh.agente.contenidoTabPuestoLaboral(formularioCarga, agenteForm, agente:Agente,pl)
+	</div>
+</div>
+}

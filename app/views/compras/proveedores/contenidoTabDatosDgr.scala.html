@@ -1,0 +1,21 @@
+@(formularioCarga: Boolean, provForm: Form[Proveedor] = null)
+@import java.util.List
+
+@if(provForm.field("id").value == null || provForm.field("id").value == ""){
+	<p><i class="glyphicon glyphicon-info-sign"></i> Para cargar datos dgr primero debe guardar el proveedor</p>
+} else {
+	@if(provForm.field("cuit").value != null && provForm.field("cuit").value != ""){
+		<script>
+			$( function (){
+				
+				$.get('@controllers.compras.routes.ProveedorDatosDgrController.index(provForm.field("cuit").value.toLong, formularioCarga)', function(data){
+					$('#listaDatosDgr').parent().html(data);
+				})
+			});
+		</script>
+	}
+}
+
+<div id="listaDatosDgr">
+
+</div>

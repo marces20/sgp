@@ -1,0 +1,85 @@
+@(formBuscador: DynamicForm,rowParque:List[com.avaje.ebean.SqlRow],rowConvenio:List[com.avaje.ebean.SqlRow],rowPlanta:List[com.avaje.ebean.SqlRow])
+@import helper._
+@import utils._
+@import models.auth._
+@implicitFieldConstructor = @{ FieldConstructor(simpleInput.render) }
+
+@views.html.dashboard.mainDashboard("Liquidaciones por Organigrama") {
+<script>
+$( function(){ $('.searchModal').modalSearch();})
+
+</script>
+<script src="@routes.Assets.at("javascripts/dashboard/liquidacionesPorProfesion.js")" type="text/javascript"></script>
+<div class="page-header">
+	<div class="row">
+		<div class="col-sm-7">
+			<h1>Liquidaciones por Organigrama</h1>
+		</div>
+		<div class="col-sm-5">
+			<div class="dropdown pull-right">
+			 <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown">
+			 	<i class="glyphicon glyphicon-list-alt"></i>
+			    Reportes
+			    <span class="caret"></span>
+			  </button>
+			  <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
+			  	<li><a tabindex="-1" href="#" id="liquidacionesPorOrganigramaReporte" data-url="@controllers.dashboard.routes.LiquidacionesReportesController.liquidacionesPorOrganigrama()">Exportar</a></li>
+			  </ul>
+			</div>
+		</div>
+	</div>
+</div>	
+@views.html.tags.successError()
+<div id="actions">
+	<form action="" method="GET">
+		<div class="row">
+			<form action="" id="formSearchLiquidacionesPorOrganigrama" method="GET">
+			<div class="col-sm-2">
+				<label for="inputPeriodo" class="control-label">Periodo</label> 
+				<div class="input-group">
+					@inputText(formBuscador("periodo"),'class -> "form-control",'id -> "periodo")
+					@inputText(formBuscador("periodo_id"),'hidden -> "hidden",'id -> "periodo_id")
+					<span class="input-group-addon">
+					<a href="#" class="searchModal"
+								id="searchPeriodo" 
+								data-title="Selección de Periodo" 
+								data-url="@controllers.contabilidad.routes.PeriodosController.modalBuscar()" 
+								data-height="650" 
+								data-width="700" 
+								data-listen="modal.seleccion.periodo.simple" 
+								data-label="#periodo" 
+								data-field="#periodo_id">
+						<i class="glyphicon glyphicon-search"></i>
+					</a>
+					</span>
+				</div>
+			</div>
+			
+			<div class="col-sm-4">
+				<label for="inputOrgranigrama" class="control-label">Departamento/Servicio</label> 
+				<div class="input-group">
+					@inputText(formBuscador("organigrama.nombre"),'class -> "form-control",'id -> "organigrama")
+					@inputText(formBuscador("organigrama_id"),'hidden -> "hidden",'id -> "organigrama_id")
+					<span class="input-group-addon">
+	                	<a href="#" id="searchOrganigrama" data-title="Selección de Departamento/Servicio" 
+	                				data-url="@controllers.administracion.routes.OrganigramasController.modalBuscarServicios()" 
+	                				data-height="650" data-width="700" 
+	                				data-listen="modal.seleccion.servicio.simple" 
+	                				data-label="#organigrama" data-field="#organigrama_id" /> <i class="glyphicon glyphicon-search"></i></a>
+	                </span>
+				</div>
+			</div>
+			<div class="col-sm-2">
+				<div class="form-group">
+				<label for="nombre" class="control-label">&nbsp;</label>
+				<button  class="form-control btn btn-primary"><i class="glyphicon glyphicon-search"></i> Buscar</button>
+				</div>
+			</div>
+			</form>
+		</div>
+	</form>
+</div>
+<hr>
+
+	@views.html.dashboard.liquidaciones.vistas.listaHaberesClasificacion(rowParque,rowConvenio,rowPlanta) 
+}

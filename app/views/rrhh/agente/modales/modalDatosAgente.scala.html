@@ -1,0 +1,12 @@
+@(url: String = null,formBuscador: DynamicForm)
+@import helper._
+@implicitFieldConstructor = @{ FieldConstructor(simpleInput.render) } 
+@views.html.tags.successError()
+@if(url) {
+	<div class="panel panel-default">
+		<div class="panel-body">
+	    	<i class="glyphicon glyphicon-save"></i> <a href="@controllers.contabilidad.routes.FacturasAccionesController.descargar322(url)">Descargar archivo de informe</a>
+		</div>
+	</div>
+}
+@flash().clear()	

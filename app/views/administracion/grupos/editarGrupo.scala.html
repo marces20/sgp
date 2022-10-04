@@ -1,0 +1,38 @@
+@(grupoForm: Form[Grupo])
+@import helper._
+@implicitFieldConstructor = @{ FieldConstructor(simpleInput.render) } 
+@views.html.administracion.mainAdministracion("Modificar grupo") {
+
+<div class="page-header">
+	<div class="row">
+		<div class="col-sm-9">
+			<h1>Editar usuario</h1>
+		</div>
+		
+		<div class="col-sm-3">
+			<a href="@controllers.administracion.routes.GruposController.crear"  class="btn btn-default"><i class="glyphicon glyphicon-plus-sign"></i> Nuevo grupo</a>
+			<a href="@controllers.administracion.routes.UsuariosController.index()" class="btn btn-default"><i class="glyphicon glyphicon-list"></i></a> 
+			<a href="#" class="btn btn-default"><i class="glyphicon glyphicon-align-justify"></i></a> 
+		</div>
+	</div>
+</div>
+
+    @if(flash.containsKey("error")) {
+		<div class="alert alert-danger">
+			<i class="glyphicon glyphicon-remove-sign"></i>  @flash.get("error")
+		</div>
+    }
+
+@helper.form(action = controllers.administracion.routes.GruposController.actualizar()) {
+	@inputText(grupoForm("id"), 'hidden -> "hidden")
+	@views.html.administracion.grupos.form(grupoForm)
+	<div class="row form-actions">
+	    <div class="col-lg-offset-4 col-lg-8">
+	      <a href="" class="btn btn-default">Cancelar</a>
+	      <button type="submit" class="btn btn-sistema">Editar</button>
+	    </div>
+	</div>
+}
+
+
+}

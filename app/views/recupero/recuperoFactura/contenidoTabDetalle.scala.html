@@ -1,0 +1,21 @@
+@(formularioCarga: Boolean, facturaForm: Form[models.recupero.RecuperoFactura] = null,factura:models.recupero.RecuperoFactura)
+
+<div class="panel panel-default">
+	<div class="panel-heading"><b>Detalles</b></div>
+	<div class="panel-body">
+	
+		<div class="row margin-bottom-25">
+			<div class="col-sm-12">
+				<h4>Base: 	<b>@if(factura.getBase() != null){@utils.NumberUtils.moneda(factura.getBase())}else{0,00}</b></h4>
+				<h4>Total: 	<b>@if(factura.getTotal() != null){@utils.NumberUtils.moneda(factura.getTotal())}else{0,00}</b></h4>
+				<h4>Total Notas Creditos: 	<b>@if(factura.getTotalNotaCredito() != null){@utils.NumberUtils.moneda(factura.getTotalNotaCredito())}else{0,00}</b></h4>
+				<h4>Saldo pendiente: 	<b>@if(factura.getSaldoPendiente() != null){@utils.NumberUtils.moneda(factura.getSaldoPendiente())}else{0,00}</b></h4>
+				
+				<h4>Estado: 
+					<b>@factura.estado.nombre</b>
+				</h4>
+			</div>
+		</div>
+
+	</div>
+</div>	

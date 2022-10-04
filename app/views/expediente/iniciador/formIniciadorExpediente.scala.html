@@ -1,0 +1,15 @@
+@(iniciadorExpedienteForm: Form[IniciadorExpediente])
+@import helper._
+@implicitFieldConstructor = @{ FieldConstructor(simpleInput.render) } 
+
+	<div class="row">
+		<div class="col-sm-4">
+			<div class="form-group @if(iniciadorExpedienteForm.error("nombre") != null) {has-error}else{has-required}">
+				<label for="inputNombre" class="control-label">Nombre</label> 
+				@inputText(iniciadorExpedienteForm("nombre"), 'class -> "form-control")
+				@iniciadorExpedienteForm("nombre").error.map{ error =>
+					<div class="text-error">@error.message</div>
+				}
+			</div>
+		</div>
+	</div>

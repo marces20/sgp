@@ -1,0 +1,18 @@
+@(ocForm: Form[OrdenPagoCircuito] = null)
+@import java.util.List
+
+@if(ocForm.field("id").value == null || ocForm.field("id").value == ""){
+	<p><i class="glyphicon glyphicon-info-sign"></i> Para cargar productos primero debe dar de alta la OP</p>
+} else {
+	<script>
+		$( function (){
+			$.get('@controllers.contabilidad.routes.OrdenesPagosCircuitosLineasController.index(ocForm.field("id").value.toLong)', function(data){
+				$('#listaLineaPagos').parent().html(data);
+			})
+		});
+	</script>
+}
+
+<div id="listaLineaPagos">
+
+</div>

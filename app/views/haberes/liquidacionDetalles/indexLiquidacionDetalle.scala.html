@@ -1,0 +1,131 @@
+@(paginador:  utils.pagination.Pagination[models.haberes.LiquidacionDetalle], editable: Boolean,lc:models.haberes.LiquidacionPuesto)
+@import helper._
+@import utils._
+@import models.auth._
+
+<div id="listaLiquidacionDetalles" class="contenedorPaginador ajaxPaginador">
+
+	<p>
+	
+		@if(editable && Permiso.check("liquidacionDetalleAgregar")){
+			<a class="btn btn-default btn-xs" href="#" id="nuevoLiquidacionDetalle"><i class="glyphicon glyphicon-plus"></i> Nuevo</a>	 	
+		}
+	</p>
+	
+	<table id="listaDeLiquidacionDetalles" class="table table-striped table-bordered">
+		<thead>
+			<tr>
+				<th class="accion-editar">#</th>
+				<th>Concepto</th>
+				<th style="text-align: center;">Cantidad</th>
+				<th style="text-align: center;">Haberes C/A</th>
+				<th style="text-align: center;">Haberes S/A</th>
+				<th style="text-align: center;">Descuentos</th>
+				<th></th>
+			<tr>	
+		</thead>
+		<tbody>
+		@for(detalle <- paginador.getList) {
+			@views.html.haberes.liquidacionDetalles.lineaLiquidacionDetalle(detalle, editable)
+		}
+		</tbody>
+		<tfoot>
+			@views.html.haberes.liquidacionDetalles.footFineaLiquidacionDetalle(lc)
+		</tfoot>
+		
+	</table>
+	
+	 
+</div>
+
+<script>
+$( function(){
+	/*
+	 * Ventana de carga linea de productos en ordenes
+	 */
+	 
+	var contenedor = $("#listaLiquidacionDetalles");
+
+	contenedor.on('click', '#nuevoLiquidacionDetalle', function(){
+		urlContenidoModal = '/haberes/liquidacion-detalle/crear?liquidacionPuestoId='+$('#liquidacionPuestoId').val();
+		mostrarModal(urlContenidoModal);
+		return false;
+	});
+	
+	contenedor.on('click', '.modificarLiquidacionDetalle', function(){
+		lineaParaEditar = $(this).closest('tr');
+		var modal = mostrarModal($(this).attr('href'));
+		modal.dialog('option', 'title', 'Editar Detalle');	
+		return false;
+	});
+	
+	contenedor.on('click', '.eliminarv', function(){
+		var url = $(this).attr('href');
+		var mensaje = "¿Confirma que desea eliminar el registro?";
+		if(confirm(mensaje)){
+			$this = $(this);
+			$.get(url, function(data){
+				if(data.success){
+					$this.closest("tr").remove();
+				} else {
+					alert("No se puedo eliminar el registro.");
+				}
+			});
+		}
+		return false;
+	});
+	
+	function mostrarModal(url){
+		modalCargaProductos = $('<div></div>').dialog({
+			resizable: false,
+		    title: "Cargar Detalle",
+		    height: 400,
+		    width: 750,
+		    modal: true,
+		    open: function( event, ui ) {
+				$.get(url, function(data){
+					modalCargaProductos.html(data);
+				});
+		    },
+		    close: function(event, ui ){
+		    	modalCargaProductos.dialog('destroy');
+			}
+		  });
+		
+		modalCargaProductos.on('click', '.cancelar', function(){
+			modalCargaProductos.dialog('destroy');
+			return false;
+		});
+		
+		modalCargaProductos.on('submit', function(e){
+			var href = $(e.target).attr('action');
+			var data = $(e.target).serialize();
+			$.post(href, data, function(resultado){
+				if(resultado.success && resultado.nuevo){
+					$('#listaDeLiquidacionDetalles tbody').prepend(resultado.html);
+					modalCargaProductos.dialog( "destroy" );
+				} else if(resultado.success && resultado.modificar){
+					$(lineaParaEditar).replaceWith(resultado.html);
+					modalCargaProductos.dialog( "destroy" );
+				} else {
+					modalCargaProductos.html(resultado);
+				}
+			});
+			return false;
+		});
+		
+		
+		return modalCargaProductos;
+	}
+	
+	
+	contenedor.find('form').on('submit', function(){
+		var url = $(this).attr("action");
+		var query = $(this).serialize();
+		$.get(url+"?"+query, function(data){
+			contenedor.parent().html(data);
+		});
+		return false;
+	});
+});
+</script>

@@ -1,0 +1,25 @@
+@(puestoForm: Form[models.haberes.PuestoLaboral])
+@import helper._
+@implicitFieldConstructor = @{ FieldConstructor(simpleInput.render) }
+
+@views.html.haberes.mainHaberes("Modificar Puesto Laboral") {
+
+	<div class="page-header">
+		<div class="row">
+			<div class="col-sm-10">
+				<h1>Editar Puesto Laboral</h1>
+			</div>
+			
+			<div class="col-sm-2">
+			</div>
+		</div>
+	</div>
+	
+	@views.html.tags.successError()
+	
+	@helper.form(action = controllers.haberes.routes.PuestosLaboralesController.actualizar()) {
+		@inputText(puestoForm("id"), 'hidden -> "hidden")
+		@views.html.haberes.puestosLaborales.formPuestoLaboral(puestoForm)
+	}
+
+}

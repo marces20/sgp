@@ -1,0 +1,351 @@
+@(facturaForm: Form[Factura])
+@import helper._
+@import utils._
+@import models.auth._
+@implicitFieldConstructor = @{ FieldConstructor(simpleInput.render) } 
+
+@getClassEstadoEditable(i:String) = @{
+	var isEditable:Boolean = new Boolean(false)
+	
+	
+	if(i == null || (i.compareTo("18") == 0) ){
+		isEditable = new Boolean(true)
+	}
+	
+	isEditable
+}
+<script>
+$( function(){ $('.searchModal').modalSearch();})
+</script>
+
+
+	<div class="row menu-acciones">
+		<div class="col-sm-5">
+			<button type="submit" class="btn btn-default" title="Guardar factura"><i class="glyphicon glyphicon-floppy-disk"></i> Guardar</button>	
+	    	
+	    	@if(facturaForm.field("estado.id").value != null && (facturaForm.field("estado.id").value.toInt ==  models.Estado.FACTURA_ESTADO_ENCURSO)){
+	    		<button type="submit" id="guardarPreaprobar" name="guardarPreaprobar" class="btn btn-default" title="Guardar y preaprobar factura">
+	    			<i class="glyphicon glyphicon-floppy-disk"></i> 
+	    			<i class="glyphicon glyphicon-arrow-right"></i>
+	    			Guardar y Preaprobar
+	    		</button>
+	    	}
+	    	<a href="@if(request().getHeader("referer")){ @request().getHeader("referer") } else {@controllers.contabilidad.routes.FacturasController.index()@UriTrack.decode()}" title="Cancelar editar" class="btn btn-default"><i class="glyphicon glyphicon-floppy-remove"></i> Cancelar</a>
+	    </div>
+	    <div class="col-sm-4">
+			@if(facturaForm("tipoCuenta").value != null){
+				<span style="color:red;font-size: 25px;font-weight: bold;">@facturaForm("tipoCuenta.nombre").value</span>
+			}
+		</div>
+	    <div class="col-sm-2">
+			<a href="@UriTrack.decode()" title="Volver al listado" class="btn btn-default"><i class="glyphicon glyphicon-list"></i></a> 
+			@if(facturaForm.field("id").value){<a href="@controllers.contabilidad.routes.FacturasController.ver(facturaForm.field("id").value.toLong)@UriTrack.get("&")" title="Ver factura" class="btn btn-default"><i class="glyphicon glyphicon-align-justify"></i></a>}
+		</div>
+	</div>
+
+	<input type="hidden" name=@UriTrack.getKey() value="@UriTrack.code()" />
+	@inputText(facturaForm("id"), 'type -> "hidden", 'id -> "facturaId")
+	<div class="row">
+		<div class="col-sm-2">
+			<div class="form-group @if(facturaForm.error("nombre") != null) {has-error}">
+				<label for="inputNombre" class="control-label">Nombre</label> 
+				@inputText(facturaForm("nombre"), 'class -> "form-control",'readOnly -> "readOnly")
+				@facturaForm("nombre").error.map{ error =>
+					<div class="text-error">@error.message</div>
+				}
+			</div>
+		</div>
+		<div class="col-sm-2">
+			<div class="form-group @if(facturaForm.error("referencia") != null) {has-error}">
+				<label for="inputNombre" class="control-label">Referencia</label> 
+				@inputText(facturaForm("referencia"), 'class -> "form-control")
+			</div>
+		</div>
+		
+		<div class="col-sm-4">
+			<div class="form-group @if(facturaForm.error("proveedor_id") != null) {has-error}else{has-required}">
+				<label for="inputProveedor" class="control-label">Contraparte</label>
+				@if(getClassEstadoEditable(facturaForm.field("estado.id").value)){ 
+					<div class="input-group">
+						@inputText(facturaForm("proveedor.nombre"), 'class -> "form-control", 'id -> "proveedor")
+						@inputText(facturaForm("proveedor_id"), 'hidden -> "hidden", 'id -> "proveedor_id")
+						<span class="input-group-addon">
+							<a href="#" class="searchModal"
+										id="searchProveedor" 
+										data-title="Selección de Proveedores" 
+										data-url="@controllers.compras.routes.ProveedoresController.modalBuscar()" 
+										data-height="650" 
+										data-width="700" 
+										data-listen="modal.seleccion.proveedor.simple" 
+										data-label="#proveedor" 
+										data-field="#proveedor_id">
+								<i class="glyphicon glyphicon-search"></i>
+							</a>
+						</span>
+						
+						@facturaForm("proveedor_id").error.map{ error =>
+							<div class="text-error">@error.message</div>
+						}
+					</div>
+				}else{
+					@inputText(facturaForm("proveedor.nombre"), 'class -> "form-control",'readOnly -> "readOnly")
+					@inputText(facturaForm("proveedor_id"), 'hidden -> "hidden", 'id -> "proveedor_id",'readOnly -> "readOnly")
+				}
+			</div>
+		</div>
+		 
+		<div class="col-sm-2">
+			<div class="form-group @if(facturaForm.error("expediente_id") != null) {has-error}else{has-required}">
+				<label for="inputExpediente" class="control-label">Expediente</label>
+				@if(getClassEstadoEditable(facturaForm.field("estado.id").value)){ 
+					<div class="input-group">
+						@inputText(facturaForm("expediente.expedienteEjercicio"),'class -> "form-control",'id -> "expediente")
+						@inputText(facturaForm("expediente_id"),'hidden -> "hidden", 'id -> "expediente_id")
+						<span class="input-group-addon">
+							<a href="#" class="searchModal"
+										id="searchExpediente" 
+										data-title="Selección de expediente" 
+										data-url="@controllers.expediente.routes.ExpedientesController.modalBuscar()" 
+										data-height="650" 
+										data-width="700" 
+										data-listen="modal.seleccion.expediente.simple" 
+										data-label="#expediente" 
+										data-field="#expediente_id">
+								<i class="glyphicon glyphicon-search"></i>
+							</a>
+						</span>
+					</div>
+					@facturaForm("expediente_id").error.map{ error =>
+						<div class="text-error">@error.message</div>
+					}
+				}else{
+					@inputText(facturaForm("expediente.expedienteEjercicio"), 'class -> "form-control",'readOnly -> "readOnly")	
+					@inputText(facturaForm("expediente_id"),'hidden -> "hidden", 'id -> "expediente_id",'readOnly -> "readOnly")		
+				}
+			</div>
+		</div>
+		<div class="col-sm-2">
+			<div class="form-group @if(facturaForm.error("periodo_id") != null) {has-error}">
+				<label for="periodo" class="control-label">Periodo</label>
+				@if(getClassEstadoEditable(facturaForm.field("estado.id").value)){ 
+					<div class="input-group">
+						@inputText(facturaForm("periodo.nombre"), 'class -> "form-control", 'id -> "periodo")
+						@inputText(facturaForm("periodo_id"),'hidden -> "hidden", 'id -> "periodo_id")
+						<span class="input-group-addon">
+							<a href="#" class="searchModal"
+										id="searchPeriodo" 
+										data-title="Selección de Periodo" 
+										data-url="@controllers.contabilidad.routes.PeriodosController.modalBuscar()" 
+										data-height="650" 
+										data-width="700" 
+										data-listen="modal.seleccion.periodo.simple" 
+										data-label="#periodo" 
+										data-field="#periodo_id">
+								<i class="glyphicon glyphicon-search"></i>
+							</a>
+						</span>
+					</div>
+				}else{
+					@inputText(facturaForm("periodo.nombre"), 'class -> "form-control",'readOnly -> "readOnly")			
+				}
+			</div>
+		</div>
+		
+	</div>
+	<div class="row">
+		<div class="col-sm-2">
+			<div class="form-group @if(facturaForm.error("numero_factura") != null) {has-error}">
+				<label for="inputNumeroFactura" class="control-label">N° de factura</label> 
+				@inputText(facturaForm("numero_factura"),'id->"nfform", 'class -> "form-control")
+			</div>
+			@facturaForm("numero_factura").error.map{ error =>
+					<div class="text-error">@error.message</div>
+				}
+		</div>
+		<div class="col-sm-2">
+			<div class="form-group @if(facturaForm.error("fecha_factura") != null) {has-error}">
+				<label for="fecha_factura" class="control-label">Fecha factura</label> 
+				@inputText(facturaForm("fecha_factura"),'class -> "form-control date", 'id -> "fecha_factura")
+			</div>
+		</div>
+		<div class="col-sm-2">
+			<div class="form-group @if(facturaForm.error("fecha_recepcion") != null) {has-error}">
+				<label class="control-label">
+					Fecha recepción
+					@inputText(facturaForm("fecha_recepcion"),'class -> "form-control date")
+				</label> 
+			</div>
+		</div>
+		
+		<div class="col-sm-2">
+			<div class="form-group @if(facturaForm.error("fecha_aprobacion") != null) {has-error}">
+				<label class="control-label">
+					Fecha aprobación
+					@inputText(facturaForm("fecha_aprobacion"),'class -> "form-control date")
+				</label> 
+			</div>
+		</div>
+		<div class="col-sm-2">
+			<div class="form-group">
+				<label for="fecha_orden_pago" class="control-label">Fecha vencimiento 322</label> 
+				@inputText(facturaForm("fecha_vencimiento_322"),'class -> "form-control date", 'id -> "fecha_vencimiento_322")
+			</div>
+		</div>
+		<!-- <div class="col-sm-2">
+			<div class="checkbox">
+				<label class="control-label"> 
+					PROFE
+					@checkbox(facturaForm("profe"))
+				</label>
+			</div> 
+		</div> -->
+		<div class="col-sm-2">
+			<div class="form-group @if(facturaForm.error("tipo_cuenta_id") != null) {has-error}">
+				<label class="control-label">Tipo Cuenta</label>
+				@select(facturaForm("tipo_cuenta_id"),TipoCuenta.find.all().map { p => p.id.toString -> p.nombre}, 'class -> "form-control select", '_default -> "Seleccionar")
+				@facturaForm("tipo_cuenta_id").error.map{ error =>
+					<div class="text-error">@error.message</div>
+				}
+			</div>
+		</div>
+	</div>	
+	
+	<div class="row">
+		<div class="col-sm-4">
+			<div class="form-group @if(facturaForm.error("cuenta_id") != null) {has-error}else{has-required}">
+				<label for="inputCuenta" class="control-label">Cuenta</label> 
+				<div class="input-group">
+					@inputText(facturaForm("cuenta.nombre"), 'class -> "form-control", 'id -> "cuenta")
+					@inputText(facturaForm("cuenta_id"),'hidden -> "hidden", 'id -> "cuenta_id")
+					<span class="input-group-addon">
+						<a href="#" class="searchModal"
+									id="searchCuenta" 
+									data-title="Selección de Cuenta" 
+									data-url="@controllers.contabilidad.routes.CuentasController.modalBuscar()" 
+									data-height="650" 
+									data-width="700" 
+									data-listen="modal.seleccion.cuenta.simple" 
+									data-label="#cuenta" 
+									data-field="#cuenta_id">
+							<i class="glyphicon glyphicon-search"></i>
+						</a>
+					</span>
+				</div>
+			</div>
+			@facturaForm("cuenta_id").error.map{ error =>
+					<div class="text-error">@error.message</div>
+				}
+		</div>
+		<div class="col-sm-2">
+			<div class="form-group @if(facturaForm.error("orden_pago_id") != null) {has-error}">
+				<label for="orden_pago_id" class="control-label">Orden de pago N° </label>
+				@if(getClassEstadoEditable(facturaForm.field("estado.id").value)){  
+					<div class="input-group">
+						@inputText(facturaForm("ordenPago.nombreCompleto"), 'class -> "form-control", 'id -> "orden_pago")
+						@inputText(facturaForm("orden_pago_id"),'hidden -> "hidden", 'id -> "orden_pago_id")
+						<span class="input-group-addon">
+							<a href="#" class="searchModal"
+										id="searchOrdenPago" 
+										data-title="Selección de órdenes de pago" 
+										data-url="@controllers.contabilidad.routes.OrdenesPagosController.modalBuscar()" 
+										data-height="650" 
+										data-width="700" 
+										data-listen="modal.seleccion.orden-pago.simple" 
+										data-label="#orden_pago" 
+										data-field="#orden_pago_id">
+								<i class="glyphicon glyphicon-search"></i>
+							</a>
+						</span>
+					</div>
+				}else{
+					@inputText(facturaForm("ordenPago.nombreCompleto"), 'class -> "form-control",'readOnly -> "readOnly")			
+				}
+			</div>
+		</div>
+		<div class="col-sm-2">
+			<div class="form-group @if(facturaForm.error("fecha_orden_pago") != null) {has-error}">
+				<label for="fecha_orden_pago" class="control-label">Fecha orden de pago</label> 
+				@if(getClassEstadoEditable(facturaForm.field("estado.id").value)){
+					@inputText(facturaForm("fecha_orden_pago"),'class -> "form-control date", 'id -> "fecha_orden_pago")
+				}else{
+					@inputText(facturaForm("fecha_orden_pago"), 'class -> "form-control",'readOnly -> "readOnly")			
+				}
+			</div>
+		</div>
+		<div class="col-sm-2">
+			<div class="form-group @if(facturaForm.error("cot_dolar") != null) {has-error}">
+				<label class="control-label">Cot. dolar</label>
+				<div class="form-group">
+					@inputText(facturaForm("cot_dolar"), 'class -> "form-control",'id -> "cot_dolar")
+					@facturaForm("cot_dolar").error.map{ error =>
+						<div class="text-error">@error.message</div>
+					}
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-sm-3">
+			<div class="checkbox">
+				<label class="control-label"> 
+					Debe libre deuda DGR
+					@checkbox(facturaForm("debe_dgr"))
+				</label>
+			</div> 
+		</div>
+		<div class="col-sm-3">
+			<div class="checkbox">
+				<label class="control-label"> 
+					Debe libre deuda DGR aguinaldo
+					@checkbox(facturaForm("debe_dgr_aguinaldo"))
+				</label>
+			</div> 
+		</div>
+		<div class="col-sm-3">
+			<div class="checkbox">
+				<label class="control-label"> 
+					Debe constancia AFIP
+					@checkbox(facturaForm("debe_afip"))
+				</label>
+			</div> 
+		</div>
+		<div class="col-sm-2">
+			<div class="checkbox">
+				<label class="control-label"> 
+					Debe Judicial
+					@checkbox(facturaForm("debe_judicial"))
+				</label>
+			</div> 
+		</div>
+		
+		
+		
+	</div>
+	<div class="row">
+		<div class="col-sm-3">
+			<div class="checkbox">
+				<label class="control-label">Creacion Automatica
+				@checkbox(facturaForm("creacion_automatica"))</label> 
+			</div>
+		</div>
+		<div class="col-sm-3">
+			<div class="checkbox">
+				<label class="control-label">Agente Pago Externo
+				@checkbox(facturaForm("agente_pago_externo"))</label> 
+			</div>
+		</div>
+		<div class="col-sm-3">
+			<div class="checkbox">
+				<label class="control-label">Produccion
+				@checkbox(facturaForm("produccion"))</label> 
+			</div>
+		</div>
+		<div class="col-sm-3">
+			<div class="checkbox">
+				<label class="control-label"> 
+					Debito Automatico
+					@checkbox(facturaForm("debito_automatico"))
+				</label>
+			</div> 
+		</div>
+	</div>

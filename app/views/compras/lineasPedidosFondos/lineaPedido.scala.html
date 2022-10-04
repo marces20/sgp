@@ -1,0 +1,14 @@
+@(linea: PedidoFondoLinea, editable: Boolean)
+
+<tr data-id="@linea.id">
+	@if(editable){
+		<td class="accion-editar"><a class="btn btn-default btn-xs modificarPedido" href="@controllers.compras.routes.LineasPedidosFondosController.editar(linea.id)"><i class="glyphicon glyphicon-edit"></i></a></td>
+	}
+	<td>@linea.expediente.nombre</td>
+	<td>@if(linea.proveedor != null){@linea.proveedor.nombre}</td>
+	<td>@utils.NumberUtils.moneda(linea.monto, 10)</td>
+	<td>@linea.concepto</td>
+	@if(editable){
+		<td><a class="btn btn-default btn-xs eliminarPedido" href="@controllers.compras.routes.LineasPedidosFondosController.eliminar(linea.id)"><i class="glyphicon glyphicon-trash icono-eliminar"></i></a></td>
+	}
+</tr>

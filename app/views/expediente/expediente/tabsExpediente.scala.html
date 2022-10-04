@@ -1,0 +1,19 @@
+@(formularioCarga: Boolean, expedienteForm: Form[Expediente] = null)
+
+<ul id="certificacionTab" class="nav nav-tabs">
+	<li class="active"><a class="tabExpedienteMovimiento" href="#contenedorExpedientesMovientos" data-toggle="tab">Movimientos</a></li>
+	<li><a class="tabDispos" href="#contenedorDispos" data-toggle="tab">Disposiciones</a></li>
+</ul>
+
+<div class="tab-content">
+
+	<div class="tab-pane active" id="contenedorExpedientesMovientos">
+		@views.html.expediente.expediente.contenidoTabExpedienteMovimiento(formularioCarga, expedienteForm)	
+	</div>
+	
+	<div class="tab-pane" id="contenedorDispos">
+		@views.html.expediente.expediente.contenidoTabDispos(expedienteForm.field("id").value.toLong)	
+	</div>
+	
+
+</div>

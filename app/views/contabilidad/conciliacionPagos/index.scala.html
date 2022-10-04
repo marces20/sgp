@@ -1,0 +1,30 @@
+@()
+
+@views.html.contabilidad.mainContabilidad(title = "Conciliación cheques") {
+
+<div class="page-header">
+	<div class="row">
+		<div class="col-sm-9">
+			<h1>Conciliación cheques</h1>
+		</div>
+	</div>
+</div>
+
+@views.html.tags.successError()
+        
+	<div class="content">
+	@helper.form(action = controllers.contabilidad.routes.ConciliacionPagosController.analisisConciliacionCheques(), 'enctype -> "multipart/form-data") {
+
+		<input type="file" name="archivo">
+	
+		<div class="row form-actions">
+		    <div class="col-lg-offset-4 col-lg-8">
+		      <button type="submit" class="btn btn-sistema">Verificar</button>
+		    </div>
+		</div>
+
+	}
+	</div>
+
+
+}

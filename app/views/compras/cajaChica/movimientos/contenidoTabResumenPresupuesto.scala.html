@@ -1,0 +1,24 @@
+@(s:List[com.avaje.ebean.SqlRow])
+
+<div id="" class=" ">
+ 
+
+
+<table id="" class="table table-striped table-bordered">
+	<thead>
+		<tr>
+		 	<th>Cuenta analitica</th>
+			<th>Monto</th> 
+		<tr>	
+	</thead>
+	<tbody>
+	@for(sx <- s) {
+		<tr data-id="">
+			<td>@sx.getString("cuenta")</td>
+			<td>@utils.NumberUtils.moneda(sx.getBigDecimal("total"), 10)</td>
+		</tr>
+	}
+	</tbody>
+</table>
+
+</div>

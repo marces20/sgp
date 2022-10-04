@@ -1,0 +1,177 @@
+@(buscador: utils.pagination.Pagination[OrdenProvisionLineas], formBuscador: DynamicForm)
+@import helper._
+@import models.auth._
+@import utils._
+@implicitFieldConstructor = @{ FieldConstructor(simpleInput.render) } 
+
+
+
+<div class="contenedorPaginador ajaxPaginador">
+
+<div id="filtroBuscador" class="row">	
+	@helper.form(action = controllers.patrimonio.routes.RemitosLineasController.paraAgregar(), 'id -> "buscadorroductosAgregarRemitos") {
+	@inputText(formBuscador("id_remito"), 'type -> "hidden", 'id -> "remitoId")
+
+	<div class="col-sm-5">
+		<label for="producto" class="control-label">Producto</label>
+			@inputText(formBuscador("producto"), 'class -> "form-control", 'autofocus -> "autofocus", 'id -> "productoLinea")
+	</div>
+	
+	<div class="col-sm-2">
+		<div class="form-group">
+		<label for="nombre" class="control-label">&nbsp;</label>
+		<button  class="form-control btn btn-primary"><i class="glyphicon glyphicon-search"></i> Buscar</button>
+		</div>
+	</div>	
+	
+	
+	<div class="col-sm-2 col-sm-offset-3">
+		<div class="form-group">
+		<label for="nombre" class="control-label">&nbsp;</label>
+		<a id="agregarTodos" href="@controllers.patrimonio.routes.RemitosLineasController.recepcionarTodos(formBuscador.get("id_remito").toLong)" class="form-control"><i class="glyphicon glyphicon-cloud-download"></i> Agregar todos</a>
+		</div>
+	</div>
+	
+	}
+</div>
+
+
+
+   @if(buscador.getTotalRowCount == 0) {
+        
+       <div class="well">
+           <em>No se encuentran productos para agregar.</em>
+       </div>
+        
+    } else {
+		
+		Mostrando @buscador.getDisplayXtoYofZ(" a "," de ") resultado(s).   
+		<table id="listaProductos" class="table table-striped table-bordered table-hover">
+			<thead>
+				<tr>
+					<th width="600">Producto</th>
+					<th width="50">Pendiente</th>	
+					<th width="50">UDM</th>
+					<th width="100">Valor</th>
+					<th></th>				
+				</tr>
+			</thead>
+			<tbody>
+		        @for(linea <- buscador.getList()) {
+				<tr class="pointer" id="tr-@linea.orden_linea_id">
+					<td>@linea.producto.nombre</td>
+					<td>@linea.getPendiente()</td>
+					<td>@linea.udm</td>
+					<td>@utils.NumberUtils.moneda(linea.precio)</td>
+					<td><input class="linea_orden_id" type="hidden" value="@linea.orden_linea_id" name="linea_orden_id" /> 
+					<input class="cantidad" type="text" name="cantidad" value="@linea.getPendiente()" style="width: 60px" /> 
+					<button class="agregar" data-url="@controllers.patrimonio.routes.RemitosLineasController.modalAgregarConClientes()"><i class="glyphicon glyphicon-ok-sign"></i></button> </td>
+				</tr>
+              	}
+			</tbody>
+		</table>
+		
+		<div class="pagination pull-right">
+		    @views.html.helpers.paginador(buscador, controllers.patrimonio.routes.RemitosLineasController.paraAgregar())
+		</div>
+        
+    }
+</div>
+
+<script>
+$( function() {
+	$('#searchProductoLinea').modalSearch();
+	
+	$(".cantidad").numeric_input();
+	$('#agregarTodos').click( function() {
+		
+	});
+	
+	var idRemito = $('#remitoId').val();
+	$('#listaProductos tbody tr .cantidad').keypress(function(e) {
+		var btn = $(this).closest('tr').find('.agregar');
+	    if(e.which == 13) {
+	    	btn.click();
+	    }
+	});
+	
+	$('#listaProductos tbody tr .agregar').click( function(){
+		$this = $(this);
+		$this.prop('disabled', true);
+		var tr = $(this).closest('tr')
+		var cantidad = tr.find('.cantidad').val();
+		var linea_orden_id = tr.find('.linea_orden_id').val();
+		 
+		
+		var url = $(this).attr("data-url");
+		
+		$.get('@controllers.patrimonio.routes.RemitosLineasController.tienePacientes()', {linea_orden_id: linea_orden_id}, function(datac) {
+			if(datac.success){
+			
+				$.post('@controllers.patrimonio.routes.RemitosLineasController.controlesAgregarConCliente()', {remito_id: idRemito, cantidad:cantidad, linea_orden_id: linea_orden_id}, function(data) {
+					if(data.message) {
+						alert(data.message);
+						$this.removeAttr('disabled');
+					} else {
+						
+						var dialogo = $('<div id="dialogo-carga-pacientes-cantidad"></div>');
+						dialogo.dialog({
+					    	resizable: false,
+							autoOpen: true,
+							modal: true,
+							height: 350,
+							width:750,
+							position: 'top',
+							title: "Cargar cantidades de cada Paciente",
+							buttons: {
+						          Cerrar: function() {
+						            $( this ).dialog( "destroy" );
+						            $this.removeAttr('disabled');
+						          }
+						    },
+					    	close: function(event, ui ){
+					    		$(this).dialog( "destroy" );
+					    		$this.removeAttr('disabled');
+					    	},
+						    open: function( event, ui ) {
+								$.get(url,{remito_id: idRemito, cantidad:cantidad, linea_orden_id: linea_orden_id}, function(data){
+									dialogo.html(data);
+								});	
+								
+						    }
+					      });
+						 
+					}
+				});
+			}else{
+			
+				$.post('@controllers.patrimonio.routes.RemitosLineasController.agregar()', {remito_id: idRemito, cantidad:cantidad, linea_orden_id: linea_orden_id}, function(data) {
+					 
+					if(data.success) {
+						tr.remove();
+					} else {
+						alert(data.message);
+					}
+					$this.removeAttr('disabled');
+				});
+			}
+		});
+	});
+	
+	
+	
+	var resultados = $('#resultadoLineasRemitos');
+	
+	$('#buscadorLineasRemitos').submit( function() {
+		var url = $(this).attr('action');
+		
+		$.get(url, $(this).serialize(), function(data){
+			resultados.replaceWith(data);
+		});
+		
+		return false;
+	});
+	
+	
+});
+</script>

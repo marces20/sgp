@@ -1,0 +1,134 @@
+@(orden: OrdenProvision, buscador: utils.pagination.Pagination[OrdenProvisionLineas])
+@import helper._
+@import models.auth._
+@import utils._
+@implicitFieldConstructor = @{ FieldConstructor(simpleInput.render) }
+
+	<ul id="ordenTab" class="nav nav-tabs">
+		<li class="active"><a href="#contenedorSolicitados"  data-href="@controllers.patrimonio.routes.OrdenesProvisionController.verProductosSolicitados(orden.id)" id="menuProductosSolicitados" data-toggle="tab">Solicitados</a></li>
+		<li><a id="menuProductosRecepcionados" data-href="@controllers.patrimonio.routes.OrdenesProvisionController.productosRecepcionados(orden.ordenCompra.id)" href="#contenedorProductosRecepcionados" data-toggle="tab">Productos recepcionados</a></li>
+		<li><a id="menuRecepciones" data-href="@controllers.patrimonio.routes.OrdenesProvisionController.getRecepciones(orden.id)" href="#contenedorRecepciones" data-toggle="tab">Recepciones</a></li>
+		<li><a id="menuAnulados" data-href="@controllers.patrimonio.routes.AnulacionRecepcionProductosController.productosEnOrden(orden.ordenCompra.id)" href="#contenedorAnulados" data-toggle="tab">Productos anulados</a></li>
+		<li><a id="menuAjusteOrdenCompra" data-href="@controllers.compras.routes.OrdenesLineasAjustesController.index(orden.ordenCompra.id,false)" href="#contenedorAjusteOrdenCompra" data-toggle="tab">Ajustes Orden</a></li>
+	</ul>
+
+	<div class="tab-content">
+		<div id="contenedorSolicitados" class="contenedor tab-pane active">
+			
+		</div>
+	
+		<div id="contenedorProductosRecepcionados" class="contenedor tab-pane">
+			
+		</div>
+		<div id="contenedorRecepciones" class="contenedor tab-pane">
+			
+		</div>
+	
+		<div id="contenedorAnulados" class="contenedor tab-pane">
+			
+		</div>
+		
+		<div id="contenedorAjusteOrdenCompra" class="contenedor tab-pane">
+			
+		</div>
+	
+	</div>
+	
+
+<script>
+$( function(){
+	/**
+	 * Ventana de carga linea de productos en ordenes
+	 */
+	 
+	var contenedor = $("#listaLineaProductos");
+	
+	 
+	
+	var dialogo = $('<div></div>');
+	contenedor.on('click', '.modificarProducto', function(){
+		lineaParaEditar = $(this).closest('tr');
+		var url = $(this).attr('href');
+		
+
+		dialogo.dialog({
+			resizable: false,
+		    title: "Modificar producto para anular",
+		    height: 400,
+		    width: 750,
+		    modal: true,
+		    open: function( event, ui ) {
+				$.get(url, function(data){
+					dialogo.html(data);
+				});
+		    },
+		    close: function(event, ui ){
+		    	dialogo.dialog('destroy');
+			}
+		  });
+		
+		
+		
+		return false;
+	});
+	
+	contenedor.on('click', '.eliminarProducto', function(){
+		var url = $(this).attr('href');
+		var mensaje = "�Confirma que desea eliminar el registro?";
+		if(confirm(mensaje)){
+			$this = $(this);
+			$.get(url, function(data){
+				if(data.success){
+					$this.closest("tr").remove();
+				} else {
+					alert("No se puedo eliminar el registro.");
+				}
+			});
+		}
+		return false;
+	});
+	
+	$(document).on('click', '#nuevoProducto', function(){
+		urlContenidoModal = $(this).attr('href');
+
+		var dialogo = $('<div id="dialogo-anulacion-productos"></div>');
+		dialogo.dialog({
+			resizable: false,
+		    title: "Agregar producto para anular",
+		    height: 400,
+		    width: 750,
+		    modal: true,
+		    open: function( event, ui ) {
+				$.get(urlContenidoModal, function(data){
+					dialogo.html(data);
+				});
+		    },
+		    close: function(event, ui ){
+		    	dialogo.dialog('destroy');
+			}
+		  });
+		return false;
+	});
+
+	$(document).on('submit', '#formAnulados', function(){
+		
+		var url = $(this).attr("action");
+		var query = $(this).serialize();
+		$.post(url, query, function(data){
+			if (data.success) {
+				if(data.nuevo) {
+					 
+					$("#listaProductosAnulados").find('tbody').append(data.html);
+					
+				} else {
+					lineaParaEditar.replaceWith(data.html);
+				}
+				dialogo.dialog('close');
+			} else {
+				dialogo.html(data);				
+			}
+		});
+		return false;
+	});
+});
+</script>

@@ -1,0 +1,30 @@
+@(legajoForm: Form[models.haberes.Legajo])
+@import helper._
+@import utils._
+@import models.auth._
+@import models.haberes._
+@implicitFieldConstructor = @{ FieldConstructor(simpleInput.render) } 
+	
+	<div class="row menu-acciones">
+		<div class="col-sm-10">
+			<button type="submit" class="btn btn-default" title="Guardar legajo"><i class="glyphicon glyphicon-floppy-disk"></i> Guardar</button>
+			<a href="@if(request().getHeader("referer")){ @request().getHeader("referer") } else {@controllers.haberes.routes.LegajosController.index()@UriTrack.decode()}" title="Cancelar editar" class="btn btn-default"><i class="glyphicon glyphicon-floppy-remove"></i> Cancelar</a>
+		</div>
+		<div class="col-sm-2">
+			<a href="@UriTrack.decode()" title="Volver al listado" class="btn btn-default"><i class="glyphicon glyphicon-list"></i></a> 
+		</div>	
+	</div>
+	<div class="row">
+		 
+		<div class="col-sm-5">
+			<div class="form-group @if(legajoForm.error("numero") != null) {has-error}else{has-required}">
+				<label for="inputNumero" class="control-label">Numero</label> 
+				@inputText(legajoForm("numero"), 'class -> "form-control")
+				@legajoForm("numero").error.map{ error =>
+					<div class="text-error">@error.message</div>
+				}
+			</div>
+		</div>
+		 
+	</div>
+	

@@ -1,0 +1,114 @@
+@(paginador:  utils.pagination.Pagination[CertificacionesComprasLineaAjustes], editable: Boolean,c:CertificacionCompra)
+@import helper._
+@import models.auth._
+<div id="listaLineaProductosAjuste" class="contenedorPaginador ajaxPaginador">
+
+<p>
+	<b>Ajuste</b>
+	@if(Permiso.check("certificacionesComprasAgregarLineaAjuste")) {
+		@if(c != null && (c.estado_id == 81)){
+		<a class="btn btn-default btn-xs" href="#" id="nuevoProductoAjuste"><i class="glyphicon glyphicon-plus"></i> Nuevo</a>
+													   						
+		} 	
+	}
+</p>
+
+<table id="listaDeProductosAjuste" class="table table-striped table-bordered">
+	<thead>
+		<tr>
+		 
+			<th>Producto</th>
+			<th>Cuenta analitica</th>
+			<th>UDM</th>
+			<th>Cantidad</th>
+			<th>Precio</th>
+			<th>Subtotal</th>
+			 
+		<tr>	
+	</thead>
+	<tbody>
+	@for(linea <- paginador.getList) {
+		@views.html.compras.lineaAjustesCertificacionesCompras.lineaProducto(linea, editable)
+	}
+	</tbody>
+</table>
+
+<div class="pagination pull-right">		
+    @views.html.helpers.paginador(paginador, controllers.compras.routes.CertificacionesComprasLineaAjustesController.index())
+</div>
+</div>
+
+<script>
+$( function(){
+	/**
+	 * Ventana de carga linea de productos en ordenes
+	 */
+	 
+	var contenedor = $("#listaLineaProductosAjuste");
+
+	contenedor.on('click', '#nuevoProductoAjuste', function(){
+		
+		urlContenidoModal = '/compras/certificacion-linea-ajuste/crear?certificacionId='+$('#certificacionId').val();
+		mostrarModal(urlContenidoModal);
+		return false;
+	});
+	
+ 	function mostrarModal(url){
+		modalCargaProductos = $('<div></div>').dialog({
+			resizable: false,
+		    title: "Cargar Ajuste",
+		    height: 400,
+		    width: 750,
+		    modal: true,
+		    open: function( event, ui ) {
+				$.get(url, function(data){
+					modalCargaProductos.html(data);
+				});
+		    },
+		    close: function(event, ui ){
+		    	modalCargaProductos.dialog('destroy');
+			}
+		  });
+		
+		modalCargaProductos.on('click', '.cancelar', function(){
+			modalCargaProductos.dialog('destroy');
+			return false;
+		});
+		
+		modalCargaProductos.on('submit', function(e){
+			var href = $(e.target).attr('action');
+			var data = $(e.target).serialize();
+			
+			$("#btn-guardar-linea-ajuste-cc").attr("disabled", true);
+			$.post(href, data, function(resultado){
+				if(resultado.success && resultado.nuevo){
+					$('#listaDeProductosAjuste tbody').prepend(resultado.html);
+					$('.successAddLineaAjuste').html(resultado.message)
+					$('.successAddLineaAjuste').show();
+					modalCargaProductos.dialog( "destroy" );
+				} else if(resultado.success && resultado.modificar){
+					$(lineaParaEditar).replaceWith(resultado.html);
+					modalCargaProductos.dialog( "destroy" );
+				} else {
+					modalCargaProductos.html(resultado);
+				}
+				$("#btn-guardar-linea-ajuste-cc").attr("disabled", false);
+			});
+			return false;
+		});
+		
+		
+		return modalCargaProductos;
+	}
+	
+	
+	contenedor.find('form').on('submit', function(){
+		var url = $(this).attr("action");
+		var query = $(this).serialize();
+		$.get(url+"?"+query, function(data){
+			contenedor.parent().html(data);
+		});
+		return false;
+	});
+});
+</script>

@@ -1,0 +1,167 @@
+@(lineaForm: Form[FacturaLineaReintegro])
+@import helper._
+@implicitFieldConstructor = @{ FieldConstructor(simpleInput.render) } 
+
+ 
+
+@if(flash.containsKey("error")) {
+	<div class="alert alert-danger">
+		<i class="glyphicon glyphicon-remove-sign"></i> @flash.get("error")
+	</div>
+}
+<script>
+$(function(){
+	$('#searchCuentaModalReintegro').modalSearch();
+	$('#searchCuentaAnaliticaModalReintegro').modalSearch();
+	$('#searchCuentaImpuestoModalReintegro').modalSearch();
+	$("#monto").numeric_input();
+	
+});
+</script>
+
+<div class="row">
+	@inputText(lineaForm("factura_id"), 'type -> "hidden")
+	<div class="col-sm-4">
+		<label for="cuenta" class="control-label">Cuenta</label>
+		<div class="input-group @if(lineaForm.error("cuenta_id") != null) {has-error} else {has-required}">
+																					 
+			@inputText(lineaForm("cuenta.nombre"), 'class -> "form-control", 'id -> "cuenta_modal_reintegro")
+			@inputText(lineaForm("cuenta_id"),'hidden -> "hidden", 'id -> "cuenta_id_modal_reintegro")
+			<span class="input-group-addon">
+				<a href="#" class="searchModal"
+							id="searchCuentaModalReintegro" 
+								
+							data-title="Selección de cuenta" 
+							data-url="@controllers.contabilidad.routes.CuentasController.modalBuscar()" 
+							data-height="650" 
+							data-width="700" 
+							data-listen="modal.seleccion.cuenta.simple" 
+							data-label="#cuenta_modal_reintegro" 
+							data-field="#cuenta_id_modal_reintegro">
+					<i class="glyphicon glyphicon-search"></i>
+				</a>
+			</span>
+		</div>
+		@lineaForm("cuenta_id").error.map{ error =>
+			<div class="text-error">@error.message</div>
+		}
+	</div>
+	<div class="col-sm-4">
+		<label for="cuenta" class="control-label">Cuenta Presupuestaria</label>
+		<div class="input-group @if(lineaForm.error("cuenta_id") != null) {has-error} else {has-required}">
+			
+			@inputText(lineaForm("cuentaAnalitica.nombre"), 'class -> "form-control", 'id -> "cuenta_analitica_modal_reintegro")
+			@inputText(lineaForm("cuenta_analitica_id"),'hidden -> "hidden", 'id -> "cuenta_analitica_id_modal_reintegro")
+			<span class="input-group-addon">
+				<a href="#" class="searchModal"
+							id="searchCuentaAnaliticaModalReintegro" 
+							data-title="Selección de cuenta Presupuestaria" 
+							data-url="@controllers.contabilidad.routes.CuentasAnaliticasController.modalBuscar()" 
+							data-height="650" 
+							data-width="700" 
+							data-listen="modal.seleccion.cuentaAnalitica.simple" 
+							data-label="#cuenta_analitica_modal_reintegro" 
+							data-field="#cuenta_analitica_id_modal_reintegro">
+					<i class="glyphicon glyphicon-search"></i>
+				</a>
+			</span>
+		</div>
+		@lineaForm("cuenta_analitica_id").error.map{ error =>
+			<div class="text-error">@error.message</div>
+		}
+	</div>
+	<div class="col-sm-4">
+		<label for="cuenta" class="control-label">Cuenta Impuesto</label>
+		<div class="input-group ">
+			
+			@inputText(lineaForm("cuentaImpuesto.nombre"), 'class -> "form-control", 'id -> "cuenta_impuesto_modal_reintegro")
+			@inputText(lineaForm("cuenta_impuesto_id"),'hidden -> "hidden", 'id -> "cuenta_impuesto_id_modal_reintegro")
+			<span class="input-group-addon">
+				<a href="#" class="searchModal"
+							id="searchCuentaImpuestoModalReintegro" 
+								
+							data-title="Selección de cuenta" 
+							data-url="@controllers.contabilidad.routes.CuentasController.modalBuscar()" 
+							data-height="650" 
+							data-width="700" 
+							data-listen="modal.seleccion.cuenta.simple" 
+							data-label="#cuenta_impuesto_modal_reintegro" 
+							data-field="#cuenta_impuesto_id_modal_reintegro">
+					<i class="glyphicon glyphicon-search"></i>
+				</a>
+			</span>
+		</div> 
+	</div>
+	
+</div>	
+<div class="row">	
+	<div class="col-sm-3">
+		<label class="control-label">Importe</label>
+		<div class="form-group @if(lineaForm.error("monto") != null) {has-error} else {has-required}">
+			@inputText(lineaForm("monto"), 'class -> "form-control", 'id -> "monto")
+			@lineaForm("monto").error.map{ error => <div class="text-error">@error.message</div>}
+		</div>
+	</div>
+	<div class="col-sm-9">
+		<label for="Descripción" class="control-label">Descripción</label>
+		<div class="input-group @if(lineaForm.error("descripcion") != null) {has-error}">
+			@textarea(lineaForm("descripcion"), 'class -> "form-control", 'id -> "descripcion", 'rows -> "3", 'cols -> "50")
+			@lineaForm("descripcion").error.map{ error => <div class="text-error">@error.message</div>}
+		</div>
+	</div>	
+</div>
+ 
+<div class="row form-actions">
+    <div class="col-lg-offset-4 col-lg-8">
+      <button type="submit" class="btn btn-default"><i class="glyphicon glyphicon-floppy-disk"></i>Guardar</button>	
+      <a href="" class="btn btn-default cancelar"><i class="glyphicon glyphicon-floppy-remove"></i>Cancelar</a>
+    </div>
+</div>
+<script>
+$( function(){
+
+	if($("#cuenta_modal_reintegro").length){
+		var options = {
+				script:"/contabilidad/suggestCuenta/",
+				varname:"",
+				json:true,
+				shownoresults:true,
+				maxresults:6,
+				callback: function (obj) { 
+											$("#cuenta_id_modal_reintegro").val(obj.id); 
+										 }
+			};
+		var as_json = new bsn.AutoSuggest('cuenta_modal_reintegro', options);
+	}
+ 
+	if($("#cuenta_impuesto_modal_reintegro").length){
+		var options = {
+				script:"/contabilidad/suggestCuenta/",
+				varname:"",
+				json:true,
+				shownoresults:true,
+				maxresults:6,
+				callback: function (obj) { 
+											$("#cuenta_impuesto_id_modal_reintegro").val(obj.id); 
+										 }
+			};
+		var as_json = new bsn.AutoSuggest('cuenta_impuesto_modal_reintegro', options);
+	}
+	if($("#cuenta_analitica_modal_reintegro").length){
+		var options = {
+				script:"/contabilidad/suggestCuentaAnalitica/",
+				varname:"",
+				json:true,
+				shownoresults:true,
+				maxresults:6,
+				callback: function (obj) { 
+											$("#cuenta_analitica_id_modal_reintegro").val(obj.id); 
+										 }
+			};
+		var as_json = new bsn.AutoSuggest('cuenta_analitica_modal_reintegro', options);
+	}
+});
+</script>	
+
+
+@flash().clear()

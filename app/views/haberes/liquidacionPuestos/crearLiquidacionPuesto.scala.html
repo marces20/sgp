@@ -1,0 +1,19 @@
+@(baseForm: Form[models.haberes.LiquidacionPuesto])
+@import helper._
+
+@views.html.haberes.mainHaberes("Crear Liquidacion Puesto") {
+
+	<div class="page-header">
+		<div class="row">
+			<div class="col-sm-10">
+				<h1>Crear nuevo Liquidacion Puesto</h1>
+			</div>
+		</div>
+	</div>
+	@views.html.tags.successError()
+    
+    @helper.form(action = controllers.haberes.routes.LiquidacionPuestosController.guardar()) {
+		@views.html.haberes.liquidacionPuestos.formLiquidacionPuesto(baseForm) 
+		@views.html.haberes.liquidacionPuestos.tabsLiquidacionPuesto(true,baseForm)	
+	}
+}

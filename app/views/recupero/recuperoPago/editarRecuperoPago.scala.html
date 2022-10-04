@@ -1,0 +1,97 @@
+@(recuperoPagoForm: Form[models.recupero.RecuperoPago],recuperoPago:models.recupero.RecuperoPago)
+@import helper._
+@implicitFieldConstructor = @{ FieldConstructor(simpleInput.render) }
+
+@scripts = {
+	<script src="@routes.Assets.at("javascripts/recupero/pago.js")" type="text/javascript"></script>
+}
+
+@views.html.recupero.mainRecupero("Modificar Pago", scripts) {
+
+	<div class="page-header">
+		<div class="row">
+			<div class="col-sm-7">
+				<h1>Editar pago</h1>
+			</div>
+
+			<div class="col-sm-5">
+				<div class="dropdown pull-right">
+				 <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown">
+				 	<i class="glyphicon glyphicon-list-alt"></i>
+				    Reportes
+				    <span class="caret"></span>
+				  </button>
+				  <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
+				    
+				  </ul>
+				</div>
+				
+				<div class="dropdown pull-right btn-header">
+				 <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown">
+				 	<i class="glyphicon glyphicon-cog"></i>
+				    Acciones
+				    <span class="caret"></span>
+				  </button>
+				  <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
+				  	
+				  </ul>
+				</div>
+					
+				<!-- <div class="pull-right btn-header">
+					<a href="@controllers.recupero.routes.RecuperoPagosController.crear()"  class="btn btn-default"><i class="glyphicon glyphicon-plus-sign"></i> Nuevo Pago</a>
+				</div> -->
+			</div>
+			
+			
+		</div>
+	</div>
+	
+	@if(flash.containsKey("error")) {
+		<div class="alert alert-danger">
+			@flash.get("error")
+		</div>
+	}
+	
+
+	@helper.form(action = controllers.recupero.routes.RecuperoPagosController.actualizar(recuperoPago.id)) {
+	
+	
+		@inputText(recuperoPagoForm("id"), 'hidden -> "hidden")
+		@views.html.recupero.recuperoPago.formRecuperoPago(recuperoPagoForm,recuperoPago)
+		
+		 @views.html.recupero.recuperoPago.tabsRecuperoPago(true, recuperoPagoForm)	
+		
+		
+		
+		
+		<h4>Estado actual: 	<b>@recuperoPago.estado.nombre</b></h4>
+		<div class="row margin-bottom-25">	
+			
+		</div>
+		
+	}
+
+}
+
+
+
+
+<script>
+
+$( function() {
+	
+	$( function() {
+		$('.datosPago').hide();
+		if('@recuperoPago.tipoPago' == '@models.recupero.RecuperoPago.PAGO_CHEQUE') {
+			$('#datosCheque').show();
+			$.get('@controllers.recupero.routes.RecuperoChequesController.editar(recuperoPago.id)', function(data) {
+				$('#datosCheque').html(data);
+			})
+		}
+	});
+	
+
+	
+});
+
+</script>

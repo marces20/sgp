@@ -1,0 +1,114 @@
+@(formBuscador: DynamicForm)
+@import helper._
+@implicitFieldConstructor = @{ FieldConstructor(simpleInput.render) } 
+
+<div class="row"  style="">
+
+	<nav class="navbar navbar-default" role="navigation">
+		<div class="container-fluid">
+			<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+		      <ul class="nav navbar-nav">
+		      	<!-- <li class="active"><a href="@controllers.dashboard.routes.DeudasGlobalizadasController.deudasResumidas()">Deudas Resumen <span class="sr-only">(current)</span></a></li> -->
+		        <li class="dropdown">
+		         	
+		          <a href="#" class="dropdown-toggle" data-toggle="dropdown">Deudas Resumen <b class="caret"></b></a>
+		          <ul class="dropdown-menu">
+		          	<li><a href="@controllers.dashboard.routes.DeudasGlobalizadasController.deudasResumidas(0,false)">Deudas Resumen</a></li>
+		            <li><a href="@controllers.dashboard.routes.DeudasGlobalizadasController.deudasResumidas(models.Deposito.HEARM,false)">Deudas Resumen HEARM</a></li>
+		            <li><a href="@controllers.dashboard.routes.DeudasGlobalizadasController.deudasResumidas(-1,false)">Deudas Resumen Otras Instituciones</a></li>
+		            <li><a href="@controllers.dashboard.routes.DeudasGlobalizadasController.deudasResumidas(0,true)">Deudas Resumen RA</a></li>
+		          </ul>
+		        </li>
+		        <li class="dropdown">
+		        	<a href="#" class="dropdown-toggle" data-toggle="dropdown">Deudas Detalles <b class="caret"></b></a>
+		          	<ul class="dropdown-menu">
+		          		<li><a href="@controllers.dashboard.routes.DeudasGlobalizadasController.deudasDetalles(0,true)">Deudas RA</a></li>
+		          		<li><a href="@controllers.dashboard.routes.DeudasGlobalizadasController.deudasDetalles(1530,false)">Deudas MOFAR</a></li>
+		          		<li><a href="@controllers.dashboard.routes.DeudasGlobalizadasController.deudasDetalles(15156,false)">Deudas MACROFAR</a></li>
+		          		<li><a href="@controllers.dashboard.routes.DeudasGlobalizadasController.deudasDetalles(4359,false)">Deudas SAN JORGE</a></li>
+		          		<li><a href="@controllers.dashboard.routes.DeudasGlobalizadasController.deudasDetalles(2749,false)">Deudas IMPLANTEJ</a></li>
+		          		<li><a href="@controllers.dashboard.routes.DeudasGlobalizadasController.deudasDetalles(14733,false)">Deudas BIOMISIONES</a></li>
+		          		<!--  <li><a href="@controllers.dashboard.routes.DeudasGlobalizadasController.deudasDetalles(1498,false)">Deudas MEDICALPRO</a></li>-->
+		          		<li><a href="@controllers.dashboard.routes.DeudasGlobalizadasController.deudasDetalles(1589,false)">Deudas NR CONSTRUCCIONES-TABAY</a></li>
+		          	</ul>
+		        </li>
+		        <li class="dropdown">
+		        	<a href="#" class="dropdown-toggle" data-toggle="dropdown">Deudas Otros  <b class="caret"></b></a>
+		          	<ul class="dropdown-menu">
+		          		<li><a href="@controllers.dashboard.routes.DeudasGlobalizadasController.deudasDetallesOtrosProveedoresResumen(false,false)">Deudas Otros Proveedores Operativa - RESUMEN</a></li>
+		          		<li><a href="@controllers.dashboard.routes.DeudasGlobalizadasController.deudasDetallesOtrosProveedoresResumen(false,true)">Deudas Otros Proveedores Equipamiento Operativa - RESUMEN</a></li>
+		          	
+		          		<li><a href="@controllers.dashboard.routes.DeudasGlobalizadasController.deudasDetallesOtros(false,false)">Deudas Otros Proveedores Operativa</a></li>
+		          		<li><a href="@controllers.dashboard.routes.DeudasGlobalizadasController.deudasDetallesOtros(false,true)">Deudas Otros Proveedores Equipamiento Operativa</a></li>
+		          		<li><a href="@controllers.dashboard.routes.DeudasGlobalizadasController.deudasDetallesOtros(true,false)">Deudas Otros Proveedores PROFE</a></li>
+		          		<li><a href="@controllers.dashboard.routes.DeudasGlobalizadasController.deudasDetallesOtros(true,true)">Deudas Otros Proveedores Equipamiento PROFE</a></li>
+		          	</ul>
+		        </li>
+		        
+		        <li class="dropdown">
+		        	<a href="#" class="dropdown-toggle" data-toggle="dropdown">Deudas Totales Cuentas  <b class="caret"></b></a>
+		          	<ul class="dropdown-menu">
+		          		@for(t <- TipoCuenta.find.all()) {
+		          			<li><a href="@controllers.dashboard.routes.DeudasGlobalizadasController.deudasDetallesCuentas(t.id.intValue())">@t.nombre</a></li>
+		          		}
+		          		
+		          		
+		          	</ul>
+		        </li>
+		         
+		        <li class="dropdown">
+		        	<a href="#" class="dropdown-toggle" data-toggle="dropdown">Servicios  <b class="caret"></b></a>
+		        	<ul class="dropdown-menu">
+		        		<li><a href="@controllers.dashboard.routes.DeudasGlobalizadasController.deudasDetallesServiciosResumen()">Servicios RESUMEN</a></li>
+		        		<li><a href="@controllers.dashboard.routes.DeudasGlobalizadasController.deudasDetallesServicios()">Servicios Detalles</a></li>
+		        	</ul>
+		        </li>
+		        
+		        <li class="dropdown">
+		        	<a href="#" class="dropdown-toggle" data-toggle="dropdown">Honorarios  <b class="caret"></b></a>
+		        	<ul class="dropdown-menu">
+		        		<li><a href="@controllers.dashboard.routes.DeudasGlobalizadasController.deudasDetallesHonorariosResumen()">Honorarios RESUMEN</a></li>
+		        		<li><a href="@controllers.dashboard.routes.DeudasGlobalizadasController.deudasDetallesHonorarios()">Honorarios Detalles</a></li>
+		        	</ul>
+		        </li>
+		         
+			        
+			    
+		      
+		       @helper.form(action = controllers.dashboard.routes.DeudasGlobalizadasController.deudasDetallesPorProveedor()) {	
+		      	<div class="input-group" style="padding: 10px 15px 0px 15px;">	
+					@inputText(formBuscador("proveedor.id"), 'hidden -> "hidden", 'id -> "proveedor_id")
+					@inputText(formBuscador("proveedor.nombre"), 'name -> "", 'class -> "form-control",'placeholder->"Proveedor", 'id -> "proveedor")
+	    			 <span class="input-group-addon">
+						<a href="#" class="searchModal"
+									id="searchProveedor" 
+									data-title="Selección de Proveedores" 
+									data-url="@controllers.compras.routes.ProveedoresController.modalBuscar()" 
+									data-height="650" 
+									data-width="700" 
+									data-listen="modal.seleccion.proveedor.simple" 
+									data-label="#proveedor" 
+									data-field="#proveedor_id">
+							<i class="glyphicon glyphicon-search"></i>
+						</a>
+					</span>
+					<button class="btn btn-outline-success my-2 my-sm-0" style="margin:0px 0px 0px 10px; text-align: center;" type="submit">Buscar</button>	
+				</div>
+				
+    		   }
+    		   
+		      </ul>
+		      	
+		    </div>  
+	   		
+		</div>
+		 
+	</nav>
+</div>
+<script type="text/javascript">
+	$(function(){
+		$('#searchProveedor').modalSearch();
+	});
+</script>
+
+

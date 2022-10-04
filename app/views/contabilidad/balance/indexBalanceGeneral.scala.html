@@ -1,0 +1,33 @@
+@(cuentas: List[Cuenta], balances: Map[Long,List[Balance]])
+@import helper._
+@import models.auth._
+@import java.math.BigDecimal;var debe=new java.math.BigDecimal(0);var haber=new java.math.BigDecimal(0);
+@implicitFieldConstructor = @{ FieldConstructor(simpleInput.render) } 
+@scripts = {
+	<script src="@routes.Assets.at("javascripts/contabilidad/balance.js")" type="text/javascript"></script>
+}
+
+@views.html.contabilidad.mainContabilidad("Balance",scripts) {
+<div class="page-header">
+	<div class="row">
+		<div class="col-sm-7">
+			<h1>Balance general</h1>
+		</div>
+		
+	</div>
+	
+</div>
+<div class="row">
+	<div class="col-sm-12">
+
+
+			@for(b <- cuentas) {
+				@views.html.contabilidad.balance.listaBalanceGeneral(b.id, balances) 
+			}
+
+		
+
+	</div>	
+</div>
+
+}

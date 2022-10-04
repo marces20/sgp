@@ -1,0 +1,7 @@
+@(lineaForm: Form[RemitoLineaBaul])
+@import helper._
+@implicitFieldConstructor = @{ FieldConstructor(simpleInput.render) } 
+
+@helper.form(action = controllers.patrimonio.routes.RemitosLineasBaulController.guardar()) {
+	@views.html.patrimonio.baul.lineas.formProducto(lineaForm)
+}

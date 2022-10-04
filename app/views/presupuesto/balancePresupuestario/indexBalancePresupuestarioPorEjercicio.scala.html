@@ -1,0 +1,291 @@
+@(formBuscador: DynamicForm,lbp:List[BalancePresupuestario],idEjercicio:String)
+@import helper._
+@implicitFieldConstructor = @{ FieldConstructor(simpleInput.render) } 
+
+@getClassEstadoRP(l:BalancePresupuestario) = @{
+	var classEstado:String = new String()
+	
+	classEstado = "positivoPresupuesto"
+	
+	if(l.preventivo.subtract(l.definitivo).add(l.preventivo_rp.subtract(l.definitivo_rp)).compareTo(java.math.BigDecimal.ZERO) != 0 || 
+	   l.definitivo.subtract(l.obligacion).add(l.definitivo_rp.subtract(l.obligacion_rp)).compareTo(java.math.BigDecimal.ZERO) != 0	||
+	   l.obligacion.subtract(l.pago).add(l.obligacion_rp.subtract(l.pago_rp)).compareTo(java.math.BigDecimal.ZERO) != 0 
+	){
+		classEstado = "revisarPresupuesto"
+	}
+	
+	if(l.preventivo.subtract(l.definitivo).add(l.preventivo_rp.subtract(l.definitivo_rp)).compareTo(java.math.BigDecimal.ZERO) < 0 || 
+	   l.definitivo.subtract(l.obligacion).add(l.definitivo_rp.subtract(l.obligacion_rp)).compareTo(java.math.BigDecimal.ZERO) < 0	||
+	   l.obligacion.subtract(l.pago).add(l.obligacion_rp.subtract(l.pago_rp)).compareTo(java.math.BigDecimal.ZERO) < 0 
+	){
+		classEstado = "negativoPresupuesto"
+	}
+	
+	
+	
+	classEstado
+	
+}
+
+@getClassEstado(l:BalancePresupuestario) = @{
+	var classEstado:String = new String()
+	
+	classEstado = "positivoPresupuesto"
+	
+	if(l.preventivo.subtract(l.definitivo).compareTo(java.math.BigDecimal.ZERO) != 0 ||
+	   l.definitivo.subtract(l.obligacion).compareTo(java.math.BigDecimal.ZERO) != 0 ||
+	   l.obligacion.subtract(l.pago).compareTo(java.math.BigDecimal.ZERO) != 0	
+	){
+		classEstado = "revisarPresupuesto"
+	}
+	
+	if(l.preventivo.subtract(l.definitivo).compareTo(java.math.BigDecimal.ZERO) < 0 ||
+	   l.definitivo.subtract(l.obligacion).compareTo(java.math.BigDecimal.ZERO) < 0 ||
+	   l.obligacion.subtract(l.pago).compareTo(java.math.BigDecimal.ZERO) < 0	
+	){
+		classEstado = "negativoPresupuesto"
+	}
+	
+		
+	classEstado
+	
+}
+
+@views.html.presupuesto.mainPresupuesto("Balance presupuestario") {
+
+	<div class="page-header">
+		<div class="row">
+			<div class="col-sm-7">
+				<h1>Balance presupuestario Por ejercicio</h1>
+			</div>
+			<div class="col-sm-5">
+				<div class="dropdown pull-right">
+				 <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown">
+				 	<i class="glyphicon glyphicon-list-alt"></i>
+				    Reportes
+				    <span class="caret"></span>
+				  </button>
+				  <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
+				    
+				    <li role="presentation"><a role="menuitem" id="accionReporteExportarDatosPresupuestoControl" 
+				    tabindex="-1" 
+				    href="#" data-url="@controllers.presupuesto.routes.BalancePresupuestarioReportesController.modalReporteExportarDatosPresupuestoControl()">
+				    Exportar Datos</a></li>
+				    
+				    
+				    
+				    <!-- ------------------------------------------------------------------------- -->
+				    <li role="presentation"><a role="menuitem" id="reporteGeneralPorExpedientePorCuenta" 
+				    data-url="" tabindex="-1" 
+				    href="@controllers.presupuesto.routes.BalancePresupuestarioReportesController.reporteBalanceDiferenciaPreventivoDefinitivo(13)">
+				    Reporte 2022 Saldos en Preventivos</a></li>
+				    <li role="presentation"><a role="menuitem" id="reporteGeneralPorExpedientePorCuenta" 
+				    data-url="" tabindex="-1" 
+				    href="@controllers.presupuesto.routes.BalancePresupuestarioReportesController.reporteBalanceDiferenciaPreventivoDefinitivo(12)">
+				    Reporte 2021 Saldos en Preventivos</a></li>
+				    <li role="presentation"><a role="menuitem" id="reporteGeneralPorExpedientePorCuenta" 
+				    data-url="" tabindex="-1" 
+				    href="@controllers.presupuesto.routes.BalancePresupuestarioReportesController.reporteBalanceDiferenciaPreventivoDefinitivo(9)">
+				    Reporte 2020 Saldos en Preventivos</a></li>
+				    <li role="presentation"><a role="menuitem" id="reporteGeneralPorExpedientePorCuenta" 
+				    data-url="" tabindex="-1" 
+				    href="@controllers.presupuesto.routes.BalancePresupuestarioReportesController.reporteBalanceDiferenciaPreventivoDefinitivo(8)">
+				    Reporte 2019 Saldos en Preventivos</a></li>
+				     <li role="presentation"><a role="menuitem" id="reporteGeneralPorExpedientePorCuenta" 
+				    data-url="" tabindex="-1" 
+				    href="@controllers.presupuesto.routes.BalancePresupuestarioReportesController.reporteBalanceDiferenciaPreventivoDefinitivo(7)">
+				    Reporte 2018 Saldos en Preventivos</a></li>
+				    <!-- <li role="presentation"><a role="menuitem" id="reporteGeneralPorExpedientePorCuenta" 
+				    data-url="" tabindex="-1" 
+				    href="@controllers.presupuesto.routes.BalancePresupuestarioReportesController.reporteBalanceDiferenciaPreventivoDefinitivo(6)">
+				    Reporte 2017 Saldos en Preventivos</a></li>
+				    <li role="presentation"><a role="menuitem" id="reporteGeneralPorExpedientePorCuenta" 
+				    data-url="" tabindex="-1" 
+				    href="@controllers.presupuesto.routes.BalancePresupuestarioReportesController.reporteBalanceDiferenciaPreventivoDefinitivo(5)">
+				    Reporte 2016 Saldos en Preventivos</a></li>
+				     <li role="presentation"><a role="menuitem" id="reporteGeneralPorExpedientePorCuenta" 
+				    data-url="" tabindex="-1" 
+				    href="@controllers.presupuesto.routes.BalancePresupuestarioReportesController.reporteBalanceDiferenciaPreventivoDefinitivo(4)">
+				    Reporte 2015 Saldos en Preventivos</a></li>
+				    <li role="presentation"><a role="menuitem" id="reporteGeneralPorExpedientePorCuenta" 
+				    data-url="" tabindex="-1" 
+				    href="@controllers.presupuesto.routes.BalancePresupuestarioReportesController.reporteBalanceDiferenciaPreventivoDefinitivo(3)">
+				    Reporte 2014 Saldos en Preventivos</a></li> -->
+				  </ul>
+				</div>
+				
+			</div>
+		</div>
+	</div>
+	
+	<div id="actions">
+		<form action="" method="GET">
+			<div class="row">		
+				<div class="col-sm-2">
+					<label class="control-label">Ejercicio
+					@select(formBuscador("ejercicio"), Ejercicio.getEjercicios().map { p => p.id.toString -> p.nombre}, 
+					'class -> "form-control select")
+					</label>
+				</div>
+				<div class="col-sm-8">
+					<div class="col-sm-3"><h4 style="text-align:center; cursor: pointer; border:1px solid green; padding: 5px; color:green;" class="btnPositivoPresupuesto">CERRADOS</h4></div>
+					<div class="col-sm-3"><h4 style="text-align:center; cursor: pointer; border:1px solid blue;padding: 5px;color:blue;" class="btnRevisarPresupuesto">ABIERTOS</h4></div>
+					<div class="col-sm-3"><h4 style="text-align:center; cursor: pointer; border:1px solid red;padding: 5px;color:red;" class="btnNegativoPresupuesto">ERRORES</h4></div>
+					<div class="col-sm-3"><h4 style="text-align:center; cursor: pointer; border:1px solid black;padding: 5px;" class="btnTodosPresupuesto">TODOS</h4></div>
+				</div>
+			</div>			
+			<div class="row">		
+				<div class="col-sm-2">
+					<div class="form-group">
+					<label for="nombre" class="control-label">&nbsp;</label>
+					<button  class="form-control btn btn-primary"><i class="glyphicon glyphicon-search"></i> Buscar</button>
+					</div>
+				</div>
+				<div class="col-sm-2">
+					<div class="form-group">
+					<label for="nombre" class="control-label">&nbsp;</label>
+					<a href="@controllers.presupuesto.routes.BalancePresupuestarioController.index()"  class="form-control btn btn-default">Limpiar</a>
+					</div>
+				</div>
+			</div>
+		</form>
+	</div>
+	
+ 
+		
+		
+		
+	@if(lbp != null){
+		<table class="table table-bordered tablaPresupuesto">
+			<thead>
+				<tr>
+					<th width="30" >Expediente</th>
+					
+					<th width="30" colspan="2">Preventivo</th>
+					<th width="30" colspan="2">Definitivo</th>
+					<th width="30" colspan="2">Obligación</th>
+					<th width="30" colspan="2">Pago</th>
+				</tr>
+				<tr>
+					<th></th>
+					<th>Total</th>
+					<th>Disponible</th>
+					<th>Total</th>
+					<th>Disponible</th>
+					<th>Total</th>
+					<th>Disponible</th>
+					<th colspan="2">Total</th>
+				</tr>
+			</thead>
+			<tbody>	
+		@for(l <- lbp) {
+			@if(BalancePresupuestario.tieneRP(l.expediente.id)){
+				<tr class="@getClassEstadoRP(l)">
+					<td>
+						@l.expediente.nombre<br>
+						@l.expedienteRp<br>
+						TOTAL
+					</td>
+					<td>
+						@(utils.NumberUtils.moneda(l.preventivo))<br>
+						@(utils.NumberUtils.moneda(l.preventivo_rp))<br>
+						@(utils.NumberUtils.moneda(l.preventivo.add(l.preventivo_rp)))
+					</td>
+					<td class="">
+						@(utils.NumberUtils.moneda(l.preventivo.subtract(l.definitivo)))<br>
+						@(utils.NumberUtils.moneda(l.preventivo_rp.subtract(l.definitivo_rp)))<br>
+						@(utils.NumberUtils.moneda(l.preventivo.subtract(l.definitivo).add(l.preventivo_rp.subtract(l.definitivo_rp))))
+					</td>
+					<td>
+						@(utils.NumberUtils.moneda(l.definitivo))<br>
+						@(utils.NumberUtils.moneda(l.definitivo_rp))<br>
+						@(utils.NumberUtils.moneda(l.definitivo.add(l.definitivo_rp)))
+					</td>
+					<td class="">
+						@(utils.NumberUtils.moneda(l.definitivo.subtract(l.obligacion)))<br>
+						@(utils.NumberUtils.moneda(l.definitivo_rp.subtract(l.obligacion_rp)))<br>
+						@(utils.NumberUtils.moneda(l.definitivo.subtract(l.obligacion).add(l.definitivo_rp.subtract(l.obligacion_rp))))
+					</td>
+					
+					<td>	
+						@(utils.NumberUtils.moneda(l.obligacion))<br>
+						@(utils.NumberUtils.moneda(l.obligacion_rp))<br>
+						@(utils.NumberUtils.moneda(l.obligacion.add(l.obligacion_rp)))
+					</td>
+					<td class="">
+						@(utils.NumberUtils.moneda(l.obligacion.subtract(l.pago)))<br>
+						@(utils.NumberUtils.moneda(l.obligacion_rp.subtract(l.pago_rp)))<br>
+						@(utils.NumberUtils.moneda(l.obligacion.subtract(l.pago).add(l.obligacion_rp.subtract(l.pago_rp))))
+					</td>
+					<td colspan="2">
+						@(utils.NumberUtils.moneda(l.pago))<br>
+						@(utils.NumberUtils.moneda(l.pago_rp))<br>
+						@(utils.NumberUtils.moneda(l.pago.add(l.pago_rp)))
+					</td>
+				</tr>	
+				 	
+			}else{
+			  	<tr class="@getClassEstado(l)">
+					<td>@l.expediente.nombre</td>
+					<td>@(utils.NumberUtils.moneda(l.preventivo))</td>
+					<td class="">
+						@(utils.NumberUtils.moneda(l.preventivo.subtract(l.definitivo)))
+					</td>
+					<td>@(utils.NumberUtils.moneda(l.definitivo))</td>
+					<td class="">
+						@(utils.NumberUtils.moneda(l.definitivo.subtract(l.obligacion)))
+					</td>
+					
+					<td>@(utils.NumberUtils.moneda(l.obligacion))</td>
+					<td class="">
+						@(utils.NumberUtils.moneda(l.obligacion.subtract(l.pago)))
+					</td>
+					<td colspan="2">@(utils.NumberUtils.moneda(l.pago))</td>
+				</tr>	
+			}
+		}
+			</tbody>
+       	</table>
+	}
+}
+		
+<script>
+$(function(){
+	$('#searchCuentaAnalitica').modalSearch();
+	$('#searchExpediente').modalSearch();
+	
+	$('#accionReporteExportarDatosPresupuestoControl').click( function() {  
+		var url = $(this).attr("data-url");
+		dialogoPasarBorrador = crearDialogoGeneral(url);
+		dialogoPasarBorrador.dialog({title: "Reporte Presupuesto Control",});
+	});
+	
+	$('.btnPositivoPresupuesto').click( function() {
+		$('.positivoPresupuesto').show();
+		$('.negativoPresupuesto').hide();
+		$('.revisarPresupuesto').hide();
+		
+	})
+	
+	$('.btnRevisarPresupuesto').click( function() {
+		$('.positivoPresupuesto').hide();
+		$('.negativoPresupuesto').hide();
+		$('.revisarPresupuesto').show();
+	})
+	
+	
+	
+	$('.btnNegativoPresupuesto').click( function() {
+		$('.positivoPresupuesto').hide();
+		$('.negativoPresupuesto').show();
+		$('.revisarPresupuesto').hide();
+	})
+	
+	$('.btnTodosPresupuesto').click( function() {
+		$('.positivoPresupuesto').show();
+		$('.negativoPresupuesto').show();
+		$('.revisarPresupuesto').show();
+	})
+	
+});
+</script>

@@ -1,0 +1,102 @@
+@(buscador: utils.pagination.Pagination[Proveedor], formBuscador: DynamicForm)
+@import helper._
+@implicitFieldConstructor = @{ FieldConstructor(simpleInput.render) } 
+
+@views.html.compras.mainCompras(title = "Lista de proveedores") {
+    
+<div class="page-header">
+	<div class="row">
+		<div class="col-sm-9">
+			<h1>Lista de proveedores</h1>
+		</div>
+
+		<div class="col-sm-3">
+			<a href="@controllers.compras.routes.ProveedoresController.crear"  class="btn btn-default"><i class="glyphicon glyphicon-plus-sign"></i> Nuevo proveedor</a>
+		</div>
+	</div>
+</div>
+
+@if(flash.containsKey("success")) {
+	<div class="alert alert-success"><i class="glyphicon glyphicon-ok-sign"></i> @flash.get("success")</div>
+}
+@if(flash.containsKey("error")) {
+	<div class="alert alert-danger"><i class="glyphicon glyphicon-remove-sign"></i> @flash.get("error")</div>
+} 
+
+
+    <form action="" method="GET">
+		<div class="row seccion">
+			
+				<div class="col-sm-2">
+					<div class="form-group">
+						<label for="nombre" class="control-label">Nombre
+						@inputText(formBuscador("nombre"), 'class -> "form-control", 'autofocus -> "autofocus")
+						</label>
+					</div>
+				</div>
+				
+				<div class="col-sm-2">
+					<div class="form-group">
+						<label for="nombre" class="control-label">Cuit
+							@inputText(formBuscador("cuit"), 'class -> "form-control")
+						</label>
+					</div>
+				</div>
+
+				
+				<div class="col-sm-2">
+					<label class="control-label">Tipo de proveedor
+						@select(formBuscador("tipo"), options(Proveedor.TIPO_INTERNO ->"Agentes", Proveedor.TIPO_EXTERNO->"Proveedores", Proveedor.TIPO_AGENTE_INTERNO ->"Agentes contratados", Proveedor.TIPO_AGENTE_PLANTA->"Agentes en planta"), 'class -> "form-control select", '_default -> "Todos")
+					</label>
+				</div>
+				
+				<div class="col-sm-2">
+					<div class="form-group">
+					<label for="nombre" class="control-label">&nbsp;</label>
+					<button  class="form-control btn btn-primary">Buscar</button>
+					</div>
+				</div>
+				<div class="col-sm-2">
+					<div class="form-group">
+					<label for="nombre" class="control-label">&nbsp;</label>
+					<a href="@controllers.compras.routes.ProveedoresController.index()"  class="form-control btn btn-default">Limpiar</a>
+					</div>
+				</div>
+			
+		</div>
+    </form>
+    @if(buscador.getTotalRowCount == 0) {
+        
+        <div class="well">
+            <em>No se encuentran resultados</em>
+        </div>
+        
+    } else {
+		Mostrando @buscador.getDisplayXtoYofZ(" a "," de ") resultado(s).   
+		<table class="table table-striped table-bordered">
+			<thead>
+				<tr>
+					<th width="50">#</th>
+					<th>Nombre</th>
+					<th width="110">Cuit</th>
+					<th width="110">Agente</th>
+					<th class="50">#</th>
+				</tr>
+			</thead>
+			<tbody>
+		        @for(proveedor <- buscador.getList) {
+				<tr class="pointer" data-href="@controllers.compras.routes.ProveedoresController.ver(proveedor.id)">
+					<td class="notSeleccion"><a class="btn btn-default btn-xs notSeleccion" href="@controllers.compras.routes.ProveedoresController.editar(proveedor.id)"><i class="glyphicon glyphicon-edit"></i></a></td>
+					<td>@(proveedor.nombre)</td>
+					<td>@(proveedor.cuit)</td>
+					<td>@if(proveedor.agente_id != null){Si} else {No}</td>
+					<td class="notSeleccion"><a class="btn btn-default btn-xs delete-confirm-link notSeleccion"  href="@controllers.compras.routes.ProveedoresController.eliminar(proveedor.id)"><i class="glyphicon glyphicon-remove-circle"></i></a></td>
+				</tr>
+		        }
+			</tbody>
+		</table>
+		<div class="pagination pull-right">
+		    @views.html.helpers.paginador(buscador, controllers.compras.routes.ProveedoresController.index())
+		</div>
+	}
+}

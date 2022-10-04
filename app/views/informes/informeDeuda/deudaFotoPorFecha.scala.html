@@ -1,0 +1,160 @@
+@(formBuscador: DynamicForm,
+fecha:String,
+fechaHoy:String,
+totalCorte:java.math.BigDecimal,
+totalHoy:java.math.BigDecimal,
+totalDiferencia:java.math.BigDecimal,
+totalCorteE:java.math.BigDecimal,
+totalHoyE:java.math.BigDecimal,
+totalDiferenciaE:java.math.BigDecimal,
+totalCorteO:java.math.BigDecimal,
+totalHoyO:java.math.BigDecimal,
+totalDiferenciaO:java.math.BigDecimal)
+@import helper._
+@import utils._
+@import models.auth._
+@implicitFieldConstructor = @{ FieldConstructor(simpleInput.render) }
+
+@views.html.informes.mainInformes("Deudas - Corte por Fecha") {
+
+@views.html.informes.navInformes()
+
+@views.html.tags.successError()
+<div class="row">
+	<div class="col-sm-10">
+		<h1>Deudas  - Corte por Fecha Otros Proveedores - <span style="font-size: 12px;">(Fecha inicial de registro 21/06/2022)</span></h1>
+		 
+	
+	</div>
+	<div class="col-sm-4">
+		
+	</div>
+
+	<div class="col-sm-4">
+		
+		 
+	
+	</div>
+</div>
+
+<form action="" method="GET" id="filtroInforme">
+    	 
+	<div class="row seccion">
+		 
+		<div class="col-sm-2 input-group">
+			<label class="control-label">Fecha Corte</label>
+			<div>
+				@inputText(formBuscador("fecha_corte"), 'class -> "form-control date", 'id -> "fecha_corte", 'placeholder -> "Desde")
+			</div>
+		</div>
+		 
+		
+		<div class="col-sm-2">
+			<div class="form-group">
+				<label for="nombre" class="control-label">&nbsp;</label>
+				<button  class="form-control btn btn-primary" id="btn-buscar">Buscar</button>
+			</div>
+		</div>
+		<div class="col-sm-2">
+			<div class="form-group">
+				<label for="nombre" class="control-label">&nbsp;</label>
+				<a href="@controllers.informes.routes.InformesDeudasController.deudasFotoPorFecha()"  class="form-control btn btn-default">Limpiar</a>
+			</div>
+		</div>
+		
+	</div>
+</form>
+<hr>
+@if(fecha != null){
+<div class="row seccion">
+<h3>Otros Proveedores - Totales</h3>
+</div>
+<div class="row seccion">
+   	 <div class="col-sm-4">
+	  	  <div class="small-box bg-green">
+	  	  	<div class="inner">
+	          <h3>Deuda al @fecha</h3>
+	          <p>@utils.NumberUtils.moneda(totalCorte)</p>
+	  	  </div>
+		 </div>
+	 </div>
+	 <div class="col-sm-4">
+	  	  <div class="small-box bg-green">
+	  	  	<div class="inner">
+	          <h3>Deuda hoy @fechaHoy</h3>
+	          <p>@utils.NumberUtils.moneda(totalHoy)</p> 
+	  	  </div>
+		 </div>
+	 </div> 
+	 <div class="col-sm-4">
+	  	  <div class="small-box bg-green">
+	  	  	<div class="inner">
+	          <h3>Diferencia entre Deudas</h3>
+	          <p>@utils.NumberUtils.moneda(totalDiferencia)</p>
+	  	  </div>
+		 </div>
+	 </div> 
+</div>
+<hr>
+<div class="row seccion">
+<h3>Otros Proveedores Sin Equipamientos</h3>
+</div>
+<div class="row seccion">
+   	 <div class="col-sm-4">
+	  	  <div class="small-box bg-green">
+	  	  	<div class="inner">
+	          <h3>Deuda al @fecha</h3>
+	          <p>@utils.NumberUtils.moneda(totalCorteO)</p>
+	  	  </div>
+		 </div>
+	 </div>
+	 <div class="col-sm-4">
+	  	  <div class="small-box bg-green">
+	  	  	<div class="inner">
+	          <h3>Deuda hoy @fechaHoy</h3>
+	          <p>@utils.NumberUtils.moneda(totalHoyO)</p> 
+	  	  </div>
+		 </div>
+	 </div> 
+	 <div class="col-sm-4">
+	  	  <div class="small-box bg-green">
+	  	  	<div class="inner">
+	          <h3>Diferencia entre Deudas</h3>
+	          <p>@utils.NumberUtils.moneda(totalDiferenciaO)</p>
+	  	  </div>
+		 </div>
+	 </div> 
+</div>
+<hr>
+<div class="row seccion">
+<h3>Otros Proveedores Equipamientos</h3>
+</div>
+<div class="row seccion">
+   	 <div class="col-sm-4">
+	  	  <div class="small-box bg-green">
+	  	  	<div class="inner">
+	          <h3>Deuda al @fecha</h3>
+	          <p>@utils.NumberUtils.moneda(totalCorteE)</p>
+	  	  </div>
+		 </div>
+	 </div>
+	 <div class="col-sm-4">
+	  	  <div class="small-box bg-green">
+	  	  	<div class="inner">
+	          <h3>Deuda hoy @fechaHoy</h3>
+	          <p>@utils.NumberUtils.moneda(totalHoyE)</p> 
+	  	  </div>
+		 </div>
+	 </div> 
+	 <div class="col-sm-4">
+	  	  <div class="small-box bg-green">
+	  	  	<div class="inner">
+	          <h3>Diferencia entre Deudas</h3>
+	          <p>@utils.NumberUtils.moneda(totalDiferenciaE)</p>
+	  	  </div>
+		 </div>
+	 </div> 
+</div>
+<hr>
+}
+}

@@ -1,0 +1,34 @@
+@(formBuscador: DynamicForm,id:Long,orden: Orden)
+@import helper._
+@implicitFieldConstructor = @{ FieldConstructor(simpleInput.render) } 
+																			
+@helper.form(action = controllers.compras.routes.OrdenesAccionesController.editarFechaProvision(), 'id -> "formEditarFechaProvision") {	
+	
+	@views.html.tags.successError()
+	<div class="row">
+		<div class="col-sm-3">
+			<div class="form-group">
+				<label for="fecha_modal" class="control-label">Fecha</label> 
+				<input name="fecha_modal" id="fecha_modal" class="form-control date"/>
+				<input name="id_orden" id="id_orden" type="hidden" value="@id"/>
+			</div>
+		</div>
+		<div class="col-sm-5">
+			 
+			<span style="color:red;font-weight: bold;">Fecha Expediente - @(utils.DateUtils.formatDate(orden.expediente.fecha))</span>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-sm-5"><br />
+			<button type="submit" class="btn btn-default" title="Editar Fecha Provision"><i class="glyphicon glyphicon-arrow-right"></i> 
+			Editar</button>
+		</div>
+	</div>
+
+}
+<script>
+$( function(){
+	$("#fecha_modal").mask("99/99/9999");
+});
+</script>
+@flash().clear()

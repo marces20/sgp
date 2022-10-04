@@ -1,0 +1,49 @@
+@(formularioCarga: Boolean, facturaForm: Form[Factura] = null,factura:Factura)
+<div class="tab-pane" id="contenedorParciales">
+
+	@if(factura != null && factura.facturaParciales != null && factura.facturaParciales.size() > 0){
+		<table id="" class="table table-bordered">
+			<thead>
+				<tr>
+					<th width="100">Referencia</th>
+					<th width="100">Proveedor</th>
+					<!-- <th width="100">Referencia</th> -->
+					<th width="100">OPG</th>
+					<th width="100">N° Factura</th>
+					<!-- <th width="100">Representante</th> -->
+					<th width="100">Base</th>
+					<th width="100">Total impuestos</th>
+					<th width="100">Total</th>
+					<th width="100">Saldo pendiente</th>
+					<th width="100">Expediente</th>
+					<th width="100">Periodo</th>
+					<th>Tipo Cuenta</th>
+					<th width="100">Estado</th>
+				</tr>	
+			</thead>	
+		@for(f <- factura.facturaParciales) {
+			<tr>
+				<td align="center">@(f.nombre)</td>
+				<td>@if(f.proveedor != null){@(f.proveedor.nombre)}</td>
+				<td class="opg">@if(f.ordenPago != null){@(f.ordenPago.numero)}</td>
+				<td>@(f.numero_factura)</td>
+				<td class="totalBase" rel="@f.base">@if(f.base != null){@(utils.NumberUtils.moneda(f.base))}</td>
+				<td class="totalImpuestos" rel="@f.getTotalImpuesto()">@(utils.NumberUtils.moneda(f.getTotalImpuesto()))</td>
+				<td class="total" rel="@f.getTotal()">@(utils.NumberUtils.moneda(f.getTotal()))</td>
+				<td class="totalSaldo" rel="@f.getSaldoPendiente()">@(utils.NumberUtils.moneda(f.getSaldoPendiente()))</td>
+				<td>@if(f.expediente != null){@(f.expediente.getExpedienteEjercicio())}</td>
+				<td>@if(f.periodo != null){@(f.periodo.nombre)}</td>
+				<td>@if(f.tipoCuenta != null){@f.tipoCuenta.nombre}</td>
+				<td class="estado" align="center">
+						@if(f.getSaldoPendiente() != null && !f.getSaldoPendiente().equals(f.base) && (f.estado != null && f.estado.id == 19)){
+							Pagado 
+						}else{
+							@if(f.estado != null){@(f.estado.nombre)}
+						}
+				</td>	
+			<tr>
+		
+		}
+		</table>
+	}
+</div>

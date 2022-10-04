@@ -1,0 +1,20 @@
+@(formularioCarga: Boolean, certificacionForm: Form[CertificacionCompra] = null)
+@import java.util.List
+
+@if(certificacionForm.field("id").value == null || certificacionForm.field("id").value == ""){
+	<p>Para cargar productos primero debe dar de alta la Certificacion</p>
+} else {
+
+	<script>
+		$( function (){
+			$.get('@controllers.compras.routes.CertificacionesComprasLineaAjustesController.index(certificacionForm.field("id").value.toLong, formularioCarga)', function(data){
+				$('#listaLineaAjustes').parent().html(data);
+			})
+		});
+	</script>
+
+}
+
+<div id="listaLineaAjustes">
+
+</div>

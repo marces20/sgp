@@ -1,0 +1,134 @@
+@(nForm: Form[models.haberes.Novedad])
+@import helper._
+
+@import models.auth._
+@import models.haberes._
+@implicitFieldConstructor = @{ FieldConstructor(simpleInput.render) } 
+	
+	<div class="row">
+
+		<div class="col-sm-4">
+			<label class="control-label">Puesto laboral</label>
+			<div class="input-group @if(nForm.error("puesto_laboral_id") != null) {has-error}  else {has-required}">
+				@inputText(nForm("puestoLaboral.legajo.agente.apellido"),'class -> "form-control", 'id -> "puesto_laboral")
+				@inputText(nForm("puesto_laboral_id"), 'hidden -> "hidden", 'id -> "puesto_laboral_id")
+				<span class="input-group-addon">
+					<a href="#" class="searchModal"
+								id="searchPuestoLaboral" 
+								data-title="Selección de puesto laboral" 
+								data-url="@controllers.haberes.routes.PuestosLaboralesController.modalBuscar()" 
+								data-height="650" 
+								data-width="700" 
+								data-listen="modal.seleccion.puestoLaboral.simple" 
+								data-label="#puesto_laboral" 
+								data-field="#puesto_laboral_id">
+						<i class="glyphicon glyphicon-search"></i>
+					</a>
+				</span>
+			</div>
+			@nForm("puesto_laboral_id").error.map{ error => <div class="text-error">@error.message</div>}
+		</div>
+			
+		<div class="col-sm-2">
+			<label class="control-label">Periodo inicio</label> 
+			<div class="form-group @if(nForm.error("periodo_inicio_id") != null) {has-error} else {has-required}">
+				<div class="input-group">
+				@inputText(nForm("periodoInicio.nombre"),'class -> "form-control", 'id -> "periodo_inicio")
+				@inputText(nForm("periodo_inicio_id"),'hidden -> "hidden", 'id -> "periodo_inicio_id")
+				<span class="input-group-addon">
+						<a href="#" class="searchModal"
+									id="searchPeriodoInicio" 
+									data-title="Selección de Periodo" 
+									data-url="@controllers.contabilidad.routes.PeriodosController.modalBuscar()" 
+									data-height="650" 
+									data-width="700" 
+									data-listen="modal.seleccion.periodo.simple" 
+									data-label="#periodo_inicio" 
+									data-field="#periodo_inicio_id">
+							<i class="glyphicon glyphicon-search"></i>
+						</a>
+					</span>
+				</div>	
+			</div>
+			@nForm("periodo_inicio_id").error.map{ error => <div class="text-error">@error.message</div>}
+		</div>
+		
+		<div class="col-sm-2">
+			<label class="control-label">Periodo fin</label> 
+			<div class="form-group @if(nForm.error("periodo_hasta_id") != null) {has-error} else {has-required}">
+				<div class="input-group">
+				@inputText(nForm("periodoFin.nombre"),'class -> "form-control", 'id -> "periodo_fin")
+				@inputText(nForm("periodo_hasta_id"),'hidden -> "hidden", 'id -> "periodo_hasta_id")
+				<span class="input-group-addon">
+						<a href="#" class="searchModal"
+									id="searchPeriodoFin" 
+									data-title="Selección de Periodo" 
+									data-url="@controllers.contabilidad.routes.PeriodosController.modalBuscar()" 
+									data-height="650" 
+									data-width="700" 
+									data-listen="modal.seleccion.periodo.simple" 
+									data-label="#periodo_fin" 
+									data-field="#periodo_hasta_id">
+							<i class="glyphicon glyphicon-search"></i>
+						</a>
+					</span>
+				</div>	
+			</div>
+			@nForm("periodo_hasta_id").error.map{ error => <div class="text-error">@error.message</div>}
+		</div>
+		
+		<div class="col-sm-2 @if(nForm.error("liquidacion_tipo_id") != null) {has-error}  else {has-required}">
+			<label class="control-label">Tipo
+			@select(nForm("liquidacion_tipo_id"), models.haberes.LiquidacionTipo.getTipos().map { p => p.id.toString -> p.nombre}, 'class -> "form-control select", '_default -> "Seleccionar")
+			</label>
+			@nForm("liquidacion_tipo_id").error.map{ error => <div class="text-error">@error.message</div>}
+		</div>
+		
+	</div>
+	
+	<div class="row">
+	
+		<div class="col-sm-4">
+			<label class="control-label">Concepto</label>
+			<div class="input-group  @if(nForm.error("liquidacion_concepto_id") != null) {has-error}  else {has-required}">
+				@inputText(nForm("concepto.denominacion"), 'class -> "form-control", 'id -> "concepto")
+				@inputText(nForm("liquidacion_concepto_id"), 'hidden -> "hidden", 'id -> "liquidacion_concepto_id")
+				<span class="input-group-addon"><a href="#" id="searchConcepto" data-title="Selección de concepto" data-url="@controllers.haberes.routes.LiquidacionConceptosController.modalBuscar()" data-height="650" data-width="700" data-listen="modal.seleccion.concepto.simple" data-label="#concepto" data-field="#liquidacion_concepto_id"><i class="glyphicon glyphicon-search"></i></a></span>
+			</div>
+			@nForm("liquidacion_concepto_id").error.map{ error => <div class="text-error">@error.message</div>}
+		</div>
+	
+		<div class="col-sm-2">
+			<label for="cantidad" class="control-label">Cantidad</label>
+			<div class="form-group @if(nForm.error("cantidad") != null) {has-error} else {has-required}">
+				@inputText(nForm("cantidad"), 'class -> "form-control", 'id -> "cantidad")
+				@nForm("cantidad").error.map{ error => <div class="text-error">@error.message</div>}
+			</div>
+		</div>
+	
+		<div class="col-sm-2">
+			<label class="control-label">Importe</label>
+			<div class="form-group @if(nForm.error("importe") != null) {has-error}">	
+				@inputText(nForm("importe"), 'class -> "form-control", 'id -> "importe")
+				@nForm("importe").error.map{ error => <div class="text-error">@error.message</div>}
+			</div>
+		</div>
+		
+		
+		<div class="col-sm-2">
+			<label class="control-label">Importe tope</label>
+			<div class="form-group @if(nForm.error("importe_tope") != null) {has-error}">	
+				@inputText(nForm("importe_tope"), 'class -> "form-control", 'id -> "importe_tope")
+				@nForm("importe_tope").error.map{ error => <div class="text-error">@error.message</div>}
+			</div>
+		</div>
+	
+	</div>
+	
+	<hr />
+	
+	<div id="listaNovedades" data-href="@controllers.haberes.routes.NovedadesController.lista()">
+	
+	</div>
+
+	

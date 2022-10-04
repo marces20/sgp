@@ -1,0 +1,14 @@
+@(formBuscador: DynamicForm)
+@import helper._
+@implicitFieldConstructor = @{ FieldConstructor(simpleInput.render) } 
+	
+@helper.form(action = controllers.contabilidad.routes.OrdenesPagosCircuitosAccionesController.pasarRendicionesMasivo(), 'id -> "formPasarRendicionesOpc") {	
+	
+	@views.html.tags.successError()
+	
+	<div class="col-sm-5"><br />
+		<button type="submit" class="btn btn-default" title="Pasar a Rendiciones"><i class="glyphicon glyphicon-arrow-right"></i> Pasar a Rendiciones</button>
+	</div>
+
+}
+@flash().clear()

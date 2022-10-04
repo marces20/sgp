@@ -1,0 +1,50 @@
+@(linea: OrdenLineaAnulacion)
+
+@getPacientes(linea: OrdenLinea) = @{
+	var pacientes:String = new String()
+	if(linea != null && linea.ordenLineaCliente != null && linea.ordenLineaCliente.size() > 0){
+		for(olp <- linea.ordenLineaCliente) {
+			pacientes += olp.cliente.nombre.toUpperCase()+" - ID:"+olp.cliente.id_paciente_rismi+"\n" 
+		}
+	}
+	pacientes
+}
+
+@getPacientesAnulados(linea: OrdenLineaAnulacion) = @{
+	var pacientes:String = new String()
+								   
+	if(linea.ordenLineaAnulacionCliente != null && linea.ordenLineaAnulacionCliente.size() > 0){
+		for(olp <- linea.ordenLineaAnulacionCliente) {
+			pacientes += olp.cliente.nombre.toUpperCase()+" - ID:"+olp.cliente.id_paciente_rismi+"\n" 
+		}
+	}
+	
+	pacientes
+}
+
+<tr class="pointer">
+	<td class="accion-editar">
+		<!-- <a class="btn btn-default btn-xs modificarProducto" href="@controllers.patrimonio.routes.AnulacionRecepcionProductosController.editar(linea.id)"><i class="glyphicon glyphicon-edit"></i></a> -->
+		<input type="checkbox" name="check_linea_anulacion[]" value="@linea.id" class="data-check-linea-anulacion notSeleccion" id="check-@linea.id"/>
+	</td>
+	<td>@linea.ordenLinea.producto.nombre</td>
+	<td align="center">@linea.cantidad</td>
+	<td>@linea.ordenLinea.udm.nombre</td>
+	<td align="center">@utils.NumberUtils.moneda(linea.ordenLinea.precio)</td>
+	<td align="center" class="totalAnulado" data-valor="@linea.getTotal()">@utils.NumberUtils.moneda(linea.getTotal())</td>
+	<td align="center">@linea.observaciones</td>
+	
+	@if(linea != null && linea.ordenLineaAnulacionCliente != null && linea.ordenLineaAnulacionCliente.size() > 0){
+			
+			
+		<td><div class='tip-top pointer' title='@getPacientesAnulados(linea)'><i class="glyphicon glyphicon-user"></i></div></td>
+			
+		
+	}else{
+		<td></td>
+	}
+	<!--<td>
+	 <a class="btn btn-default btn-xs eliminarProducto" href="@controllers.patrimonio.routes.AnulacionRecepcionProductosController.eliminar(linea.id)">
+	 <i class="glyphicon glyphicon-trash icono-eliminar"></i></a></td>-->
+</tr>
+

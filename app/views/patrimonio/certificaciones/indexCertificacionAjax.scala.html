@@ -1,0 +1,75 @@
+@(buscador: utils.pagination.Pagination[CertificacionServicio], formBuscador: DynamicForm)
+@import helper._
+@import utils._
+@import models.auth._
+@implicitFieldConstructor = @{ FieldConstructor(simpleInput.render) } 
+
+@getClassEstado(i:CertificacionServicio) = @{
+	var classEstado:String = new String()
+	 
+	if(i.estado != null && i.estado.id == 43){
+		classEstado = "borrador"
+	}else if(i.estado != null && i.estado.id == 44){
+		classEstado = "cancelada"
+	}else if(i.estado != null && i.estado.id == 42){
+		classEstado = "autorizado"
+	}
+	 
+	classEstado
+}
+
+
+	@if(buscador.getTotalRowCount == 0) {
+        
+       <div class="well">
+           <em>No se encuentran certificaciones</em>
+       </div>
+        
+    } else {
+		
+		Mostrando @buscador.getDisplayXtoYofZ(" a "," de ") resultado(s).   
+		<table id="listaCertificaciones" class="table table-striped table-bordered table-hover">
+			<thead>
+				<tr>
+					<th width="30"></th>
+					<th width="60">Número</th>
+					<th width="100">Ord. provisión</th>
+					<th width="80">Acta</th>
+					<th width="70">Periodo</th>
+					<th>Proveedor</th>
+					<th width="110">Base</th>
+					<th width="110">Descuento</th>
+					<th width="110">Total</th>
+					<th width="80">Fecha</th>
+					<th width="80">Estado</th>
+				</tr>
+			</thead>
+			<tbody>
+		        @for(certificacion <- buscador.getList) {
+				<tr class="pointer @getClassEstado(certificacion)" data-href="@controllers.patrimonio.routes.CertificacionesServiciosController.ver(certificacion.id)">
+					
+					<td class="notSeleccion" align="center">
+						<a class="btn btn-default btn-xs notSeleccion" href="@controllers.patrimonio.routes.CertificacionesServiciosController.editar(certificacion.id)&@UriTrack.encode()">
+							<i class="glyphicon glyphicon-edit"></i>
+						</a>
+					</td>
+					<td>@certificacion.id</td>
+					<td>@certificacion.ordenProvision.numero</td>
+					<td>@if(certificacion.acta != null) {@certificacion.acta.numero}</td>
+					<td>@if(certificacion.periodo != null) {@certificacion.periodo.nombre}</td>
+					<td>@certificacion.ordenProvision.ordenCompra.proveedor.nombre</td>
+					<td>@(utils.NumberUtils.moneda(certificacion.getBase()))</td>
+					<td>@(utils.NumberUtils.moneda(certificacion.getDescuento()))</td>
+					<td>@(utils.NumberUtils.moneda(certificacion.getTotal()))</td>
+					<td>@if(certificacion.fecha_certificacion != null) { @DateUtils.formatDate(certificacion.fecha_certificacion)}</td>
+					<td>@certificacion.estado.nombre</td>
+				</tr>
+              	}
+			</tbody>
+		</table>
+		
+		<div class="pagination pull-right">
+		    @views.html.helpers.paginador(buscador, controllers.patrimonio.routes.CertificacionesServiciosController.index())
+		</div>
+        
+    }

@@ -1,0 +1,8 @@
+@(linea: CajaChicaPresupuestoLinea,  editable: Boolean = false)
+
+<tr data-id="@linea.id">
+	<td class="cuentaAnaliticaEnLinea">@if(linea.cuentaAnalitica == null){No asociada} else {@linea.cuentaAnalitica.codigo @linea.cuentaAnalitica.nombre}</td>
+	<td>@utils.NumberUtils.moneda(linea.monto, 10)</td>
+	<td>@if(linea.ajuste){AJUSTE}else{INICIAL}</td>
+</tr>
+

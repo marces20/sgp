@@ -1,0 +1,325 @@
+@(buscador: utils.pagination.Pagination[models.informes.InformeDeudaPorActaMaterializada], formBuscador: DynamicForm)
+@import helper._
+@implicitFieldConstructor = @{ FieldConstructor(simpleInput.render) } 
+
+@multiplica(a:BigDecimal,b:BigDecimal) = {
+	@(a * b)
+}
+
+@views.html.dashboard.mainDashboard(title = "Informe estadistico") {
+    
+<div class="page-header">
+	<div class="row">
+		<div class="col-sm-9">
+			<h1>Informe de deuda por actas</h1>
+		</div>
+
+		<div class="col-sm-3">
+			<a id="generarArchivo" href="@controllers.dashboard.routes.InformeDeudaPorActasController.archivoDeudaPorActas()"  class="btn btn-default"><i class="glyphicon glyphicon-download-alt"></i> Generar archivo</a>
+		</div>
+
+	</div>
+</div>
+
+
+<script>
+
+$( function() {
+	var baseUrl = $('#generarArchivo').attr('href')
+	$('#generarArchivo').attr('href', baseUrl + '?descarga=&' + window.location.href.slice(window.location.href.indexOf('?') + 1))
+	
+	/*
+	$('#generarArchivo').click( function() {
+		
+		var href = $(this).attr('href') + '?descarga=&' + escape(window.location.href.slice(window.location.href.indexOf('?') + 1).split('&'));
+		alert(href);
+		window.location = href;
+		return false;
+	});
+	*/
+});
+
+</script>
+
+
+
+
+@if(flash.containsKey("success")) {
+	<div class="alert alert-success"><i class="glyphicon glyphicon-ok-sign"></i> @flash.get("success")</div>
+}
+@if(flash.containsKey("error")) {
+	<div class="alert alert-danger"><i class="glyphicon glyphicon-remove-sign"></i> @flash.get("error")</div>
+} 
+
+
+    <form action="" method="GET" id="filtroInforme">
+		<div class="row seccion">
+			
+		<div class="form-group col-sm-2">
+			<label for="nombre" class="control-label">Numero
+			@inputText(formBuscador("acta_numero"), 'class -> "form-control", 'autofocus -> "autofocus")
+			</label>
+		</div>
+	
+		<div class="form-group col-sm-2">
+			<label for="nombre" class="control-label">Orden provisión
+			@inputText(formBuscador("orden_provision"), 'class -> "form-control")
+			</label>
+		</div>
+			
+		<div class="col-sm-4">
+			<label class="control-label">Proveedor
+				<div class="input-group">	
+					@inputText(formBuscador("proveedor_nombre"), 'name -> "", 'class -> "form-control", 'id -> "proveedor")
+					@inputText(formBuscador("proveedor_id"), 'hidden -> "hidden", 'id -> "proveedor_id")
+					<span class="input-group-addon">
+						<a href="#" class="searchModal"
+									id="searchProveedor" 
+									data-title="Selección de Proveedores" 
+									data-url="@controllers.compras.routes.ProveedoresController.modalBuscar()" 
+									data-height="650" 
+									data-width="700" 
+									data-listen="modal.seleccion.proveedor.simple" 
+									data-label="#proveedor" 
+									data-field="#proveedor_id">
+							<i class="glyphicon glyphicon-search"></i>
+						</a>
+					</span>
+				</div>
+			</label>
+		</div>
+			
+			<div class="col-sm-2">
+				<label class="control-label">Expediente
+					<div class="input-group">
+						@inputText(formBuscador("expediente.nombre"), 'name -> "", 'class -> "form-control", 'id -> "expediente")
+						@inputText(formBuscador("expediente_id"), 'hidden -> "hidden", 'id -> "expediente_id")
+						
+						<span class="input-group-addon">
+							<a href="#" class="searchModal"
+										id="searchExpediente" 
+										data-title="Selección de expediente" 
+										data-url="@controllers.expediente.routes.ExpedientesController.modalBuscar()" 
+										data-height="650" 
+										data-width="700" 
+										data-listen="modal.seleccion.expediente.simple" 
+										data-label="#expediente" 
+										data-field="#expediente_id">
+								<i class="glyphicon glyphicon-search"></i>
+							</a>
+						</span>
+					</div>
+				</label>
+			</div>  
+				
+			<div class="col-sm-2">
+				<label class="control-label">Ejercicio</label>
+					@select(formBuscador("ejercicio"), Ejercicio.getEjercicios().map { p => p.id.toString -> p.nombre}, 'class -> "form-control select", '_default -> "Seleccionar")
+			</div>	
+			
+	</div>
+	
+	<div class="row">
+		<!--  <div class="col-sm-2">
+			<label class="control-label"> 
+				Cuenta
+				@select(formBuscador("profe"),options(""->"Todos","profe"->"PROFE","operativa"->"OPERATIVA"), 'class -> "form-control select")
+			</label>
+		</div>-->
+		<div class="col-sm-2 input-group">
+			<label class="control-label"> 
+				Tipo Cuenta
+				@select(formBuscador("tipo_cuenta_id"), 
+				TipoCuenta.find.all().map { p => p.id.toString -> p.nombre}, 'class -> "form-control select", '_default -> "Seleccionar")
+			</label>
+		</div>
+		<div class="col-sm-2">		
+			<div class="form-group">
+				<label for="mayor_a">Deuda entre</label>
+				<div class="input-group">
+					@inputText(formBuscador("deuda_mayor"), 'class -> "form-control", 'id -> "mayor_a", 'placeholder -> "Mayor a")
+					<div class="input-group-addon"> y </div>
+		    		@inputText(formBuscador("deuda_menor"), 'class -> "form-control", 'placeholder -> "Menor a")
+				</div>
+			</div>
+		</div>	
+		
+				
+		<div class="col-sm-2">
+			<label for="deposito" class="control-label">Institucion</label> 
+			<div class="input-group">
+				@inputText(formBuscador("deposito.nombre"),'class -> "form-control", 'id -> "deposito_nombre", 'autocomplete -> "off")
+				@inputText(formBuscador("deposito_id"),'hidden -> "hidden", 'id -> "deposito_id")
+				<span class="input-group-addon">
+                	<a href="#" id="searchDeposito" data-title="Selección de Institucion" 
+                	data-url="@controllers.delegacion.routes.DepositosController.modalBuscar()" 
+                	data-height="650" data-width="700" 
+                	data-listen="modal.seleccion.deposito.simple" 
+                	data-label="#deposito_nombre" data-field="#deposito_id" /> <i class="glyphicon glyphicon-search"></i></a>
+                </span>
+			</div>
+		</div>
+		<div class="col-sm-6">
+			<div class="col-sm-3">
+				<label class="control-label"> 
+					Tipo
+					@select(formBuscador("tipo_acta"),options(""->"Ambos","acta"->"Actas","CC"->"Certificaciones","Anticipo"->"Anticipos"), 'class -> "form-control select")
+				</label>
+			</div>
+			<div class="col-sm-3">
+				<label class="control-label">Moneda</label>
+				<div class="form-group">
+					@select(formBuscador("tipo_moneda"),TipoMoneda.find.all().map { p => p.id.toString -> p.nombre}, 'class -> "form-control select", '_default -> "Seleccionar")
+				</div>
+			</div>		
+			<div class="col-sm-3">
+				<div class="checkbox">
+					<label class="control-label"> 
+						Sólo dolar
+						@checkbox(formBuscador("dolar"))
+					</label><br>
+				</div>
+			</div>
+			<div class="col-sm-3">
+				<label class="control-label"> 
+					Emergencia
+					@select(formBuscador("emergencia"),options(""->"","SI"->"SI","NO"->"NO"), 'class -> "form-control select")
+				</label>
+			</div>	
+		</div>	
+	</div>
+	
+	<div class="row">
+		
+	</div>	
+			
+	<div class="row">		
+		<div class="col-sm-2">
+			<div class="form-group">
+			<label for="nombre" class="control-label">&nbsp;</label>
+			<button  class="form-control btn btn-primary">Buscar</button>
+			</div>
+		</div>
+		<div class="col-sm-2">
+			<div class="form-group">
+			<label for="nombre" class="control-label">&nbsp;</label>
+			<a href="@controllers.dashboard.routes.InformeDeudaPorActasController.index()"  class="form-control btn btn-default">Limpiar</a>
+			</div>
+		</div>
+			
+		</div>
+    </form>
+    @if(buscador.getTotalRowCount == 0) {
+        
+        <div class="well">
+            <em>No se encuentran resultados</em>
+        </div>
+        
+    } else {
+		
+		<table class="table table-striped table-bordered" id="listaInforme">
+			<thead>
+				<tr style="background: #FFFFFF;">
+					<td colspan="9">
+						Mostrando @buscador.getDisplayXtoYofZ(" a "," de ") resultado(s).   
+					</td>
+					<td><b>Total:</b><br /><span class="actaFooter"></span></td>
+					<td><b>Total:</b><br /><span class="autorizadoFooter"></span></td>
+					<td><b>Total:</b><br /><span class="pagadoFooter"></span></td>
+					<td><b>Total:</b><br /><span class="deudaFooter"></span></td>
+				</tr>
+				<tr>
+					<th>Acta</th>
+					<th>Ejercicio</th>
+					<th>Institucion</th>
+					<th>Rubro</th>
+					<th>Fecha acta</th>
+					<th width="30">Cuenta</th>
+					<th width="40">OP</th>
+					<th>Proveedor</th>
+					<th width="90">Expediente</th>
+					<th>Total acta</th>
+					<th>Total autorizado</th>
+					<th width="90">Total pagado</th>
+					<th width="90">Total deuda</th>
+				</tr>
+			</thead>
+			<tbody>
+		        @for(informe <- buscador.getList) {
+				<tr>
+					<td>@informe.acta_numero</td>
+					<td>@if(informe.ejercicio != null){@informe.ejercicio.nombre}</td>
+					<td>@informe.ordenCompra.deposito.nombre</td>
+					<td>@if(informe.ordenCompra.ordenRubro != null){@informe.ordenCompra.ordenRubro.nombre}</td>
+					<td>@utils.DateUtils.formatDate(informe.fecha)</td>
+					<td>@if(informe.tipoCuenta != null){@informe.tipoCuenta.nombre}</td>
+					<td>@if(informe.ordenProvision != null){@informe.ordenProvision.numero}</td>
+					<td>@informe.proveedor.nombre</td>
+					<td>@informe.expediente.getExpedienteEjercicio()<br>
+						@if(informe.expediente.emergencia){
+							<span style="color:red;font-weight: bold;font-size:11px; ">Emergencia</span>
+						}
+					</td>
+					<td class="totalActa" data-valor="@informe.totalActa">@utils.NumberUtils.moneda(informe.totalActa)</td>
+					<td class="totalAutorizado" data-valor="@informe.totalAutorizado">@utils.NumberUtils.moneda(informe.totalAutorizado)</td>
+					<td class="totalPagado" data-valor="@informe.totalPagado">@utils.NumberUtils.moneda(informe.totalPagado)</td>
+					<td class="totalDeuda" data-valor="@informe.totalDeuda">
+							
+							@utils.NumberUtils.moneda(informe.totalDeuda)
+							
+						
+					
+					</td>					
+				</tr>
+		        }
+			</tbody>
+			<tfoot>
+				<tr>
+					<td colspan="9"></td>
+					<td><b>Total:</b><br /><span class="actaFooter"></span></td>
+					<td><b>Total:</b><br /><span class="autorizadoFooter"></span></td>
+					<td><b>Total:</b><br /><span class="pagadoFooter"></span></td>
+					<td><b>Total:</b><br /><span class="deudaFooter"></span></td>
+				</tr>
+			</tfoot>
+		</table>
+		<div class="pagination pull-right">
+		    @views.html.helpers.paginador(buscador, controllers.dashboard.routes.InformeDeudaPorActasController.index())
+		</div>
+	}
+	
+	
+	<script type="text/javascript">
+	$( function() {
+		$('#searchExpediente, #searchProveedor').modalSearch();
+		$('.actas').click( function() {
+			var $this = $(this);
+			var url = $this.attr('href');
+			var oid = $(this).data('data-id-provision');
+			$.get(url, function(data) {
+				$this.parent().html(data);
+			});
+			return false;
+		});
+		
+		var trs = $('#listaInforme tbody tr');
+
+		var orden = 0;var autorizado = 0; var pagado = 0; var deuda = 0; var compromiso = 0;
+		
+		trs.each( function() {
+			orden += Number($('.totalActa',this).attr("data-valor"));
+			autorizado += Number($('.totalAutorizado',this).attr("data-valor"));
+			pagado += Number($('.totalPagado',this).attr("data-valor"));
+			deuda += Number($('.totalDeuda',this).attr("data-valor"));
+		});
+
+		$(".actaFooter").html(formatNumberPesos(parseFloat(orden).toFixed(2)));
+		$(".autorizadoFooter").html(formatNumberPesos(parseFloat(autorizado).toFixed(2)));
+		$(".pagadoFooter").html(formatNumberPesos(parseFloat(pagado).toFixed(2)));
+		$(".deudaFooter").html(formatNumberPesos(parseFloat(deuda).toFixed(2)));
+		
+	});
+	</script>
+	
+	
+}

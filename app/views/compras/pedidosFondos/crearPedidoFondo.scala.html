@@ -1,0 +1,27 @@
+@(pedidoForm: Form[PedidoFondo])
+@import helper._
+
+@scripts = {
+	
+}
+
+@views.html.compras.mainCompras("Crear Pedido", scripts) {
+
+	<div class="page-header">
+		<div class="row">
+			<div class="col-sm-7">
+				<h1>Crear nuevo Pedido</h1>
+			</div>
+		</div>
+	</div>
+	@if(flash.containsKey("error")) {
+		<div class="alert alert-danger">
+			@flash.get("error")
+		</div>
+    }
+    
+    @helper.form(action = controllers.compras.routes.PedidosFondosController.guardar()) {
+		@views.html.compras.pedidosFondos.formPedidoFondo(pedidoForm) 
+		@views.html.compras.pedidosFondos.tabsPedidoFondo(true, pedidoForm)	
+	}
+}

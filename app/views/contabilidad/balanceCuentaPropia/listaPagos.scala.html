@@ -1,0 +1,94 @@
+@(pagos: List[Pago])
+@getClassEstado(i:Estado) = @{
+	var classEstado:String = new String()
+	if(i != null && i.id == 24){
+		classEstado = "borrador"
+	}else if(i != null && i.id == 26){
+		classEstado = "cancelada"
+	}else if(i != null && (i.id == 23)){
+		classEstado = "autorizado"
+	}else if(i != null && i.id == 25){
+		classEstado = "pagado"
+	}
+	
+	classEstado
+}
+
+@if(pagos != null){
+	@if(pagos.size() > 0){
+		<div class="row">
+			<div class="col-sm-12">
+				
+				<h2>Pagos</h2>
+					
+				<table class="table table-bordered">
+					<thead>
+						<tr>
+							 
+							 
+							<th>Referencia</th>
+							<th>Fecha</th>
+							<th>Fecha Concil.</th>
+							<!-- <th>Entrega Factura</th>-->
+							<!-- <th width="80">Fecha Conciliado</th> -->
+							<th>C/O</th>
+							<th>REF N°</th>
+							<th>Contraparte</th>
+							<th>Cuenta propia</th>
+							<th>T.P.</th>
+							<th>Orden pago</th>
+							<th>Tipo Cuenta</th>
+							<th>Exp.</th>
+							<th>Periodo</th>
+							<th>Total Debito</th>
+							<th>Total Credito</th>
+							<th>Estado</th>
+							 
+						</tr>
+					</thead>
+					<tbody>
+					@for(pago <- pagos) {
+						<tr class="pointer @getClassEstado(pago.estado)" data-estado="@pago.estado_id">
+							 
+							 			
+							<td>@(pago.nombre)</td>
+							<td class="fecha">@if(pago.fecha_pago != null){@(utils.DateUtils.formatDate(pago.fecha_pago))}</td>
+							<!--<td class="fechax">@if(pago.factura != null && pago.factura.fecha_recepcion != null){@(utils.DateUtils.formatDate(pago.factura.fecha_recepcion))}</td>-->
+							<td class="fechaConciliado">@if(pago.fecha_conciliacion != null){@(utils.DateUtils.formatDate(pago.fecha_conciliacion))}</td> 
+							<td>@if(pago.factura != null && pago.factura.proveedor != null && pago.tipo == "impuestos") {@(pago.factura.proveedor.nombre)}</td>
+							
+							<td class="referencia">@(pago.referencia)</td>
+							<td>@(pago.proveedor.nombre)</td>
+							<td>@if(pago.cuentaPropia != null) {@pago.cuentaPropia.nombre}</td>
+							<td class="tipoPago">
+								@if(pago.tipo_pago != null && pago.tipo_pago.compareTo("cheque") == 0){cheque} 
+								@if(pago.tipo_pago != null && pago.tipo_pago.compareTo("debito") == 0){debito} 
+								@if(pago.tipo_pago != null && pago.tipo_pago.compareTo("transferencia") == 0){MacroOnline} 
+								@if(pago.tipo_pago != null && pago.tipo_pago.compareTo("transferenciaInterbanking") == 0){Interbanking}
+								@if(pago.tipo_pago != null && pago.tipo_pago.compareTo("transferenciaMacroProveedores") == 0){MacroProveedores}
+							</td>
+							<td>@if(pago.ordenPago != null) {@pago.ordenPago.getNombreCompleto()}</td>
+							<td>@if(pago.tipoCuenta != null){@pago.tipoCuenta.nombre}</td>
+							<td>@if(pago.expediente != null) {@pago.expediente.getExpedienteEjercicio()}</td>
+							<td>@if(pago.periodo != null) {@pago.periodo.nombre}</td>
+							<td class="total" rel="@pago.total">@(utils.NumberUtils.moneda(pago.total))</td>
+							<td class="totalCredito" rel="@pago.total_credito">@(utils.NumberUtils.moneda(pago.total_credito))</td>
+							<td class="estado">@(pago.estado.nombre)</td>
+							 
+						</tr>
+		             }
+			        </tbody>
+			        <tfoot>
+			        	<tr>	
+			        		<td colspan="12">.</td>
+			        		<td></td>
+			        		<td></td>
+			        		<td colspan="1">&nbsp</td>
+			        	</tr>
+			        </tfoot>
+				</table>	
+				
+			</div>		
+		</div>		
+	}
+}

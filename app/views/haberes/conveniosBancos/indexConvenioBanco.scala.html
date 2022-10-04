@@ -1,0 +1,100 @@
+@(buscador: utils.pagination.Pagination[models.haberes.ConvenioBanco], formBuscador: DynamicForm)
+@import helper._
+@import utils._
+@import models.auth._
+
+@implicitFieldConstructor = @{ FieldConstructor(simpleInput.render) } 
+@views.html.haberes.mainHaberes("Lista Convenios Bancos ") {
+
+	<div class="page-header">
+		<div class="row">
+			<div class="col-sm-7">
+				<h1>Lista Convenios Bancos</h1>
+			</div>
+	
+			<div class="col-sm-5">
+				<div class="pull-right btn-header">
+					<a href="@controllers.haberes.routes.ConveniosBancosController.crear()?@UriTrack.encode()"  class="form-control btn btn-default"><i class="glyphicon glyphicon-plus-sign"></i> Nueva Convenio</a>
+				</div>
+			</div>
+		</div>
+	</div>
+	
+	@views.html.tags.successError()
+	
+	<div id="actions">
+		<form action="" method="GET">
+			<div class="row">
+				<div class="col-sm-3">
+					<div class="form-group">
+						<label for="nombre" class="control-label">Denominacion
+						@inputText(formBuscador("nombre"), 'class -> "form-control", 'autofocus -> "autofocus")
+						</label>
+					</div>
+				</div>
+				<div class="col-sm-2">
+					<div class="form-group">
+					<label for="buscar" class="control-label">&nbsp;</label>
+					<button  class="form-control btn btn-primary">Buscar</button>
+					</div>
+				</div>
+				<div class="col-sm-2">
+					<div class="form-group">
+					<label for="limpiar" class="control-label">&nbsp;</label>
+					<a href="@controllers.haberes.routes.ConveniosBancosController.index()"  class="form-control btn btn-default">Limpiar</a>
+					</div>
+				</div>
+			</div>
+		</form>
+	</div>
+	
+	@if(buscador.getTotalRowCount == 0) {
+        
+        <div class="well">
+            <em>No se encuentran Convenios Bancos</em>
+        </div>
+        
+    } else {
+    
+    	Mostrando @buscador.getDisplayXtoYofZ(" a "," de ") resultado(s). 
+		
+		<table class="table table-striped table-bordered">
+			<thead>
+				<tr>
+					<th width="30">
+						<input type="checkbox" name="checkAll" id="checkAll"/>
+					</th>
+					<th width="30">#</th>
+					<th>Denominacion</th>
+					<th width="30">#</th>
+				</tr>
+			</thead>
+			<tbody>
+			@for(lc <- buscador.getList) {
+				<tr class="pointer" data-href="@controllers.haberes.routes.ConveniosBancosController.ver(lc.id)&@UriTrack.encode()">
+					<td><input type="checkbox" name="check_listado[]" value="@lc.id" class="notSeleccion" id="check-@lc.id"/></td>
+					<td>
+						@if(Permiso.check("convenioBancoEditar")) {
+						<a class="btn btn-default btn-xs notSeleccion" href="@controllers.haberes.routes.ConveniosBancosController.editar(lc.id)&@UriTrack.encode()">
+							<i class="glyphicon glyphicon-edit"></i>
+						</a>
+						}
+					</td>
+					<td>@(lc.nombre)</td>
+					<td>
+						@if(Permiso.check("convenioBancoEliminar")) {
+						<a class="btn btn-default btn-xs delete-confirm-link notSeleccion" href="@controllers.haberes.routes.ConveniosBancosController.eliminar(lc.id)&@UriTrack.encode()">
+							<i class="glyphicon glyphicon-trash icono-eliminar"></i>
+						</a>
+						}
+					</td>
+				</tr>
+             }
+	        </tbody>
+        </table>
+        
+        <div class="pagination pull-right">
+		    @views.html.helpers.paginador(buscador, controllers.haberes.routes.ConveniosBancosController.index())
+		</div>
+ 	 }
+}

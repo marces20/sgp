@@ -1,0 +1,18 @@
+@(formularioCarga: Boolean, certificacionForm: Form[CertificacionServicio] = null)
+@import java.util.List
+
+@if(certificacionForm.field("id").value == null || certificacionForm.field("id").value == ""){
+	<p>Para cargar productos primero debe dar de alta la Certificacion</p>
+} else {
+	<script>
+	$( function (){
+		$.get('@controllers.patrimonio.routes.LineasCertificacionesController.index(certificacionForm.field("id").value.toLong, formularioCarga)', function(data){
+			$('#listaLineaProductos').parent().html(data);
+		})
+	});
+	</script>
+}
+
+<div id="listaLineaProductos">
+
+</div>

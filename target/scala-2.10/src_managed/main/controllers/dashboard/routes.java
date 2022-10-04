@@ -1,0 +1,91 @@
+// @SOURCE:/home/marce/hspwork/play/sgpgit/sgp/conf/routeDashboard.routes
+// @HASH:9584acea7ab162a68e5aa6372ff713688149ed32
+// @DATE:Tue Oct 04 11:43:27 ART 2022
+
+package controllers.dashboard;
+
+public class routes {
+public static final controllers.dashboard.ReverseInformesRecuperoController InformesRecuperoController = new controllers.dashboard.ReverseInformesRecuperoController();
+public static final controllers.dashboard.ReverseAutorizadoLineasController AutorizadoLineasController = new controllers.dashboard.ReverseAutorizadoLineasController();
+public static final controllers.dashboard.ReverseProfesionalesMedicosController ProfesionalesMedicosController = new controllers.dashboard.ReverseProfesionalesMedicosController();
+public static final controllers.dashboard.ReverseInventarioRismiController InventarioRismiController = new controllers.dashboard.ReverseInventarioRismiController();
+public static final controllers.dashboard.ReverseDeudasPorAntiguedadController DeudasPorAntiguedadController = new controllers.dashboard.ReverseDeudasPorAntiguedadController();
+public static final controllers.dashboard.ReverseLiquidacionesController LiquidacionesController = new controllers.dashboard.ReverseLiquidacionesController();
+public static final controllers.dashboard.ReverseDeudasGlobalizadasReportesController DeudasGlobalizadasReportesController = new controllers.dashboard.ReverseDeudasGlobalizadasReportesController();
+public static final controllers.dashboard.ReverseProveedoresController ProveedoresController = new controllers.dashboard.ReverseProveedoresController();
+public static final controllers.dashboard.ReverseUltimasCotizacionesController UltimasCotizacionesController = new controllers.dashboard.ReverseUltimasCotizacionesController();
+public static final controllers.dashboard.ReverseMovimientosCuentasController MovimientosCuentasController = new controllers.dashboard.ReverseMovimientosCuentasController();
+public static final controllers.dashboard.ReversePresupuestoController PresupuestoController = new controllers.dashboard.ReversePresupuestoController();
+public static final controllers.dashboard.ReverseInformeEstadisticoDeudaProveedoresController InformeEstadisticoDeudaProveedoresController = new controllers.dashboard.ReverseInformeEstadisticoDeudaProveedoresController();
+public static final controllers.dashboard.ReverseAutorizadosController AutorizadosController = new controllers.dashboard.ReverseAutorizadosController();
+public static final controllers.dashboard.ReverseHonorariosNewController HonorariosNewController = new controllers.dashboard.ReverseHonorariosNewController();
+public static final controllers.dashboard.ReverseAuditoriaController AuditoriaController = new controllers.dashboard.ReverseAuditoriaController();
+public static final controllers.dashboard.ReverseImpuestosController ImpuestosController = new controllers.dashboard.ReverseImpuestosController();
+public static final controllers.dashboard.ReverseLiquidacionesReportesController LiquidacionesReportesController = new controllers.dashboard.ReverseLiquidacionesReportesController();
+public static final controllers.dashboard.ReverseIndexController IndexController = new controllers.dashboard.ReverseIndexController();
+public static final controllers.dashboard.ReverseDeudasPorAntiguedadReportesController DeudasPorAntiguedadReportesController = new controllers.dashboard.ReverseDeudasPorAntiguedadReportesController();
+public static final controllers.dashboard.ReverseInformeEstadisticoPagoProveedoresController InformeEstadisticoPagoProveedoresController = new controllers.dashboard.ReverseInformeEstadisticoPagoProveedoresController();
+public static final controllers.dashboard.ReverseControlDeudaController ControlDeudaController = new controllers.dashboard.ReverseControlDeudaController();
+public static final controllers.dashboard.ReverseHonorariosNewReportesController HonorariosNewReportesController = new controllers.dashboard.ReverseHonorariosNewReportesController();
+public static final controllers.dashboard.ReverseDeudasGlobalizadasController DeudasGlobalizadasController = new controllers.dashboard.ReverseDeudasGlobalizadasController();
+public static final controllers.dashboard.ReverseInformesRecuperoReportesController InformesRecuperoReportesController = new controllers.dashboard.ReverseInformesRecuperoReportesController();
+public static final controllers.dashboard.ReverseHonorariosController HonorariosController = new controllers.dashboard.ReverseHonorariosController();
+public static final controllers.dashboard.ReverseInformeDeudaPorActasController InformeDeudaPorActasController = new controllers.dashboard.ReverseInformeDeudaPorActasController();
+public static class javascript {
+public static final controllers.dashboard.javascript.ReverseInformesRecuperoController InformesRecuperoController = new controllers.dashboard.javascript.ReverseInformesRecuperoController();
+public static final controllers.dashboard.javascript.ReverseAutorizadoLineasController AutorizadoLineasController = new controllers.dashboard.javascript.ReverseAutorizadoLineasController();
+public static final controllers.dashboard.javascript.ReverseProfesionalesMedicosController ProfesionalesMedicosController = new controllers.dashboard.javascript.ReverseProfesionalesMedicosController();
+public static final controllers.dashboard.javascript.ReverseInventarioRismiController InventarioRismiController = new controllers.dashboard.javascript.ReverseInventarioRismiController();
+public static final controllers.dashboard.javascript.ReverseDeudasPorAntiguedadController DeudasPorAntiguedadController = new controllers.dashboard.javascript.ReverseDeudasPorAntiguedadController();
+public static final controllers.dashboard.javascript.ReverseLiquidacionesController LiquidacionesController = new controllers.dashboard.javascript.ReverseLiquidacionesController();
+public static final controllers.dashboard.javascript.ReverseDeudasGlobalizadasReportesController DeudasGlobalizadasReportesController = new controllers.dashboard.javascript.ReverseDeudasGlobalizadasReportesController();
+public static final controllers.dashboard.javascript.ReverseProveedoresController ProveedoresController = new controllers.dashboard.javascript.ReverseProveedoresController();
+public static final controllers.dashboard.javascript.ReverseUltimasCotizacionesController UltimasCotizacionesController = new controllers.dashboard.javascript.ReverseUltimasCotizacionesController();
+public static final controllers.dashboard.javascript.ReverseMovimientosCuentasController MovimientosCuentasController = new controllers.dashboard.javascript.ReverseMovimientosCuentasController();
+public static final controllers.dashboard.javascript.ReversePresupuestoController PresupuestoController = new controllers.dashboard.javascript.ReversePresupuestoController();
+public static final controllers.dashboard.javascript.ReverseInformeEstadisticoDeudaProveedoresController InformeEstadisticoDeudaProveedoresController = new controllers.dashboard.javascript.ReverseInformeEstadisticoDeudaProveedoresController();
+public static final controllers.dashboard.javascript.ReverseAutorizadosController AutorizadosController = new controllers.dashboard.javascript.ReverseAutorizadosController();
+public static final controllers.dashboard.javascript.ReverseHonorariosNewController HonorariosNewController = new controllers.dashboard.javascript.ReverseHonorariosNewController();
+public static final controllers.dashboard.javascript.ReverseAuditoriaController AuditoriaController = new controllers.dashboard.javascript.ReverseAuditoriaController();
+public static final controllers.dashboard.javascript.ReverseImpuestosController ImpuestosController = new controllers.dashboard.javascript.ReverseImpuestosController();
+public static final controllers.dashboard.javascript.ReverseLiquidacionesReportesController LiquidacionesReportesController = new controllers.dashboard.javascript.ReverseLiquidacionesReportesController();
+public static final controllers.dashboard.javascript.ReverseIndexController IndexController = new controllers.dashboard.javascript.ReverseIndexController();
+public static final controllers.dashboard.javascript.ReverseDeudasPorAntiguedadReportesController DeudasPorAntiguedadReportesController = new controllers.dashboard.javascript.ReverseDeudasPorAntiguedadReportesController();
+public static final controllers.dashboard.javascript.ReverseInformeEstadisticoPagoProveedoresController InformeEstadisticoPagoProveedoresController = new controllers.dashboard.javascript.ReverseInformeEstadisticoPagoProveedoresController();
+public static final controllers.dashboard.javascript.ReverseControlDeudaController ControlDeudaController = new controllers.dashboard.javascript.ReverseControlDeudaController();
+public static final controllers.dashboard.javascript.ReverseHonorariosNewReportesController HonorariosNewReportesController = new controllers.dashboard.javascript.ReverseHonorariosNewReportesController();
+public static final controllers.dashboard.javascript.ReverseDeudasGlobalizadasController DeudasGlobalizadasController = new controllers.dashboard.javascript.ReverseDeudasGlobalizadasController();
+public static final controllers.dashboard.javascript.ReverseInformesRecuperoReportesController InformesRecuperoReportesController = new controllers.dashboard.javascript.ReverseInformesRecuperoReportesController();
+public static final controllers.dashboard.javascript.ReverseHonorariosController HonorariosController = new controllers.dashboard.javascript.ReverseHonorariosController();
+public static final controllers.dashboard.javascript.ReverseInformeDeudaPorActasController InformeDeudaPorActasController = new controllers.dashboard.javascript.ReverseInformeDeudaPorActasController();
+}
+public static class ref {
+public static final controllers.dashboard.ref.ReverseInformesRecuperoController InformesRecuperoController = new controllers.dashboard.ref.ReverseInformesRecuperoController();
+public static final controllers.dashboard.ref.ReverseAutorizadoLineasController AutorizadoLineasController = new controllers.dashboard.ref.ReverseAutorizadoLineasController();
+public static final controllers.dashboard.ref.ReverseProfesionalesMedicosController ProfesionalesMedicosController = new controllers.dashboard.ref.ReverseProfesionalesMedicosController();
+public static final controllers.dashboard.ref.ReverseInventarioRismiController InventarioRismiController = new controllers.dashboard.ref.ReverseInventarioRismiController();
+public static final controllers.dashboard.ref.ReverseDeudasPorAntiguedadController DeudasPorAntiguedadController = new controllers.dashboard.ref.ReverseDeudasPorAntiguedadController();
+public static final controllers.dashboard.ref.ReverseLiquidacionesController LiquidacionesController = new controllers.dashboard.ref.ReverseLiquidacionesController();
+public static final controllers.dashboard.ref.ReverseDeudasGlobalizadasReportesController DeudasGlobalizadasReportesController = new controllers.dashboard.ref.ReverseDeudasGlobalizadasReportesController();
+public static final controllers.dashboard.ref.ReverseProveedoresController ProveedoresController = new controllers.dashboard.ref.ReverseProveedoresController();
+public static final controllers.dashboard.ref.ReverseUltimasCotizacionesController UltimasCotizacionesController = new controllers.dashboard.ref.ReverseUltimasCotizacionesController();
+public static final controllers.dashboard.ref.ReverseMovimientosCuentasController MovimientosCuentasController = new controllers.dashboard.ref.ReverseMovimientosCuentasController();
+public static final controllers.dashboard.ref.ReversePresupuestoController PresupuestoController = new controllers.dashboard.ref.ReversePresupuestoController();
+public static final controllers.dashboard.ref.ReverseInformeEstadisticoDeudaProveedoresController InformeEstadisticoDeudaProveedoresController = new controllers.dashboard.ref.ReverseInformeEstadisticoDeudaProveedoresController();
+public static final controllers.dashboard.ref.ReverseAutorizadosController AutorizadosController = new controllers.dashboard.ref.ReverseAutorizadosController();
+public static final controllers.dashboard.ref.ReverseHonorariosNewController HonorariosNewController = new controllers.dashboard.ref.ReverseHonorariosNewController();
+public static final controllers.dashboard.ref.ReverseAuditoriaController AuditoriaController = new controllers.dashboard.ref.ReverseAuditoriaController();
+public static final controllers.dashboard.ref.ReverseImpuestosController ImpuestosController = new controllers.dashboard.ref.ReverseImpuestosController();
+public static final controllers.dashboard.ref.ReverseLiquidacionesReportesController LiquidacionesReportesController = new controllers.dashboard.ref.ReverseLiquidacionesReportesController();
+public static final controllers.dashboard.ref.ReverseIndexController IndexController = new controllers.dashboard.ref.ReverseIndexController();
+public static final controllers.dashboard.ref.ReverseDeudasPorAntiguedadReportesController DeudasPorAntiguedadReportesController = new controllers.dashboard.ref.ReverseDeudasPorAntiguedadReportesController();
+public static final controllers.dashboard.ref.ReverseInformeEstadisticoPagoProveedoresController InformeEstadisticoPagoProveedoresController = new controllers.dashboard.ref.ReverseInformeEstadisticoPagoProveedoresController();
+public static final controllers.dashboard.ref.ReverseControlDeudaController ControlDeudaController = new controllers.dashboard.ref.ReverseControlDeudaController();
+public static final controllers.dashboard.ref.ReverseHonorariosNewReportesController HonorariosNewReportesController = new controllers.dashboard.ref.ReverseHonorariosNewReportesController();
+public static final controllers.dashboard.ref.ReverseDeudasGlobalizadasController DeudasGlobalizadasController = new controllers.dashboard.ref.ReverseDeudasGlobalizadasController();
+public static final controllers.dashboard.ref.ReverseInformesRecuperoReportesController InformesRecuperoReportesController = new controllers.dashboard.ref.ReverseInformesRecuperoReportesController();
+public static final controllers.dashboard.ref.ReverseHonorariosController HonorariosController = new controllers.dashboard.ref.ReverseHonorariosController();
+public static final controllers.dashboard.ref.ReverseInformeDeudaPorActasController InformeDeudaPorActasController = new controllers.dashboard.ref.ReverseInformeDeudaPorActasController();
+}
+}
+          

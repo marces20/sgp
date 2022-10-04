@@ -1,0 +1,9 @@
+@(lineaForm: Form[AgenteSeguimientoLinea])
+@import helper._
+@implicitFieldConstructor = @{ FieldConstructor(simpleInput.render) } 
+
+@helper.form(action = controllers.rrhh.routes.AgentesSeguimientoLineasController.actualizar()) {
+	@views.html.rrhh.agenteSeguimientoLineas.formLineaSeguimiento(lineaForm)
+	@inputText(lineaForm("id"), 'hidden -> "hidden")
+	
+}

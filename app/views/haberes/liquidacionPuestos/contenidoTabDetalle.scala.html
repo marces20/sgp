@@ -1,0 +1,18 @@
+@(formularioCarga: Boolean, lpForm: Form[models.haberes.LiquidacionPuesto] = null)
+@import java.util.List
+
+@if(lpForm.field("id").value == null || lpForm.field("id").value == ""){
+	<p><i class="glyphicon glyphicon-info-sign"></i> Para cargar detalles primero debe dar de alta la liquidacion</p>
+} else {
+	<script>
+		$( function (){
+			$.get('@controllers.haberes.routes.LiquidacionDetallesController.index(lpForm.field("id").value.toLong, formularioCarga)', function(data){
+				$('#listaLiquidacionDetalles').parent().html(data);
+			})
+		});
+	</script>
+}
+		 
+<div id="listaLiquidacionDetalles">
+
+</div>

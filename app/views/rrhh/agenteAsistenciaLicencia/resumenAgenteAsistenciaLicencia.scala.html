@@ -1,0 +1,27 @@
+@(aal:java.util.Map[String,java.util.Map[String,Array[Integer]]])
+@import helper._
+@import utils._
+@import models.auth._
+@for((key,value) <- aal){
+<table id="listaDeAgenteAsistenciaLicenciasResumen" class="table table-striped table-bordered">
+	<thead>
+		<tr>
+			<th align="center" colspan="3">EJERCICIO - @key</th>
+		</tr>
+		<tr>
+			<th width="400">Tipo de Licencia</th>
+			<th>Dias Pedidos/Totales</th>
+			<th>Dias Disponibles</th>
+		<tr>
+	</thead>
+	<tbody>
+		@for((key2,value2) <- value){
+		<tr>
+			<td>@key2</td>
+			<td>@value2(0)/@value2(2)</td>
+			<td>@value2(1)</td>
+		</tr>
+		}
+	</tbody>
+</table>
+}

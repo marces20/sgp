@@ -1,0 +1,128 @@
+@(cuentaBancariaForm: Form[CuentaBancaria],c: CuentaBancaria)
+@import helper._
+@implicitFieldConstructor = @{ FieldConstructor(simpleInput.render) }
+
+@views.html.contabilidad.mainContabilidad("Ver cuenta bancaria") {
+
+	<div class="page-header">
+		<div class="row">
+			<div class="col-sm-7">
+				<h1>Vista de cuenta bancaria</h1>
+			</div>
+			<div class="col-sm-5">
+				<div class="dropdown pull-right">
+				 <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown">
+				 	<i class="glyphicon glyphicon-list-alt"></i>
+				    Reportes
+				    <span class="caret"></span>
+				  </button>
+				  <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
+				    
+				  </ul>
+				</div>
+				
+				<div class="dropdown pull-right btn-header">
+				 <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown">
+				 	<i class="glyphicon glyphicon-cog"></i>
+				    Acciones
+				    <span class="caret"></span>
+				  </button>
+				  <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
+				  	
+				  </ul>
+				</div>
+			</div>
+		</div>
+	</div>
+	
+	@views.html.tags.successError()
+	
+	<div class="row menu-acciones">
+		<div class="col-sm-10">
+			<a href="@controllers.contabilidad.routes.CuentaBancariasController.crearCuentaBancaria()"  class="btn btn-default"><i class="glyphicon glyphicon-plus-sign"></i> Nuevo</a>
+			<a href="@controllers.contabilidad.routes.CuentaBancariasController.editarCuentaBancaria(c.id)"  class="btn btn-default"><i class="glyphicon glyphicon-edit"></i> Editar</a>
+			<a href="@controllers.contabilidad.routes.CuentaBancariasController.eliminarCuentaBancaria(c.id)"  class="btn btn-default delete-confirm-link"><i class="glyphicon glyphicon-trash icono-eliminar"></i> Eliminar</a>
+		</div>
+		<div class="col-sm-2">
+			<a href="@controllers.contabilidad.routes.CuentaBancariasController.indexCuentaBancaria()" class="btn btn-default"><i class="glyphicon glyphicon-list"></i></a>
+		</div>
+	</div>
+	
+	<div class="row">
+		<div class="col-sm-4">
+			<label class="control-label">Proveedor</label> 
+			<p class="form-control-static form-control" style="height: 25px; overflow: hidden;">
+				<a href="#" class="infoProveedor" data-url="@controllers.compras.routes.ProveedoresAccionesController.modalInformacionProveedor(c.proveedor.id)">
+						@cuentaBancariaForm("proveedor.nombre").value
+				</a>
+			</p>
+		</div>
+		<div class="col-sm-4">
+			<label class="control-label">Numero Cuenta</label> 
+			<p class="form-control-static form-control" style="height: 25px; overflow: hidden;">
+				@cuentaBancariaForm("numero_cuenta").value
+			</p>
+		</div>
+		<div class="col-sm-4">
+			<label class="control-label">CBU</label> 
+			<p class="form-control-static form-control" style="height: 25px; overflow: hidden;">
+				@cuentaBancariaForm("cbu").value
+			</p>
+		</div>
+	</div>	
+	<div class="row contenedorUbicacion">
+		<div class="col-sm-4">
+			<div class="seleccionBanco form-group @if(cuentaBancariaForm.error("banco_id") != null) {has-error}else{has-required}">
+				<label for="@cuentaBancariaForm("banco_id").id" class="control-label">Banco</label>
+				@select(cuentaBancariaForm("banco_id"), Banco.find.all().map { p => p.id.toString -> p.nombre}, 'class -> "form-control select", '_default -> "Seleccionar",'disabled -> "disabled")
+			</div>
+		</div>
+		<div class="col-sm-4">
+			<div class="seleccionSucursal form-group @if(cuentaBancariaForm.error("sucursal_banco_id") != null) {has-error}else{has-required}">
+				<label for="@cuentaBancariaForm("sucursal_banco_id").id" class="control-label">Sucursal</label>
+				@select(cuentaBancariaForm("sucursal_banco_id"), 
+					cuentaBancariaForm("banco_id").value match {
+						case null => {options()}
+						case v if v.matches("\\d+") => {SucursalBanco.getSucursales(v.toInt).map { p => p.id.toString -> p.nombre}}
+						case _ => {options()}
+					}, 
+				'class -> "form-control select", '_default -> "Seleccionar",'disabled -> "disabled")
+			</div>
+		</div>
+		<div class="col-sm-2">
+			<div class="checkbox">
+				<label class="control-label"> 
+					Predeterminada
+					@checkbox(cuentaBancariaForm("predeterminada"),'disabled -> "disabled")
+				</label>
+			</div>
+		</div>
+	</div>
+	<h4>Estado actual: 	<b>@c.estado.nombre</b></h4>
+	
+	<div class="row margin-bottom-25">	
+		@for(estado <- models.Estado.getSiguienteEstadoPorAprobar(c.estado.orden,models.Estado.TIPO_CUENTA_BANCARIA)) {	
+			@if(estado.orden <= 3) {
+				<div class="col-sm-3">
+					<a href="@controllers.contabilidad.routes.CuentaBancariasController.cambiarEstado(c.id, estado.id.toLong)" class="btn btn-default">
+						<i class="glyphicon glyphicon-arrow-right"></i> @estado.nombre
+					</a>
+				</div>
+				
+			}
+		}
+		@if(c.estado.id == models.Estado.CUENTA_BANCARIA_ESTADO_CANCELADO) {
+			<div class="col-sm-3">
+				<a href="@controllers.contabilidad.routes.CuentaBancariasController.cambiarEstado(c.id, models.Estado.CUENTA_BANCARIA_ESTADO_BORRADOR)" class="btn btn-default">
+					<i class="glyphicon glyphicon-arrow-right"></i> Volver a Borrador
+				</a>
+			</div>
+		}else{
+			<div class="col-sm-3">
+				<a href="@controllers.contabilidad.routes.CuentaBancariasController.cambiarEstado(c.id, models.Estado.CUENTA_BANCARIA_ESTADO_CANCELADO)" class="btn btn-default">
+					<i class="glyphicon glyphicon-minus-sign"></i> Cancelar Cuenta Bancaria
+				</a>
+			</div>
+		}	
+	</div>	
+}

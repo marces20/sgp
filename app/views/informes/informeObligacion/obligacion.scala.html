@@ -1,0 +1,367 @@
+@(formBuscador: DynamicForm)
+@import helper._
+@import utils._
+@import models.auth._
+@implicitFieldConstructor = @{ FieldConstructor(simpleInput.render) }
+
+@views.html.informes.mainInformes("Obligaciones") {
+
+@views.html.informes.navInformes()
+
+
+<!-- Main content -->
+    <section class="content">
+      <div class="container-fluid">
+        <div class="row">
+         
+          <!-- /.col (LEFT) -->
+          <div class="col-md-12">
+           
+
+            <!-- BAR CHART -->
+            <div class="card card-success">
+              <div class="card-header">
+                <h3 class="card-title">Obligaciones</h3>
+
+                 
+              </div>
+              <div class="card-body">
+                <div class="chart">
+                  <canvas id="barChart" style="height:230px; min-height:230px"></canvas>
+                </div>
+              </div>
+              <!-- /.card-body -->
+            </div>
+            <!-- /.card -->
+
+             
+
+          </div>
+          <!-- /.col (RIGHT) -->
+        </div>
+        <!-- /.row -->
+      </div><!-- /.container-fluid -->
+    </section>
+<!-- /.content -->
+	<table class="table table-bordered">
+       <thead>                  
+         <tr>
+           <th style="width: 10px">#</th>
+           <th align="center">Enero</th>
+           <th align="center">Febrero</th>
+           <th align="center">Marzo</th>
+           <th align="center">Abril</th>
+           <th align="center">Mayo</th>
+           <th align="center">Junio</th> 
+         </tr>
+       </thead>
+       <tbody>
+         <tr>
+           <td>ESTUDIOS MEDICOS</td>
+           <td></td>
+           <td></td>
+           <td></td>
+           <td></td>
+           <td></td>
+           <td></td>
+            
+         </tr>
+         <tr>
+           <td>MEDICAMENTOS</td>
+           <td></td>
+           <td></td>
+           <td></td>
+           <td></td>
+           <td></td>
+           <td></td>
+            
+         </tr>
+         <tr>
+           <td>OTROS SERVICIOS</td>
+           <td></td>
+           <td></td>
+           <td></td>
+           <td></td>
+           <td></td>
+           <td></td>
+            
+         </tr>
+         <tr>
+           <td>HONORARIOS</td>
+           <td></td>
+           <td></td>
+           <td></td>
+           <td></td>
+           <td></td>
+           <td></td>
+            
+         </tr>
+         <tr>
+           <td>SERVICIOS</td>
+           <td></td>
+           <td></td>
+           <td></td>
+           <td></td>
+           <td></td>
+           <td></td>
+            
+         </tr>
+         <tr>
+           <td>INSUMOS VARIOS</td>
+           <td></td>
+           <td></td>
+           <td></td>
+           <td></td>
+           <td></td>
+           <td></td>
+            
+         </tr>
+         <tr>
+           <td>EQUIPAMIENTOS</td>
+           <td></td>
+           <td></td>
+           <td></td>
+           <td></td>
+           <td></td>
+           <td></td>
+            
+         </tr>
+         <tr>
+           <td>PROTESIS</td>
+           <td></td>
+           <td></td>
+           <td></td>
+           <td></td>
+           <td></td>
+           <td></td>
+            
+         </tr>
+         <tr>
+           <td>REFACCIONES</td>
+           <td></td>
+           <td></td>
+           <td></td>
+           <td></td>
+           <td></td>
+           <td></td>
+            
+         </tr>
+       </tbody>
+     </table> 
+
+<script>
+/*
+<option value="2">ESTUDIOS MEDICOS</option>
+<option value="3">INSUMOS VARIOS</option>
+<option value="4">MEDICAMENTOS</option>
+<option value="6">PROTESIS</option>
+
+
+<option value="5">OTROS SERVICIOS</option>
+
+<option value="7">SERVICIOS</option>
+<option value="8">HONORARIOS</option>
+
+<option value="1">EQUIPAMIENTOS</option>
+<option value="9">REFACCIONES</option>
+*/
+
+var url = '/informes/obligaciones/getObligaciones';
+var row = [];
+var data;
+var estudios = [];
+var medicamentos = [];
+var otroservicios = [];
+var honorarios = [];
+var servicios = [];
+var insumos = [];
+var equipamientos = [];
+var protesis = [];
+var refacciones = [];
+
+$.post(url, data, function(data){
+	var labels = [];
+	
+	if(data.success) {
+		$.each(data.results, function(idx,valor) {
+			
+			console.log("------------------");
+			console.log(Object.keys(valor).length);
+			console.log("------------------");
+			
+			var count = Object.keys(valor).length;
+			var estudios = [];
+			
+			
+			$.each(valor, function(valor1,valor2) {
+				//console.log(valor1);
+				//console.log(valor2);
+				
+				labels.push(valor1);
+				estudios.push(0);
+				medicamentos.push(0);
+				otroservicios.push(0);
+				honorarios.push(0);
+				servicios.push(0);
+				insumos.push(0);
+				equipamientos.push(0);
+				protesis.push(0);
+				refacciones.push(0);
+				
+				
+				$.each(valor2, function(valor21,valor22) {
+					console.log('ESTUDIOS MEDICOS');
+					
+					switch(valor21) {
+					  case 'ESTUDIOS MEDICOS':
+					 		estudios.pop();
+							estudios.push(valor22);
+					  		break;
+					  case 'MEDICAMENTOS':
+						  	medicamentos.pop();
+						  	medicamentos.push(valor22);
+					    break;
+					  case 'OTROS SERVICIOS':
+						  	otroservicios.pop();
+						  	otroservicios.push(valor22);
+						    break;  
+					  case 'HONORARIOS':
+						  	honorarios.pop();
+						  	honorarios.push(valor22);
+						    break;
+					  case 'SERVICIOS':
+						  	servicios.pop();
+						  	servicios.push(valor22);
+						    break;
+					  case 'INSUMOS VARIOS':
+						  	insumos.pop();
+						  	insumos.push(valor22);
+						    break;
+					  case 'EQUIPAMIENTOS':
+						  	equipamientos.pop();
+						  	equipamientos.push(valor22);
+						    break;
+					  case 'PROTESIS':
+						  	protesis.pop();
+						  	protesis.push(valor22);
+						    break;
+					  case 'REFACCIONES':
+						  	refacciones.pop();
+						  	refacciones.push(valor22);
+						    break;
+					}
+					
+					
+				 
+					
+					
+				});
+				
+				
+				
+				
+			});
+			console.log(estudios);
+			
+			setData(labels,estudios,medicamentos,otroservicios,honorarios,servicios,insumos,equipamientos,protesis,refacciones);
+		});
+		
+	}
+	
+	
+	
+});
+
+$(function () {
+  /* ChartJS
+   * -------
+   * Here we will create a few charts using ChartJS
+   */
+   
+
+  
+})
+
+function setData(labels,estudios,medicamentos,otroservicios,honorarios,servicios,insumos,equipamientos,protesis,refacciones){
+	var datasets= [];
+	datasets.push({label : 'ESTUDIOS MEDICOS', backgroundColor     : 'rgba(255, 76, 82, 0.8)',data : estudios});
+	datasets.push({label : 'MEDICAMENTOS', backgroundColor     : 'rgba(245, 176, 65 , 0.8)',data : medicamentos});
+	datasets.push({label : 'OTROS SERVICIOS', backgroundColor     : 'rgba(255, 255, 51, 0.8)',data : otroservicios});
+	datasets.push({label : 'HONORARIOS', backgroundColor     : 'rgba(123, 199, 77,0.8)',data : honorarios});
+	datasets.push({label:  'SERVICIOS',backgroundColor     : 'rgba(60,141,188,0.9)',data : servicios});
+	datasets.push({label : 'INSUMOS VARIOS', backgroundColor     : 'rgba(95, 211, 239, 0.8)',data : insumos});
+	datasets.push({label : 'EQUIPAMIENTOS', backgroundColor     : 'rgba(148, 99, 247, 0.8)',data : equipamientos});
+	datasets.push({label : 'PROTESIS', backgroundColor     : 'rgba(44, 62, 80, 0.8)',data : protesis});
+	datasets.push({label : 'REFACCIONES', backgroundColor     : 'rgba(210, 214, 222, 0.8)',data : refacciones});
+
+
+	
+	var areaChartData = {
+	  	      labels  : labels ,
+	  	      datasets: datasets
+	  	    }
+	 
+	  var barChartCanvas = $('#barChart').get(0).getContext('2d')
+	  var barChartData = jQuery.extend(true, {}, areaChartData)
+	  barChartData.datasets[0] = areaChartData.datasets[0]
+	  barChartData.datasets[1] = areaChartData.datasets[1]
+
+	  var barChartOptions = {
+	    responsive              : true,
+	    maintainAspectRatio     : true,
+	    datasetFill             : false,
+	    tooltips: {
+				    callbacks: {
+				      label: function(tooltipItems, data) {
+				        return data.labels[tooltipItems.index] +   data.datasets[0].data[tooltipItems.index].toLocaleString();
+				      }
+				    }
+				  },
+		  scales: {
+		        yAxes: [{
+		          ticks: {
+		            beginAtZero: true,
+		            callback: function(value, index, values) {
+		              if(parseInt(value) >= 1000){
+		                return '$' + value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+		              } else {
+		                return '$' + value;
+		              }
+		            }
+		          }
+		        }]
+		      }
+	  }
+
+	  var barChart = new Chart(barChartCanvas, {
+	    type: 'bar',
+	    data: barChartData,
+	    options: barChartOptions
+	  })
+}
+
+/*function getCertificaciones(){
+	var url = '/dashboard/estadoGeneralAgente/getCertificacionesEstadoGeneralPorAgente';
+	var data = 'proveedorId='+$('#proveedor_id').val();
+	
+	$.post(url, data, function(data){
+		var tr = "";
+		if(data.results && data.results.length > 0) {
+			 
+			$.each(data.results, function(idx,ret) {
+				 
+					ret.referencia ;
+			});
+			
+		} else {
+			 
+		}
+		
+	});
+}*/
+
+
+
+</script>     
+    
+}

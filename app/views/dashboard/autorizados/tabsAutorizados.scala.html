@@ -1,0 +1,49 @@
+@(formularioCarga: Boolean, autorizadoForm: Form[Autorizado] = null,autorizado:Autorizado= null)
+<hr />
+<input type="hidden" id="formularioCarga" value="@formularioCarga"/>
+
+<ul id="ordenTab" class="nav nav-tabs">
+	<li class="active"><a class="tabLineas" href="#contenedorLineas" data-toggle="tab">Detalles</a></li>
+	@if(formularioCarga && autorizado != null){
+		<li><a class="tabCarga" href="#contenedorCarga" data-toggle="tab">Carga Autorizado por OP</a></li>
+		<li><a class="tabCargaActa" href="#contenedorCargaActa" data-toggle="tab">Carga Autorizado por Acta</a></li>
+	}
+	<li><a class="tabResumen" href="#contenedorResumen" data-toggle="tab">Resumen</a></li>
+	<li><a class="tabNota" href="#contenedorNotas" data-toggle="tab">Notas</a></li>
+</ul>
+
+
+
+<div class="tab-content">
+
+	<div class="tab-pane active" id="contenedorLineas">
+		@views.html.dashboard.autorizados.contenidoTabLineas(formularioCarga, autorizadoForm,autorizado)	
+	</div>
+	
+	@if(formularioCarga && autorizado != null){
+		<div class="tab-pane" id="contenedorCarga">
+			 
+		</div>
+		<div class="tab-pane" id="contenedorCargaActa">
+			 
+		</div>
+	}
+	
+	<div class="tab-pane" id="contenedorResumen">
+		<div id="contenedorResumenDiv"></div>
+	</div>
+	
+	<div class="tab-pane" id="contenedorNotas">
+		@if(formularioCarga){
+			<textarea name="descripcion" class="form-control" rows="5">@autorizadoForm.field("notas").value</textarea>
+		} else {
+			<textarea name="descripcion" disabled="disabled" class="form-control" rows="5">@autorizadoForm.field("notas").value</textarea>
+		}
+	</div>
+
+</div>
+<script>
+$( function () {
+	
+});
+</script>

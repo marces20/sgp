@@ -1,0 +1,34 @@
+
+@import helper._
+@import utils._
+@import models.auth._
+@implicitFieldConstructor = @{ FieldConstructor(simpleInput.render) }
+
+@views.html.dashboard.mainDashboard("Movimientos Cuentas") {
+
+<div class="page-header">
+	<div class="row">
+		<div class="col-sm-7">
+			<h1>Movimientos Cuentas</h1>
+		</div>
+	</div>
+</div>
+
+@views.html.dashboard.movimientosCuentas.navmovimientoscuentas()
+<div class="row"  style="">
+	<div class="col-sm-3" style="">
+		 
+		<div class="panel panel-default">
+			<div class="panel-heading"><b>Descargas</b></div>
+			<div class="panel-body">
+				<div class="row margin-bottom-25">
+					<div class="col-sm-12">
+						<a href=""  class="btn btn-default">
+						<i class="glyphicon glyphicon glyphicon-signal"></i> Informe General</a>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>	
+}

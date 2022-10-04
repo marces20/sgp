@@ -1,0 +1,22 @@
+@(formBuscador: DynamicForm)
+@import helper._
+@implicitFieldConstructor = @{ FieldConstructor(simpleInput.render) } 
+	
+@helper.form(action = controllers.haberes.routes.PuestosLaboralesAccionesController.preliquidarFinalPuesto(), 'id -> "formPreliquidarPuestoFinal") {	
+	
+	@views.html.tags.successError()
+	
+	
+	<div class="row">
+		<div class="col-sm-5"><br />
+			<button type="submit" class="btn btn-default" title="Preliquidar"><i class="glyphicon glyphicon-arrow-right"></i> Preliquidar</button>
+		</div>
+	</div>
+
+}
+<script>
+$( function(){
+	$('#searchLiquidacion').modalSearch();
+});
+</script>
+@flash().clear()

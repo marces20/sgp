@@ -1,0 +1,8 @@
+@(lineaForm: Form[AgenteFamilia])
+@import helper._
+@implicitFieldConstructor = @{ FieldConstructor(simpleInput.render) } 
+
+@helper.form(action = controllers.rrhh.routes.AgentesFamiliasController.actualizar()) {
+	@views.html.rrhh.agenteFamilias.formAgenteFamilia(lineaForm)
+	@inputText(lineaForm("id"), 'hidden -> "hidden")
+}

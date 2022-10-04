@@ -1,0 +1,18 @@
+@(formularioCarga: Boolean, expedienteForm: Form[Expediente] = null)
+@import java.util.List
+
+@if(expedienteForm.field("id").value == null || expedienteForm.field("id").value == ""){
+	<p>No hay movimientos</p>
+} else {
+	<script>
+	$( function (){
+		$.get('@controllers.expediente.routes.ExpedientesMovimientosController.index(expedienteForm.field("id").value.toLong, formularioCarga)', function(data){
+			$('#listaLineaExpedientesMovimientos').parent().html(data);
+		})
+	});
+	</script>
+}
+
+<div id="listaLineaExpedientesMovimientos">
+
+</div>

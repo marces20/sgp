@@ -1,0 +1,21 @@
+@(provForm: Form[Proveedor],vista:Boolean)
+@import helper._
+	<ul class="nav nav-tabs">
+	  <li class="active"><a href="#contenedorContactos" data-toggle="tab">Contactos del proveedor</a></li>
+	  <li><a href="#contenedorObservaciones" data-toggle="tab">Observaciones</a></li>
+	</ul>
+	
+	<div class="tab-content">
+		<div class="tab-pane active" id="contenedorContactos">
+			@if( provForm("id").value == null ){
+				<p>Para agregar el contacto primero debe dar de alta el proveedor.<p>
+			} 
+			@if(provForm("id").value != null){
+				@views.html.compras.proveedores.contacto_proveedor(provForm, false) 
+			}
+		</div>
+		<div class="tab-pane" id="contenedorObservaciones">
+			 @textarea(provForm("observaciones"), 'rows -> 4, 'cols -> 50, '_label -> "observacionesLabel")
+		</div>
+		
+	</div>

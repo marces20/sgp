@@ -1,0 +1,34 @@
+@(formularioCarga: Boolean, solicitudForm: Form[Solicitud] = null,solicitud:Solicitud = null)
+@import helper._
+@import utils._
+@import models.auth._
+<ul id="solicitudTab" class="nav nav-tabs">
+	<li class="active"><a class="tabProducto" href="#contenedorProductos" data-toggle="tab">Productos</a></li>
+	<li><a class="tabLineAjustePreventivo" href="#contenedorLineasAjuste" data-toggle="tab">Ajustes preventivos</a></li>
+	<li><a class="tabReferenciaCompras" href="#contenedorReferenciaCompras" data-toggle="tab">Referencia de compras</a></li>
+	<li><a class="tabNotas" href="#contenedorNotas" data-toggle="tab">Notas</a></li>
+</ul>
+
+<div class="tab-content">
+
+	<div class="tab-pane active" id="contenedorProductos">
+		@views.html.compras.solicitudes.contenidoTabProducto(formularioCarga,solicitudForm,solicitud)	
+	</div>
+	@if(!Permiso.check("noVerPrecios")) {
+	<div class="tab-pane" id="contenedorLineasAjuste">
+		@views.html.compras.solicitudes.contenidoTabAjuste(formularioCarga, solicitudForm)	
+	</div>
+	
+	<div class="tab-pane" id="contenedorReferenciaCompras">
+		<h3>Referencia órdenes de compras</h3>
+	</div>
+	}
+	<div class="tab-pane" id="contenedorNotas">
+		@if(formularioCarga){
+			<textarea name="descripcion" class="form-control" rows="5">@solicitudForm.field("descripcion").value</textarea>
+		} else {
+			<textarea name="descripcion" disabled="disabled" class="form-control" rows="5">@solicitudForm.field("descripcion").value</textarea>
+		}
+	</div>
+	
+</div>

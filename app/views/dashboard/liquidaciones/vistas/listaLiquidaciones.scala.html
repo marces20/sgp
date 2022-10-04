@@ -1,0 +1,32 @@
+@(lp: java.util.List[models.haberes.LiquidacionPuesto])
+@import helper._
+@import utils._
+@import models.auth._
+@implicitFieldConstructor = @{ FieldConstructor(simpleInput.render) }
+
+<table class="table table-bordered">
+	<thead>
+		<tr>
+			<th align="center">N° Liq.</th>	
+			<th align="center">Periodo</th>		
+			<th align="center">Total C/A</th>	
+			<th align="center">Total S/A</th>	
+			<th align="center">Total Ret.</th>	
+			<th  align="center">Total A Cobrar</th>		
+			<th  align="center">Recibo</th>	
+		</tr>
+	</thead>					
+	@for(x <- lp){
+		<tr class="trUltimasLiquidaciones pointer" data-url="@controllers.haberes.routes.LiquidacionDetallesController.index(x.id, false)">
+			<td align="center">@x.liquidacionMes.nro_liquidacion_parque</td>
+			<td align="center">@x.liquidacionMes.periodo.nombre</td>
+			<td align="center">@utils.NumberUtils.moneda(x.getTotalCA())</td>
+			<td align="center">@utils.NumberUtils.moneda(x.getTotalSA())</td>
+			<td align="center">@utils.NumberUtils.moneda(x.getTotalRetenciones())</td>
+			<td align="center"><b>@utils.NumberUtils.moneda(x.getTotalACobrar())</b></td>
+			<td align="center" class="notSeleccion">
+				<a id="reporteReciboSueldo"  href="#" data-url="@controllers.haberes.routes.LiquidacionPuestosReportesController.reciboSueldoPorPuesto(x.id)"><i class="glyphicon glyphicon-list-alt"></i></a>
+			</td>
+		</tr>
+	}
+</table>

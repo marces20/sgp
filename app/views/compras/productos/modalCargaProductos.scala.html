@@ -1,0 +1,153 @@
+@(productoForm: Form[Producto],productoDepositoArray:List[Integer] = null)
+@import helper._
+@implicitFieldConstructor = @{ FieldConstructor(simpleInput.render) }
+
+@views.html.tags.successError()
+
+@helper.form(action = controllers.compras.routes.ProductosController.guardarProductoDesdeModal(),'id -> "formGuardarProductoDesdeModal") {
+	
+	<div class="row">
+		<div class="col-sm-9">
+			<div class="form-group @if(productoForm.error("nombre") != null) {has-error}else{has-required}">
+				<label for="inputNombre" class="control-label">Nombre</label> 
+				@inputText(productoForm("nombre"), 'class -> "form-control")
+				@productoForm("nombre").error.map{ error =>
+					<div class="text-error">@error.message</div>
+				}
+			</div>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-sm-3">
+			<div class="form-group @if(productoForm.error("categoria_id") != null) {has-error}else{has-required}">
+				<label for="inputCategoria" class="control-label">Categor&iacute;a</label> 
+				@inputText(productoForm("categoria.nombre"),'class -> "form-control")
+				@inputText(productoForm("categoria_id"),'hidden -> "hidden")
+				@productoForm("categoria_id").error.map{ error =>
+					<div class="text-error">@error.message</div>
+				}
+			</div>
+		</div>
+		<div class="col-sm-3">
+			<div class="form-group @if(productoForm.error("tipo_producto_id") != null) {has-error}else{has-required}">
+				<label for="inputTipoProducto" class="control-label">Tipo Producto</label> 
+				@inputText(productoForm("tipo_producto.nombre"),'class -> "form-control")
+				@inputText(productoForm("tipo_producto_id"),'hidden -> "hidden")
+				@productoForm("tipo_producto_id").error.map{ error =>
+					<div class="text-error">@error.message</div>
+				}
+			</div>
+		</div>
+		<div class="col-sm-3">
+			<div class="form-group @if(productoForm.error("udm.id") != null) {has-error}else{has-required}">
+				<label for="inputUdm" class="control-label">Udm</label> 
+				@inputText(productoForm("udm.nombre"),'class -> "form-control")
+				@inputText(productoForm("udm_id"),'hidden -> "hidden")
+				@productoForm("udm_id").error.map{ error =>
+					<div class="text-error">@error.message</div>
+				}
+			</div>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-sm-6">
+			<table class="table table-striped table-bordered">
+				<thead>
+					<tr>
+						<th width="50">#</th>
+						<th width="100">Deposito</th>
+					
+					</tr>
+				</thead>
+				<tbody>
+					@for( d <- Deposito.find.all()){
+						
+						<tr>
+							<td>
+								<input type="checkbox" class="permiso" name="productoDeposito[]" 
+								@if(productoDepositoArray != null){ 
+								@if(productoDepositoArray.contains(d.id.intValue())) {checked}} 
+								value="@d.id" />
+								
+							</td>
+							<td>@d.nombre</td>
+						</tr>
+					}
+				</tbody>	
+			</table>
+		</div>
+	</div>
+	<div class="row form-actions">
+	    <div class="col-lg-offset-4 col-lg-8">
+	      @inputText(productoForm("precio_coste"),'hidden->"hidden") 
+	      <button type="submit" class="btn btn-sistema" id="btn-guardar-producto-modal">Guardar</button>
+	    </div>
+	</div>
+
+<script>
+$(document).off( "submit", "#formGuardarProductoDesdeModal" )
+$(document).on("submit", '#formGuardarProductoDesdeModal', function(){
+	var form = $(this);
+	var url = form.attr('action');
+	var data = form.serialize();
+	var submit = form.find("button[type='submit']");
+	submit.replaceWith(getLoading());
+	
+	$("#btn-guardar-producto-modal").attr("disabled","disabled");
+	$.post(url, data, function(data){
+	
+		if(data.success) {
+			$("#producto_id").val(data.idProducto);
+			$("#producto").val(data.nombre);
+			dialogoProductoCarga.dialog( "destroy" );
+			form.replaceWith(data.html);
+		} else {
+			form.replaceWith(data);
+		}
+	});
+	
+	return false;
+});
+$( function(){
+	if($("#categoria_nombre").length){
+		var options = {
+				script:"/suggestCategoria/",
+				varname:"",
+				json:true,
+				shownoresults:true,
+				maxresults:6,
+				callback: function (obj) { 
+											$("#categoria_nombre").next().val(obj.id); 
+										 }
+			};
+		var as_json = new bsn.AutoSuggest('categoria_nombre', options);
+	}
+	if($("#tipo_producto_nombre").length){
+		var options = {
+				script:"/suggestTipoProducto/",
+				varname:"",
+				json:true,
+				shownoresults:true,
+				maxresults:6,
+				callback: function (obj) { 
+											$("#tipo_producto_nombre").next().val(obj.id); 
+										 }
+			};
+		var as_json = new bsn.AutoSuggest('tipo_producto_nombre', options);
+	}
+	if($("#udm_nombre").length){
+		var options = {
+				script:"/suggestUdm/",
+				varname:"",
+				json:true,
+				shownoresults:true,
+				maxresults:6,
+				callback: function (obj) { 
+											$("#udm_nombre").next().val(obj.id); 
+										 }
+			};
+		var as_json = new bsn.AutoSuggest('udm_nombre', options);
+	}
+});	 
+</script>
+}	

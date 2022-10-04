@@ -1,0 +1,238 @@
+@(
+escalasLaborales:List[models.haberes.EscalaLaboral],
+escalasLiquidacionesNoCmList:java.util.TreeMap[String,java.util.Map[String,String]],
+escalasLiquidacionesCmList:java.util.TreeMap[String,java.util.Map[String,String]],
+escalasAsistencialProfesionNoCmList:java.util.TreeMap[String,java.util.Map[String,java.math.BigDecimal]],
+escalasNoAsistencialProfesionNoCmList:java.util.TreeMap[String,java.util.Map[String,java.math.BigDecimal]],
+escalasAsistencialProfesionCmList:java.util.TreeMap[String,java.util.Map[String,java.math.BigDecimal]],
+escalasNoAsistencialProfesionCmList:java.util.TreeMap[String,java.util.Map[String,java.math.BigDecimal]]
+
+
+)
+@import helper._
+@implicitFieldConstructor = @{ FieldConstructor(simpleInput.render) } 
+@import java.math.BigDecimal;var x=new java.math.BigDecimal(0);
+@views.html.dashboard.mainDashboard("Honorarios") {
+
+<div class="page-header">
+	<div class="row">
+		<div class="col-sm-7"><h1>Estado de Honorarios</h1></div>
+		<div class="col-sm-5">
+			<div class="dropdown pull-right">
+			 <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown">
+			 	<i class="glyphicon glyphicon-list-alt"></i>
+			    Reportes
+			    <span class="caret"></span>
+			  </button>
+			  <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
+			  	
+			  </ul>
+			</div>
+		</div>
+	</div>
+</div>
+
+<hr><hr>
+<div class="row">
+	<div class="col-sm-12">
+		<h2>Cantidad En liquidaciones por Escala Parque Salud</h2>
+		<table class="table table-bordered">
+			<thead>
+				<tr>
+					<td>Agentes/Periodo</td>
+					@for((key,value) <- escalasLiquidacionesNoCmList){
+						<td>@key</td>
+						
+					}
+				</tr>
+			</thead>
+			<tbody>
+				@for(el <- escalasLaborales){
+				<tr>
+					<td>@el.nombre</td>
+					@for((key,value) <- escalasLiquidacionesNoCmList){
+						<td>@if(value.get(el.nombre) != null){@value.get(el.nombre)}</td>
+					}
+				</tr>
+				}
+			</tbody>
+		</table>		
+	</div>
+</div>
+<div class="row">
+	<div class="col-sm-12">
+		<h2>Cantidad liquidaciones por Escala CM</h2>
+		<table class="table table-bordered">
+			<thead>
+				<tr>
+					<td>Agentes/Periodo</td>
+					@for((key,value) <- escalasLiquidacionesCmList){
+						<td>@key</td>
+						
+					}
+				</tr>
+			</thead>
+			<tbody>
+				@for(el <- escalasLaborales){
+				<tr>
+					<td>@el.nombre</td>
+					@for((key,value) <- escalasLiquidacionesCmList){
+						<td>@if(value.get(el.nombre) != null){@value.get(el.nombre)}</td>
+					}
+				</tr>
+				}
+			</tbody>
+		</table>		
+	</div>
+</div>
+<hr><hr>
+<div class="row">
+	<div class="col-sm-12">
+		<h2>Cantidad por Escala por Profesion Asistencia PS</h2>
+		 
+		<table class="table table-bordered">
+		<thead>
+			<tr>
+				<td colspan="2">Cantidad por Escala por Profesion Asistencia PS</td>
+			</tr>
+		</thead>
+		<tbody>
+			@for(el <- escalasLaborales){
+				@if(escalasAsistencialProfesionNoCmList.get(el.nombre) != null){
+					<tr>
+						<td align="center" colspan="2" ></td>
+					</tr>
+					<tr>
+						<td align="center" colspan="2" style="font-size: 14px;font-weight: bold;" >@el.nombre</td>
+					</tr>
+					@{x =new java.math.BigDecimal(0)}
+					@for((key,value) <- escalasAsistencialProfesionNoCmList.get(el.nombre)){
+						<tr>
+							<td>@key</td>
+							<td>@value</td>
+						</tr>
+						@{x = x.add(value)}
+					}
+					<tr>
+						<td>Total</td>
+						<td>@x</td>
+					</tr>
+				} 
+			}
+		</tbody>
+		</table>	
+	</div>	
+</div>	
+<div class="row">
+	<div class="col-sm-12">
+		<h2>Cantidad por Escala por Profesion No Asistencial PS</h2>
+		 
+		<table class="table table-bordered">
+		<thead>
+			<tr>
+				<td colspan="2">Cantidad por Escala por Profesion No Asistencial Ps</td>
+			</tr>
+		</thead>
+		<tbody>
+			@for(el <- escalasLaborales){
+				@if(escalasNoAsistencialProfesionNoCmList.get(el.nombre) != null){
+					<tr>
+						<td align="center" colspan="2" ></td>
+					</tr>
+					<tr>
+						<td align="center" colspan="2" style="font-size: 14px;font-weight: bold;" >@el.nombre</td>
+					</tr>
+					@{x =new java.math.BigDecimal(0)}
+					@for((key,value) <- escalasNoAsistencialProfesionNoCmList.get(el.nombre)){
+						<tr>
+							<td>@key</td>
+							<td>@value</td>
+						</tr>
+						@{x = x.add(value)}
+					}
+					<tr>
+						<td>Total</td>
+						<td>@x</td>
+					</tr>
+				} 
+			}
+		</tbody>
+		</table>	
+	</div>	
+</div>	
+<hr><hr>
+<div class="row">
+	<div class="col-sm-12">
+		<h2>Cantidad por Escala por Profesion Asistencial CM</h2>
+		 
+		<table class="table table-bordered">
+		<thead>
+			<tr>
+				<td colspan="2">Cantidad por Escala por Profesion CM</td>
+			</tr>
+		</thead>
+		<tbody>
+			@for(el <- escalasLaborales){
+				@if(escalasAsistencialProfesionCmList.get(el.nombre) != null){
+					<tr>
+						<td align="center" colspan="2" ></td>
+					</tr>
+					<tr>
+						<td align="center" colspan="2" style="font-size: 14px;font-weight: bold;" >@el.nombre</td>
+					</tr>
+					@{x =new java.math.BigDecimal(0)}
+					@for((key,value) <- escalasAsistencialProfesionCmList.get(el.nombre)){
+						<tr>
+							<td>@key</td>
+							<td>@value</td>
+						</tr>
+						@{x = x.add(value)}
+					}
+					<tr>
+						<td>Total</td>
+						<td>@x</td>
+					</tr>
+				} 
+			}
+		</tbody>
+		</table>	
+	</div>	
+</div>	
+<div class="row">
+	<div class="col-sm-12">
+		<h2>Cantidad por Escala por Profesion No Asistencial CM</h2>
+		 
+		<table class="table table-bordered">
+		<thead>
+			<tr>
+				<td colspan="2">Cantidad por Escala por Profesion No Asistencial CM</td>
+			</tr>
+		</thead>
+		<tbody>
+			@for(el <- escalasLaborales){
+				@if(escalasNoAsistencialProfesionCmList.get(el.nombre) != null){
+					<tr>
+						<td align="center" colspan="2" ></td>
+					</tr>
+					<tr>
+						<td align="center" colspan="2" style="font-size: 14px;font-weight: bold;" >@el.nombre</td>
+					</tr>
+					@{x =new java.math.BigDecimal(0)}
+					@for((key,value) <- escalasNoAsistencialProfesionCmList.get(el.nombre)){
+						<tr>
+							<td>@key</td>
+							<td>@value</td>
+						</tr>
+						@{x = x.add(value)}
+					}
+					<tr>
+						<td>Total</td>
+						<td>@x</td>
+					</tr>
+				} 
+			}
+		</tbody>
+		</table>	
+	</div>	
+</div>	
+}

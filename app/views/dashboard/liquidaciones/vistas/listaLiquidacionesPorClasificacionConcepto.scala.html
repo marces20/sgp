@@ -1,0 +1,36 @@
+@(lp: java.util.List[models.haberes.LiquidacionPuesto])
+@import helper._
+@import utils._
+@import models.auth._
+@implicitFieldConstructor = @{ FieldConstructor(simpleInput.render) }
+
+<table class="table table-bordered">
+	<thead>
+		<tr>
+			<th align="center">N° Liq.</th>	
+			<th align="center">Periodo</th>		
+			<th align="center">Haber Contrato</th>
+			<th align="center">Adicionales</th>		
+			<th align="center">Guardias</th>	
+			<th align="center">Produccion</th>	
+			<th align="center">Descuentos Ley</th>	
+			<th align="center">Total a cobrar</th>
+			<th align="center">Recibo</th>
+		</tr>
+	</thead>					
+	@for(x <- lp){
+		<tr class="trUltimasLiquidaciones pointer" data-url="@controllers.haberes.routes.LiquidacionDetallesController.index(x.id, false)">
+			<td align="center">@x.liquidacionMes.nro_liquidacion_parque</td>
+			<td align="center">@x.liquidacionMes.periodo.nombre</td>
+			<td align="center">@utils.NumberUtils.moneda(x.getTotalClasificacionHaberContrato())</td>
+			<td align="center">@utils.NumberUtils.moneda(x.getTotalClasificacionAdicional())</td>
+			<td align="center">@utils.NumberUtils.moneda(x.getTotalClasificacionGuardia())</td>
+			<td align="center">@utils.NumberUtils.moneda(x.getTotalClasificacionProduccion())</td>
+			<td align="center">@utils.NumberUtils.moneda(x.getTotalClasificacionDescuento())</td>
+			<td align="center">@utils.NumberUtils.moneda(x.getTotalACobrar())</td>
+			<td align="center" class="notSeleccion">
+				<a id="reporteReciboSueldo"  href="#" data-url="@controllers.haberes.routes.LiquidacionPuestosReportesController.reciboSueldoPorPuesto(x.id)"><i class="glyphicon glyphicon-list-alt"></i></a>
+			</td>
+		</tr>
+	}
+</table>

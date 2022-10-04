@@ -1,0 +1,70 @@
+@(facturaForm: Form[Factura], factura: Factura)
+@import helper._
+@import utils._
+@implicitFieldConstructor = @{ FieldConstructor(simpleInput.render) }
+@getClassEstadoEditable(i:String) = @{
+	var isEditable:Boolean = new Boolean(false)
+	
+	
+	if(i == null || (i.compareTo("18") == 0) ){
+		isEditable = new Boolean(true)
+	}
+	
+	isEditable
+}
+@getClassEstadoEditableParaImpuestos(i:String) = @{
+	var isEditable:Boolean = new Boolean(false)
+	
+	
+	if(i == null || (i.compareTo("60") == 0) ){
+		isEditable = new Boolean(true)
+	}
+	
+	isEditable
+}
+
+@views.html.contabilidad.mainContabilidad("Modificar Factura") {
+
+	<div class="page-header">
+		<div class="row">
+			<div class="col-sm-7">
+				<h1>Editar factura</h1>
+			</div>
+			<div class="col-sm-5">
+				<div class="dropdown pull-right">
+				 <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown">
+				 	<i class="glyphicon glyphicon-list-alt"></i>
+				    Reportes
+				    <span class="caret"></span>
+				  </button>
+				  <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
+				  </ul>
+				</div>
+				<div class="dropdown pull-right btn-header">
+				 <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown">
+				 	<i class="glyphicon glyphicon-cog"></i>
+				    Acciones
+				    <span class="caret"></span>
+				  </button>
+				  <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
+				  	
+				  </ul>
+				</div>
+				<div class="pull-right btn-header">
+					<a href="@controllers.contabilidad.routes.FacturasController.crear()@UriTrack.get("?")"  class="btn btn-default pull-right"><i class="glyphicon glyphicon-plus-sign"></i> Nueva Factura</a>
+				</div>
+			</div>
+		</div>
+	</div>
+	
+	@views.html.tags.successError()
+	
+	@helper.form(action = controllers.contabilidad.routes.FacturasController.actualizar(factura.id) ) {
+	
+		@inputText(facturaForm("id"), 'hidden -> "hidden")
+		@views.html.contabilidad.facturas.formFacturaProveedor(facturaForm)
+		@views.html.contabilidad.facturas.tabsFactura(getClassEstadoEditable(factura.estado.id.toString),getClassEstadoEditableParaImpuestos(factura.estado.id.toString),facturaForm,factura)
+
+	}
+
+}

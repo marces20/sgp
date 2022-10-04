@@ -1,0 +1,89 @@
+@(formBuscador: DynamicForm)
+@import helper._
+@implicitFieldConstructor = @{ FieldConstructor(simpleInput.render) } 
+
+<div class="row"  style="">
+	<nav class="navbar navbar-default" role="navigation">
+		<div class="container-fluid">
+			<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+		      <ul class="nav navbar-nav">
+		      	<li class="dropdown">
+		        	<a href="#" class="dropdown-toggle" data-toggle="dropdown">Deudas Resumen Mensual <b class="caret"></b></a>
+		          	<ul class="dropdown-menu">
+		          		<li><a href="@controllers.dashboard.routes.DeudasPorAntiguedadController.deudasResumenMensual()">Resumen Mensual</a></li>
+		          	</ul>
+		        </li>
+		        <li class="dropdown">
+		        	<a href="#" class="dropdown-toggle" data-toggle="dropdown">Deudas Detalles <b class="caret"></b></a>
+		          	<ul class="dropdown-menu">
+		          		<li><a href="@controllers.dashboard.routes.DeudasPorAntiguedadController.deudasDetalles(0,false)">Todos</a></li>
+		          		<li><a href="@controllers.dashboard.routes.DeudasPorAntiguedadController.deudasDetalles(-1,false)">Deudas RA</a></li>
+		          		<li><a href="@controllers.dashboard.routes.DeudasPorAntiguedadController.deudasDetalles(1530,false)">Deudas MOFAR</a></li>
+		          		<li><a href="@controllers.dashboard.routes.DeudasPorAntiguedadController.deudasDetalles(15156,false)">Deudas MACROFAR</a></li>
+		          		<li><a href="@controllers.dashboard.routes.DeudasPorAntiguedadController.deudasDetalles(4359,false)">Deudas SAN JORGE</a></li>
+		          		<li><a href="@controllers.dashboard.routes.DeudasPorAntiguedadController.deudasDetalles(2749,false)">Deudas IMPLANTEJ</a></li>
+		          		<li><a href="@controllers.dashboard.routes.DeudasPorAntiguedadController.deudasDetalles(14733,false)">Deudas BIOMISIONES</a></li>
+		          		<!-- <li><a href="@controllers.dashboard.routes.DeudasPorAntiguedadController.deudasDetalles(1498,false)">Deudas MEDICALPRO</a></li>-->
+		          		<li><a href="@controllers.dashboard.routes.DeudasPorAntiguedadController.deudasDetalles(1589,false)">Deudas NR CONSTRUCCIONES-TABAY</a></li>
+		          		<li><a href="@controllers.dashboard.routes.DeudasPorAntiguedadController.deudasDetalles(-2,false)">Otros Proveedores</a></li>
+		          	</ul>
+		        </li>
+		        <li class="dropdown">
+		        	<a href="#" class="dropdown-toggle" data-toggle="dropdown">Deudas Equipamiento <b class="caret"></b></a>
+		          	<ul class="dropdown-menu">
+		          		<li><a href="@controllers.dashboard.routes.DeudasPorAntiguedadController.deudasDetalles(0,true)">Equipamientos</a></li>
+		          	</ul>
+		        </li>
+		        <li class="dropdown">
+		        	<a href="#" class="dropdown-toggle" data-toggle="dropdown">Deudas por Institucion<b class="caret"></b></a>
+		          	<ul class="dropdown-menu">
+		          		<li><a href="@controllers.dashboard.routes.DeudasPorAntiguedadController.deudasResumenInstitucion()">Deudas Resumen Institucion</a></li>
+		          		<li><a href="@controllers.dashboard.routes.DeudasPorAntiguedadController.deudasDetallesInstitucion()">Deudas Detalle Institucion</a></li>
+		          	</ul>
+		        </li>
+		        <li class="dropdown">
+		        	<a href="#" class="dropdown-toggle" data-toggle="dropdown">Deudas Cuentas<b class="caret"></b></a>
+		          	<ul class="dropdown-menu">
+		          		@for(t <- TipoCuenta.find.all()) {
+		          			<li><a href="@controllers.dashboard.routes.DeudasPorAntiguedadController.deudasDetallesCuenta(t.id.intValue())">@t.nombre</a></li>
+		          		}
+		          		
+		          		
+		          	</ul>
+		        </li>
+		        <li><a href="@controllers.dashboard.routes.DeudasPorAntiguedadController.deudasDetallesServicios()">Servicios</a></li>
+		        @helper.form(action = controllers.dashboard.routes.DeudasPorAntiguedadController.deudasDetallesPorProveedor()) {	
+		      	<div class="input-group" style="padding: 10px 15px 0px 15px;">	
+					@inputText(formBuscador("proveedor.id"), 'hidden -> "hidden", 'id -> "proveedor_id")
+					@inputText(formBuscador("proveedor.nombre"), 'name -> "", 'class -> "form-control",'placeholder->"Proveedor", 'id -> "proveedor")
+	    			 <span class="input-group-addon">
+						<a href="#" class="searchModal"
+									id="searchProveedor" 
+									data-title="Selección de Proveedores" 
+									data-url="@controllers.compras.routes.ProveedoresController.modalBuscar()" 
+									data-height="650" 
+									data-width="700" 
+									data-listen="modal.seleccion.proveedor.simple" 
+									data-label="#proveedor" 
+									data-field="#proveedor_id">
+							<i class="glyphicon glyphicon-search"></i>
+						</a>
+					</span>
+					<button class="btn btn-outline-success my-2 my-sm-0" style="margin:0px 0px 0px 10px; text-align: center;" type="submit">Buscar</button>	
+				</div>
+				
+				
+				
+				
+    		   }
+		         
+		      </ul>
+		    </div>  
+		</div>
+	</nav>
+</div>
+<script type="text/javascript">
+	$(function(){
+		$('#searchProveedor').modalSearch();
+	});
+</script>

@@ -1,0 +1,18 @@
+@(convenioForm: Form[models.haberes.ConvenioBanco])
+@import helper._
+
+@views.html.haberes.mainHaberes("Crear Convenio Banco") {
+
+	<div class="page-header">
+		<div class="row">
+			<div class="col-sm-10">
+				<h1>Crear nuevo Convenio</h1>
+			</div>
+		</div>
+	</div>
+	@views.html.tags.successError()
+    
+    @helper.form(action = controllers.haberes.routes.ConveniosBancosController.guardar()) {
+		@views.html.haberes.conveniosBancos.formConvenioBanco(convenioForm) 	
+	}
+}

@@ -1,0 +1,128 @@
+@(remito: Remito, paginadorFicha: utils.pagination.PaginadorFicha)
+@import helper._
+@import models.auth._
+@import utils._
+@implicitFieldConstructor = @{ FieldConstructor(simpleInput.render) } 
+
+@paginadorFicha.setActual(remito.id.toString)
+
+@views.html.patrimonio.mainPatrimonio("Vista de remito") {
+	<div class="page-header">
+		<div class="row" class="page-header">
+			<div class="col-sm-7">
+				<h1>Vista de remito</h1>
+			</div>
+		</div>
+	</div>
+	
+	<ol class="breadcrumb">
+		<li><a href="@controllers.patrimonio.routes.OrdenesProvisionController.ver(remito.recepcion.ordenProvision.id)">Orden de provisión @remito.recepcion.ordenProvision.numero</a></li>
+		<li><a href="@controllers.patrimonio.routes.RecepcionesController.ver(remito.recepcion.id)">Recepción número @remito.recepcion.numero</a></li>
+		<li class="active">Remito @remito.numero</li>
+	</ol>
+	
+	@views.html.tags.successError()
+
+	<div class="row menu-acciones">
+		<div class="col-sm-4">
+		@if(Permiso.check("remitosCrear")) {
+			<a href="@controllers.patrimonio.routes.RemitosController.editar(remito.id)@UriTrack.get("&")"  class="btn btn-default"><i class="glyphicon glyphicon-edit"></i> Editar</a>
+		}
+		@if(Permiso.check("remitosEliminar")) {
+		<a href="@controllers.patrimonio.routes.RemitosController.eliminar(remito.id)@UriTrack.get("&")"  class="btn btn-default delete-confirm-link"><i class="glyphicon glyphicon-trash icono-eliminar"></i> Eliminar</a>
+		}
+		</div>
+		<div class="col-sm-5">
+		@if(remito.recepcion.ordenProvision.ordenCompra.tipo_moneda != null){
+			<span style="color:green;font-weight:bold;font-size: 24px;">MONEDA EXTRANJERA</span>
+		}
+		</div>
+		<div class="col-sm-3">
+			<a href="@UriTrack.getOnNull(controllers.patrimonio.routes.RemitosController.index().absoluteURL())" class="btn btn-default"><i class="glyphicon glyphicon-list"></i></a>
+			@if(paginadorFicha.getLista().size() > 1){
+		
+              	
+			<div class="btn-group">
+				@if(paginadorFicha.hasPrev()) {
+					<a  role="group" href="@controllers.patrimonio.routes.RemitosController.ver(paginadorFicha.prev().toLong)@UriTrack.get("&")" class="btn btn-default"><i class="glyphicon glyphicon-chevron-left"></i></a>
+				}
+				<p style="padding-top: 3px" href=""  role="group" class="btn btn-default">@paginadorFicha.posicionActual() de @paginadorFicha.getLista().size()</p>
+				@if(paginadorFicha.hasNext()) {
+					<a  role="group" href="@controllers.patrimonio.routes.RemitosController.ver(paginadorFicha.next().toLong)@UriTrack.get("&")" class="btn btn-default"><i class="glyphicon glyphicon-chevron-right"></i></a>
+				}  
+			</div>
+			}
+		
+		</div>
+	</div>
+
+	<div class="row">
+	
+		<div class="col-sm-3">
+			<div class="row">
+				<div class="col-sm-6">
+					<label class="control-label">Número</label>
+					<p class="form-control-static form-control">@remito.numero</p>
+				</div>
+				<div class="col-sm-6">
+					<label class="control-label">Número de recpeción</label> 
+					<p class="form-control-static form-control" style="height: 25px; overflow: hidden;">@remito.recepcion.numero</p>
+				</div>
+			</div>
+		</div>
+		
+		<div class="col-sm-3">
+			<div class="row">
+				<div class="col-sm-6">
+					<label class="control-label">Fecha</label> 
+					<p class="form-control-static form-control" style="height: 25px; overflow: hidden;">@(DateUtils.formatDate(remito.fecha_remito))</p>
+				</div>
+				<div class="col-sm-6">
+					<label class="control-label">Creado</label> 
+					<p class="form-control-static form-control" style="height: 25px; overflow: hidden;">@(DateUtils.formatDate(remito.create_date))</p>
+				</div>
+			</div>
+		</div>
+		
+		<div class="col-sm-2">
+			<label class="control-label">Expediente</label> 
+			<p class="form-control-static form-control" style="height: 25px; overflow: hidden;">@remito.recepcion.ordenProvision.ordenCompra.expediente.getExpedienteEjercicio()</p>
+		</div>
+		
+		<div class="col-sm-3">
+			<label class="control-label">Responsable</label> 
+			<p class="form-control-static form-control" style="height: 25px; overflow: hidden;">@remito.create_usuario.nombre</p>
+		</div>
+		
+	</div>
+
+	@{ val productos = remito.comprobarInventario(); 
+		if(productos.size() > 0) {
+			<div class="alert alert-info" style="margin-top: 15px"><h4><i class="glyphicon glyphicon-info-sign"></i> Compruebe el inventario de los siguientes productos:</h4></div>
+		}
+	}
+
+	<hr />
+
+	<ul id="ordenTab" class="nav nav-tabs">
+		<li class="active"><a id="listaRemitos" data-href="@controllers.patrimonio.routes.RemitosLineasController.index()?remito_id=@remito.id" href="#contenedorRemitos" data-toggle="tab">Productos del remito</a></li>
+	</ul>
+
+
+	<div class="tab-content">
+		<div id="contenedorRemitos" class="tab-pane active">
+		
+		</div>
+	</div>
+	
+	<script>
+	$( function(){
+		var urlRemitos = $('#listaRemitos').attr("data-href");
+		$.get(urlRemitos, function(data){
+			$('#contenedorRemitos').html(data);
+		});
+	});
+	</script>
+	
+	
+}

@@ -1,0 +1,679 @@
+@(buscador: utils.pagination.Pagination[Pago], formBuscador: DynamicForm)
+@import helper._
+@import utils._
+@import models.auth._
+@implicitFieldConstructor = @{ FieldConstructor(simpleInput.render) } 
+@scripts = {
+	<script src="@routes.Assets.at("javascripts/contabilidad/pagos.js")" type="text/javascript"></script>
+}
+@getClassEstado(i:Estado) = @{
+	var classEstado:String = new String()
+	if(i != null && i.id == 24){
+		classEstado = "borrador"
+	}else if(i != null && i.id == 26){
+		classEstado = "cancelada"
+	}else if(i != null && (i.id == 23)){
+		classEstado = "autorizado"
+	}else if(i != null && i.id == 25){
+		classEstado = "pagado"
+	}
+	
+	classEstado
+}
+
+
+@views.html.contabilidad.mainContabilidad("Lista Pagos", scripts) {
+
+	<div class="page-header">
+		<div class="row">
+			<div class="col-sm-7">
+				<h1>Lista de pagos</h1>
+			</div>
+
+			
+			<div class="col-sm-5">
+				<div class="dropdown pull-right">
+			
+					<div class="btn-group pull-right  btn-header">
+						<button class="btn btn-default dropdown-toggle" type="button" id="dropdownReportes" data-toggle="dropdown">
+							<i class="glyphicon glyphicon-list-alt"></i> Reportes <span class="caret"></span>
+						</button>
+						<ul class="dropdown-menu">
+							@if(Permiso.check("pagosInformeMensualRentas")) {
+								<li><a id="reporteInformeMensualRentas" href="#" data-url="@controllers.contabilidad.routes.PagosReportesController.modalInformeMensualRentas()">Informe mensual de RENTAS</a></li>
+							}
+							<li><a id="reporteInformeLotes" href="#" data-url="@controllers.contabilidad.routes.PagosReportesController.descargarLotes()">Informe Lotes</a></li>
+							<li><a id="reporteInformeMensualImpuestos" href="#" data-url="@controllers.contabilidad.routes.PagosReportesController.modalInformeMensualImpuestos()">Informe Impuestos</a></li>
+							<li><a id="reporteRetencionDgrSellos" href="#" data-url="@controllers.contabilidad.routes.PagosReportesController.informeRetDgrSellos()">Retencion DGR Sellos</a></li>
+							<li><a id="reporteInformeRetDgrIibb" href="#" data-url="@controllers.contabilidad.routes.PagosReportesController.informeRetDgrIibb()">Retencion DGR IIBB</a></li>
+							<li><a id="reporteInformeRetDgrIibb331" href="#" data-url="@controllers.contabilidad.routes.PagosReportesController.informeRetDgrIibb331()">Retencion DGR IIBB 331</a></li>
+							<li><a id="reporteRetencionSeguridad" class="reporteRetencionSeguridad" href="#" data-url="@controllers.contabilidad.routes.PagosReportesController.informeRetencionSuss("748")">Retencion SUSS 6% Res. AFIP 1556/04</a></li>
+							<li><a id="reporteRetencionSeguridad2" class="reporteRetencionSeguridad" href="#" data-url="@controllers.contabilidad.routes.PagosReportesController.informeRetencionSuss("754")">Retencion SUSS 6% Res. AFIP 1769/04</a></li>
+							<li><a id="reporteRetencionSeguridad3" class="reporteRetencionSeguridad" href="#" data-url="@controllers.contabilidad.routes.PagosReportesController.informeRetencionSuss("755")">Retencion SUSS 1% AFIP 2069/06 mof 1784/04</a></li>
+							
+							<li><a id="reporteRetencionSeguridad4" class="reporteRetencionSeguridad" href="#" data-url="@controllers.contabilidad.routes.PagosReportesController.informeRetencionSuss("740")">Retencion SUSS 2.5% Res AFIP 2682/09</a></li>
+							
+							
+							<li><a id="reporteRetencionGcia4245" href="#" data-url="@controllers.contabilidad.routes.PagosReportesController.informeRetencionGcia4245()">Retencion RET.AFIP-DGI- GCIAS. 2% RES.AFIP 4245/18</a></li>
+							<li><a id="reporteRetencionIva" href="#" data-url="@controllers.contabilidad.routes.PagosReportesController.informeRetencionIva()">Retencion RET. IVA 8,68% RES. AFIP 3164/11</a></li>
+							
+							<li><a id="reporteInformeImpuestoMunicipal" href="#" data-url="@controllers.contabilidad.routes.PagosReportesController.informeImpuestoMunicipal()">Informe Impuesto Municipal</a></li>
+							<li><a id="reporteInformeProfe" href="#" data-url="@controllers.contabilidad.routes.PagosReportesController.informeProfe()">Informe PROFE</a></li>
+						</ul>
+					</div>
+					
+					<div class="dropdown btn-group pull-right  btn-header">
+						 <button class="btn btn-default dropdown-toggle" type="button" id="dropdownAcciones" data-toggle="dropdown">
+							<i class="glyphicon glyphicon-cog"></i> Acciones <span class="caret"></span>
+						 </button>
+						 <ul class="dropdown-menu">
+						 @if(Permiso.check("pagosModificarFechaMasivamente")) {
+						 	<li><a id="accionModificarFecha" href="#" data-url="@controllers.contabilidad.routes.PagosAccionesController.modalModificarFecha()">Modificar fecha</a></li>
+						 }
+									   
+						 @if(Permiso.check("pagosModificarReferenciaMasivamente")) {
+						 	<li><a id="accionModificarReferencia" href="#"  data-url="@controllers.contabilidad.routes.PagosAccionesController.modalModificarReferencia()">Modificar referencia</a></li>
+						 }
+						 
+						 @if(Permiso.check("pagosModificarPagueseMasivamente")) {
+						 	<li><a id="accionModificarPaguese" href="#"  data-url="@controllers.contabilidad.routes.PagosAccionesController.modalModificarPaguese()">Modificar Paguese A</a></li>
+						 }
+						 
+						 @if(Permiso.check("pagosModificarFechaConciliadoMasivamente")) {
+						 	<li><a id="accionModificarFechaConciliado" href="#" data-url="@controllers.contabilidad.routes.PagosAccionesController.modalModificarFechaConciliado()">Modificar fecha Conciliacion</a></li> 
+						 }
+						  @if(Permiso.check("pagosModificarFechaCancelacionMasivamente")) {
+						 	<li><a id="accionModificarFechaCancelacion" href="#" data-url="@controllers.contabilidad.routes.PagosAccionesController.modalModificarFechaCancelacion()">Modificar fecha Cancelacion</a></li>
+						 }
+						 
+						 @if(Permiso.check("pagosModificarNumeroCheque")) {
+						 	<li><a id="accionModificarNumeroCheque" href="#"  data-url="@controllers.contabilidad.routes.PagosAccionesController.modalModificarNumeroCheque()">Modificar N°Cheque</a></li>
+						 }
+						 @if(Permiso.check("pagosModificarTipoPago")) {
+						 	<li><a id="accionModificarTipoPago" href="#"  data-url="@controllers.contabilidad.routes.PagosAccionesController.modalModificarTipoPago()">Modificar Tipo Pago</a></li>
+						 }
+						  @if(Permiso.check("pagosModificarCuentaPropia")) {
+						 	<li><a id="accionModificarCuentaPropia" href="#"  data-url="@controllers.contabilidad.routes.PagosAccionesController.modalModificarCuentaPropia()">Modificar Cuenta Propia</a></li>
+						 }
+						 
+						  @if(Permiso.check("pagosPagarProveedoresExternos")) {
+						 	<li><a id="accionCrearRefenciaEmbargos" href="#" data-url="@controllers.contabilidad.routes.PagosAccionesController.modalCrearRefenciaEmbargos()">Crear Ref.Embargos </a></li>
+						 }
+						 
+						 	<li class="divider"></li>
+						 @if(Permiso.check("pagosPagarCheques")) {
+						 	<li><a id="accionPagarCheque" href="#" data-url="@controllers.contabilidad.routes.PagosAccionesController.modalPagarCheques()">Pagar cheques</a></li>
+						 }	
+						 @if(Permiso.check("pagosPagarAgentesContratados")) {
+						 	<li><a id="accionPagar" href="#" data-url="@controllers.contabilidad.routes.PagosAccionesController.modalPagarInterno()">Pagar agentes contratados (Trasnf.)</a></li>
+						 }
+						 @if(Permiso.check("pagosPagarAgentesPlanta")) {	
+						 	<li><a id="accionPagarPlanta" href="#" data-url="@controllers.contabilidad.routes.PagosAccionesController.modalPagarPlanta">Pagar agentes en planta (Trasnf.)</a></li>
+						 }
+						 @if(Permiso.check("pagosPagarProveedoresExternos")) {	
+						 	<li><a id="accionPagarProveedorExterno" href="#" data-url="@controllers.contabilidad.routes.PagosAccionesController.modalPagarProveedoresExternos()">Pagar proveedores externos (Trasnf.)</a></li>
+						 }
+						 
+						 @if(Permiso.check("pagosPagarProveedoresExternos")) {	
+						 	<li><a id="accionPagarEmbargos" href="#" data-url="@controllers.contabilidad.routes.PagosAccionesController.modalPagarEmbargos()">Pagar Embargos Banco Macro</a></li>
+						 }
+						 @if(Permiso.check("pagosPagarProveedoresExternos")) {	
+						 	<li><a id="accionPagarEmbargosExternos" href="#" data-url="@controllers.contabilidad.routes.PagosAccionesController.modalPagarEmbargosExternos()">Pagar Embargos Externos</a></li>
+						 }
+						 
+						 @if(Permiso.check("pagosPagarProveedoresInterbanking")) {	
+						 	<li><a id="accionPagarExternosInterbankingProveedores" href="#" 
+						 	data-url="@controllers.contabilidad.routes.PagosAccionesController.modalPagarInterbankingProveedores()">Pagar Interbanking Proveedores</a></li>
+						 }
+						 
+						 @if(Permiso.check("pagosPagarProveedoresMacrosMaviso")) {	
+						 	<li><a id="accionPagarProveedoresMacrosMaviso" href="#" 
+						 	data-url="@controllers.contabilidad.routes.PagosAccionesController.modalPagarProveedoresMacroMasivos()">Pagar Proveedores Macro Masivos</a></li>
+						 }
+						 
+						 	<li class="divider"></li>
+						 	<li role="presentation" class="dropdown-header">Acciones Masivas</li>
+						 	@if(Permiso.check("pagosPasarBorradorMasivo")) {	
+						 	<li role="presentation">
+						    	<a role="menuitem" id="accionPasarBorrador" tabindex="-1" href="#" data-url="@controllers.contabilidad.routes.PagosAccionesController.modalPasarBorrador()">
+						    		Pasar a Borrador
+						    	</a>
+						    </li>
+						    }
+						    @if(Permiso.check("pagosPasarConciliadoMasivo")) {	
+						    <li role="presentation">
+						    	<a role="menuitem" id="accionPasarConciliado" tabindex="-1" href="#" data-url="@controllers.contabilidad.routes.PagosAccionesController.modalPasarConciliado()">
+						    		Pasar a Conciliado (Cheques)
+						    	</a>
+						    </li>	
+						    }
+						    @if(Permiso.check("pagosPasarCanceladoMasivo")) {	
+						    <li role="presentation">
+						    	<a role="menuitem" id="accionPasarCancelado" tabindex="-1" href="#" data-url="@controllers.contabilidad.routes.PagosAccionesController.modalPasarCancelado()">
+						    		Pasar a Cancelado
+						    	</a>
+						    </li>	
+						    }
+						 </ul>
+					 </div>
+					 
+					<a href="@controllers.contabilidad.routes.PagosController.crear"  class="btn btn-default  btn-header pull-right">
+						<i class="glyphicon glyphicon-plus-sign"></i> Nuevo pago
+					</a>
+				</div>
+			</div>
+		</div>
+	</div>
+	
+	@views.html.tags.successError()
+	
+	<div id="actions">
+		<form action="" id="formSearchPagos" method="GET">
+			<div class="row">
+				<div class="col-sm-10 filtrosEstados" id="filtrosEstados">
+					<div class="btn-group">
+					  <button type="button" rel="borrador" class="btn btn-default btn-filtros">
+					  	<i class="glyphicon glyphicon-pencil"></i><br>Borrador
+					  	@checkbox(formBuscador("btnFiltro[0]"), 'hidden -> "hidden")
+					  </button>
+					  <button type="button" rel="abierta" class="btn btn-default btn-filtros">
+					  	<i class="glyphicon glyphicon-arrow-right"></i><br>En Curso
+					  	@checkbox(formBuscador("btnFiltro[2]"), 'hidden -> "hidden")
+					  </button>
+					  <button type="button" rel="entregado" class="btn btn-default btn-filtros">
+					  	<i class="glyphicon glyphicon-usd glyphicon-usd-green"></i><br>Pagado
+					  	@checkbox(formBuscador("btnFiltro[3]"), 'hidden -> "hidden")
+					  </button>
+					  <button type="button" rel="imputado" class="btn btn-default btn-filtros">
+					  	<i class="glyphicon glyphicon-ok"></i><br>Conciliado
+					  	@checkbox(formBuscador("btnFiltro[1]"), 'hidden -> "hidden")
+					  </button>
+					  <button type="button" rel="cancelada" class="btn btn-default btn-filtros">
+					  	<i class="glyphicon glyphicon-minus-sign"></i><br>Cancelado
+					  	@checkbox(formBuscador("btnFiltro[4]"), 'hidden -> "hidden")
+					  </button>
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-sm-2 input-group">
+					<label class="control-label">Fecha Pago</label>
+					<div>
+						@inputText(formBuscador("fecha_pago_desde"), 'class -> "form-control inputDateMascara", 'id -> "fecha_pago_desde", 'placeholder -> "Desde")
+						@inputText(formBuscador("fecha_pago_hasta"), 'class -> "form-control inputDateMascara", 'id -> "fecha_pago_hasta", 'placeholder -> "Hasta")
+					</div>
+				</div>
+				
+				<div class="col-sm-2">
+					<div class="form-group">
+						<label for="nombre" class="control-label">Referencia
+						@inputText(formBuscador("referencia"), 'class -> "form-control")
+						</label>
+					</div>
+				</div>
+				
+				<div class="col-sm-2">
+					<label class="control-label">Contraparte
+						<div class="input-group">
+							@inputText(formBuscador("proveedor.nombre"), 'name -> "", 'class -> "form-control", 'id -> "proveedor")
+							@inputText(formBuscador("proveedor.id"), 'hidden -> "hidden", 'id -> "proveedor_id")
+							<span class="input-group-addon">
+								<a href="#" class="searchModal"
+											id="searchProveedor" 
+											data-title="Selección de Proveedores" 
+											data-url="@controllers.compras.routes.ProveedoresController.modalBuscar()" 
+											data-height="650" 
+											data-width="700" 
+											data-listen="modal.seleccion.proveedor.simple" 
+											data-label="#proveedor" 
+											data-field="#proveedor_id">
+									<i class="glyphicon glyphicon-search"></i>
+								</a>
+							</span>
+						</div>
+					</label>
+				</div>
+				
+				<div class="col-sm-2">
+				
+					<div class="form-group @if(formBuscador.error("periodo_id") != null) {has-error}">
+						<label for="periodo" class="control-label">Periodo</label> 
+						<div class="input-group">
+							@inputText(formBuscador("periodo.nombre"), 'class -> "form-control", 'id -> "periodo")
+							@inputText(formBuscador("periodo.id"),'hidden -> "hidden", 'id -> "periodo_id")
+							<span class="input-group-addon">
+								<a href="#" class="searchModal"
+											id="searchPeriodo" 
+											data-title="Selección de Periodo" 
+											data-url="@controllers.contabilidad.routes.PeriodosController.modalBuscar()" 
+											data-height="650" 
+											data-width="700" 
+											data-listen="modal.seleccion.periodo.simple" 
+											data-label="#periodo" 
+											data-field="#periodo_id">
+									<i class="glyphicon glyphicon-search"></i>
+								</a>
+							</span>
+						</div>
+					</div>
+
+				</div>
+				
+				<div class="col-sm-2">
+					<label class="control-label">Expediente
+						<div class="input-group">
+							@inputText(formBuscador("expediente.nombre"), 'name -> "", 'class -> "form-control", 'id -> "expediente")
+							@inputText(formBuscador("expediente.id"), 'hidden -> "hidden", 'id -> "expediente_id")
+							<span class="input-group-addon">
+								<a href="#" class="searchModal"
+											id="searchExpediente" 
+											data-title="Selección de expediente" 
+											data-url="@controllers.expediente.routes.ExpedientesController.modalBuscar()" 
+											data-height="650" 
+											data-width="700" 
+											data-listen="modal.seleccion.expediente.simple" 
+											data-label="#expediente" 
+											data-field="#expediente_id">
+									<i class="glyphicon glyphicon-search"></i>
+								</a>
+							</span>
+						</div>
+					</label>
+				</div>
+				
+				<div class="col-sm-2">
+					<label class="control-label">Ejercicio
+						@select(formBuscador("ejercicio"), Ejercicio.getEjercicios().map { p => p.id.toString -> p.nombre}, 'class -> "form-control select", '_default -> "Seleccionar")
+					</label>
+				</div>
+			</div>
+			<div class="row">
+				<!--<div class="col-sm-2 input-group">
+					  <label class="control-label">Orden de Pago N°
+					<div>
+					@inputText(formBuscador("numero_orden_pago_desde"), 
+							  'class -> "form-control", 
+							  'id -> "numero_orden_pago_desde", 
+							  'style -> "width: 71px;font-size:11px;", 
+							  'placeholder -> "Desde")
+					@inputText(formBuscador("numero_orden_pago_hasta"), 
+							  'class -> "form-control", 
+							  'id -> "numero_orden_pago_hasta", 
+							  'style -> "width: 71px;font-size:11px;", 'placeholder -> "Hasta")
+					</div>
+					</label>
+				</div>-->
+				
+				<div class="col-sm-2">
+				<label for="orden_pago_id" class="control-label">Orden de pago N° 
+					<div class="input-group">
+						@inputText(formBuscador("ordenPago.numero"), 'class -> "form-control", 'id -> "orden_pago")
+						@inputText(formBuscador("ordenPago.id"),'hidden -> "hidden", 'id -> "orden_pago_id")
+						<span class="input-group-addon">
+							<a href="#" class="searchModal"
+										id="searchPeriodo" 
+										data-title="Selección de órdenes de pago" 
+										data-url="@controllers.contabilidad.routes.OrdenesPagosController.modalBuscar()" 
+										data-height="650" 
+										data-width="700" 
+										data-listen="modal.seleccion.orden-pago.simple" 
+										data-label="#orden_pago" 
+										data-field="#orden_pago_id">
+								<i class="glyphicon glyphicon-search"></i>
+							</a>
+						</span>
+					</div>
+				</label>
+				</div>
+				
+				<!-- <div class="col-sm-2 input-group">
+					<label class="control-label">Fecha OPG</label>
+					<div>
+						@inputText(formBuscador("fecha_opg_desde"), 'class -> "form-control inputDateMascara", 'id -> "fecha_opg_desde", 'placeholder -> "Desde")
+						@inputText(formBuscador("fecha_opg_hasta"), 'class -> "form-control inputDateMascara", 'id -> "fecha_opg_hasta", 'placeholder -> "Hasta")
+					</div>
+				</div> -->
+				
+				<div class="col-sm-2">
+					<label class="control-label">Tipo de proveedor
+						@select(formBuscador("tipo_proveedor"), options(Proveedor.TIPO_INTERNO ->"Agentes", Proveedor.TIPO_EXTERNO->"Proveedores", Proveedor.TIPO_AGENTE_INTERNO ->"Agentes contratados", Proveedor.TIPO_AGENTE_PLANTA->"Agentes en planta"), 'class -> "form-control select", '_default -> "Todos")
+					</label>
+				</div>
+				<div class="col-sm-2">
+					<label class="control-label">Cuenta Impuesto
+						<div class="input-group">
+							@inputText(formBuscador("cuentaImpuesto.nombre"), 'name -> "", 'class -> "form-control", 'id -> "cuenta_impuesto")
+							@inputText(formBuscador("cuentaImpuesto.id"), 'hidden -> "hidden", 'id -> "cuenta_impuesto_id")
+							<span class="input-group-addon">
+								<a href="#" class="searchModal"
+											id="searchCuentaModal" 
+											data-title="Selección de Cuenta" 
+											data-url="@controllers.contabilidad.routes.CuentasController.modalBuscar()" 
+											data-height="650" 
+											data-width="700" 
+											data-listen="modal.seleccion.cuenta.simple" 
+											data-label="#cuenta_impuesto" 
+											data-field="#cuenta_impuesto_id">
+									<i class="glyphicon glyphicon-search"></i>
+								</a>
+							</span>
+						</div>
+					</label>
+				</div>
+				<div class="col-sm-2">
+					<label class="control-label">Contraparte factura
+						<div class="input-group">
+							@inputText(formBuscador("factura.proveedor.nombre"), 'name -> "", 'class -> "form-control", 'id -> "proveedor_factura")
+							@inputText(formBuscador("factura.proveedor.id"), 'hidden -> "hidden", 'id -> "proveedor_factura_id")
+							<span class="input-group-addon">
+								<a href="#" class="searchModal"
+											id="searchProveedor" 
+											data-title="Selección de Proveedores" 
+											data-url="@controllers.compras.routes.ProveedoresController.modalBuscar()" 
+											data-height="650" 
+											data-width="700" 
+											data-listen="modal.seleccion.proveedor.simple" 
+											data-label="#proveedor_factura" 
+											data-field="#proveedor_factura_id">
+									<i class="glyphicon glyphicon-search"></i>
+								</a>
+							</span>
+						</div>
+					</label>
+				</div>
+				<div class="col-sm-2">
+					<label class="control-label">Tipo de Contraparte
+						@select(formBuscador("tipo_proveedor_contraparte"), options(Proveedor.TIPO_INTERNO ->"Agentes", Proveedor.TIPO_EXTERNO->"Proveedores", Proveedor.TIPO_AGENTE_INTERNO ->"Agentes contratados", Proveedor.TIPO_AGENTE_PLANTA->"Agentes en planta"), 'class -> "form-control select", '_default -> "Todos")
+					</label>
+				</div>
+				<div class="col-sm-2 input-group">
+					<label class="control-label">Entrega Factura</label>
+					<div>
+						@inputText(formBuscador("fecha_entrega_factura_desde"), 'class -> "form-control inputDateMascara", 'id -> "fecha_entrega_factura_desde", 'placeholder -> "Desde")
+						@inputText(formBuscador("fecha_entrega_factura_hasta"), 'class -> "form-control inputDateMascara", 'id -> "fecha_entrega_factura_hasta", 'placeholder -> "Hasta")
+					</div>
+				</div>
+			</div>	
+			<div class="row">
+				
+				
+				<div class="col-sm-2 input-group">
+					<label class="control-label"> 
+						<!-- PROFE
+						@select(formBuscador("profe"),options(""->"","SI"->"SI","NO"->"NO"), 'class -> "form-control select") -->
+						Tipo Cuenta
+						@select(formBuscador("tipo_cuenta_id"), 
+						TipoCuenta.find.all().map { p => p.id.toString -> p.nombre}, 'class -> "form-control select", '_default -> "Seleccionar")
+					</label>
+				</div>
+				
+				<div class="col-sm-2">
+					<div class="checkbox">
+						<label for="inputGuardia" class="control-label"> 
+							Guardia
+							@checkbox(formBuscador("guardia"))
+						</label><br>
+					</div> 
+				</div>
+				<div class="col-sm-2 input-group">
+					<label class="control-label">Fecha Conciliacion</label>
+					<div>
+						@inputText(formBuscador("fecha_conciliacion_desde"), 'class -> "form-control inputDateMascara", 'id -> "fecha_conciliacion_desde", 'placeholder -> "Desde")
+						@inputText(formBuscador("fecha_conciliacion_hasta"), 'class -> "form-control inputDateMascara", 'id -> "fecha_conciliacion_hasta", 'placeholder -> "Hasta")
+					</div>
+				</div>
+				<div class="col-sm-2">
+					<label class="control-label">Tipo de pago
+						@select(formBuscador("tipo_pago"), options("transferencia"->"Macro Online","transferenciaMacroProveedores"->"Macro Proveedores","transferenciaInterbanking"->"Interbanking","cheque"->"Cheque","debito"->"Debito"), 'class -> "form-control select", '_default -> "Seleccionar")
+					</label>
+				</div>	
+				
+				<div class="col-sm-4">
+				
+					<div class="col-sm-4">
+						<label class="control-label"> 
+							Impuesto
+							@select(formBuscador("tipo"),options(""->"","SI"->"SI","NO"->"NO"), 'class -> "form-control select")
+						</label>
+					</div>
+					<!-- <div class="col-sm-2">
+						<div class="form-group">
+							<label class="control-label">Estado PP</label>
+							@select(formBuscador("estado_pp"), 
+							Estado.find.where().eq("tipo",Estado.TIPO_PAGO).findList().map { p => p.id.toString -> p.nombre}, 
+							'class -> "form-control select", '_default -> "Seleccionar"), 
+						</div>
+					</div>  -->
+					<div class="col-sm-4">
+						<label class="control-label"> 
+							RP
+							@select(formBuscador("rp"),options(""->"","SI"->"SI","NO"->"NO"), 'class -> "form-control select")
+						</label>
+					</div>
+					<!--<div class="col-sm-2">
+						<div class="checkbox">
+							<label for="inputGuardia" class="control-label"> 
+								RP
+								@checkbox(formBuscador("rp"))
+							</label><br>
+						</div> 
+					</div>-->
+					<div class="col-sm-4">
+						<label class="control-label"> 
+							Emergencia
+							@select(formBuscador("emergencia"),options(""->"","SI"->"SI","NO"->"NO"), 'class -> "form-control select")
+						</label>
+					</div>
+				</div>	
+			</div>
+			<div class="row">
+				
+				<div class="col-sm-2">
+					<div class="form-group">
+					<label for="nombre" class="control-label">&nbsp;</label>
+					<button  class="form-control btn btn-primary">Buscar</button>
+					</div>
+				</div>
+				<div class="col-sm-2">
+					<div class="form-group">
+					<label for="nombre" class="control-label">&nbsp;</label>
+					<a href="@controllers.contabilidad.routes.PagosController.index()"  class="form-control btn btn-default">Limpiar</a>
+					</div>
+				</div>
+			</div>
+		</form>
+	</div>
+	
+	<div class="row">
+	<div class="col-sm-12">
+	@if(buscador.getTotalRowCount == 0) {
+        
+        <div class="well">
+            <em>No se encuentran Pagos</em>
+        </div>
+        
+    } else {
+		
+		<table id="listaPagos" class="table table-striped table-bordered">
+			<thead>
+				<tr style="background: #FFFFFF;">	
+	        		<td colspan="14">Mostrando @buscador.getDisplayXtoYofZ(" a "," de ") resultado(s).</td>
+	        		<td><b>Total Debito:</b> <span class="totalFooter"></span></td>
+	        		<td><b>Total Credito:</b> <span class="totalCreditoFooter"></span></td>
+	        		<td colspan="2">&nbsp</td>
+	        	</tr>
+				
+				<tr>
+					<th width="20"><input type="checkbox" name="checkAll" id="checkAll"/></th>
+					<th>#</th>
+					<th>Referencia</th>
+					<th>Fecha</th>
+					<th>Fecha Concil.</th>
+					<!-- <th>Entrega Factura</th>-->
+					<!-- <th width="80">Fecha Conciliado</th> -->
+					<th>C/O</th>
+					<th>REF N°</th>
+					<th>Contraparte</th>
+					<th>Cuenta propia</th>
+					<th>T.P.</th>
+					<th>Orden pago</th>
+					<th>Tipo Cuenta</th>
+					<th>Exp.</th>
+					<th>Periodo</th>
+					<th>Total Debito</th>
+					<th>Total Credito</th>
+					<th>Estado</th>
+					<th width="20">#</th>
+				</tr>
+			</thead>
+			<tbody>
+			@for(pago <- buscador.getList) {
+				<tr class="pointer @getClassEstado(pago.estado)" data-estado="@pago.estado_id" data-href="@controllers.contabilidad.routes.PagosController.ver(pago.id)&@UriTrack.encode()">
+					<td><input type="checkbox" name="id_pago[]" value="@pago.id" class="notSeleccion" id="check-@pago.id"/></td>
+					<td class="notSeleccion">
+						<a class="btn btn-default btn-xs notSeleccion" href="@controllers.contabilidad.routes.PagosController.editar(pago.id)&@UriTrack.encode()">
+							<i class="glyphicon glyphicon-edit"></i>
+						</a>
+					</td>				
+					<td>@(pago.nombre)
+						@if(pago.expediente != null){
+							@if(pago.expediente.emergencia){
+								<span style="color:red;font-weight: bold;font-size:11px; ">Emergencia</span>
+							}
+						}
+					</td>
+					<td class="fecha">@if(pago.fecha_pago != null){@(utils.DateUtils.formatDate(pago.fecha_pago))}</td>
+					
+					<td class="fechaConciliado">@if(pago.fecha_conciliacion != null){@(utils.DateUtils.formatDate(pago.fecha_conciliacion))}</td> 
+					<td>@if(pago.factura != null && pago.factura.proveedor != null && pago.tipo == "impuestos") {@(pago.factura.proveedor.nombre)}</td>
+					
+					<td class="referencia">@(pago.referencia)</td>
+					<td>@(pago.proveedor.nombre)</td>
+					<td class="cuentaPropia">@if(pago.cuentaPropia != null) {@pago.cuentaPropia.nombre}</td>
+					<td class="tipoPago">
+						@if(pago.tipo_pago != null && pago.tipo_pago.compareTo("cheque") == 0){cheque} 
+						@if(pago.tipo_pago != null && pago.tipo_pago.compareTo("transferencia") == 0){MacroOnline} 
+						@if(pago.tipo_pago != null && pago.tipo_pago.compareTo("transferenciaInterbanking") == 0){Interbanking}
+						@if(pago.tipo_pago != null && pago.tipo_pago.compareTo("transferenciaMacroProveedores") == 0){MacroProveedores}
+						@if(pago.tipo_pago != null && pago.tipo_pago.compareTo("debito") == 0){Debito}
+					</td>
+					<td>@if(pago.ordenPago != null) {@pago.ordenPago.getNombreCompleto()}</td>
+					<td>@if(pago.tipoCuenta != null){@pago.tipoCuenta.nombre}</td>
+					<td>@if(pago.expediente != null) {@pago.expediente.getExpedienteEjercicio()}</td>
+					<td>@if(pago.periodo != null) {@pago.periodo.nombre}</td>
+					<td class="total" rel="@pago.total">@(utils.NumberUtils.moneda(pago.total))</td>
+					<td class="totalCredito" rel="@pago.total_credito">@(utils.NumberUtils.moneda(pago.total_credito))</td>
+					<td class="estado">@(pago.estado.nombre)</td>
+					<td>
+						<a class="btn btn-default btn-xs delete-confirm-link notSeleccion"  href="@controllers.contabilidad.routes.PagosController.eliminar(pago.id)&@UriTrack.encode()">
+							<i class="glyphicon glyphicon-trash icono-eliminar"></i>
+						</a>
+					</td>
+				</tr>
+             }
+	        </tbody>
+	        <tfoot>
+	        	<tr>	
+	        		<td colspan="14">Mostrando @buscador.getDisplayXtoYofZ(" a "," de ") resultado(s).</td>
+	        		<td><b>Total Debito:</b> <span class="totalFooter"></span></td>
+	        		<td><b>Total Credito:</b> <span class="totalCreditoFooter"></span></td>
+	        		<td colspan="2">&nbsp</td>
+	        	</tr>
+	        </tfoot>
+        </table>
+		
+		<div class="pagination pull-right">
+		    @views.html.helpers.paginador(buscador, controllers.contabilidad.routes.PagosController.index())
+		</div>
+	</div>	
+	</div>	
+<script>
+$( function (){
+	
+	
+	
+	if($("#proveedor_factura").length){
+		var options = {
+				script:"/suggestProveedor/",
+				varname:"",
+				json:true,
+				shownoresults:true,
+				maxresults:6,
+				callback: function (obj) { 
+											$("#proveedor_factura_id").val(obj.id); 
+										 }
+			};
+		var as_json = new bsn.AutoSuggest('proveedor_factura', options);
+	}
+	
+	
+	var a = 0;var b = 0;var c = 0;var d = 0;
+	$(".total").each(function (index) {
+		a = Number($(this).attr("rel"))+a 
+	})
+	
+	$(".totalFooter").append(formatNumberPesos(parseFloat(a).toFixed(2)));
+	
+	$(".totalCredito").each(function (index) {
+		b = Number($(this).attr("rel"))+b 
+	})
+	
+	$(".totalCreditoFooter").append(formatNumberPesos(parseFloat(b).toFixed(2)));
+	
+	$( "#checkAll" ).click(function() {
+			selectAll();
+	});
+	$( "input[name='id_pago[]']" ).click(function() {
+		selectTrList();
+	});
+});		
+
+function selectTrList(){
+	var a = 0;var b = 0;var c = 0;var d = 0;
+	$(".total").each(function (index) {
+		if($(this).parent().find("input[name='id_pago[]']").prop("checked")){
+			a = Number($(this).attr("rel"))+a
+		}
+	})
+	$(".totalFooter").empty();
+	$(".totalFooter").append(formatNumberPesos(parseFloat(a).toFixed(2)));
+	
+	$(".totalCredito").each(function (index) {
+		if($(this).parent().find("input[name='id_pago[]']").prop("checked")){
+			b = Number($(this).attr("rel"))+b
+		}
+	})
+	$(".totalCreditoFooter").empty();
+	$(".totalCreditoFooter").append(formatNumberPesos(parseFloat(b).toFixed(2)));
+}
+
+function selectAll(){
+	var a = 0;var b = 0;var c = 0;var d = 0;
+	if($("#checkAll").prop("checked")){
+		$("input[name='id_pago[]']").prop( "checked", true );
+		
+	}else{
+		$( "input[name='id_pago[]']").prop( "checked", false );
+	}
+	
+	$(".total").each(function (index) {
+		a = Number($(this).attr("rel"))+a 
+	})
+	$(".totalFooter").empty();
+	$(".totalFooter").append(formatNumberPesos(parseFloat(a).toFixed(2)));
+	
+	$(".totalCredito").each(function (index) {
+		b= Number($(this).attr("rel"))+b
+	})
+	$(".totalCreditoFooter").empty();
+	$(".totalCreditoFooter").append(formatNumberPesos(parseFloat(b).toFixed(2)));
+}
+
+
+</script>
+ 	 }
+}
+		
+		
+	
+	

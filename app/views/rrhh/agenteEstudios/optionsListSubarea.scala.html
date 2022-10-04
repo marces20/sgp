@@ -1,0 +1,3 @@
+@(subAreas: List[EstudioSubarea])
+<option value>Seleccionar</option>
+@for(p <- subAreas) {<option value="@p.id.toString">@p.nombre</option>}

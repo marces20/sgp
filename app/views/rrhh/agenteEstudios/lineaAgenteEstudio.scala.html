@@ -1,0 +1,16 @@
+@(linea: AgenteEstudio, editable: Boolean)
+@import models.auth._
+
+<tr data-id="@linea.id">
+	@if(editable && Permiso.check("editarAgenteEstudio")){
+		<td class="accion-editar"><a class="btn btn-default btn-xs modificarAgenteEstudio" href="@controllers.rrhh.routes.AgentesEstudiosController.editar(linea.id)"><i class="glyphicon glyphicon-edit"></i></a></td>
+	}
+		<td>@linea.estudioNivel.nombre</td>
+		<td>@linea.titulo</td>
+		<td>@if(linea.otra_institucion == null || linea.otra_institucion.isEmpty()){@linea.estudioInstitucion.nombre}else{@linea.otra_institucion}</td>
+		<td>@if(linea.estudioSubarea != null) {@linea.estudioSubarea.nombre}</td>
+		<td>@if(linea.estudioEstado != null) {@linea.estudioEstado.nombre}</td>
+	@if(editable && Permiso.check("eliminarAgenteEstudio")){
+		<td><a class="btn btn-default btn-xs delete-confirm-link eliminarAgenteEstudio" href="@controllers.rrhh.routes.AgentesEstudiosController.eliminar(linea.id)"><i class="glyphicon glyphicon-trash icono-eliminar"></i></a></td>
+	}
+</tr>

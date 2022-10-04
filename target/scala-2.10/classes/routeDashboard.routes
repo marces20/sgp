@@ -1,0 +1,183 @@
+#-----------------------------MODULO DASHBOARD ---------------------------------
+GET  /             				controllers.dashboard.IndexController.index()
+GET  /honorarios 					controllers.dashboard.HonorariosController.index()
+GET  /estadoDeudaHonorarios 		controllers.dashboard.HonorariosController.estadoDeuda()
+POST /honorarios/getEstadoDeudaPorEjercicio 				controllers.dashboard.HonorariosController.getEstadoDeudaPorEjercicio()
+POST /honorarios/getEstadoDeudaPorPeriodo 					controllers.dashboard.HonorariosController.getEstadoDeudaPorPeriodo()
+POST /honorarios/getDataEstadoDeudaPagadosPorEjercicio 		controllers.dashboard.HonorariosController.getDataEstadoDeudaPagadosPorEjercicio()
+POST /honorarios/getDataEstadoDeudaNoPagadosPorEjercicio 	controllers.dashboard.HonorariosController.getDataEstadoDeudaNoPagadosPorEjercicio()
+POST /honorarios/getDataEstadoDeudaPagadosPorPeriodo 		controllers.dashboard.HonorariosController.getDataEstadoDeudaPagadosPorPeriodo()
+POST /honorarios/getDataEstadoDeudaNoPagadosPorPeriodo 		controllers.dashboard.HonorariosController.getDataEstadoDeudaNoPagadosPorPeriodo()
+
+GET  /estadoGeneralAgente 												controllers.dashboard.HonorariosController.estadoGeneralPorAgente()
+POST /estadoGeneralAgente/getDatosEstadoGeneralPorAgente 				controllers.dashboard.HonorariosController.getDatosEstadoGeneralPorAgente()
+POST /estadoGeneralAgente/getCertificacionesEstadoGeneralPorAgente 		controllers.dashboard.HonorariosController.getCertificacionesEstadoGeneralPorAgente()
+POST /estadoGeneralAgente/getFacturacionEstadoGeneralPorAgente 			controllers.dashboard.HonorariosController.getFacturacionEstadoGeneralPorAgente()
+POST /estadoGeneralAgente/getPagosEstadoGeneralPorAgente 				controllers.dashboard.HonorariosController.getPagosEstadoGeneralPorAgente()
+POST /estadoGeneralAgente/getEstadoDeudaEstadoGeneralPorAgenteEstadoPeriodo 	controllers.dashboard.HonorariosController.getEstadoDeudaEstadoGeneralPorAgenteEstadoPeriodo()
+GET  /honorarios/porDepartamentos 				controllers.dashboard.HonorariosController.porDepartamento()
+GET  /honorarios/agentesDepartamentos			controllers.dashboard.HonorariosController.getAgentesTotalDepartamento()
+GET  /honorarios/getHonorarioDepartamento 		controllers.dashboard.HonorariosController.getHonorarioDepartamento()
+GET  /estadoDeudaMonotributo 					controllers.dashboard.HonorariosController.estadoDeudaMonotributo()
+GET  /estadoDeudaMonotributoExcel 				controllers.dashboard.HonorariosController.estadoDeudaMonotributoExcel()
+GET  /estadoDeudaMonotributoProfe 				controllers.dashboard.HonorariosController.estadoDeudaMonotributoProfe()
+GET  /estadoDeudaMonotributoExcelProfe 			controllers.dashboard.HonorariosController.estadoDeudaMonotributoExcelProfe()
+
+
+GET  /honorariosNew 					controllers.dashboard.HonorariosNewController.index()
+GET  /profesionalesMedicos 					controllers.dashboard.ProfesionalesMedicosController.index()
+
+GET  /listadoHonorariosReporte 			controllers.dashboard.HonorariosNewController.listadoHonorariosReporte(id:Int)
+GET  /informeHonorarioPorPeriodo		controllers.dashboard.HonorariosNewReportesController.informeHonorarioPorPeriodo()
+
+GET /liquidacionesPorPuesto				controllers.dashboard.LiquidacionesController.liquidacionesPorPuesto()
+																					  	
+#GET /getCertificacionesPorPuesto		controllers.dashboard.LiquidacionesController.getCertificacionesPorPuesto()
+GET /getLiquidacionesPorPuesto			controllers.dashboard.LiquidacionesController.getLiquidacionesPorPuesto()
+GET /getLiquidacionesPorPuestoPorPeriodo		controllers.dashboard.LiquidacionesController.getLiquidacionesPorPuestoPorPeriodo()
+GET /getLiquidacionesPorPuestoPorPeriodoPorClasificacion		controllers.dashboard.LiquidacionesController.getLiquidacionesPorPuestoPorPeriodoPorClasificacion()
+GET /liquidacionesPorEscala				controllers.dashboard.LiquidacionesController.liquidacionesPorEscala()
+POST /getDetalleLiquidacionClasificacion			controllers.dashboard.LiquidacionesController.getDetalleLiquidacionClasificacion(idPuestoLaboral:Int,idPeriodo:Int,idClasificacion:Int)
+GET /liquidacionesPorProfesion			controllers.dashboard.LiquidacionesController.liquidacionesPorProfesion()
+GET /liquidacionesPorProfesionReporte			controllers.dashboard.LiquidacionesReportesController.liquidacionesPorProfesion()
+
+GET /liquidacionesPorOrganigrama			controllers.dashboard.LiquidacionesController.liquidacionesPorOrganigrama()
+GET /liquidacionesPorOrganigramaReporte		controllers.dashboard.LiquidacionesReportesController.liquidacionesPorOrganigrama()				
+GET /liquidacionesPorEscalaReporte			controllers.dashboard.LiquidacionesReportesController.liquidacionesPorEscala()																		  
+GET /liquidacionesTotalesPorEscala		controllers.dashboard.LiquidacionesController.liquidacionesTotalesPorEscala()
+
+GET /liquidacionesPorAgrupadoOrganigrama	controllers.dashboard.LiquidacionesController.liquidacionesPorAgrupadoOrganigrama()
+GET /liquidacionesPorAgrupadoOrganigramaReporte		controllers.dashboard.LiquidacionesReportesController.liquidacionesPorAgrupadoOrganigrama()	
+
+GET /impuestosDeuda						controllers.dashboard.ImpuestosController.estadoDeuda()
+GET /detalleImpuestos					controllers.dashboard.ImpuestosController.detalleImpuestos(id:Long)
+
+GET /estadoPorExpedientePorLinea		controllers.dashboard.ProveedoresController.estadoPorExpedientePorLinea()
+GET /reporteEstadoDefinitivoExpedienteLineas		controllers.dashboard.ProveedoresController.reporteEstadoDefinitivoExpedienteLineas(proveedorId:Long ?= 0,rubroId:Long ?= 0,ejercicioId:Long ?= 0)
+
+GET /informe-estadistico-deuda-proveedores			controllers.dashboard.InformeEstadisticoDeudaProveedoresController.index()
+GET /informe-deuda-actas							controllers.dashboard.InformeDeudaPorActasController.index()
+GET /archivo-deuda-actas							controllers.dashboard.InformeDeudaPorActasController.archivoDeudaPorActas()
+GET /diferencias									controllers.dashboard.InformeEstadisticoDeudaProveedoresController.diferencias()
+POST /procesar-diferencias							controllers.dashboard.InformeEstadisticoDeudaProveedoresController.procesarDiferencias()
+
+GET /informe-estadistico-deuda-proveedores/descarga						controllers.dashboard.InformeEstadisticoDeudaProveedoresController.archivoEstadistico()
+GET /informe-estadistico-deuda-proveedores/get-actas					controllers.dashboard.InformeEstadisticoDeudaProveedoresController.getActas(id_orden_provision:Long)
+
+GET /informe-estadistico-pago-proveedores				controllers.dashboard.InformeEstadisticoPagoProveedoresController.index()
+GET /informe-estadistico-pago-proveedores/descarga		controllers.dashboard.InformeEstadisticoPagoProveedoresController.archivoEstadistico()
+
+GET /informe-pago-periodo-proveedores				controllers.dashboard.InformeEstadisticoPagoProveedoresController.informePeriodoProveedor()
+GET /informe-pago-periodo-proveedores-reportes		controllers.dashboard.InformeEstadisticoPagoProveedoresController.informePeriodoProveedorReporte()
+
+GET /informeProveedor							controllers.dashboard.InformeEstadisticoPagoProveedoresController.informeProveedor()
+
+
+GET     /autorizado        						controllers.dashboard.AutorizadosController.index()
+GET     /autorizado/crear        				controllers.dashboard.AutorizadosController.crear()
+POST    /autorizado/guardar      				controllers.dashboard.AutorizadosController.guardar()
+GET     /autorizado/editar       				controllers.dashboard.AutorizadosController.editar(id:Long)
+GET     /autorizado/eliminar     				controllers.dashboard.AutorizadosController.eliminar(id:Long)
+GET     /autorizado/ver        					controllers.dashboard.AutorizadosController.ver(id:Long)
+POST    /autorizado/actualizar   				controllers.dashboard.AutorizadosController.actualizar(id:Long)
+GET     /autorizado/cambiarEstado				controllers.dashboard.AutorizadosController.cambiarEstado(idAutorizado:Long, idEstado: Long)
+POST    /autorizado/cargarLineasAutorizados     controllers.dashboard.AutorizadosController.cargarLineasAutorizados()
+POST    /autorizado/cargarLineasAutorizadosCertificacionesCompras     controllers.dashboard.AutorizadosController.cargarLineasAutorizadosCertificacionesCompras()
+POST    /autorizado/modalAgregarMontos			controllers.dashboard.AutorizadosController.modalAgregarMontos(idOrdenProvision:Long ?= 0,idAutorizado:Long,idOrdenCompra:Long ?= 0,tipo_cuenta_id:Long ?= 0)
+GET     /autorizado/getListadoDeudas			controllers.dashboard.AutorizadosController.getListadoDeudas()
+GET     /autorizado/getListadoDeudasActas		controllers.dashboard.AutorizadosController.getListadoDeudasActas()
+GET     /autorizado/getActualizarDatos        	controllers.dashboard.AutorizadosController.getActualizarDatos(idAutorizado:Long)
+POST     /autorizado/controlCargaCotizacion		controllers.dashboard.AutorizadosController.controlCargaCotizacion()
+
+POST    /autorizado/modalAgregarMontosActas		controllers.dashboard.AutorizadosController.modalAgregarMontosActas(idActa:Long ?= 0,idOrdenProvision:Long ?= 0,idAutorizado:Long,idOrdenCompra:Long ?= 0,tipo_cuenta_id:Long ?= 0)
+POST    /autorizado/modalAgregarMontosSinOp		controllers.dashboard.AutorizadosController.modalAgregarMontosSinOp(idAutorizado:Long,idOrdenCompra:Long ?= 0,tipo_cuenta_id:Long ?= 0)
+POST    /autorizado/modalAgregarMontosCertificacionesCompras		controllers.dashboard.AutorizadosController.modalAgregarMontosCertificacionesCompras(idCertificacion:Long ?= 0,idAutorizado:Long,idOrdenCompra:Long,tipo_cuenta_id:Long ?= 0)
+
+GET     /autorizado/getResumen					controllers.dashboard.AutorizadosController.getResumen(id:Long)
+GET     /autorizado/reporteAutorizado			controllers.dashboard.AutorizadosController.reporteAutorizado(id:Long)
+GET     /autorizado/reporteAutorizadoExcel		controllers.dashboard.AutorizadosController.reporteAutorizadoExcel(id:Long)
+GET     /autorizado/reporteAutorizadoRemitos		controllers.dashboard.AutorizadosController.reporteAutorizadoRemitos(id:Long)
+
+POST     /autorizado/cargarLineasAutorizadosMasivamente		controllers.dashboard.AutorizadosController.cargarLineasAutorizadosMasivamente()
+
+GET     /autorizado-linea/index       			controllers.dashboard.AutorizadoLineasController.index(id:Long ?= 0, editable:Boolean ?= false)
+GET     /autorizado-linea/eliminar       		controllers.dashboard.AutorizadoLineasController.eliminar(autorizado_id:Long,orden_id:Long)
+
+GET 	/autorizado-linea/get-actas				controllers.dashboard.AutorizadoLineasController.getActas(id:Long)
+
+
+GET     /indexInformeRecupero					controllers.dashboard.InformesRecuperoController.index()
+GET     /deudasRecuperoPorTipoDeCliente			controllers.dashboard.InformesRecuperoController.deudasPorTipoDeCliente(idTipoCliente:Long)
+
+GET     /deudasRecuperoPorTipoDeClienteReporte	controllers.dashboard.InformesRecuperoReportesController.deudasPorTipoDeCliente(idTipoCliente:Long)
+
+GET     /deudas									controllers.dashboard.DeudasGlobalizadasController.index()
+GET     /deudasResumidas						controllers.dashboard.DeudasGlobalizadasController.deudasResumidas(deposito:Int ?= 0, ra:Boolean ?= false)
+GET     /deudasPorProveedorHEARM				controllers.dashboard.DeudasGlobalizadasController.deudasDetalles(idProveedor:Int ?= 0, ra:Boolean ?= false)
+GET     /deudasDetallesOtros					controllers.dashboard.DeudasGlobalizadasController.deudasDetallesOtros(profe:Boolean ?= false,equipamientos:Boolean ?= false)
+GET     /deudasDetallesCuentas					controllers.dashboard.DeudasGlobalizadasController.deudasDetallesCuentas(idCuenta:Int ?= 0)
+GET		/deudasDetallesPorProveedor				controllers.dashboard.DeudasGlobalizadasController.deudasDetallesPorProveedor()
+
+GET		/deudasDetallesOtrosProveedoresResumen 	controllers.dashboard.DeudasGlobalizadasController.deudasDetallesOtrosProveedoresResumen(profe:Boolean ?= false,equipamientos:Boolean ?= false)
+
+
+GET     /deudasDetallesServicios				controllers.dashboard.DeudasGlobalizadasController.deudasDetallesServicios()
+GET     /deudasDetallesServiciosResumen			controllers.dashboard.DeudasGlobalizadasController.deudasDetallesServiciosResumen()
+GET     /deudasDetallesHonorarios				controllers.dashboard.DeudasGlobalizadasController.deudasDetallesHonorarios()
+GET		/deudasDetallesHonorariosResumen		controllers.dashboard.DeudasGlobalizadasController.deudasDetallesHonorariosResumen()
+
+GET     /deudasResumidasReporte					controllers.dashboard.DeudasGlobalizadasReportesController.deudasResumidasReporte(deposito:Int ?= 0, ra:Boolean ?= false)
+GET     /deudasDetallesReporte					controllers.dashboard.DeudasGlobalizadasReportesController.deudasDetallesReporte(idProveedor:Int ?= 0, ra:Boolean ?= false)
+GET     /deudasDetallesOtrosReportes			controllers.dashboard.DeudasGlobalizadasReportesController.deudasDetallesOtrosReportes(profe:Boolean ?= false, equipamientos:Boolean ?= false)
+GET 	/deudasInformeGeneral					controllers.dashboard.DeudasGlobalizadasReportesController.deudasInformeGeneral()
+GET 	/deudasInformeGeneralResumen			controllers.dashboard.DeudasGlobalizadasReportesController.deudasInformeGeneralResumen()
+GET 	/deudasDetallesServiciosReportes		controllers.dashboard.DeudasGlobalizadasReportesController.deudasDetallesServiciosReportes()
+GET 	/deudasDetallesHonorariosReportes		controllers.dashboard.DeudasGlobalizadasReportesController.deudasDetallesHonorariosReportes()
+GET     /deudasServiciosProveedoresResumenReportes controllers.dashboard.DeudasGlobalizadasReportesController.deudasServiciosProveedoresResumenReportes()
+GET 	/deudasHonorariosProveedoresResumenReportes controllers.dashboard.DeudasGlobalizadasReportesController.deudasHonorariosProveedoresResumenReportes()
+
+GET 	/deudasCuentasReportes					controllers.dashboard.DeudasGlobalizadasReportesController.deudasCuentasReportes(idCuenta:Int ?= 0,soloDeuda:Boolean ?= false)
+	
+GET     /deudasOtrosProveedoresResumenReporte	controllers.dashboard.DeudasGlobalizadasReportesController.deudasDetallesOtrosProveedoresResumen(profe:Boolean ?= false, equipamientos:Boolean ?= false)
+
+
+GET     /cotizacion        						controllers.dashboard.UltimasCotizacionesController.indexUltimaCotizaciones()
+GET     /cotizacion/crear        				controllers.dashboard.UltimasCotizacionesController.crearUltimaCotizaciones()
+POST    /cotizacion/guardar      				controllers.dashboard.UltimasCotizacionesController.guardarUltimaCotizaciones()
+GET     /cotizacion/eliminar     				controllers.dashboard.UltimasCotizacionesController.eliminar(id:Long)
+
+GET     /deudasPorAntigueda						controllers.dashboard.DeudasPorAntiguedadController.index()
+GET     /deudasPorProveedorPorAntiguedad		controllers.dashboard.DeudasPorAntiguedadController.deudasDetalles(idProveedor:Int ?= 0, equipamiento:Boolean ?= false)
+GET     /deudasDetallesPorAntiguedadReporte		controllers.dashboard.DeudasPorAntiguedadReportesController.deudasDetallesReporte(idProveedor:Int ?= 0, equipamiento:Boolean ?= false,idCuenta:Int ?= 0, sinServicio:Boolean ?= false)
+GET 	/deudasInformeGeneralPorAntiguedad		controllers.dashboard.DeudasPorAntiguedadReportesController.deudasInformeGeneral()
+GET 	/deudasInformeGeneralPorAntiguedadNuevo		controllers.dashboard.DeudasPorAntiguedadReportesController.deudasInformeGeneralNuevo()
+GET 	/deudasResumenMensual					controllers.dashboard.DeudasPorAntiguedadController.deudasResumenMensual()
+GET     /deudasMensualReporte					controllers.dashboard.DeudasPorAntiguedadReportesController.deudasMensualReporte()
+GET     /deudasDetallesServiciosPorAntiguedad	controllers.dashboard.DeudasPorAntiguedadController.deudasDetallesServicios()
+GET     /deudasDetallesPorAntiguedaPorProveedor	controllers.dashboard.DeudasPorAntiguedadController.deudasDetallesPorProveedor()
+
+GET     /deudasDetallesInstitucion				controllers.dashboard.DeudasPorAntiguedadController.deudasDetallesInstitucion()
+GET 	/deudasResumenInstitucion				controllers.dashboard.DeudasPorAntiguedadController.deudasResumenInstitucion()
+GET 	/deudasDetallePorInstitucionReporte		controllers.dashboard.DeudasPorAntiguedadReportesController.deudasDetallePorInstitucionReporte()
+GET 	/deudasResumenPorInstitucionReporte		controllers.dashboard.DeudasPorAntiguedadReportesController.deudasResumenPorInstitucionReporte()
+GET 	/deudasDetallesAntiguedadServiciosReportes		controllers.dashboard.DeudasPorAntiguedadReportesController.deudasDetallesServiciosReportes()
+ 
+GET     /deudasDetallesAntiguedadCuenta			controllers.dashboard.DeudasPorAntiguedadController.deudasDetallesCuenta(idCuenta:Int ?= 0) 
+ 
+
+GET 	/autorizadoDistintoDePagado				controllers.dashboard.ControlDeudaController.autorizadoDistintoDePagado()
+GET 	/getAutorizadoDistintoDePagado			controllers.dashboard.ControlDeudaController.getAutorizadoDistintoDePagado()
+GET 	/controlDeudaMonedaExtranjera			controllers.dashboard.ControlDeudaController.controlDeudaMonedaExtranjera()
+GET 	/indexControlDeuda						controllers.dashboard.ControlDeudaController.index()
+
+GET 	/resumenFinanciero						controllers.dashboard.MovimientosCuentasController.index()
+GET 	/resumenFinancieroGeneral				controllers.dashboard.MovimientosCuentasController.resumenFinancieroGeneral()
+GET 	/resumenFinancieroDetalle				controllers.dashboard.MovimientosCuentasController.resumenFinancieroDetalle()
+GET 	/resumenFinancieroDetalleInstitucion	controllers.dashboard.MovimientosCuentasController.resumenFinancieroDetallePorInstitucion()
+GET 	/conciliacion							controllers.dashboard.MovimientosCuentasController.conciliacion()
+
+GET 	/auditoria								controllers.dashboard.AuditoriaController.index()
+GET 	/inventarioRismi						controllers.dashboard.InventarioRismiController.index()
+
+GET     /presuControl							controllers.dashboard.PresupuestoController.index()
+GET     /presuControl/devengado					controllers.dashboard.PresupuestoController.devengado()

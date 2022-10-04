@@ -1,0 +1,35 @@
+@(formBuscador: DynamicForm)
+@import helper._
+@implicitFieldConstructor = @{ FieldConstructor(simpleInput.render) } 
+																			
+@helper.form(action = controllers.compras.routes.CertificacionesAccionesController.editarFechaCertificacionMasivo(), 'id -> "formCargarFecharCertificacion") {	
+	
+	@if(flash.containsKey("error")) {
+		<div class="alert alert-danger"><i class="glyphicon glyphicon-remove-sign"></i> @flash.get("error")</div>
+	}
+	
+	@if(flash.containsKey("success")) {
+		<div class="alert alert-success"><i class="glyphicon glyphicon-ok-circle"></i> @flash.get("success")</div>
+	}
+	<div class="row">
+		<div class="col-sm-3">
+			<div class="form-group">
+				<label for="fecha_certificacion_modal" class="control-label">Fecha Certificacion</label> 
+				<input name="fecha_certificacion_modal" id="fecha_certificacion_modal" class="form-control date"/>
+			</div>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-sm-5"><br />
+			<button type="submit" class="btn btn-default" title="Agregar Fecha Certificacion">
+			<i class="glyphicon glyphicon-arrow-right"></i> Editar Fecha Certificacion</button>
+		</div>
+	</div>
+
+}
+<script>
+$( function(){
+	$("#fecha_certificacion_modal").mask("99/99/9999");
+});
+</script>
+@flash().clear()

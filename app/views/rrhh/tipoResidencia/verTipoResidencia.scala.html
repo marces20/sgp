@@ -1,0 +1,53 @@
+@(lcForm: Form[TipoResidencia],lc:TipoResidencia)
+@import helper._
+@import utils._
+@import models.auth._
+@scripts = {
+	 
+}
+@implicitFieldConstructor = @{ FieldConstructor(simpleInput.render) } 
+
+@views.html.rrhh.mainRrhh("Tipo Residencia") {
+	<div class="page-header">
+		<div class="row">
+			<div class="col-sm-3">
+				<h1>Vista Tipo Residencia</h1>
+			</div>
+			<div class="col-sm-2">
+				<a href="@controllers.rrhh.routes.TipoResidenciasController.indexTipoResidencia()" class="btn btn-default"><i class="glyphicon glyphicon-list"></i></a> 
+				<a href="#" class="btn btn-default"><i class="glyphicon glyphicon-align-justify"></i></a> 
+			</div>
+			
+		</div>
+	</div>		
+@views.html.tags.successError()	
+	<div class="row menu-acciones">
+		<div class="col-sm-4">
+			<a href="@controllers.rrhh.routes.TipoResidenciasController.editarTipoResidencia(lc.id)"  class="btn btn-default"><i class="glyphicon glyphicon-edit"></i> Editar</a>
+			<a href="@controllers.rrhh.routes.TipoResidenciasController.eliminarTipoResidencia(lc.id)"  class="btn btn-default delete-confirm-link"><i class="glyphicon glyphicon-trash icono-eliminar"></i> Eliminar</a>
+			 
+		</div>
+	 
+		<div class="col-sm-2">
+			<a href="@UriTrack.getOnNull(controllers.rrhh.routes.TipoResidenciasController.indexTipoResidencia().absoluteURL())" class="btn btn-default"><i class="glyphicon glyphicon-list"></i></a> 
+		</div> 
+	</div>	
+	
+	
+	<div class="row">
+		<div class="col-sm-4">
+			<div class="form-group">
+				<label class="control-label">Nombre</label>
+				<p class="form-control-static form-control">@lcForm.field("nombre").value</p>
+			</div>
+		</div>
+		<div class="col-sm-4">
+			<div class="form-group">
+				<label class="control-label">Tipo</label>
+				<p class="form-control-static form-control">@lcForm.field("tipo").value</p>
+			</div>
+		</div>
+	</div>
+	
+	 
+}

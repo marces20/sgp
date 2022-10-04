@@ -1,0 +1,32 @@
+@(clienteForm: Form[Cliente])
+@import helper._
+@implicitFieldConstructor = @{ FieldConstructor(simpleInput.render) } 
+@scripts = {
+	<script src="@routes.Assets.at("javascripts/compras/clientes.js")" type="text/javascript"></script>
+}
+
+@views.html.compras.mainCompras("Crear cliente", scripts) {
+<div class="page-header">
+	<div class="row">
+		<div class="col-sm-10">
+			<h1>Crear nuevo cliente</h1>
+		</div>
+	</div>
+</div>
+
+@if(flash.containsKey("success")) {
+	<div class="alert alert-success">
+		<i class="glyphicon glyphicon-ok-circle"></i> @flash.get("success")
+	</div>
+}
+@if(flash.containsKey("error")) {
+	<div class="alert alert-danger">
+		<i class="glyphicon glyphicon-remove-sign"></i> @flash.get("error")
+	</div>
+}
+
+@helper.form(action = controllers.compras.routes.ClientesController.guardar()) {
+	@views.html.compras.clientes.form(clienteForm)
+}
+
+}

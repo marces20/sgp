@@ -1,0 +1,8 @@
+@(lineaForm: Form[CajaChicaMovimiento])
+@import helper._
+@implicitFieldConstructor = @{ FieldConstructor(simpleInput.render) } 
+
+@helper.form(action = controllers.compras.routes.CajaChicaMovimientosController.guardar()) {
+	@views.html.compras.cajaChica.movimientos.formLineaMovimiento(lineaForm)
+	
+}

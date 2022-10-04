@@ -1,0 +1,96 @@
+@(listaFinal:java.util.Map[String,List[com.avaje.ebean.SqlRow]],formBuscador: DynamicForm)
+@import java.math.BigDecimal;var totaloperativa=new java.math.BigDecimal(0);var totalprofe=new java.math.BigDecimal(0);
+@views.html.dashboard.mainDashboard("Deudas Detalles") {
+
+@views.html.dashboard.deudasPorAntiguedad.navdeudas(formBuscador)
+
+<div class="page-header">
+	<div class="row">
+		<div class="col-sm-7">
+			<h1>Deudas Resumen Mensual</h1>
+		</div>
+		
+		<div class="col-sm-5">
+			<div class="dropdown pull-right">
+			 <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown">
+			 	<i class="glyphicon glyphicon-list-alt"></i>
+			    Reportes
+			    <span class="caret"></span>
+			  </button>
+			  <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
+			  	<li role="presentation">
+				  <a id="" role="menuitem" tabindex="-1" 
+				  href="@controllers.dashboard.routes.DeudasPorAntiguedadReportesController.deudasMensualReporte()">Reporte Excel</a></li>
+			  	
+			  </ul>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div class="row"  style="">
+	<div class="col-sm-12" style="">
+		@if(listaFinal.get("OPERATIVA") != null){
+			<table class="table table-striped table-bordered table-hover" id="listaInforme">
+				<thead>
+					<th colspan="2" align="center">OPERATIVA</th>
+				</thead>
+				<thead>
+					<th>PERIODO</th>
+					<th>MONTO</th>
+				</thead>
+				<tbody>
+					@for(sx <- listaFinal.get("OPERATIVA")){
+						<tr>
+							<td>@sx.getString("fecha_mes_ano")</td>
+							<td>@utils.NumberUtils.moneda(sx.getBigDecimal("total_deuda"))</td>
+						</tr>
+						@{totaloperativa= totaloperativa.add(sx.getBigDecimal("total_deuda"))}
+					}
+				</tbody>
+				<tfoot>
+					<tr>
+						<td align="right"><b>TOTALES</b></td>
+						<td><b>@utils.NumberUtils.moneda(totaloperativa)</b></td>
+						
+					</tr>
+				</tfoot>
+			</table>
+		}
+		
+		@if(listaFinal.get("PROFE") != null){
+			<table class="table table-striped table-bordered table-hover" id="listaInforme">
+				<thead>
+					<th colspan="2" align="center">PROFE</th>
+				</thead>
+				<thead>
+					<th>PERIODO</th>
+					<th>MONTO</th>
+				</thead>
+				<tbody>
+					@for(sx <- listaFinal.get("PROFE")){
+						<tr>
+							<td>@sx.getString("fecha_mes_ano")</td>
+							<td>@utils.NumberUtils.moneda(sx.getBigDecimal("total_deuda"))</td>
+						</tr>
+						@{totalprofe= totalprofe.add(sx.getBigDecimal("total_deuda"))}
+					}
+				</tbody>
+				<tfoot>
+					<tr>
+						<td align="right"><b>TOTALES</b></td>
+						<td><b>@utils.NumberUtils.moneda(totalprofe)</b></td>
+						
+					</tr>
+				</tfoot>
+			</table>
+		}
+		
+	</div>
+</div>
+
+
+
+
+
+}

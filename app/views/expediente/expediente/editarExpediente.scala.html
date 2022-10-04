@@ -1,0 +1,26 @@
+@(expedienteForm: Form[Expediente])
+@import helper._
+@implicitFieldConstructor = @{ FieldConstructor(simpleInput.render) }
+
+@views.html.expediente.mainExpediente("Modificar expediente") {
+
+	<div class="page-header">
+		<div class="row">
+			<div class="col-sm-10">
+				<h1>Editar expediente</h1>
+			</div>
+			
+		</div>
+	</div>
+	
+	@views.html.tags.successError()
+	
+	
+	
+	@helper.form(action = controllers.expediente.routes.ExpedientesController.actualizarExpediente()) {
+		@inputText(expedienteForm("id"), 'hidden -> "hidden")
+		@views.html.expediente.expediente.formExpediente(expedienteForm)
+		@views.html.expediente.expediente.tabsExpediente(true, expedienteForm)	
+	}
+
+}

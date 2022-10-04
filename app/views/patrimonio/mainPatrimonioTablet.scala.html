@@ -1,0 +1,23 @@
+@(title: String, scripts: Html = Html(""))(content: Html)
+@import models.auth._
+<!DOCTYPE html>
+
+<html>
+<head>
+<title>@title</title>
+<link rel="shortcut icon" href="/assets/images/favicon.png" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="stylesheet" media="screen" href="@routes.Assets.at("plugins/bootstrap/css/bootstrap.min.css")">
+
+@scripts
+
+</head>
+<body>
+
+	<div class="container">
+		@content
+	</div>
+	
+	
+</body>
+</html>

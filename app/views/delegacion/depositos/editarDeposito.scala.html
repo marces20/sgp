@@ -1,0 +1,26 @@
+@(depositoForm: Form[Deposito])
+@import helper._
+@implicitFieldConstructor = @{ FieldConstructor(simpleInput.render) }
+
+@views.html.delegacion.mainDelegaciones("Modificar Deposito") {
+
+	<div class="page-header">
+		<div class="row">
+			<div class="col-sm-10">
+				<h1>Editar depósito</h1>
+			</div>
+		</div>
+	</div>
+	
+	@if(flash.containsKey("error")) {
+		<div class="alert alert-danger">
+			@flash.get("error")
+		</div>
+	}
+	
+	@helper.form(action = controllers.delegacion.routes.DepositosController.actualizar()) {
+		@inputText(depositoForm("id"), 'hidden -> "hidden")
+		@views.html.delegacion.depositos.formDeposito(depositoForm)
+	}
+
+}

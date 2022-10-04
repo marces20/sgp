@@ -1,0 +1,205 @@
+@(lineas:java.util.Map[Integer,List[com.avaje.ebean.SqlRow]],
+lineaTotalDisponble:java.util.Map[Integer,java.math.BigDecimal],
+lineaProducto:java.util.Map[Integer,String])
+@import helper._
+@import models.auth._
+@import utils._
+@implicitFieldConstructor = @{ FieldConstructor(simpleInput.render) } 
+@import java.math.BigDecimal;var hayDisponibles:Boolean = new Boolean(false);
+<div class="col-sm-12">
+	<div class="panel panel-default">
+		<div class="panel-heading"><b>Lineas con Pacientes</b></div>
+		<div class="panel-body">
+			<div class="row">
+				<table class="table table-bordered table-hover" id="">
+					@for((key,value) <- lineas){
+						@{hayDisponibles = new Boolean(false)}
+						<thead>
+							<tr><td align="center" colspan="4"><b>@lineaProducto.get(key)</b></td></tr>
+							<tr>
+								<td>id-Paciente</td>
+								<td>Nombre</td>
+								<td>Cantidad Disponible</td>
+								<td></td>
+							</tr>
+						</thead>
+						<tbody class="bodyTablasACargar">
+							<input id="" type="hidden" value="@key" name="linea_orden_id_clientemodal" />
+							@for(p <- value){
+								@if(p.getBigDecimal("cantidad").compareTo(java.math.BigDecimal.ZERO) > 0){
+									<tr class="tr-carga-pacientes-cantidad">
+										<td><b>@p.getString("idPacienteRismi")</b></td>
+										<td><b>@p.getString("nombreCliente")</b></td>
+										<td><b>@p.getBigDecimal("cantidad")</b></td>
+										<td>
+										<input class="cantidadCarga" type="text" name="cantidadCarga" value="@p.getBigDecimal("""cantidad""")"" style="width: 60px" />
+										 
+										</td>
+										<input class="cantidadCargaInicial" type="hidden" name="cantidadCargaInicial" value="@p.getBigDecimal("""cantidad""")""/>
+										<input class="cliente_id" type="hidden" name="cliente_id" value="@p.getLong("""cliente_id""")"" />
+										
+									</tr>
+									@{hayDisponibles = new Boolean(true)}
+								}
+							}
+							@if(lineaTotalDisponble.get(key) != null && lineaTotalDisponble.get(key).compareTo(java.math.BigDecimal.ZERO) > 0){
+								<tr class="tr-carga-pacientes-cantidad">
+									<td><b>SIN PACIENTE</b></td>
+									<td><b></b></td>
+									<td><b>@lineaTotalDisponble.get(key)</b></td>
+									<td>
+									<input class="cantidadCarga" type="text" name="cantidadCarga" value="@lineaTotalDisponble.get(key)" style="width: 60px" />
+									</td>
+									<input class="cantidadCargaInicial" type="hidden" name="cantidadCargaInicial" value="@lineaTotalDisponble.get(key)"/>
+									<input class="cliente_id" type="hidden" name="cliente_id" value="0" />
+								</tr>
+								@{hayDisponibles = new Boolean(true)}
+							}
+							
+							@if(!hayDisponibles:Boolean){
+								<tr class="tr-carga-pacientes-cantidad">
+									<td colspan="4" align="center"><b style="color:red">NO HAY CANTIDAD DISPONIBLE PARA ESTE PRODUCTO</b></td>
+								</tr>
+							}
+							
+						</tbody>
+					}
+					
+					
+				</table>
+			</div>
+			<div class="row" >
+				<div class="col-sm-4"></div>
+				<div class="col-sm-4">
+					<button class="agregarConClienteConCertificacion"  
+						data-url="@controllers.patrimonio.routes.CertificacionesServiciosController.agregarLineasConCliente()">CREAR CERTIFICACION</button>
+				</div>
+			</div>
+		</div>
+	</div>	
+</div>
+<script>
+$( function() {
+	$(".cantidadCarga").numeric_input();
+	
+	$(document).on('click', '.agregarConClienteConCertificacion', function(){
+	 
+		$this = $(this);
+		$this.prop('disabled', true);
+		var tr = $(this).closest('tr');
+		var url = $(this).attr('data-url');
+		/*var idRemito = $('#remitoId').val();*/
+		
+		var idOrdenProvision = $('#idOrdenProvision').val();
+		var datos = new Array();
+		var cantidadTotalOrden = 0; 
+		$(".bodyTablasACargar").each(function(){
+			/*alert($(this).find("input[name='linea_orden_id_clientemodal']").val());*/
+			
+			
+			var arrayProperties = new Array();
+			
+			var cantidadTotal = 0; 
+			$(this).find(".tr-carga-pacientes-cantidad").each(function(){
+				/*alert($(this).find("input[name='cantidadCarga']").val());*/
+				
+				var datosLinea = new Object();
+				datosLinea.clienteId = $(this).find("input[name='cliente_id']").val();
+				datosLinea.cantidad = $(this).find("input[name='cantidadCargaInicial']").val();
+				datosLinea.cantidadCargar = $(this).find("input[name='cantidadCarga']").val();
+				arrayProperties.push(datosLinea);
+				
+				if($(this).find("input[name='cantidadCarga']").val() != ''){
+					cantidadTotal = parseFloat(cantidadTotal)+parseFloat($(this).find("input[name='cantidadCarga']").val());
+					cantidadTotalOrden = parseFloat(cantidadTotalOrden)+parseFloat($(this).find("input[name='cantidadCarga']").val());
+				}
+				
+			})
+			
+			
+			var linea = new Object();
+			linea.linea_orden_id = $(this).find("input[name='linea_orden_id_clientemodal']").val();
+			linea.cantidadTotal = cantidadTotal;
+			linea.datosLinea = arrayProperties;
+			if(cantidadTotal > 0){
+				datos.push(linea);
+			}
+		});
+		
+		var datosi = new Object();
+		datosi.datos = datos;
+		datosi.idOrdenProvision = idOrdenProvision;
+		datosi.cantidadTotalOrden = cantidadTotalOrden;
+		var myString = JSON.stringify(datosi);
+		
+		
+		/*alert(myString);*/
+		/*var linea_orden_id = $('#linea_orden_id_clientemodal').val();
+		var cantidadCargar = tr.find('.cantidadCarga').val();
+		var cantidad = $(this).attr('data-cantidad');
+		var clienteId = $(this).attr('data-clienteId');
+		
+		
+		var datosLinea = new Object();
+		datosLinea.clienteId = 1;
+		datosLinea.cantidad = 1;
+		datosLinea.cantidadCargar = 1;
+		 
+		var arrayProperties = new Array();
+		arrayProperties.push(datosLinea);
+		 
+		
+		var linea = new Object();
+		linea.linea_orden_id = 2;
+		linea.cantidadTotal = 2;
+		linea.datosLinea = arrayProperties;
+		
+		var linea2 = new Object();
+		linea2.linea_orden_id = 22;
+		linea2.cantidadTotal = 22;
+		linea2.datosLinea = arrayProperties;
+		
+		var linea3 = new Object();
+		linea3.linea_orden_id = 222;
+		linea3.cantidadTotal = 222;
+		linea3.datosLinea = arrayProperties;
+		
+		var datos = new Array();
+		datos.push(linea);
+		datos.push(linea2);
+		datos.push(linea3);
+		
+		var datosi = new Object();
+		datosi.datos = datos;
+		
+		var myString = JSON.stringify(datosi);
+		
+		*/
+		
+		$.ajax({
+	        url: url,
+	        type: "post",
+	        data:  myString,
+	        contentType: "application/json",
+	        dataType: "json",
+	        success: function(data){
+	        	if(data.success){
+					window.location = '/patrimonio/certificaciones/editar?id='+data.idCertificacionServicio;	
+					
+				}else{
+					alert(data.error);
+					$this.prop('disabled', false);
+					return false; 
+				}
+	        	
+	        },
+	        error:function(){
+	        	$this.prop('disabled', false);
+	        }
+	    });
+		return false; 
+	});
+	
+});
+</script>
+

@@ -1,0 +1,45 @@
+@(formBuscador: DynamicForm,idOrdenProvision:Long = null)
+@import helper._
+@implicitFieldConstructor = @{ FieldConstructor(simpleInput.render) } 
+	
+@views.html.tags.successError()
+	
+@if(idOrdenProvision != null){	
+	@helper.form(action = controllers.patrimonio.routes.RemitosController.cambiarRecepcion(), 'id -> "formCambiarRecepcion") {	
+
+		
+		<div class="row">
+			<div class="col-sm-3">
+				<div class="input-group">
+					<input type="text" name="recepcion_modal" id="recepcion_modal" class="form-control" value=""/>
+					<input type="hidden" name="recepcion_id_modal" id="recepcion_id_modal" class="" value=""/>
+					<input type="hidden" name="idOrdenProvision_modal" id="idOrdenProvision_modal" class="" value="@idOrdenProvision"/>
+					<span class="input-group-addon">
+						<a href="#" class="searchModal"
+									id="searchRecepciones" 
+									data-title="Selección de recepcion" 
+									data-url="@controllers.patrimonio.routes.RecepcionesController.modalBuscarRecepcionesDeOrdenes(idOrdenProvision)" 
+									data-height="650" 
+									data-width="700" 
+									data-listen="modal.seleccion.recepcion.simple" 
+									data-label="#recepcion_modal" 
+									data-field="#recepcion_id_modal">
+							<i class="glyphicon glyphicon-search"></i>
+						</a>
+					</span>
+				</div>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-sm-5"><br />
+				<button type="submit" class="btn btn-default" title="Cambiar Recepcion"><i class="glyphicon glyphicon-arrow-right"></i> Cambiar Recepcion</button>
+			</div>
+		</div>
+	}
+}
+<script>
+$( function(){
+	$('#searchRecepciones').modalSearch();
+});
+</script>
+@flash().clear()

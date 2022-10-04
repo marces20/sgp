@@ -1,0 +1,19 @@
+@(expedienteForm: Form[Expediente])
+@import helper._
+
+@views.html.expediente.mainExpediente("Crear expediente") {
+
+	<div class="page-header">
+		<div class="row">
+			<div class="col-sm-10">
+				<h1>Crear nuevo expediente</h1>
+			</div>
+		</div>
+	</div>
+    
+    @views.html.tags.successError()
+    
+    @helper.form(action = controllers.expediente.routes.ExpedientesController.guardarExpediente()) {
+		@views.html.expediente.expediente.formExpediente(expedienteForm)
+	}
+}	

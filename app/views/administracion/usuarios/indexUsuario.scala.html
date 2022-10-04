@@ -1,0 +1,101 @@
+@(paginator: utils.pagination.Pagination[Usuario], formBuscador: DynamicForm)
+@import helper._
+@implicitFieldConstructor = @{ FieldConstructor(simpleInput.render) } 
+@views.html.administracion.mainAdministracion(title = "Lista de usuarios") {
+    
+<div class="page-header">
+	<div class="row">
+		<div class="col-sm-9">
+			<h1>Lista de usuarios</h1>
+		</div>
+
+		<div class="pull-right">
+			<a href="@controllers.administracion.routes.UsuariosController.crear"  class="btn btn-default"><i class="glyphicon glyphicon-plus-sign"></i> Nuevo usuario</a>
+			<a href="@controllers.administracion.routes.UsuariosController.index()" class="btn btn-default"><i class="glyphicon glyphicon-list"></i></a>
+			<a href="#" class="btn btn-default"><i
+				class="glyphicon glyphicon-align-justify"></i></a>
+		</div>
+	</div>
+</div>
+
+    @if(flash.containsKey("success")) {
+        <div class="alert alert-success"><i class="glyphicon glyphicon-ok-sign"></i> @flash.get("success")</div>
+    } 
+		<div class="row seccion">
+			<form action="" method="GET">
+				<div class="col-sm-3">
+					<div class="form-group">
+						<label class="control-label">Nombre
+						@inputText(formBuscador("nombre"), 'class -> "form-control", 'autofocus -> "autofocus")
+						</label>
+					</div>
+				</div>
+				
+				<div class="col-sm-2">
+					<div class="form-group">
+						<label class="control-label">Nick
+						@inputText(formBuscador("nick"), 'class -> "form-control")
+						</label>
+					</div>
+				</div>
+				
+				<div class="col-sm-2">
+					<div class="form-group">
+					<label for="nombre" class="control-label">&nbsp;</label>
+					<button  class="form-control btn btn-primary">Buscar</button>
+					</div>
+				</div>
+				<div class="col-sm-2">
+					<div class="form-group">
+					<label for="nombre" class="control-label">&nbsp;</label>
+					<a href="@controllers.administracion.routes.UsuariosController.index()"  class="form-control btn btn-default">Limpiar</a>
+					</div>
+				</div>
+			</form>
+		</div>
+    
+    @if(paginator.getTotalRowCount == 0) {
+        
+        <div class="well">
+            <em>No se encuentran usuarios</em>
+        </div>
+        
+    } else {
+		
+		Mostrando @paginator.getDisplayXtoYofZ(" a "," de ") resultado(s).   
+		<table class="table table-striped table-bordered">
+			<thead>
+				<tr>
+					<th width="50">#</th>
+					<th width="100">Código</th>
+					<th width="700">Nombre</th>
+					<th width="160">Nick</th>
+					<th width="160">Departamento</th>
+					<th class="50">#</th>
+				</tr>
+			</thead>
+			<tbody>
+		        @for(usuario <- paginator.getList) {
+				<tr>
+					<td>
+						<a href="@controllers.administracion.routes.UsuariosController.editar(usuario.id)">
+							<i class="glyphicon glyphicon-edit"></i>
+						</a>
+					</td>
+					<td>@(usuario.id)</td>
+					<td>@(usuario.nombre)</td>
+					<td>@(usuario.nick)</td>
+					<td>@if(usuario.departamento != null){@usuario.departamento.nombre}</td>
+					<td><a href="@controllers.administracion.routes.UsuariosController.eliminar(usuario.id)"><i class="glyphicon glyphicon-remove-circle"></i></a></td>
+				</tr>
+              	}
+			</tbody>
+		</table>
+		
+		<div class="pagination pull-right">
+		    @views.html.helpers.paginador(paginator, controllers.administracion.routes.UsuariosController.index())
+		</div>
+        
+    }
+        
+}

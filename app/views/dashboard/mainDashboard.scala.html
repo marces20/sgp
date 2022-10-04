@@ -1,0 +1,129 @@
+@(title: String, scripts: Html = Html(""))(content: Html)
+@import models.auth._
+
+@main(title: String, scripts){
+	<div class="row">
+		<div class="col-sm-2">
+			<div class="menu-contenido">
+			
+			<ul class="nav nav-pills nav-stacked">
+				@if(Componente.check("dashboardAcciones") || Componente.check("cotizacion")) {
+				<li class="titulo">Acciones</li>
+					@if(Permiso.check("dashboardAutorizadosListado")) {
+					<li><a href="@controllers.dashboard.routes.AutorizadosController.index()">Autorizados</a></li>
+					}
+					@if(Componente.check("cotizacion")) {
+					<li><a href="@controllers.dashboard.routes.UltimasCotizacionesController.indexUltimaCotizaciones()">Cotizaciones</a></li>
+					}
+				}
+				@if(Componente.check("dashboardHonorarios")) {
+					<li class="titulo">Honorarios</li>
+					<!-- <li><a href="@controllers.dashboard.routes.HonorariosController.estadoGeneralPorAgente()">Estado general agente</a></li>
+			        <li><a href="@controllers.dashboard.routes.HonorariosController.estadoDeuda()">Estado de Deudas</a></li> -->
+			        @if(Permiso.check("dashboardHonorarios")) {
+			        	<li><a href="@controllers.dashboard.routes.HonorariosController.estadoDeudaMonotributo()">Reporte Deudas Monotributos</a></li>
+			        	<li><a href="@controllers.dashboard.routes.HonorariosController.estadoDeudaMonotributoProfe()">Reporte Deudas Monotributos PROFE</a></li>
+		        	}
+		        }
+		        
+		        @if(Componente.check("dashboardImpuestos")) {
+		        <li class="titulo">Impuestos</li>
+		        	@if(Permiso.check("dashboardImpuestosEstadoDeuda")) {
+		        		<li><a href="@controllers.dashboard.routes.ImpuestosController.estadoDeuda()">Reporte Deudas Impuestos</a></li>
+		        	}
+		        }	
+		        
+		        @if(Componente.check("dashboardLiquidaciones")) {
+			        <li class="titulo">Liquidaciones Relacion</li>
+			        					  
+			        @if(Permiso.check("dashboardLiquidacionesPorPuesto")) {
+			        	<li><a href="@controllers.dashboard.routes.LiquidacionesController.liquidacionesPorPuesto()">Estado por Agente</a></li>
+					}
+					@if(Permiso.check("dashboardLiquidacionesPorProfesion")) {
+			        	<li><a href="@controllers.dashboard.routes.LiquidacionesController.liquidacionesPorProfesion()?nuevo=true">Por Profesion</a></li>
+					}
+					@if(Permiso.check("dashboardLiquidacionesPorAgrupadoOrganigrama")) {
+					
+						<li><a href="@controllers.dashboard.routes.LiquidacionesController.liquidacionesPorAgrupadoOrganigrama()?nuevo=true">Por Grupo Organigrama</a></li>
+					}
+					@if(Permiso.check("dashboardLiquidacionesPorProfesion")) {
+			        	<li><a href="@controllers.dashboard.routes.LiquidacionesController.liquidacionesPorOrganigrama()?nuevo=true">Por Organigrama</a></li>
+					}
+					@if(Permiso.check("dashboardLiquidacionesPorProfesion")) {
+			        	<li><a href="@controllers.dashboard.routes.LiquidacionesController.liquidacionesTotalesPorEscala()?nuevo=true">Por Escala</a></li>
+					}
+					@if(Permiso.check("dashboardLiquidacionesPorProfesion")) {
+			        	<li><a href="@controllers.dashboard.routes.LiquidacionesController.liquidacionesPorEscala()?nuevo=true">Por Escala/Profesion</a></li>
+					}
+			        @if(Permiso.check("dashboardLiquidacionesPorDepartamento")) {
+			        	<li><a href="@controllers.dashboard.routes.HonorariosController.porDepartamento()">Reporte por departamento</a></li>
+					}
+				}
+				
+				
+				@if(Componente.check("dashboardProveedores")) {
+					@if(Permiso.check("dashboardProveedoresEstadoPorExpedientePorLinea")) {
+			        	<li><a href="@controllers.dashboard.routes.ProveedoresController.estadoPorExpedientePorLinea()">Estado por linea rubro</a></li>
+					}
+				} 
+				
+				
+		        @if(Componente.check("dashboardRRHH")) {
+			        <li class="titulo">RRHH</li>
+			        					  
+			        @if(Permiso.check("dashboardProfesionalesMedicosEtario")) {
+			        	<li><a href="@controllers.dashboard.routes.ProfesionalesMedicosController.index()">Profesionales médicos</a></li>
+					}
+
+				}
+				
+				
+				@if(Componente.check("dashboardInforme")) {
+					<li class="titulo">Informes Deudas</li>
+					@if(Permiso.check("dashboardInformeDeudaProveedores")) {
+					<li><a href="@controllers.dashboard.routes.InformeEstadisticoDeudaProveedoresController.index()">Informe Deuda por proveedor</a></li>
+					}
+					@if(Permiso.check("dashboardInformeDeudaPorActas")) {
+					<li><a href="@controllers.dashboard.routes.InformeDeudaPorActasController.index()">Deuda por actas</a></li>
+					}
+					@if(Permiso.check("dashboardInformeDeudaProveedores")) {
+					<li><a href="@controllers.dashboard.routes.DeudasGlobalizadasController.index()">Deudas reportes</a></li>
+					}
+					@if(Permiso.check("dashboardInformeDeudaProveedores")) {
+						<li><a href="@controllers.dashboard.routes.DeudasPorAntiguedadController.index()">Deudas reportes por Antiguedad</a></li>
+					}
+					@if(Permiso.check("dashboardInformeDeudaProveedores")) {
+						<li><a href="@controllers.dashboard.routes.ControlDeudaController.index()">Control Deudas</a></li>
+					}
+				}
+				
+				@if(Componente.check("dashboardInforme")) {
+					<li class="titulo">Informes Pagos</li>
+				
+					@if(Permiso.check("dashboardInformeDeudaProveedores")) {
+					<li><a href="@controllers.dashboard.routes.InformeEstadisticoPagoProveedoresController.index()">Informe Pago por proveedor</a></li>
+					}
+					@if(Permiso.check("dashboardInformeDeudaProveedores")) {
+					<li><a href="@controllers.dashboard.routes.InformeEstadisticoPagoProveedoresController.informePeriodoProveedor()">Informe Pago Periodo/Proveedores</a></li>
+					}
+					
+					@if(Permiso.check("dashboardMovimientoCuenta")) {
+					<li><a href="@controllers.dashboard.routes.MovimientosCuentasController.index()">Movimientos Cuentas</a></li>
+					} 
+				}
+				
+				@if(Componente.check("dashboardInformeRecupero")) {
+					<li class="titulo">Informes Recupero</li>
+					<li><a href="@controllers.dashboard.routes.InformesRecuperoController.index()">Informes</a></li>
+				}
+				
+				@if(Componente.check("dashboardInformeRecupero")) {
+					<li class="titulo">Inventario</li>
+					<li><a href="@controllers.dashboard.routes.InventarioRismiController.index()">Inventario Rismi</a></li>
+				}
+			</ul>
+			</div>
+		</div>
+		<div class="col-sm-10">@content</div>
+	</div>
+}

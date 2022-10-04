@@ -1,0 +1,242 @@
+@(provForm: Form[Proveedor])
+@import helper._
+@implicitFieldConstructor = @{ FieldConstructor(simpleInput.render) } 
+
+
+
+	<div class="row menu-acciones">
+		<div class="col-sm-10">
+			<button type="submit" class="btn btn-default" title="Guardar orden">
+				<i class="glyphicon glyphicon-floppy-disk"></i> Guardar
+			</button>	
+																																   
+	    	<a href="@if(request().getHeader("referer")){ @request().getHeader("referer") } else {@controllers.compras.routes.ProveedoresController.index()}" title="Cancelar editar" class="btn btn-default"><i class="glyphicon glyphicon-floppy-remove"></i> Cancelar</a>
+	    </div>
+		<div class="col-sm-2">
+			<a href="@controllers.compras.routes.ProveedoresController.index()" title="Volver al listado" class="btn btn-default"><i class="glyphicon glyphicon-list"></i></a> 
+			@if(provForm.field("id").value){<a href="@controllers.compras.routes.ProveedoresController.ver(provForm.field("id").value.toLong)" title="Ver proveedor" class="btn btn-default"><i class="glyphicon glyphicon-align-justify"></i></a>}
+		</div>
+	</div>
+ <div class="row">
+ 	@inputText(provForm("id"), 'type -> "hidden", 'id -> "proveedorId")
+	<div class="col-sm-4">
+		<div class="form-group @if(provForm.error("nombre") != null) {has-error} else {has-required}">
+			<label for="nombre" class="control-label">Nombre del proveedor</label>
+			@if(provForm.field("id").value){
+				
+				@inputText(provForm("nombre"), 'class -> "form-control",'readOnly -> "readOnly")
+				
+			}else{
+				@inputText(provForm("nombre"), 'class -> "form-control")
+				@provForm("nombre").error.map{ error =>
+					<div class="text-error">@error.message</div>
+				}
+			}
+		</div>
+	</div>
+	
+	<div class="col-sm-3">
+		<div class="form-group @if(provForm.error("referencia") != null) {has-error}">
+			<label for="referencia" class="control-label">Referencia</label>
+			@inputText(provForm("referencia"), 'class -> "form-control")
+			@provForm("referencia").error.map{ error =>
+				<div class="text-error">@error.message</div>
+			}
+		</div>
+	</div>
+
+	<div class="col-sm-4">
+		<label class="control-label">Agente
+			<div class="input-group">
+				@inputText(provForm("agente.apellido"), 'name -> "", 'class -> "form-control", 'id -> "agente")
+				@inputText(provForm("agente_id"), 'hidden -> "hidden", 'id -> "agente_id")
+				<span class="input-group-addon">
+					<a href="#" id="searchAgente" 
+								data-title="Selección de agente" 
+								data-url="@controllers.rrhh.routes.AgentesController.modalBuscar()" 
+								data-height="650" data-width="700" data-listen="modal.seleccion.agente.simple" 
+								data-label="#agente" data-field="#agente_id">
+								<i class="glyphicon glyphicon-search"></i></a></span>
+			</div>
+		</label>
+	</div>
+	
+	
+</div>
+<div class="row">
+	<div class="col-sm-2">
+		<div class="form-group @if(provForm.error("cuit") != null) {has-error} else {has-required}">
+			<label for="cuit" class="control-label">Cuit</label>
+			@if(provForm.field("id").value){
+				@inputText(provForm("cuit"), 'class -> "form-control",'readOnly -> "readOnly")
+			}else{
+				@inputText(provForm("cuit"), 'class -> "form-control", 'id -> "cuit")
+				@provForm("cuit").error.map{ error =>
+					<div class="text-error">@error.message</div>
+				}
+			}
+		</div>
+	</div>		
+	<div class="col-sm-2">
+		<div class="form-group">
+			<label for="cuit" class="control-label">DNI</label>
+			 
+				@inputText(provForm("dni"), 'class -> "form-control", 'id -> "dni")
+				 
+			 
+		</div>
+	</div>		
+	
+	<div class="col-sm-2">
+		<div class="form-group @if(provForm.error("fecha_vencimiento_322") != null) {has-error}">
+			<label for="fecha_factura" class="control-label">Fecha vencimiento 322</label> 
+			@inputText(provForm("fecha_vencimiento_322"),'class -> "form-control date", 'id -> "fecha_vencimiento_322")
+		</div>
+	</div>
+	<div class="col-sm-3">
+			<label class="control-label">Proveedor Padre</label> 
+			<div class="input-group">	
+				@inputText(provForm("proveedor_padre.nombre"), 'class -> "form-control", 'id -> "proveedor_padre")
+				@inputText(provForm("proveedor_padre_id"), 'hidden -> "hidden", 'id -> "proveedor_padre_id")
+				<span class="input-group-addon">
+                	<a href="#" id="searchProveedor" 
+                	data-title="Selección de proveedor" 
+                	data-url="@controllers.compras.routes.ProveedoresController.modalBuscar()" 
+                	data-height="650" data-width="700" data-listen="modal.seleccion.proveedor.simple" 
+                	data-label="#proveedor_padre" data-field="#proveedor_padre_id" /> <i class="glyphicon glyphicon-search"></i></a>
+                </span>
+			</div>
+			 
+		</div>
+	
+</div>
+<div class="row">
+	<div class="col-sm-2">
+		<div class="form-group @if(provForm.error("numero_inscripcion") != null) {has-error}">
+			<label for="numero_inscripcion" class="control-label">Número de inscripción</label>
+			@inputText(provForm("numero_inscripcion"), 'class -> "form-control")
+			@provForm("numero_inscripcion").error.map{ error =>
+				<div class="text-error">@error.message</div>
+			}
+		</div>
+	</div>
+	<div class="col-sm-offset-1  col-sm-2">
+		<div class="checkbox" @if(provForm.error("activo") != null) {has-error}">
+			<label for="activo" class="control-label"> @checkbox(provForm("activo")) Activo</label>
+			
+		</div>
+	</div>
+	
+	<div class="col-sm-offset-1  col-sm-2">
+		<div class="checkbox" @if(provForm.error("oficio") != null) {has-error}">
+			<label for="oficio" class="control-label"> @checkbox(provForm("oficio")) Oficio</label>
+			
+		</div>
+	</div>
+</div>
+<script>
+	$( function() {
+		$("#cuit").mask("99999999999");
+		$("#dni").mask("99999999");
+		$('#searchAgente,#searchProveedor').modalSearch();
+	});
+</script>
+@if(provForm("id").value != null && provForm("id").value != "") {
+
+<script>
+	$( function() {
+		
+		
+		 
+		
+		urlProvincias  = '@controllers.administracion.routes.ProvinciasController.listOptions()';
+		urlLocalidades = '@controllers.administracion.routes.LocalidadesController.listOptions()';
+		urlFormularioContacto  = '@controllers.compras.routes.ProveedoresController.formularioContacto(provForm("id").value.toInt)';
+		
+		var contenedorContactos = $('#contenedorContactos');
+		var formularioContacto = $('#formularioContacto');
+		
+		contenedorContactos.on('change', '.seleccionPais .select', function(){
+			var id = $(this).find('option:selected').val();
+			var contenedor = $(this).closest('.contenedorUbicacion');
+			contenedor.find('.seleccionProvincia .select, .seleccionLocalidad .select').find('option:gt(0)').remove();
+			
+			if(id == "") return false;
+
+			$.get(urlProvincias + '?paisId='+id, function(data){
+				contenedor.find('.seleccionProvincia .select').html(data);
+			});
+		});
+		
+		contenedorContactos.on('change', '.seleccionProvincia .select', function(){
+			var id = $(this).find('option:selected').val();
+			
+			var contenedor = $(this).closest('.contenedorUbicacion');
+			contenedor.find('.seleccionLocalidad .select').find('option:gt(0)').remove();
+			
+			if(id == "") return false;
+
+			$.get(urlLocalidades + '?provinciaId='+id, function(data){
+				contenedor.find('.seleccionLocalidad .select').html(data);
+			});
+		});
+		
+        var contenedor = $('#contenedorDirecciones');
+        var primerElemento = $('#contenedorDirecciones .linea-direccion:eq(0)');
+        
+        contenedor.find('.linea-direccion').hide();
+        primerElemento.show();
+
+        if (getCantidadLineas() == 1)
+            primerElemento.find('.eliminar').hide();
+
+        $('#nuevoContacto').on('click', function() { 
+        	$('#listaContactos').toggleClass('hide');
+        	$.get(urlFormularioContacto, function(data){
+        		$('#contenedorContactos').append(data);
+        	});
+        	return false;
+        });
+        
+        
+        $('#contenedorContactos').on('click', '#modificarDireccion', function() { 
+        	var url = $(this).attr('href');
+        	$('#listaContactos').toggleClass('hide');
+        	$.get(url, function(data){
+        		$('#contenedorContactos').append(data);
+        	});
+        	return false;
+        });
+        
+        $('#contenedorContactos').on('click', '#cancelarEdicion', function() { 
+        	$('#formularioContacto').remove();
+        	$('#listaContactos').toggleClass('hide');;
+        });
+        
+        $('#contenedorContactos').on('click', '#guardarContacto', function() { 
+        	var url = $(this).closest('form').attr('action');
+        	$this = $(this);
+
+        	$.post(url, $(this).closest('form').serialize(), function(data){
+        		if(data.success)
+        			window.location.href = data.redirect;
+        		else {
+        			$this.closest("#formularioContacto").remove();
+        			$('#contenedorContactos').append(data);
+        		}
+        	});
+        	return false;
+        });
+        
+        
+        function getCantidadLineas() {
+            return contenedor.find('.linea-direccion').length;
+        }
+		 
+	});
+</script>
+}
+
+	
+	
+	

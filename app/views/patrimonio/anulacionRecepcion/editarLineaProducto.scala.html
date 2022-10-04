@@ -1,0 +1,9 @@
+@(idOrdenCompra: Long, lineaForm: Form[OrdenLineaAnulacion], orden_linea_id:Long)
+@import helper._
+@implicitFieldConstructor = @{ FieldConstructor(simpleInput.render) } 
+
+@helper.form(action = controllers.patrimonio.routes.AnulacionRecepcionProductosController.actualizar(orden_linea_id), 'id -> "formAnulados") {
+	@views.html.patrimonio.anulacionRecepcion.formLineaProducto(idOrdenCompra, lineaForm, orden_linea_id)
+	@inputText(lineaForm("id"), 'hidden -> "hidden")
+	
+}

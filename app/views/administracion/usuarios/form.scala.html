@@ -1,0 +1,97 @@
+@(usuarioForm: Form[Usuario])
+@import helper._
+@implicitFieldConstructor = @{ FieldConstructor(simpleInput.render) } 
+
+
+ 	<div class="row">
+		<div class="col-sm-3">
+			<div class="form-group @if(usuarioForm.error("nombre") != null) {has-error} else {has-required}">
+				<label for="nombre" class="control-label">Nombre</label>
+				@inputText(usuarioForm("nombre"), 'class -> "form-control")
+				@usuarioForm("nombre").error.map{ error =>
+					<div class="text-error">@error.message</div>
+				}
+			</div>
+		</div>
+		
+		<div class="col-sm-3">
+			<div class="form-group @if(usuarioForm.error("nick") != null) {has-error} else {has-required}">
+				<label for="nombre" class="control-label">Nick</label>
+				@inputText(usuarioForm("nick"), 'class -> "form-control")
+				@usuarioForm("nick").error.map{ error =>
+					<div class="text-error">@error.message</div>
+				}
+			</div>
+		</div>		
+		
+		<div class="col-sm-3">
+			<div class="form-group @if(usuarioForm.error("password") != null) {has-error} else {has-required}">
+				<label for="nombre" class="control-label">Contraseña</label>
+				@inputText(usuarioForm("password"), 'class -> "form-control")
+				@usuarioForm("password").error.map{ error =>
+					<div class="text-error">@error.message</div>
+				}
+			</div>
+		</div>
+		
+		<div class="col-sm-3">
+			<div class="checkbox" @if(usuarioForm.error("activo") != null) {has-error}">
+				<label for="activo" class="control-label"> @checkbox(usuarioForm("activo")) ¿usuario activo?</label>
+			</div>
+		</div>
+	
+	</div>	
+	<div class="row">
+		<div class="col-sm-2">
+			<label for="inputPeriodo" class="control-label">Departamento</label> 
+			<div class="input-group">
+				@inputText(usuarioForm("departamento.nombre"),'class -> "form-control",'id -> "departamento")
+				@inputText(usuarioForm("departamento_id"),'hidden -> "hidden",'id -> "departamento_id")
+				<span class="input-group-addon">
+				<a href="#" class="searchModal"
+							id="searchDepartamento" 
+							data-title="Selección de Departamento" 
+							data-url="@controllers.rrhh.routes.DepartamentosController.modalBuscar()" 
+							data-height="650" 
+							data-width="700" 
+							data-listen="modal.seleccion.departamento.simple" 
+							data-label="#departamento" 
+							data-field="#departamento_id">
+					<i class="glyphicon glyphicon-search"></i>
+				</a>
+				</span>
+			</div>
+			@usuarioForm("departamento_id").error.map{ error =>
+					<div class="text-error">@error.message</div>
+				}
+		</div>
+		<div class="col-sm-2">
+			
+			<div class="form-group @if(usuarioForm.error("organigrama_id") != null) {has-error}else{has-required}">
+				<label for="inputPeriodo" class="control-label">Servicio</label> 
+				@inputText(usuarioForm("organigrama.nombre"),'class -> "form-control",'id -> "organigrama")
+				@inputText(usuarioForm("organigrama_id"),'hidden -> "hidden",'id -> "organigrama_id")
+				
+			</div>
+			@usuarioForm("organigrama_id").error.map{ error =>
+					<div class="text-error">@error.message</div>
+				}
+		</div>
+				<div class="col-sm-2  @if(usuarioForm.error("plansumarmaterno") != null) {has-error}else{has-required}">
+					<label class="control-label"> 
+						PLAN SUMAR MATERNO 
+						@select(usuarioForm("plansumarmaterno"),options(""->"","true"->"SI","false"->"NO"), 'class -> "form-control select")
+					</label>
+					@usuarioForm("plansumarmaterno").error.map{ error =>
+					<div class="text-error">@error.message</div>
+					}
+				</div>
+				
+	</div>		
+<script>
+$( function(){
+	$('#searchDepartamento').modalSearch();	
+	
+});
+</script>	
+	

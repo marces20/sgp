@@ -1,0 +1,72 @@
+@(formularioCarga: Boolean, caja: CajaChica = null)
+
+
+<hr />
+<ul id="movimientosTab" class="nav nav-tabs">
+	<li class="active"><a class="tabProducto" href="#contenedorMovimientos" data-toggle="tab">Movimientos</a></li>
+	<li><a class="tabPresupuesto" href="#contenedorPresupuesto" data-toggle="tab">Presupuesto Preventivo</a></li>
+	<li><a id="tabResumenPresupuesto" class="tabResumenPresupuesto" href="#contenedorResumenPresupuesto" data-toggle="tab">Resumen Presupuesto</a></li>
+</ul>
+
+<div class="tab-content">
+
+	<div class="tab-pane active" id="contenedorMovimientos">
+	
+	
+		@if(caja == null){
+			<p>Para cargar movimientos primero debe crear la caja chica.</p>
+		} else {
+			<script>
+			$( function (){
+				$.get('@controllers.compras.routes.CajaChicaMovimientosController.lista(caja.id, formularioCarga)', function(data){
+					$('#lineasMovimientos').html(data);
+				})
+			});
+			</script>
+		}
+	
+		<div id="lineasMovimientos">
+		
+		</div>
+	
+	
+	</div>
+	
+	<div class="tab-pane" id="contenedorPresupuesto">
+		@if(caja == null){
+			<p>Para cargar presupuesto primero debe crear la caja chica.</p>
+		} else {
+			<script>
+			$( function (){
+				$.get('@controllers.compras.routes.CajaChicaPresupuestoLineasController.lista(caja.id, formularioCarga)', function(data){
+					$('#lineasPresupuesto').html(data);
+				})
+			});
+			</script>
+		}
+	
+		<div id="lineasPresupuesto">
+		
+		</div>
+	</div>
+	
+	<div class="tab-pane" id="contenedorResumenPresupuesto">
+		 
+	</div>
+	
+</div>
+
+<script>
+$( function (){
+	$('#tabResumenPresupuesto').on("click", function() { 
+		 
+		var url = "/compras/caja-chica/resumenPresupuesto?id="+$('#cajaId').val();
+				
+		$("#contenedorResumenPresupuesto").html('<div class="loading"></div>');
+		$.get(url, function(data){
+			$('#contenedorResumenPresupuesto').html(data);
+		})
+		 
+	});
+});
+</script>

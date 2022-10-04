@@ -1,0 +1,27 @@
+@(categoriaForm: Form[Categoria])
+@import helper._
+@implicitFieldConstructor = @{ FieldConstructor(simpleInput.render) } 
+
+	<div class="row">
+		<div class="col-sm-4">
+			<div class="form-group @if(categoriaForm.error("nombre") != null) {has-error}else{has-required}">
+				<label for="inputNombre" class="control-label">Nombre</label> 
+				@inputText(categoriaForm("nombre"), 'class -> "form-control")
+				@categoriaForm("nombre").error.map{ error =>
+					<div class="text-error">@error.message</div>
+				}
+			</div>
+		</div>
+		<div class="col-sm-4">
+			<div class="form-group @if(categoriaForm.error("parent_categoria.id") != null) {has-error}else{has-required}">
+				<label for="inputCategoria" class="control-label">Categor&iacute;a Padre</label> 
+				@inputText(categoriaForm("parent_categoria.nombre"),'class -> "form-control")
+				@inputText(categoriaForm("parent_categoria.id"),'hidden -> "hidden")
+				@categoriaForm("parent_categoria.id").error.map{ error =>
+					<div class="text-error">@error.message</div>
+				}
+			</div>
+		</div>
+	</div>
+	
+	

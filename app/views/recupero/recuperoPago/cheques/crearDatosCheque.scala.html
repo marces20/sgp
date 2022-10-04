@@ -1,0 +1,10 @@
+@(chequeForm: Form[models.recupero.Cheque])
+@import helper._
+@import utils._
+@implicitFieldConstructor = @{ FieldConstructor(simpleInput.render) } 
+
+ 
+
+@helper.form(action = controllers.recupero.routes.RecuperoChequesController.guardar(), 'id -> "formDatosCheques") {
+	@views.html.recupero.recuperoPago.cheques.formDatosCheque(chequeForm)
+}

@@ -1,0 +1,75 @@
+@(listFactura: java.util.Map[Long,java.util.List[Factura]],
+mapPeriodo: java.util.Map[Long,String],
+totalPeriodo: java.util.Map[Long,java.math.BigDecimal],
+totalImpuestoPeriodo: java.util.Map[Long,java.math.BigDecimal],
+totalNetoPeriodo: java.util.Map[Long,java.math.BigDecimal],
+total:java.math.BigDecimal,
+totalImpuesto:java.math.BigDecimal,
+totalNeto:java.math.BigDecimal)
+@import helper._
+@implicitFieldConstructor = @{ FieldConstructor(simpleInput.render) } 
+@views.html.dashboard.mainDashboard("Estado de deudas - Honorarios Monotributo") {
+<div class="page-header">
+	<div class="row">
+		<div class="col-sm-7"><h1>Estado de deudas - Honorarios Monotributo</h1></div>
+		<div class="col-sm-5">
+			<div class="dropdown pull-right">
+			 <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown">
+			 	<i class="glyphicon glyphicon-list-alt"></i>
+			    Reportes
+			    <span class="caret"></span>
+			  </button>
+			  <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
+			  	<li><a href="@controllers.dashboard.routes.HonorariosController.estadoDeudaMonotributoExcel()"> Exportar listado Excel</a></li>
+			  	<li><a href="@controllers.dashboard.routes.HonorariosController.estadoDeudaMonotributoExcelProfe()"> Exportar listado PROFE Excel</a></li>
+			  </ul>
+			</div>
+		</div>
+	</div>
+</div>
+<div class="row">		
+	<table class="table table-striped table-bordered">
+	<tbody>	
+		
+			@for((key,value) <- listFactura) {
+				<tr>
+					<td colspan="5" align="center"><b>@mapPeriodo.get(key)</b></td>
+				</tr>
+				<tr>
+					<td><b>Nombre</b></td>
+					<td align="center"><b>Expediente</b></td>
+					<td align="center"><b>Base</b></td>
+					<td align="center"><b>Total impuestos</b></td>
+					<td align="center"><b>Total</b></td>
+				</tr>
+				@for(factura <- value) {
+					<tr>
+						<td>@factura.proveedor.nombre</td>
+						<td align="center">@factura.expediente.getExpedienteEjercicio()</td>
+						<td align="center">@utils.NumberUtils.moneda(factura.getBase())</td>
+						<td align="center">@utils.NumberUtils.moneda(factura.getTotalImpuesto())</td>
+						<td align="center">@utils.NumberUtils.moneda(factura.getTotal())</td>
+					</tr>
+				}
+				<tr>
+					
+					<td colspan="2" align="right"><b>TOTALES:</b></td>
+					<td align="center"><b>@utils.NumberUtils.moneda(totalPeriodo.get(key))</b></td>
+					<td align="center"><b>@utils.NumberUtils.moneda(totalImpuestoPeriodo.get(key))</b></td>
+					<td align="center"><b>@utils.NumberUtils.moneda(totalNetoPeriodo.get(key))</b></td>
+				</tr>
+				<tr>
+					<td colspan="5" align="center">&nbsp;</td>
+				</tr>
+			}
+			<tr>
+				<td colspan="2" align="right"><b style="font-size:20px;">TOTALES:</b></td>
+				<td align="center"><b style="font-size:20px;">@utils.NumberUtils.moneda(total)</b></td>
+				<td align="center"><b style="font-size:20px;">@utils.NumberUtils.moneda(totalImpuesto)</b></td>
+				<td align="center"><b style="font-size:20px;">@utils.NumberUtils.moneda(totalNeto)</b></td>
+				
+			</tr>
+	</tbody>
+	</table>
+</div>	
+}

@@ -1,0 +1,136 @@
+@(id: Long,lineaForm: Form[OrdenLineaCliente])
+@import helper._
+@implicitFieldConstructor = @{ FieldConstructor(simpleInput.render) } 
+
+@if(id != null) {
+	@inputText(lineaForm("id"), 'hidden -> "hidden", 'id -> "idLineaModalAddCLiente")
+	<div class="panel panel-default">
+		<div class="panel-body">
+			<div class="row" style="margin-bottom: 10px;">
+		 
+				<div class="col-sm-6">
+					<label for="cliente" class="control-label">Paciente</label>
+					<div class="input-group">
+						@inputText(lineaForm("cliente.nombre"), 'class -> "form-control", 'id -> "cliente")
+						@inputText(lineaForm("cliente_id"), 'hidden -> "hidden", 'id -> "clienteIdModalAddCLiente")
+						<span class="input-group-addon">
+							<a href="#" 
+							   id="searchCliente" 
+							   class="searchModal"
+							   data-title="Selección de paciente" 
+							   data-url="@controllers.compras.routes.ClientesController.modalBuscar()" 
+							   data-height="650" 
+							   data-width="700" 
+							   data-listen="modal.seleccion.cliente.simple" 
+							   data-label="#cliente" data-field="#clienteIdModalAddCLiente">
+							   <i class="glyphicon glyphicon-search"></i>
+							 </a>
+						</span>
+					</div>
+				</div>
+				<div class="col-sm-4">
+					<label for="cliente" class="control-label">Cantidad</label>
+					@inputText(lineaForm("cantidad"), 'class -> "form-control", 'id -> "cantidadModalAddCLiente")
+				</div>
+			</div>
+			<div class="row">
+				 
+				<div class="col-sm-4 col-sm-offset-4">
+					<button type="button" class="btn btn-default" id="guardarOrdenLineaCliente"><i class="glyphicon glyphicon-floppy-disk"></i> Guardar</button>
+					<button type="button" class="btn btn-default" id="cancelarOrdenLineaCliente"><i class="glyphicon glyphicon-floppy-remove"></i>Cancelar</button>
+				</div>
+			</div>
+		</div>
+	</div>	
+
+}else{
+	<div class="panel panel-default">
+		<div class="panel-body">
+			<p>Debe guardar la linea primero para despues poder asignarles Pacientes.</p>
+		</div>
+	</div>	
+
+}
+
+<script>
+$( function(){
+	$('#searchCliente').modalSearch();	
+	if($("#clienteIdModalAddCLiente").length){
+		var options = {
+				script:"/suggestCliente/",
+				varname:"",
+				json:true,
+				shownoresults:true,
+				maxresults:6,
+				callback: function (obj) { 
+											$("#clienteIdModalAddCLiente").val(obj.id); 
+										 }
+			};
+		var as_json = new bsn.AutoSuggest('cliente', options);
+	}
+	
+	$( "#cancelarOrdenLineaCliente" ).on( "click", function() {
+		$("#modalAddClientes").dialog( "destroy" );
+	});
+	
+	$( "#guardarOrdenLineaCliente" ).on( "click", function() {
+		
+		if($('#idLineaModalAddCLiente').val() != '' && $('#clienteIdModalAddCLiente').val() != ''){
+			var url = '/compras/linea-orden-cliente/guardarAjax';
+			var data = 'idLinea='+$('#idLineaModalAddCLiente').val();
+			data += '&clienteId='+$('#clienteIdModalAddCLiente').val();
+			data += '&cantidad='+$('#cantidadModalAddCLiente').val();
+			var urlEliminar = '';
+			var cantidad = $('#cantidad').val();
+			var cantidadLineaCliente = 0;
+			$('.cantidadLineaCliente').each(function(idx,valor){
+				cantidadLineaCliente += parseInt($(valor).html())
+			});	
+			cantidadLineaCliente += parseInt($("#cantidadModalAddCLiente").val());
+			
+			if(cantidadLineaCliente > cantidad){
+				alert('La cantidad por paciente excede a la cantidad de la linea.');
+			}else{
+				$.post(url, data, function(data){
+					var respuesta = false;
+					if(data.results) {
+						$.each(data.results,function(idx,valor){
+							if(valor['respuesta'] == true){
+								respuesta = true;
+								urlEliminar = valor['url'];
+							}
+						})
+					}
+					
+					if(respuesta){
+							var tr = "<tr>";
+							tr += "<td>"+$("#cliente").val()+"</td>";
+							tr += "<td class='cantidadLineaCliente'>"+$("#cantidadModalAddCLiente").val()+"</td>";
+							tr += '<td><a data-url="'+urlEliminar+'" class="btn btn-default btn-xs notSeleccion eliminarLineaPaciente" href="#">';
+							tr += '<i class="glyphicon glyphicon-trash icono-eliminar"></i></a></td>';
+							tr += "</tr>";
+						
+							if (!$('.eliminarLineaPaciente').length) {
+								$('#tablaListadoPacientes tbody').empty();
+							}	
+							$('#tablaListadoPacientes tbody').append(tr);
+							
+							$("#modalAddClientes").dialog( "destroy" );
+						
+					}else{
+						alert('No se puede guardar el paciente.');
+					}
+				});
+			}	
+		}else{
+			alert('Debe ingresar un paciente.')
+		}
+	});
+	
+	
+	function getDatos(){
+		
+	}
+	
+});
+</script>

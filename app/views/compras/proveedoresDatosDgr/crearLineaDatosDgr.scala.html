@@ -1,0 +1,9 @@
+@(lineaForm: Form[ProveedorDatoDgr],linea:ProveedorDatoDgr)
+@import helper._
+@implicitFieldConstructor = @{ FieldConstructor(simpleInput.render) } 
+
+@helper.form(action = controllers.compras.routes.ProveedorDatosDgrController.guardar()) {
+	
+	@views.html.compras.proveedoresDatosDgr.formLineaDatosDgr(lineaForm,linea)
+	
+}

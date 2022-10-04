@@ -1,0 +1,30 @@
+@(proveedor:Proveedor)
+
+<div class="row">
+	<div class="col-sm-12">
+		<h3>Datos</h3>
+		<p>Nombre: @(proveedor.nombre)</p>
+		<p>Cuit: @(proveedor.cuit)</p>
+		<hr>
+		<h3>Informacion Cuentas</h3>
+		@for(c <- proveedor.cuenta) {
+			<p>Numero Cuenta: @(c.numero_cuenta)</p>
+			<p>Estado: @if(c.activo){activo}else{inactivo}</p>
+			<p>Predeterminada: @if(c.predeterminada){si}else{no}</p>
+		}
+		<hr>
+		<h3>Informacion Direcciones</h3>
+		@for(d <- proveedor.direcciones) {
+			<p>Dirección: @(d.calle) @(d.numero) - @if(d.localidad != null){@(d.localidad.nombre) - @(d.localidad.provincia.nombre) - @(d.localidad.provincia.pais.nombre)}</p>
+			<p>Email: @(d.email)</p>
+			<p>Telefono: @(d.telefono)</p>
+			<p>Celular: @(d.mobile)</p>
+			<p>Fax: @(d.fax)</p>
+		}
+		<h3>Observaciones</h3>	
+		<p>@(proveedor.observaciones)</p>
+	</div>
+
+
+
+</div>

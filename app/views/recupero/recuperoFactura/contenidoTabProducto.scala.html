@@ -1,0 +1,18 @@
+@(formularioCarga: Boolean, recuperoFacturaForm: Form[models.recupero.RecuperoFactura] = null)
+@import java.util.List
+
+@if(recuperoFacturaForm.field("id").value == null || recuperoFacturaForm.field("id").value == ""){
+	<p>Para cargar productos primero debe dar de alta la factura</p>
+} else {
+	<script>
+	$( function (){
+		$.get('@controllers.recupero.routes.RecuperoFacturaLineasController.index(recuperoFacturaForm.field("id").value.toLong, formularioCarga)', function(data){
+			$('#listaLineaProductos').parent().html(data);
+		})
+	});
+	</script>
+}
+
+<div id="listaLineaProductos">
+
+</div>

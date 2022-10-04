@@ -1,0 +1,18 @@
+@(formularioCarga: Boolean, recuperoPagoForm: Form[models.recupero.RecuperoPago] = null)
+@import java.util.List
+
+@if(recuperoPagoForm.field("id").value == null || recuperoPagoForm.field("id").value == ""){
+	<p>Para cargar cheque primero debe dar de alta el pago</p>
+} else {
+	<script>
+	$( function (){
+		$.get('@controllers.recupero.routes.RecuperoChequesController.index(recuperoPagoForm.field("id").value.toLong, formularioCarga)', function(data){
+			$('#listaLineaCheques').parent().html(data);
+		})
+	});
+	</script>
+}
+
+<div id="listaLineaCheques">
+
+</div>

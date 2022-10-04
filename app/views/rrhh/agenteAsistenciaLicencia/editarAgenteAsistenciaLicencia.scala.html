@@ -1,0 +1,17 @@
+@(lineaForm: Form[AgenteAsistenciaLicencia],puedeEditar:Boolean)
+@import helper._
+@implicitFieldConstructor = @{ FieldConstructor(simpleInput.render) } 
+
+@helper.form(action = controllers.rrhh.routes.AgentesAsistenciasLicenciasController.actualizar()) {
+	
+	@if(flash.containsKey("error") && !puedeEditar) {
+		<div class="alert alert-danger">
+			<i class="glyphicon glyphicon-remove-sign"></i> @flash.get("error")
+		</div>
+	}else{
+		@inputText(lineaForm("id"), 'hidden -> "hidden")
+		@views.html.rrhh.agenteAsistenciaLicencia.formAgenteAsistenciaLicencia(lineaForm)
+	}
+	
+}
+

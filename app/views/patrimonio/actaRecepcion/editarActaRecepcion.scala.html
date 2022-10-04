@@ -1,0 +1,26 @@
+@(actaForm: Form[ActaRecepcion],acta:ActaRecepcion)
+@import helper._
+@import utils._
+@implicitFieldConstructor = @{ FieldConstructor(simpleInput.render) } 
+
+@scripts = {
+	<script src="@routes.Assets.at("javascripts/patrimonio/actasRecepcion.js")" type="text/javascript"></script>
+}
+@views.html.patrimonio.mainPatrimonio("Editar acta",scripts) {
+
+	<div class="page-header">
+		<div class="row">
+			<div class="col-sm-10">
+				<h1>Editar acta</h1>
+			</div>
+		</div>
+	</div>
+    
+    
+	@helper.form(action = controllers.patrimonio.routes.ActasRecepcionController.actualizar(), 'id -> "formEditarActa") {
+		@views.html.patrimonio.actaRecepcion.formActaRecepcion(actaForm) 
+	}
+	<hr />
+	@views.html.patrimonio.actaRecepcion.tabsActaRecepcion(true, acta)
+	
+}

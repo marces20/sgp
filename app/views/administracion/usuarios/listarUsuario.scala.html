@@ -1,0 +1,103 @@
+@main(title = "Prueba") {
+@views.html.tags.header()
+@views.html.tags.navigator()
+<div id="content">
+
+	@views.html.tags.barraIzqAdministracion("marcelo")
+	
+	<div id="content-center">
+		<div id="titulado"><h1>Buscar: Usuarios</h1></div>
+		<!-- --SEARCH--- -->
+		<div id="form">
+			<form class="form-search" method="GET" action="">
+			 	<table>
+					<tr>
+						<td><label for="name">Nombre de usuario:</label></td>
+						<td><label for="login">Usuario:</label></td>
+						<!--<td><label for="name">Dirección:</label></td>
+						<td><label for="name">Compañía:</label></td> -->
+					</tr>
+					<tr>
+						<td><input type="text" name="name" value="" maxlength="" /></td>
+						<td><input type="text" name="login" value="" maxlength="" /></td>
+					</tr>
+					<tr>
+						<td>
+							<input type="hidden" name="row" value=""/>
+							<input type="hidden" name="fetch" value=""/>
+							<input type="hidden" name="page" value=""/>
+							<input type="hidden" name="accion" value=""/>
+							<input type="submit" name="buscar" class="button" value="Buscar"/>
+							<input type="button" id="limpiarFormSearch" class="button" value="Limpiar"/>
+						</td>
+						<td>&nbsp;</td>
+					</tr>
+				</table>
+			</form>
+		</div>
+		<!-- --FIN SEARCH--- -->
+		<!-- --LISTADO--- -->
+		<div id="listado">
+			<table class="tablas-listado-1">
+				<thead>
+					<tr>
+						<th colspan="6" class="text-align-left">
+							<span>USUARIOS</span> 
+							<a title="Nuevo" href="" class="button">Nuevo</a>
+						</th>
+						<th class="">
+							<div id="barra-paginador-listado">
+								<div id="paginador">
+									<!--<a href="#"><span  class="flechas-botones barra-pager-last">r</span></a>-->
+									<a href="#"><span  class="flechas-botones barra-pager-right">r</span></a>
+									<a href="#"><span class="contadores">10 - 1 a 10</span></a>
+									<!-- <a href="#"><span class="flechas-botones barra-pager-left-inactive">l</span></a> -->
+									<a href="#"><span class="flechas-botones barra-pager-left">l</span></a>
+									<!--<a href="#"><span class="flechas-botones barra-first-inactive">l</span></a>-->
+								</div>
+								<div id="opciones-paginador">
+									<span>Cambiar Limite:</span>
+									<select id="selector-limite-paginador">
+							            <option value=""></option>
+						                <option value="20">20</option>
+						                <option value="50">50</option>
+						                <option value="100">100</option>
+						                <option value="500">500</option>
+							            <option value="-1">Todos</option>
+							        </select>
+						        </div>
+							</div>
+						</th>
+					</tr>
+					<tr class="encabezado">
+						<th><input type="checkbox" class="checkboxListadoPadre" value="false"/></th>
+						<th>&nbsp;</th>
+						<th>NOMBRE DE USUARIO</th>
+						<th>USUARIO</th>
+						<th>ULTIMA CONEXION</th>
+						<th>&nbsp;</th>
+					</tr>
+				</thead>
+				<tbody>
+					 
+						<tr class="">
+							<td class="text-align-center"><input type="checkbox" class="checkboxListadoHijos" value="false"/></td>
+							<td><img src="/public/images/iconset-b-edit.gif" alt="Editar" /></td>
+							<td class="left"></td>
+							<td></td>
+							<td></td>
+							<td><a href="#"></a></td>
+						</tr>
+						
+					 
+				</tbody>
+			</table>
+		</div>
+		<!-- --FIN LISTADO--- -->
+	
+	
+	<div id="content-right">
+		33333
+	</div>
+</div>
+}

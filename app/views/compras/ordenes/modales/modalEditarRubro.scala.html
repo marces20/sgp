@@ -1,0 +1,81 @@
+@(formBuscador: DynamicForm,id:Long)
+@import helper._
+@implicitFieldConstructor = @{ FieldConstructor(simpleInput.render) } 
+																			
+@helper.form(action = controllers.compras.routes.OrdenesAccionesController.editarRubro(), 'id -> "formEditarRubro") {	
+	<input name="id_orden" id="id_orden" type="hidden" value="@id"/>
+	@views.html.tags.successError()
+	<div class="row contenedorRubros">
+		<div class="col-sm-3">
+			<div class="seleccionOrdenRubro form-group @if(formBuscador.error("orden_rubro_id") != null) {has-error}">
+				<label for="" class="control-label">Rubro</label>
+				@select(formBuscador("orden_rubro_id"), 
+				OrdenRubro.find.all().map { p => p.id.toString -> p.nombre}, 'class -> "form-control select", '_default -> "Seleccionar")
+				@formBuscador("orden_rubro_id").error.map{ error =>
+					<div class="text-error">@error.message</div>
+				}
+			</div>
+		</div>
+		<div class="col-sm-3">
+			<div class="seleccionSubrubros form-group @if(formBuscador.error("orden_subrubro_id") != null) {has-error}">
+				<label for="" class="control-label">Sub-Rubro</label>
+				@select(formBuscador("orden_subrubro_id"), 
+					formBuscador("ordenRubro.id").value match {
+						case null => {options()}
+						case v if v.matches("\\d+") => {OrdenSubrubro.getOrdenSubrubro(v.toInt).map { p => p.id.toString -> p.nombre}}
+						case _ => {options()}
+					}, 
+				'class -> "form-control select", '_default -> "Seleccionar")
+				@formBuscador("orden_subrubro_id").error.map{ error =>
+					<div class="text-error">@error.message</div>
+				}
+			</div>
+		</div>
+		<div class="col-sm-3">
+			<label class="control-label">Detalle Rubro</label>
+			<div class="form-group">
+				@inputText(formBuscador("detalle_rubro"), 'class -> "form-control",'id -> "detalle_rubro")
+				@formBuscador("detalle_rubro").error.map{ error =>
+					<div class="text-error">@error.message</div>
+				}
+			</div>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-sm-5"><br />
+			<button type="submit" class="btn btn-default" title="Editar Rubros"><i class="glyphicon glyphicon-arrow-right"></i> 
+			Editar</button>
+		</div>
+	</div>
+
+}
+<script>
+$( function() {
+	
+	urlOrdenSubrubro  = '@controllers.compras.routes.OrdenSubrubroController.listOptions()';
+	
+	var contenedorRubros = $('.contenedorRubros');
+	
+	contenedorRubros.on('change', '.seleccionOrdenRubro .select', function(){
+		var id = $(this).find('option:selected').val();
+		var contenedor = $(this).closest('.contenedorRubros');
+		contenedor.find('.seleccionSubrubros .select').find('option:gt(0)').remove();
+		
+		if(id == "") return false;
+
+		$.get(urlOrdenSubrubro + '?rubroId='+id, function(data){
+			contenedor.find('.seleccionSubrubros .select').html(data);
+		});
+	});
+	
+});
+</script>
+@flash().clear()
+
+
+
+
+
+
+
+

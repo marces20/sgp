@@ -1,0 +1,145 @@
+@(paginador:  utils.pagination.Pagination[AgenteEstudio], editable: Boolean)
+@import models.auth._
+
+<div id="listaAgenteEstudio" class="contenedorPaginador ajaxPaginador">
+		
+	<div class="panel panel-default">
+		<div class="panel-heading"><b>Estudios</b>
+			@if(editable && Permiso.check("crearAgenteEstudio")){
+			<a class="btn btn-default btn-xs" href="#" id="nuevoAgenteEstudio"><i class="glyphicon glyphicon-plus"></i> Nuevo</a>	 	
+			}
+		</div>
+		<div class="panel-body">
+		
+	@if(paginador.getTotalRowCount == 0) {
+        <p id="mensajeSinResultados" class="well"><i class="glyphicon glyphicon-info-sign"></i> No hay estudios cargados.</p>
+    } 
+
+	<table id="listaDeAgenteEstudio" class="table table-striped table-bordered  @if(paginador.getTotalRowCount() <= 0){hide}">
+		<thead>
+			<tr>
+				@if(editable && Permiso.check("editarAgenteEstudio")){
+					<th class="accion-editar">#</th>
+				}
+					<th>Nivel</th>
+					<th>Titulo</th>
+					<th>Institucion</th>
+					<th>Area</th>
+					<th>Estado</th>					
+				@if(editable && Permiso.check("eliminarAgenteEstudio")){
+					<th></th>
+				}
+			<tr>	
+		</thead>
+		<tbody>
+		@for(linea <- paginador.getList) {
+			@views.html.rrhh.agenteEstudios.lineaAgenteEstudio(linea, editable)
+		}
+		</tbody>
+	</table>
+
+
+		
+			<div class="pagination pull-right">
+			    @views.html.helpers.paginador(paginador, controllers.rrhh.routes.AgentesEstudiosController.index())
+			</div>
+		</div>
+	</div>
+</div>
+
+
+<script>
+$( function(){
+	 
+	 
+	var contenedor = $("#listaAgenteEstudio");
+						     
+	contenedor.on('click', '#nuevoAgenteEstudio', function(){
+		urlContenidoModal = '/rrhh/agente-estudio/crear?agenteId='+$('#agenteId').val();
+		mostrarModal(urlContenidoModal);
+		return false;
+	});
+	
+	contenedor.on('click', '.modificarAgenteEstudio', function(){
+		lineaParaEditar = $(this).closest('tr');
+		var modal = mostrarModal($(this).attr('href'));
+		modal.dialog('option', 'title', 'Editar Estudio');	
+		return false;
+	});
+	
+	contenedor.on('click', '.eliminarAgenteEstudio', function(){
+		var mensaje = "¿Confirma que desea eliminar el registro?";
+		if(confirm(mensaje)){
+			var url = $(this).attr('href');
+			$this = $(this);
+			$.get(url, function(data){
+				if(data.success){
+					$this.closest("tr").remove();
+				} else {
+					alert("No se puedo eliminar el registro.");
+				}
+			});
+		}
+		return false;
+	});
+	
+	function mostrarModal(url){
+		modalCargaAgenteEstudio = $('<div></div>').dialog({
+			resizable: false,
+		    title: "Cargar Estudios",
+		    height: 600,
+		    minHeight:600,
+		    width: 800,
+		    modal: true,
+		    open: function( event, ui ) {
+				$.get(url, function(data){
+					modalCargaAgenteEstudio.html(data);
+				});
+		    },
+		    close: function(event, ui ){
+		    	modalCargaAgenteEstudio.dialog('destroy');
+			}
+		  });
+		
+		modalCargaAgenteEstudio.on('click', '.cancelar', function(){
+			modalCargaAgenteEstudio.dialog('destroy');
+			return false;
+		});
+		
+		modalCargaAgenteEstudio.on('submit', function(e){
+			var href = $(e.target).attr('action');
+			var data = $(e.target).serialize();
+			$.post(href, data, function(resultado){
+				if(resultado.success && resultado.nuevo){
+					$('#listaDeAgenteEstudio tbody').prepend(resultado.html);
+					$('#mensajeSinResultados').remove();
+					$('#listaDeAgenteEstudio').removeClass('hide');
+					modalCargaAgenteEstudio.dialog( "destroy" );
+					/*aca va funcion Actualizar cuadrito*/				
+				} else if(resultado.success && resultado.modificar){
+					$(lineaParaEditar).replaceWith(resultado.html);
+					modalCargaAgenteEstudio.dialog( "destroy" );
+					/*aca va funcion Actualizar cuadrito*/
+					
+				} else {
+					modalCargaAgenteEstudio.html(resultado);
+				}
+			});
+			return false;
+		});
+		
+		
+		return modalCargaAgenteEstudio;
+	}
+	
+	
+	contenedor.find('form').on('submit', function(){
+		var url = $(this).attr("action");
+		var query = $(this).serialize();
+		$.get(url+"?"+query, function(data){
+			contenedor.parent().html(data);
+		});
+		return false;
+	});
+});
+</script>

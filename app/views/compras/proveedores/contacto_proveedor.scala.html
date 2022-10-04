@@ -1,0 +1,48 @@
+@(provForm: Form[Proveedor],vista:Boolean)
+@import helper._
+@implicitFieldConstructor = @{ FieldConstructor(simpleInput.render) } 
+<div id="listaContactos" class="@if(provForm.data().containsKey("direcciones[0].nombre")){hide}">
+	
+@if(!vista){
+	<p><a class="btn btn-xs btn-default" id="nuevoContacto" href="#"><i class="glyphicon glyphicon-plus"></i> Agregar nuevo</a></p>
+}	
+	
+@for(direccion <- DireccionProveedor.find.fetch("localidad").where().eq("proveedor_id", provForm("id").value.toInt).findList())  {
+
+
+	<div class="panel panel-default">
+
+	  	<div class="panel-body">
+	  	
+		@if(!vista){
+			<p>
+			<div class="btn-group">
+				<a class="btn btn-xs btn-default" id='modificarDireccion' href="@controllers.compras.routes.ProveedoresController.formularioContacto(direccion.proveedor_id, direccion.id)"><i class="glyphicon glyphicon-pencil"></i> Modificar</a>
+				<a class="btn btn-xs btn-default" href="@controllers.compras.routes.ProveedoresController.eliminarContacto(provForm("id").value.toInt, direccion.id)"><i class="glyphicon glyphicon-remove-circle"></i> Eliminar</a>
+			</div>
+			</p>
+		}
+		  	<div class="row">
+		  	<div class="col-sm-6"><b>Nombre:</b> @direccion.nombre</div>
+		  	</div>
+		  	<div class="row">
+		  		<div class="col-sm-4"><b>Calle:</b>  @direccion.calle</div>
+		  		<div class="col-sm-3"><b>CP:</b>  @direccion.zip</div>
+		  		<div class="col-sm-3"><b>Número:</b>  @direccion.numero</div>
+		  	</div>
+		  	<div class="row">
+		  		<div class="col-sm-4"><b>Pais:</b>  @if(direccion.localidad != null){@direccion.localidad.provincia.pais.nombre}</div>
+		  		<div class="col-sm-3"><b>Provincia:</b>  @if(direccion.localidad != null){@direccion.localidad.provincia.nombre}</div>
+		  		<div class="col-sm-3"><b>Localidad:</b>  @if(direccion.localidad != null){@direccion.localidad.nombre}</div>
+		  	</div>
+		  	<div class="row">
+		  		<div class="col-sm-4"><b>Email:</b> @if(direccion.email != null){@direccion.email}</div>
+		  		<div class="col-sm-3"><b>Celular:</b>  @if(direccion.mobile != null){@direccion.mobile}</div>
+		  		<div class="col-sm-2"><b>Fijo:</b>  @if(direccion.telefono != null){@direccion.telefono}</div>
+		  		<div class="col-sm-3"><b>Fax:</b>  @if(direccion.fax != null){@direccion.fax}</div>
+		  	</div>
+	  	
+	  	</div>
+	</div>
+}
+</div>

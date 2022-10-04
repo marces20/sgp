@@ -1,0 +1,18 @@
+@(formularioCarga: Boolean, ordenForm: Form[Orden] = null)
+@import java.util.List
+
+@if(ordenForm.field("id").value == null || ordenForm.field("id").value == ""){
+	<p>Para cargar productos primero debe dar de alta la Orden</p>
+} else {
+	<script>
+		$( function (){
+			$.get('@controllers.compras.routes.LineasOrdenesController.index(ordenForm.field("id").value.toLong, formularioCarga)', function(data){
+				$('#listaLineaProductos').parent().html(data);
+			})
+		});
+	</script>
+}
+
+<div id="listaLineaProductos">
+
+</div>

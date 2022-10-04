@@ -1,0 +1,41 @@
+@(actaForm: Form[InventarioPrefijo])
+@import helper._
+@import utils._
+@implicitFieldConstructor = @{ FieldConstructor(simpleInput.render) } 
+    
+@helper.form(action = controllers.patrimonio.routes.PrefijosAccionesController.modificar(), 'id -> "formGuardarActaRecepcion") {
+@views.html.tags.successError()
+ <div class="row">
+
+	<label for="cuenta" class="control-label">Prefijo</label>
+	<div class="input-group has-required">
+		@inputText(actaForm("profijo.nombre"), 'class -> "form-control", 'id -> "prefijo")
+		@inputText(actaForm("prefijo_inventario_id"), 'hidden -> "hidden", 'id -> "prefijo_id")
+		<span class="input-group-addon">
+			<a href="#" 
+			   id="searchPrefijo" 
+			   class="searchModal"
+			   data-title="Selección de prefijo" 
+			   data-url="@controllers.patrimonio.routes.PrefijosController.modalBuscar()" 
+			   data-height="650" 
+			   data-width="700" 
+			   data-listen="modal.seleccion.prefijo.simple" 
+			   data-label="#prefijo" data-field="#prefijo_id">
+			   <i class="glyphicon glyphicon-search"></i>
+			 </a>
+		</span>
+	</div>
+
+	
+	<div class="col-sm-2">
+		<div class="form-group">
+		<label for="nombre" class="control-label">&nbsp;</label>
+		<button  class="form-control btn btn-primary"> Guardar</button>
+		</div>
+	</div>	
+
+</div>	
+
+}
+
+@flash().clear()

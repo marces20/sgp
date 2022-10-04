@@ -1,0 +1,25 @@
+@(centroForm: Form[models.haberes.CentroCosto])
+@import helper._
+@implicitFieldConstructor = @{ FieldConstructor(simpleInput.render) }
+
+@views.html.haberes.mainHaberes("Modificar Centro Costo") {
+
+	<div class="page-header">
+		<div class="row">
+			<div class="col-sm-10">
+				<h1>Editar Centro Costo</h1>
+			</div>
+			
+			<div class="col-sm-2">
+			</div>
+		</div>
+	</div>
+	
+	@views.html.tags.successError()
+													 
+	@helper.form(action = controllers.haberes.routes.CentrosCostosController.actualizar()) {
+		@inputText(centroForm("id"), 'hidden -> "hidden")
+		@views.html.haberes.centrosCostos.formCentroCosto(centroForm)
+	}
+
+}

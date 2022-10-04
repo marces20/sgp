@@ -1,0 +1,14 @@
+@(linea: AgenteRul, editable: Boolean)
+@import models.auth._
+
+<tr data-id="@linea.id">
+	@if(editable && Permiso.check("editarAgenteRul")){
+		<td class="accion-editar"><a class="btn btn-default btn-xs modificarAgenteRul" href="@controllers.rrhh.routes.AgentesRulController.editar(linea.id)"><i class="glyphicon glyphicon-edit"></i></a></td>
+	}
+		<td>@linea.tipoRelacionLaboral.nombre</td>
+		<td>@linea.institucionExterna.nombre</td>
+		<td>@linea.nota</td>
+	@if(editable && Permiso.check("eliminarAgenteRul")){
+		<td><a class="btn btn-default btn-xs delete-confirm-link eliminarAgenteRul" href="@controllers.rrhh.routes.AgentesRulController.eliminar(linea.id)"><i class="glyphicon glyphicon-trash icono-eliminar"></i></a></td>
+	}
+</tr>

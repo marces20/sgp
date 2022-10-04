@@ -1,0 +1,92 @@
+@(ll:List[com.avaje.ebean.SqlRow],lr:List[com.avaje.ebean.SqlRow],ls:List[com.avaje.ebean.SqlRow],usuariosActivos:Boolean)
+@import helper._
+@import utils._
+@import models.auth._
+@implicitFieldConstructor = @{ FieldConstructor(simpleInput.render) }
+@main("SGP - v1.0") {
+ 
+
+@if(usuariosActivos){	    
+<div class="page-header">
+	<div class="row">
+	
+		<div class="col-sm-4">
+			<div class="panel panel-default">
+				<div class="panel-heading"><b>Top 20 de Deuda por Proveedor</b>
+				</div>
+				<div class="panel-body" id="div-datos-puestos">
+					<table class="table table-striped table-bordered">
+						<thead>
+							<tr>
+								<td><b>Proveedor</b></td>
+								<td><b>Deuda Total</b></td>
+							</tr>	
+						</thead>
+						<tbody>
+							@for(el <- ll){
+							<tr>
+								<td>@el.getString("nombre")</td>
+								<td>@(utils.NumberUtils.moneda(el.getBigDecimal("td")))</td>
+							</tr>
+							}
+						</tbody>
+					</table>			
+				</div>
+			</div>	
+		</div>
+		
+		<div class="col-sm-4">
+			<div class="panel panel-default">
+				<div class="panel-heading"><b>Top 20 de Deuda por Rubro</b>
+				</div>
+				<div class="panel-body" id="div-datos-puestos">
+					<table class="table table-striped table-bordered">
+						<thead>
+							<tr>
+								<td><b>Rubro</b></td>
+								<td><b>Deuda Total</b></td>
+							</tr>	
+						</thead>
+						<tbody>
+							@for(el <- lr){
+							<tr>
+								<td>@el.getString("nombre")</td>
+								<td>@(utils.NumberUtils.moneda(el.getBigDecimal("td")))</td>
+							</tr>
+							}
+						</tbody>
+					</table>			
+				</div>
+			</div>	
+		</div>
+		
+		<div class="col-sm-4">
+			<div class="panel panel-default">
+				<div class="panel-heading"><b>Top 20 de Deuda por Servicio</b>
+				</div>
+				<div class="panel-body" id="div-datos-puestos">
+					<table class="table table-striped table-bordered">
+						<thead>
+							<tr>
+								<td><b>Servicio</b></td>
+								<td><b>Deuda Total</b></td>
+							</tr>	
+						</thead>
+						<tbody>
+							@for(el <- ls){
+							<tr>
+								<td>@el.getString("nombre")</td>
+								<td>@(utils.NumberUtils.moneda(el.getBigDecimal("td")))</td>
+							</tr>
+							}
+						</tbody>
+					</table>			
+				</div>
+			</div>	
+		</div>
+		
+	</div>
+</div>	
+}			 
+		
+}

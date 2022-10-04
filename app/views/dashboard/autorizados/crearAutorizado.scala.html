@@ -1,0 +1,26 @@
+@(autorizadoForm: Form[Autorizado])
+@import helper._
+
+@scripts = {
+	<script src="@routes.Assets.at("javascripts/dashboard/autorizado.js")" type="text/javascript"></script>
+}
+
+@views.html.dashboard.mainDashboard("Crear Autorizado", scripts) {
+
+	<div class="page-header">
+		<div class="row">
+			<div class="col-sm-7">
+				<h1>Crear nuevo Autorizado</h1>
+			</div>
+		</div>
+	</div>
+	@views.html.tags.successError()
+    
+    @helper.form(action = controllers.dashboard.routes.AutorizadosController.guardar()) {
+
+		@views.html.dashboard.autorizados.formAutorizado(autorizadoForm) 
+		@views.html.dashboard.autorizados.tabsAutorizados(true, autorizadoForm)
+		
+
+	}
+}

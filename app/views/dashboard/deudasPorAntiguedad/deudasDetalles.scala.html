@@ -1,0 +1,207 @@
+@(equipamiento:Boolean,
+idProveedor:Integer,
+listaFinal:java.util.Map[String,java.util.Map[String,List[List[com.avaje.ebean.SqlRow]]]],
+proveedor:String,
+formBuscador: DynamicForm,
+sinServicio:Boolean)
+@import java.math.BigDecimal;var ptmpcompromiso=new java.math.BigDecimal(0);var ptmpdeuda=new java.math.BigDecimal(0);var mtdoh=new java.math.BigDecimal(0);var mtcoh=new java.math.BigDecimal(0);var mtdoo=new java.math.BigDecimal(0);var mtcoo=new java.math.BigDecimal(0);var mtdos=new java.math.BigDecimal(0);var mtcos=new java.math.BigDecimal(0);var mtdph=new java.math.BigDecimal(0);var mtcph=new java.math.BigDecimal(0);var mtdpo=new java.math.BigDecimal(0);var mtcpo=new java.math.BigDecimal(0);var mtdps=new java.math.BigDecimal(0);var mtcps=new java.math.BigDecimal(0)
+@import java.lang.Integer;var proveedorId =0;var bandera =0;var xx =0
+@import java.lang.String;var proveedorNombre ="";var fecha =""
+@views.html.dashboard.mainDashboard("Deudas Detalles") {
+
+@views.html.dashboard.deudasPorAntiguedad.navdeudas(formBuscador)
+
+<div class="page-header">
+	<div class="row">
+		<div class="col-sm-7">
+			<h1>Deudas Detalles - @proveedor</h1>
+		</div>
+		
+		<div class="col-sm-5">
+			<div class="dropdown pull-right">
+			 <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown">
+			 	<i class="glyphicon glyphicon-list-alt"></i>
+			    Reportes
+			    <span class="caret"></span>
+			  </button>
+			  <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
+			  	<li role="presentation">
+				  <a id="" 
+				  role="menuitem" tabindex="-1" 
+				  href="@controllers.dashboard.routes.DeudasPorAntiguedadReportesController.deudasDetallesReporte(idProveedor,equipamiento,0,sinServicio)">Reporte Excel</a></li>
+			  	
+			  </ul>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div class="row"  style="">
+	<div class="col-sm-12" style="">
+		@if(listaFinal.get("OPERATIVA") != null){
+			@if(listaFinal.get("OPERATIVA").get("HEARM") != null){
+				@if(listaFinal.get("OPERATIVA").get("HEARM").size() > 0){
+					<table class="table table-striped table-bordered table-hover" id="listaInforme">
+						@views.html.dashboard.deudasPorAntiguedad.tablaDetalles("OPERATIVA","",proveedor)
+						<tbody>
+							
+							@for(sx <- listaFinal.get("OPERATIVA").get("HEARM")){
+								@for(s <- sx){
+									 
+										
+										@{xx = 1}
+										@if(fecha.compareToIgnoreCase("") != 0 && fecha.compareToIgnoreCase(s.getString("fecha_mes_ano")) != 0){
+											<tr>
+												<td colspan="4" align="right"><b>@fecha - TOTAL</b></td>
+												<td><b>@utils.NumberUtils.moneda(ptmpdeuda)</b></td>
+												<td></td>
+												<td colspan="2"></td>
+											</tr>
+											<tr><td colspan="8"></td></tr>
+											@{ptmpdeuda = new java.math.BigDecimal(0)}
+											@{bandera = 0}
+										} 
+										
+										@if(bandera == 0){
+											<tr style="background-color:#dfdfdf;">
+												<td colspan="8" align="center"><b>@s.getString("fecha_mes_ano")</b></td>
+											</tr>
+											@{bandera = 1}
+										}
+										
+										@{ptmpdeuda = ptmpdeuda.add(s.getBigDecimal("total_deuda"))}
+										 
+										<tr>
+											<td>@s.getInteger("numeroProvision")</td>
+											<td>@(utils.DateUtils.formatDate(s.getDate("fecha")))</td>
+											<td>@s.getString("expediente")</td>
+											<td>@s.getString("nombre_proveedor")</td>
+											<td>@utils.NumberUtils.moneda(s.getBigDecimal("total_deuda"))</td>
+											<td>@s.getString("deposito")</td>
+											<td>@s.getString("rubro")</td>
+											<td>@s.getString("descripcion")</td>
+										</tr>
+										@{mtdoh= mtdoh.add(s.getBigDecimal("total_deuda"))}
+										@{proveedorId = s.getInteger("proveedorId")}
+										@{fecha = s.getString("fecha_mes_ano")}
+										@{proveedorNombre = s.getString("nombre_proveedor")}
+									}
+								}
+								
+							 
+							@if(listaFinal.get("OPERATIVA").get("HEARM").size() >0 && xx == 1){ 
+								<tr>
+									<td colspan="4" align="right"><b>@fecha - TOTAL</b></td>
+									<td><b>@utils.NumberUtils.moneda(ptmpdeuda)</b></td>
+									<td></td>
+									<td colspan="2"></td>
+								</tr>
+							}
+							@{ptmpdeuda = new java.math.BigDecimal(0)}
+							@{proveedorId =0}
+							@{fecha =""}							
+							@{bandera = 0}
+							@{xx = 0}
+						</tbody>
+						<tfoot>
+							<tr>
+								<td colspan="4" align="right"><b>TOTALES</b></td>
+								<td><b>@utils.NumberUtils.moneda(mtdoh)</b></td>
+								<td></td>
+								<td colspan="2" align="right"></td>
+							</tr>
+						</tfoot>
+					</table>
+				}
+			}
+		}	
+	</div>
+</div>
+
+
+<div class="row"  style="">
+	<div class="col-sm-12" style="">
+		@if(listaFinal.get("PROFE") != null){
+			@if(listaFinal.get("PROFE").get("HEARM") != null){
+				@if(listaFinal.get("PROFE").get("HEARM").size() > 0){
+					<table class="table table-striped table-bordered table-hover" id="listaInforme">
+						@views.html.dashboard.deudasPorAntiguedad.tablaDetalles("PROFE","",proveedor)
+						<tbody>
+							@for(sx <- listaFinal.get("PROFE").get("HEARM")){
+								@for(s <- sx){
+									@if(s.getString("rubro").compareTo("SERVICIOS") != 0){
+										@{xx = 1}
+										
+										@if(fecha.compareToIgnoreCase("") != 0 && fecha.compareToIgnoreCase(s.getString("fecha_mes_ano")) != 0){
+											<tr>
+												<td colspan="4" align="right"><b>@proveedorNombre - TOTAL</b></td>
+												<td><b>@utils.NumberUtils.moneda(ptmpdeuda)</b></td>
+												<td></td>
+												<td colspan="2"></td>
+											</tr>
+											<tr><td colspan="8"></td></tr>
+											@{ptmpdeuda = new java.math.BigDecimal(0)}
+											@{bandera = 0}
+										} 
+										@if(bandera == 0){
+											<tr style="background-color:#dfdfdf;">
+												<td colspan="8" align="center"><b>@s.getString("fecha_mes_ano")</b></td>
+											</tr>
+											@{bandera = 1}
+										}
+										@{ptmpdeuda = ptmpdeuda.add(s.getBigDecimal("total_deuda"))} 
+										<tr>
+											<td>@s.getInteger("numeroProvision")</td>
+											<td>@(utils.DateUtils.formatDate(s.getDate("fecha")))</td>
+											<td>@s.getString("expediente")</td>
+											<td>@s.getString("nombre_proveedor")</td>
+											<td>@utils.NumberUtils.moneda(s.getBigDecimal("total_deuda"))</td>
+											<td>@s.getString("deposito")</td>
+											<td>@s.getString("rubro")</td>
+											<td>@s.getString("descripcion")</td>
+										</tr>
+										@{mtdph= mtdph.add(s.getBigDecimal("total_deuda"))} 
+										@{proveedorId = s.getInteger("proveedorId")}
+										@{proveedorNombre = s.getString("nombre_proveedor")}
+										@{fecha = s.getString("fecha_mes_ano")}
+									}
+									
+								}
+								 
+							}
+							@if(listaFinal.get("PROFE").get("HEARM").size() >0 && xx == 1){ 
+								<tr>
+									<td colspan="4" align="right"><b>@fecha - TOTAL</b></td>
+									<td><b>@utils.NumberUtils.moneda(ptmpdeuda)</b></td>
+									<td></td>
+									<td colspan="2"></td>
+								</tr>
+							}
+							@{ptmpdeuda = new java.math.BigDecimal(0)}
+							@{proveedorId =0}
+							@{bandera = 0}
+							@{xx = 0}
+							@{fecha =""}
+						</tbody>
+						<tfoot>
+							<tr>
+								<td colspan="4" align="right"><b>TOTALES</b></td>
+								<td><b>@utils.NumberUtils.moneda(mtdph)</b></td>
+								<td></td>
+								<td colspan="2" align="right"></td>
+							</tr>
+						</tfoot>
+					</table>
+				}
+			}
+		}	
+	</div>
+</div>
+
+
+
+
+
+}
+ 
+

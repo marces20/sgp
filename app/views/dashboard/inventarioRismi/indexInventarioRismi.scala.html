@@ -1,0 +1,127 @@
+@(buscador: utils.pagination.Pagination[InventarioRismi], formBuscador: DynamicForm, paginadorFicha: utils.pagination.PaginadorFicha)
+@import helper._
+@import utils._
+@import models.auth._
+@implicitFieldConstructor = @{ FieldConstructor(simpleInput.render) }
+
+@views.html.dashboard.mainDashboard("Lista de Inventario Rismi") {
+
+<div class="page-header">
+		<div class="row">
+			<div class="col-sm-7">
+				<h1>Lista Inventario Rismi</h1>
+			</div>
+			
+			<div class="col-sm-5">
+				 
+			</div>
+		</div>
+	</div>
+	
+	@views.html.tags.successError()
+	<div id="actions">
+		<form action="" id="formSearchAutorizafos" method="GET">
+			<div class="row">	
+				<div class="col-sm-2">
+					<div class="form-group">
+						<label for="nombre" class="control-label">Producto
+						@inputText(formBuscador("producto_inv"), 'class -> "form-control", 'autofocus -> "autofocus")
+						</label>
+					</div>
+				</div>	
+				<div class="col-sm-2">
+					<div class="form-group">
+						<label for="nombre" class="control-label">Responsable
+						@inputText(formBuscador("responsable_inv"), 'class -> "form-control")
+						</label>
+					</div>
+				</div>	
+				<div class="col-sm-2">
+					<div class="form-group">
+						<label for="nombre" class="control-label">Lugar
+						@inputText(formBuscador("lugar_inv"), 'class -> "form-control")
+						</label>
+					</div>
+				</div>	
+				<div class="col-sm-2">
+					<div class="form-group">
+						<label for="nombre" class="control-label">N° Inventario
+						@inputText(formBuscador("numero_inventario"), 'class -> "form-control")
+						</label>
+					</div>
+				</div>	
+			</div>
+			<div class="row">
+				 
+				<div class="col-sm-2">
+					<div class="form-group">
+					<label for="nombre" class="control-label">&nbsp;</label>
+					<button  class="form-control btn btn-primary">Buscar</button>
+					</div>
+				</div>
+				<div class="col-sm-2">
+					<div class="form-group">
+					<label for="nombre" class="control-label">&nbsp;</label>
+					<a href="@controllers.dashboard.routes.InventarioRismiController.index()"  class="form-control btn btn-default">Limpiar</a>
+					</div>
+				</div>
+			</div>
+		</form>
+	</div>
+	
+	@if(buscador.getTotalRowCount == 0) {
+        
+        <div class="well">
+            <em>No se encuentran Inventario</em>
+        </div>
+        
+    } else {	
+    
+    	<table id=" " class="table table-striped table-bordered">
+			<thead>
+				 <tr style="background: #FFFFFF;">
+			        <td colspan="9">Mostrando @buscador.getDisplayXtoYofZ(" a "," de ") resultado(s). </td>
+			       
+		        </tr>
+				<tr>
+					<th width="">CODIGO</th>
+					<th width="">Nº INV</th>
+					<th width="">PRODUCTO</th>
+					<th width="">CONDICION DEL BIEN</th>
+					<th width="">LUGAR</th>
+					<th width="">RESPONSABLE</th>
+					<th width="">DESCRIPCION DEL BIEN</th>
+					<th width="">VALOR</th>
+					<th width="">FECHA ALTA</th> 
+				</tr>
+			</thead>
+			<tbody>
+			@for(inv <- buscador.getList) {
+				@paginadorFicha.add(inv.id.toString)
+				<tr>
+					<td>@if(inv.codigo != null){@inv.codigo}</td>
+					<td>@if(inv.numero_inventario != null){@inv.numero_inventario}</td>
+					<td>@if(inv.producto_nombre != null){@inv.producto_nombre}</td>
+					<td>@if(inv.param_condicion_producto != null){@inv.param_condicion_producto}</td>
+					<td>@if(inv.lugar != null){@inv.lugar}</td>
+					<td>@if(inv.responsable != null){@inv.responsable}</td>
+					<td>@if(inv.precio != null){@(utils.NumberUtils.moneda(inv.precio))}</td>
+					<td>@if(inv.descripcion != null){@inv.descripcion}</td>
+					<td>@if(inv.bi_producto_detalle_creado != null){@(utils.DateUtils.formatDate(inv.bi_producto_detalle_creado))}</td>
+				</tr>
+             }
+             @paginadorFicha.guardar()
+	        </tbody>
+	        <tfoot>
+		        <tr>
+			        <td colspan="9">&nbsp</td>
+		        </tr>
+	        </tfoot>
+        </table>
+    	
+    	<div class="pagination pull-right">
+		    @views.html.helpers.paginador(buscador, controllers.dashboard.routes.InventarioRismiController.index())
+		</div>
+<script>
+}
+}

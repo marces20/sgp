@@ -1,0 +1,70 @@
+@(buscador: utils.pagination.Pagination[Especialidad], formBuscador: DynamicForm)
+@import helper._
+@implicitFieldConstructor = @{ FieldConstructor(simpleInput.render) } 
+
+<div id="modalBusquedaEspecialidades" class="contenedorPaginador ajaxPaginador">
+<form action="@controllers.rrhh.routes.EspecialidadesController.modalBuscar()" method="GET">
+	<div class="row">
+		<div class="col-sm-6">
+			<label class="control-label">Nombre</label>
+			@inputText(formBuscador("nombre"), 'class -> "form-control", 'autofocus -> "autofocus")
+			
+		</div>
+		<div class="col-sm-3">
+			<label class="control-label">&nbsp 
+			<button class="btn btn-primary form-control">Buscar</button>
+			</label>
+		</div>
+	</div>
+</form>
+
+@if(buscador.getTotalRowCount == 0) {
+	<div class="well">
+	    <em>No se encuentran Especialidades</em>
+	</div>
+} else {
+    Mostrando @buscador.getDisplayXtoYofZ(" a "," de ") resultado(s). 
+    	
+	<table class="table table-striped table-bordered table-hover">
+		<thead>
+			<tr>
+				<th>Nombre</th>
+			</tr>
+		</thead>
+		<tbody>
+    	
+    @for(especialidad <- buscador.getList) {
+	<tr data-id="@especialidad.id" class="modalSeleccionEspecialidad">
+		<td> @especialidad.nombre</td>
+	</tr>    
+    }
+    </tbody>
+    </table>
+    
+	<div class="pagination pull-right">
+	    @views.html.helpers.paginador(buscador, controllers.rrhh.routes.EspecialidadesController.modalBuscar())
+	</div>	
+}
+</div>
+
+<script>
+$( function(){
+	var contenedor = $("#modalBusquedaEspecialidades");
+	var url = "@controllers.rrhh.routes.EspecialidadesController.get()"
+	contenedor.find('.modalSeleccionEspecialidad').on('click', function(){
+		var id = $(this).attr('data-id');
+		$.get(url+"?id="+id, function(data){
+			$(document).trigger("modal.seleccion.especialidad.simple", data);
+		});
+	});
+	
+	contenedor.find('form').on('submit', function(){
+		var url = $(this).attr("action");
+		var query = $(this).serialize();
+		$.get(url+"?"+query, function(data){
+			contenedor.parent().html(data);
+		});
+		return false;
+	});
+});
+</script>

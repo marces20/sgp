@@ -1,0 +1,214 @@
+@(lcForm: Form[Expediente],lc:Expediente)
+@import helper._
+@import utils._
+@import models.auth._
+@scripts = {
+	<script src="@routes.Assets.at("javascripts/expediente/expediente.js")" type="text/javascript"></script>
+}
+@implicitFieldConstructor = @{ FieldConstructor(simpleInput.render) } 
+
+@views.html.expediente.mainExpediente("Vista Expediente",scripts) {
+	<div class="page-header">
+		<div class="row">
+			<div class="col-sm-3">
+				<h1>Vista Expediente</h1>
+			</div>
+			<div class="col-sm-4">
+				 
+			</div>
+			<div class="col-sm-5">
+				<div class="dropdown pull-right btn-header">
+				 <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown">
+				 	<i class="glyphicon glyphicon-list-alt"></i>
+				    Reportes
+				    <span class="caret"></span>
+				  </button>
+				  <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
+				    <li role="presentation"><a role="menuitem" id="reporteTapaExpediente" href="@controllers.expediente.routes.ExpedientesController.reporteTapaExpediente(lc.id)" tabindex="-1">Tapa Expediente</a></li>
+				  	<li><a id="reportePaseExpediente" href="#" data-url="@controllers.expediente.routes.ExpedientesReportesController.reportePaseExpediente(lc.id)">Reporte Pase Expediente</a></li>
+				  </ul>
+				</div>
+				
+				<div class="dropdown pull-right btn-header">
+				 <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown">
+				 	<i class="glyphicon glyphicon-list-alt"></i>
+				    Acciones
+				    <span class="caret"></span>
+				  </button>
+				  <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
+				  	@if(Permiso.check("expedientesCrearCopia") && lc.nro_copia == null) {
+				  	<li role="presentation">
+				  		<a  role="menuitem" href="@controllers.expediente.routes.ExpedientesController.crearCopia(lc.id)">
+				  		<i class="glyphicon glyphicon-subtitles"></i> Crear Copia</a>
+				  	</li>
+				  	}
+				  	@if(Permiso.check("expedientesCrearRP") && (lc.residuo_pasivo == null || !lc.residuo_pasivo )) {
+				  	<li role="presentation">
+				  		<a  role="menuitem" href="@controllers.expediente.routes.ExpedientesController.crearRP(lc.id)">
+				  		<i class="glyphicon glyphicon-registration-mark"></i> Crear RP</a>
+				  	</li>
+				  	}
+				  	@if(Permiso.check("expedientesPasarAOtroServicio")) {
+				  	<li role="presentation">
+				  		<a role="menuitem" id="accionPasarOtroServicio" tabindex="-1" href="#" 
+				    						   data-url="@controllers.expediente.routes.ExpedientesAccionesController.modalPasarOtroServicioIndividual(lc.id)">
+				    						   Pasar a otro servicio</a>
+				 	</li>
+				 	}
+				 	
+				 	@if(Permiso.check("expedientesCancelarPase")) {
+				    <li><a id="cancelarPase" href="#" data-url="@controllers.expediente.routes.ExpedientesAccionesController.cancelarPase(lc.id)">Cancelar Pase</a></li>
+				  	}
+				  	@if(Permiso.check("expedientesAsignarMiServicio")) {
+				  	<li role="presentation">
+				  		<a role="menuitem" id="asignarMiServicio" tabindex="-1" href="#" 
+				    						   data-url="@controllers.expediente.routes.ExpedientesAccionesController.asignarMiServicio(lc.id)">
+				    						   Asignar a Mi Servicio</a>
+				 	</li>
+				 	}
+				  </ul>
+				</div>
+				
+				<div class="pull-right btn-header">
+					<a href="@controllers.expediente.routes.ExpedientesController.crearExpediente()"  class="btn btn-default"><i class="glyphicon glyphicon-plus-sign"></i> Nuevo expediente</a>
+				</div>
+			</div>
+		</div>
+	</div>		
+@views.html.tags.successError()	
+	<div class="row menu-acciones">
+		<div class="col-sm-4">
+			<a href="@controllers.expediente.routes.ExpedientesController.editarExpediente(lc.id)"  class="btn btn-default"><i class="glyphicon glyphicon-edit"></i> Editar</a>
+			<a href="@controllers.expediente.routes.ExpedientesController.eliminarExpediente(lc.id)"  class="btn btn-default delete-confirm-link"><i class="glyphicon glyphicon-trash icono-eliminar"></i> Eliminar</a>
+			@if(Permiso.check("expedientesEliminarCopias") && lc.nro_copia != null) {
+			<a href="@controllers.expediente.routes.ExpedientesController.eliminarExpedienteCopia(lc.id)"  class="btn btn-default delete-confirm-link"><i class="glyphicon glyphicon-trash icono-eliminar"></i> Eliminar Copia</a>
+			}
+		</div>
+		<div class="col-sm-6">
+				@if(lc.servicio != null) { 
+				<h2>Depto/Servicio - @lc.servicio</h2>
+				}
+		</div>
+		<div class="col-sm-2">
+			<a href="@UriTrack.getOnNull(controllers.expediente.routes.ExpedientesController.indexExpediente().absoluteURL())" class="btn btn-default"><i class="glyphicon glyphicon-list"></i></a> 
+		</div> 
+	</div>	
+	
+	<input type="hidden" id="expedienteId" name="expedienteId" value="@lc.id"/>
+	<div class="row">
+		<div class="col-sm-2">
+			<div class="form-group">
+				<label class="control-label">Nombre</label>
+				<p class="form-control-static form-control">@lcForm.field("nombre").value</p>
+			</div>
+		</div>
+		<div class="col-sm-7">
+			<div class="form-group">
+				<label class="control-label">Descripcion</label>
+				<p class="form-control-static form-control">@lcForm.field("descripcion").value</p>
+			</div>
+		</div> 
+	</div>
+	<div class="row">
+	 	<div class="col-sm-2">
+			<div class="form-group">
+				<label class="control-label">Ejercicio</label>
+				<p class="form-control-static form-control">@lc.ejercicio.nombre</p>
+			</div>
+		</div>
+		<div class="col-sm-2">
+			<div class="form-group ">
+				<label class="control-label">Fecha</label>
+				<p class="form-control-static form-control">@(utils.DateUtils.formatDate(lc.fecha))</p>
+			</div>
+		</div>
+		<div class="col-sm-5">
+			<div class="form-group">
+				<label class="control-label">Iniciador</label>
+				<p class="form-control-static form-control">@if(lc.iniciador != null){@(lc.iniciador.nombre)}</p>
+			</div>
+		</div>
+	</div> 
+	<div class="row">
+		<div class="col-sm-2">
+			<div class="form-group">
+				<label class="control-label">Expediente Padre</label>
+					<p class="form-control-static form-control">
+					@if(lc.parent_id != null){ @lc.parent.getExpedienteEjercicio()}
+					</p>
+			</div>
+		</div>
+		<div class="col-sm-2">
+			<div class="checkbox">
+				<label class="control-label">
+					Residuo pasivo
+					@checkbox(lcForm("residuo_pasivo"), 'disabled -> "disabled")
+				</label>
+			</div>
+		</div>	
+		
+		<div class="col-sm-2">
+			<div class="checkbox">
+				<label class="control-label">
+					RESERVADO
+					@checkbox(lcForm("reservado"), 'disabled -> "disabled")
+				</label>
+			</div>
+		</div>	
+		<div class="col-sm-3">
+			<div class="checkbox">
+				<label class="control-label">
+					LICITACION
+					@checkbox(lcForm("licitacion"), 'disabled -> "disabled")
+				</label>
+			</div>
+		</div>	
+		<div class="col-sm-3">
+			<div class="checkbox">
+				<label class="control-label">
+					EMERGENCIA SANITARIA
+					@checkbox(lcForm("emergencia"), 'disabled -> "disabled")
+				</label>
+			</div>
+		</div>	
+	</div> 
+	<div class="row">	
+		<div class="col-sm-2">
+			<div class="checkbox">
+				<label class="control-label">
+					Cerrar
+					@checkbox(lcForm("cerrar"), 'disabled -> "disabled")
+				</label>
+			</div>
+		</div>		
+		<div class="col-sm-2">
+			<div class="checkbox">
+				<label class="control-label">
+					Activo
+					@checkbox(lcForm("activo"), 'disabled -> "disabled")
+				</label>
+			</div>
+		</div>		
+		<div class="col-sm-3">
+			<div class="checkbox">
+				<label class="control-label">
+					Expediente Guardia Personal
+					@checkbox(lcForm("guardia"), 'disabled -> "disabled")
+				</label>
+			</div>
+		</div>	
+		
+		<div class="col-sm-3">
+			<div class="checkbox">
+				<label class="control-label">
+					PROFE
+					@checkbox(lcForm("profe"), 'disabled -> "disabled")
+				</label>
+			</div>
+		</div>	
+		
+	</div> 
+	@views.html.expediente.expediente.tabsExpediente(false, lcForm) 
+	
+	 
+}

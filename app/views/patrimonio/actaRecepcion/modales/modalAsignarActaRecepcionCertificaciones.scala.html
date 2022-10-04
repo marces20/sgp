@@ -1,0 +1,41 @@
+@(actaForm: Form[ActaRecepcion])
+@import helper._
+@import utils._
+@implicitFieldConstructor = @{ FieldConstructor(simpleInput.render) } 
+    
+@helper.form(action = controllers.patrimonio.routes.ActasRecepcionCertificacionesAccionesController.asignar(), 'id -> "formAsignarActaRecepcion") {
+@views.html.tags.successError()
+ <div class="row">
+	<div class="col-sm-3">
+		<div class="form-group has-required @if(actaForm.error("numero") != null) {has-error}">
+			<label for="nombre" class="control-label">Número de acta</label>
+			@inputText(actaForm("numero"), 'class -> "form-control", 'autofocus -> "autofocus")
+			@actaForm("numero").error.map{ error =>
+				<div class="text-error">@error.message</div>
+			}
+		</div>
+	</div>
+
+	<div class="col-sm-3">
+		<div class="form-group has-required @if(actaForm.error("ejercicio_id") != null) {has-error}">
+			<label class="control-label">Ejercicio
+			@select(actaForm("ejercicio_id"), Ejercicio.getEjercicios().map { p => p.id.toString -> p.nombre}, 'class -> "form-control select", '_default -> "Seleccionar")
+			</label>
+			@actaForm("ejercicio_id").error.map{ error =>
+				<div class="text-error">@error.message</div>
+			}	
+		</div>
+	</div>
+
+	<div class="col-sm-2">
+		<div class="form-group">
+		<label for="nombre" class="control-label">&nbsp;</label>
+		<button  class="form-control btn btn-primary"> Guardar</button>
+		</div>
+	</div>	
+
+</div>	
+
+}
+
+@flash().clear()

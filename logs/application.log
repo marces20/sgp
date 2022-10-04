@@ -1,0 +1,906 @@
+2022-09-22 12:04:43,210 - [INFO] - from play in pool-4-thread-3 
+Listening for HTTP on /0:0:0:0:0:0:0:0:9000
+
+2022-09-22 12:06:03,374 - [ERROR] - from application in New I/O worker #1 
+
+
+! @7p436n588 - Internal server error, for (GET) [/] ->
+
+play.PlayExceptions$UnexpectedException: Unexpected exception[NoSuchElementException: key not found: SOURCE]
+	at play.PlayReloader$$anon$1$$anonfun$reload$2$$anonfun$apply$14.apply(PlayReloader.scala:309) ~[na:na]
+	at play.PlayReloader$$anon$1$$anonfun$reload$2$$anonfun$apply$14.apply(PlayReloader.scala:298) ~[na:na]
+	at scala.Option.map(Option.scala:145) ~[scala-library.jar:na]
+	at play.PlayReloader$$anon$1$$anonfun$reload$2.apply(PlayReloader.scala:298) ~[na:na]
+	at play.PlayReloader$$anon$1$$anonfun$reload$2.apply(PlayReloader.scala:296) ~[na:na]
+	at scala.util.Either$LeftProjection.map(Either.scala:377) ~[scala-library.jar:na]
+	at play.PlayReloader$$anon$1.reload(PlayReloader.scala:296) ~[na:na]
+	at play.core.ReloadableApplication$$anonfun$get$1.apply(ApplicationProvider.scala:104) ~[play_2.10.jar:2.2.1]
+	at play.core.ReloadableApplication$$anonfun$get$1.apply(ApplicationProvider.scala:102) ~[play_2.10.jar:2.2.1]
+	at scala.concurrent.impl.Future$PromiseCompletingRunnable.liftedTree1$1(Future.scala:24) ~[scala-library.jar:na]
+	at scala.concurrent.impl.Future$PromiseCompletingRunnable.run(Future.scala:24) ~[scala-library.jar:na]
+	at scala.concurrent.forkjoin.ForkJoinTask$AdaptedRunnableAction.exec(ForkJoinTask.java:1361) ~[scala-library.jar:na]
+	at scala.concurrent.forkjoin.ForkJoinTask.doExec(ForkJoinTask.java:260) ~[scala-library.jar:na]
+	at scala.concurrent.forkjoin.ForkJoinPool$WorkQueue.runTask(ForkJoinPool.java:1339) ~[scala-library.jar:na]
+	at scala.concurrent.forkjoin.ForkJoinPool.runWorker(ForkJoinPool.java:1979) ~[scala-library.jar:na]
+	at scala.concurrent.forkjoin.ForkJoinWorkerThread.run(ForkJoinWorkerThread.java:107) ~[scala-library.jar:na]
+java.util.NoSuchElementException: key not found: SOURCE
+	at scala.collection.MapLike$class.default(MapLike.scala:228) ~[scala-library.jar:na]
+	at scala.collection.AbstractMap.default(Map.scala:58) ~[scala-library.jar:na]
+	at scala.collection.MapLike$class.apply(MapLike.scala:141) ~[scala-library.jar:na]
+	at scala.collection.AbstractMap.apply(Map.scala:58) ~[scala-library.jar:na]
+	at play.templates.GeneratedSource.source(ScalaTemplateCompiler.scala:127) ~[na:na]
+	at play.templates.GeneratedSource.needRecompilation(ScalaTemplateCompiler.scala:112) ~[na:na]
+	at play.templates.ScalaTemplateCompiler$.compile(ScalaTemplateCompiler.scala:177) ~[na:na]
+	at play.PlaySourceGenerators$$anonfun$3$$anonfun$apply$8$$anonfun$apply$9.apply(PlaySourceGenerators.scala:45) ~[na:na]
+	at play.PlaySourceGenerators$$anonfun$3$$anonfun$apply$8$$anonfun$apply$9.apply(PlaySourceGenerators.scala:43) ~[na:na]
+	at scala.collection.mutable.ResizableArray$class.foreach(ResizableArray.scala:59) ~[scala-library.jar:na]
+	at scala.collection.mutable.ArrayBuffer.foreach(ArrayBuffer.scala:47) ~[scala-library.jar:na]
+	at play.PlaySourceGenerators$$anonfun$3$$anonfun$apply$8.apply(PlaySourceGenerators.scala:43) ~[na:na]
+	at play.PlaySourceGenerators$$anonfun$3$$anonfun$apply$8.apply(PlaySourceGenerators.scala:42) ~[na:na]
+	at scala.collection.immutable.List.foreach(List.scala:318) ~[scala-library.jar:na]
+	at play.PlaySourceGenerators$$anonfun$3.apply(PlaySourceGenerators.scala:42) ~[na:na]
+	at play.PlaySourceGenerators$$anonfun$3.apply(PlaySourceGenerators.scala:30) ~[na:na]
+	at scala.Function5$$anonfun$tupled$1.apply(Function5.scala:35) ~[scala-library.jar:na]
+	at scala.Function5$$anonfun$tupled$1.apply(Function5.scala:34) ~[scala-library.jar:na]
+	at scala.Function1$$anonfun$compose$1.apply(Function1.scala:47) ~[scala-library.jar:na]
+	at sbt.$tilde$greater$$anonfun$$u2219$1.apply(TypeFunctions.scala:42) ~[na:na]
+	at sbt.std.Transform$$anon$4.work(System.scala:64) ~[na:na]
+	at sbt.Execute$$anonfun$submit$1$$anonfun$apply$1.apply(Execute.scala:237) ~[na:na]
+	at sbt.Execute$$anonfun$submit$1$$anonfun$apply$1.apply(Execute.scala:237) ~[na:na]
+	at sbt.ErrorHandling$.wideConvert(ErrorHandling.scala:18) ~[na:na]
+	at sbt.Execute.work(Execute.scala:244) ~[na:na]
+	at sbt.Execute$$anonfun$submit$1.apply(Execute.scala:237) ~[na:na]
+	at sbt.Execute$$anonfun$submit$1.apply(Execute.scala:237) ~[na:na]
+	at sbt.ConcurrentRestrictions$$anon$4$$anonfun$1.apply(ConcurrentRestrictions.scala:160) ~[na:na]
+	at sbt.CompletionService$$anon$2.call(CompletionService.scala:30) ~[na:na]
+	at java.util.concurrent.FutureTask.run(FutureTask.java:266) ~[na:1.8.0_292]
+	at java.util.concurrent.Executors$RunnableAdapter.call(Executors.java:511) ~[na:1.8.0_292]
+	at java.util.concurrent.FutureTask.run(FutureTask.java:266) ~[na:1.8.0_292]
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1149) [na:1.8.0_292]
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:624) [na:1.8.0_292]
+	at java.lang.Thread.run(Thread.java:748) [na:1.8.0_292]
+
+2022-09-22 12:06:03,425 - [WARN] - from play in New I/O worker #1 
+No application found at invoker init
+
+2022-09-22 12:09:26,365 - [DEBUG] - from com.jolbox.bonecp.BoneCPDataSource in play-internal-execution-context-1 
+JDBC URL = jdbc:postgresql://10.1.4.36/sgp, Username = postgres, partitions = 1, max (per partition) = 30, min (per partition) = 5, idle max age = 10 min, idle test period = 1 min, strategy = DEFAULT
+
+2022-09-22 12:09:26,897 - [INFO] - from play in play-internal-execution-context-1 
+database [default] connected at jdbc:postgresql://10.1.4.36/sgp
+
+2022-09-22 12:09:26,934 - [DEBUG] - from org.reflections.Reflections in play-internal-execution-context-1 
+going to scan these urls:
+	jar:file:/home/marce/hspwork/play/repository/local/com.typesafe.play/play_2.10/2.2.1/jars/play_2.10.jar!/
+	file:/home/marce/hspwork/play/sgp/target/scala-2.10/classes/
+
+
+2022-09-22 12:09:27,137 - [INFO] - from org.reflections.Reflections in play-internal-execution-context-1 
+Reflections took 202 ms to scan 2 urls, producing 211 keys and 998 values 
+
+2022-09-22 12:09:27,371 - [INFO] - from com.avaje.ebeaninternal.server.core.DefaultServerFactory in play-internal-execution-context-1 
+DatabasePlatform name:default platform:postgres
+
+2022-09-22 12:09:27,393 - [DEBUG] - from com.avaje.ebeaninternal.api.ClassLoadContext in play-internal-execution-context-1 
+Context ClassLoader play.PlayRun$$anonfun$11$$anon$2 child of Caller ClassLoader play.PlayRun$$anonfun$10$$anon$1
+
+2022-09-22 12:09:27,397 - [DEBUG] - from com.avaje.ebeaninternal.server.type.DefaultTypeManager in play-internal-execution-context-1 
+Registering Joda data types
+
+2022-09-22 12:09:27,449 - [DEBUG] - from com.avaje.ebeaninternal.server.deploy.BeanDescriptorManager in play-internal-execution-context-1 
+BeanPersistControllers[1] BeanFinders[0] BeanPersistListeners[0] BeanQueryAdapters[0]
+
+2022-09-22 12:09:27,496 - [DEBUG] - from com.avaje.ebeaninternal.server.deploy.PersistControllerManager in play-internal-execution-context-1 
+BeanPersistController on[models.OrdenPago] models.sgcore.SGBeanPersistController
+
+2022-09-22 12:09:27,644 - [DEBUG] - from com.avaje.ebeaninternal.server.deploy.PersistControllerManager in play-internal-execution-context-1 
+BeanPersistController on[models.Agente] models.sgcore.SGBeanPersistController
+
+2022-09-22 12:09:27,693 - [DEBUG] - from com.avaje.ebeaninternal.server.deploy.BeanDescriptorManager in play-internal-execution-context-1 
+explicit sequence puestos_id_seq on models.Puesto
+
+2022-09-22 12:09:27,696 - [DEBUG] - from com.avaje.ebeaninternal.server.deploy.BeanDescriptorManager in play-internal-execution-context-1 
+explicit sequence estudio_instituciones_id_seq on models.EstudioInstitucion
+
+2022-09-22 12:09:27,696 - [DEBUG] - from com.avaje.ebeaninternal.server.deploy.BeanDescriptorManager in play-internal-execution-context-1 
+explicit sequence categorias_laborales_id_seq on models.haberes.CategoriaLaboral
+
+2022-09-22 12:09:27,696 - [DEBUG] - from com.avaje.ebeaninternal.server.deploy.BeanDescriptorManager in play-internal-execution-context-1 
+explicit sequence factura_lineas_id_seq on models.FacturaLinea
+
+2022-09-22 12:09:27,697 - [DEBUG] - from com.avaje.ebeaninternal.server.deploy.BeanDescriptorManager in play-internal-execution-context-1 
+explicit sequence inventario_id_seq on models.Inventario
+
+2022-09-22 12:09:27,697 - [DEBUG] - from com.avaje.ebeaninternal.server.deploy.BeanDescriptorManager in play-internal-execution-context-1 
+explicit sequence remito_linea_baul_id_seq on models.RemitoLineaBaul
+
+2022-09-22 12:09:27,697 - [DEBUG] - from com.avaje.ebeaninternal.server.deploy.BeanDescriptorManager in play-internal-execution-context-1 
+explicit sequence envios_mails_id_seq on models.EnvioMail
+
+2022-09-22 12:09:27,697 - [DEBUG] - from com.avaje.ebeaninternal.server.deploy.BeanDescriptorManager in play-internal-execution-context-1 
+explicit sequence presupuesto_lineas_id_seq on models.recupero.PresupuestoLinea
+
+2022-09-22 12:09:27,698 - [DEBUG] - from com.avaje.ebeaninternal.server.deploy.BeanDescriptorManager in play-internal-execution-context-1 
+explicit sequence estudio_subareas_id_seq on models.EstudioSubarea
+
+2022-09-22 12:09:27,698 - [DEBUG] - from com.avaje.ebeaninternal.server.deploy.BeanDescriptorManager in play-internal-execution-context-1 
+explicit sequence inciador_expedientes_id_seq on models.IniciadorExpediente
+
+2022-09-22 12:09:27,698 - [DEBUG] - from com.avaje.ebeaninternal.server.deploy.BeanDescriptorManager in play-internal-execution-context-1 
+explicit sequence factura_linea_impuestos_id_seq on models.FacturaLineaImpuesto
+
+2022-09-22 12:09:27,699 - [DEBUG] - from com.avaje.ebeaninternal.server.deploy.BeanDescriptorManager in play-internal-execution-context-1 
+explicit sequence pedidos_fondos_lineas_id_seq on models.PedidoFondoLinea
+
+2022-09-22 12:09:27,699 - [DEBUG] - from com.avaje.ebeaninternal.server.deploy.BeanDescriptorManager in play-internal-execution-context-1 
+explicit sequence agente_familias_id_seq on models.AgenteFamilia
+
+2022-09-22 12:09:27,699 - [DEBUG] - from com.avaje.ebeaninternal.server.deploy.BeanDescriptorManager in play-internal-execution-context-1 
+explicit sequence autorizado_linea_actas_id_seq on models.AutorizadoLineaActa
+
+2022-09-22 12:09:27,700 - [DEBUG] - from com.avaje.ebeaninternal.server.deploy.BeanDescriptorManager in play-internal-execution-context-1 
+explicit sequence recupero_pago_lineas_id_seq on models.recupero.RecuperoPagoLinea
+
+2022-09-22 12:09:27,701 - [DEBUG] - from com.avaje.ebeaninternal.server.deploy.BeanDescriptorManager in play-internal-execution-context-1 
+explicit sequence facturas_id_seq on models.Factura
+
+2022-09-22 12:09:27,702 - [DEBUG] - from com.avaje.ebeaninternal.server.deploy.BeanDescriptorManager in play-internal-execution-context-1 
+explicit sequence recupero_pagos_id_seq on models.recupero.RecuperoPago
+
+2022-09-22 12:09:27,702 - [DEBUG] - from com.avaje.ebeaninternal.server.deploy.BeanDescriptorManager in play-internal-execution-context-1 
+explicit sequence cuenta_analiticas_id_seq on models.CuentaAnalitica
+
+2022-09-22 12:09:27,702 - [DEBUG] - from com.avaje.ebeaninternal.server.deploy.BeanDescriptorManager in play-internal-execution-context-1 
+explicit sequence actas_recepcion_lineas_ajustes_id_seq on models.ActaRecepcionLineaAjuste
+
+2022-09-22 12:09:27,703 - [DEBUG] - from com.avaje.ebeaninternal.server.deploy.BeanDescriptorManager in play-internal-execution-context-1 
+explicit sequence balances_id_seq on models.Balance
+
+2022-09-22 12:09:27,704 - [DEBUG] - from com.avaje.ebeaninternal.server.deploy.BeanDescriptorManager in play-internal-execution-context-1 
+explicit sequence inventario_rismi_id_seq on models.InventarioRismi
+
+2022-09-22 12:09:27,704 - [DEBUG] - from com.avaje.ebeaninternal.server.deploy.BeanDescriptorManager in play-internal-execution-context-1 
+explicit sequence categorias_id_seq on models.Categoria
+
+2022-09-22 12:09:27,704 - [DEBUG] - from com.avaje.ebeaninternal.server.deploy.BeanDescriptorManager in play-internal-execution-context-1 
+explicit sequence feriados_id_seq on models.Feriado
+
+2022-09-22 12:09:27,705 - [DEBUG] - from com.avaje.ebeaninternal.server.deploy.BeanDescriptorManager in play-internal-execution-context-1 
+explicit sequence agente_novedades_id_seq on models.AgenteNovedad
+
+2022-09-22 12:09:27,705 - [DEBUG] - from com.avaje.ebeaninternal.server.deploy.BeanDescriptorManager in play-internal-execution-context-1 
+explicit sequence orden_lineas_anulaciones_id_seq on models.OrdenLineaAnulacion
+
+2022-09-22 12:09:27,705 - [DEBUG] - from com.avaje.ebeaninternal.server.deploy.BeanDescriptorManager in play-internal-execution-context-1 
+explicit sequence liquidacion_base_calculos_id_seq on models.haberes.LiquidacionBaseCalculo
+
+2022-09-22 12:09:27,706 - [DEBUG] - from com.avaje.ebeaninternal.server.deploy.BeanDescriptorManager in play-internal-execution-context-1 
+explicit sequence cuentas_propias_id_seq on models.CuentaPropia
+
+2022-09-22 12:09:27,706 - [DEBUG] - from com.avaje.ebeaninternal.server.deploy.BeanDescriptorManager in play-internal-execution-context-1 
+explicit sequence tipos_tareas_id_seq on models.TipoTarea
+
+2022-09-22 12:09:27,706 - [DEBUG] - from com.avaje.ebeaninternal.server.deploy.BeanDescriptorManager in play-internal-execution-context-1 
+explicit sequence proveedor_datos_dgr_motivo_id_seq on models.ProveedorDatoDgrRegimen
+
+2022-09-22 12:09:27,706 - [DEBUG] - from com.avaje.ebeaninternal.server.deploy.BeanDescriptorManager in play-internal-execution-context-1 
+explicit sequence grupos_id_seq on models.Grupo
+
+2022-09-22 12:09:27,706 - [DEBUG] - from com.avaje.ebeaninternal.server.deploy.BeanDescriptorManager in play-internal-execution-context-1 
+explicit sequence liquidacion_conceptos_id_seq on models.haberes.LiquidacionConcepto
+
+2022-09-22 12:09:27,707 - [DEBUG] - from com.avaje.ebeaninternal.server.deploy.BeanDescriptorManager in play-internal-execution-context-1 
+explicit sequence auditoria_registros_id_seq on models.AuditoriaRegistro
+
+2022-09-22 12:09:27,707 - [DEBUG] - from com.avaje.ebeaninternal.server.deploy.BeanDescriptorManager in play-internal-execution-context-1 
+explicit sequence cuentas_id_seq on models.Cuenta
+
+2022-09-22 12:09:27,707 - [DEBUG] - from com.avaje.ebeaninternal.server.deploy.BeanDescriptorManager in play-internal-execution-context-1 
+explicit sequence ordenes_pagos_circuitos_lineas_id_seq on models.OrdenPagoCircuitoLinea
+
+2022-09-22 12:09:27,707 - [DEBUG] - from com.avaje.ebeaninternal.server.deploy.BeanDescriptorManager in play-internal-execution-context-1 
+explicit sequence certificaciones_servicios_lineas_id_seq on models.CertificacionServicioLinea
+
+2022-09-22 12:09:27,708 - [DEBUG] - from com.avaje.ebeaninternal.server.deploy.BeanDescriptorManager in play-internal-execution-context-1 
+explicit sequence tipos_balance_cuentas_propias_id_seq on models.TipoBalanceCuentaPropia
+
+2022-09-22 12:09:27,708 - [DEBUG] - from com.avaje.ebeaninternal.server.deploy.BeanDescriptorManager in play-internal-execution-context-1 
+explicit sequence tipo_licencias_conducir_id_seq on models.TipoLicenciaConducir
+
+2022-09-22 12:09:27,708 - [DEBUG] - from com.avaje.ebeaninternal.server.deploy.BeanDescriptorManager in play-internal-execution-context-1 
+explicit sequence dispos_id_seq on models.Dispo
+
+2022-09-22 12:09:27,708 - [DEBUG] - from com.avaje.ebeaninternal.server.deploy.BeanDescriptorManager in play-internal-execution-context-1 
+explicit sequence balance_cuentas_propia_ordenespagos_id_seq on models.BalanceCuentaPropiaOrdenPago
+
+2022-09-22 12:09:27,709 - [DEBUG] - from com.avaje.ebeaninternal.server.deploy.BeanDescriptorManager in play-internal-execution-context-1 
+explicit sequence recupero_notas_creditos_id_seq on models.recupero.RecuperoNotaCredito
+
+2022-09-22 12:09:27,709 - [DEBUG] - from com.avaje.ebeaninternal.server.deploy.BeanDescriptorManager in play-internal-execution-context-1 
+explicit sequence liquidacion_concepto_tipos_id_seq on models.haberes.LiquidacionConceptoTipo
+
+2022-09-22 12:09:27,709 - [DEBUG] - from com.avaje.ebeaninternal.server.deploy.BeanDescriptorManager in play-internal-execution-context-1 
+explicit sequence agentes_id_seq on models.Agente
+
+2022-09-22 12:09:27,710 - [DEBUG] - from com.avaje.ebeaninternal.server.deploy.BeanDescriptorManager in play-internal-execution-context-1 
+explicit sequence ordenes_provision_id_seq on models.OrdenProvision
+
+2022-09-22 12:09:27,710 - [DEBUG] - from com.avaje.ebeaninternal.server.deploy.BeanDescriptorManager in play-internal-execution-context-1 
+explicit sequence expedientes_id_seq on models.Expediente
+
+2022-09-22 12:09:27,710 - [DEBUG] - from com.avaje.ebeaninternal.server.deploy.BeanDescriptorManager in play-internal-execution-context-1 
+explicit sequence balance_ordenespagos_id_seq on models.BalanceOrdenPago
+
+2022-09-22 12:09:27,710 - [DEBUG] - from com.avaje.ebeaninternal.server.deploy.BeanDescriptorManager in play-internal-execution-context-1 
+explicit sequence tipo_relacion_laborales_id_seq on models.TipoRelacionLaboral
+
+2022-09-22 12:09:27,711 - [DEBUG] - from com.avaje.ebeaninternal.server.deploy.BeanDescriptorManager in play-internal-execution-context-1 
+explicit sequence ordenes_solicitudes_id_seq on models.OrdenesSolicitudes
+
+2022-09-22 12:09:27,711 - [DEBUG] - from com.avaje.ebeaninternal.server.deploy.BeanDescriptorManager in play-internal-execution-context-1 
+explicit sequence orden_linea_anulacion_clientes_id_seq on models.OrdenLineaAnulacionCliente
+
+2022-09-22 12:09:27,711 - [DEBUG] - from com.avaje.ebeaninternal.server.deploy.BeanDescriptorManager in play-internal-execution-context-1 
+explicit sequence legajos_id_seq on models.haberes.Legajo
+
+2022-09-22 12:09:27,711 - [DEBUG] - from com.avaje.ebeaninternal.server.deploy.BeanDescriptorManager in play-internal-execution-context-1 
+explicit sequence banco_id_seq on models.Banco
+
+2022-09-22 12:09:27,711 - [DEBUG] - from com.avaje.ebeaninternal.server.deploy.BeanDescriptorManager in play-internal-execution-context-1 
+explicit sequence autorizados_id_seq on models.Autorizado
+
+2022-09-22 12:09:27,712 - [DEBUG] - from com.avaje.ebeaninternal.server.deploy.BeanDescriptorManager in play-internal-execution-context-1 
+explicit sequence orden_349_id_seq on models.Orden349
+
+2022-09-22 12:09:27,712 - [DEBUG] - from com.avaje.ebeaninternal.server.deploy.BeanDescriptorManager in play-internal-execution-context-1 
+explicit sequence proveedor_atributos_id_seq on models.ProveedorAtributo
+
+2022-09-22 12:09:27,712 - [DEBUG] - from com.avaje.ebeaninternal.server.deploy.BeanDescriptorManager in play-internal-execution-context-1 
+explicit sequence udms_id_seq on models.Udm
+
+2022-09-22 12:09:27,712 - [DEBUG] - from com.avaje.ebeaninternal.server.deploy.BeanDescriptorManager in play-internal-execution-context-1 
+explicit sequence caja_chica_movimientos_id_seq on models.CajaChicaMovimiento
+
+2022-09-22 12:09:27,713 - [DEBUG] - from com.avaje.ebeaninternal.server.deploy.BeanDescriptorManager in play-internal-execution-context-1 
+explicit sequence orden_lineas_id_seq on models.OrdenLinea
+
+2022-09-22 12:09:27,713 - [DEBUG] - from com.avaje.ebeaninternal.server.deploy.BeanDescriptorManager in play-internal-execution-context-1 
+explicit sequence factura_linea_reintegros_id_seq on models.FacturaLineaReintegro
+
+2022-09-22 12:09:27,713 - [DEBUG] - from com.avaje.ebeaninternal.server.deploy.BeanDescriptorManager in play-internal-execution-context-1 
+explicit sequence usuarios_id_seq on models.Usuario
+
+2022-09-22 12:09:27,714 - [DEBUG] - from com.avaje.ebeaninternal.server.deploy.BeanDescriptorManager in play-internal-execution-context-1 
+explicit sequence cargos_laborales_id_seq on models.haberes.CargoLaboral
+
+2022-09-22 12:09:27,714 - [DEBUG] - from com.avaje.ebeaninternal.server.deploy.BeanDescriptorManager in play-internal-execution-context-1 
+explicit sequence escalas_laborales_id_seq on models.haberes.EscalaLaboral
+
+2022-09-22 12:09:27,714 - [DEBUG] - from com.avaje.ebeaninternal.server.deploy.BeanDescriptorManager in play-internal-execution-context-1 
+explicit sequence agente_seguimiento_lineas_id_seq on models.AgenteSeguimientoLinea
+
+2022-09-22 12:09:27,714 - [DEBUG] - from com.avaje.ebeaninternal.server.deploy.BeanDescriptorManager in play-internal-execution-context-1 
+explicit sequence obrasociales_id_seq on models.Obrasocial
+
+2022-09-22 12:09:27,714 - [DEBUG] - from com.avaje.ebeaninternal.server.deploy.BeanDescriptorManager in play-internal-execution-context-1 
+explicit sequence estudio_estados_id_seq on models.EstudioEstado
+
+2022-09-22 12:09:27,715 - [DEBUG] - from com.avaje.ebeaninternal.server.deploy.BeanDescriptorManager in play-internal-execution-context-1 
+explicit sequence nomenclador_cuentas_patrimonio_id_seq on models.InventarioPrefijo
+
+2022-09-22 12:09:27,715 - [DEBUG] - from com.avaje.ebeaninternal.server.deploy.BeanDescriptorManager in play-internal-execution-context-1 
+explicit sequence actas_recepcion_id_seq on models.ActaRecepcion
+
+2022-09-22 12:09:27,715 - [DEBUG] - from com.avaje.ebeaninternal.server.deploy.BeanDescriptorManager in play-internal-execution-context-1 
+explicit sequence novedades_id_seq on models.Novedad
+
+2022-09-22 12:09:27,716 - [DEBUG] - from com.avaje.ebeaninternal.server.deploy.BeanDescriptorManager in play-internal-execution-context-1 
+explicit sequence tipo_familiares_id_seq on models.TipoFamiliar
+
+2022-09-22 12:09:27,716 - [DEBUG] - from com.avaje.ebeaninternal.server.deploy.BeanDescriptorManager in play-internal-execution-context-1 
+explicit sequence tipo_productos_id_seq on models.TipoProducto
+
+2022-09-22 12:09:27,716 - [DEBUG] - from com.avaje.ebeaninternal.server.deploy.BeanDescriptorManager in play-internal-execution-context-1 
+explicit sequence actas_movimientos_id_seq on models.ActaMovimiento
+
+2022-09-22 12:09:27,717 - [DEBUG] - from com.avaje.ebeaninternal.server.deploy.BeanDescriptorManager in play-internal-execution-context-1 
+explicit sequence pagos_id_seq on models.Pago
+
+2022-09-22 12:09:27,718 - [DEBUG] - from com.avaje.ebeaninternal.server.deploy.BeanDescriptorManager in play-internal-execution-context-1 
+explicit sequence tipo_agente_seguimientos_id_seq on models.TipoAgenteSeguimiento
+
+2022-09-22 12:09:27,718 - [DEBUG] - from com.avaje.ebeaninternal.server.deploy.BeanDescriptorManager in play-internal-execution-context-1 
+explicit sequence liquidacion_meses_id_seq on models.haberes.LiquidacionMes
+
+2022-09-22 12:09:27,719 - [DEBUG] - from com.avaje.ebeaninternal.server.deploy.BeanDescriptorManager in play-internal-execution-context-1 
+explicit sequence balance_cuentas_propias_id_seq on models.BalanceCuentaPropia
+
+2022-09-22 12:09:27,719 - [DEBUG] - from com.avaje.ebeaninternal.server.deploy.BeanDescriptorManager in play-internal-execution-context-1 
+explicit sequence certificaciones_servicios_id_seq on models.CertificacionServicio
+
+2022-09-22 12:09:27,719 - [DEBUG] - from com.avaje.ebeaninternal.server.deploy.BeanDescriptorManager in play-internal-execution-context-1 
+explicit sequence provincia_id_seq on models.Provincia
+
+2022-09-22 12:09:27,719 - [DEBUG] - from com.avaje.ebeaninternal.server.deploy.BeanDescriptorManager in play-internal-execution-context-1 
+explicit sequence productos_id_seq on models.Producto
+
+2022-09-22 12:09:27,720 - [DEBUG] - from com.avaje.ebeaninternal.server.deploy.BeanDescriptorManager in play-internal-execution-context-1 
+explicit sequence tipo_residencias_id_seq on models.TipoResidencia
+
+2022-09-22 12:09:27,720 - [DEBUG] - from com.avaje.ebeaninternal.server.deploy.BeanDescriptorManager in play-internal-execution-context-1 
+explicit sequence agente_hijos_id_seq on models.AgenteHijo
+
+2022-09-22 12:09:27,720 - [DEBUG] - from com.avaje.ebeaninternal.server.deploy.BeanDescriptorManager in play-internal-execution-context-1 
+explicit sequence lineas_recursos_presupuestarios_id_seq on models.LineaRecursoPresupuestario
+
+2022-09-22 12:09:27,721 - [DEBUG] - from com.avaje.ebeaninternal.server.deploy.BeanDescriptorManager in play-internal-execution-context-1 
+explicit sequence liquidaciones_envios_mails_id_seq on models.haberes.LiquidacionEnvioMail
+
+2022-09-22 12:09:27,721 - [DEBUG] - from com.avaje.ebeaninternal.server.deploy.BeanDescriptorManager in play-internal-execution-context-1 
+explicit sequence remitos_lineas_id_seq on models.RemitoLinea
+
+2022-09-22 12:09:27,721 - [DEBUG] - from com.avaje.ebeaninternal.server.deploy.BeanDescriptorManager in play-internal-execution-context-1 
+explicit sequence agente_rul_id_seq on models.AgenteRul
+
+2022-09-22 12:09:27,721 - [DEBUG] - from com.avaje.ebeaninternal.server.deploy.BeanDescriptorManager in play-internal-execution-context-1 
+explicit sequence certificaciones_id_seq on models.Certificacion
+
+2022-09-22 12:09:27,722 - [DEBUG] - from com.avaje.ebeaninternal.server.deploy.BeanDescriptorManager in play-internal-execution-context-1 
+explicit sequence tipo_novedades_agentes_id_seq on models.TipoNovedadAgente
+
+2022-09-22 12:09:27,722 - [DEBUG] - from com.avaje.ebeaninternal.server.deploy.BeanDescriptorManager in play-internal-execution-context-1 
+explicit sequence facturas_motivos_rechazos_id_seq on models.FacturaMotivoRechazo
+
+2022-09-22 12:09:27,722 - [DEBUG] - from com.avaje.ebeaninternal.server.deploy.BeanDescriptorManager in play-internal-execution-context-1 
+explicit sequence certificaciones_compras_lineas_id_seq on models.CertificacionCompraLinea
+
+2022-09-22 12:09:27,722 - [DEBUG] - from com.avaje.ebeaninternal.server.deploy.BeanDescriptorManager in play-internal-execution-context-1 
+explicit sequence recupero_factura_lineas_id_seq on models.recupero.RecuperoFacturaLinea
+
+2022-09-22 12:09:27,723 - [DEBUG] - from com.avaje.ebeaninternal.server.deploy.BeanDescriptorManager in play-internal-execution-context-1 
+explicit sequence certificaciones_lineas_id_seq on models.CertificacionLinea
+
+2022-09-22 12:09:27,723 - [DEBUG] - from com.avaje.ebeaninternal.server.deploy.BeanDescriptorManager in play-internal-execution-context-1 
+explicit sequence centros_costos_id_seq on models.haberes.CentroCosto
+
+2022-09-22 12:09:27,723 - [DEBUG] - from com.avaje.ebeaninternal.server.deploy.BeanDescriptorManager in play-internal-execution-context-1 
+explicit sequence orden_lineas_ajustes_id_seq on models.OrdenLineaAjuste
+
+2022-09-22 12:09:27,724 - [DEBUG] - from com.avaje.ebeaninternal.server.deploy.BeanDescriptorManager in play-internal-execution-context-1 
+explicit sequence solicitud_lineas_id_seq on models.SolicitudLinea
+
+2022-09-22 12:09:27,724 - [DEBUG] - from com.avaje.ebeaninternal.server.deploy.BeanDescriptorManager in play-internal-execution-context-1 
+explicit sequence certificaciones_compras_id_seq on models.CertificacionCompra
+
+2022-09-22 12:09:27,724 - [DEBUG] - from com.avaje.ebeaninternal.server.deploy.BeanDescriptorManager in play-internal-execution-context-1 
+explicit sequence pais_id_seq on models.Pais
+
+2022-09-22 12:09:27,725 - [DEBUG] - from com.avaje.ebeaninternal.server.deploy.BeanDescriptorManager in play-internal-execution-context-1 
+explicit sequence puestos_laborales_id_seq on models.haberes.PuestoLaboral
+
+2022-09-22 12:09:27,725 - [DEBUG] - from com.avaje.ebeaninternal.server.deploy.BeanDescriptorManager in play-internal-execution-context-1 
+explicit sequence historial_deuda_proveedores_id_seq on models.informes.HistorialDeudaProveedores
+
+2022-09-22 12:09:27,725 - [DEBUG] - from com.avaje.ebeaninternal.server.deploy.BeanDescriptorManager in play-internal-execution-context-1 
+explicit sequence cuenta_bancarias_id_seq on models.CuentaBancaria
+
+2022-09-22 12:09:27,725 - [DEBUG] - from com.avaje.ebeaninternal.server.deploy.BeanDescriptorManager in play-internal-execution-context-1 
+explicit sequence remito_linea_clientes_id_seq on models.RemitoLineaCliente
+
+2022-09-22 12:09:27,726 - [DEBUG] - from com.avaje.ebeaninternal.server.deploy.BeanDescriptorManager in play-internal-execution-context-1 
+explicit sequence ultimas_cotizaciones_id_seq on models.UltimaCotizacion
+
+2022-09-22 12:09:27,726 - [DEBUG] - from com.avaje.ebeaninternal.server.deploy.BeanDescriptorManager in play-internal-execution-context-1 
+explicit sequence clientes_direcciones_id_seq on models.DireccionCliente
+
+2022-09-22 12:09:27,726 - [DEBUG] - from com.avaje.ebeaninternal.server.deploy.BeanDescriptorManager in play-internal-execution-context-1 
+explicit sequence tipo_licencias_id_seq on models.TipoLicencia
+
+2022-09-22 12:09:27,727 - [DEBUG] - from com.avaje.ebeaninternal.server.deploy.BeanDescriptorManager in play-internal-execution-context-1 
+explicit sequence instituciones_externas_id_seq on models.InstitucionExterna
+
+2022-09-22 12:09:27,727 - [DEBUG] - from com.avaje.ebeaninternal.server.deploy.BeanDescriptorManager in play-internal-execution-context-1 
+explicit sequence tickets_id_seq on models.Ticket
+
+2022-09-22 12:09:27,727 - [DEBUG] - from com.avaje.ebeaninternal.server.deploy.BeanDescriptorManager in play-internal-execution-context-1 
+explicit sequence liquidacion_detalles_id_seq on models.haberes.LiquidacionDetalle
+
+2022-09-22 12:09:27,727 - [DEBUG] - from com.avaje.ebeaninternal.server.deploy.BeanDescriptorManager in play-internal-execution-context-1 
+explicit sequence solicitud_linea_ajustes_id_seq on models.SolicitudLineaAjuste
+
+2022-09-22 12:09:27,728 - [DEBUG] - from com.avaje.ebeaninternal.server.deploy.BeanDescriptorManager in play-internal-execution-context-1 
+explicit sequence profesiones_id_seq on models.Profesion
+
+2022-09-22 12:09:27,728 - [DEBUG] - from com.avaje.ebeaninternal.server.deploy.BeanDescriptorManager in play-internal-execution-context-1 
+explicit sequence organigramas_id_seq on models.Organigrama
+
+2022-09-22 12:09:27,728 - [DEBUG] - from com.avaje.ebeaninternal.server.deploy.BeanDescriptorManager in play-internal-execution-context-1 
+explicit sequence tareas_automaticas_id_seq on models.TareaAutomatica
+
+2022-09-22 12:09:27,728 - [DEBUG] - from com.avaje.ebeaninternal.server.deploy.BeanDescriptorManager in play-internal-execution-context-1 
+explicit sequence clientes_tipos_id_seq on models.ClienteTipo
+
+2022-09-22 12:09:27,729 - [DEBUG] - from com.avaje.ebeaninternal.server.deploy.BeanDescriptorManager in play-internal-execution-context-1 
+explicit sequence balance_cuentas_propia_expedientes_id_seq on models.BalanceCuentaPropiaExpediente
+
+2022-09-22 12:09:27,729 - [DEBUG] - from com.avaje.ebeaninternal.server.deploy.BeanDescriptorManager in play-internal-execution-context-1 
+explicit sequence unidades_laborales_id_seq on models.haberes.UnidadLaboral
+
+2022-09-22 12:09:27,729 - [DEBUG] - from com.avaje.ebeaninternal.server.deploy.BeanDescriptorManager in play-internal-execution-context-1 
+explicit sequence clientes_id_seq on models.Cliente
+
+2022-09-22 12:09:27,730 - [DEBUG] - from com.avaje.ebeaninternal.server.deploy.BeanDescriptorManager in play-internal-execution-context-1 
+explicit sequence agente_asistencia_licencias_id_seq on models.AgenteAsistenciaLicencia
+
+2022-09-22 12:09:27,730 - [DEBUG] - from com.avaje.ebeaninternal.server.deploy.BeanDescriptorManager in play-internal-execution-context-1 
+explicit sequence solicitud_id_seq on models.Solicitud
+
+2022-09-22 12:09:27,731 - [DEBUG] - from com.avaje.ebeaninternal.server.deploy.BeanDescriptorManager in play-internal-execution-context-1 
+explicit sequence proveedor_datos_dgr_id_seq on models.ProveedorDatoDgr
+
+2022-09-22 12:09:27,731 - [DEBUG] - from com.avaje.ebeaninternal.server.deploy.BeanDescriptorManager in play-internal-execution-context-1 
+explicit sequence agente_estudios_id_seq on models.AgenteEstudio
+
+2022-09-22 12:09:27,731 - [DEBUG] - from com.avaje.ebeaninternal.server.deploy.BeanDescriptorManager in play-internal-execution-context-1 
+explicit sequence convenios_bancos_id_seq on models.haberes.ConvenioBanco
+
+2022-09-22 12:09:27,731 - [DEBUG] - from com.avaje.ebeaninternal.server.deploy.BeanDescriptorManager in play-internal-execution-context-1 
+explicit sequence productos_depositos_id_seq on models.ProductoDeposito
+
+2022-09-22 12:09:27,732 - [DEBUG] - from com.avaje.ebeaninternal.server.deploy.BeanDescriptorManager in play-internal-execution-context-1 
+explicit sequence cie_id_seq on models.Cie
+
+2022-09-22 12:09:27,732 - [DEBUG] - from com.avaje.ebeaninternal.server.deploy.BeanDescriptorManager in play-internal-execution-context-1 
+explicit sequence ordenes_rubros_id_seq on models.OrdenRubro
+
+2022-09-22 12:09:27,732 - [DEBUG] - from com.avaje.ebeaninternal.server.deploy.BeanDescriptorManager in play-internal-execution-context-1 
+explicit sequence facturas_rechazos_id_seq on models.FacturaRechazo
+
+2022-09-22 12:09:27,732 - [DEBUG] - from com.avaje.ebeaninternal.server.deploy.BeanDescriptorManager in play-internal-execution-context-1 
+explicit sequence pedidos_fondos_id_seq on models.PedidoFondo
+
+2022-09-22 12:09:27,732 - [DEBUG] - from com.avaje.ebeaninternal.server.deploy.BeanDescriptorManager in play-internal-execution-context-1 
+explicit sequence certificaciones_servicios_linea_clientes_id_seq on models.CertificacionServicioLineaCliente
+
+2022-09-22 12:09:27,733 - [DEBUG] - from com.avaje.ebeaninternal.server.deploy.BeanDescriptorManager in play-internal-execution-context-1 
+explicit sequence remitos_id_seq on models.Remito
+
+2022-09-22 12:09:27,733 - [DEBUG] - from com.avaje.ebeaninternal.server.deploy.BeanDescriptorManager in play-internal-execution-context-1 
+explicit sequence creditos_presupuestarios_id_seq on models.CreditoPresupuestario
+
+2022-09-22 12:09:27,733 - [DEBUG] - from com.avaje.ebeaninternal.server.deploy.BeanDescriptorManager in play-internal-execution-context-1 
+explicit sequence balance_pago_id_seq on models.BalancePago
+
+2022-09-22 12:09:27,733 - [DEBUG] - from com.avaje.ebeaninternal.server.deploy.BeanDescriptorManager in play-internal-execution-context-1 
+explicit sequence organigrama_tipos_id_seq on models.OrganigramaTipo
+
+2022-09-22 12:09:27,734 - [DEBUG] - from com.avaje.ebeaninternal.server.deploy.BeanDescriptorManager in play-internal-execution-context-1 
+explicit sequence lineas_creditos_presupuestarios_id_seq on models.LineaCreditoPresupuestario
+
+2022-09-22 12:09:27,734 - [DEBUG] - from com.avaje.ebeaninternal.server.deploy.BeanDescriptorManager in play-internal-execution-context-1 
+explicit sequence agente_seguimientos_id_seq on models.AgenteSeguimiento
+
+2022-09-22 12:09:27,734 - [DEBUG] - from com.avaje.ebeaninternal.server.deploy.BeanDescriptorManager in play-internal-execution-context-1 
+explicit sequence caja_chica_presupuesto_lineas_id_seq on models.CajaChicaPresupuestoLinea
+
+2022-09-22 12:09:27,734 - [DEBUG] - from com.avaje.ebeaninternal.server.deploy.BeanDescriptorManager in play-internal-execution-context-1 
+explicit sequence caja_chica_id_seq on models.CajaChica
+
+2022-09-22 12:09:27,735 - [DEBUG] - from com.avaje.ebeaninternal.server.deploy.BeanDescriptorManager in play-internal-execution-context-1 
+explicit sequence tipo_seguimientos_id_seq on models.TipoSeguimiento
+
+2022-09-22 12:09:27,735 - [DEBUG] - from com.avaje.ebeaninternal.server.deploy.BeanDescriptorManager in play-internal-execution-context-1 
+explicit sequence estudio_niveles_id_seq on models.EstudioNivel
+
+2022-09-22 12:09:27,735 - [DEBUG] - from com.avaje.ebeaninternal.server.deploy.BeanDescriptorManager in play-internal-execution-context-1 
+explicit sequence ordenes_subrubros_id_seq on models.OrdenSubrubro
+
+2022-09-22 12:09:27,735 - [DEBUG] - from com.avaje.ebeaninternal.server.deploy.BeanDescriptorManager in play-internal-execution-context-1 
+explicit sequence proveedores_id_seq on models.Proveedor
+
+2022-09-22 12:09:27,736 - [DEBUG] - from com.avaje.ebeaninternal.server.deploy.BeanDescriptorManager in play-internal-execution-context-1 
+explicit sequence punto_ventas_id_seq on models.PuntoVenta
+
+2022-09-22 12:09:27,736 - [DEBUG] - from com.avaje.ebeaninternal.server.deploy.BeanDescriptorManager in play-internal-execution-context-1 
+explicit sequence orden_linea_clientes_id_seq on models.OrdenLineaCliente
+
+2022-09-22 12:09:27,736 - [DEBUG] - from com.avaje.ebeaninternal.server.deploy.BeanDescriptorManager in play-internal-execution-context-1 
+explicit sequence mis_pagos_id_seq on models.MiPago
+
+2022-09-22 12:09:27,736 - [DEBUG] - from com.avaje.ebeaninternal.server.deploy.BeanDescriptorManager in play-internal-execution-context-1 
+explicit sequence presupuestos_id_seq on models.recupero.Presupuesto
+
+2022-09-22 12:09:27,736 - [DEBUG] - from com.avaje.ebeaninternal.server.deploy.BeanDescriptorManager in play-internal-execution-context-1 
+explicit sequence certificaciones_compras_linea_ajustes_id_seq on models.CertificacionesComprasLineaAjustes
+
+2022-09-22 12:09:27,737 - [DEBUG] - from com.avaje.ebeaninternal.server.deploy.BeanDescriptorManager in play-internal-execution-context-1 
+explicit sequence depositos_id_seq on models.Deposito
+
+2022-09-22 12:09:27,737 - [DEBUG] - from com.avaje.ebeaninternal.server.deploy.BeanDescriptorManager in play-internal-execution-context-1 
+explicit sequence liquidacion_puestos_id_seq on models.haberes.LiquidacionPuesto
+
+2022-09-22 12:09:27,737 - [DEBUG] - from com.avaje.ebeaninternal.server.deploy.BeanDescriptorManager in play-internal-execution-context-1 
+explicit sequence expediente_movimiento_op_id_seq on models.ExpedienteMovimientosOrdenpago
+
+2022-09-22 12:09:27,738 - [DEBUG] - from com.avaje.ebeaninternal.server.deploy.BeanDescriptorManager in play-internal-execution-context-1 
+explicit sequence periodos_id_seq on models.Periodo
+
+2022-09-22 12:09:27,738 - [DEBUG] - from com.avaje.ebeaninternal.server.deploy.BeanDescriptorManager in play-internal-execution-context-1 
+explicit sequence auth_modulos_id_seq on models.auth.Modulo
+
+2022-09-22 12:09:27,738 - [DEBUG] - from com.avaje.ebeaninternal.server.deploy.BeanDescriptorManager in play-internal-execution-context-1 
+explicit sequence estados_id_seq on models.Estado
+
+2022-09-22 12:09:27,738 - [DEBUG] - from com.avaje.ebeaninternal.server.deploy.BeanDescriptorManager in play-internal-execution-context-1 
+explicit sequence historial_deuda_actas_id_seq on models.informes.HistorialDeudaActa
+
+2022-09-22 12:09:27,739 - [DEBUG] - from com.avaje.ebeaninternal.server.deploy.BeanDescriptorManager in play-internal-execution-context-1 
+explicit sequence instrumentos_legales_id_seq on models.haberes.InstrumentoLegal
+
+2022-09-22 12:09:27,739 - [DEBUG] - from com.avaje.ebeaninternal.server.deploy.BeanDescriptorManager in play-internal-execution-context-1 
+explicit sequence localidades_id_seq on models.Localidad
+
+2022-09-22 12:09:27,739 - [DEBUG] - from com.avaje.ebeaninternal.server.deploy.BeanDescriptorManager in play-internal-execution-context-1 
+explicit sequence balance_expedientes_id_seq on models.BalanceExpediente
+
+2022-09-22 12:09:27,740 - [DEBUG] - from com.avaje.ebeaninternal.server.deploy.BeanDescriptorManager in play-internal-execution-context-1 
+explicit sequence estado_civiles_id_seq on models.EstadoCivil
+
+2022-09-22 12:09:27,740 - [DEBUG] - from com.avaje.ebeaninternal.server.deploy.BeanDescriptorManager in play-internal-execution-context-1 
+explicit sequence especialidades_id_seq on models.Especialidad
+
+2022-09-22 12:09:27,740 - [DEBUG] - from com.avaje.ebeaninternal.server.deploy.BeanDescriptorManager in play-internal-execution-context-1 
+explicit sequence ordenes_pagos_id_seq on models.OrdenPago
+
+2022-09-22 12:09:27,741 - [DEBUG] - from com.avaje.ebeaninternal.server.deploy.BeanDescriptorManager in play-internal-execution-context-1 
+explicit sequence remito_baul_id_seq on models.RemitoBaul
+
+2022-09-22 12:09:27,741 - [DEBUG] - from com.avaje.ebeaninternal.server.deploy.BeanDescriptorManager in play-internal-execution-context-1 
+explicit sequence recepciones_id_seq on models.Recepcion
+
+2022-09-22 12:09:27,741 - [DEBUG] - from com.avaje.ebeaninternal.server.deploy.BeanDescriptorManager in play-internal-execution-context-1 
+explicit sequence liquidacion_tipos_id_seq on models.haberes.LiquidacionTipo
+
+2022-09-22 12:09:27,741 - [DEBUG] - from com.avaje.ebeaninternal.server.deploy.BeanDescriptorManager in play-internal-execution-context-1 
+explicit sequence balance_cuentas_propia_pago_id_seq on models.BalanceCuentaPropiaPago
+
+2022-09-22 12:09:27,741 - [DEBUG] - from com.avaje.ebeaninternal.server.deploy.BeanDescriptorManager in play-internal-execution-context-1 
+explicit sequence ordenes_pagos_circuitos_id_seq on models.OrdenPagoCircuito
+
+2022-09-22 12:09:27,742 - [DEBUG] - from com.avaje.ebeaninternal.server.deploy.BeanDescriptorManager in play-internal-execution-context-1 
+explicit sequence facturas_actas_id_seq on models.FacturaActaAsosiada
+
+2022-09-22 12:09:27,742 - [DEBUG] - from com.avaje.ebeaninternal.server.deploy.BeanDescriptorManager in play-internal-execution-context-1 
+explicit sequence sucursal_bancos_id_seq on models.SucursalBanco
+
+2022-09-22 12:09:27,742 - [DEBUG] - from com.avaje.ebeaninternal.server.deploy.BeanDescriptorManager in play-internal-execution-context-1 
+explicit sequence factura_datos_id_seq on models.FacturaDato
+
+2022-09-22 12:09:27,742 - [DEBUG] - from com.avaje.ebeaninternal.server.deploy.BeanDescriptorManager in play-internal-execution-context-1 
+explicit sequence escalas_laborales_montos_id_seq on models.haberes.EscalaLaboralMonto
+
+2022-09-22 12:09:27,742 - [DEBUG] - from com.avaje.ebeaninternal.server.deploy.BeanDescriptorManager in play-internal-execution-context-1 
+explicit sequence proveedor_datos_dgr_motivo_id_seq on models.ProveedorDatoDgrMotivo
+
+2022-09-22 12:09:27,743 - [DEBUG] - from com.avaje.ebeaninternal.server.deploy.BeanDescriptorManager in play-internal-execution-context-1 
+explicit sequence autorizado_lineas_id_seq on models.AutorizadoLinea
+
+2022-09-22 12:09:27,743 - [DEBUG] - from com.avaje.ebeaninternal.server.deploy.BeanDescriptorManager in play-internal-execution-context-1 
+explicit sequence departamentos_id_seq on models.Departamento
+
+2022-09-22 12:09:27,743 - [DEBUG] - from com.avaje.ebeaninternal.server.deploy.BeanDescriptorManager in play-internal-execution-context-1 
+explicit sequence articulos_id_seq on models.Articulo
+
+2022-09-22 12:09:27,744 - [DEBUG] - from com.avaje.ebeaninternal.server.deploy.BeanDescriptorManager in play-internal-execution-context-1 
+explicit sequence tipo_cuenta_id_seq on models.TipoCuenta
+
+2022-09-22 12:09:27,744 - [DEBUG] - from com.avaje.ebeaninternal.server.deploy.BeanDescriptorManager in play-internal-execution-context-1 
+explicit sequence proveedor_direcciones_id_seq on models.DireccionProveedor
+
+2022-09-22 12:09:27,744 - [DEBUG] - from com.avaje.ebeaninternal.server.deploy.BeanDescriptorManager in play-internal-execution-context-1 
+explicit sequence recupero_facturas_id_seq on models.recupero.RecuperoFactura
+
+2022-09-22 12:09:27,745 - [DEBUG] - from com.avaje.ebeaninternal.server.deploy.BeanDescriptorManager in play-internal-execution-context-1 
+explicit sequence ordenes_id_seq on models.Orden
+
+2022-09-22 12:09:27,746 - [DEBUG] - from com.avaje.ebeaninternal.server.deploy.BeanDescriptorManager in play-internal-execution-context-1 
+explicit sequence recupero_planillas_id_seq on models.recupero.RecuperoPlanilla
+
+2022-09-22 12:09:27,746 - [DEBUG] - from com.avaje.ebeaninternal.server.deploy.BeanDescriptorManager in play-internal-execution-context-1 
+explicit sequence ejercicios_id_seq on models.Ejercicio
+
+2022-09-22 12:09:27,746 - [DEBUG] - from com.avaje.ebeaninternal.server.deploy.BeanDescriptorManager in play-internal-execution-context-1 
+explicit sequence recupero_cheques_id_seq on models.recupero.Cheque
+
+2022-09-22 12:09:27,746 - [DEBUG] - from com.avaje.ebeaninternal.server.deploy.BeanDescriptorManager in play-internal-execution-context-1 
+explicit sequence liquidacion_concepto_clasificaciones_id_seq on models.haberes.LiquidacionConceptoClasificacion
+
+2022-09-22 12:09:27,746 - [DEBUG] - from com.avaje.ebeaninternal.server.deploy.BeanDescriptorManager in play-internal-execution-context-1 
+explicit sequence estudio_areas_id_seq on models.EstudioArea
+
+2022-09-22 12:09:27,747 - [DEBUG] - from com.avaje.ebeaninternal.server.deploy.BeanDescriptorManager in play-internal-execution-context-1 
+explicit sequence pagos_lineas_id_seq on models.PagoLinea
+
+2022-09-22 12:09:27,747 - [DEBUG] - from com.avaje.ebeaninternal.server.deploy.BeanDescriptorManager in play-internal-execution-context-1 
+explicit sequence universidades_id_seq on models.Universidad
+
+2022-09-22 12:09:27,747 - [DEBUG] - from com.avaje.ebeaninternal.server.deploy.BeanDescriptorManager in play-internal-execution-context-1 
+explicit sequence expedientes_movimientos_id_seq on models.ExpedienteMovimiento
+
+2022-09-22 12:09:27,747 - [DEBUG] - from com.avaje.ebeaninternal.server.deploy.BeanDescriptorManager in play-internal-execution-context-1 
+explicit sequence tipo_moneda_id_seq on models.TipoMoneda
+
+2022-09-22 12:09:27,748 - [DEBUG] - from com.avaje.ebeaninternal.server.deploy.BeanDescriptorManager in play-internal-execution-context-1 
+explicit sequence liquidacion_novedades_id_seq on models.haberes.Novedad
+
+2022-09-22 12:09:27,815 - [INFO] - from com.avaje.ebeaninternal.server.deploy.BeanDescriptorManager in play-internal-execution-context-1 
+Entities enhanced[194]
+
+2022-09-22 12:09:27,851 - [DEBUG] - from javax.management.mbeanserver in play-internal-execution-context-1 
+ObjectName = JMImplementation:type=MBeanServerDelegate
+
+2022-09-22 12:09:27,851 - [DEBUG] - from javax.management.mbeanserver in play-internal-execution-context-1 
+name = JMImplementation:type=MBeanServerDelegate
+
+2022-09-22 12:09:27,851 - [DEBUG] - from javax.management.mbeanserver in play-internal-execution-context-1 
+Send create notification of object JMImplementation:type=MBeanServerDelegate
+
+2022-09-22 12:09:27,852 - [DEBUG] - from javax.management.mbeanserver in play-internal-execution-context-1 
+JMX.mbean.registered JMImplementation:type=MBeanServerDelegate
+
+2022-09-22 12:09:27,855 - [DEBUG] - from javax.management.mbeanserver in play-internal-execution-context-1 
+ObjectName = Ebean:server=default2,key=AutoFetch
+
+2022-09-22 12:09:27,856 - [DEBUG] - from javax.management.mbeanserver in play-internal-execution-context-1 
+name = Ebean:server=default2,key=AutoFetch
+
+2022-09-22 12:09:27,856 - [DEBUG] - from javax.management.mbeanserver in play-internal-execution-context-1 
+Send create notification of object Ebean:key=AutoFetch,server=default2
+
+2022-09-22 12:09:27,856 - [DEBUG] - from javax.management.mbeanserver in play-internal-execution-context-1 
+JMX.mbean.registered Ebean:server=default2,key=AutoFetch
+
+2022-09-22 12:09:27,858 - [DEBUG] - from com.avaje.ebean.Ebean in play-internal-execution-context-1 
+GlobalProperties.isSkipPrimaryServer()
+
+2022-09-22 12:09:27,869 - [DEBUG] - from net.sf.ehcache.config.ConfigurationFactory in play-internal-execution-context-1 
+Configuring ehcache from URL: jar:file:/home/marce/hspwork/play/repository/local/com.typesafe.play/play-cache_2.10/2.2.1/jars/play-cache_2.10.jar!/ehcache-default.xml
+
+2022-09-22 12:09:27,869 - [DEBUG] - from net.sf.ehcache.config.ConfigurationFactory in play-internal-execution-context-1 
+Configuring ehcache from InputStream
+
+2022-09-22 12:09:27,879 - [DEBUG] - from net.sf.ehcache.config.BeanHandler in play-internal-execution-context-1 
+Ignoring ehcache attribute xmlns:xsi
+
+2022-09-22 12:09:27,879 - [DEBUG] - from net.sf.ehcache.config.BeanHandler in play-internal-execution-context-1 
+Ignoring ehcache attribute xsi:noNamespaceSchemaLocation
+
+2022-09-22 12:09:27,888 - [DEBUG] - from net.sf.ehcache.CacheManager in play-internal-execution-context-1 
+Creating new CacheManager with config URL: jar:file:/home/marce/hspwork/play/repository/local/com.typesafe.play/play-cache_2.10/2.2.1/jars/play-cache_2.10.jar!/ehcache-default.xml
+
+2022-09-22 12:09:27,892 - [DEBUG] - from net.sf.ehcache.util.PropertyUtil in play-internal-execution-context-1 
+propertiesString is null.
+
+2022-09-22 12:09:27,901 - [DEBUG] - from net.sf.ehcache.config.ConfigurationHelper in play-internal-execution-context-1 
+No CacheManagerEventListenerFactory class specified. Skipping...
+
+2022-09-22 12:09:27,914 - [DEBUG] - from net.sf.ehcache.Cache in play-internal-execution-context-1 
+No BootstrapCacheLoaderFactory class specified. Skipping...
+
+2022-09-22 12:09:27,914 - [DEBUG] - from net.sf.ehcache.Cache in play-internal-execution-context-1 
+CacheWriter factory not configured. Skipping...
+
+2022-09-22 12:09:27,915 - [DEBUG] - from net.sf.ehcache.config.ConfigurationHelper in play-internal-execution-context-1 
+No CacheExceptionHandlerFactory class specified. Skipping...
+
+2022-09-22 12:09:27,935 - [DEBUG] - from net.sf.ehcache.store.MemoryStore in play-internal-execution-context-1 
+Initialized net.sf.ehcache.store.NotifyingMemoryStore for play
+
+2022-09-22 12:09:27,941 - [DEBUG] - from net.sf.ehcache.Cache in play-internal-execution-context-1 
+Initialised cache: play
+
+2022-09-22 12:09:27,941 - [DEBUG] - from net.sf.ehcache.config.ConfigurationHelper in play-internal-execution-context-1 
+CacheDecoratorFactory not configured for defaultCache. Skipping for 'play'.
+
+2022-09-22 12:09:27,961 - [INFO] - from play in play-internal-execution-context-1 
+Application started (Dev)
+
+2022-09-22 12:09:28,149 - [DEBUG] - from com.jolbox.bonecp.PreparedStatementHandle in play-akka.actor.default-dispatcher-7 
+select count(*) from totales_por_orden t0 left outer join ordenes_provision t1 on t1.orden_compra_id = t0.orden_id  left outer join ordenes t2 on t2.id = t1.orden_compra_id  left outer join expedientes t3 on t3.id = t2.expediente_id  where not (t3.ejercicio_id in (1, 2, 3, 4, 5 ) )  and t2.fecha_provision is null  and t0.total_recepcionado > 0 
+
+2022-09-22 12:09:28,273 - [DEBUG] - from org.avaje.ebean.SUM in play-akka.actor.default-dispatcher-7 
+txn[1001] FindRowCount exeMicros[133047] rows[31] type[models.informes.InformeTotalesPorOrden] predicates[not (t3.ejercicio_id in (?, ?, ?, ?, ? ) )  and t2.fecha_provision is null  and t0.total_recepcionado > ? ] bind[1,2,3,4,5,0]
+
+2022-09-22 12:09:28,297 - [DEBUG] - from com.jolbox.bonecp.PreparedStatementHandle in play-akka.actor.default-dispatcher-7 
+select count(*) from totales_por_orden t0 left outer join ordenes_provision t1 on t1.orden_compra_id = t0.orden_id  left outer join ordenes t2 on t2.id = t1.orden_compra_id  left outer join expedientes t3 on t3.id = t2.expediente_id  where not (t3.ejercicio_id in (1, 2, 3, 4, 5 ) )  and t2.fecha_provision is null 
+
+2022-09-22 12:09:28,366 - [DEBUG] - from org.avaje.ebean.SUM in play-akka.actor.default-dispatcher-7 
+txn[1002] FindRowCount exeMicros[68329] rows[148] type[models.informes.InformeTotalesPorOrden] predicates[not (t3.ejercicio_id in (?, ?, ?, ?, ? ) )  and t2.fecha_provision is null ] bind[1,2,3,4,5]
+
+2022-09-22 12:09:28,411 - [DEBUG] - from com.jolbox.bonecp.PreparedStatementHandle in play-akka.actor.default-dispatcher-7 
+select t0.id as c0, t0.orden_id as c1, t0.orden_provision_id as c2, t0.numero_orden_provision as c3, t0.deposito_id as c4, t0.tipo_moneda as c5, t0.expediente_id as c6, t0.ejercicio_id as c7, t0.rubro_id as c8, t0.rubro as c9, t0.ano as c10, t0.profe as c11, t0.tipo_cuenta_id as c12, t0.monto_adelanto as c13, t0.total_orden as c14, t0.total_deuda as c15, t0.total_pagado as c16, t0.total_actas as c17, t0.total_actas_sin_adelanto as c18, t0.total_deuda_en_tramite as c19, t0.total_compromiso as c20, t0.total_autorizado as c21, t0.total_recepcionado as c22, t0.cotizacion as c23, t0.moneda as c24, t0.expediente as c25, t0.nombre_proveedor as c26, t0.proveedor_id as c27, t0.perimido as c28, t0.deposito_id as c29, t0.expediente_id as c30, t0.tipo_cuenta_id as c31, t1.id as c32, t1.numero as c33, t1.orden_compra_id as c34, t2.id as c35, t2.nombre as c36 from informe_estadistico_deuda_proveedores_matrializada t0 left outer join ordenes_provision t1 on t1.id = t0.orden_provision_id  left outer join proveedores t2 on t2.id = t0.proveedor_id  where t0.rubro_id <> 8  and total_autorizado <> total_pagado
+
+2022-09-22 12:09:28,939 - [DEBUG] - from org.avaje.ebean.SUM in play-akka.actor.default-dispatcher-7 
+txn[1003] FindMany type[InformeDeudaProveedoresMaterializada] origin[_tkEk.Do2jqf.B0X-HI] exeMicros[527993] rows[515] name[] predicates[t0.rubro_id <> ?  and total_autorizado <> total_pagado] bind[8]
+
+2022-09-22 12:09:28,960 - [DEBUG] - from application in play-akka.actor.default-dispatcher-7 
+------------------- true
+
+2022-09-22 12:09:28,964 - [DEBUG] - from com.jolbox.bonecp.PreparedStatementHandle in play-akka.actor.default-dispatcher-7 
+select count(*) as c,u.id as id,u.nombre as nombre from solicitudes s inner join estados e on e.id = s.state_id inner join usuarios u on u.id = s.asignacion_usuario_id where asignacion_usuario_id is not null and e.id <> 5 and e.id <> 6 group by u.id,u.nombre order by c desc
+
+2022-09-22 12:09:29,017 - [DEBUG] - from org.avaje.ebean.SUM in play-akka.actor.default-dispatcher-7 
+txn[1004] SqlQuery  rows[9] time[53] bind[] finished[true]
+
+2022-09-22 12:09:29,084 - [DEBUG] - from com.jolbox.bonecp.PreparedStatementHandle in play-akka.actor.default-dispatcher-7 
+select count(*) c from tickets where leido = false
+
+2022-09-22 12:09:29,110 - [DEBUG] - from org.avaje.ebean.SUM in play-akka.actor.default-dispatcher-7 
+txn[1005] SqlQuery  rows[1] time[26] bind[] finished[true]
+
+2022-09-22 12:09:29,149 - [DEBUG] - from com.jolbox.bonecp.PreparedStatementHandle in play-akka.actor.default-dispatcher-7 
+select m.id modulo from auth_asignaciones a inner join auth_permisos p on p.id = a.permiso_id inner join auth_componentes c on c.id = p.componente_id inner join auth_modulos m on m.id = c.modulo_id where usuario_id = 1
+
+2022-09-22 12:09:29,192 - [DEBUG] - from org.avaje.ebean.SUM in play-akka.actor.default-dispatcher-7 
+txn[1006] SqlQuery  rows[485] time[45] bind[1, ] finished[true]
+
+2022-09-22 12:19:04,802 - [DEBUG] - from org.jboss.logging in play-akka.actor.default-dispatcher-12 
+Logging Provider: org.jboss.logging.Slf4jLoggerProvider
+
+2022-09-22 12:19:04,803 - [INFO] - from org.hibernate.validator.internal.util.Version in play-akka.actor.default-dispatcher-12 
+HV000001: Hibernate Validator 5.0.1.Final
+
+2022-09-22 12:19:04,814 - [DEBUG] - from org.hibernate.validator.internal.engine.resolver.DefaultTraversableResolver in play-akka.actor.default-dispatcher-12 
+Found javax.persistence.Persistence on classpath containing 'getPersistenceUtil'. Assuming JPA 2 environment. Trying to instantiate JPA aware TraversableResolver
+
+2022-09-22 12:19:04,815 - [DEBUG] - from org.hibernate.validator.internal.engine.resolver.DefaultTraversableResolver in play-akka.actor.default-dispatcher-12 
+Instantiated JPA aware TraversableResolver of type org.hibernate.validator.internal.engine.resolver.JPATraversableResolver.
+
+2022-09-22 12:19:04,821 - [DEBUG] - from org.hibernate.validator.internal.xml.ValidationXmlParser in play-akka.actor.default-dispatcher-12 
+Trying to load META-INF/validation.xml for XML based Validator configuration.
+
+2022-09-22 12:19:04,824 - [DEBUG] - from org.hibernate.validator.internal.xml.ValidationXmlParser in play-akka.actor.default-dispatcher-12 
+No META-INF/validation.xml found. Using annotation based configuration only.
+
+2022-09-22 12:19:04,943 - [DEBUG] - from com.avaje.ebeaninternal.server.lib.thread.ThreadPool in play-akka.actor.default-dispatcher-12 
+ThreadPool grow created [Ebean-default.0] size[0]
+
+2022-09-22 12:19:04,943 - [DEBUG] - from com.jolbox.bonecp.PreparedStatementHandle in Ebean-default.0 
+select count(*) from tickets t0 where t0.estado_id = 97 
+
+2022-09-22 12:19:04,975 - [DEBUG] - from org.avaje.ebean.SUM in Ebean-default.0 
+txn[1007] FindRowCount exeMicros[32076] rows[97] type[models.Ticket] predicates[t0.estado_id = ? ] bind[97]
+
+2022-09-22 12:19:04,975 - [DEBUG] - from com.avaje.ebeaninternal.server.query.CQueryEngine in Ebean-default.0 
+Future findRowCount completed!
+
+2022-09-22 12:19:05,003 - [DEBUG] - from com.jolbox.bonecp.PreparedStatementHandle in Ebean-default.0 
+select t0.id as c0, t0.asunto as c1, t0.detalles as c2, t0.prioridad as c3, t0.leido as c4, t0.estado_id as c5, t0.fecha as c6, t0.fecha_cierre as c7, t0.respuesta as c8, t0.usuario_id as c9, t0.estado_id as c10, t0.usuario_id as c11 from tickets t0 where t0.estado_id = 97  order by t0.fecha desc 
+limit 26
+
+2022-09-22 12:19:05,047 - [DEBUG] - from org.avaje.ebean.SUM in Ebean-default.0 
+txn[1008] FindMany type[Ticket] origin[DPGwIu.C-av7R.BakGug] exeMicros[43912] rows[25] name[] predicates[t0.estado_id = ? ] bind[97]
+
+2022-09-22 12:19:05,047 - [DEBUG] - from com.avaje.ebeaninternal.server.query.CQueryEngine in Ebean-default.0 
+Future fetch completed!
+
+2022-09-22 12:19:05,231 - [DEBUG] - from com.jolbox.bonecp.PreparedStatementHandle in play-akka.actor.default-dispatcher-12 
+select t0.id as c0, t0.nombre as c1, t0.nick as c2, t0.password as c3, t0.email as c4, t0.activo as c5, t0.plansumarmaterno as c6, t0.create_usuario_id as c7, t0.create_date as c8, t0.write_date as c9, t0.write_usuario_id as c10, t0.departamento_id as c11, t0.organigrama_id as c12, t0.create_usuario_id as c13, t0.write_usuario_id as c14, t0.departamento_id as c15, t0.organigrama_id as c16 from usuarios t0 where t0.id = 459  
+
+2022-09-22 12:19:05,338 - [DEBUG] - from org.avaje.ebean.SUM in play-akka.actor.default-dispatcher-12 
+txn[1009] FindMany mode[+lazy] type[Usuario] origin[DPGwIu.C-av7R.BakGug] lazyLoadProp[nombre] load[path:usuario batch:1] exeMicros[107192] rows[1] name[] predicates[] bind[459]
+
+2022-09-22 12:19:05,456 - [DEBUG] - from com.jolbox.bonecp.PreparedStatementHandle in play-akka.actor.default-dispatcher-12 
+select t0.id as c0, t0.nombre as c1, t0.tipo as c2, t0.orden as c3, t0.descripcion as c4, t0.significado as c5 from estados t0 where t0.id = 97  
+
+2022-09-22 12:19:05,496 - [DEBUG] - from org.avaje.ebean.SUM in play-akka.actor.default-dispatcher-12 
+txn[1010] FindMany mode[+lazy] type[Estado] origin[DPGwIu.C-av7R.BakGug] lazyLoadProp[nombre] load[path:estado batch:1] exeMicros[40391] rows[1] name[] predicates[] bind[97]
+
+2022-09-22 12:19:05,532 - [DEBUG] - from com.jolbox.bonecp.PreparedStatementHandle in play-akka.actor.default-dispatcher-12 
+select t0.id as c0, t0.nombre as c1, t0.nick as c2, t0.password as c3, t0.email as c4, t0.activo as c5, t0.plansumarmaterno as c6, t0.create_usuario_id as c7, t0.create_date as c8, t0.write_date as c9, t0.write_usuario_id as c10, t0.departamento_id as c11, t0.organigrama_id as c12, t0.create_usuario_id as c13, t0.write_usuario_id as c14, t0.departamento_id as c15, t0.organigrama_id as c16 from usuarios t0 where t0.id = 483  
+
+2022-09-22 12:19:05,567 - [DEBUG] - from org.avaje.ebean.SUM in play-akka.actor.default-dispatcher-12 
+txn[1011] FindMany mode[+lazy] type[Usuario] origin[DPGwIu.C-av7R.BakGug] lazyLoadProp[nombre] load[path:usuario batch:1] exeMicros[35326] rows[1] name[] predicates[] bind[483]
+
+2022-09-22 12:19:05,621 - [DEBUG] - from com.jolbox.bonecp.PreparedStatementHandle in play-akka.actor.default-dispatcher-12 
+select t0.id as c0, t0.nombre as c1, t0.nick as c2, t0.password as c3, t0.email as c4, t0.activo as c5, t0.plansumarmaterno as c6, t0.create_usuario_id as c7, t0.create_date as c8, t0.write_date as c9, t0.write_usuario_id as c10, t0.departamento_id as c11, t0.organigrama_id as c12, t0.create_usuario_id as c13, t0.write_usuario_id as c14, t0.departamento_id as c15, t0.organigrama_id as c16 from usuarios t0 where t0.id = 1  
+
+2022-09-22 12:19:05,656 - [DEBUG] - from org.avaje.ebean.SUM in play-akka.actor.default-dispatcher-12 
+txn[1012] FindMany mode[+lazy] type[Usuario] origin[DPGwIu.C-av7R.BakGug] lazyLoadProp[nombre] load[path:usuario batch:1] exeMicros[35584] rows[1] name[] predicates[] bind[1]
+
+2022-09-22 12:19:05,694 - [DEBUG] - from com.jolbox.bonecp.PreparedStatementHandle in play-akka.actor.default-dispatcher-12 
+select t0.id as c0, t0.nombre as c1, t0.nick as c2, t0.password as c3, t0.email as c4, t0.activo as c5, t0.plansumarmaterno as c6, t0.create_usuario_id as c7, t0.create_date as c8, t0.write_date as c9, t0.write_usuario_id as c10, t0.departamento_id as c11, t0.organigrama_id as c12, t0.create_usuario_id as c13, t0.write_usuario_id as c14, t0.departamento_id as c15, t0.organigrama_id as c16 from usuarios t0 where t0.id = 432  
+
+2022-09-22 12:19:05,718 - [DEBUG] - from org.avaje.ebean.SUM in play-akka.actor.default-dispatcher-12 
+txn[1013] FindMany mode[+lazy] type[Usuario] origin[DPGwIu.C-av7R.BakGug] lazyLoadProp[nombre] load[path:usuario batch:1] exeMicros[24749] rows[1] name[] predicates[] bind[432]
+
+2022-09-22 12:19:05,739 - [DEBUG] - from com.jolbox.bonecp.PreparedStatementHandle in play-akka.actor.default-dispatcher-12 
+select t0.id as c0, t0.nombre as c1, t0.nick as c2, t0.password as c3, t0.email as c4, t0.activo as c5, t0.plansumarmaterno as c6, t0.create_usuario_id as c7, t0.create_date as c8, t0.write_date as c9, t0.write_usuario_id as c10, t0.departamento_id as c11, t0.organigrama_id as c12, t0.create_usuario_id as c13, t0.write_usuario_id as c14, t0.departamento_id as c15, t0.organigrama_id as c16 from usuarios t0 where t0.id = 409  
+
+2022-09-22 12:19:05,759 - [DEBUG] - from org.avaje.ebean.SUM in play-akka.actor.default-dispatcher-12 
+txn[1014] FindMany mode[+lazy] type[Usuario] origin[DPGwIu.C-av7R.BakGug] lazyLoadProp[nombre] load[path:usuario batch:1] exeMicros[20196] rows[1] name[] predicates[] bind[409]
+
+2022-09-22 12:19:05,778 - [DEBUG] - from com.jolbox.bonecp.PreparedStatementHandle in play-akka.actor.default-dispatcher-12 
+select t0.id as c0, t0.nombre as c1, t0.nick as c2, t0.password as c3, t0.email as c4, t0.activo as c5, t0.plansumarmaterno as c6, t0.create_usuario_id as c7, t0.create_date as c8, t0.write_date as c9, t0.write_usuario_id as c10, t0.departamento_id as c11, t0.organigrama_id as c12, t0.create_usuario_id as c13, t0.write_usuario_id as c14, t0.departamento_id as c15, t0.organigrama_id as c16 from usuarios t0 where t0.id = 90  
+
+2022-09-22 12:19:05,798 - [DEBUG] - from org.avaje.ebean.SUM in play-akka.actor.default-dispatcher-12 
+txn[1015] FindMany mode[+lazy] type[Usuario] origin[DPGwIu.C-av7R.BakGug] lazyLoadProp[nombre] load[path:usuario batch:1] exeMicros[20003] rows[1] name[] predicates[] bind[90]
+
+2022-09-22 12:19:05,817 - [DEBUG] - from com.jolbox.bonecp.PreparedStatementHandle in play-akka.actor.default-dispatcher-12 
+select t0.id as c0, t0.nombre as c1, t0.nick as c2, t0.password as c3, t0.email as c4, t0.activo as c5, t0.plansumarmaterno as c6, t0.create_usuario_id as c7, t0.create_date as c8, t0.write_date as c9, t0.write_usuario_id as c10, t0.departamento_id as c11, t0.organigrama_id as c12, t0.create_usuario_id as c13, t0.write_usuario_id as c14, t0.departamento_id as c15, t0.organigrama_id as c16 from usuarios t0 where t0.id = 445  
+
+2022-09-22 12:19:05,838 - [DEBUG] - from org.avaje.ebean.SUM in play-akka.actor.default-dispatcher-12 
+txn[1016] FindMany mode[+lazy] type[Usuario] origin[DPGwIu.C-av7R.BakGug] lazyLoadProp[nombre] load[path:usuario batch:1] exeMicros[21415] rows[1] name[] predicates[] bind[445]
+
+2022-09-22 12:19:05,858 - [DEBUG] - from com.jolbox.bonecp.PreparedStatementHandle in play-akka.actor.default-dispatcher-12 
+select t0.id as c0, t0.nombre as c1, t0.nick as c2, t0.password as c3, t0.email as c4, t0.activo as c5, t0.plansumarmaterno as c6, t0.create_usuario_id as c7, t0.create_date as c8, t0.write_date as c9, t0.write_usuario_id as c10, t0.departamento_id as c11, t0.organigrama_id as c12, t0.create_usuario_id as c13, t0.write_usuario_id as c14, t0.departamento_id as c15, t0.organigrama_id as c16 from usuarios t0 where t0.id = 473  
+
+2022-09-22 12:19:05,879 - [DEBUG] - from org.avaje.ebean.SUM in play-akka.actor.default-dispatcher-12 
+txn[1017] FindMany mode[+lazy] type[Usuario] origin[DPGwIu.C-av7R.BakGug] lazyLoadProp[nombre] load[path:usuario batch:1] exeMicros[21452] rows[1] name[] predicates[] bind[473]
+
+2022-09-22 12:19:05,901 - [DEBUG] - from com.jolbox.bonecp.PreparedStatementHandle in play-akka.actor.default-dispatcher-12 
+select t0.id as c0, t0.nombre as c1, t0.nick as c2, t0.password as c3, t0.email as c4, t0.activo as c5, t0.plansumarmaterno as c6, t0.create_usuario_id as c7, t0.create_date as c8, t0.write_date as c9, t0.write_usuario_id as c10, t0.departamento_id as c11, t0.organigrama_id as c12, t0.create_usuario_id as c13, t0.write_usuario_id as c14, t0.departamento_id as c15, t0.organigrama_id as c16 from usuarios t0 where t0.id = 460  
+
+2022-09-22 12:19:05,924 - [DEBUG] - from org.avaje.ebean.SUM in play-akka.actor.default-dispatcher-12 
+txn[1018] FindMany mode[+lazy] type[Usuario] origin[DPGwIu.C-av7R.BakGug] lazyLoadProp[nombre] load[path:usuario batch:1] exeMicros[23600] rows[1] name[] predicates[] bind[460]
+
+2022-09-22 12:19:05,948 - [DEBUG] - from com.jolbox.bonecp.PreparedStatementHandle in play-akka.actor.default-dispatcher-12 
+select t0.id as c0, t0.nombre as c1, t0.nick as c2, t0.password as c3, t0.email as c4, t0.activo as c5, t0.plansumarmaterno as c6, t0.create_usuario_id as c7, t0.create_date as c8, t0.write_date as c9, t0.write_usuario_id as c10, t0.departamento_id as c11, t0.organigrama_id as c12, t0.create_usuario_id as c13, t0.write_usuario_id as c14, t0.departamento_id as c15, t0.organigrama_id as c16 from usuarios t0 where t0.id = 16  
+
+2022-09-22 12:19:05,975 - [DEBUG] - from org.avaje.ebean.SUM in play-akka.actor.default-dispatcher-12 
+txn[1019] FindMany mode[+lazy] type[Usuario] origin[DPGwIu.C-av7R.BakGug] lazyLoadProp[nombre] load[path:usuario batch:1] exeMicros[27320] rows[1] name[] predicates[] bind[16]
+
+2022-09-22 12:19:05,995 - [DEBUG] - from com.jolbox.bonecp.PreparedStatementHandle in play-akka.actor.default-dispatcher-12 
+select t0.id as c0, t0.nombre as c1, t0.nick as c2, t0.password as c3, t0.email as c4, t0.activo as c5, t0.plansumarmaterno as c6, t0.create_usuario_id as c7, t0.create_date as c8, t0.write_date as c9, t0.write_usuario_id as c10, t0.departamento_id as c11, t0.organigrama_id as c12, t0.create_usuario_id as c13, t0.write_usuario_id as c14, t0.departamento_id as c15, t0.organigrama_id as c16 from usuarios t0 where t0.id = 433  
+
+2022-09-22 12:19:06,019 - [DEBUG] - from org.avaje.ebean.SUM in play-akka.actor.default-dispatcher-12 
+txn[1020] FindMany mode[+lazy] type[Usuario] origin[DPGwIu.C-av7R.BakGug] lazyLoadProp[nombre] load[path:usuario batch:1] exeMicros[24017] rows[1] name[] predicates[] bind[433]
+
+2022-09-22 12:19:06,042 - [DEBUG] - from com.jolbox.bonecp.PreparedStatementHandle in play-akka.actor.default-dispatcher-12 
+select t0.id as c0, t0.nombre as c1, t0.nick as c2, t0.password as c3, t0.email as c4, t0.activo as c5, t0.plansumarmaterno as c6, t0.create_usuario_id as c7, t0.create_date as c8, t0.write_date as c9, t0.write_usuario_id as c10, t0.departamento_id as c11, t0.organigrama_id as c12, t0.create_usuario_id as c13, t0.write_usuario_id as c14, t0.departamento_id as c15, t0.organigrama_id as c16 from usuarios t0 where t0.id = 15  
+
+2022-09-22 12:19:06,064 - [DEBUG] - from org.avaje.ebean.SUM in play-akka.actor.default-dispatcher-12 
+txn[1021] FindMany mode[+lazy] type[Usuario] origin[DPGwIu.C-av7R.BakGug] lazyLoadProp[nombre] load[path:usuario batch:1] exeMicros[22428] rows[1] name[] predicates[] bind[15]
+
+2022-09-22 12:19:06,089 - [DEBUG] - from com.jolbox.bonecp.PreparedStatementHandle in play-akka.actor.default-dispatcher-12 
+select t0.id as c0, t0.nombre as c1, t0.nick as c2, t0.password as c3, t0.email as c4, t0.activo as c5, t0.plansumarmaterno as c6, t0.create_usuario_id as c7, t0.create_date as c8, t0.write_date as c9, t0.write_usuario_id as c10, t0.departamento_id as c11, t0.organigrama_id as c12, t0.create_usuario_id as c13, t0.write_usuario_id as c14, t0.departamento_id as c15, t0.organigrama_id as c16 from usuarios t0 where t0.id = 462  
+
+2022-09-22 12:19:06,125 - [DEBUG] - from org.avaje.ebean.SUM in play-akka.actor.default-dispatcher-12 
+txn[1022] FindMany mode[+lazy] type[Usuario] origin[DPGwIu.C-av7R.BakGug] lazyLoadProp[nombre] load[path:usuario batch:1] exeMicros[36641] rows[1] name[] predicates[] bind[462]
+
+2022-09-22 12:19:06,171 - [DEBUG] - from com.jolbox.bonecp.PreparedStatementHandle in play-akka.actor.default-dispatcher-12 
+select count(*) c from tickets where leido = false
+
+2022-09-22 12:19:06,208 - [DEBUG] - from org.avaje.ebean.SUM in play-akka.actor.default-dispatcher-12 
+txn[1023] SqlQuery  rows[1] time[37] bind[] finished[true]
+
+2022-09-22 13:33:05,160 - [ERROR] - from com.jolbox.bonecp.hooks.AbstractConnectionHook in BoneCP-pool-watch-thread 
+Failed to acquire connection to jdbc:postgresql://10.1.4.36/sgp Sleeping for 1000ms and trying again. Attempts left: 10. Exception: java.net.ConnectException: Expiró el tiempo de conexión (Connection timed out).Message:Conexión rechazada. Verifique que el nombre del Host y el puerto sean correctos y que postmaster este aceptando conexiones TCP/IP.
+
+2022-09-22 13:39:38,376 - [ERROR] - from com.jolbox.bonecp.hooks.AbstractConnectionHook in BoneCP-pool-watch-thread 
+Failed to acquire connection to jdbc:postgresql://10.1.4.36/sgp Sleeping for 1000ms and trying again. Attempts left: 9. Exception: java.net.ConnectException: Expiró el tiempo de conexión (Connection timed out).Message:Conexión rechazada. Verifique que el nombre del Host y el puerto sean correctos y que postmaster este aceptando conexiones TCP/IP.
+
+2022-09-22 13:46:12,195 - [ERROR] - from com.jolbox.bonecp.hooks.AbstractConnectionHook in BoneCP-pool-watch-thread 
+Failed to acquire connection to jdbc:postgresql://10.1.4.36/sgp Sleeping for 1000ms and trying again. Attempts left: 8. Exception: java.net.ConnectException: Expiró el tiempo de conexión (Connection timed out).Message:Conexión rechazada. Verifique que el nombre del Host y el puerto sean correctos y que postmaster este aceptando conexiones TCP/IP.
+
+2022-09-22 13:52:45,411 - [ERROR] - from com.jolbox.bonecp.hooks.AbstractConnectionHook in BoneCP-pool-watch-thread 
+Failed to acquire connection to jdbc:postgresql://10.1.4.36/sgp Sleeping for 1000ms and trying again. Attempts left: 7. Exception: java.net.ConnectException: Expiró el tiempo de conexión (Connection timed out).Message:Conexión rechazada. Verifique que el nombre del Host y el puerto sean correctos y que postmaster este aceptando conexiones TCP/IP.
+
+2022-09-22 13:59:18,627 - [ERROR] - from com.jolbox.bonecp.hooks.AbstractConnectionHook in BoneCP-pool-watch-thread 
+Failed to acquire connection to jdbc:postgresql://10.1.4.36/sgp Sleeping for 1000ms and trying again. Attempts left: 6. Exception: java.net.ConnectException: Expiró el tiempo de conexión (Connection timed out).Message:Conexión rechazada. Verifique que el nombre del Host y el puerto sean correctos y que postmaster este aceptando conexiones TCP/IP.
+
+2022-09-22 18:11:39,468 - [DEBUG] - from com.avaje.ebeaninternal.server.lib.ShutdownManager in Thread-6 
+Shutting down
+
+2022-09-22 18:11:39,501 - [DEBUG] - from com.avaje.ebeaninternal.server.core.DefaultServer in Thread-6 
+Shutting down EbeanServer default
+
+2022-09-22 18:11:39,504 - [DEBUG] - from com.avaje.ebeaninternal.server.core.TraditionalBackgroundExecutor in Thread-6 
+Shutting down
+
+2022-09-22 18:11:39,506 - [DEBUG] - from com.avaje.ebeaninternal.server.lib.thread.ThreadPool in Thread-6 
+ThreadPool [Ebean-default] Shutting down; threadCount[1] busyCount[0]
+
+2022-09-22 18:11:39,508 - [DEBUG] - from com.avaje.ebeaninternal.server.lib.DaemonScheduleThreadPool in Thread-6 
+DaemonScheduleThreadPool Ebean-default-periodic- shutting down...
+

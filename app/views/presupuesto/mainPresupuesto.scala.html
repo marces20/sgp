@@ -1,0 +1,31 @@
+@(title: String, scripts: Html = Html(""))(content: Html)
+@import models.auth._
+
+@main(title: String, scripts){
+	<div class="row">
+		<div class="col-sm-2">
+			<div class="menu-contenido">
+				<ul class="nav nav-pills nav-stacked">
+					<li class="titulo">Presupuesto</li>
+					@if(Componente.check("creditosPresupuestarios")) {
+						<li><a href="@controllers.presupuesto.routes.CreditosPresupuestariosController.index()">Créditos presupuestarios</a></li>
+						<li><a href="@controllers.presupuesto.routes.CreditosPresupuestariosController.listaCargas()">Lista Carga Créditos</a></li>
+					}
+					@if(Componente.check("balancePresupuestario")) {
+						<li><a href="@controllers.presupuesto.routes.BalancePresupuestarioController.index()">Balance presupuestario</a></li>
+					}
+					@if(Componente.check("balancePresupuestario")) {
+						
+						<li><a href="@controllers.presupuesto.routes.BalancePresupuestarioController.balancePresupuestarioPorExpediente()">Presupuesto control</a></li>
+					}
+					@if(Componente.check("balancePresupuestario")) {
+						
+						<li><a href="@controllers.presupuesto.routes.ControlPresupuestarioController.controlAnulacionProductosAutomaticos()">Control Anulacion Automatica</a></li>
+						<li><a href="@controllers.presupuesto.routes.ControlPresupuestarioController.movimientosSaldoPreventivo()">Movimientos Saldos/Preventivo</a></li>
+					}
+				</ul>
+			</div>
+		</div>
+		<div class="col-sm-10">@content</div>
+	</div>
+}

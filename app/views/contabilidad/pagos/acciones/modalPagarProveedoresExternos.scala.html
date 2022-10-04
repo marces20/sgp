@@ -1,0 +1,27 @@
+@(formPago: DynamicForm)
+@import helper._
+@implicitFieldConstructor = @{ FieldConstructor(simpleInput.render) } 
+
+@helper.form(action = controllers.contabilidad.routes.PagosAccionesController.pagarProveedoresExternos(), 'id -> "formPagar") {
+	
+	@views.html.tags.successError()	
+				
+	<div class="row">
+		<div class="col-sm-3">
+			<div class="form-group @if(formPago.error("fecha_pago") != null) {has-error}">
+				<label for="inputFechaPago" class="control-label">Referencia</label> 
+				@inputText(formPago("referencia"), 'class -> "form-control", 'id -> "referencia", 'autofocus -> "autofocus")
+			</div>
+				@formPago("referencia").error.map{ error =>
+					<div class="text-error">@error.message</div>
+				}
+		</div>
+		
+		<div class="col-sm-5"><br />
+			<button type="submit" class="btn btn-default" title="Guardar"><i class="glyphicon glyphicon-floppy-disk"></i> Pagar</button>
+		</div>
+		
+	</div>
+	
+}
+@flash().clear()

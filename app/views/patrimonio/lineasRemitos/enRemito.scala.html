@@ -1,0 +1,178 @@
+@(buscador: utils.pagination.Pagination[RemitoLinea], formBuscador: DynamicForm)
+@import helper._
+@import models.auth._
+@import utils._
+@implicitFieldConstructor = @{ FieldConstructor(simpleInput.render) } 
+<div class="contenedorPaginador ajaxPaginador">
+
+
+
+<div id="filtroBuscador" class="row">	
+	@helper.form(action = controllers.patrimonio.routes.RemitosLineasController.index(), 'id -> "buscadorLineasRemitos") {	
+		@inputText(formBuscador("id_remito"), 'type -> "hidden", 'id -> "idRemito")
+	
+		<div class="col-sm-5">
+			<label for="producto" class="control-label">Producto</label>
+			@inputText(formBuscador("producto.nombre"), 'class -> "form-control", 'autofocus -> "autofocus", 'id -> "productoLinea")
+		</div>
+		
+		<div class="col-sm-2">
+			<div class="form-group">
+				<label for="nombre" class="control-label">&nbsp;</label>
+				<button  class="form-control btn btn-primary"><i class="glyphicon glyphicon-search"></i> Buscar</button>
+			</div>
+		</div>	
+	}
+</div>
+
+
+
+   @if(buscador.getTotalRowCount == 0) {
+        
+       <div class="well">
+           <em>No se encuentran productos en este remitos.</em>
+       </div>
+        
+    } else {
+		
+		Mostrando @buscador.getDisplayXtoYofZ(" a "," de ") resultado(s).   
+		<table id="listaProductos" class="table table-striped table-bordered table-hover">
+			<thead>
+				<tr>
+					<th>Producto</th>
+					<th width="50">UDM</th>	
+					<th width="100">Precio</th>
+					<th width="275">Cantidad</th>	
+								
+				</tr>
+			</thead>
+			<tbody>
+		        @for(linea <- buscador.getList) {
+				<tr class="pointer" style="@if(CuentaAnalitica.getCuentasParaInventario().contains(linea.lineaOrden.cuenta_analitica_id.toInt)) {color:blue}">
+					<td>@linea.lineaOrden.producto.nombre</td>
+					<td>@linea.lineaOrden.udm.nombre</td>
+					<td>@utils.NumberUtils.moneda(linea.lineaOrden.precio)</td>
+					<td>
+						<input class="remito_id" type="hidden" value="@linea.remito_id" name="remito_id" />
+						<input class="linea_orden_id" type="hidden" value="@linea.linea_orden_id" name="linea_orden__id" />
+						<input class="id" type="hidden" value="@linea.id" name="id" /> 
+						<input class="cantidad" type="text" name="cantidad" value="@linea.cantidad" style="width: 60px" /> 
+						<button class="agregar"><i class="glyphicon glyphicon-ok-sign"></i></button> 
+						
+						@if(CuentaAnalitica.getCuentasParaInventario().contains(linea.lineaOrden.cuenta_analitica_id.toInt)){
+						<button class="agregarNumeroInventario" data-url="@controllers.patrimonio.routes.InventarioController.registrarModal(linea.id)"><i class="glyphicon glyphicon-barcode"></i></button> 
+						}
+						@if(Permiso.check("remitosEliminar")) {
+							<button style="margin-left: 20px" class="eliminarLinea pull-right" data-href="@controllers.patrimonio.routes.RemitosLineasController.eliminar(linea.id)"><i class="glyphicon glyphicon-trash icono-eliminar"></i></button>
+						}
+					</td>
+				</tr>
+              	}
+			</tbody>
+		</table>
+		
+		<div class="pagination pull-right">
+		    @views.html.helpers.paginador(buscador, controllers.patrimonio.routes.RemitosLineasController.enRemito())
+		</div>
+        
+    }
+</div>
+
+
+<script>
+$( function() {
+
+	$('#listaProductos tbody tr .cantidad').keypress(function(e) {
+		var btn = $(this).closest('tr').find('.agregar');
+	    if(e.which == 13) {
+	    	btn.click();
+	    }
+	});
+	
+	$('#listaProductos tbody tr .agregar').click( function(){
+		$this = $(this);
+		var tr = $(this).closest('tr');
+		var inputAgregar = tr.find('.cantidad');
+		inputAgregar.prop('disabled', true);
+		$this.prop('disabled', true);
+		var cantidad = inputAgregar.val();
+		
+		var id = tr.find('.id').val();
+		var remito_id = tr.find('.remito_id').val();
+		var linea_orden_id = tr.find('.linea_orden_id').val();
+		$.post('@controllers.patrimonio.routes.RemitosLineasController.modificar()', {cantidad:cantidad, id: id, remito_id:remito_id, linea_orden_id:linea_orden_id }, function(data) {
+			if(data.success) {
+				alert("La cantidad se ha modificado correctamente.");
+			} else {
+				alert(data.message);
+			}
+			inputAgregar.removeAttr('disabled');
+			$this.removeAttr('disabled');
+		});
+	});
+
+	$('.agregarNumeroInventario').click( function() { //abrir modal para mostrar mensaje informe rentas
+		var tr = $(this).closest('tr');
+		var url = $(this).attr("data-url");
+		var dialogo = $('<div>Cargando...</div>');
+		
+		dialogo.dialog({
+			title: "Registro de inventario",
+	    	resizable: false,
+			autoOpen: true,
+			modal: true,
+			height: 550,
+			width:750,
+	        buttons: {
+		          Cerrar: function() {
+		            $( this ).dialog( "destroy" );
+		          }
+		    },
+	    	close: function(event, ui ){
+	    		$(this).dialog( "destroy" );
+	    	},
+		    open: function( event, ui ) {
+				$.get(url, function(data){
+					dialogo.html(data);
+				});	
+		    }
+	    });
+	});
+	
+	
+	var dialogo = $('<div><p><span class="ui-icon ui-icon-alert" style="float:left; margin:0 7px 20px 0;"></span> ¿Está seguro que desea eliminar el registro?<p></div>');
+	$('.eliminarLinea').on('click', function(){
+		$this = $(this);
+		var link = $(this).attr("data-href");
+		var tr = $(this).closest('tr');
+		
+	    dialogo.dialog({
+	        resizable: false,
+	        height:180,
+	        modal: true,
+	        title: "Eliminar registro",
+	        buttons: {
+	          Eliminar: function() {
+	        	$this.prop('disabled', true);
+	            $.get(link, function(data){
+	            	if(data.success) {
+	            		tr.remove();
+	            	} else {
+	            		alert(data.message);
+	            	}
+	            	dialogo.dialog( "destroy" );
+	            });
+	          },
+	          Cancelar: function( event, ui ) {
+	        	  dialogo.dialog( "destroy" );
+	          }
+	        },
+		    close: function(){
+		    	$( this ).dialog( "destroy" );
+		    },
+	      });
+	    return false;
+	});
+	
+});
+</script>

@@ -1,0 +1,42 @@
+@(formBuscador: DynamicForm)
+@import helper._
+@implicitFieldConstructor = @{ FieldConstructor(simpleInput.render) } 
+	
+@helper.form(action = controllers.haberes.routes.PuestosLaboralesAccionesController.preliquidarPuesto(), 'id -> "formPreliquidarPuesto") {	
+	
+	@views.html.tags.successError()
+	
+	<div class="row">
+		<div class="col-sm-3">
+			<div class="input-group">
+				<input type="text" name="liquidacion" id="liquidacion_modal" class="form-control" value=""/>
+				<input type="hidden" name="liquidacion_id" id="liquidacion_id_modal" class="" value=""/>
+				<span class="input-group-addon">
+					<a href="#" class="searchModal"
+								id="searchLiquidacion" 
+								data-title="Selección de liquidacion" 
+								data-url="@controllers.haberes.routes.LiquidacionMesesController.modalBuscar()" 
+								data-height="650" 
+								data-width="700" 
+								data-listen="modal.seleccion.liquidacionMes.simple" 
+								data-label="#liquidacion_modal" 
+								data-field="#liquidacion_id_modal">
+						<i class="glyphicon glyphicon-search"></i>
+					</a>
+				</span>
+			</div>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-sm-5"><br />
+			<button type="submit" class="btn btn-default" title="Preliquidar"><i class="glyphicon glyphicon-arrow-right"></i> Preliquidar</button>
+		</div>
+	</div>
+
+}
+<script>
+$( function(){
+	$('#searchLiquidacion').modalSearch();
+});
+</script>
+@flash().clear()

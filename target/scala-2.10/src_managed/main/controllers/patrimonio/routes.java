@@ -1,0 +1,82 @@
+// @SOURCE:/home/marce/hspwork/play/sgpgit/sgp/conf/routePatrimonio.routes
+// @HASH:f2062f867d9eeb5641bae91bce5c89e3c639c8fc
+// @DATE:Tue Oct 04 11:43:28 ART 2022
+
+package controllers.patrimonio;
+
+public class routes {
+public static final controllers.patrimonio.ReverseOrdenesProvisionController OrdenesProvisionController = new controllers.patrimonio.ReverseOrdenesProvisionController();
+public static final controllers.patrimonio.ReverseRemitosLineasBaulController RemitosLineasBaulController = new controllers.patrimonio.ReverseRemitosLineasBaulController();
+public static final controllers.patrimonio.ReverseInventarioController InventarioController = new controllers.patrimonio.ReverseInventarioController();
+public static final controllers.patrimonio.ReverseCertificacionesServiciosController CertificacionesServiciosController = new controllers.patrimonio.ReverseCertificacionesServiciosController();
+public static final controllers.patrimonio.ReverseActasRecepcionReportesController ActasRecepcionReportesController = new controllers.patrimonio.ReverseActasRecepcionReportesController();
+public static final controllers.patrimonio.ReverseRemitosLineasController RemitosLineasController = new controllers.patrimonio.ReverseRemitosLineasController();
+public static final controllers.patrimonio.ReversePrefijosController PrefijosController = new controllers.patrimonio.ReversePrefijosController();
+public static final controllers.patrimonio.ReverseActasMovimientosController ActasMovimientosController = new controllers.patrimonio.ReverseActasMovimientosController();
+public static final controllers.patrimonio.ReverseLineasCertificacionesController LineasCertificacionesController = new controllers.patrimonio.ReverseLineasCertificacionesController();
+public static final controllers.patrimonio.ReverseOrdenesProvisionReportesController OrdenesProvisionReportesController = new controllers.patrimonio.ReverseOrdenesProvisionReportesController();
+public static final controllers.patrimonio.ReverseRemitosBaulController RemitosBaulController = new controllers.patrimonio.ReverseRemitosBaulController();
+public static final controllers.patrimonio.ReverseRecepcionesController RecepcionesController = new controllers.patrimonio.ReverseRecepcionesController();
+public static final controllers.patrimonio.ReverseActasRecepcionAccionesController ActasRecepcionAccionesController = new controllers.patrimonio.ReverseActasRecepcionAccionesController();
+public static final controllers.patrimonio.ReverseActasRecepcionLineasController ActasRecepcionLineasController = new controllers.patrimonio.ReverseActasRecepcionLineasController();
+public static final controllers.patrimonio.ReverseIndexController IndexController = new controllers.patrimonio.ReverseIndexController();
+public static final controllers.patrimonio.ReverseActaRecepcionLineaAjusteController ActaRecepcionLineaAjusteController = new controllers.patrimonio.ReverseActaRecepcionLineaAjusteController();
+public static final controllers.patrimonio.ReverseRecepcionesReportesController RecepcionesReportesController = new controllers.patrimonio.ReverseRecepcionesReportesController();
+public static final controllers.patrimonio.ReverseAnulacionRecepcionProductosController AnulacionRecepcionProductosController = new controllers.patrimonio.ReverseAnulacionRecepcionProductosController();
+public static final controllers.patrimonio.ReverseActasRecepcionController ActasRecepcionController = new controllers.patrimonio.ReverseActasRecepcionController();
+public static final controllers.patrimonio.ReverseRemitosController RemitosController = new controllers.patrimonio.ReverseRemitosController();
+public static final controllers.patrimonio.ReverseActasRecepcionCertificacionesAccionesController ActasRecepcionCertificacionesAccionesController = new controllers.patrimonio.ReverseActasRecepcionCertificacionesAccionesController();
+public static final controllers.patrimonio.ReverseCertificacionesReportesController CertificacionesReportesController = new controllers.patrimonio.ReverseCertificacionesReportesController();
+public static final controllers.patrimonio.ReversePrefijosAccionesController PrefijosAccionesController = new controllers.patrimonio.ReversePrefijosAccionesController();
+public static class javascript {
+public static final controllers.patrimonio.javascript.ReverseOrdenesProvisionController OrdenesProvisionController = new controllers.patrimonio.javascript.ReverseOrdenesProvisionController();
+public static final controllers.patrimonio.javascript.ReverseRemitosLineasBaulController RemitosLineasBaulController = new controllers.patrimonio.javascript.ReverseRemitosLineasBaulController();
+public static final controllers.patrimonio.javascript.ReverseInventarioController InventarioController = new controllers.patrimonio.javascript.ReverseInventarioController();
+public static final controllers.patrimonio.javascript.ReverseCertificacionesServiciosController CertificacionesServiciosController = new controllers.patrimonio.javascript.ReverseCertificacionesServiciosController();
+public static final controllers.patrimonio.javascript.ReverseActasRecepcionReportesController ActasRecepcionReportesController = new controllers.patrimonio.javascript.ReverseActasRecepcionReportesController();
+public static final controllers.patrimonio.javascript.ReverseRemitosLineasController RemitosLineasController = new controllers.patrimonio.javascript.ReverseRemitosLineasController();
+public static final controllers.patrimonio.javascript.ReversePrefijosController PrefijosController = new controllers.patrimonio.javascript.ReversePrefijosController();
+public static final controllers.patrimonio.javascript.ReverseActasMovimientosController ActasMovimientosController = new controllers.patrimonio.javascript.ReverseActasMovimientosController();
+public static final controllers.patrimonio.javascript.ReverseLineasCertificacionesController LineasCertificacionesController = new controllers.patrimonio.javascript.ReverseLineasCertificacionesController();
+public static final controllers.patrimonio.javascript.ReverseOrdenesProvisionReportesController OrdenesProvisionReportesController = new controllers.patrimonio.javascript.ReverseOrdenesProvisionReportesController();
+public static final controllers.patrimonio.javascript.ReverseRemitosBaulController RemitosBaulController = new controllers.patrimonio.javascript.ReverseRemitosBaulController();
+public static final controllers.patrimonio.javascript.ReverseRecepcionesController RecepcionesController = new controllers.patrimonio.javascript.ReverseRecepcionesController();
+public static final controllers.patrimonio.javascript.ReverseActasRecepcionAccionesController ActasRecepcionAccionesController = new controllers.patrimonio.javascript.ReverseActasRecepcionAccionesController();
+public static final controllers.patrimonio.javascript.ReverseActasRecepcionLineasController ActasRecepcionLineasController = new controllers.patrimonio.javascript.ReverseActasRecepcionLineasController();
+public static final controllers.patrimonio.javascript.ReverseIndexController IndexController = new controllers.patrimonio.javascript.ReverseIndexController();
+public static final controllers.patrimonio.javascript.ReverseActaRecepcionLineaAjusteController ActaRecepcionLineaAjusteController = new controllers.patrimonio.javascript.ReverseActaRecepcionLineaAjusteController();
+public static final controllers.patrimonio.javascript.ReverseRecepcionesReportesController RecepcionesReportesController = new controllers.patrimonio.javascript.ReverseRecepcionesReportesController();
+public static final controllers.patrimonio.javascript.ReverseAnulacionRecepcionProductosController AnulacionRecepcionProductosController = new controllers.patrimonio.javascript.ReverseAnulacionRecepcionProductosController();
+public static final controllers.patrimonio.javascript.ReverseActasRecepcionController ActasRecepcionController = new controllers.patrimonio.javascript.ReverseActasRecepcionController();
+public static final controllers.patrimonio.javascript.ReverseRemitosController RemitosController = new controllers.patrimonio.javascript.ReverseRemitosController();
+public static final controllers.patrimonio.javascript.ReverseActasRecepcionCertificacionesAccionesController ActasRecepcionCertificacionesAccionesController = new controllers.patrimonio.javascript.ReverseActasRecepcionCertificacionesAccionesController();
+public static final controllers.patrimonio.javascript.ReverseCertificacionesReportesController CertificacionesReportesController = new controllers.patrimonio.javascript.ReverseCertificacionesReportesController();
+public static final controllers.patrimonio.javascript.ReversePrefijosAccionesController PrefijosAccionesController = new controllers.patrimonio.javascript.ReversePrefijosAccionesController();
+}
+public static class ref {
+public static final controllers.patrimonio.ref.ReverseOrdenesProvisionController OrdenesProvisionController = new controllers.patrimonio.ref.ReverseOrdenesProvisionController();
+public static final controllers.patrimonio.ref.ReverseRemitosLineasBaulController RemitosLineasBaulController = new controllers.patrimonio.ref.ReverseRemitosLineasBaulController();
+public static final controllers.patrimonio.ref.ReverseInventarioController InventarioController = new controllers.patrimonio.ref.ReverseInventarioController();
+public static final controllers.patrimonio.ref.ReverseCertificacionesServiciosController CertificacionesServiciosController = new controllers.patrimonio.ref.ReverseCertificacionesServiciosController();
+public static final controllers.patrimonio.ref.ReverseActasRecepcionReportesController ActasRecepcionReportesController = new controllers.patrimonio.ref.ReverseActasRecepcionReportesController();
+public static final controllers.patrimonio.ref.ReverseRemitosLineasController RemitosLineasController = new controllers.patrimonio.ref.ReverseRemitosLineasController();
+public static final controllers.patrimonio.ref.ReversePrefijosController PrefijosController = new controllers.patrimonio.ref.ReversePrefijosController();
+public static final controllers.patrimonio.ref.ReverseActasMovimientosController ActasMovimientosController = new controllers.patrimonio.ref.ReverseActasMovimientosController();
+public static final controllers.patrimonio.ref.ReverseLineasCertificacionesController LineasCertificacionesController = new controllers.patrimonio.ref.ReverseLineasCertificacionesController();
+public static final controllers.patrimonio.ref.ReverseOrdenesProvisionReportesController OrdenesProvisionReportesController = new controllers.patrimonio.ref.ReverseOrdenesProvisionReportesController();
+public static final controllers.patrimonio.ref.ReverseRemitosBaulController RemitosBaulController = new controllers.patrimonio.ref.ReverseRemitosBaulController();
+public static final controllers.patrimonio.ref.ReverseRecepcionesController RecepcionesController = new controllers.patrimonio.ref.ReverseRecepcionesController();
+public static final controllers.patrimonio.ref.ReverseActasRecepcionAccionesController ActasRecepcionAccionesController = new controllers.patrimonio.ref.ReverseActasRecepcionAccionesController();
+public static final controllers.patrimonio.ref.ReverseActasRecepcionLineasController ActasRecepcionLineasController = new controllers.patrimonio.ref.ReverseActasRecepcionLineasController();
+public static final controllers.patrimonio.ref.ReverseIndexController IndexController = new controllers.patrimonio.ref.ReverseIndexController();
+public static final controllers.patrimonio.ref.ReverseActaRecepcionLineaAjusteController ActaRecepcionLineaAjusteController = new controllers.patrimonio.ref.ReverseActaRecepcionLineaAjusteController();
+public static final controllers.patrimonio.ref.ReverseRecepcionesReportesController RecepcionesReportesController = new controllers.patrimonio.ref.ReverseRecepcionesReportesController();
+public static final controllers.patrimonio.ref.ReverseAnulacionRecepcionProductosController AnulacionRecepcionProductosController = new controllers.patrimonio.ref.ReverseAnulacionRecepcionProductosController();
+public static final controllers.patrimonio.ref.ReverseActasRecepcionController ActasRecepcionController = new controllers.patrimonio.ref.ReverseActasRecepcionController();
+public static final controllers.patrimonio.ref.ReverseRemitosController RemitosController = new controllers.patrimonio.ref.ReverseRemitosController();
+public static final controllers.patrimonio.ref.ReverseActasRecepcionCertificacionesAccionesController ActasRecepcionCertificacionesAccionesController = new controllers.patrimonio.ref.ReverseActasRecepcionCertificacionesAccionesController();
+public static final controllers.patrimonio.ref.ReverseCertificacionesReportesController CertificacionesReportesController = new controllers.patrimonio.ref.ReverseCertificacionesReportesController();
+public static final controllers.patrimonio.ref.ReversePrefijosAccionesController PrefijosAccionesController = new controllers.patrimonio.ref.ReversePrefijosAccionesController();
+}
+}
+          

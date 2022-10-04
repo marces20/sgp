@@ -1,0 +1,100 @@
+@(lcForm:Form[models.haberes.LiquidacionConcepto],lc:models.haberes.LiquidacionConcepto)
+@import helper._ 
+@import utils._ 
+@scripts = {
+<script src="@routes.Assets.at("javascripts/haberes/liquidacionConcepto.js")" type="text/javascript"></script>
+} 
+@implicitFieldConstructor = @{ FieldConstructor(simpleInput.render) }
+
+@views.html.haberes.mainHaberes("Vista Concepto",scripts) {
+<div class="page-header">
+	<div class="row">
+		<div class="col-sm-7">
+			<h1>Vista de Concepto</h1>
+		</div>
+		<div class="col-sm-5"></div>
+	</div>
+</div>
+<div class="row menu-acciones">
+	<div class="col-sm-10">
+		<a href="@controllers.haberes.routes.LiquidacionConceptosController.crear()" class="btn btn-default"><i class="glyphicon glyphicon-plus-sign"></i>
+			Nuevo Concepto</a> 
+			<a href="@controllers.haberes.routes.LiquidacionConceptosController.editar(lc.id)@UriTrack.get("&")"  class="btn btn-default"><i class="glyphicon glyphicon-edit"></i>
+			Editar</a> 
+			<a href="@controllers.haberes.routes.LiquidacionConceptosController.eliminar(lc.id)@UriTrack.get("&")"  class="btn btn-default delete-confirm-link"><i
+			class="glyphicon glyphicon-trash icono-eliminar"></i> Eliminar</a>
+	</div>
+	<div class="col-sm-2">
+		<a
+			href="@UriTrack.getOnNull(controllers.haberes.routes.LiquidacionConceptosController.index().absoluteURL())"
+			class="btn btn-default"><i class="glyphicon glyphicon-list"></i></a>
+	</div>
+</div>
+
+<input type="hidden" id="conceptoId" name="agenteId" value="@lc.id" />
+<div class="row">
+	<div class="col-sm-2">
+		<div class="form-group">
+			<label class="control-label">Código</label>
+			<p class="form-control-static form-control">@lcForm.field("codigo").value</p>
+		</div>
+	</div>
+	<div class="col-sm-5">
+		<div class="form-group">
+			<label class="control-label">Denominación</label>
+			<p class="form-control-static form-control">@lcForm.field("denominacion").value</p>
+		</div>
+	</div>
+	<div class="col-sm-5">
+		<div class="form-group">
+			<label class="control-label">Abreviatura</label>
+			<p class="form-control-static form-control">@lcForm.field("abreviatura").value</p>
+		</div>
+	</div>
+</div>
+<div class="row">
+	<div class="col-sm-2">
+		<div class="form-group">
+			<label class="control-label">Fecha Baja</label>
+			<p class="form-control-static form-control">@lcForm.field("fecha_baja").value</p>
+		</div>
+	</div>
+	<div class="col-sm-5">
+
+		<div class="form-group">
+			<label class="control-label">Tipo</label>
+			<p class="form-control-static form-control">@lcForm.field("liquidacionConceptoTipo.nombre").value</p>
+		</div>
+	</div>
+	<div class="col-sm-5">
+		<div class="form-group">
+			<label class="control-label">Base Cálculo</label>
+			<p class="form-control-static form-control">@lcForm.field("liquidacionBaseCalculo.nombre").value</p>
+		</div>
+	</div>
+</div>
+<div class="row">
+	<div class="col-sm-5">
+		<div class="form-group">
+			<label class="control-label">Clasificacion</label>
+			<p class="form-control-static form-control">@lcForm.field("liquidacionConceptoClasificacion.nombre").value</p>
+		</div>
+	</div>
+	<div class="col-sm-2">
+			<div class="form-group">
+				<label class="control-label">Deduce ganancias</label>
+				<p class="form-control-static form-control">
+					@if(lcForm("deduce_ganancias").value == "true"){SI}else{NO}
+				</p>
+			</div>
+		</div>
+	<div class="col-sm-2">
+			<div class="form-group">
+				<label class="control-label">Reporte ganancias</label>
+				<p class="form-control-static form-control">
+					@if(lcForm("reporte_ganancias").value == "true"){SI}else{NO}
+				</p>
+			</div>
+		</div>	
+</div>
+}

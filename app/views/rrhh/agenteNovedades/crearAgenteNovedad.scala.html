@@ -1,0 +1,7 @@
+@(lineaForm: Form[AgenteNovedad])
+@import helper._
+@implicitFieldConstructor = @{ FieldConstructor(simpleInput.render) } 
+
+@helper.form(action = controllers.rrhh.routes.AgentesNovedadesController.guardar()) {
+	@views.html.rrhh.agenteNovedades.formAgenteNovedad(lineaForm)
+}

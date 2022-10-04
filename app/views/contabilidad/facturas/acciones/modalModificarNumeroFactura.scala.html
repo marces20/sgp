@@ -1,0 +1,99 @@
+@(formBuscador: DynamicForm,id:Long,p:Factura)
+@import helper._
+@implicitFieldConstructor = @{ FieldConstructor(simpleInput.render) } 
+
+@helper.form(action = controllers.contabilidad.routes.FacturasAccionesController.modificarNumeroFactura(), 'id -> "formModificarNumeroFactura") {
+	<input type="hidden" name="id" value="@id" />
+	
+	@views.html.tags.successError()
+	
+	<div class="row">
+		<div class="col-sm-6">
+			<div class="panel panel-default">
+				<div class="panel-heading"><b>Facturacion</b></div>
+				<div class="panel-body">
+					<table class="table table-striped table-bordered">
+						<thead>
+							<tr>
+								<td>Monto Orden</td>
+								<td>Monto Cargado</td>
+								<td>Restante</td>
+							</tr>
+						<thead>
+						<tbody>
+						<tr>
+							<td><b>@if(p != null && p.orden != null){@utils.NumberUtils.moneda(p.orden.getTotalTotal())}</b></td>
+							<td><b>@if(p != null && p.orden != null){@utils.NumberUtils.moneda(Factura.getTotalMontoFacturasCargadas(p.id))}</b></td>
+							<td><b>@if(p != null && p.orden != null){@utils.NumberUtils.moneda(p.orden.getTotalTotal().subtract(Factura.getTotalMontoFacturasCargadas(p.id)))}</b></td>
+						</tr>
+						</tbody>
+					</table>
+				</div>
+			</div>	
+		</div>
+		<div class="col-sm-6">
+			<div class="panel panel-default">
+				<div class="panel-heading"><b>Facturas cargadas</b></div>
+				<div class="panel-body">
+					<table class="table table-striped table-bordered">
+						<thead>
+						<tr>
+							<td>Factura</td>
+							<td>Numero</td>
+							<td>Monto</td>
+						</tr>
+						</thead>
+						<tbody>
+						
+						@for(s <- Factura.getFacturasDatosCargadas(p.id) ){
+						
+							<tr>
+								<td><b>@s.getString("nombre")</b></td>
+								<td><b>@s.getString("numero_factura")</b></td>
+								<td><b>@utils.NumberUtils.moneda(s.getBigDecimal("monto"))</b></td>
+							</tr>
+						}
+						</tbody>
+					</table>
+				</div>
+			</div>	
+		</div>
+	</div>
+	
+	<div class="row">
+		<div class="col-sm-3">
+			<div class="form-group @if(formBuscador.error("numero_factura") != null) {has-error}">
+				<label for="inputNumeroFactura" class="control-label">N° Factura</label> 
+				@inputText(formBuscador("numero_factura"), 'class -> "form-control", 'id -> "numero_factura", 'autofocus -> "autofocus")
+			</div>
+			
+			@formBuscador("numero_factura").error.map{ error =>
+				<div class="text-error">@error.message</div>
+			}
+		</div>
+		
+		<div class="col-sm-3">
+			<div class="form-group @if(formBuscador.error("monto") != null) {has-error}">
+				<label for="inputNumeroFactura" class="control-label">Monto</label> 
+				@inputText(formBuscador("monto"), 'class -> "form-control", 'id -> "monto")
+			</div>
+			
+			@formBuscador("monto").error.map{ error =>
+				<div class="text-error">@error.message</div>
+			}
+		</div>
+		
+		<div class="col-sm-5"><br />
+			<button type="submit" class="btn btn-default" title="Guardar"><i class="glyphicon glyphicon-floppy-disk"></i> Guardar</button>
+		</div>
+		
+	</div>
+}
+<script>
+$( function(){ 
+	$('#numero_factura').mask("a-9999-99999999");
+	$("#monto").numeric_input({allowNegative: true});
+
+})
+</script>
+@flash().clear()

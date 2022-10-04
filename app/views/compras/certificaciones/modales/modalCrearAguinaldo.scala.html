@@ -1,0 +1,114 @@
+@(formBuscador: DynamicForm,url: String = null)
+@import helper._
+@implicitFieldConstructor = @{ FieldConstructor(simpleInput.render) } 
+																			
+@helper.form(action = controllers.compras.routes.CertificacionesAccionesController.crearAguinaldo(), 'id -> "formCrearAguinaldo") {	
+	
+	@if(flash.containsKey("error")) {
+		<div class="alert alert-danger"><i class="glyphicon glyphicon-remove-sign"></i> @flash.get("error")</div>
+	}
+	
+	@if(flash.containsKey("success")) {
+		<div class="alert alert-success"><i class="glyphicon glyphicon-ok-circle"></i> @flash.get("success")</div>
+	}
+	
+	<div class="row">
+		<div class="col-sm-2">
+			<div class="form-group">
+				<label for="meses" class="control-label">Meses
+				@inputText(formBuscador("meses"), 'class -> "form-control", 'autofocus -> "autofocus")
+				</label>
+			</div>
+		</div>
+		<div class="col-sm-3">
+			<label class="control-label">Expediente
+				<div class="input-group">
+					@inputText(formBuscador("expediente_id_modal_agui"), 'hidden -> "hidden", 'id -> "expediente_id_modal_agui")
+					@inputText(formBuscador("expediente.nombre"), 'name -> "", 'class -> "form-control", 'id -> "expediente_modal_agui")
+					<span class="input-group-addon">
+						<a href="#" class="searchModal"
+									id="searchExpediente" 
+									data-title="Selección de expediente" 
+									data-url="@controllers.expediente.routes.ExpedientesController.modalBuscar()" 
+									data-height="650" 
+									data-width="700" 
+									data-listen="modal.seleccion.expediente.simple" 
+									data-label="#expediente_modal_agui" 
+									data-field="#expediente_id_modal_agui">
+							<i class="glyphicon glyphicon-search"></i>
+						</a>
+					</span>
+				</div>
+			</label>
+		</div>
+		<div class="col-sm-3">
+			<label for="inputPeriodo" class="control-label">Periodo</label> 
+			<div class="input-group">
+				@inputText(formBuscador("periodo_modal_agui"),'class -> "form-control",'id -> "periodo_modal_agui")
+				@inputText(formBuscador("periodo_id_modal_agui"),'hidden -> "hidden",'id -> "periodo_id_modal_agui")
+				<span class="input-group-addon">
+				<a href="#" class="searchModal"
+							id="searchPeriodo" 
+							data-title="Selección de Periodo" 
+							data-url="@controllers.contabilidad.routes.PeriodosController.modalBuscar()" 
+							data-height="650" 
+							data-width="700" 
+							data-listen="modal.seleccion.periodo.simple" 
+							data-label="#periodo_modal_agui" 
+							data-field="#periodo_id_modal_agui">
+					<i class="glyphicon glyphicon-search"></i>
+				</a>
+				</span>
+			</div>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-sm-5"><br />
+			<button type="submit" class="btn btn-default" title="Crear Aguinaldo">
+			<i class="glyphicon glyphicon-arrow-right"></i> Crear Aguinaldo</button>
+		</div>
+	</div>
+	<br>
+	<div class="row">
+		@if(url) {
+			<div class="panel panel-default">
+				<div class="panel-body">
+			    	<i class="glyphicon glyphicon-save"></i> 
+			    	<a href="@controllers.contabilidad.routes.FacturasAccionesController.descargar322(url)">Descargar archivo de Planilla Sueldos</a>
+				</div>
+			</div>
+		}
+	</div>
+
+}
+<script>
+$( function(){
+	if($("#periodo_modal_agui").length){
+		var options = {
+				script:"/contabilidad/suggestPeriodo/",
+				varname:"",
+				json:true,
+				shownoresults:true,
+				maxresults:6,
+				callback: function (obj) { 
+											$("#periodo_id_modal_agui").val(obj.id); 
+										 }
+			};
+		var as_json = new bsn.AutoSuggest('periodo_modal_agui', options);
+	}
+	if($("#expediente_modal_agui").length){
+		var options = {
+				script:"/suggestExpediente/",
+				varname:"",
+				json:true,
+				shownoresults:true,
+				maxresults:6,
+				callback: function (obj) { 
+											$("#expediente_id_modal_agui").val(obj.id); 
+										 }
+			};
+		var as_json = new bsn.AutoSuggest('expediente_modal_agui', options);
+	}
+});
+</script>
+@flash().clear()

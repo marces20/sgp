@@ -1,0 +1,277 @@
+@(lmForm: Form[models.haberes.LiquidacionMes])
+@import helper._
+@import utils._
+@import models.auth._
+@import models.haberes._
+@implicitFieldConstructor = @{ FieldConstructor(simpleInput.render) } 
+<script>
+$( function(){ $('.searchModal').modalSearch();})
+</script>		
+	<div class="row menu-acciones">
+		<div class="col-sm-10">
+			<button type="submit" class="btn btn-default" title="Guardar liquidacion"><i class="glyphicon glyphicon-floppy-disk"></i> Guardar</button>
+			<a href="@if(request().getHeader("referer")){ @request().getHeader("referer") } else {@controllers.haberes.routes.LiquidacionMesesController.index()@UriTrack.decode()}" title="Cancelar editar" class="btn btn-default"><i class="glyphicon glyphicon-floppy-remove"></i> Cancelar</a>
+		</div>
+		<div class="col-sm-2">
+			<a href="@UriTrack.decode()" title="Volver al listado" class="btn btn-default"><i class="glyphicon glyphicon-list"></i></a> 
+		</div>	
+	</div>
+	<div class="row">
+		<div class="col-sm-2">
+			<b>Convenio Ministerio</b>
+			<div class="row">
+				<div class="col-sm-5">
+					<div class="radio">
+						<label class="control-label"> 
+							@inputRadioGroup(lmForm("convenio_ministerio"), options = Seq("true"->"SI"))
+						</label>
+					</div>
+				</div>
+				<div class="col-sm-7">
+					<div class="radio">
+						<label class="control-label"> 
+							@inputRadioGroup(lmForm("convenio_ministerio"),options = Seq("false"->"NO"))
+						</label>
+					</div>
+				</div>
+			</div>
+			@lmForm("convenio_ministerio").error.map{ error =>
+					<div class="text-error">@error.message</div>
+				}
+		</div> 
+	
+		<div class="col-sm-2">
+			<div class="form-group @if(lmForm.error("nro_liquidacion_parque") != null) {has-error}else{has-required}">
+				<label for="inputNroLiquidacionParque" class="control-label">N° Liquidación</label> 
+				@inputText(lmForm("nro_liquidacion_parque"), 'class -> "form-control")
+				@lmForm("nro_liquidacion_parque").error.map{ error =>
+					<div class="text-error">@error.message</div>
+				}
+			</div>
+		</div>
+		
+		<div class="col-sm-4">
+			<div class="form-group @if(lmForm.error("titulo") != null) {has-error}else{has-required}">
+				<label for="inputTitulo" class="control-label">Titulo</label> 
+				@inputText(lmForm("titulo"), 'class -> "form-control")
+				@lmForm("titulo").error.map{ error =>
+					<div class="text-error">@error.message</div>
+				}
+			</div>
+		</div>
+		
+		<div class="col-sm-3">
+			<div class="form-group @if(lmForm.error("liquidacionTipo") != null) {has-error}else{has-required}">
+				<label for="@lmForm("liquidacionTipo")" class="control-label">Liquidacion Tipo</label>
+				@select(lmForm("liquidacion_tipo_id"), 
+				LiquidacionTipo.find.all().map { p => p.id.toString -> p.nombre}, 
+				'class -> "form-control select", '_default -> "Seleccionar"), 
+				
+				@lmForm("liquidacion_tipo_id").error.map{ error =>
+					<div class="text-error">@error.message</div>
+				}
+			</div>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-sm-2">
+			<div class="form-group @if(lmForm.error("fecha_liquidacion") != null) {has-error}else{has-required}">
+				<label for="fechaLiquidacion" class="control-label">Fecha Liquidacion</label> 
+				@inputText(lmForm("fecha_liquidacion"),'class -> "form-control date")
+			</div>
+			@lmForm("fecha_liquidacion").error.map{ error =>
+				<div class="text-error">@error.message</div>
+			}
+		</div>
+		<div class="col-sm-2">
+			<div class="form-group @if(lmForm.error("periodo_id") != null) {has-error}else{has-required}">
+				<label for="periodo" class="control-label">Periodo</label> 
+				<div class="input-group">
+					@inputText(lmForm("periodo.nombre"), 'class -> "form-control", 'id -> "periodo")
+					@inputText(lmForm("periodo_id"),'hidden -> "hidden", 'id -> "periodo_id")
+					<span class="input-group-addon">
+						<a href="#" class="searchModal"
+									id="searchPeriodo" 
+									data-title="Selección de Periodo" 
+									data-url="@controllers.contabilidad.routes.PeriodosController.modalBuscar()" 
+									data-height="650" 
+									data-width="700" 
+									data-listen="modal.seleccion.periodo.simple" 
+									data-label="#periodo" 
+									data-field="#periodo_id">
+							<i class="glyphicon glyphicon-search"></i>
+						</a>
+					</span>
+				</div>
+			</div>
+		</div>
+		<div class="col-sm-2">
+			<div class="form-group @if(lmForm.error("expediente_id") != null) {has-error}else{has-required}">
+				<label for="inputExpediente" class="control-label">Expediente</label>
+				<div class="input-group">
+					@inputText(lmForm("expediente.expedienteEjercicio"),'class -> "form-control",'id -> "expediente")
+					@inputText(lmForm("expediente_id"),'hidden -> "hidden", 'id -> "expediente_id")
+					<span class="input-group-addon">
+						<a href="#" class="searchModal"
+									id="searchExpediente" 
+									data-title="Selección de expediente" 
+									data-url="@controllers.expediente.routes.ExpedientesController.modalBuscar()" 
+									data-height="650" 
+									data-width="700" 
+									data-listen="modal.seleccion.expediente.simple" 
+									data-label="#expediente" 
+									data-field="#expediente_id">
+							<i class="glyphicon glyphicon-search"></i>
+						</a>
+					</span>
+				</div>
+				@lmForm("expediente_id").error.map{ error =>
+					<div class="text-error">@error.message</div>
+				}
+			</div>
+		</div>
+		<div class="col-sm-2">
+			<div class="form-group @if(lmForm.error("orden_pago_id") != null) {has-error}">
+				<label for="orden_pago_id" class="control-label">Orden de pago N° </label>
+					<div class="input-group">
+						@inputText(lmForm("ordenPago.nombreCompleto"), 'class -> "form-control", 'id -> "orden_pago")
+						@inputText(lmForm("orden_pago_id"),'hidden -> "hidden", 'id -> "orden_pago_id")
+						<span class="input-group-addon">
+							<a href="#" class="searchModal"
+										id="searchOrdenPago" 
+										data-title="Selección de órdenes de pago" 
+										data-url="@controllers.contabilidad.routes.OrdenesPagosController.modalBuscar()" 
+										data-height="650" 
+										data-width="700" 
+										data-listen="modal.seleccion.orden-pago.simple" 
+										data-label="#orden_pago" 
+										data-field="#orden_pago_id">
+								<i class="glyphicon glyphicon-search"></i>
+							</a>
+						</span>
+					</div>
+			</div>
+		</div>
+		<div class="col-sm-2">
+			<div class="form-group @if(lmForm.error("fecha_orden_pago") != null) {has-error}">
+				<label for="fecha_orden_pago" class="control-label">Fecha orden de pago</label> 
+				@inputText(lmForm("fecha_orden_pago"),'class -> "form-control date", 'id -> "fecha_orden_pago")
+			</div>
+		</div>
+		<div class="col-sm-2">
+			<div class="form-group @if(lmForm.error("fecha_pago") != null) {has-error}">
+				<label for="fecha_pago" class="control-label">Fecha de pago</label> 
+				@inputText(lmForm("fecha_pago"),'class -> "form-control date", 'id -> "fecha_pago")
+			</div>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-sm-2">
+			<div class="form-group @if(lmForm.error("expediente_aporte_id") != null) {has-error}else{has-required}">
+				<label for="inputExpediente" class="control-label">Expediente Aporte</label>
+				<div class="input-group">
+					@inputText(lmForm("expedienteAporte.expedienteEjercicio"),'class -> "form-control",'id -> "expediente_aporte")
+					@inputText(lmForm("expediente_aporte_id"),'hidden -> "hidden", 'id -> "expediente_aporte_id")
+					<span class="input-group-addon">
+						<a href="#" class="searchModal"
+									id="searchExpediente0" 
+									data-title="Selección de expediente" 
+									data-url="@controllers.expediente.routes.ExpedientesController.modalBuscar()" 
+									data-height="650" 
+									data-width="700" 
+									data-listen="modal.seleccion.expediente.simple" 
+									data-label="#expediente_aporte" 
+									data-field="#expediente_aporte_id">
+							<i class="glyphicon glyphicon-search"></i>
+						</a>
+					</span>
+				</div>
+				@lmForm("expediente_aporte_id").error.map{ error =>
+					<div class="text-error">@error.message</div>
+				}
+			</div>
+		</div>
+		<div class="col-sm-2">
+			<div class="form-group @if(lmForm.error("expediente_segurovida_id") != null) {has-error}else{has-required}">
+				<label for="inputExpediente" class="control-label">Exp. Seguro Vida</label>
+				<div class="input-group">
+					@inputText(lmForm("expedienteSeguroVida.expedienteEjercicio"),'class -> "form-control",'id -> "expediente_segurovida")
+					@inputText(lmForm("expediente_segurovida_id"),'hidden -> "hidden", 'id -> "expediente_segurovida_id")
+					<span class="input-group-addon">
+						<a href="#" class="searchModal"
+									id="searchExpediente1" 
+									data-title="Selección de expediente" 
+									data-url="@controllers.expediente.routes.ExpedientesController.modalBuscar()" 
+									data-height="650" 
+									data-width="700" 
+									data-listen="modal.seleccion.expediente.simple" 
+									data-label="#expediente_segurovida" 
+									data-field="#expediente_segurovida_id">
+							<i class="glyphicon glyphicon-search"></i>
+						</a>
+					</span>
+				</div>
+				@lmForm("expediente_segurovida_id").error.map{ error =>
+					<div class="text-error">@error.message</div>
+				}
+			</div>
+		</div>
+		<div class="col-sm-2">
+			<div class="form-group @if(lmForm.error("expediente_segurosepelio_id") != null) {has-error}else{has-required}">
+				<label for="inputExpediente" class="control-label">Exp. Seguro Sepelio</label>
+				<div class="input-group">
+					@inputText(lmForm("expedienteSeguroSepelio.expedienteEjercicio"),'class -> "form-control",'id -> "expediente_segurosepelio")
+					@inputText(lmForm("expediente_segurosepelio_id"),'hidden -> "hidden", 'id -> "expediente_segurosepelio_id")
+					<span class="input-group-addon">
+						<a href="#" class="searchModal"
+									id="searchExpediente2" 
+									data-title="Selección de expediente" 
+									data-url="@controllers.expediente.routes.ExpedientesController.modalBuscar()" 
+									data-height="650" 
+									data-width="700" 
+									data-listen="modal.seleccion.expediente.simple" 
+									data-label="#expediente_segurosepelio" 
+									data-field="#expediente_segurosepelio_id">
+							<i class="glyphicon glyphicon-search"></i>
+						</a>
+					</span>
+				</div>
+				@lmForm("expediente_segurosepelio_id").error.map{ error =>
+					<div class="text-error">@error.message</div>
+				}
+			</div>
+		</div>
+		<div class="col-sm-2">
+			<div class="form-group @if(lmForm.error("expediente_contribuciones_id") != null) {has-error}else{has-required}">
+				<label for="inputExpediente" class="control-label">Exp. Contribuciones</label>
+				<div class="input-group">
+					@inputText(lmForm("expedienteContribuciones.expedienteEjercicio"),'class -> "form-control",'id -> "expediente_contribuciones")
+					@inputText(lmForm("expediente_contribuciones_id"),'hidden -> "hidden", 'id -> "expediente_contribuciones_id")
+					<span class="input-group-addon">
+						<a href="#" class="searchModal"
+									id="searchExpediente2" 
+									data-title="Selección de expediente" 
+									data-url="@controllers.expediente.routes.ExpedientesController.modalBuscar()" 
+									data-height="650" 
+									data-width="700" 
+									data-listen="modal.seleccion.expediente.simple" 
+									data-label="#expediente_contribuciones" 
+									data-field="#expediente_contribuciones_id">
+							<i class="glyphicon glyphicon-search"></i>
+						</a>
+					</span>
+				</div>
+				@lmForm("expediente_contribuciones_id").error.map{ error =>
+					<div class="text-error">@error.message</div>
+				}
+			</div>
+		</div>
+		<div class="col-sm-4">
+			<label for="@lmForm("comentario")" class="control-label">Comentario</label>
+			@textarea(lmForm("comentario"), 'class -> "form-control", 'rows -> 5)
+		</div>
+	</div>
+	<div class="row">
+		
+	</div>
+	

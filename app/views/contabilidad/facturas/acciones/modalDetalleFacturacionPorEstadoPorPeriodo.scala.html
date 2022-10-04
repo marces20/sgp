@@ -1,0 +1,131 @@
+@(facturas:List[Factura])
+
+@getClassEstado(i:Factura) = @{
+	var classEstado:String = new String()
+	var saldoPendiente:BigDecimal = i.getSaldoPendiente()
+	var base:BigDecimal = i.getBase()
+	
+	if(!saldoPendiente.equals(base) && i.estado != null && i.estado_id == 19){
+		classEstado = "pagado"
+	}else{
+		if(i.estado != null && i.estado.id == 18){
+			classEstado = "borrador"
+		}else if(i.estado != null && i.estado.id == 21){
+			classEstado = "cancelada"
+		}else if(i.estado != null && i.estado.id == 19){
+			classEstado = "autorizado"
+		}
+	}
+	classEstado
+}
+
+@getClassPorcentajePagado(i:Factura) = @{
+	
+	var cien:java.math.BigDecimal = new java.math.BigDecimal(100)
+	var porcentaje:java.math.BigDecimal = new java.math.BigDecimal(0)
+	var cero:java.math.BigDecimal = new java.math.BigDecimal(0)
+	var saldoPendiente:java.math.BigDecimal = i.getSaldoPendiente()
+	var base:java.math.BigDecimal = i.base
+	if(i.estado != null && i.estado.id == 19){
+		if(saldoPendiente.compareTo(java.math.BigDecimal.ZERO) != 0 && base.compareTo(java.math.BigDecimal.ZERO) != 0){
+			porcentaje = (base.subtract(saldoPendiente)).multiply(cien).divide(i.base, 2, java.math.RoundingMode.HALF_UP)
+		}else{
+			porcentaje = new java.math.BigDecimal(0)
+		}
+		porcentaje = (base.subtract(saldoPendiente)).multiply(cien).divide(i.base, 2, java.math.RoundingMode.HALF_UP)
+	}
+	porcentaje
+}
+
+@getTotalBase(cl:List[Factura]) = @{
+	var total:java.math.BigDecimal = new java.math.BigDecimal(0)
+	for(c <- cl){
+		total = total.add(c.getBase())
+	}
+	total
+}
+@getTotalImpuestos(cl:List[Factura]) = @{
+	var total:java.math.BigDecimal = new java.math.BigDecimal(0)
+	for(c <- cl){
+		total = total.add(c.getTotalImpuesto())
+	}
+	total
+}
+@getTotalTotal(cl:List[Factura]) = @{
+	var total:java.math.BigDecimal = new java.math.BigDecimal(0)
+	for(c <- cl){
+		total = total.add(c.getTotal())
+	}
+	total
+}
+@getTotalSaldo(cl:List[Factura]) = @{
+	var total:java.math.BigDecimal = new java.math.BigDecimal(0)
+	for(c <- cl){
+		total = total.add(c.getSaldoPendiente())
+	}
+	total
+}
+<table class="table table-bordered tableEstadoGeneral">
+	<thead>
+		<tr>
+			<th width="100">Referencia</th>
+			<th width="70">OPG</th>
+			<th width="100">N° Factura</th>
+			<th width="95">Expediente</th>
+			<th width="95">Periodo</th>
+			<th width="30">Tipo Cuenta</th>
+			<th width="100">Base</th>
+			<th width="100">Total impuestos</th>
+			<th width="100">Total</th>
+			<th width="100">Saldo pendiente</th>
+			<th width="100">Estado</th>
+			<th width="30">Detalle</th> 
+		</tr>
+	</thead>
+	<tbody>
+		@for(factura <- facturas) {
+			<tr class="@getClassEstado(factura)">
+				<td>@(factura.nombre)</td>
+				<td class="opg">@if(factura.ordenPago != null){@(factura.ordenPago.numero)}</td>
+				<td>@(factura.numero_factura)</td>
+				<td>@if(factura.expediente != null){@(factura.expediente.getExpedienteEjercicio())}</td>
+				<td>@if(factura.periodo != null){@(factura.periodo.nombre)}</td>
+				<td>@if(factura.tipoCuenta != null){@factura.tipoCuenta.nombre}</td>
+				<td class="totalBase">@if(factura.base != null){@(utils.NumberUtils.moneda(factura.base))}</td>
+				<td class="totalImpuestos">@(utils.NumberUtils.moneda(factura.getTotalImpuesto()))</td>
+				<td class="total">@(utils.NumberUtils.moneda(factura.getTotal()))</td>
+				<td class="totalSaldo">@(utils.NumberUtils.moneda(factura.getSaldoPendiente()))</td>
+				<td class="estado" align="center">
+					<div class='tip-top' title='@(factura.estado.significado)'>
+					@if(factura.getSaldoPendiente() != null && !factura.getSaldoPendiente().equals(factura.base) && (factura.estado != null && factura.estado.id == 19)){
+						Pagado @getClassPorcentajePagado(factura)%
+					}else{
+						@if(factura.estado != null){@(factura.estado.nombre)}
+					}
+					</div>
+				</td>
+				<td> 
+					<a href='#' class='detalleFacturacionModal' data-url='@controllers.contabilidad.routes.FacturasAccionesController.modalDetalleFacturacion(factura.id)'>
+					<i class='glyphicon glyphicon-tasks'></i></a> 
+				</td>	
+			</tr>
+		}
+		
+		<tr>	
+			<td colspan='6' style='text-align: right;'><b>Totales:</b></td>
+			<td>@utils.NumberUtils.moneda(getTotalBase(facturas))</td>
+			<td>@utils.NumberUtils.moneda(getTotalImpuestos(facturas))</td>
+			<td>@utils.NumberUtils.moneda(getTotalTotal(facturas))</td> 
+			<td>@utils.NumberUtils.moneda(getTotalSaldo(facturas))</td> 
+			<td colspan='2'></td>
+		</tr>
+	</tbody>
+</table>
+
+
+					 
+					
+					
+					
+					
+					

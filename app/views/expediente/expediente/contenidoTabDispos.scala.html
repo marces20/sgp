@@ -1,0 +1,19 @@
+@(expedienteId:Long = 0)
+@import java.util.List
+
+@if(expedienteId == 0){
+	<p>No hay disposiciones</p>
+} else {
+	<script>
+	$( function (){
+		$.get('@controllers.expediente.routes.DisposController.getDisposPorExpediente(expedienteId)', function(data){
+			$('#lineasDispos').parent().html(data);
+		})
+	});
+	</script>
+
+}
+
+<div id="lineasDispos">
+
+</div>

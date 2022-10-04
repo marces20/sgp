@@ -1,0 +1,128 @@
+@(cuentaBancariaForm: Form[CuentaBancaria])
+@import helper._
+@implicitFieldConstructor = @{ FieldConstructor(simpleInput.render) } 
+<script>
+$( function(){
+$('#searchProveedor').modalSearch();
+$( "#cbu" ).mask("9999999999999999999999");
+$( "#numero_cuenta" ).mask("999999999999999");
+});
+
+
+</script>	
+	 
+	<div class="row menu-acciones">
+		<div class="col-sm-10">
+	      <button type="submit" class="btn btn-default"><i class="glyphicon glyphicon-floppy-disk"></i> Guardar</button>
+	      <a href="@controllers.contabilidad.routes.CuentaBancariasController.indexCuentaBancaria()" class="btn btn-default"><i class="glyphicon glyphicon-floppy-remove"></i> Cancelar</a>
+	    </div>
+    </div>
+	@inputText(cuentaBancariaForm("estado_id"),'type -> "hidden", 'class -> "form-control")
+	@inputText(cuentaBancariaForm("id"),'type -> "hidden", 'class -> "form-control")
+	<div class="row">
+		<div class="col-sm-4">
+			<div class="form-group @if(cuentaBancariaForm.error("proveedor_id") != null) {has-error}else{has-required}">
+				<label for="inputProveedor" class="control-label">Proveedor</label> 
+				<div class="input-group">
+					@inputText(cuentaBancariaForm("proveedor.nombre"),'class -> "form-control",'id -> "proveedor")
+					@inputText(cuentaBancariaForm("proveedor_id"),'hidden -> "hidden",'id -> "proveedor_id")
+					<span class="input-group-addon">
+						<a href="#" class="searchModal"
+									id="searchProveedor" 
+									data-title="Selección de Proveedores" 
+									data-url="@controllers.compras.routes.ProveedoresController.modalBuscar()" 
+									data-height="650" 
+									data-width="700" 
+									data-listen="modal.seleccion.proveedor.simple" 
+									data-label="#proveedor" 
+									data-field="#proveedor_id">
+							<i class="glyphicon glyphicon-search"></i>
+						</a>
+					</span>
+				</div>
+				@cuentaBancariaForm("proveedor_id").error.map{ error =>
+					<div class="text-error">@error.message</div>
+				}
+			</div>
+		</div>
+		<div class="col-sm-4">
+			<div class="form-group @if(cuentaBancariaForm.error("numero_cuenta") != null) {has-error}else{has-required}">
+				<label for="inputNombre" class="control-label">Numero Cuenta</label> 
+				@inputText(cuentaBancariaForm("numero_cuenta"), 'class -> "form-control",'id->"numero_cuenta")
+				@cuentaBancariaForm("numero_cuenta").error.map{ error =>
+					<div class="text-error">@error.message</div>
+				}
+			</div>
+		</div>
+		<div class="col-sm-4">
+			<div class="form-group @if(cuentaBancariaForm.error("cbu") != null) {has-error}else{has-required}">
+				<label for="inputNombre" class="control-label">CBU</label> 
+				@inputText(cuentaBancariaForm("cbu"), 'class -> "form-control",'id -> "cbu" )
+				@cuentaBancariaForm("cbu").error.map{ error =>
+					<div class="text-error">@error.message</div>
+				}
+			</div>
+		</div>
+	</div>
+	<div class="row contenedorUbicacion">
+		<div class="col-sm-4">
+			<div class="seleccionBanco form-group @if(cuentaBancariaForm.error("banco_id") != null) {has-error}else{has-required}">
+				<label for="@cuentaBancariaForm("banco_id").id" class="control-label">Banco</label>
+				@select(cuentaBancariaForm("banco_id"), Banco.find.all().map { p => p.id.toString -> p.nombre}, 'class -> "form-control select", '_default -> "Seleccionar")
+				@cuentaBancariaForm("banco_id").error.map{ error =>
+					<div class="text-error">@error.message</div>
+				}
+			</div>
+		</div>
+		<div class="col-sm-4">
+			<div class="seleccionSucursal form-group @if(cuentaBancariaForm.error("sucursal_banco_id") != null) {has-error}else{has-required}">
+				<label for="@cuentaBancariaForm("sucursal_banco_id").id" class="control-label">Sucursal</label>
+				@select(cuentaBancariaForm("sucursal_banco_id"), 
+					cuentaBancariaForm("banco_id").value match {
+						case null => {options()}
+						case v if v.matches("\\d+") => {SucursalBanco.getSucursales(v.toInt).map { p => p.id.toString -> p.nombre}}
+						case _ => {options()}
+					}, 
+				'class -> "form-control select", '_default -> "Seleccionar")
+				@cuentaBancariaForm("sucursal_banco_id").error.map{ error =>
+					<div class="text-error">@error.message</div>
+				}
+			</div>
+		</div>
+		<div class="col-sm-2">
+			<div class="checkbox" style="display: none;">
+				<label class="control-label"> 
+					Activo
+					@checkbox(cuentaBancariaForm("activo"))
+				</label>
+			</div>
+			<div class="checkbox">
+				<label class="control-label"> 
+					Predeterminada
+					@checkbox(cuentaBancariaForm("predeterminada"))
+				</label>
+			</div>
+		</div>
+		 
+	</div>
+<script>
+	$( function() {
+		
+		urlSucursales  = '@controllers.contabilidad.routes.SucursalBancosController.listOptions()';
+		
+		$('.seleccionBanco .select').on('change', function(){
+			var id = $(this).find('option:selected').val();
+			var contenedor = $(this).closest('.contenedorUbicacion');
+			contenedor.find('.seleccionSucursal .select').find('option:gt(0)').remove();
+			
+			if(id == "") return false;
+
+			$.get(urlSucursales + '?bancoId='+id, function(data){
+				contenedor.find('.seleccionSucursal .select').html(data);
+			});
+		});
+		
+		
+	
+	});
+</script>

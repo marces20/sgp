@@ -1,0 +1,29 @@
+@(linea: SolicitudLinea, editable: Boolean,btnEliminar:Boolean)
+@import helper._
+@import utils._
+@import models.auth._
+<tr data-id="@linea.id">
+	@if(editable){
+		<td><input type="checkbox" name="check_listado[]" value="@linea.id" class="check_listado notSeleccion" id="check-@linea.id"/></td>
+		<td class="accion-editar"><a class="btn btn-default btn-xs modificarProducto" href="@controllers.compras.routes.LineasSolicitudesController.editar(linea.id,0)"><i class="glyphicon glyphicon-edit"></i></a></td>
+	}
+	<td>@linea.producto.nombre</td>
+	<td>@if(linea.cantidad != null){@linea.cantidad}else{0}</td>
+	<td>
+	@if(!Permiso.check("noVerPrecios")) {
+		@utils.NumberUtils.moneda(linea.precio_estimado, 2)
+	}
+	</td>
+	<td class="cuentaAnaliticaEnLinea">@if(linea.cuentaAnalitica == null){No asociada} else {@linea.cuentaAnalitica.codigo @linea.cuentaAnalitica.nombre}</td>
+	<td>@linea.udm.nombre</td>
+	<td>
+	@if(!Permiso.check("noVerPrecios")) {
+		@if(linea.precio_estimado != null){@(utils.NumberUtils.moneda(linea.cantidad.multiply(linea.precio_estimado), 2))}else{@(utils.NumberUtils.moneda(new java.math.BigDecimal(0),2))}
+	}
+	</td>
+	
+	@if(editable && btnEliminar){
+		<td>
+			<a class="btn btn-default btn-xs eliminarProducto delete-confirm-link" href="@controllers.compras.routes.LineasSolicitudesController.eliminar(linea.id)"><i class="glyphicon glyphicon-trash icono-eliminar"></i></a></td>
+	}
+</tr>

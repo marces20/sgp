@@ -1,0 +1,59 @@
+@(formBuscador: DynamicForm)
+@import helper._
+@implicitFieldConstructor = @{ FieldConstructor(simpleInput.render) } 
+	
+@helper.form(action = controllers.contabilidad.routes.FacturasAccionesController.marcadoresMasivos(), 'id -> "formMarcadoresMasivos") {	
+	
+	@views.html.tags.successError()
+	 
+	<div class="row">
+		<div class="col-sm-3">
+			<div class="checkbox">
+				<label class="control-label"> 
+					Debe libre deuda DGR
+					@select(formBuscador("debe_dgr"),options(""->"","NO"->"NO","SI"->"SI"), 'class -> "form-control select",'id -> "debe_dgr")
+					 
+				</label>
+			</div> 
+		</div>
+		<div class="col-sm-3">
+			<div class="checkbox">
+				<label class="control-label"> 
+					Debe libre deuda DGR aguinaldo
+					@select(formBuscador("debe_dgr_aguinaldo"),options(""->"","NO"->"NO","SI"->"SI"), 'class -> "form-control select",'id -> "debe_dgr_aguinaldo")
+				</label>
+			</div> 
+		</div>
+		<div class="col-sm-3">
+			<div class="checkbox">
+				<label class="control-label"> 
+					Debe constancia AFIP
+					@select(formBuscador("debe_afip"),options(""->"","NO"->"NO","SI"->"SI"), 'class -> "form-control select",'id -> "debe_afip")
+				</label>
+			</div> 
+		</div>
+		<div class="col-sm-2">
+			<div class="checkbox">
+				<label class="control-label"> 
+					Debe Judicial
+					@select(formBuscador("debe_judicial"),options(""->"","NO"->"NO","SI"->"SI"), 'class -> "form-control select",'id -> "debe_judicial")
+					
+				</label>
+			</div> 
+		</div>
+		
+	</div>
+	 
+	<div class="row">
+		<div class="col-sm-5"><br />
+			<button type="submit" class="btn btn-default" title="Agregar Marcadores Masivos"><i class="glyphicon glyphicon-arrow-right"></i> Cargar</button>
+		</div>
+	</div>
+
+}
+<script>
+$( function(){
+	 
+});
+</script>
+@flash().clear()

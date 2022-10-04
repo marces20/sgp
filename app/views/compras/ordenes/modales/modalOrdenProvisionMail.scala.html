@@ -1,0 +1,43 @@
+@(formBuscador: DynamicForm,ordenId:Long,lista: List[DireccionProveedor])
+@import helper._
+@implicitFieldConstructor = @{ FieldConstructor(simpleInput.render) } 
+@import utils._
+@import models.auth._
+<div class="row" id="div-actualizar-mail-proveedor">
+@views.html.tags.successError()
+@if(lista != null){
+<table class="table table-striped table-bordered">
+	<thead>
+		<tr>
+		    <th>Email</th>
+		    <th>Fecha Actual.</th>
+		    <th colspan="2" ></th>
+		  </tr>
+	</thead>
+	<tbody>
+		@for(linea <- lista) {
+			<tr> 
+  				<td>
+  					<input size="40" type="text" name="email" value="@linea.email" />
+  					<input type="hidden" name="id_direccion" value="@linea.id" />
+  					<input type="hidden" name="ordenId" value="@ordenId" />
+  				</td>
+		    	<td>
+		    		<input size="10" readonly="readonly" type="text" name="fecha_actualizacion" value="@DateUtils.formatDate(linea.getFechaActualizacion())" />
+		    	</td>
+		    	<td>
+		    		<a  id="" data-url="@controllers.compras.routes.ProveedoresAccionesController.actualizarMail()" class="btn btn-default actualizarMailProveedorOrden">
+					<i class="glyphicon glyphicon-arrow-right"></i> Actualizar Mail</a>
+				</td>
+		    	<td>
+		    		<a  id="" data-url="@controllers.compras.routes.OrdenesAccionesController.enviarOrdenMail()" class="btn btn-default enviarMailOrden">
+		    		<i class="glyphicon glyphicon-envelope"></i> Enviar Mail</a>
+				</td>
+		  	</tr>
+		}
+	</tbody>
+</table>
+}
+</div>
+@flash().clear()
+

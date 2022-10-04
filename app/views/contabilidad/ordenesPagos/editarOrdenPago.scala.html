@@ -1,0 +1,32 @@
+@(formOrden: Form[OrdenPago])
+@import helper._
+@implicitFieldConstructor = @{ FieldConstructor(simpleInput.render) }
+
+@views.html.contabilidad.mainContabilidad("Modificar orden de pago") {
+
+	<div class="page-header">
+		<div class="row">
+			<div class="col-sm-10">
+				<h1>Editar orden de pago</h1>
+			</div>
+		</div>
+	</div>
+	
+	@if(flash.containsKey("error")) {
+		<div class="alert alert-danger">
+			@flash.get("error")
+		</div>
+	}
+	
+	@helper.form(action = controllers.contabilidad.routes.OrdenesPagosController.actualizar()) {
+		@inputText(formOrden("id"), 'hidden -> "hidden")
+
+		@views.html.contabilidad.ordenesPagos.formOrdenPago(formOrden)
+	}
+<script>
+$(function(){
+	$('.searchModal').modalSearch(); 
+});
+</script>
+
+}

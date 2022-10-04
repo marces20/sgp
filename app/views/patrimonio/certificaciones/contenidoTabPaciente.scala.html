@@ -1,0 +1,15 @@
+@(certificacionForm: Form[CertificacionServicio] = null)
+@import java.util.List
+
+<script>
+$( function (){
+	$.get('@controllers.patrimonio.routes.LineasCertificacionesController.getListaLineasPacientes(certificacionForm.field("id").value.toLong)', function(data){
+		$('#listaLineaPacientes').html(data.html);
+	})
+});
+</script>
+
+
+<div id="listaLineaPacientes">
+
+</div>

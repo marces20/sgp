@@ -1,0 +1,153 @@
+@(paginador:  utils.pagination.Pagination[FacturaLineaReintegro], editable: Boolean,facturaId:Long,factura:Factura)
+@import models.auth._
+
+<div id="listaLineaReintegros" class="contenedorPaginador ajaxPaginador">
+
+<p>
+	<b>Reintegros</b>
+	@if(Permiso.check("facturasCargarReintegro")) {  
+		@if(factura != null){
+			@if(factura.estado.id ==  models.Estado.FACTURA_ESTADO_APROBADO){
+				<a class="btn btn-default btn-xs" href="#" id="nuevoReintegro"><i class="glyphicon glyphicon-plus"></i> Nuevo</a>
+			}
+		}
+	}
+</p>		
+	<div class="panel panel-default">
+		
+		<div class="panel-body">
+		
+		@if(paginador.getTotalRowCount == 0) {
+	        <p id="mensajeSinResultados" class="well"><i class="glyphicon glyphicon-info-sign"></i> No hay reintegros para esta factura.</p>
+	    } 
+	
+		<table id="listaDeReintegros" class="table table-striped table-bordered  @if(paginador.getTotalRowCount() <= 0){hide}">
+			<thead>
+				<tr>
+					@if(factura.estado.id ==  models.Estado.FACTURA_ESTADO_APROBADO && Permiso.check("facturasEditarReintegros")){
+						<th class="accion-editar">#</th>
+					}
+						
+						<th>Cuenta</th>
+						<th>Cuenta Presupuestaria</th>
+						<th>Cuenta Impuesto</th>
+						<th>Importe</th>
+						<th>Descripcion</th>
+					@if(factura.estado.id ==  models.Estado.FACTURA_ESTADO_APROBADO && Permiso.check("facturasEliminarReintegros")){
+						<th></th>
+					}
+				<tr>	
+			</thead>
+			<tbody>
+			@for(linea <- paginador.getList) {
+				@views.html.contabilidad.facturasLineasReintegros.lineaReintegro(linea, editable,factura:Factura)
+			}
+			</tbody>
+		</table>
+
+
+		
+			<div class="pagination pull-right">
+			    @views.html.helpers.paginador(paginador, controllers.contabilidad.routes.FacturasLineasReintegrosController.index())
+			</div>
+		</div>
+	</div>
+</div>
+
+
+<script>
+$( function(){
+	/**
+	 * Ventana de carga linea de productos en ordenes
+	 */
+	 
+	var contenedor = $("#listaLineaReintegros");
+	
+	contenedor.on('click', '#nuevoReintegro', function(){
+		urlContenidoModal = '/contabilidad/factura-linea-reintegro/crear?facturaId='+$('#facturaId').val();
+		mostrarModal(urlContenidoModal);
+		return false;
+	});
+	
+	contenedor.on('click', '.modificarReintegro', function(){
+		lineaParaEditar = $(this).closest('tr');
+		var modal = mostrarModal($(this).attr('href'));
+		modal.dialog('option', 'title', 'Editar Reintegro');	
+		return false;
+	});
+	
+	contenedor.on('click', '.eliminarReintegro', function(){
+		var mensaje = "¿Confirma que desea eliminar el registro?";
+		if(confirm(mensaje)){
+			var url = $(this).attr('href');
+			$this = $(this);
+			$.get(url, function(data){
+				if(data.success){
+					$this.closest("tr").remove();
+				} else {
+					alert("No se puedo eliminar el registro.");
+				}
+			});
+		}
+		return false;
+	});
+	
+	function mostrarModal(url){
+		modalCargaReintegros = $('<div></div>').dialog({
+			resizable: false,
+		    title: "Cargar Reintegro",
+		    height: 400,
+		    width: 750,
+		    modal: true,
+		    open: function( event, ui ) {
+				$.get(url, function(data){
+					modalCargaReintegros.html(data);
+				});
+		    },
+		    close: function(event, ui ){
+		    	modalCargaReintegros.dialog('destroy');
+			}
+		  });
+		
+		modalCargaReintegros.on('click', '.cancelar', function(){
+			modalCargaReintegros.dialog('destroy');
+			return false;
+		});
+		
+		modalCargaReintegros.on('submit', function(e){
+			var href = $(e.target).attr('action');
+			var data = $(e.target).serialize();
+			$.post(href, data, function(resultado){
+				if(resultado.success && resultado.nuevo){
+					$('#listaDeReintegros tbody').prepend(resultado.html);
+					$('#mensajeSinResultados').remove();
+					$('#listaDeReintegros').removeClass('hide');
+					modalCargaReintegros.dialog( "destroy" );
+					/*aca va funcion Actualizar cuadrito*/				
+				} else if(resultado.success && resultado.modificar){
+					$(lineaParaEditar).replaceWith(resultado.html);
+					modalCargaReintegros.dialog( "destroy" );
+					/*aca va funcion Actualizar cuadrito*/
+					
+				} else {
+					modalCargaReintegros.html(resultado);
+				}
+			});
+			return false;
+		});
+		
+		
+		return modalCargaReintegros;
+	}
+	
+	
+	contenedor.find('form').on('submit', function(){
+		var url = $(this).attr("action");
+		var query = $(this).serialize();
+		$.get(url+"?"+query, function(data){
+			contenedor.parent().html(data);
+		});
+		return false;
+	});
+});
+</script>

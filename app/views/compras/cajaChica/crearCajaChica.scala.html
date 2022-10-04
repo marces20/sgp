@@ -1,0 +1,30 @@
+@(cajaForm: Form[CajaChica])
+@import helper._
+
+@scripts = {
+	<script src="@routes.Assets.at("javascripts/compras/cajaChica.js")" type="text/javascript"></script>
+}
+
+@views.html.compras.mainCompras("Crear caja chica", scripts) {
+
+	<div class="page-header">
+		<div class="row">
+			<div class="col-sm-7">
+				<h1>Crear caja chica</h1>
+			</div>
+		</div>
+	</div>
+	@if(flash.containsKey("error")) {
+		<div class="alert alert-danger">
+			@flash.get("error")
+		</div>
+    }
+    
+    @helper.form(action = controllers.compras.routes.CajaChicaController.guardar()) {
+
+		@views.html.compras.cajaChica.formCajaChica(cajaForm) 
+		@views.html.compras.cajaChica.tabsMovimientos(true, null)	
+
+
+	}
+}

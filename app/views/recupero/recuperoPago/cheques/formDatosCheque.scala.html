@@ -1,0 +1,118 @@
+@(chequeForm: Form[models.recupero.Cheque])
+@import helper._
+@import utils._
+@implicitFieldConstructor = @{ FieldConstructor(simpleInput.render) } 
+
+
+@views.html.tags.successError()
+
+<div class="row">
+	@inputText(chequeForm("id_pago_recupero"), 'hidden -> "hidden")
+	@inputText(chequeForm("id"), 'type -> "hidden")
+
+	<div class="col-sm-2">
+		<label class="control-label">Numero</label> 
+		<div class="form-group @if(chequeForm.error("numero") != null)  {has-error} else {has-required}">
+			@inputText(chequeForm("numero"), 'class -> "form-control", 'id -> "numero")
+			
+			@chequeForm("numero").error.map{ error =>
+				<div class="text-error">@error.message</div>
+			}
+		</div>
+	</div>
+		
+	<div class="col-sm-2">	
+		<label class="control-label">Fecha</label> 
+		<div class="form-group @if(chequeForm.error("fecha") != null)  {has-error} else {has-required}">
+			@inputText(chequeForm("fecha"), 'class -> "form-control date")
+			
+			@chequeForm("fecha").error.map{ error =>
+				<div class="text-error">@error.message</div>
+			}
+		</div>
+		
+	</div>
+	<div class="col-sm-2">
+			<label class="control-label">Monto</label> 
+			<div class="form-group @if(chequeForm.error("monto") != null) {has-error} else {has-required}">
+				@inputText(chequeForm("monto"), 'class -> "form-control", 'id -> "monto")
+				@chequeForm("monto").error.map{ error =>
+					<div class="text-error">@error.message</div>
+				}
+			</div>
+		</div>
+	<div class="col-sm-3">
+		<div class="seleccionBanco form-group @if(chequeForm.error("banco_id") != null) {has-error} else {has-required}">
+			<label for="@chequeForm("banco_id").id" class="control-label">Banco</label>
+			@select(chequeForm("banco_id"), Banco.find.all().map { p => p.id.toString -> p.nombre}, 'class -> "form-control select", '_default -> "Seleccionar")
+			@chequeForm("banco_id").error.map{ error =>
+				<div class="text-error">@error.message</div>
+			}
+		</div>
+	</div>
+
+	<div class="col-sm-3">
+		<div class="seleccionSucursal form-group @if(chequeForm.error("sucursal_banco_id") != null) {has-error} else {has-required}">
+			<label for="@chequeForm("sucursal_banco_id").id" class="control-label">Sucursal</label>
+			@select(chequeForm("sucursal_banco_id"), 
+				chequeForm("banco_id").value match {
+					case null => {options()}
+					case v if v.matches("\\d+") => {SucursalBanco.getSucursales(v.toInt).map { p => p.id.toString -> p.nombre}}
+					case _ => {options()}
+				}, 
+			'class -> "form-control select", 'id -> "sucursal_banco_id", '_default -> "Seleccionar")
+			@chequeForm("sucursal_banco_id").error.map{ error =>
+				<div class="text-error">@error.message</div>
+			}
+		</div>
+	</div>
+
+
+</div>	
+
+<div class="row">
+
+	<div class="col-sm-12">
+		<label for="obs" class="control-label">Observaciones</label> 
+		@textarea(chequeForm("observaciones"), 'class -> "form-control", 'rows -> "4", 'id -> "obs")
+	</div>
+
+</div>
+
+<div class="row form-actions">
+    <div class="col-lg-offset-4 col-lg-8">
+      <a href="" class="btn btn-default cancelar" title="Cancelar"><i class="glyphicon glyphicon-floppy-remove"></i> Cancelar</a>
+      <button type="submit" class="btn btn-default" title="Guardar Linea"><i class="glyphicon glyphicon-floppy-disk"></i> Guardar</button>
+    </div>
+</div>
+@flash().clear()
+
+<script>
+$( function() {
+	
+	
+	$( ".date" ).mask("99/99/9999");
+	$("#monto,#numero").numeric_input({allowNegative: true});
+	/*$('#formDatosCheques').on('submit', function() {
+		var url = $(this).attr("action");
+		$.post(url, $(this).serialize(), function(data) {
+			$('#datosCheque').html(data);
+		});
+		return false;
+	});*/
+	
+	
+	urlSucursales  = '@controllers.contabilidad.routes.SucursalBancosController.listOptions()';
+	
+	$('.seleccionBanco .select').on('change', function(){
+		var id = $(this).find('option:selected').val();
+		$('#sucursal_banco_id').find('option:gt(0)').remove();
+		
+		if(id == "") return false;
+
+		$.get(urlSucursales + '?bancoId='+id, function(data){
+			$('#sucursal_banco_id').html(data);
+		});
+	});		
+});
+</script>

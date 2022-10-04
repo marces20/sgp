@@ -1,0 +1,14 @@
+@(lineaForm: Form[LineaRecursoPresupuestario])
+@import helper._
+@implicitFieldConstructor = @{ FieldConstructor(simpleInput.render) } 
+
+@helper.form(action = controllers.presupuesto.routes.LineasRecursosPresupuestariosController.actualizar()) {
+	@views.html.presupuesto.lineaRecursoPresupuestario.formLineaRecurso(lineaForm)
+	@inputText(lineaForm("id"), 'hidden -> "hidden")
+	<div class="row form-actions">
+	    <div class="col-lg-offset-4 col-lg-8">
+	      <a href="" class="btn btn-default cancelar">Cancelar</a>
+	      <button type="submit" class="btn btn-sistema">Modificar</button>
+	    </div>
+	</div>
+}

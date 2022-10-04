@@ -1,0 +1,101 @@
+@(cuentaForm: Form[CuentaAnalitica], cuentaPadre: CuentaAnalitica)
+@import helper._
+@implicitFieldConstructor = @{ FieldConstructor(simpleInput.render) }
+<script>
+$(function(){
+	$('#searchCuentaAnalitica').modalSearch();
+});
+</script>
+
+ <div class="row">
+	<div class="col-sm-3">
+		<div class="form-group">
+			<label for="nombre" class="control-label">Cuenta Padre</label>
+			<p>@cuentaPadre.nombre</p>
+		</div>
+	</div>
+	
+	<div class="col-sm-2">
+		<div class="form-group @if(cuentaForm.error("codigo") != null) {has-error} else {has-required}">
+			<label for="codigo" class="control-label">Código</label>
+			@inputText(cuentaForm("codigo"), 'class -> "form-control")
+			@cuentaForm("codigo").error.map{ error =>
+				<div class="text-error">@error.message</div>
+			}
+		</div>
+	</div>
+	
+	<div class="col-sm-3">
+		<div class="form-group @if(cuentaForm.error("nombre") != null) {has-error} else {has-required}">
+			<label for="nombre" class="control-label">Nombre</label>
+			@inputText(cuentaForm("nombre"), 'class -> "form-control")
+			@cuentaForm("nombre").error.map{ error =>
+				<div class="text-error">@error.message</div>
+			}
+		</div>
+	</div>
+	
+	<div class="col-sm-2">
+		<div class="form-group @if(cuentaForm.error("tipo_partida") != null) {has-error} else {has-required}">
+			<label for="tipo_partida" class="control-label">Tipo partida</label>
+			@inputText(cuentaForm("tipo_partida"), 'class -> "form-control")
+			@cuentaForm("tipo_partida").error.map{ error =>
+				<div class="text-error">@error.message</div>
+			}
+		</div>
+	</div>
+</div>
+
+<div class="row">
+	<div class="col-sm-6">
+		<label for="cuenta" class="control-label">Cuenta presupuestaria a reportar</label>
+		<div class="input-group @if(cuentaForm.error("cuenta_reporta_id") != null) {has-error} else {has-required}">
+			@inputText(cuentaForm("cuentaReporta.nombre"), 'class -> "form-control", 'id -> "cuentaAnalitica")
+			@inputText(cuentaForm("cuenta_reporta_id"), 'hidden -> "hidden", 'id -> "cuentaAnalitica_id")
+			<span class="input-group-addon">
+				<a href="#" 
+				   id="searchCuentaAnalitica" 
+				   class="searchModal"
+				   data-title="Selección de Cuenta Analitica" 
+				   data-url="@controllers.contabilidad.routes.CuentasAnaliticasController.modalBuscar()" 
+				   data-height="650" 
+				   data-width="700" 
+				   data-listen="modal.seleccion.cuentaAnalitica.simple" 
+				   data-label="#cuentaAnalitica" data-field="#cuentaAnalitica_id">
+				   <i class="glyphicon glyphicon-search"></i>
+				 </a>
+			</span>
+		</div>
+		@cuentaForm("cuenta_analitica_id").error.map{ error =>
+			<div class="text-error">@error.message</div>
+		}
+	</div>
+	<div class="col-sm-2">
+		<div class="checkbox" @if(cuentaForm.error("activo") != null) {has-error}">
+			<label class="control-label"> @checkbox(cuentaForm("ejecutable")) ¿Ejecutable?</label>
+		</div>
+	</div>
+	
+	<div class="col-sm-2">
+		<div class="checkbox" @if(cuentaForm.error("activo") != null) {has-error}">
+			<label class="control-label"> @checkbox(cuentaForm("carga_credito")) ¿Carga crédito?</label>
+		</div>
+	</div>
+</div>
+<script>
+$( function(){
+	if($("#cuentaAnalitica").length){
+		var options = {
+				script:"/contabilidad/suggestCuentaAnalitica/",
+				varname:"",
+				json:true,
+				shownoresults:true,
+				maxresults:6,
+				callback: function (obj) { 
+											$("#cuentaAnalitica_id").val(obj.id); 
+										 }
+			};
+		var as_json = new bsn.AutoSuggest('cuentaAnalitica', options);
+	}	
+});
+</script>

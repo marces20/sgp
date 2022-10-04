@@ -1,0 +1,14 @@
+@(formularioCarga: Boolean, agenteSeguimientoForm: Form[AgenteSeguimiento] = null,agenteSeguimiento:AgenteSeguimiento)
+
+<ul id="seguimientoTab" class="nav nav-tabs">
+	<li class="active"><a class="tabProducto" href="#contenedorEventos" data-toggle="tab">Eventos</a></li>
+</ul>
+
+<div class="tab-content">
+
+	<div class="tab-pane active" id="contenedorEventos">
+		@views.html.rrhh.agenteSeguimientos.contenidoTabEventos(formularioCarga, agenteSeguimientoForm)	
+	</div>
+	 
+
+</div>

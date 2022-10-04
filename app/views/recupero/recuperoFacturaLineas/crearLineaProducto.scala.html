@@ -1,0 +1,8 @@
+@(lineaForm: Form[models.recupero.RecuperoFacturaLinea])
+@import helper._
+@implicitFieldConstructor = @{ FieldConstructor(simpleInput.render) } 
+
+@helper.form(action = controllers.recupero.routes.RecuperoFacturaLineasController.guardar()) {
+	@views.html.recupero.recuperoFacturaLineas.formLineaProducto(lineaForm)
+	
+}

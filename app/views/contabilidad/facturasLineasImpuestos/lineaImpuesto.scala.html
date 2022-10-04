@@ -1,0 +1,24 @@
+@(linea: FacturaLineaImpuesto, editable: Boolean)
+@import models.auth._
+
+<tr data-id="@linea.id">
+	@if(editable && Permiso.check("facturasCargarRetencones")){
+		<td class="accion-editar"><a class="btn btn-default btn-xs modificarImpuesto" href="@controllers.contabilidad.routes.FacturasLineasImpuestosController.editar(linea.id)"><i class="glyphicon glyphicon-edit"></i></a></td>
+	}
+		<td>@linea.nombre</td>
+		<td>@linea.cuenta.nombre</td>
+		<td>@utils.NumberUtils.moneda(linea.base)</td>
+		<td>@utils.NumberUtils.moneda(linea.monto)</td>
+		<td>@if(linea.tipo != null){
+			 
+				@linea.tipo.intValue() match {
+			    	case 1 => {SERVICIO}
+					case 2 => {BIENES}
+					case 3 => {SERVICIOS AGENTES}
+				}
+			 
+		}</td>
+	@if(editable && Permiso.check("facturasCargarRetencones")){
+		<td><a class="btn btn-default btn-xs delete-confirm-link eliminarImpuesto" href="@controllers.contabilidad.routes.FacturasLineasImpuestosController.eliminar(linea.id)"><i class="glyphicon glyphicon-trash icono-eliminar"></i></a></td>
+	}
+</tr>

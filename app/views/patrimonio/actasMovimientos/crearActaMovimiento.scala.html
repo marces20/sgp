@@ -1,0 +1,7 @@
+@(lineaForm: Form[ActaMovimiento])
+@import helper._
+@implicitFieldConstructor = @{ FieldConstructor(simpleInput.render) } 
+
+@helper.form(action = controllers.patrimonio.routes.ActasMovimientosController.guardar()) {
+	@views.html.patrimonio.actasMovimientos.formActaMovimiento(lineaForm)
+}

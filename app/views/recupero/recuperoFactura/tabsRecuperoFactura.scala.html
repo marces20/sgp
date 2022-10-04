@@ -1,0 +1,37 @@
+@(formularioCarga: Boolean, recuperoFacturaForm: Form[models.recupero.RecuperoFactura] = null,factura:models.recupero.RecuperoFactura = null)
+<hr />
+<div class="row">
+	<ul id="recuperoFacturaTab" class="nav nav-tabs">
+		<li class="active"><a class="tabProducto" href="#contenedorProductos" data-toggle="tab">Productos</a></li>
+		<li><a class="tabNotas" href="#contenedorNotas" data-toggle="tab">Notas</a></li>
+	</ul>
+	
+	<div class="tab-content">
+	
+		<div class="tab-pane active" id="contenedorProductos">
+			@views.html.recupero.recuperoFactura.contenidoTabProducto(formularioCarga, recuperoFacturaForm)	
+		</div>
+		<div class="tab-pane" id="contenedorNotas">
+			@if(formularioCarga){
+				<textarea name="nota" class="form-control" rows="5">@recuperoFacturaForm.field("nota").value</textarea>
+			} else {
+				<textarea name="nota" disabled="disabled" class="form-control" rows="5">@recuperoFacturaForm.field("nota").value</textarea>
+			}
+		</div>
+	
+	</div>
+</div>
+
+<hr />
+
+<div class="row">
+	<div class="col-sm-7">
+		@views.html.recupero.recuperoFactura.contenidoTabNotaCredito(formularioCarga,recuperoFacturaForm)
+	</div>
+	<div class="col-sm-5">
+		@if(!formularioCarga){
+			@views.html.recupero.recuperoFactura.contenidoTabDetalle(formularioCarga,recuperoFacturaForm,factura)
+		}
+		
+	</div>
+</div>

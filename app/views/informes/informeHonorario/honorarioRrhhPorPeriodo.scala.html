@@ -1,0 +1,440 @@
+@(formBuscador: DynamicForm,
+pId:Long,
+total:Integer,
+totalconv:Integer,
+totalparque:Integer)
+@import helper._
+@import utils._
+@import models.auth._
+@implicitFieldConstructor = @{ FieldConstructor(simpleInput.render) }
+
+@views.html.informes.mainInformes("Honorarios - RRHH por Periodo") {
+
+@views.html.informes.navInformes()
+
+@views.html.tags.successError()
+
+ 
+<div class="row">
+	<div class="col-sm-4">
+		<h1>Honorarios  - RRHH por Periodo</h1>
+		 
+	
+	</div>
+	<div class="col-sm-4">
+		
+	</div>
+
+	<div class="col-sm-4">
+		
+		 
+	
+	</div>
+</div>
+ 
+<form action="" method="GET" id="filtroInforme">
+    	 
+	<div class="row seccion">
+		<div class="col-sm-2">
+			<div class="form-group @if(formBuscador.error("periodo_id") != null) {has-error}">
+				<label for="periodo" class="control-label">Periodo</label> 
+				<div class="input-group">
+					@inputText(formBuscador("periodo.nombre"), 'class -> "form-control", 'id -> "periodo")
+					@inputText(formBuscador("periodo.id"),'hidden -> "hidden", 'id -> "periodo_id")
+					<span class="input-group-addon">
+						<a href="#" class="searchModal"
+									id="searchPeriodo" 
+									data-title="Selección de Periodo" 
+									data-url="@controllers.contabilidad.routes.PeriodosController.modalBuscar()" 
+									data-height="650" 
+									data-width="700" 
+									data-listen="modal.seleccion.periodo.simple" 
+									data-label="#periodo" 
+									data-field="#periodo_id">
+							<i class="glyphicon glyphicon-search"></i>
+						</a>
+					</span>
+				</div>
+			</div>
+		</div>
+		
+		<div class="col-sm-2">
+			<div class="form-group">
+				<label for="nombre" class="control-label">&nbsp;</label>
+				<button  class="form-control btn btn-primary" id="btn-buscar">Buscar</button>
+			</div>
+		</div>
+		<div class="col-sm-2">
+			<div class="form-group">
+				<label for="nombre" class="control-label">&nbsp;</label>
+				<a href="@controllers.informes.routes.InformesHonorariosController.honorarioRrhhPorPeriodo()"  class="form-control btn btn-default">Limpiar</a>
+			</div>
+		</div>
+		
+	</div>
+</form>
+<hr>
+@if(pId != null){
+<div class="row seccion">
+   	 <div class="col-sm-4">
+	  	  <div class="small-box bg-green">
+	  	  	<div class="inner">
+	          <h3>Total RRHH</h3>
+	          <p>@total</p>
+	  	  </div>
+		 </div>
+	 </div>
+	 <div class="col-sm-4">
+	  	  <div class="small-box bg-green">
+	  	  	<div class="inner">
+	          <h3>Total RRHH PARQUE</h3>
+	          <p>@totalparque</p>
+	  	  </div>
+		 </div>
+	 </div> 
+	 <div class="col-sm-4">
+	  	  <div class="small-box bg-green">
+	  	  	<div class="inner">
+	          <h3>Total RRHH CONV.</h3>
+	          <p>@totalconv</p>
+	  	  </div>
+		 </div>
+	 </div> 
+</div>
+<hr>
+ <h3 class="card-title">Escala</h3>
+	<div class="row">
+		<div class="col-sm-5">
+   	 		<!-- PIE CHART -->
+            <div class="card card-danger">
+              <div class="card-header">
+                <h3 class="card-title">Parque</h3>
+
+                <div class="card-tools">
+                   
+                </div>
+              </div>
+              <div class="card-body">
+                <canvas id="pieChart0" style="height:230px; min-height:230px"></canvas>
+              </div>
+              <!-- /.card-body -->
+            </div>
+            <!-- /.card -->
+		   
+           
+		<div class="card card-info">
+             
+            <div class="card-body p-0">
+              <table class="table table-bordered">
+                <thead>
+                  <tr>
+                    <th></th>
+                    <th style="text-align: center;">Totales Agentes</th>
+                    <th style="text-align: center;">(%)</th> 
+                  </tr>
+                </thead>
+                <tbody>
+				  <tr>
+                    <td>Escala I (Otros)</td>
+                    <td id="escala1parque" align="center"></td>
+                    <td id="porcentajeParque1" align="center"></td>
+                  </tr> 
+                  <tr>
+                    <td>Escala II (Auxiliares)</td>
+                    <td id="escala2parque" align="center"></td>
+                    <td id="porcentajeParque2" align="center"></td>
+                  </tr>
+                  <tr>
+                    <td>Escala III (Tecnicos)</td>
+                    <td id="escala3parque" align="center"></td>
+                    <td id="porcentajeParque3" align="center"></td>
+                  </tr>   
+                  <tr>
+                    <td>Escala IV (Profesionales)</td>
+                    <td id="escala4parque" align="center"></td>
+                    <td id="porcentajeParque4" align="center"></td>
+                  </tr>   
+                  <tr>
+                    <td>Escala V (Medicos)</td>
+                    <td id="escala5parque" align="center"></td>
+                    <td id="porcentajeParque5" align="center"></td>
+                  </tr>   
+                  <tr>
+                    <td style="font-weight:bold;font-size: 15px;">Total</td>
+                    <td id="totalParque" style="font-weight:bold;font-size: 15px;" align="center"></td>
+                    <td style="font-weight:bold;font-size: 15px;" align="center">100%</td>
+                  </tr> 
+                </tbody>
+              </table>
+            </div>
+            <!-- /.card-body -->
+          </div>
+	</div>
+	<div class="col-sm-2">
+	</div>
+	<div class="col-sm-5">
+		<!-- PIE CHART -->
+        <div class="card card-danger">
+          <div class="card-header">
+            <h3 class="card-title">Convenio</h3>
+
+            <div class="card-tools">
+               
+            </div>
+          </div>
+          <div class="card-body">
+            <canvas id="pieChart00" style="height:230px; min-height:230px"></canvas>
+          </div>
+          <!-- /.card-body -->
+        </div>
+        <!-- /.card -->
+		<div class="card card-info">
+             
+            <div class="card-body p-0">
+              <table class="table table-bordered">
+                <thead>
+                  <tr>
+                    <th></th>
+                    <th style="text-align: center;">Totales Agentes</th>
+                    <th style="text-align: center;">%</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>Escala I (Otros)</td>
+                    <td id="escala1convenio" align="center"></td>
+                    <td id="porcentajeConvenio1" align="center"></td>
+                  </tr> 
+                  <tr>
+                    <td>Escala II (Auxiliares)</td>
+                    <td id="escala2convenio" align="center"></td>
+                    <td id="porcentajeConvenio2" align="center"></td>
+                  </tr>
+                  <tr>
+                    <td>Escala III (Tecnicos)</td>
+                    <td id="escala3convenio" align="center"></td>
+                    <td id="porcentajeConvenio3" align="center"></td>
+                  </tr>   
+                  <tr>
+                    <td>Escala IV (Profesionales)</td>
+                    <td id="escala4convenio" align="center"></td>
+                    <td id="porcentajeConvenio4" align="center"></td>
+                  </tr>   
+                  <tr>
+                    <td>Escala V (Medicos)</td>
+                    <td id="escala5convenio" align="center"></td>
+                    <td id="porcentajeConvenio5" align="center"></td>
+                  </tr>
+                  <tr>
+                    <td style="font-weight:bold;font-size: 15px;">Total</td>
+                    <td id="totalConvenio" style="font-weight:bold;font-size: 15px;" align="center"></td>
+                    <td style="font-weight:bold;font-size: 15px;" align="center">100%</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <!-- /.card-body -->
+          </div>
+	</div> 
+</div>
+<hr>
+}
+}
+
+<script>
+
+$( function() {
+	$('#searchProveedor,#searchPeriodo').modalSearch();
+});
+
+var pieOptions = {
+					maintainAspectRatio : false,
+					responsive : true,
+				}
+
+
+var idPeriodo = $('#periodo_id').val();
+if(idPeriodo != ''){
+	
+	var url = '/informes/honorarios/getCountRrrhPorEscala';	
+	var data = 'idPeriodo='+idPeriodo+'&convenio=false';
+	$.post(url, data, function(data){
+		var labels = [];
+		var dataEscalaParque = [0,0,0,0,0];
+		var totalParque = 0;
+		
+		var porcentajeParque1 = 0;
+		var porcentajeParque2 = 0;
+		var porcentajeParque3 = 0;
+		var porcentajeParque4 = 0;
+		var porcentajeParque5 = 0;
+		
+		if(data.success) {
+			$.each(data.results, function(idx,valor) {
+				$.each(valor, function(valor1,valor2) {
+					 
+					switch(valor1) {
+						case '1':
+				 			dataEscalaParque[0]= valor2;
+				 			porcentajeParque1 = valor2;
+				 			$('#escala1parque').html(valor2); 
+				  		break;
+						case '2':
+				 			dataEscalaParque[1]= valor2;
+				 			porcentajeParque2 = valor2;
+				 			$('#escala2parque').html(valor2); 
+				  		break;
+						case '3':
+				 			dataEscalaParque[2]= valor2;
+				 			porcentajeParque3 = valor2;
+				 			$('#escala3parque').html(valor2); 
+				  		break;
+						case '4':
+				 			dataEscalaParque[3]= valor2;
+				 			porcentajeParque4 = valor2;
+				 			$('#escala4parque').html(valor2); 
+				  		break;
+						case '5':
+				 			dataEscalaParque[4]= valor2;
+				 			porcentajeParque5 = valor2;
+				 			$('#escala5parque').html(valor2); 
+				  		break;
+					}
+					totalParque = parseInt(totalParque) + parseInt(valor2);
+				}); 
+				$('#totalParque').html(parseInt(totalParque));
+				
+				 	  
+				
+				$('#porcentajeParque1').html(parseFloat((porcentajeParque1*100)/totalParque).toFixed(2)+"%");
+				$('#porcentajeParque2').html(parseFloat((porcentajeParque2*100)/totalParque).toFixed(2)+"%");
+				$('#porcentajeParque3').html(parseFloat((porcentajeParque3*100)/totalParque).toFixed(2)+"%");
+				$('#porcentajeParque4').html(parseFloat((porcentajeParque4*100)/totalParque).toFixed(2)+"%");
+				$('#porcentajeParque5').html(parseFloat((porcentajeParque5*100)/totalParque).toFixed(2)+"%");
+				
+				
+				
+				
+			});
+			 
+			setDataEscalaParque(dataEscalaParque);
+		}
+	});
+	
+	var url = '/informes/honorarios/getCountRrrhPorEscala';
+	var data = 'idPeriodo='+idPeriodo+'&convenio=true';
+	$.post(url, data, function(data){
+		var labels = [];
+		var dataEscalaConvenio = [0,0,0,0,0];
+		var totalConvenio = 0;
+		var porcentajeConvenio1 = 0;
+		var porcentajeConvenio2 = 0;
+		var porcentajeConvenio3 = 0;
+		var porcentajeConvenio4 = 0;
+		var porcentajeConvenio5 = 0;
+		
+		if(data.success) {
+			$.each(data.results, function(idx,valor) {
+				$.each(valor, function(valor1,valor2) {
+					 
+					switch(valor1) {
+						case '1':
+							dataEscalaConvenio[0]= valor2;
+							$('#escala1convenio').html(valor2); 
+							porcentajeConvenio1 = valor2;
+				  		break;
+						case '2':
+							dataEscalaConvenio[1]= valor2;
+							$('#escala2convenio').html(valor2); 
+							porcentajeConvenio2 = valor2;
+				  		break;
+						case '3':
+							dataEscalaConvenio[2]= valor2;
+							$('#escala3convenio').html(valor2); 
+							porcentajeConvenio3 = valor2;
+				  		break;
+						case '4':
+							dataEscalaConvenio[3]= valor2;
+							$('#escala4convenio').html(valor2);
+							porcentajeConvenio4 = valor2;
+				  		break;
+						case '5':
+							dataEscalaConvenio[4]= valor2;
+							$('#escala5convenio').html(valor2);
+							porcentajeConvenio5 = valor2;
+				  		break;
+					}
+					totalConvenio = parseInt(totalConvenio) + parseInt(valor2);
+				}); 
+				$('#totalConvenio').html(parseInt(totalConvenio));
+				
+				$('#porcentajeConvenio1').html(parseFloat((porcentajeConvenio1*100)/totalConvenio).toFixed(2)+"%");
+				$('#porcentajeConvenio2').html(parseFloat((porcentajeConvenio2*100)/totalConvenio).toFixed(2)+"%");
+				$('#porcentajeConvenio3').html(parseFloat((porcentajeConvenio3*100)/totalConvenio).toFixed(2)+"%");
+				$('#porcentajeConvenio4').html(parseFloat((porcentajeConvenio4*100)/totalConvenio).toFixed(2)+"%");
+				$('#porcentajeConvenio5').html(parseFloat((porcentajeConvenio5*100)/totalConvenio).toFixed(2)+"%");
+			});
+			 
+			setDataEscalaConvenio(dataEscalaConvenio);
+		}
+	});
+	
+	
+	function setDataEscalaParque(data){
+		var donutData0        = {
+			      labels: [
+			          'Escala I', 
+			          'Escala II',
+			          'Escala III',
+			          'Escala IV',
+			          'Escala V'
+			      ],
+			      datasets: [
+			        {
+			          data: data,
+			          backgroundColor : ['#f56954', '#00a65a', '#f39c12', '#00c0ef', '#3c8dbc'],
+			        }
+			      ]
+			    }
+			    
+		var pieChartCanvas0 = $('#pieChart0').get(0).getContext('2d')
+		var pieData0       = donutData0;
+		
+		 
+		var pieChart0 = new Chart(pieChartCanvas0, {
+			type: 'pie',
+			data: pieData0,
+			options: pieOptions      
+		})
+	}
+	
+	function setDataEscalaConvenio(data){
+		var donutData00        = {
+			      labels: [
+			          'Escala I', 
+			          'Escala II',
+			          'Escala III',
+			          'Escala IV',
+			          'Escala V'
+			      ],
+			      datasets: [
+			        {
+			          data: data,
+			          backgroundColor : ['#f56954', '#00a65a', '#f39c12', '#00c0ef', '#3c8dbc'],
+			        }
+			      ]
+			    }
+			    
+		var pieChartCanvas00 = $('#pieChart00').get(0).getContext('2d')
+		var pieData00       = donutData00;
+		
+		var pieChart00 = new Chart(pieChartCanvas00, {
+			type: 'pie',
+			data: pieData00,
+			options: pieOptions      
+		})
+	}
+	
+}
+
+</script>

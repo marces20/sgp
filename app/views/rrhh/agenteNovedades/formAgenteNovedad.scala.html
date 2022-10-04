@@ -1,0 +1,127 @@
+@(lineaForm: Form[AgenteNovedad])
+@import helper._
+@implicitFieldConstructor = @{ FieldConstructor(simpleInput.render) } 
+
+@if(flash.containsKey("error")) {
+	<div class="alert alert-danger">
+		<i class="glyphicon glyphicon-remove-sign"></i> @flash.get("error")
+	</div>
+}
+
+<div class="row">
+	@inputText(lineaForm("agente_id"), 'type -> "hidden")
+	
+	<div class="col-sm-2">
+		<div class="form-group @if(lineaForm.error("fecha_inicio") != null) {has-error}else{has-required}">
+			<label for="inputFinicio" class="control-label">Fecha</label> 
+			@inputText(lineaForm("fecha_inicio"), 'class -> "form-control", 'id -> "fecha_inicio")
+			@lineaForm("fecha_inicio").error.map{ error =>
+				<div class="text-error">@error.message</div>
+			}
+		</div>
+	</div>
+	
+	<div class="col-sm-3">
+		<div class="form-group @if(lineaForm.error("carga_horaria") != null) {has-error}else{has-required}">
+			<label for="carga horaria" class="control-label">Horas Semanales</label> 
+			@inputText(lineaForm("carga_horaria"), 'class -> "form-control", 'id -> "carga_horaria")
+			@lineaForm("carga_horaria").error.map{ error =>
+				<div class="text-error">@error.message</div>
+			}
+		</div>
+	</div>
+</div>
+<div class="row">
+	<div class="col-sm-4">
+		<div class="form-group @if(lineaForm.error("tipo_novedad_agente_id") != null) {has-error}else{has-required}">
+			<label for="@lineaForm("tipo_novedad_agente_id")" class="control-label">Tipo Modificacion</label>
+			@select(lineaForm("tipo_novedad_agente_id"), 
+			TipoNovedadAgente.find.orderBy("id asc").findList().map { p => p.id.toString -> p.nombre}, 
+			'class -> "form-control select", '_default -> "Seleccionar")
+			
+			@lineaForm("tipo_novedad_agente_id").error.map{ error =>
+				<div class="text-error">@error.message</div>
+			}
+		</div>
+	</div>
+	
+	<div class="col-sm-4">
+		<div class="form-group @if(lineaForm.error("escala_laboral_id") != null) {has-error}else{has-required}">
+			<label for="@lineaForm("escala_laboral_id")" class="control-label">Agrupamiento</label>
+			@select(lineaForm("escala_laboral_id"), 
+			models.haberes.EscalaLaboral.find.orderBy("id asc").findList().map { p => p.id.toString -> p.nombre}, 
+			'class -> "form-control select", '_default -> "Seleccionar")
+			
+			@lineaForm("escala_laboral_id").error.map{ error =>
+				<div class="text-error">@error.message</div>
+			}
+		</div>
+	</div>
+	<div class="col-sm-3">
+		<label class="control-label">Categoria Interna</label>
+			<div class="input-group @if(lineaForm.error("categoria_laboral_id") != null) {has-error}else{has-required}">
+				@inputText(lineaForm("categoriaLaboral.nombre"), 'name -> "", 'class -> "form-control", 'id -> "categoria_laboral")
+				@inputText(lineaForm("categoria_laboral_id"), 'hidden -> "hidden", 'id -> "categoria_laboral_id")
+				<span class="input-group-addon">
+				<a href="#" class="searchModal" id="searchCategoriaLaboral" 
+						 	data-title="Selección de categoria" 
+						 	data-url="@controllers.haberes.routes.CategoriasLaboralesController.modalBuscar()" 
+						 	data-height="650" data-width="700" 
+						 	data-listen="modal.seleccion.categoriaLaboral.simple" 
+						 	data-label="#categoria_laboral" data-field="#categoria_laboral_id">
+				<i class="glyphicon glyphicon-search"></i></a></span>
+			</div>
+			@lineaForm("categoria_laboral_id").error.map{ error =>
+				<div class="text-error">@error.message</div>
+			}
+	</div> 
+</div>	
+
+<div class="row">
+	
+
+	<div class="col-sm-8">
+		<div class="form-group">
+			<label for="inputNota" class="control-label">Observacion</label> 
+			@inputText(lineaForm("observaciones"), 'class -> "form-control")
+		</div>
+	</div>
+</div>
+<div class="row">
+	<div class="col-sm-8">
+		<div class="form-group">
+			<label for="inputNota" class="control-label">Situación Contractual</label> 
+			@inputText(lineaForm("situacion"), 'class -> "form-control")
+		</div>
+	</div>
+</div>
+
+<div class="row form-actions">
+    <div class="col-lg-offset-4 col-lg-8">
+    	<a href="" class="btn btn-default cancelar"><i class="glyphicon glyphicon-floppy-remove"></i>Cancelar</a>
+     	<button type="submit" class="btn btn-default"><i class="glyphicon glyphicon-floppy-disk"></i>Guardar</button>	
+    </div>
+</div>
+<script>
+$( function(){
+	$("#fecha_inicio").mask("99/99/9999");
+	$("#carga_horaria").mask("99");
+	$('#searchCategoriaLaboral').modalSearch();
+	if($("#categoria_laboral").length){
+		var options = {
+				script:"/haberes/categoriaLaboral/suggestCategoriaLaboral/",
+				varname:"",
+				json:true,
+				shownoresults:true,
+				maxresults:6,
+				callback: function (obj) { 
+											$("#categoria_laboral_id").val(obj.id); 
+										 }
+			};
+		var as_json = new bsn.AutoSuggest('categoria_laboral', options);
+	}
+});
+</script>	
+
+
+@flash().clear()

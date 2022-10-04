@@ -1,0 +1,16 @@
+@(cuentas: List[CuentaAnalitica])
+
+@if(cuentas.size() > 0){
+	<ul>
+    @for(cuenta <- cuentas) {
+    	<li>
+    		<a href="?id=@cuenta.id.toInt" class="hide"></a>
+	    	<a href="@controllers.contabilidad.routes.CuentasAnaliticasController.crear(cuenta.id.toInt)"><i class="glyphicon glyphicon-plus-sign"></i></a>
+	    	<a href="@controllers.contabilidad.routes.CuentasAnaliticasController.editar(cuenta.id.toInt)"><i class="glyphicon glyphicon-edit"></i></a>
+	    	<a href="@controllers.contabilidad.routes.CuentasAnaliticasController.eliminar(cuenta.id.toInt)"><i class="glyphicon glyphicon-remove"></i></a>
+    		<span>@cuenta.codigo - @cuenta.nombre</span>
+    		@views.html.contabilidad.cuentasAnaliticas.listaCuenta(CuentaAnalitica.find.where().eq("parent_id", cuenta.id).findList()) 
+    	</li>
+    }
+	</ul>
+}

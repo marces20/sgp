@@ -1,0 +1,81 @@
+@(paginador:  utils.pagination.Pagination[AutorizadoLinea], editable: Boolean)
+<div id="listaLineaAutorizados" class="contenedorPaginador ajaxPaginador">
+
+<p>
+	<b>Autorizados</b>
+</p>
+@if(paginador.getTotalRowCount() > 0) {
+	Mostrando @paginador.getDisplayXtoYofZ(" a "," de ") resultado(s).
+}
+<table id="listaDeAutorizados" class="table table-striped table-bordered">
+	<thead>
+		<tr>
+			<th>OP</th>
+			<th>Cuenta</th>
+			<th>Exp.</th>
+			<th>Proveedor</th>
+			<th>Monto</th>
+			<th>Actas</th>
+			@if(editable){
+				<th></th>
+			}
+		<tr>	
+	</thead>
+	<tbody>
+	@for(linea <- paginador.getList) {
+		@views.html.dashboard.autorizadosLineas.lineaAutorizado(linea, editable)
+	}
+	</tbody>
+</table>
+
+<div class="pagination pull-right">		
+    @views.html.helpers.paginador(paginador, controllers.dashboard.routes.AutorizadoLineasController.index())
+</div>
+</div>
+
+<script>
+$( function(){
+	/**
+	 * Ventana de carga linea de productos en ordenes
+	 */
+	 
+	var contenedor = $("#listaLineaAutorizados");
+
+	contenedor.on('click', '.eliminarAutorizado', function(){
+		var url = $(this).attr('href');
+		
+		var mensaje = "¿Confirma que desea eliminar el registro?";
+		if(confirm(mensaje)){
+			$this = $(this);	
+			$.get(url, function(data){
+				if(data.success){
+					$this.closest("tr").remove();
+					actualizarDatos();
+				} else {
+					alert("No se puedo eliminar el registro.");
+				}
+			});
+		}
+		return false;
+	});
+	
+	contenedor.find('form').on('submit', function(){
+		var url = $(this).attr("action");
+		var query = $(this).serialize();
+		$.get(url+"?"+query, function(data){
+			contenedor.parent().html(data);
+		});
+		return false;
+	});
+	
+	$('.lineasActas').click( function() {
+		var $this = $(this);
+		var url = $this.attr('href');
+		var oid = $(this).data('data-id-provision');
+		$.get(url, function(data) {
+			$this.parent().html(data);
+		});
+		return false;
+	});
+});
+</script>

@@ -1,0 +1,103 @@
+@(creditoPresupuestario: CreditoPresupuestario)
+@import helper._
+@import utils._
+@import models.auth._
+
+@views.html.presupuesto.mainPresupuesto("Credito Presupuestario") {
+	<div class="page-header">
+		<div class="row">
+			<div class="col-sm-7">
+				<h1>Vista de Credito Presupuestario</h1>
+			</div>
+			<div class="col-sm-5">
+				<div class="pull-right">
+					
+				</div>
+			</div>
+		</div>
+	</div>
+	
+	@views.html.tags.successError()
+	
+	<div class="row menu-acciones">
+		<div class="col-sm-9">
+			@if(Permiso.check("crearCredito")) {  	
+				<a href="@controllers.presupuesto.routes.CreditosPresupuestariosController.crear"  class="btn btn-default">
+				<i class="glyphicon glyphicon-plus-sign"></i> Nuevo</a>
+				
+				<a href="@controllers.presupuesto.routes.CreditosPresupuestariosController.editar(creditoPresupuestario.id)"  class="btn btn-default"><i class="glyphicon glyphicon-edit"></i> Editar</a>
+			}
+			@if(Permiso.check("eliminarCredito")) {  	
+			<a href="@controllers.presupuesto.routes.CreditosPresupuestariosController.crear"  class="btn btn-default"><i class="glyphicon glyphicon-trash icono-eliminar"></i> Eliminar</a>
+			}		
+		</div>
+		<div class="col-sm-3">
+			<a href="@controllers.presupuesto.routes.CreditosPresupuestariosController.index()" class="btn btn-default">
+				<i class="glyphicon glyphicon-list"></i>
+			</a>
+			<a href="#" class="btn btn-default">
+				<i class="glyphicon glyphicon-align-justify"></i>
+			</a>
+		</div>
+	</div>
+	 
+	<div class="row">
+		<div class="col-sm-6">
+			<label for="inputNombre" class="control-label">Ley</label> 
+			<p class="form-control-static form-control">@if(creditoPresupuestario.nombre != null){@creditoPresupuestario.nombre}</p>
+		</div>
+		<div class="col-sm-2">
+			<label class="control-label">Ejercicio</label>
+			<p class="form-control-static form-control">@if(creditoPresupuestario.ejercicio != null){@creditoPresupuestario.ejercicio.nombre}</p>
+		</div>
+		
+		<div class="col-sm-2">
+			<label for="expediente" class="control-label">Expediente</label> 
+			<p class="form-control-static form-control">@if(creditoPresupuestario.expediente != null){@creditoPresupuestario.expediente.nombre}</p>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-sm-2">
+			<label for="inputFechaStart" class="control-label">Fecha</label> 
+			<p class="form-control-static form-control">@if(creditoPresupuestario.fecha != null){@(utils.DateUtils.formatDate(creditoPresupuestario.fecha))}</p>
+		</div>
+	</div>		
+	<hr />	
+		
+	@views.html.presupuesto.creditoPresupuestario.tabsCreditoPresupuestario(false,creditoPresupuestario)	
+		
+	<hr />
+	
+	<div class="panel panel-default">
+	<div class="panel-heading"><b>Detalles</b></div>
+	<div class="panel-body">
+	
+		<div class="row margin-bottom-25">
+			<div class="col-sm-12">
+				 
+				<h4>Total: 	<b>@if(creditoPresupuestario.getTotal() != null){@utils.NumberUtils.moneda(creditoPresupuestario.getTotal())}else{0,00}</b></h4>
+				<h4>Total Recursos: 	<b>@if(creditoPresupuestario.getTotalRecursos() != null){@utils.NumberUtils.moneda(creditoPresupuestario.getTotalRecursos())}else{0,00}</b></h4>
+				
+				<h4>Estado: 
+					@if(creditoPresupuestario.estado != null){
+						<b>@creditoPresupuestario.estado</b>
+					} 
+				</h4>
+			</div>
+		</div>
+
+	</div>
+	</div>
+	@if(creditoPresupuestario.estado != "Completado" && Permiso.check("aprobarCredito")){
+		<div class="row margin-bottom-25">
+	 	<div class="col-sm-3">
+	 		
+			<a href="@controllers.presupuesto.routes.CreditosPresupuestariosController.aprobar(creditoPresupuestario.id)" class="btn btn-default btn-disable-onclick">
+				<i class="glyphicon glyphicon-arrow-right"></i> APROBAR
+			</a>
+			
+		</div>
+	 	</div>
+ 	}
+
+}

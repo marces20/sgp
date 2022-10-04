@@ -1,0 +1,23 @@
+@(formularioCarga: Boolean, id: Long = null)
+
+	<ul id="ordenTab" class="nav nav-tabs">
+		<li class="active"><a id="listaRemitos" data-href="@controllers.patrimonio.routes.RemitosLineasBaulController.index(if(id != null) {id} else {0}, formularioCarga)" href="#contenedorRemitos" data-toggle="tab">Lista de productos</a></li>
+	</ul>
+
+
+	<div class="tab-content">
+		<div id="contenedorProductos" class="tab-pane active">
+		
+		</div>
+	</div>
+	
+	
+	<script>
+	$( function(){
+		var urlRemitos = $('#listaRemitos').attr("data-href");
+		$.get(urlRemitos, function(data){
+			$('#contenedorProductos').html(data);
+		});
+	});
+	</script>
+

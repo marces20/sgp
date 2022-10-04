@@ -1,0 +1,3 @@
+@(sucursalBancos: List[SucursalBanco])
+<option value>Seleccionar</option>
+@for(p <- sucursalBancos) {<option value="@p.id.toString">@p.nombre</option>}

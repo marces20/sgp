@@ -1,0 +1,85 @@
+@(formOrden: Form[OrdenPago])
+@import helper._
+@import utils._
+@implicitFieldConstructor = @{ FieldConstructor(simpleInput.render) } 
+
+<script>
+$(function(){
+	$("#fecha").mask("99/99/9999");
+	$("#numero").numeric_input({decimal: null, initialParse: false});
+	$("#monto").numeric_input();
+});
+</script>
+
+
+<div class="row menu-acciones">
+	<div class="col-sm-10">
+		<button type="submit" class="btn btn-default" title="Guardar orden de pago"><i class="glyphicon glyphicon-floppy-disk"></i> Guardar</button>	
+    	<a href="@if( UriTrack.decode() ){ @UriTrack.decode() } else {@controllers.contabilidad.routes.OrdenesPagosController.index()@UriTrack.decode()}" title="Cancelar editar" class="btn btn-default"><i class="glyphicon glyphicon-floppy-remove"></i> Cancelar</a>
+    </div>
+	<div class="col-sm-2">
+		<a href="@UriTrack.decode()" title="Volver al listado" class="btn btn-default"><i class="glyphicon glyphicon-list"></i></a> 
+	</div>
+</div>
+
+<input type="hidden" name=@UriTrack.getKey() value="@UriTrack.code()" />
+<div class="row">
+	<div class="col-sm-2 @if(formOrden.error("numero") != null) {has-error}else{has-required}">
+		<label class="control-label">Número
+			@inputText(formOrden("numero"), 'class -> "form-control", 'id -> "numero", 'autofocus -> "autofocus")
+		</label> 
+		@formOrden("numero").error.map{ error =>
+			<div class="text-error">@error.message</div>
+		}
+	</div>
+
+	
+	<div class="col-sm-2 @if(formOrden.error("ejercicio_id") != null) {has-error}else{has-required}">
+		<label class="control-label">Ejercicio
+			@select(formOrden("ejercicio_id"), Ejercicio.getEjercicios().map { p => p.id.toString -> p.nombre}, 'class -> "form-control select", '_default -> "Seleccionar")
+		</label>
+		@formOrden("ejercicio_id").error.map{ error =>
+			<div class="text-error">@error.message</div>
+		}
+	</div>
+	
+	<div class="col-sm-2 @if(formOrden.error("monto") != null) {has-error}else{has-required}">
+		<label class="control-label">Monto
+			@inputText(formOrden("monto"), 'class -> "form-control", 'id -> "monto")
+		</label>
+		@formOrden("monto").error.map{ error =>
+			<div class="text-error">@error.message</div>
+		}
+	</div>
+	
+	<div class="col-sm-2">
+		<div class="form-group">
+			<label for="orden_pago_id" class="control-label">Orden de pago Padre N° </label>
+			<div class="input-group">
+				@inputText(formOrden("ordenPago.nombreCompleto"), 'class -> "form-control", 'id -> "orden_pago")
+				@inputText(formOrden("orden_pago_id"),'hidden -> "hidden", 'id -> "orden_pago_id")
+				<span class="input-group-addon">
+					<a href="#" class="searchModal"
+								id="searchOrdenPago" 
+								data-title="Selección de órdenes de pago" 
+								data-url="@controllers.contabilidad.routes.OrdenesPagosController.modalBuscar()" 
+								data-height="650" 
+								data-width="700" 
+								data-listen="modal.seleccion.orden-pago.simple" 
+								data-label="#orden_pago" 
+								data-field="#orden_pago_id">
+						<i class="glyphicon glyphicon-search"></i>
+					</a>
+				</span>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div class="row">
+	<div class="col-sm-8">
+		<label class="control-label">Observación</label>
+		@textarea(formOrden("observacion"), 'class -> "form-control", 'id -> "monto", 'rows -> 4)
+	</div>
+</div>
+

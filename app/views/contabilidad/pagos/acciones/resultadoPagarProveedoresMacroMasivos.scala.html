@@ -1,0 +1,23 @@
+@(mipago: MiPago)
+
+@if(flash.containsKey("success")) {
+	<div class="alert alert-success"><i class="glyphicon glyphicon-ok-circle"></i> @flash.get("success")</div>
+}	
+	
+<div class="panel panel-default">	
+	<div class="panel-body">
+		<i class="glyphicon glyphicon-save"></i> 
+		<a href="@controllers.contabilidad.routes.PagosAccionesController.descargarArchivoBnfMacroMasivos(mipago.id)" id="descarga">Descargar archivo BENEFICIARIO MACRO MASIVO</a> 
+		
+	</div>
+</div>	
+	
+<div class="panel panel-default">	
+	<div class="panel-body">
+		<i class="glyphicon glyphicon-save"></i> 
+		<a href="@controllers.contabilidad.routes.PagosAccionesController.descargarArchivoProveedoresMacroMasivos(mipago.id)" id="descarga">Descargar archivo PROVEEDORES MACRO MASIVO</a> 
+		
+	</div>
+</div>
+
+@flash().clear()

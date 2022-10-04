@@ -1,0 +1,24 @@
+@(formularioCarga: Boolean, certificacionForm: Form[CertificacionCompra] = null)
+
+<ul id="certificacionTab" class="nav nav-tabs">
+	<li class="active"><a class="tabProducto" href="#contenedorProductos" data-toggle="tab">Productos</a></li>
+	<li><a class="tabLineaAjuste" href="#contenedorLineasAjuste" data-toggle="tab">Ajustes</a></li>
+	<li><a class="tabNotas" href="#contenedorNotas" data-toggle="tab">Notas</a></li>
+</ul>
+
+<div class="tab-content">
+
+	<div class="tab-pane active" id="contenedorProductos">
+		@views.html.compras.certificacionesCompras.contenidoTabProducto(formularioCarga, certificacionForm)	
+	</div>
+	<div class="tab-pane" id="contenedorLineasAjuste">
+		@views.html.compras.certificacionesCompras.contenidoTabAjuste(formularioCarga, certificacionForm)	
+	</div> 
+	<div class="tab-pane" id="contenedorNotas">
+		@if(formularioCarga){
+			<textarea name="descripcion" class="form-control" rows="5">@certificacionForm.field("descripcion").value</textarea>
+		} else {
+			<textarea name="descripcion" disabled="disabled" class="form-control" rows="5">@certificacionForm.field("descripcion").value</textarea>
+		}
+	</div>
+</div>

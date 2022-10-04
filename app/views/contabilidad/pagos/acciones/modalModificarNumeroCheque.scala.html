@@ -1,0 +1,33 @@
+@(formBuscador: DynamicForm)
+@import helper._
+@implicitFieldConstructor = @{ FieldConstructor(simpleInput.render) } 
+
+@helper.form(action = controllers.contabilidad.routes.PagosAccionesController.modificarNumeroCheque(), 'id -> "formModificarNumeroCheque") {
+	
+	@views.html.tags.successError()
+	
+	@formBuscador("id_pago").error.map{ error =>
+		<div class="alert alert-danger"><i class="glyphicon glyphicon-remove-sign"></i> @error.message</div>
+	}
+	
+	<div id="alert-success" class="alert alert-success hide"></div>
+	<div id="alert-danger" class="alert alert-danger hide"></div>
+	
+	<div class="row">
+		<div class="col-sm-3">
+			<div class="form-group @if(formBuscador.error("numero_cheque") != null) {has-error}else{has-required}">
+				<label for="inputFechaPago" class="control-label">N° Cheque</label> 
+				@inputText(formBuscador("numero_cheque"), 'class -> "form-control", 'id -> "numero_cheque", 'autofocus -> "autofocus")
+			</div>
+				@formBuscador("numero_cheque").error.map{ error =>
+					<div class="text-error">@error.message</div>
+				}
+		</div>
+		
+		<div class="col-sm-5"><br />
+			<button type="submit" class="btn btn-default" title="Guardar"><i class="glyphicon glyphicon-floppy-disk"></i> Guardar</button>
+		</div>
+		
+	</div>
+}
+@flash().clear()

@@ -1,0 +1,77 @@
+@(buscador: utils.pagination.Pagination[models.haberes.PuestoLaboral], formBuscador: DynamicForm)
+@import helper._
+@implicitFieldConstructor = @{ FieldConstructor(simpleInput.render) } 
+
+<div id="modalBusquedaPuestos" class="contenedorPaginador ajaxPaginador">
+<form action="@controllers.haberes.routes.PuestosLaboralesController.modalBuscar()" method="GET">
+	<div class="row">
+		<div class="col-sm-6">
+			<label class="control-label">Agente</label>
+			@inputText(formBuscador("nombre"), 'class -> "form-control", 'autofocus -> "autofocus")
+			
+		</div>
+		<div class="col-sm-3">
+			<label class="control-label">&nbsp 
+			<button class="btn btn-primary form-control">Buscar</button>
+			</label>
+		</div>
+	</div>
+</form>
+
+@if(buscador.getTotalRowCount == 0) {
+	<div class="well">
+	    <em>No se encuentran puestos laborales</em>
+	</div>
+} else {
+    Mostrando @buscador.getDisplayXtoYofZ(" a "," de ") resultado(s). 
+    	
+	<table class="table table-striped table-bordered table-hover">
+		<thead>
+			<tr>
+				<th>N° Legajo</th>	
+				<th>Agente</th>
+				<th>Organigrama</th>
+				<th>CUIT</th>
+			</tr>
+		</thead>
+		<tbody>
+    	
+    @for(p <- buscador.getList) {
+	<tr data-id="@p.id" class="modalSeleccionPuestos">
+		<td>@p.legajo.numero</td>
+		<td>@p.legajo.agente.apellido</td>
+		<td>@if(p.legajo.agente.organigrama != null){@p.legajo.agente.organigrama.nombre}</td>
+		<td>@if(p.legajo.agente.cuit != null){@p.legajo.agente.cuit}</td>
+	</tr>    
+    }
+    </tbody>
+    </table>
+    
+	<div class="pagination pull-right">
+	    @views.html.helpers.paginador(buscador, controllers.haberes.routes.PuestosLaboralesController.modalBuscar())
+	</div>	
+}
+</div>
+
+<script>
+$( function(){
+	var contenedor = $("#modalBusquedaPuestos");
+	var url = "@controllers.haberes.routes.PuestosLaboralesController.get()"
+	contenedor.find('.modalSeleccionPuestos').on('click', function(){
+		var id = $(this).attr('data-id');
+		$.get(url+"?id="+id, function(data){
+			$(document).trigger("modal.seleccion.puestoLaboral.simple", data);
+		});
+	});
+	
+	contenedor.find('form').on('submit', function(){
+		var url = $(this).attr("action");
+		var query = $(this).serialize();
+		$.get(url+"?"+query, function(data){
+			contenedor.parent().html(data);
+		});
+		return false;
+	});
+	
+});
+</script>

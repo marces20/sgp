@@ -1,0 +1,81 @@
+@(remitoForm: Form[Remito],r:Remito)
+@import helper._
+@import utils._
+@implicitFieldConstructor = @{ FieldConstructor(simpleInput.render) } 
+
+@views.html.patrimonio.mainPatrimonio("Editar remito") {
+
+	<div class="page-header">
+		<div class="row">
+			<div class="col-sm-10">
+				<h1>Editar remito</h1>
+			</div>			 
+		</div>
+	</div> 
+    
+  
+	@helper.form(action = controllers.patrimonio.routes.RemitosController.actualizar(r.id), 'id -> "formEditarRemito") {
+		@views.html.patrimonio.remitos.formRemito(remitoForm) 
+	}
+	
+	<hr />
+	
+	<ul id="ordenTab" class="nav nav-tabs">
+		<li class="active"><a id="produtosEnRemito" data-href="@controllers.patrimonio.routes.RemitosLineasController.enRemito(r.id)" href="#contenedorRemitosProductosAgregado" data-toggle="tab">Productos en remito</a></li>
+		<li><a id="productosParaAgregar" data-href="@controllers.patrimonio.routes.RemitosLineasController.paraAgregar(r.id)" href="#contenedorRemitosProductosAgregar" data-toggle="tab">Productos para agregar</a></li>
+	</ul>
+
+
+	<div class="tab-content">
+		<div id="contenedorRemitosProductosAgregado" class="tab-pane active">
+		
+		</div>
+		
+		<div id="contenedorRemitosProductosAgregar" class="tab-pane">
+		
+		</div>
+		
+	</div>
+
+
+	<script>
+	$( function() {
+
+		$('#productosParaAgregar').on('click', function(){
+			var url = $(this).attr("data-href");
+			$.get(url, function(data) {
+				$('#contenedorRemitosProductosAgregar').html(data);
+			});
+		});
+		
+		$('#produtosEnRemito').on('click', function(){
+			var url = $(this).attr("data-href");
+			$.get(url, function(data) {
+				$('#contenedorRemitosProductosAgregado').html(data);
+			});
+		});
+		$('#produtosEnRemito').click();
+		
+		
+		/*
+		* Filtro de búsqueda en lista de productos en remitos y para agregar
+		*/
+
+		$('#contenedorRemitosProductosAgregado, #contenedorRemitosProductosAgregar').on('submit', '#filtroBuscador form', function () {
+
+			var f = $(this);
+			var url = f.attr('action');
+			var contenedor = f.closest('.contenedorPaginador');
+
+			$.get(url, f.serialize(), function(data) {
+				contenedor.html(data);
+			});
+			
+			return false;
+		});
+		
+	});
+	</script>
+
+
+}

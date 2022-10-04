@@ -1,0 +1,34 @@
+// @SOURCE:/home/marce/hspwork/play/sgpgit/sgp/conf/routes
+// @HASH:1f124834843d709feba2747cf62a07cc4c597ae1
+// @DATE:Tue Oct 04 11:43:29 ART 2022
+
+package controllers.presupuesto;
+
+public class routes {
+public static final controllers.presupuesto.ReverseLineasRecursosPresupuestariosController LineasRecursosPresupuestariosController = new controllers.presupuesto.ReverseLineasRecursosPresupuestariosController();
+public static final controllers.presupuesto.ReverseLineasCreditosPresupuestariosController LineasCreditosPresupuestariosController = new controllers.presupuesto.ReverseLineasCreditosPresupuestariosController();
+public static final controllers.presupuesto.ReverseBalancePresupuestarioController BalancePresupuestarioController = new controllers.presupuesto.ReverseBalancePresupuestarioController();
+public static final controllers.presupuesto.ReverseCreditosPresupuestariosController CreditosPresupuestariosController = new controllers.presupuesto.ReverseCreditosPresupuestariosController();
+public static final controllers.presupuesto.ReverseIndexController IndexController = new controllers.presupuesto.ReverseIndexController();
+public static final controllers.presupuesto.ReverseControlPresupuestarioController ControlPresupuestarioController = new controllers.presupuesto.ReverseControlPresupuestarioController();
+public static final controllers.presupuesto.ReverseBalancePresupuestarioReportesController BalancePresupuestarioReportesController = new controllers.presupuesto.ReverseBalancePresupuestarioReportesController();
+public static class javascript {
+public static final controllers.presupuesto.javascript.ReverseLineasRecursosPresupuestariosController LineasRecursosPresupuestariosController = new controllers.presupuesto.javascript.ReverseLineasRecursosPresupuestariosController();
+public static final controllers.presupuesto.javascript.ReverseLineasCreditosPresupuestariosController LineasCreditosPresupuestariosController = new controllers.presupuesto.javascript.ReverseLineasCreditosPresupuestariosController();
+public static final controllers.presupuesto.javascript.ReverseBalancePresupuestarioController BalancePresupuestarioController = new controllers.presupuesto.javascript.ReverseBalancePresupuestarioController();
+public static final controllers.presupuesto.javascript.ReverseCreditosPresupuestariosController CreditosPresupuestariosController = new controllers.presupuesto.javascript.ReverseCreditosPresupuestariosController();
+public static final controllers.presupuesto.javascript.ReverseIndexController IndexController = new controllers.presupuesto.javascript.ReverseIndexController();
+public static final controllers.presupuesto.javascript.ReverseControlPresupuestarioController ControlPresupuestarioController = new controllers.presupuesto.javascript.ReverseControlPresupuestarioController();
+public static final controllers.presupuesto.javascript.ReverseBalancePresupuestarioReportesController BalancePresupuestarioReportesController = new controllers.presupuesto.javascript.ReverseBalancePresupuestarioReportesController();
+}
+public static class ref {
+public static final controllers.presupuesto.ref.ReverseLineasRecursosPresupuestariosController LineasRecursosPresupuestariosController = new controllers.presupuesto.ref.ReverseLineasRecursosPresupuestariosController();
+public static final controllers.presupuesto.ref.ReverseLineasCreditosPresupuestariosController LineasCreditosPresupuestariosController = new controllers.presupuesto.ref.ReverseLineasCreditosPresupuestariosController();
+public static final controllers.presupuesto.ref.ReverseBalancePresupuestarioController BalancePresupuestarioController = new controllers.presupuesto.ref.ReverseBalancePresupuestarioController();
+public static final controllers.presupuesto.ref.ReverseCreditosPresupuestariosController CreditosPresupuestariosController = new controllers.presupuesto.ref.ReverseCreditosPresupuestariosController();
+public static final controllers.presupuesto.ref.ReverseIndexController IndexController = new controllers.presupuesto.ref.ReverseIndexController();
+public static final controllers.presupuesto.ref.ReverseControlPresupuestarioController ControlPresupuestarioController = new controllers.presupuesto.ref.ReverseControlPresupuestarioController();
+public static final controllers.presupuesto.ref.ReverseBalancePresupuestarioReportesController BalancePresupuestarioReportesController = new controllers.presupuesto.ref.ReverseBalancePresupuestarioReportesController();
+}
+}
+          

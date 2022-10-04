@@ -1,0 +1,54 @@
+@(linea: ProveedorAtributo, editable: Boolean)
+
+<tr data-id="@linea.id">
+	
+	<td>
+		@if(linea.afip_ganancia){SI}else{NO}
+	</td>
+	<td>
+		@if(linea.exento_iva){SI}else{NO}
+	</td>
+	<td>
+		@if(linea.afip_condicion == 1){Monotribulo}else{
+			@if(linea.afip_condicion == 2){Responsable}
+		}
+	</td>
+	<td>@if(linea.suss_tipo == 1){
+			Comun
+		} else{ 
+			@if(linea.suss_tipo == 2){
+				Limpieza
+			}else{ 
+				@if(linea.suss_tipo == 3){
+					Seguridad
+				}else{
+					@if(linea.suss_tipo == 4){
+						Constructora
+					}
+				} 
+			}
+		}
+	</td>
+	<td>@if(linea.dgr_condicion == 1){CM} else{ 
+			@if(linea.dgr_condicion == 2){DIRECTO}else{ 
+				@if(linea.dgr_condicion == 3){NO CM} }
+		}</td>
+	<!-- <td>
+		@if(linea.exento_municipal == 0){Gravado}else{
+			@if(linea.exento_municipal == 1){Exento}
+		}
+	</td> -->	
+	<td>
+		@if(linea.exento_sello){SI}else{NO}
+		
+	</td>
+	<!-- <td> </td> -->
+	<td>@(utils.DateUtils.formatDate(linea.fecha_extento_afip_gcia))</td>
+	<td>@(utils.DateUtils.formatDate(linea.fecha_extento_afip_suss))</td>
+	<td>@(utils.DateUtils.formatDate(linea.fecha_extento_dgr_iibb))</td>
+	<td>@(utils.DateUtils.formatDate(linea.fecha_extento_dgr_sellos))</td>
+	
+	<td>@(utils.DateUtils.formatDate(linea.create_date))</td>
+		
+	 
+</tr>

@@ -1,0 +1,39 @@
+@(formBuscador: DynamicForm)
+@import helper._
+@import utils._
+@import models.auth._
+@implicitFieldConstructor = @{ FieldConstructor(simpleInput.render) }
+
+@views.html.dashboard.mainDashboard("Deudas Globalizadas") {
+
+<div class="page-header">
+	<div class="row">
+		<div class="col-sm-7">
+			<h1>Deudas</h1>
+		</div>
+	</div>
+</div>
+
+@views.html.dashboard.deudasGlobalizadas.navdeudas(formBuscador)
+@views.html.tags.successError()
+<div class="row"  style="">
+	<div class="col-sm-6" style="">
+		 
+		<div class="panel panel-default">
+			<div class="panel-heading"><b>Descargas</b></div>
+			<div class="panel-body">
+				<div class="row margin-bottom-25">
+					<div class="col-sm-6">
+						<a href="@controllers.dashboard.routes.DeudasGlobalizadasReportesController.deudasInformeGeneral()"  class="btn btn-default">
+						<i class="glyphicon glyphicon glyphicon-signal"></i> Informe General</a>
+					</div>
+					<div class="col-sm-6">
+						<a href="@controllers.dashboard.routes.DeudasGlobalizadasReportesController.deudasInformeGeneralResumen()"  class="btn btn-default">
+						<i class="glyphicon glyphicon glyphicon-signal"></i> Informe General RESUMEN</a>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>	
+}

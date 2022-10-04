@@ -1,0 +1,90 @@
+@(certificacionForm: Form[CertificacionCompra],certificacion:CertificacionCompra,obras:Boolean)
+@import helper._
+@implicitFieldConstructor = @{ FieldConstructor(simpleInput.render) }
+
+@scripts = {
+	<script src="@routes.Assets.at("javascripts/compras/certificacionesCompras.js")" type="text/javascript"></script>
+}
+
+@views.html.compras.mainCompras("Modificar Certificacion", scripts) {
+
+	<div class="page-header">
+		<div class="row">
+			<div class="col-sm-7">
+				<h1>Editar Certificacion @if(obras){Obras}else{Compras}</h1>
+			</div>
+
+			<div class="col-sm-5">
+				<div class="dropdown pull-right">
+				 <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown">
+				 	<i class="glyphicon glyphicon-list-alt"></i>
+				    Reportes
+				    <span class="caret"></span>
+				  </button>
+				  <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
+				    
+				  </ul>
+				</div>
+				
+				<div class="dropdown pull-right btn-header">
+				 <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown">
+				 	<i class="glyphicon glyphicon-cog"></i>
+				    Acciones
+				    <span class="caret"></span>
+				  </button>
+				  <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
+				  	<li role="presentation">
+				  		@if(obras){
+				  		
+				  		}else{
+					    	<a role="menuitem" tabindex="-1" href="#" id="editarCuentaAnalitica" data-url="@controllers.compras.routes.CertificacionesComprasController.modalEditarCuentaAnalica()">
+					    		Editar cuenta analitica
+					    	</a>
+				    	}
+				    </li>	
+				  </ul>
+				</div>
+					
+				<div class="pull-right btn-header">
+					@if(obras){
+				  		<a href="@controllers.compras.routes.CertificacionesObrasController.crear()"  class="btn btn-default"><i class="glyphicon glyphicon-plus-sign"></i> Nueva Certificacion</a>
+				  	}else{
+						<a href="@controllers.compras.routes.CertificacionesComprasController.crear()"  class="btn btn-default"><i class="glyphicon glyphicon-plus-sign"></i> Nueva Certificacion</a>
+					}
+				</div>
+			</div>
+			
+			
+		</div>
+	</div>
+	
+	@if(flash.containsKey("error")) {
+		<div class="alert alert-danger">
+			@flash.get("error")
+		</div>
+	}
+	
+	 @if(obras){
+	   @helper.form(action = controllers.compras.routes.CertificacionesObrasController.actualizar(certificacion.id)) {
+			@inputText(certificacionForm("id"), 'hidden -> "hidden")
+			@views.html.compras.certificacionesCompras.formCertificacion(certificacionForm)
+			@views.html.compras.certificacionesCompras.tabsCertificacion(true, certificacionForm)	
+		}
+		
+	}else{
+		@helper.form(action = controllers.compras.routes.CertificacionesComprasController.actualizar(certificacion.id)) {
+			@inputText(certificacionForm("id"), 'hidden -> "hidden")
+			@views.html.compras.certificacionesCompras.formCertificacion(certificacionForm)
+			@views.html.compras.certificacionesCompras.tabsCertificacion(true, certificacionForm)	
+		}
+	}
+		<h4>Base: 		<b>@utils.NumberUtils.moneda(certificacion.getBase())</b></h4>	
+		<h4>Descuento: 	<b>@utils.NumberUtils.moneda(certificacion.getDescuento())</b></h4>	
+		<h4>Total: 		<b>@utils.NumberUtils.moneda(certificacion.getTotal())</b></h4>	
+		<h4>Estado actual: 	<b>@certificacion.estado.nombre</b></h4>
+		<div class="row margin-bottom-25">	
+			
+		</div>
+	
+
+}

@@ -1,0 +1,86 @@
+@(formBuscador: DynamicForm)
+@import helper._
+@implicitFieldConstructor = @{ FieldConstructor(simpleInput.render) } 
+																							
+@helper.form(action = controllers.compras.routes.CertificacionesAccionesController.duplicarMasivo(), 'id -> "formDuplicarMasivoCertificacion") {	
+	
+	@if(flash.containsKey("error")) {
+		<div class="alert alert-danger"><i class="glyphicon glyphicon-remove-sign"></i> @flash.get("error")</div>
+	}
+	
+	@if(flash.containsKey("success")) {
+		<div class="alert alert-success"><i class="glyphicon glyphicon-ok-circle"></i> @flash.get("success")</div>
+	}
+	<div class="row">
+		<div class="col-sm-3">
+			<label for="inputPeriodo" class="control-label">Periodo</label> 
+			<div class="input-group">
+				@inputText(formBuscador("periodo_id_modal"),'hidden -> "hidden",'id -> "periodo_id_modal")
+				@inputText(formBuscador("periodo_modal"),'class -> "form-control",'id -> "periodo_modal")
+				<span class="input-group-addon">
+				<a href="#" class="searchModal"
+							id="searchPeriodoModal" 
+							data-title="Selección de Periodo" 
+							data-url="@controllers.contabilidad.routes.PeriodosController.modalBuscar()" 
+							data-height="650" 
+							data-width="700" 
+							data-listen="modal.seleccion.periodo.simple" 
+							data-label="#periodo_modal" 
+							data-field="#periodo_id_modal">
+					<i class="glyphicon glyphicon-search"></i>
+				</a>
+				</span>
+			</div>
+			
+			@formBuscador("periodo_id_modal").error.map{ error =>
+				<div class="text-error">@error.message</div>
+			}
+		</div>
+		
+	</div>
+	<div class="row">
+		<div class="col-sm-12">&nbsp</div>
+	</div>
+	<div class="row">
+		<div class="col-sm-4" style="border-right:1px solid black;">
+			<div class="form-group">
+				<label for="porcentaje_modal" class="control-label">Porcentaje Parcial(%)</label> 
+				<input name="porcentaje_modal" id="porcentaje_modal" class="form-control date"/>
+			</div>
+		</div>
+		<div class="col-sm-4">
+			<div class="form-group">
+				<label for="total_porcentaje_modal" class="control-label">Porcentaje Total (%)</label> 
+				<input name="total_porcentaje_modal" id="total_porcentaje_modal" class="form-control date"/>
+			</div>
+		</div>
+	</div>
+	<div class="row">
+		
+	</div>
+	<div class="row">
+		<div class="col-sm-5"><br />
+			<button type="submit" class="btn btn-default" title="Duplicar certificaciones"><i class="glyphicon glyphicon-arrow-right"></i> Duplicar</button>
+		</div>
+	</div>
+}
+<script>
+$( function(){
+	if($("#periodo_modal").length){
+		var options = {
+				script:"/contabilidad/suggestPeriodo/",
+				varname:"",
+				json:true,
+				shownoresults:true,
+				maxresults:6,
+				callback: function (obj) { 
+											$("#periodo_id_modal").val(obj.id); 
+										 }
+			};
+		var as_json = new bsn.AutoSuggest('periodo_modal', options);
+	}
+	
+	$('#searchPeriodoModal').modalSearch();		 
+});
+</script>
+@flash().clear()

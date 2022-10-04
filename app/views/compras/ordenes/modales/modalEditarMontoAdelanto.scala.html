@@ -1,0 +1,30 @@
+@(formBuscador: DynamicForm,id:Long)
+@import helper._
+@implicitFieldConstructor = @{ FieldConstructor(simpleInput.render) } 
+																			
+@helper.form(action = controllers.compras.routes.OrdenesAccionesController.editarMontoAdelanto(), 'id -> "formEditarMontoAdelanto") {	
+	
+	@views.html.tags.successError()
+	<div class="row">
+		<div class="col-sm-3">
+			<div class="form-group">
+				<label for="monto_adelanto_modal" class="control-label">Monto Adelanto</label> 
+				<input name="monto_adelanto_modal" id="monto_adelanto_modal" class="form-control date"/>
+				<input name="id_orden" id="id_orden" type="hidden" value="@id"/>
+			</div>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-sm-5"><br />
+			<button type="submit" class="btn btn-default" title="Editar Monto Adelanto"><i class="glyphicon glyphicon-arrow-right"></i> 
+			Editar</button>
+		</div>
+	</div>
+
+}
+<script>
+$( function(){
+	/*$("#monto_adelanto_modal").mask("99/99/9999");*/
+});
+</script>
+@flash().clear()

@@ -1,0 +1,92 @@
+
+
+#-----------------------------MODULO RECUPERO ---------------------------------
+GET    /            			  controllers.recupero.IndexController.index()
+GET    /presu        	  controllers.recupero.PresupuestosController.index()
+GET    /presu/crear        controllers.recupero.PresupuestosController.crear()
+POST   /presu/guardar      controllers.recupero.PresupuestosController.guardar()
+GET    /presu/editar       controllers.recupero.PresupuestosController.editar(id:Long)
+GET    /presu/eliminar     controllers.recupero.PresupuestosController.eliminar(id:Long)
+GET    /presu/ver          controllers.recupero.PresupuestosController.ver(id:Long)
+GET    /presu/duplicar     controllers.recupero.PresupuestosController.duplicar(id:Long)
+POST   /presu/actualizar   controllers.recupero.PresupuestosController.actualizar(id:Long)
+GET    /presu/cambiarEstado	controllers.recupero.PresupuestosController.cambiarEstado(idPresupuesto:Long, idEstado: Long)
+
+GET    /presupuesto-linea/index    controllers.recupero.PresupuestoLineasController.index(id:Long ?= 0, editable:Boolean ?= false)
+GET    /presupuesto-linea/crear    controllers.recupero.PresupuestoLineasController.crear(presupuestoId:String)
+GET    /presupuesto-linea/editar   controllers.recupero.PresupuestoLineasController.editar(id:Long)
+POST   /presupuesto-linea/guardar  controllers.recupero.PresupuestoLineasController.guardar()
+POST   /presupuesto-linea/actualizar  controllers.recupero.PresupuestoLineasController.actualizar()
+GET    /presupuesto-linea/eliminar controllers.recupero.PresupuestoLineasController.eliminar(id:Long)
+
+GET    /factura        	  controllers.recupero.RecuperoFacturasController.index()
+GET    /factura/crear        controllers.recupero.RecuperoFacturasController.crear()
+POST   /factura/guardar      controllers.recupero.RecuperoFacturasController.guardar()
+GET    /factura/editar       controllers.recupero.RecuperoFacturasController.editar(id:Long)
+GET    /factura/eliminar     controllers.recupero.RecuperoFacturasController.eliminar(id:Long)
+GET    /factura/ver          controllers.recupero.RecuperoFacturasController.ver(id:Long)
+POST   /factura/actualizar   controllers.recupero.RecuperoFacturasController.actualizar(id:Long)
+GET    /factura/cambiarEstado	controllers.recupero.RecuperoFacturasController.cambiarEstado(idRecuperoFactura:Long, idEstado: Long)
+
+GET    /factura-linea/index    controllers.recupero.RecuperoFacturaLineasController.index(id:Long ?= 0, editable:Boolean ?= false)
+GET    /factura-linea/crear    controllers.recupero.RecuperoFacturaLineasController.crear(facturaId:String)
+GET    /factura-linea/editar   controllers.recupero.RecuperoFacturaLineasController.editar(id:Long)
+POST   /factura-linea/guardar  controllers.recupero.RecuperoFacturaLineasController.guardar()
+POST   /factura-linea/actualizar  controllers.recupero.RecuperoFacturaLineasController.actualizar()
+GET    /factura-linea/eliminar    controllers.recupero.RecuperoFacturaLineasController.eliminar(id:Long)
+
+GET    /nota-credito-linea/index    	controllers.recupero.RecuperoNotasCreditosController.index(id:Long ?= 0, editable:Boolean ?= false)
+GET    /nota-credito-linea/crear    	controllers.recupero.RecuperoNotasCreditosController.crear(facturaId:String)
+GET    /nota-credito-linea/editar   	controllers.recupero.RecuperoNotasCreditosController.editar(id:Long)
+POST   /nota-credito-linea/guardar  	controllers.recupero.RecuperoNotasCreditosController.guardar()
+POST   /nota-credito-linea/actualizar  	controllers.recupero.RecuperoNotasCreditosController.actualizar()
+GET    /nota-credito-linea/eliminar    	controllers.recupero.RecuperoNotasCreditosController.eliminar(id:Long)
+
+GET    /pago        	   	controllers.recupero.RecuperoPagosController.index()
+GET    /pago/crear        	controllers.recupero.RecuperoPagosController.crear()
+POST   /pago/guardar      	controllers.recupero.RecuperoPagosController.guardar()
+GET    /pago/editar       	controllers.recupero.RecuperoPagosController.editar(id:Long)
+GET    /pago/eliminar     	controllers.recupero.RecuperoPagosController.eliminar(id:Long)
+GET    /pago/ver          	controllers.recupero.RecuperoPagosController.ver(id:Long)
+POST   /pago/actualizar   	controllers.recupero.RecuperoPagosController.actualizar(id:Long)
+GET    /pago/cambiarEstado	controllers.recupero.RecuperoPagosController.cambiarEstado(idRecuperoPago:Long, idEstado: Long)
+GET    /pago/crearPagoParcial      	controllers.recupero.RecuperoPagosController.crearPagoParcial(id:Long)
+
+GET    /pago/cheques/crear        	controllers.recupero.RecuperoChequesController.crear(pagoId:String)
+POST   /pago/cheques/guardar      	controllers.recupero.RecuperoChequesController.guardar()
+GET    /pago/cheques/editar        	controllers.recupero.RecuperoChequesController.editar(id:Long)
+POST   /pago/cheques/actualizar    	controllers.recupero.RecuperoChequesController.actualizar()
+GET    /pago/cheques/eliminar    	controllers.recupero.RecuperoChequesController.eliminar(id:Long)
+GET    /pago/cheque/index   		controllers.recupero.RecuperoChequesController.index(id:Long ?= 0, editable:Boolean ?= false)
+
+
+GET    /planilla        	  controllers.recupero.RecuperoPlanillasController.index()
+GET    /planilla/crear        controllers.recupero.RecuperoPlanillasController.crear()
+POST   /planilla/guardar      controllers.recupero.RecuperoPlanillasController.guardar()
+GET    /planilla/editar       controllers.recupero.RecuperoPlanillasController.editar(id:Long)
+GET    /planilla/eliminar     controllers.recupero.RecuperoPlanillasController.eliminar(id:Long)
+GET    /planilla/ver          controllers.recupero.RecuperoPlanillasController.ver(id:Long)
+POST   /planilla/actualizar   controllers.recupero.RecuperoPlanillasController.actualizar(id:Long)
+GET    /planilla/modalBuscar  controllers.recupero.RecuperoPlanillasController.modalBuscar()
+GET    /planilla/get          controllers.recupero.RecuperoPlanillasController.get(id:Int ?= 0)
+GET    /suggestRecuperoPlanilla/:input	controllers.recupero.RecuperoPlanillasController.suggestRecuperoPlanilla(input: String)
+
+GET    /reporte/presupuesto 			controllers.recupero.PresupuestosReportesController.presupuesto(id:Long,extrajero:Boolean ?=false)
+
+GET    /recupero/reportes/deudas          	  controllers.recupero.RecuperoReportesController.informeDeuda()
+GET    /recupero/reportes/informeGeneral      controllers.recupero.RecuperoReportesController.informeGeneral()
+GET    /archivo/deudas          			  controllers.recupero.RecuperoReportesController.archivoInformeDeuda()
+GET    /archivo/archivoInformeGeneral         controllers.recupero.RecuperoReportesController.archivoInformeGeneral()
+
+POST   /recupero/reportes/reportePagosExcel   controllers.recupero.RecuperoReportesController.reportePagosExcel()
+POST   /recupero/reportes/reporteFacturasExcel   controllers.recupero.RecuperoReportesController.reporteFacturasExcel()
+
+GET    /facturas/imprimir-factura       controllers.recupero.RecuperoReportesController.imprimirFactura(id:Long)
+GET    /pagos/imprimir-recibo           controllers.recupero.RecuperoReportesController.imprimirRecibo(id:Long)
+		
+
+GET    	/reportesPlanilla/modalPlanilla   		controllers.recupero.RecuperoReportesController.modalPlanilla()
+POST    /reportesPlanilla/imprimirPlanilla   	controllers.recupero.RecuperoReportesController.informePlanilla()
+
+POST    /reportesPlanilla/imprimirDesdePlanilla   	controllers.recupero.RecuperoReportesController.informeDesdePlanilla(idPlanilla:Long ?= 0)
+#-----------------------------FIN MODULO RECUPERO ---------------------------------

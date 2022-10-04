@@ -1,0 +1,65 @@
+@(lineaForm: Form[RemitoLineaBaul])
+@import helper._
+@implicitFieldConstructor = @{ FieldConstructor(simpleInput.render) } 
+
+@if(flash.containsKey("error")) {
+	<div class="alert alert-danger">
+		<i class="glyphicon glyphicon-remove-sign"></i> @flash.get("error")
+	</div>
+}
+
+<div class="row">
+	@inputText(lineaForm("id"), 'type -> "hidden")
+	@inputText(lineaForm("remito_baul_id"), 'type -> "hidden")
+	
+	<div class="col-sm-8">
+		<label for="producto_nombre" class="control-label">Producto</label>
+		<div class="input-group @if(lineaForm.error("producto_id") != null) {has-error} else {has-required}">
+			
+			@inputText(lineaForm("producto.nombre"), 'class -> "form-control", 'autofocus -> "autofocus", 'id -> "producto")
+			@inputText(lineaForm("producto_id"), 'hidden -> "hidden", 'id -> "producto_id")
+			<span class="input-group-addon"><a href="#" id="searchProducto" data-title="Selección de producto" data-url="@controllers.compras.routes.ProductosController.modalBuscar()" data-height="650" data-width="700" data-listen="modal.seleccion.producto.simple" data-label="#producto" data-field="#producto_id"><i class="glyphicon glyphicon-search"></i></a></span>
+		</div>
+		@lineaForm("producto_id").error.map{ error =>
+			<div class="text-error">@error.message</div>
+		}
+	</div>
+	
+	<div class="col-sm-4">
+		<div class="form-group @if(lineaForm.error("cantidad") != null) {has-error}else{has-required}">
+			<label for="inputNombre" class="control-label">Cantidad</label> 
+			@inputText(lineaForm("cantidad"), 'class -> "form-control", 'id -> "cantidad")
+			@lineaForm("cantidad").error.map{ error =>
+				<div class="text-error">@error.message</div>
+			}
+		</div>
+	</div>
+</div>
+
+<div class="row form-actions">
+    <div class="col-lg-offset-4 col-lg-8">
+      <button type="submit" class="btn btn-default"><i class="glyphicon glyphicon-floppy-disk"></i>Guardar</button>	
+      <a href="" class="btn btn-default cancelar"><i class="glyphicon glyphicon-floppy-remove"></i>Cancelar</a>
+    </div>
+</div>
+<script>
+$( function(){
+	$("#cantidad").numeric_input();
+	$('#searchProducto').modalSearch();
+	
+	var options = {
+			script:"/suggestProducto/",
+			varname:"",
+			json:true,
+			shownoresults:true,
+			maxresults:6,
+			callback: function (obj) { 
+				$("#producto").next().val(obj.id); 
+			}
+		};
+	var as_json = new bsn.AutoSuggest('producto', options);
+});
+</script>	
+
+
+@flash().clear()

@@ -1,0 +1,399 @@
+@(lcForm: Form[models.haberes.LiquidacionMes],lc:models.haberes.LiquidacionMes, dataPorConcepto:List[com.avaje.ebean.SqlRow])
+@import helper._
+@import utils._
+@import models.auth._
+@scripts = {
+	<script src="@routes.Assets.at("javascripts/haberes/liquidacionMes.js")" type="text/javascript"></script>
+}
+@implicitFieldConstructor = @{ FieldConstructor(simpleInput.render) } 
+
+@views.html.haberes.mainHaberes("Vista Liquidación",scripts) {
+	<div class="page-header">
+		<div class="row">
+			<div class="col-sm-7">
+				<h1>Vista Liquidación</h1>
+			</div>
+			<div class="col-sm-5">
+			
+			 	<div class="dropdown pull-right">
+					<button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown">
+					<i class="glyphicon glyphicon-list-alt"></i>
+					   Reportes
+					<span class="caret"></span>
+					</button>
+				  	<ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
+				  		@if(Permiso.check("lmReporteOrdenDePago")) {
+				  			<li role="presentation"><a id="ordenDePago" role="menuitem" tabindex="-1" href="@controllers.haberes.routes.LiquidacionMesesReportesController.ordenDePago(lc.id)">Orden de Pago</a></li>
+				  		}
+				  		@if(Permiso.check("lmReporteDatosGenerales")) {
+				  		<li role="presentation"><a id="datosGenerales" role="menuitem" tabindex="-1" href="@controllers.haberes.routes.LiquidacionMesesReportesController.datosGenerales(lc.id)">Datos Generales</a></li>
+				  		}
+				  		@if(Permiso.check("lmReporteListadoDePuestoLaboral")) {
+				  		<li role="presentation"><a id="listadoDePuestoLaboral" role="menuitem" tabindex="-1" href="@controllers.haberes.routes.LiquidacionMesesReportesController.listadoDePuestoLaboral(lc.id)">Listado Puestos</a></li>
+				  		}
+				  		@if(Permiso.check("lmReporteListadoDePuestoLaboralAgrupamiento")) {
+				  		<li role="presentation"><a id="listadoDePuestoLaboralAgrupamiento" role="menuitem" tabindex="-1" href="@controllers.haberes.routes.LiquidacionMesesReportesController.listadoPorEscalaPorPuestoLaboral(lc.id)">Listado Agrupamiento</a></li>
+				  		}
+				  		@if(Permiso.check("lmReporteControlDescuentosBasicos")) {
+				  		<li role="presentation"><a id="controlDescuentosBasicos" role="menuitem" tabindex="-1" href="@controllers.haberes.routes.LiquidacionMesesReportesController.controlDescuentosBasicos(lc.id)">Control Descuentos Basicos</a></li>
+				  		}
+				  		@if(Permiso.check("lmReporteListadoPorConceptosPorPuestoLaboral")) {
+				  		<li role="presentation"><a id="listadoPorConceptosPorPuestoLaboral" role="menuitem" tabindex="-1" href="@controllers.haberes.routes.LiquidacionMesesReportesController.listadoPorConceptosPorPuestoLaboral(lc.id)">Listado por Conceptos por agente</a></li>
+				  		}
+				  		@if(Permiso.check("lmReporteListadoSeguroVida")) {
+				  		<li role="presentation"><a id="listadoSeguroVida" role="menuitem" tabindex="-1" href="@controllers.haberes.routes.LiquidacionMesesReportesController.listadoSeguroVida(lc.id)">Listado Seguro de Vida</a></li>
+				  		}
+				  		@if(Permiso.check("lmReporteListadoSeguroSepelio")) {
+				  		<li role="presentation"><a id="listadoSeguroSepelio" role="menuitem" tabindex="-1" href="@controllers.haberes.routes.LiquidacionMesesReportesController.listadoSeguroSepelio(lc.id)">Listado Seguro de Sepelio</a></li>
+				  		}
+				  		@if(Permiso.check("lmReporteListadoJubilacion")) {
+				  		<li role="presentation"><a id="listadoJubilacion" role="menuitem" tabindex="-1" href="@controllers.haberes.routes.LiquidacionMesesReportesController.listadoJubilacion(lc.id)">Listado Jubilacion</a></li>
+				  		}
+				  		@if(Permiso.check("lmReporteListadoObraSocial")) {
+				  		<li role="presentation"><a id="listadoObraSocial" role="menuitem" tabindex="-1" href="@controllers.haberes.routes.LiquidacionMesesReportesController.listadoObraSocial(lc.id)">Listado Obra Social</a></li>
+				  		}
+				  		@if(Permiso.check("lmReporteListadoGeneral")) {
+				  		<li role="presentation"><a id="listadoGeneral" role="menuitem" tabindex="-1" href="@controllers.haberes.routes.LiquidacionMesesReportesController.listadoGeneral(lc.id)">Listado Completo</a></li>
+				  		}
+				  		@if(Permiso.check("lmReporteTotalPorConcepto")) {
+				  		<li role="presentation"><a id="totalPorConcepto" role="menuitem" tabindex="-1" href="@controllers.haberes.routes.LiquidacionMesesReportesController.totalPorConceptos(lc.id)">Total por conceptos</a></li>
+				  		}
+				  		@if(Permiso.check("lmReporteComparativoCertificacion")) {
+				  		<li role="presentation"><a id="comparativoCertificacion" role="menuitem" tabindex="-1" href="@controllers.haberes.routes.LiquidacionMesesReportesController.comparativoCertificacion(lc.id)">Comparativo con certificación</a></li>
+				  		}
+				  		@if(Permiso.check("lmReporteComparativoPeriodoAnterior")) {
+				  		<li role="presentation"><a id="comparativoPeriodoAnterior" role="menuitem" tabindex="-1" href="@controllers.haberes.routes.LiquidacionMesesReportesController.listadoDePuestoLaboralComparativoPeriodo(lc.id)">Comparativo Periodo anterior</a></li>
+						}					
+					</ul>	  
+				</div> 
+				<div class="pull-right btn-header">
+					<a href="@controllers.haberes.routes.LiquidacionMesesController.crear()"  class="pull-right btn btn-default"><i class="glyphicon glyphicon-plus-sign"></i> Nueva Liquidación</a>
+				</div>
+					
+			</div>
+		</div>
+	</div>		
+
+@views.html.tags.successError()
+	
+	<div class="row menu-acciones">
+		<div class="col-sm-10">
+			<a href="@controllers.haberes.routes.LiquidacionMesesController.editar(lc.id)@UriTrack.get("&")"  class="btn btn-default"><i class="glyphicon glyphicon-edit"></i> Editar</a>
+			<a href="@controllers.haberes.routes.LiquidacionMesesController.eliminar(lc.id)@UriTrack.get("&")"  class="btn btn-default delete-confirm-link"><i class="glyphicon glyphicon-trash icono-eliminar"></i> Eliminar</a>
+		</div>
+		<div class="col-sm-2">
+			<a href="@UriTrack.getOnNull(controllers.haberes.routes.LiquidacionMesesController.index().absoluteURL())" class="btn btn-default"><i class="glyphicon glyphicon-list"></i></a> 
+		</div> 
+	</div>	
+	
+	<input type="hidden" id="liquidacionMesId" name="liquidacionMesId" value="@lc.id"/>
+	<div class="row">
+		<div class="col-sm-2">
+			<b>Convenio Ministerio</b>
+			<div class="row">
+				<div class="col-sm-5">
+					<div class="radio">
+						<label class="control-label"> 
+							@inputRadioGroup(lcForm("convenio_ministerio"), options = Seq("true"->"SI"), 'disabled -> "disabled")
+						</label>
+					</div>
+				</div>
+				<div class="col-sm-7">
+					<div class="radio">
+						<label class="control-label"> 
+							@inputRadioGroup(lcForm("convenio_ministerio"),options = Seq("false"->"NO"), 'disabled -> "disabled")
+						</label>
+					</div>
+				</div>
+			</div>
+		</div> 
+		<div class="col-sm-2">
+			<div class="form-group">
+				<label class="control-label">N° Liquidación</label>
+				<p class="form-control-static form-control">@lcForm.field("nro_liquidacion_parque").value</p>
+			</div>
+		</div>
+		<div class="col-sm-4">
+			<div class="form-group">
+				<label class="control-label">Titulo</label>
+				<p class="form-control-static form-control">@lcForm.field("titulo").value</p>
+			</div>
+		</div>
+		<div class="col-sm-3">
+			<div class="form-group">
+				<label for="@lcForm("liquidacionTipo")" class="control-label">Liquidacion Tipo</label>
+				<p class="form-control-static form-control">@lcForm.field("liquidacionTipo.nombre").value</p>
+			</div>
+		</div> 
+	</div>
+	<div class="row">
+		<div class="col-sm-2">
+			<div class="form-group">
+				<label for="fechaLiquidacion" class="control-label">Fecha Liquidacion</label>
+				<p class="form-control-static form-control">@lcForm.field("fecha_liquidacion").value</p>
+			</div>
+		</div>
+		<div class="col-sm-2">
+			<div class="form-group">
+				<label for="periodo" class="control-label">Periodo</label> 
+				<p class="form-control-static form-control">@lcForm.field("periodo.nombre").value</p> 
+			</div>
+		</div>
+		<div class="col-sm-2">
+			<div class="form-group">
+				<label for="expediente" class="control-label">Expediente</label> 
+				<p class="form-control-static form-control">@lcForm.field("expediente.expedienteEjercicio").value</p> 
+			</div>
+		</div>
+		<div class="col-sm-2">
+			<div class="form-group">
+				<label for="ordenPago" class="control-label">Orden de pago N°</label> 
+				<p class="form-control-static form-control">
+				@if(lc.ordenPago != null){ 
+					@lcForm.field("ordenPago.ordenEjercicio").value
+				}
+				</p> 
+			</div>
+		</div>
+		<div class="col-sm-2">
+			<div class="form-group">
+				<label for="fecha_orden_pago" class="control-label">Fecha orden de pago</label> 
+				<p class="form-control-static form-control">@lcForm.field("fecha_orden_pago").value</p> 
+			</div>
+		</div>
+		<div class="col-sm-2">
+			<div class="form-group">
+				<label for="fecha_pago" class="control-label">Fecha de pago</label> 
+				<p class="form-control-static form-control">@lcForm.field("fecha_pago").value</p> 
+			</div>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-sm-2">
+			<div class="form-group">
+				<label for="expediente" class="control-label">Expediente Aporte</label> 
+				<p class="form-control-static form-control">@lcForm.field("expedienteAporte.expedienteEjercicio").value</p> 
+			</div>
+		</div>
+		<div class="col-sm-2">
+			<div class="form-group">
+				<label for="expediente" class="control-label">Exp. Seguro Vida</label> 
+				<p class="form-control-static form-control">@lcForm.field("expedienteSeguroVida.expedienteEjercicio").value</p> 
+			</div>
+		</div>
+		<div class="col-sm-2">
+			<div class="form-group">
+				<label for="expediente" class="control-label">Exp. Seguro Sepelio</label> 
+				<p class="form-control-static form-control">@lcForm.field("expedienteSeguroSepelio.expedienteEjercicio").value</p> 
+			</div>
+		</div>
+		<div class="col-sm-2">
+			<div class="form-group">
+				<label for="expediente" class="control-label">Exp. Contribuciones</label> 
+				<p class="form-control-static form-control">@lcForm.field("expedienteContribuciones.expedienteEjercicio").value</p> 
+			</div>
+		</div>
+		<div class="col-sm-4">
+			<div class="form-group">
+				<label for="@lcForm("comentario")" class="control-label">Comentario</label>
+				<p class="form-control-static form-control">@lcForm.field("comentario").value</p>
+			</div>
+		</div>
+	</div>
+	<div class="row">
+		
+	</div>
+	<hr>
+	<div class="row">
+		<div class="col-sm-5">
+		<div class="panel panel-default">
+			<div class="panel-heading"><b>Totales</b></div>
+				<div class="panel-body">
+			
+					<div class="row margin-bottom-25">
+						<div class="col-sm-12">
+							<h4>Total Personas: <b>@lc.cantidad_liquidaciones_puestos</b></h4>
+							<h4>Total C/A: 	<b>@if(lc.getTotalCA() != null){@utils.NumberUtils.moneda(lc.getTotalCA())}</b></h4>
+							<h4>Total S/A: 	<b>@if(lc.getTotalSA() != null){@utils.NumberUtils.moneda(lc.getTotalSA())}</b></h4>
+							<hr>
+							<h4>Retenciones</h4>
+							<h4>Total OS.:<b>@if(lc.getTotalOs() != null){@utils.NumberUtils.moneda(lc.getTotalOs())}</b></h4>
+							<h4>Total Jubilacion:<b>@if(lc.getTotalJubilacion() != null){@utils.NumberUtils.moneda(lc.getTotalJubilacion())}</b></h4>
+							<h4>Total S.Sepelio:<b>@if(lc.getTotalSeguroSepelio() != null){@utils.NumberUtils.moneda(lc.getTotalSeguroSepelio())}</b></h4>
+							<h4>Total S.Vida:<b>@if(lc.getTotalSeguroVida() != null){@utils.NumberUtils.moneda(lc.getTotalSeguroVida())}</b></h4>
+							<h4>Total Imp.Gcias:<b>@if(lc.getTotalImpuestoGanancia() != null){@utils.NumberUtils.moneda(lc.getTotalImpuestoGanancia())}</b></h4>
+							<h4>Total Embargo:<b>@if(lc.getTotalEmbargo() != null){@utils.NumberUtils.moneda(lc.getTotalEmbargo())}</b></h4>
+							<h4>Total C.PrestaFacil:<b>@if(lc.getTotalPrestafacil() != null){@utils.NumberUtils.moneda(lc.getTotalPrestafacil())}</b></h4>
+							<h4>Total C.Iprodha:<b>@if(lc.getTotalIprodha() != null){@utils.NumberUtils.moneda(lc.getTotalIprodha())}</b></h4>
+							
+							@if(lc.getTotalMutual() != null){
+								<h4>Total Federacion:<b>@utils.NumberUtils.moneda(lc.getTotalMutual())</b></h4>
+							}
+							
+							@if(lc.getTotalCuotaMutual() != null){
+								<h4>Total Cuota Fed.:<b>@utils.NumberUtils.moneda(lc.getTotalCuotaMutual())</b></h4>
+							}
+							@if(lc.getTotalYacare() != null){
+								<h4>Total Yacare:<b>@utils.NumberUtils.moneda(lc.getTotalYacare())</b></h4>
+							}
+							
+							<hr>
+							<h3><b>Total Ret.: @if(lc.getTotalRetenciones() != null){@utils.NumberUtils.moneda(lc.getTotalRetenciones())}</b></h3>
+							<h3><b>Total a Cobrar: @if(lc.getTotalACobrar() != null){@utils.NumberUtils.moneda(lc.getTotalACobrar())}</b></h3>
+							<h3><b>Costo Liquidacion S/P: @if(lc.getSubTotalAPagar() != null){@utils.NumberUtils.moneda(lc.getSubTotalAPagar())}</b></h3>
+							<hr>
+							<h4>Total C/P Obra Social: 	<b>@if(lc.getContribucionesPatronalesObraSocial() != null){@utils.NumberUtils.moneda(lc.getContribucionesPatronalesObraSocial())}</b></h4>
+							<h4>Total C/P Jubilacion: 	<b>@if(lc.getContribucionesPatronalesJubilacion() != null){@utils.NumberUtils.moneda(lc.getContribucionesPatronalesJubilacion())}</b></h4>
+							<h4>Costo Total Liquidacion: 	<b>@if(lc.getTotalAPagar() != null){@utils.NumberUtils.moneda(lc.getTotalAPagar())}</b></h4>
+							
+							<h4>Estado: 
+								<b>@lc.estado.nombre</b>
+							</h4>
+						</div>
+					</div>
+		
+				</div>
+			</div>
+		</div>
+		<div class="col-sm-3">
+		<div class="panel panel-default">
+			<div class="panel-heading"><b>Acciones</b></div>
+				<div class="panel-body">
+					<div class="row margin-bottom-25">
+						<div class="col-sm-12">
+							@if(lc.estado.id == Estado.LIQUIDACION_MES_BORRADOR && Permiso.check("liquidacionMesPreliquidarGeneral")){
+								<a href="@controllers.haberes.routes.LiquidacionMesesController.preliquidar(lc.id)"  class="btn btn-default">
+								<i class="glyphicon glyphicon-ok"></i> Preliquidar</a>
+							}
+						</div>
+					</div>
+					<div class="row margin-bottom-25">
+						<div class="col-sm-12">
+							
+							@for(estado <- models.Estado.getSiguienteEstadoPorAprobar(lc.estado.orden,models.Estado.TIPO_LIQUIDACION_MESES)) {	
+								@if(estado.orden <=6) {
+									<div class="margin-bottom-25">
+									<a href="@controllers.haberes.routes.LiquidacionMesesController.cambiarEstado(lcForm.field("id").value.toInt, estado.id.toLong)@UriTrack.get("&")" class="btn btn-default">
+										<i class="glyphicon glyphicon-arrow-right"></i> @estado.nombre
+									</a>
+									</div>
+								}
+							}
+							<div class="margin-bottom-25">
+							@if(lc.estado.id == models.Estado.LIQUIDACION_MES_CANCELADO) {
+								<a href="@controllers.haberes.routes.LiquidacionMesesController.cambiarEstado(lcForm.field("id").value.toInt, models.Estado.LIQUIDACION_MES_BORRADOR)@UriTrack.get("&")" class="btn btn-default">
+									<i class="glyphicon glyphicon-arrow-right"></i> Volver a Borrador
+								</a>
+							}else{
+								<a href="@controllers.haberes.routes.LiquidacionMesesController.cambiarEstado(lcForm.field("id").value.toInt, models.Estado.LIQUIDACION_MES_CANCELADO)@UriTrack.get("&")" class="btn btn-default">
+									<i class="glyphicon glyphicon-minus-sign"></i> Cancelar Liquidacion
+								</a>
+							}
+							</div>
+						</div>
+					</div>
+					
+				</div>
+			</div>
+		</div>
+		<div class="col-sm-4">
+		<div class="panel panel-default">
+			<div class="panel-heading"><b>Archivos</b></div>
+				<div class="panel-body">
+					<div class="row margin-bottom-25">
+						@if(lc.estado.id == models.Estado.LIQUIDACION_MES_APROBADO || lc.estado.id == models.Estado.LIQUIDACION_MES_CERRADA) {
+							<div class="col-sm-12 margin-bottom-25">
+								<a href="@controllers.haberes.routes.LiquidacionPuestosReportesController.reciboSueldosByLiquidacionMes(lc.id)"  class="btn btn-default">
+								<i class="glyphicon glyphicon-list-alt"></i> Recibos de Sueldos</a>
+								
+							</div>
+							<!-- <div class="col-sm-12 margin-bottom-25">
+								<a id="exportBanco" data-url="@controllers.haberes.routes.LiquidacionAccionesController.exportMacroSueldos(lc.id,false)"  class="btn btn-default">
+								<i class="glyphicon glyphicon-floppy-open"></i> Datos exportacion MACRO SUELDOS</a>
+								
+							</div> -->
+							<div class="col-sm-12 margin-bottom-25">
+								<a id="exportBancoNew" data-url="@controllers.haberes.routes.LiquidacionAccionesController.exportMacroSueldos(lc.id,true)"  class="btn btn-default">
+								<i class="glyphicon glyphicon-floppy-open"></i> Datos exportacion MACRO SUELDOS NUEVO</a>
+								
+							</div>
+							<div class="col-sm-12 margin-bottom-25">
+								<a id="exportBanco" data-url="@controllers.haberes.routes.LiquidacionAccionesController.exportBanco(lc.id)"  class="btn btn-default">
+								<i class="glyphicon glyphicon-floppy-open"></i> Datos exportacion banco</a>
+								
+							</div>
+							<div class="col-sm-12 margin-bottom-25">
+								<a href="@controllers.haberes.routes.LiquidacionAccionesController.exportIps(lc.id)"  class="btn btn-default">
+								<i class="glyphicon glyphicon-info-sign"></i> Datos IPS</a>
+								
+							</div>
+							<div class="col-sm-12 margin-bottom-25">
+								<a href="@controllers.haberes.routes.LiquidacionAccionesController.exportAfip(lc.id)"  class="btn btn-default">
+								<i class="glyphicon glyphicon-th-large"></i> Datos AFIP</a>
+								
+							</div>
+							<div class="col-sm-12">
+								<a href="@controllers.haberes.routes.LiquidacionPuestosReportesController.libroSueldos(lc.id)"  class="btn btn-default">
+								<i class="glyphicon glyphicon-align-justify"></i> Libro de Sueldos</a>
+								
+							</div>
+						}
+					</div>
+				</div>
+			</div>
+		</div> 	  	 	  	 
+	</div> 
+	<hr>
+	<div class="row">
+	 	<table class="table table-striped table-bordered">
+			<thead>
+				<tr>
+					<th>Codigo</th>
+					<th>Concepto</th>
+					<th>Cantidad</th>
+					<th>Haberes C/A</th>
+					<th>Haberes S/A</th>
+					<th>Desc.</th>
+					<th>Contrib.</th>
+				</tr>
+			</thead>
+			<tbody>
+				@for(lcd <- dataPorConcepto) {
+				<tr>
+					<td>
+						<a class="exportDatosPorConceptoxx" 
+						   href="@controllers.haberes.routes.LiquidacionMesesReportesController.exportDatosPorConcepto(lc.id,lcd.getLong("""id"""))">
+						   @lcd.getString("codigo")</a>
+					</td>
+					<td>@lcd.getString("deno")</td>
+					<td>@lcd.getInteger("totalCantidad")</td>
+					<td>
+						@if(lcd.getInteger("tipo") == models.haberes.LiquidacionConceptoTipo.HABERES_CON_APORTE || lcd.getInteger("tipo") == models.haberes.LiquidacionConceptoTipo.DESCUENTOS){
+							@utils.NumberUtils.moneda(lcd.getBigDecimal("importe"))
+						}
+					</td>
+					<td>
+						@if(lcd.getInteger("tipo") == models.haberes.LiquidacionConceptoTipo.HABERES_SIN_APORTE){
+							@utils.NumberUtils.moneda(lcd.getBigDecimal("importe"))
+						}
+					</td>
+					<td>
+						@if(lcd.getInteger("tipo") == models.haberes.LiquidacionConceptoTipo.RETENCIONES){
+							@utils.NumberUtils.moneda(lcd.getBigDecimal("importe"))
+						}
+					</td>
+					<td>
+						@if(lcd.getInteger("tipo") == models.haberes.LiquidacionConceptoTipo.CONTRIBUCIONES_PATRONALES){
+							@utils.NumberUtils.moneda(lcd.getBigDecimal("importe"))
+						}
+					</td>
+				</tr>
+				}
+	        </tbody>
+        </table>
+	</div>  
+	 
+	 
+	
+	 
+}

@@ -1,0 +1,329 @@
+@(
+
+escalasLaborales:List[models.haberes.EscalaLaboral],
+
+countCostoTotalPorEscalaNoCm:java.util.TreeMap[String,java.util.Map[String,String]],
+countCostoTotalPorEscalaCm:java.util.TreeMap[String,java.util.Map[String,String]],
+countCostoTotalPorEscalaNoCmSinSac:java.util.TreeMap[String,java.util.Map[String,String]],
+countCostoTotalPorEscalaCmSinSac:java.util.TreeMap[String,java.util.Map[String,String]],
+totalFinalUnicoPeriodoPorEscalaNoCmTmp:List[com.avaje.ebean.SqlRow],
+totalFinalUnicoPeriodoPorEscalaCmTmp:List[com.avaje.ebean.SqlRow],
+totalFinalUnicoPeriodoPorEscalaNoCmTmpSinSac:List[com.avaje.ebean.SqlRow],
+totalFinalUnicoPeriodoPorEscalaCmTmpSinSac:List[com.avaje.ebean.SqlRow]
+)
+@import helper._
+@implicitFieldConstructor = @{ FieldConstructor(simpleInput.render) } 
+@views.html.dashboard.mainDashboard("Honorarios") {
+
+<div class="page-header">
+	<div class="row">
+		<div class="col-sm-7"><h1>Estado de Honorarios</h1></div>
+		<div class="col-sm-5">
+			<div class="dropdown pull-right">
+			 <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown">
+			 	<i class="glyphicon glyphicon-list-alt"></i>
+			    Reportes
+			    <span class="caret"></span>
+			  </button>
+			  <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
+			  	
+			  </ul>
+			</div>
+		</div>
+	</div>
+</div>
+
+<hr><hr>
+<div class="row">
+	<div class="col-sm-12">
+		<h2>Costo TOTAL NETO por Escala Parque Salud</h2>
+		<table class="table table-bordered">
+			<thead>
+				<tr>
+					<td>Agentes/Periodo</td>
+					@for((key,value) <- countCostoTotalPorEscalaNoCm){
+						<td>@key</td>
+						
+					}
+				</tr>
+			</thead>
+			<tbody>
+				@for(el <- escalasLaborales){
+				<tr>
+					<td>@el.nombre</td>
+					@for((key,value) <- countCostoTotalPorEscalaNoCm){
+						<td>@if(value.get(el.nombre) != null){@value.get(el.nombre)}</td>
+					}
+				</tr>
+				}
+			</tbody>
+		</table>		
+	</div>
+</div>
+<div class="row">
+	<div class="col-sm-12">
+		<h2>Costo TOTAL NETO por Escala CM</h2>
+		<table class="table table-bordered">
+			<thead>
+				<tr>
+					<td>Agentes/Periodo</td>
+					@for((key,value) <- countCostoTotalPorEscalaCm){
+						<td>@key</td>
+						
+					}
+				</tr>
+			</thead>
+			<tbody>
+				@for(el <- escalasLaborales){
+				<tr>
+					<td>@el.nombre</td>
+					@for((key,value) <- countCostoTotalPorEscalaCm){
+						<td>@if(value.get(el.nombre) != null){@value.get(el.nombre)}</td>
+					}
+				</tr>
+				}
+			</tbody>
+		</table>		
+	</div>
+</div>
+<div class="row">
+	<div class="col-sm-12">
+		<h2>Costo TOTAL NETO por Escala Parque Salud SIN SAC</h2>
+		<table class="table table-bordered">
+			<thead>
+				<tr>
+					<td>Agentes/Periodo</td>
+					@for((key,value) <- countCostoTotalPorEscalaNoCmSinSac){
+						<td>@key</td>
+						
+					}
+				</tr>
+			</thead>
+			<tbody>
+				@for(el <- escalasLaborales){
+				<tr>
+					<td>@el.nombre</td>
+					@for((key,value) <- countCostoTotalPorEscalaNoCmSinSac){
+						<td>@if(value.get(el.nombre) != null){@value.get(el.nombre)}</td>
+					}
+				</tr>
+				}
+			</tbody>
+		</table>		
+	</div>
+</div>
+<div class="row">
+	<div class="col-sm-12">
+		<h2>Costo TOTAL NETO por Escala CM SIN SAC</h2>
+		<table class="table table-bordered">
+			<thead>
+				<tr>
+					<td>Agentes/Periodo</td>
+					@for((key,value) <- countCostoTotalPorEscalaCmSinSac){
+						<td>@key</td>
+						
+					}
+				</tr>
+			</thead>
+			<tbody>
+				@for(el <- escalasLaborales){
+				<tr>
+					<td>@el.nombre</td>
+					@for((key,value) <- countCostoTotalPorEscalaCmSinSac){
+						<td>@if(value.get(el.nombre) != null){@value.get(el.nombre)}</td>
+					}
+				</tr>
+				}
+			</tbody>
+		</table>		
+	</div>
+</div>
+<hr><hr>
+<div class="row">
+	<div class="col-sm-12">
+		<h2>TOTAL por Escala PS</h2>
+		<table class="table table-bordered">
+			<thead>
+				<tr>
+					<td>Escala</td>
+					<td>HCA</td>
+					<td>HSA</td>
+					<td>Jubilacion</td>
+					<td>OS</td>
+					<td>SS</td>
+					<td>SV</td>
+					<td>IG</td>
+					<td>OI</td>					
+					<td>Total Ret.</td>
+					<td>HP Jub.</td>
+					<td>HP OS</td>
+					<td>Neto</td>
+					<td>Total Bruto</td>
+				</tr>
+			</thead>
+			<tbody>
+				@for(el <- totalFinalUnicoPeriodoPorEscalaNoCmTmp){
+				<tr>
+					<td>@el.getString("nombre")</td>
+					<td>@el.getBigDecimal("hca")</td>
+					<td>@el.getBigDecimal("hsa")</td>
+					<td>@el.getBigDecimal("jubilacion")</td>
+					<td>@el.getBigDecimal("os")</td>
+					<td>@el.getBigDecimal("ss")</td>
+					<td>@el.getBigDecimal("sv")</td>
+					<td>@el.getBigDecimal("ig")</td>
+					<td>@el.getBigDecimal("oi")</td>
+					<td></td>
+					<td>@el.getBigDecimal("hpjub")</td>
+					<td>@el.getBigDecimal("hpos")</td>
+					<td>@el.getBigDecimal("neto")</td>
+					<td>@el.getBigDecimal("bruto")</td>
+					
+				</tr>
+				}
+			</tbody>
+		</table>		
+	</div>
+</div>	
+<div class="row">
+	<div class="col-sm-12">
+		<h2>TOTAL por Escala CM</h2>
+		<table class="table table-bordered">
+			<thead>
+				<tr>
+					<td>Escala</td>
+					<td>HCA</td>
+					<td>HSA</td>
+					<td>Jubilacion</td>
+					<td>OS</td>
+					<td>SS</td>
+					<td>SV</td>
+					<td>IG</td>
+					<td>OI</td>	
+					<td>Total Ret.</td>
+					<td>HP Jub.</td>
+					<td>HP OS</td>
+					<td>Neto</td>
+					<td>Total Bruto</td>
+				</tr>
+			</thead>
+			<tbody>
+				@for(el <- totalFinalUnicoPeriodoPorEscalaCmTmp){
+				<tr>
+					<td>@el.getString("nombre")</td>
+					<td>@el.getBigDecimal("hca")</td>
+					<td>@el.getBigDecimal("hsa")</td>
+					<td>@el.getBigDecimal("jubilacion")</td>
+					<td>@el.getBigDecimal("os")</td>
+					<td>@el.getBigDecimal("ss")</td>
+					<td>@el.getBigDecimal("sv")</td>
+					<td>@el.getBigDecimal("ig")</td>
+					<td>@el.getBigDecimal("oi")</td>
+					<td></td>
+					<td>@el.getBigDecimal("hpjub")</td>
+					<td>@el.getBigDecimal("hpos")</td>
+					<td>@el.getBigDecimal("neto")</td>
+					<td>@el.getBigDecimal("bruto")</td>
+					
+				</tr>
+				}
+			</tbody>
+		</table>		
+	</div>
+</div>	
+<hr><hr>
+<div class="row">
+	<div class="col-sm-12">
+		<h2>TOTAL por Escala PS Sin Sac</h2>
+		<table class="table table-bordered">
+			<thead>
+				<tr>
+					<td>Escala</td>
+					<td>HCA</td>
+					<td>HSA</td>
+					<td>Jubilacion</td>
+					<td>OS</td>
+					<td>SS</td>
+					<td>SV</td>
+					<td>IG</td>
+					<td>OI</td>	
+					<td>Total Ret.</td>
+					<td>HP Jub.</td>
+					<td>HP OS</td>
+					<td>Neto</td>
+					<td>Total Bruto</td>
+				</tr>
+			</thead>
+			<tbody>
+				@for(el <- totalFinalUnicoPeriodoPorEscalaNoCmTmpSinSac){
+				<tr>
+					<td>@el.getString("nombre")</td>
+					<td>@el.getBigDecimal("hca")</td>
+					<td>@el.getBigDecimal("hsa")</td>
+					<td>@el.getBigDecimal("jubilacion")</td>
+					<td>@el.getBigDecimal("os")</td>
+					<td>@el.getBigDecimal("ss")</td>
+					<td>@el.getBigDecimal("sv")</td>
+					<td>@el.getBigDecimal("ig")</td>
+					<td>@el.getBigDecimal("oi")</td>
+					<td></td>
+					<td>@el.getBigDecimal("hpjub")</td>
+					<td>@el.getBigDecimal("hpos")</td>
+					<td>@el.getBigDecimal("neto")</td>
+					<td>@el.getBigDecimal("bruto")</td>
+					
+				</tr>
+				}
+			</tbody>
+		</table>		
+	</div>
+</div>	
+<div class="row">
+	<div class="col-sm-12">
+		<h2>TOTAL por Escala CM Sin Sac</h2>
+		<table class="table table-bordered">
+			<thead>
+				<tr>
+					<td>Escala</td>
+					<td>HCA</td>
+					<td>HSA</td>
+					<td>Jubilacion</td>
+					<td>OS</td>
+					<td>SS</td>
+					<td>SV</td>
+					<td>IG</td>
+					<td>OI</td>	
+					<td>Total Ret.</td>
+					<td>HP Jub.</td>
+					<td>HP OS</td>
+					<td>Neto</td>
+					<td>Total Bruto</td>
+				</tr>
+			</thead>
+			<tbody>
+				@for(el <- totalFinalUnicoPeriodoPorEscalaCmTmpSinSac){
+				<tr>
+					<td>@el.getString("nombre")</td>
+					<td>@el.getBigDecimal("hca")</td>
+					<td>@el.getBigDecimal("hsa")</td>
+					<td>@el.getBigDecimal("jubilacion")</td>
+					<td>@el.getBigDecimal("os")</td>
+					<td>@el.getBigDecimal("ss")</td>
+					<td>@el.getBigDecimal("sv")</td>
+					<td>@el.getBigDecimal("ig")</td>
+					<td>@el.getBigDecimal("oi")</td>
+					<td></td>
+					<td>@el.getBigDecimal("hpjub")</td>
+					<td>@el.getBigDecimal("hpos")</td>
+					<td>@el.getBigDecimal("neto")</td>
+					<td>@el.getBigDecimal("bruto")</td>
+					
+				</tr>
+				}
+			</tbody>
+		</table>		
+	</div>
+</div>	
+
+
+}

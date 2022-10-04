@@ -1,0 +1,275 @@
+@(certificaciones:List[Certificacion],facturas:List[Factura],pagos:List[Pago])
+@getClassEstadoCertificacion(i:Estado) = @{
+	var classEstado:String = new String()
+	if(i != null && i.id == 28){
+		classEstado = "borrador"
+	}else if(i != null && i.id == 32){
+		classEstado = "cancelada"
+	}else if(i != null && i.id == 31){
+		classEstado = "autorizado"
+	}
+	classEstado
+}
+@getClassEstadoFacturacion(i:Factura) = @{
+	var classEstado:String = new String()
+	var saldoPendiente:BigDecimal = i.getSaldoPendiente()
+	var base:BigDecimal = i.getBase()
+	
+	if(!saldoPendiente.equals(base) && i.estado != null && i.estado_id == 19){
+		classEstado = "pagado"
+	}else{
+		if(i.estado != null && i.estado.id == 18){
+			classEstado = "borrador"
+		}else if(i.estado != null && i.estado.id == 21){
+			classEstado = "cancelada"
+		}else if(i.estado != null && i.estado.id == 19){
+			classEstado = "autorizado"
+		}
+	}
+	classEstado
+}
+
+@getClassPorcentajePagado(i:Factura) = @{
+	
+	var cien:java.math.BigDecimal = new java.math.BigDecimal(100)
+	var porcentaje:java.math.BigDecimal = new java.math.BigDecimal(0)
+	var cero:java.math.BigDecimal = new java.math.BigDecimal(0)
+	var saldoPendiente:java.math.BigDecimal = i.getSaldoPendiente()
+	var base:java.math.BigDecimal = i.base
+	if(i.estado != null && i.estado.id == 19){
+		if(saldoPendiente.compareTo(java.math.BigDecimal.ZERO) != 0 && base.compareTo(java.math.BigDecimal.ZERO) != 0){
+			porcentaje = (base.subtract(saldoPendiente)).multiply(cien).divide(i.base, 2, java.math.RoundingMode.HALF_UP)
+		}else{
+			porcentaje = new java.math.BigDecimal(0)
+		}
+		porcentaje = (base.subtract(saldoPendiente)).multiply(cien).divide(i.base, 2, java.math.RoundingMode.HALF_UP)
+	}
+	porcentaje
+}
+@getClassEstadoPagos(i:Estado) = @{
+	var classEstado:String = new String()
+	if(i != null && i.id == 24){
+		classEstado = "borrador"
+	}else if(i != null && i.id == 26){
+		classEstado = "cancelada"
+	}else if(i != null && i.id == 23){
+		classEstado = "autorizado"
+	}
+	classEstado
+}
+@getTotalBaseCert(cl:List[Certificacion]) = @{
+	var total:java.math.BigDecimal = new java.math.BigDecimal(0)
+	for(c <- cl){
+		total = total.add(c.getBase())
+	}
+	total
+}
+
+@getTotalDescuentoCert(cl:List[Certificacion]) = @{
+	var total:java.math.BigDecimal = new java.math.BigDecimal(0)
+	for(c <- cl){
+		total = total.add(c.getDescuento())
+	}
+	total
+}
+
+@getTotalTotalCert(cl:List[Certificacion]) = @{
+	var total:java.math.BigDecimal = new java.math.BigDecimal(0)
+	for(c <- cl){
+		total = total.add(c.getTotal())
+	}
+	total
+}
+@getTotalBaseFac(cl:List[Factura]) = @{
+	var total:java.math.BigDecimal = new java.math.BigDecimal(0)
+	for(c <- cl){
+		total = total.add(c.getBase())
+	}
+	total
+}
+@getTotalImpuestosFac(cl:List[Factura]) = @{
+	var total:java.math.BigDecimal = new java.math.BigDecimal(0)
+	for(c <- cl){
+		total = total.add(c.getTotalImpuesto())
+	}
+	total
+}
+@getTotalTotalFac(cl:List[Factura]) = @{
+	var total:java.math.BigDecimal = new java.math.BigDecimal(0)
+	for(c <- cl){
+		total = total.add(c.getTotal())
+	}
+	total
+}
+@getTotalSaldoFac(cl:List[Factura]) = @{
+	var total:java.math.BigDecimal = new java.math.BigDecimal(0)
+	for(c <- cl){
+		total = total.add(c.getSaldoPendiente())
+	}
+	total
+}
+@getTotalSaldoPag(cl:List[Pago]) = @{
+	var total:java.math.BigDecimal = new java.math.BigDecimal(0)
+	for(c <- cl){
+		total = total.add(c.total)
+	}
+	total
+}
+
+
+
+@if(certificaciones.size() > 0){
+<h3>Certificaciones</h3>
+<table class="table table-striped table-bordered tableEstadoGeneral">
+	<thead>
+		<tr>
+			<th width="80">Referencia</th>
+			<th width="70">Fecha</th>
+			<th width="95">Expediente</th>
+			<th width="95">Periodo</th>
+			<th width="30">Tipo Cuenta</th>
+			<th width="95">Base</th>
+			<th width="95">Descuento</th>
+			<th width="95">Total</th>
+			<th width="100">Estado</th>
+			<th width="30">Detalle</th> 
+		</tr>
+	</thead>
+	<tbody>
+		@for(certificacion <- certificaciones) {
+			<tr class="@getClassEstadoCertificacion(certificacion.estado)">
+				<td>@(certificacion.nombre)</td>
+				<td class="fechaCertificacion">@if(certificacion.fecha_certificacion != null){@(utils.DateUtils.formatDate(certificacion.fecha_certificacion))}</td>
+				<td>@if(certificacion.expediente != null){@certificacion.expediente.getExpedienteEjercicio()}</td>
+				<td>@if(certificacion.periodo != null){@(certificacion.periodo.nombre)}</td>
+				<td>@if(certificacion.tipoCuenta != null){@certificacion.tipoCuenta.nombre}</td>
+				<td class="base" >@(utils.NumberUtils.moneda(certificacion.getBase()))</td>
+				<td class="descuento">@(utils.NumberUtils.moneda(certificacion.getDescuento()))</td>
+				<td class="total">@(utils.NumberUtils.moneda(certificacion.getTotal()))</td>
+				<td class="estado">
+					<div class='tip-top' title='@(certificacion.estado.significado)'>
+					@if(certificacion.estado != null){@(certificacion.estado.nombre)}
+					</div>
+				</td>
+				<td>
+					<a href='#' class='detalleCertificacionModal' data-url='@controllers.compras.routes.CertificacionesAccionesController.modalDetalleCertificacion(certificacion.id)'>
+					<i class='glyphicon glyphicon-tasks'></i></a>
+				</td>
+			</tr>
+		}
+		<tr>	
+			<td colspan='5' style='text-align: right;'><b>Totales:</b></td>
+			<td>@utils.NumberUtils.moneda(getTotalBaseCert(certificaciones))</td>
+			<td>@utils.NumberUtils.moneda(getTotalDescuentoCert(certificaciones))</td>
+			<td>@utils.NumberUtils.moneda(getTotalTotalCert(certificaciones))</td>
+			<td colspan='2'></td>
+		</tr>
+	</tbody>
+</table>
+}
+
+@if(facturas.size() > 0){
+<h3>Facturacion</h3>
+<table class="table table-bordered tableEstadoGeneral">
+	<thead>
+		<tr>
+			<th width="100">Referencia</th>
+			<th width="70">OPG</th>
+			<th width="100">N° Factura</th>
+			<th width="95">Expediente</th>
+			<th width="95">Periodo</th>
+			<th width="30">Tipo Cuenta</th>
+			<th width="100">Base</th>
+			<th width="100">Total impuestos</th>
+			<th width="100">Total</th>
+			<th width="100">Saldo pendiente</th>
+			<th width="100">Estado</th>
+			<th width="30">Detalle</th> 
+		</tr>
+	</thead>
+	<tbody>
+		@for(factura <- facturas) {
+			<tr class="@getClassEstadoFacturacion(factura)">
+				<td>@(factura.nombre)</td>
+				<td class="opg">@if(factura.ordenPago != null){@(factura.ordenPago.numero)}</td>
+				<td>@(factura.numero_factura)</td>
+				<td>@if(factura.expediente != null){@(factura.expediente.getExpedienteEjercicio())}</td>
+				<td>@if(factura.periodo != null){@(factura.periodo.nombre)}</td>
+				<td>@if(factura.tipoCuenta != null){@factura.tipoCuenta.nombre}</td>
+				<td class="totalBase">@if(factura.base != null){@(utils.NumberUtils.moneda(factura.base))}</td>
+				<td class="totalImpuestos">@(utils.NumberUtils.moneda(factura.getTotalImpuesto()))</td>
+				<td class="total">@(utils.NumberUtils.moneda(factura.getTotal()))</td>
+				<td class="totalSaldo">@(utils.NumberUtils.moneda(factura.getSaldoPendiente()))</td>
+				<td class="estado" align="center">
+					<div class='tip-top' title='@(factura.estado.significado)'>
+					@if(factura.getSaldoPendiente() != null && !factura.getSaldoPendiente().equals(factura.base) && (factura.estado != null && factura.estado.id == 19)){
+						Pagado @getClassPorcentajePagado(factura)%
+					}else{
+						@if(factura.estado != null){@(factura.estado.nombre)}
+					}
+					</div>
+				</td>
+				<td> 
+					<a href='#' class='detalleFacturacionModal' data-url='@controllers.contabilidad.routes.FacturasAccionesController.modalDetalleFacturacion(factura.id)'>
+					<i class='glyphicon glyphicon-tasks'></i></a> 
+				</td>	
+			</tr>
+		}
+		<tr>	
+			<td colspan='6' style='text-align: right;'><b>Totales:</b></td>
+			<td>@utils.NumberUtils.moneda(getTotalBaseFac(facturas))</td>
+			<td>@utils.NumberUtils.moneda(getTotalImpuestosFac(facturas))</td>
+			<td>@utils.NumberUtils.moneda(getTotalTotalFac(facturas))</td> 
+			<td>@utils.NumberUtils.moneda(getTotalSaldoFac(facturas))</td> 
+			<td colspan='2'></td>
+		</tr>
+	</tbody>
+</table>
+}
+
+@if(pagos.size() > 0){
+<h3>Pagos</h3>
+	<table class="table table-bordered tableEstadoGeneral">
+		<thead>
+			<tr>
+				<th width="100">Fecha</th>
+				<th width="70">REF N°</th>
+				<th width="70">Orden pago</th>
+				<th width="80">Expediente</th>
+				<th width="60">Periodo</th>
+				<th width="30">Tipo Cuenta</th>
+				<th width="100">Total</th>
+				<th width="100">Estado</th>
+				<th width="30">Detalle</th> 
+			</tr>
+		</thead>
+		<tbody>
+		@for(pago <- pagos) {
+			<tr class="@getClassEstadoPagos(pago.estado)">
+				<td class="fecha">@if(pago.fecha_pago != null){@(utils.DateUtils.formatDate(pago.fecha_pago))}</td>
+				<td class="referencia">@(pago.referencia)</td>
+				<td>@if(pago.ordenPago != null) {@pago.ordenPago.numero}</td>
+				<td>@if(pago.expediente != null) {@pago.expediente.getExpedienteEjercicio()}</td>
+				<td>@if(pago.periodo != null) {@pago.periodo.nombre}</td>
+				<td>@if(pago.tipoCuenta != null){@pago.tipoCuenta.nombre}</td>
+				<td class="total" rel="@pago.total">@(utils.NumberUtils.moneda(pago.total))</td>
+				<td class="estado">
+					<div class='tip-top' title='@(pago.estado.significado)'>
+						@(pago.estado.nombre)
+					</div>
+				</td>
+				<td> 
+					<a href='#' class='detallePagoModal' data-url='@controllers.contabilidad.routes.PagosAccionesController.modalDetallePago(pago.id)'>
+					<i class='glyphicon glyphicon-tasks'></i></a>
+				</td>	
+			</tr>
+		}
+			<tr>	
+        		<td colspan='6' style='text-align: right;'><b>Totales:</b></td>
+        		<td>@utils.NumberUtils.moneda(getTotalSaldoPag(pagos))</td>
+        		<td colspan="2">&nbsp</td>
+	        </tr>
+		</tbody>
+	</table>
+
+}

@@ -1,0 +1,115 @@
+@(lineaForm: Form[ProveedorAtributo],linea:ProveedorAtributo)
+@import helper._
+@implicitFieldConstructor = @{ FieldConstructor(simpleInput.render) } 
+
+@if(flash.containsKey("error")) {
+	<div class="alert alert-danger">
+		<i class="glyphicon glyphicon-remove-sign"></i> @flash.get("error")
+	</div>
+}
+
+<script>
+$(function(){
+	$( ".date" ).mask("99/99/9999");	
+});
+</script>
+
+ <div class="row">
+	@inputText(lineaForm("proveedor_id"), 'type -> "hidden")
+	 
+	<div class="col-sm-3">
+		<div class="checkbox">
+			<label>
+				AFIP Ganacias @checkbox(lineaForm("afip_ganancia"))
+			</label>
+		</div> 
+	</div>
+	<div class="col-sm-3">
+		<div class="checkbox">
+			<label>
+				Exento IVA @checkbox(lineaForm("exento_iva"))
+			</label>
+		</div> 
+	</div>
+	
+	<div class="col-sm-3">
+		<div class="checkbox">
+			<label>
+				Exento sellos @checkbox(lineaForm("exento_sello"))
+			</label>
+		</div> 
+	</div>
+	<!-- <div class="col-sm-3">
+		<div class="form-group @if(lineaForm.error("fecha_extento_dgr") != null) {has-error}">
+			<label for="fecha" class="control-label">Fecha Ext. DGR</label> 
+			@inputText(lineaForm("fecha_extento_dgr"),'class -> "form-control date", 'id -> "fecha_extento_dgr")
+			 
+		</div>
+	</div> --> 
+	
+</div>	
+<div class="row">	
+	 
+	<div class="col-sm-3">
+		<div class="form-group @if(lineaForm.error("afip_condicion") != null) {has-error}">
+			<label for="afip_condicion" class="control-label">Condicion Afip</label>
+			@select(lineaForm("afip_condicion"), options("1"->"Monotributo","2"->"Responsable"), 'id -> "prioridad", 
+			'class -> "form-control select", '_default -> "Seleccionar")
+		</div>
+		@lineaForm("afip_condicion").error.map{ error =>
+			<div class="text-error">@error.message</div>
+		}
+	</div> 
+	<div class="col-sm-3">
+		<div class="form-group @if(lineaForm.error("suss_tipo") != null) {has-error}">
+			<label for="suss_tipo" class="control-label">Suss Tipo</label>
+			@select(lineaForm("suss_tipo"), options("1"->"Comun","2"->"Limpieza","3"->"Seguridad","4"->"Constructora"), 'id -> "suss_tipo", 
+			'class -> "form-control select", '_default -> "Seleccionar")
+		</div>
+	</div> 
+	<div class="col-sm-3">
+		<div class="form-group @if(lineaForm.error("dgr_condicion") != null) {has-error}">
+			<label for="dgr_condicion" class="control-label">DGR Condicion</label>
+			@select(lineaForm("dgr_condicion"), options("1"->"CM","2"->"Directo","3"->"NO CM"), 'id -> "dgr_condicion", 
+			'class -> "form-control select", '_default -> "Seleccionar")
+		</div>
+	</div> 
+</div>
+<div class="row">
+	<div class="col-sm-3">
+		<div class="form-group @if(lineaForm.error("fecha_extento_afip_gcia") != null) {has-error}">
+			<label for="fecha" class="control-label">Fecha Ext. Afip gcia</label> 
+			@inputText(lineaForm("fecha_extento_afip_gcia"),'class -> "form-control date", 'id -> "fecha_extento_afip_gcia")
+			 
+		</div>
+	</div> 
+	<div class="col-sm-3">
+		<div class="form-group @if(lineaForm.error("fecha_extento_afip_suss") != null) {has-error}">
+			<label for="fecha" class="control-label">Fecha Ext. Afip Suss</label> 
+			@inputText(lineaForm("fecha_extento_afip_suss"),'class -> "form-control date", 'id -> "fecha_extento_afip_suss")
+			 
+		</div>
+	</div> 
+	<div class="col-sm-3">
+		<div class="form-group @if(lineaForm.error("fecha_extento_dgr_iibb") != null) {has-error}">
+			<label for="fecha" class="control-label">Fecha Ext. DGR IIBB</label> 
+			@inputText(lineaForm("fecha_extento_dgr_iibb"),'class -> "form-control date", 'id -> "fecha_extento_dgr_iibb")
+			 
+		</div>
+	</div> 
+	<div class="col-sm-3">
+		<div class="form-group @if(lineaForm.error("fecha_extento_dgr_sellos") != null) {has-error}">
+			<label for="fecha" class="control-label">Fecha Ext. DGR Sellos</label> 
+			@inputText(lineaForm("fecha_extento_dgr_sellos"),'class -> "form-control date", 'id -> "fecha_extento_dgr_sellos")
+			 
+		</div>
+	</div> 
+	
+</div>
+
+<div class="row margin-top-20">
+	<div class="col-sm-4 col-sm-offset-4">
+		<button type="submit" class="btn btn-default"><i class="glyphicon glyphicon-floppy-disk"></i> Guardar</button>
+		<a href="" class="btn btn-default cancelar"><i class="glyphicon glyphicon-floppy-remove"></i>Cancelar</a>
+	</div>
+</div>

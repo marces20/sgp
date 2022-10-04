@@ -1,0 +1,25 @@
+@(categoriaForm: Form[models.haberes.CategoriaLaboral])
+@import helper._
+@implicitFieldConstructor = @{ FieldConstructor(simpleInput.render) }
+
+@views.html.haberes.mainHaberes("Modificar Categoria Laboral") {
+
+	<div class="page-header">
+		<div class="row">
+			<div class="col-sm-10">
+				<h1>Editar Categoria laboral</h1>
+			</div>
+			
+			<div class="col-sm-2">
+			</div>
+		</div>
+	</div>
+	
+	@views.html.tags.successError()
+	
+	@helper.form(action = controllers.haberes.routes.CategoriasLaboralesController.actualizar()) {
+		@inputText(categoriaForm("id"), 'hidden -> "hidden")
+		@views.html.haberes.categoriasLaborales.formCategoriaLaboral(categoriaForm)
+	}
+
+}

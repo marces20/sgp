@@ -1,0 +1,84 @@
+@(planillaForm: Form[models.recupero.RecuperoPlanilla], planilla: models.recupero.RecuperoPlanilla)
+@import utils._
+@import helper._
+@implicitFieldConstructor = @{ FieldConstructor(simpleInput.render) } 
+@scripts = {
+	<script src="@routes.Assets.at("javascripts/recupero/planilla.js")" type="text/javascript"></script>
+}
+
+
+@views.html.recupero.mainRecupero("Vista de planilla", scripts) {
+	<div class="page-header">
+		<div class="row">
+			<div class="col-sm-7">
+				<h1>Vista de planilla</h1>
+			</div>
+			<div class="col-sm-5">
+				<div class="dropdown pull-right">
+				 <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown">
+				 	<i class="glyphicon glyphicon-list-alt"></i>
+				    Reportes
+				    <span class="caret"></span>
+				  </button>
+				  <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
+				  	<li><a id="reporteDesdePlanilla" href="#" data-url="@controllers.recupero.routes.RecuperoReportesController.informeDesdePlanilla(planilla.id)">Planilla Diaria</a></li>
+				  			
+				  </ul>
+				</div>
+				
+				<div class="dropdown pull-right btn-header">
+				 <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown">
+				 	<i class="glyphicon glyphicon-cog"></i>
+				    Acciones
+				    <span class="caret"></span>
+				  </button>
+				  <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
+				  	
+				  </ul>
+				</div>
+
+			</div>
+		</div>
+	</div>
+	
+@views.html.tags.successError()
+
+<div class="row menu-acciones">
+	<div class="col-sm-9">
+		<a href="@controllers.recupero.routes.RecuperoPlanillasController.crear()@UriTrack.get("?")"  class="btn btn-default"><i class="glyphicon glyphicon-plus-sign"></i> Nuevo</a>
+		<a href="@controllers.recupero.routes.RecuperoPlanillasController.editar(planilla.id)@UriTrack.get("&")"  class="btn btn-default"><i class="glyphicon glyphicon-edit"></i> Editar</a>
+		<a href="@controllers.recupero.routes.RecuperoPlanillasController.eliminar(planilla.id)@UriTrack.get("&")"  class="btn btn-default delete-confirm-link"><i class="glyphicon glyphicon-trash icono-eliminar"></i> Eliminar</a>
+	</div>
+	<div class="col-sm-3">
+		<a href="@UriTrack.getOnNull(controllers.recupero.routes.RecuperoPlanillasController.index().absoluteURL())" class="btn btn-default"><i class="glyphicon glyphicon-list"></i></a>
+	</div>
+</div>
+	<div class="row">
+		<div class="col-sm-2">
+			<label class="control-label">Numero</label>
+			<p class="form-control-static form-control">@planilla.numero</p>
+		</div>
+		<div class="col-sm-4">
+			<label class="control-label">Expediente</label> 
+			<p class="form-control-static form-control" style="height: 25px; overflow: hidden;">
+				@if(planilla.expediente != null){@planilla.expediente.getExpedienteEjercicio()}
+			</p>
+		</div>
+		<div class="col-sm-2">
+			<label class="control-label">Fecha</label>
+			<p class="form-control-static form-control">@planillaForm("fecha").value</p>
+		</div>
+		<div class="col-sm-4">
+			<label for="deposito" class="control-label">Institucion</label> 
+			<p class="form-control-static form-control">@planillaForm("deposito.nombre").value</p>
+		</div>
+	</div>
+		
+		
+	<hr />	
+		
+	 
+	 
+}
+
+

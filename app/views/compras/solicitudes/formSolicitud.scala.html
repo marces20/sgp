@@ -1,0 +1,222 @@
+@(solicitudForm: Form[Solicitud])
+@import helper._
+@import java.util.List
+@implicitFieldConstructor = @{ FieldConstructor(simpleInput.render) } 
+
+
+	@inputText(solicitudForm("id"), 'type -> "hidden", 'id -> "solicitudId")
+	@inputText(solicitudForm("estado_id"), 'type -> "hidden", 'id -> "estado_id")
+    
+	<div class="row">
+		<div class="col-sm-2">
+			<div class="form-group @if(solicitudForm.error("referencia") != null) {has-error}">
+				<label for="@solicitudForm("referencia").id" class="control-label">Referencia</label> 
+				@inputText(solicitudForm("referencia"), 'class -> "form-control" , 'readOnly -> "readOnly")
+																				   
+				@solicitudForm("referencia").error.map{ error =>
+					<div class="text-error">@error.message</div>
+				}
+			</div>
+		</div>
+		
+		<div class="col-sm-3">
+			<label for="solicitante" class="control-label">Solicitante</label> 
+			<div class="input-group @if(solicitudForm.error("solicitante.id") != null) {has-error}">
+				@inputText(solicitudForm("solicitante.nombreCompleto"),'class -> "form-control", 'id -> "solicitante")
+				@inputText(solicitudForm("solicitante.id"),'hidden -> "hidden", 'id ->"solicitante_id")
+				<span class="input-group-addon">
+                	<a href="#" id="searchSolicitante" data-title="Selección de solicitante" data-url="@controllers.rrhh.routes.AgentesController.modalBuscar()" data-height="650" data-width="700" data-listen="modal.seleccion.agente.simple" data-label="#solicitante" data-field="#solicitante_id" /> <i class="glyphicon glyphicon-search"></i></a>
+               </span>
+			</div>
+		</div>
+		
+		<div class="col-sm-3">
+			<label for="servicio" class="control-label">Servicio</label>
+			<div class="input-group @if(solicitudForm.error("departamento_id") != null) {has-error}else{has-required}"> 
+				@inputText(solicitudForm("departamento.nombre"),'class -> "form-control", 'id -> "servicio", 'autocomplete -> "off")
+				@inputText(solicitudForm("departamento_id"),'hidden -> "hidden", 'id -> "servicio_id")
+				<span class="input-group-addon">
+					<a href="#" id="searchServicio" data-title="Selección de servicio" data-url="@controllers.rrhh.routes.DepartamentosController.modalBuscar()" data-height="650" data-width="700" data-listen="modal.seleccion.departamento.simple" data-label="#servicio" data-field="#servicio_id"><i class="glyphicon glyphicon-search"></i></a>
+				</span>
+			</div>
+			@solicitudForm("departamento_id").error.map{ error =>
+				<div class="text-error">@error.message</div>
+			}
+		</div>
+		
+		<!-- <div class="col-sm-3">
+			<div class="form-group @if(solicitudForm.error("dirigida") != null) {has-error}">
+				<label for="@solicitudForm("dirigida").id" class="control-label">Dirigido a</label>
+				@select(solicitudForm("dirigida"), options("compras"->"A Compras","patrimonio"->"A Patrimonio"), 
+				'class -> "form-control select")
+			</div>
+		</div> -->
+		<div class="col-sm-3">
+			<label for="deposito" class="control-label">Institucion</label> 
+			<div class="input-group @if(solicitudForm.error("deposito_id") != null) {has-error}else{has-required}">
+				@inputText(solicitudForm("deposito.nombre"),'class -> "form-control", 'id -> "deposito_nombre")
+				@inputText(solicitudForm("deposito_id"),'hidden -> "hidden", 'id -> "deposito_id")
+				<span class="input-group-addon">
+                	<a href="#" id="searchDeposito" data-title="Selección de depósito" 
+                	data-url="@controllers.delegacion.routes.DepositosController.modalBuscar()" 
+                	data-height="650" data-width="700" data-listen="modal.seleccion.deposito.simple" 
+                	data-label="#deposito_nombre" data-field="#deposito_id" /> <i class="glyphicon glyphicon-search"></i></a>
+                </span>
+			</div>
+			@solicitudForm("deposito_id").error.map{ error =>
+				<div class="text-error">@error.message</div>
+			}
+		</div>
+		
+	</div>
+	<div class="row">
+		<div class="col-sm-2">
+			<label for="expediente" class="control-label">Expediente</label> 
+			<div class="input-group @if(solicitudForm.error("expediente_id") != null) {has-error}">
+				@inputText(solicitudForm("expediente.expedienteEjercicio"),'class -> "form-control", 'id -> "expediente")
+				@inputText(solicitudForm("expediente_id"),'hidden -> "hidden", 'id -> "expediente_id")
+
+				<span class="input-group-addon"><a href="#" id="searchExpediente" data-title="Selección de expediente" data-url="@controllers.expediente.routes.ExpedientesController.modalBuscar()" data-height="650" data-width="700" data-listen="modal.seleccion.expediente.simple" data-label="#expediente" data-field="#expediente_id"><i class="glyphicon glyphicon-search"></i></a></span>
+			</div>
+		</div>
+		<div class="col-sm-3">
+			<label for="paciente" class="control-label">Paciente <span style="color:red" id="profeCliente"></span></label> 
+				<div class="input-group @if(solicitudForm.error("cliente.id") != null) {has-error}">
+				@inputText(solicitudForm("cliente.nombre"),'class -> "form-control", 'id -> "paciente", 'autocomplete -> "off")
+				@inputText(solicitudForm("cliente_id"),'hidden -> "hidden", 'id -> "paciente_id")
+				<span class="input-group-addon">
+                	<a href="#" id="searchPaciente" data-title="Selección de paciente" data-url="@controllers.compras.routes.ClientesController.modalBuscar()" data-height="650" data-width="700" data-listen="modal.seleccion.cliente.simple" data-label="#paciente" data-field="#paciente_id" /> <i class="glyphicon glyphicon-search"></i></a>
+                </span>
+                <span class="input-group-addon">
+                	<a href="#" id="searchPacienteCarga" 
+			                	data-title="Carga de paciente" 
+			                	data-url="@controllers.compras.routes.ClientesController.modalCarga()" 
+			                	data-height="650" 
+			                	data-width="700" 
+			                	data-listen="modal.carga.cliente.simple" 
+			                	data-label="#paciente" 
+			                	data-field="#paciente_id" /> 
+			                	<i class="glyphicon glyphicon-plus"></i></a>
+                </span>
+			</div>
+		</div>
+
+		<!-- <div class="col-sm-3">
+			<div class="form-group @if(solicitudForm.error("origen") != null) {has-error}">
+				<label for="@solicitudForm("origen").id" class="control-label">Médico</label> 
+				@inputText(solicitudForm("origen"),'class -> "form-control")
+			</div>
+		</div> -->
+		<div class="col-sm-3">
+			<label for="medico" class="control-label">Medico Solicitante</label> 
+			<div class="input-group @if(solicitudForm.error("medico.id") != null) {has-error}">
+				@inputText(solicitudForm("medico.nombreCompleto"),'class -> "form-control", 'id -> "medico")
+				@inputText(solicitudForm("medico_id"),'hidden -> "hidden", 'id ->"medico_id")
+				<span class="input-group-addon">
+                	<a href="#" id="searchMedico" 
+                	data-title="Selección de Medico" 
+                	data-url="@controllers.rrhh.routes.AgentesController.modalBuscar()" 
+                	data-height="650" 
+                	data-width="700" 
+                	data-listen="modal.seleccion.agente.simple" 
+                	data-label="#medico" 
+                	data-field="#medico_id" /> 
+                	<i class="glyphicon glyphicon-search"></i></a>
+               </span>
+			
+			</div>
+		</div>
+		<div class="col-sm-3">
+			<div class="form-group @if(solicitudForm.error("prioridad") != null) {has-error}">
+				<label for="prioridad" class="control-label">Prioridad</label>
+				@select(solicitudForm("prioridad"), options("baja"->"Baja","media"->"Media","alta"->"Alta"), 'id -> "prioridad", 
+				'class -> "form-control select")
+			</div>
+		</div>
+	</div>
+
+
+	<div class="row">
+		<div class="col-sm-2">
+			<div class="form-group @if(solicitudForm.error("date_start") != null) {has-error}">
+				<label for="fechaSolicitud" class="control-label">Fecha Solicitud</label> 
+				@inputText(solicitudForm("date_start"),'class -> "form-control date")
+			</div>
+			@solicitudForm("date_start").error.map{ error =>
+				<div class="text-error">@error.message</div>
+			}
+		</div>
+		
+		<!-- <div class="col-sm-2">
+			<div class="form-group @if(solicitudForm.error("date_end") != null) {has-error}">
+				<label for="fechaLimite" class="control-label">Fecha Límite</label> 
+				@inputText(solicitudForm("date_end"),'class -> "form-control date", 'id -> "fechaLimite")
+			</div>
+			@solicitudForm("date_end").error.map{ error =>
+				<div class="text-error">@error.message</div>
+			}
+		</div> -->
+		<div class="col-sm-4">
+			<div class="col-sm-6">
+				<div class="form-group @if(solicitudForm.error("fecha_imputacion") != null) {has-error}">
+					<label for="inputFechaImputacion" class="control-label">Fecha preventiva</label> 
+					@inputText(solicitudForm("fecha_imputacion"),'class -> "form-control date", 'id -> "inputFechaImputacion")
+				</div>
+				@solicitudForm("fecha_imputacion").error.map{ error =>
+					<div class="text-error">@error.message</div>
+				}
+			</div>
+			<div class="col-sm-6">
+				<div class="form-group">
+					<label class="control-label">Pedido Rismi</label>
+					@inputText(solicitudForm("pedido_rismi_id"),'class -> "form-control")
+				</div>
+			</div>
+		</div> 
+		<div class="col-sm-2">
+			<div class="form-group @if(solicitudForm.error("tipo_cuenta_id") != null) {has-error}">
+				<label for="tipo_cuenta" class="control-label">Tipo Cuenta</label>
+				 
+				<input type="hidden" name="creacion_orden_compra" id="creacion_orden_compra" value="auto"/>
+				@select(solicitudForm("tipo_cuenta_id"), 
+				TipoCuenta.find.all().map { p => p.id.toString -> p.nombre}, 'class -> "form-control select", '_default -> "Seleccionar")
+			</div>
+			@solicitudForm("tipo_cuenta_id").error.map{ error =>
+				<div class="text-error">@error.message</div>
+			}
+		</div>
+		
+		
+		<div class="col-sm-3">
+			<!--  <div class="col-sm-4">
+				<div class="checkbox">
+					<label>
+						Profe @checkbox(solicitudForm("profe"))
+					</label>
+				</div> 
+			</div>-->
+			<div class="col-sm-4">
+				<div class="checkbox">
+					<label>
+						Repo stock @checkbox(solicitudForm("repo_stock"))
+					</label>
+				</div> 
+			</div>
+			<div class="col-sm-4">
+				<div class="checkbox">
+					<label>
+						Recuperable Profe @checkbox(solicitudForm("recuperable"))
+					</label>
+				</div> 
+			</div>
+			<div class="col-sm-4">
+				<div class="checkbox">
+					<label>
+						Entregado @checkbox(solicitudForm("entregado"))
+					</label>
+				</div> 
+			</div>
+		</div>
+		
+		
+	</div>

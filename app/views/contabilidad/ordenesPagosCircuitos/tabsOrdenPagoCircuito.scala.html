@@ -1,0 +1,14 @@
+@(ocForm: Form[OrdenPagoCircuito] = null,oc:OrdenPagoCircuito)
+
+	<hr />
+
+	<ul id="facturaTab" class="nav nav-tabs">
+		<li class="active"><a class="tabPago" href="#contenedorPagos" data-toggle="tab">Pagos</a></li>
+	</ul>
+	<div class="tab-content">
+		<div class="tab-pane active" id="contenedorProductos">
+			@views.html.contabilidad.ordenesPagosCircuitos.contenidoTabPago(ocForm)	
+		</div>
+	</div>
+
+	

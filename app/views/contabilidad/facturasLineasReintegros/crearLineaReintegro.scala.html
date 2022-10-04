@@ -1,0 +1,7 @@
+@(lineaForm: Form[FacturaLineaReintegro])
+@import helper._
+@implicitFieldConstructor = @{ FieldConstructor(simpleInput.render) } 
+
+@helper.form(action = controllers.contabilidad.routes.FacturasLineasReintegrosController.guardar()) {
+	@views.html.contabilidad.facturasLineasReintegros.formLineaReintegro(lineaForm)
+}

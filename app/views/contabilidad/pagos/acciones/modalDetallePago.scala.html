@@ -1,0 +1,16 @@
+@(f:Pago)
+
+<div class="row">
+	<div class="col-sm-6">
+		<h4>Expediente: <b>@f.expediente.getExpedienteEjercicio()</b></h4>
+		<h4>Periodo: <b>@f.periodo.nombre</b></h4>
+		<h4>Tipo Cuenta: <b>@if(f.tipoCuenta != null){@f.tipoCuenta.nombre}</b></h4>
+		<h4>Estado actual: 	<b>@(f.estado.nombre)</b>
+		</h4>
+	</div>
+	<div class="col-sm-6">
+		<h4>Fecha de Pago: 	   <b>@utils.DateUtils.formatDate(f.fecha_pago)</b></h4>	
+		<h4>Total: 	   <b>@utils.NumberUtils.moneda(f.total)</b></h4>	
+		
+	</div>
+</div>

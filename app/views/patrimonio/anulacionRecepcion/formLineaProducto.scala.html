@@ -1,0 +1,80 @@
+@(idOrdenCompra:Long, lineaForm: Form[OrdenLineaAnulacion], orden_linea_id:Long = 0)
+@import helper._
+@implicitFieldConstructor = @{ FieldConstructor(simpleInput.render) } 
+
+
+
+@views.html.tags.successError()
+
+
+	@inputText(lineaForm("id"), 'type -> "hidden")
+	
+	<input type="hidden" name="idOrdenCompra" value="@idOrdenCompra" />
+
+
+<div class="row">
+	<div class="col-sm-8">
+		<label for="producto_nombre" class="control-label">Producto</label>
+		<div class="input-group @if(lineaForm.error("producto_id") != null) {has-error} else {has-required}">
+			@inputText(lineaForm("ordenLinea.producto.nombre"), 'class -> "form-control", 'autofocus -> "autofocus", 'id -> "producto_modal")
+			@inputText(lineaForm("orden_linea_id"), 'hidden -> "hidden", 'id -> "orden_linea_id")
+			<span class="input-group-addon">
+				<a href="#" id="searchProductoModal" 
+							data-title="Selección de producto" 
+							data-url="@controllers.patrimonio.routes.AnulacionRecepcionProductosController.modalProductosEnOrden(orden_linea_id)" 
+							data-height="650" 
+							data-width="700" 
+							data-listen="modal.seleccion.producto.simple" 
+							data-label="#producto_modal" 
+							data-field="#orden_linea_id">
+							<i class="glyphicon glyphicon-search"></i>
+				</a>
+			</span>
+		</div>
+		@lineaForm("producto_id").error.map{ error =>
+			<div class="text-error">@error.message</div>
+		}
+	</div>
+
+
+	<div class="col-sm-4">
+		<div class="form-group has-required @if(lineaForm.error("cantidad") != null) {has-error}">
+			<label for="nombre" class="control-label">Cantidad para anular</label>
+			@inputText(lineaForm("cantidad"), 'class -> "form-control")
+			@lineaForm("cantidad").error.map{ error =>
+				<div class="text-error">@error.message</div>
+			}
+		</div>
+	</div>
+	
+</div>
+<div class="row">
+
+	<div class="col-sm-12">
+		<label for="obs" class="control-label">Observaciones</label> 
+		@textarea(lineaForm("observaciones"), 'class -> "form-control", 'rows -> "4", 'id -> "obs")
+	</div>
+
+</div>
+
+	<div class="col-sm-2 col-md-offset-10">
+		<div class="form-group">
+		<label for="nombre" class="control-label">&nbsp;</label>
+		<button id="btn-guardar-anulacion-productos"  class="form-control btn btn-primary"> Guardar</button>
+		</div>
+	</div>	
+
+
+
+<script>
+$(function(){
+
+	$('#searchProductoModal').modalSearch();
+
+});
+</script>
+
+
+
+
+@flash().clear()

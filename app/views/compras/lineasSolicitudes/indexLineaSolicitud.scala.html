@@ -1,0 +1,203 @@
+@(paginador:  utils.pagination.Pagination[SolicitudLinea], editable: Boolean, btnEliminar: Boolean)
+<div id="listaLineaProductos" class="contenedorPaginador ajaxPaginador">
+
+<p>
+	<b>Productos</b>
+	@if(editable){
+	<a class="btn btn-default btn-xs" href="#" id="nuevoProducto"><i class="glyphicon glyphicon-plus"></i> Nuevo</a>
+	<a id="eliminarLineas" href="@controllers.compras.routes.LineasSolicitudesController.eliminarMasivo()" class="btn btn-xs btn-default"><i class="glyphicon glyphicon-trash icono-eliminar"></i> Eliminar</a>	 	
+	}
+</p>
+
+@if(paginador.getTotalRowCount() <= 0){
+	<p><i class="glyphicon glyphicon-info-sign"></i> No existen lineas de productos para esta solicitud.</p>
+} 
+
+@if(paginador.getTotalRowCount() > 0) {
+	Mostrando @paginador.getDisplayXtoYofZ(" a "," de ") resultado(s).
+}
+
+<table id="listaDeProductos" class="table table-striped table-bordered @if(paginador.getTotalRowCount() <= 0){hide}">
+	<thead>
+		<tr>
+			@if(editable){
+				<th width="30"><input type="checkbox" name="checkAll" id="checkAll"/></th>
+				<th class="accion-editar">#</th>
+			}
+			<th><a class="ordenPaginador" href="@controllers.compras.routes.LineasSolicitudesController.index()?@paginador.setVar("order", if(paginador.getOrder() == "desc") {"asc"} else {"desc"}).setVar("sortBy", "producto.nombre").getCurrentLink()">Producto</a></th>
+			<th>Cantidad</th>
+			<th>Precio</th>
+			<th><a class="ordenPaginador" href="@controllers.compras.routes.LineasSolicitudesController.index()?@paginador.setVar("order", if(paginador.getOrder() == "desc") {"asc"} else {"desc"}).setVar("sortBy", "cuentaAnalitica.nombre").getCurrentLink()">Cuenta analitica</a></th>
+			<th>UDM</th>
+			<th>Subtotal</th>
+			@if(editable){
+				<th></th>
+			}
+		<tr>	
+	</thead>
+	<tbody>
+	@for(linea <- paginador.getList) {
+		@views.html.compras.lineasSolicitudes.lineaProducto(linea, editable,btnEliminar)
+	}
+	</tbody>
+</table>
+
+<div class="pagination pull-right">
+    @views.html.helpers.paginador(paginador, controllers.compras.routes.LineasSolicitudesController.index())
+</div>
+
+</div>
+
+<script>
+$( function(){
+	/**
+	 * Ventana de carga linea de productos en solicitudes
+	 */
+	 
+	var contenedor = $("#listaLineaProductos");
+
+	contenedor.on('click', '#nuevoProducto', function(){
+		var deposito = 1;
+		if($('#deposito_id').val().length > 0){
+			deposito = $('#deposito_id').val();
+		}
+		urlContenidoModal = '/compras/linea-solicitud/crear?solicitudId='+$('#solicitudId').val()+"&idDeposito="+deposito;
+		mostrarModal(urlContenidoModal);
+		return false;
+	});
+	
+	contenedor.on('click', '.modificarProducto', function(){
+		var deposito = 1;
+		if($('#deposito_id').val().length > 0){
+			deposito = $('#deposito_id').val();
+		}
+		
+		var href = $(this).attr('href')+"&idDeposito="+deposito;
+		lineaParaEditar = $(this).closest('tr');
+		var modal = mostrarModal(href);
+		modal.dialog('option', 'title', 'Editar producto');	
+		return false;
+	});
+	
+	contenedor.on('click', '.eliminarProducto', function(){
+		var mensaje = "¿Confirma que desea eliminar el registro?";
+		if(confirm(mensaje)){
+			var url = $(this).attr('href');
+			$this = $(this);
+			$.get(url, function(data){
+				if(data.success){
+					$this.closest("tr").remove();
+				} else {
+					alert("No se puedo eliminar el registro.");
+				}
+			});
+		}
+		return false;
+	});
+	
+	function mostrarModal(url){
+		modalCargaProductos = $('<div></div>').dialog({
+			resizable: false,
+		    title: "Cargar producto",
+		    height: 450,
+		    width: 750,
+		    modal: true,
+		    open: function( event, ui ) {
+				$.get(url, function(data){
+					modalCargaProductos.html(data);
+				});
+		    },
+		    close: function(event, ui ){
+		    	modalCargaProductos.dialog('destroy');
+			}
+		  });
+		
+		modalCargaProductos.on('click', '.cancelar', function(){
+			modalCargaProductos.dialog('destroy');
+			return false;
+		});
+		
+		modalCargaProductos.on('submit', function(e){
+			var href = $(e.target).attr('action');
+			var data = $(e.target).serialize();
+			$.post(href, data, function(resultado){
+				if(resultado.success && resultado.nuevo){
+					$('#listaDeProductos').removeClass('hide');
+					$('#listaDeProductos tbody').prepend(resultado.html);
+					modalCargaProductos.dialog( "destroy" );
+				} else if(resultado.success && resultado.modificar){
+					$(lineaParaEditar).replaceWith(resultado.html);
+					modalCargaProductos.dialog( "destroy" );
+				} else {
+					modalCargaProductos.html(resultado);
+				}
+			});
+			return false;
+		});
+		
+		
+		return modalCargaProductos;
+	}
+	
+	
+	contenedor.find('form').on('submit', function(){
+		var url = $(this).attr("action");
+		var query = $(this).serialize();
+		$.get(url+"?"+query, function(data){
+			contenedor.parent().html(data);
+		});
+		return false;
+	});
+	
+	
+	/*
+	 * Seleccion de check en la tabla
+	 */
+	$('#checkAll').change( function(){
+		var table = $(this).closest('table');
+		table.find("input[name='check_listado[]']").prop("checked", $(this).prop( "checked" ) );
+	});
+
+	$(document).on('click', '#eliminarLineas', function(){
+		link = $(this).attr("href");
+		var retorno = false;
+
+		if($("input[name='check_listado[]']:checked").length == 0) {
+			alert("Debe seleccionar al menos una linea de productos.");
+			return false;
+		}
+		
+		
+		var ids = $("input[name='check_listado[]']").serialize();
+		
+
+		
+		var dialogo = $('<div><p><span class="ui-icon ui-icon-alert" style="float:left; margin:0 7px 20px 0;"></span> ¿Está seguro que desea eliminar los registros registros seleccionados?<p></div>');
+	    dialogo.dialog({
+	        resizable: false,
+	        height:180,
+	        modal: true,
+	        title: "Eliminar",
+	        buttons: {
+	          Eliminar: function() {
+	            $.post(link, ids, function(data){
+	            	if(data.success) {
+	            		location.reload();
+	            	} else {
+	            		alert("No se pudo eliminar las lineas de productos.");
+	            	}
+	            });
+	          },
+	          Cancelar: function( event, ui ) {
+	            $( this ).dialog( "close" );
+	          }
+	        },
+		    close: function(){
+		    	$( this ).dialog( "destroy" );
+		    }
+	      });
+	    return false;
+	}); 
+	
+});
+</script>

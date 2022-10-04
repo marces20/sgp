@@ -1,0 +1,27 @@
+@(formOrden: Form[OrdenPagoCircuito])
+@import helper._
+@implicitFieldConstructor = @{ FieldConstructor(simpleInput.render) }
+
+@views.html.contabilidad.mainContabilidad("Modificar orden de pago Circto") {
+
+	<div class="page-header">
+		<div class="row">
+			<div class="col-sm-10">
+				<h1>Editar orden de pago circuito</h1>
+			</div>
+		</div>
+	</div>
+	
+	@if(flash.containsKey("error")) {
+		<div class="alert alert-danger">
+			@flash.get("error")
+		</div>
+	}
+	
+	@helper.form(action = controllers.contabilidad.routes.OrdenesPagosCircuitosController.actualizar()) {
+		@inputText(formOrden("id"), 'hidden -> "hidden")
+													   
+		@views.html.contabilidad.ordenesPagosCircuitos.formOrdenPagoCircuito(formOrden)
+	}
+
+}

@@ -1,0 +1,40 @@
+@(formBuscador: DynamicForm)
+@import helper._
+@implicitFieldConstructor = @{ FieldConstructor(simpleInput.render) } 
+
+ 
+
+@helper.form(action = controllers.haberes.routes.LiquidacionPuestosReportesController.enviarReciboPorMail(), 'id -> "formEnviarReciboPorMail") {	
+	
+	@views.html.tags.successError()
+	
+	
+ 	<div class="row">
+		<div class="col-sm-5">
+			<div class="form-group">
+				<label for="email_modal" class="control-label">Email</label> 
+				@inputText(formBuscador("email"),'class -> "form-control", 'id -> "email")
+				@inputText(formBuscador("lpid"), 'hidden -> "hidden") 
+				@inputText(formBuscador("agente_id"), 'hidden -> "hidden") 
+			</div>
+		</div>
+		<div class="col-sm-3">
+			<div class="form-group">
+				<label for="email_modal" class="control-label">Fecha Actualizacion</label> 
+				@inputText(formBuscador("write_email_date"),'class -> "form-control",'readOnly -> "readOnly")
+			</div>
+		</div>
+		<div class="col-sm-3"><br />
+		 	<a  id="actualizarMail" data-url="@controllers.rrhh.routes.AgentesController.actualizarMail()"  class="btn btn-default">
+			 <i class="glyphicon glyphicon-arrow-right"></i> Actualizar Mail</a>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-sm-5"><br />
+			<button type="submit" id="az" class="btn btn-default" title="Enviar Mail">
+			<i class="glyphicon glyphicon-arrow-right"></i>Enviar Mail</button>
+		</div>
+	</div>
+}
+@flash().clear()
+

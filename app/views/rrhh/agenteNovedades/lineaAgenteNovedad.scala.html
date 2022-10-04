@@ -1,0 +1,20 @@
+@(linea: AgenteNovedad, editable: Boolean)
+@import models.auth._
+
+<tr data-id="@linea.id" @if(linea.activo == false){class="cancelada"}>
+	@if(editable && Permiso.check("editarAgenteNovedad") && linea.activo == true){
+		<td class="accion-editar"><a class="btn btn-default btn-xs modificarAgenteNovedad" href="@controllers.rrhh.routes.AgentesNovedadesController.editar(linea.id)"><i class="glyphicon glyphicon-edit"></i></a></td>
+	}else{
+		<td class="accion-editar"></td>
+	}
+		<td>@(utils.DateUtils.formatDate(linea.fecha_inicio))</td>
+		<td>@linea.tipoNovedadAgente.nombre</td>
+		<td>@linea.escalaLaboral.nombre</td>
+		<td>@if(linea.carga_horaria != null){@linea.carga_horaria horas semanales}</td>
+		<td>@linea.situacion</td>
+		<td>@linea.observaciones</td>
+	@if(editable && Permiso.check("eliminarAgenteNovedad")){
+		 
+	 
+	}
+</tr>

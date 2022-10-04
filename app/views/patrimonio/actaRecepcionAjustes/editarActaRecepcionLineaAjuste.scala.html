@@ -1,0 +1,9 @@
+@(lineaForm: Form[ActaRecepcionLineaAjuste])
+@import helper._
+@implicitFieldConstructor = @{ FieldConstructor(simpleInput.render) } 
+
+@helper.form(action = controllers.patrimonio.routes.ActaRecepcionLineaAjusteController.actualizar()) {
+	@views.html.patrimonio.actaRecepcionAjustes.formActaRecepcionLineaAjuste(lineaForm)
+	@inputText(lineaForm("id"), 'hidden -> "hidden")
+	
+}

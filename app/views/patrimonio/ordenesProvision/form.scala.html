@@ -1,0 +1,62 @@
+@(opForm: Form[OrdenProvision])
+@import helper._
+@import models.auth._
+@import utils._
+@implicitFieldConstructor = @{ FieldConstructor(simpleInput.render) } 
+
+
+@views.html.tags.successError()
+@inputText(opForm("id"), 'hidden -> "hidden")
+@inputText(opForm("orden_compra_id"), 'hidden -> "hidden")
+@inputText(opForm("ejercicio_id"), 'hidden -> "hidden")
+<div class="row menu-acciones">
+	<div class="col-sm-10">
+		<button type="submit" class="btn btn-default" title="Guardar certificación"><i class="glyphicon glyphicon-floppy-disk"></i> Guardar</button>	
+    	<a href="@controllers.patrimonio.routes.OrdenesProvisionController.index()" title="Cancelar" class="btn btn-default"><i class="glyphicon glyphicon-floppy-remove"></i> Cancelar</a>
+    </div>
+</div>
+	  
+<div class="row">
+	<div class="col-sm-2">
+		<div class="form-group has-required @if(opForm.error("numero") != null) {has-error}">
+			<label for="nombre" class="control-label">Número</label>
+			@inputText(opForm("numero"), 'class -> "form-control",'id -> "numero",'readOnly->"readOnly")
+			@opForm("numero").error.map{ error =>
+				<div class="text-error">@error.message</div>
+			}
+		</div>
+	</div>
+	
+	<div class="col-sm-2  has-required @if(opForm.error("fecha") != null) {has-error}">
+		<label class="control-label">Fecha Provision</label> 
+		<div class="form-group ">
+			@inputText(opForm("fecha"),'class -> "form-control date", 'autocomplete -> "off",'readOnly->"readOnly")
+		</div>
+		@opForm("fecha").error.map{ error =>
+			<div class="text-error">@error.message</div>
+		}
+	</div>
+	
+	<div class="col-sm-2  has-required @if(opForm.error("plazo_entrega") != null) {has-error}">
+		<label class="control-label">Fecha entrega</label> 
+		<div class="form-group ">
+			@inputText(opForm("plazo_entrega"),'class -> "form-control date", 'autocomplete -> "off",'readOnly->"readOnly")
+		</div>
+		@opForm("plazo_entrega").error.map{ error =>
+			<div class="text-error">@error.message</div>
+		}
+	</div>
+	
+	<div class="col-sm-2  has-required @if(opForm.error("fcierre") != null) {has-error}">
+		<label class="control-label">Fecha cierre</label> 
+		<div class="form-group ">
+			@inputText(opForm("fcierre"),'class -> "form-control date", 'autocomplete -> "off")
+		</div>
+		@opForm("fcierre").error.map{ error =>
+			<div class="text-error">@error.message</div>
+		}
+	</div>
+	
+	 
+
+</div>

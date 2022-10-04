@@ -1,0 +1,15 @@
+@(linea: SolicitudLineaAjuste, editable: Boolean, solicitud: Solicitud)
+
+<tr data-id="@linea.id">
+	<td>@linea.cuentaAnalitica.codigo</td>
+	<td>@linea.cuentaAnalitica.nombre</td>
+	<td>@if(linea.producto != null){@linea.producto.nombre}</td>
+	<td>@linea.cantidad</td>
+	<td>@(utils.NumberUtils.moneda(linea.precio,2))</td>
+	<!-- <td>@utils.NumberUtils.moneda(linea.valor, 2)</td> -->
+	<td>@if(linea.precio != null){@(utils.NumberUtils.moneda(linea.cantidad.multiply(linea.precio), 2))}else{@(utils.NumberUtils.moneda(new java.math.BigDecimal(0),2))}</td>
+	<td>@linea.observacion</td>
+	@if(editable){
+		<!-- <td><a class="btn btn-default btn-xs eliminarAjuste delete-confirm-link" href="@controllers.compras.routes.AjustesSolicitudesController.eliminar(linea.id)"><i class="glyphicon glyphicon-trash icono-eliminar"></i></a></td> -->
+	}
+</tr>

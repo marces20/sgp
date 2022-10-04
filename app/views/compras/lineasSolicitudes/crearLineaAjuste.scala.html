@@ -1,0 +1,13 @@
+@(lineaForm: Form[SolicitudLineaAjuste])
+@import helper._
+@implicitFieldConstructor = @{ FieldConstructor(simpleInput.render) } 
+
+@helper.form(action = controllers.compras.routes.AjustesSolicitudesController.guardar()) {
+	@views.html.compras.lineasSolicitudes.formLineaAjuste(lineaForm)
+	<div class="row form-actions">
+	    <div class="col-lg-offset-4 col-lg-8">
+	      <a href="" class="btn btn-default cancelar">Cancelar</a>
+	      <button type="submit" id="btn-guardar-linea-ajuste-solicitudes" class="btn btn-sistema">Crear</button>
+	    </div>
+	</div>
+}

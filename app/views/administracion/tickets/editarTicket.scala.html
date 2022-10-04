@@ -1,0 +1,83 @@
+@(ticketForm: Form[Ticket])
+@import helper._
+@implicitFieldConstructor = @{ FieldConstructor(simpleInput.render) } 
+@views.html.administracion.mainTicket("Abrir ticket") {
+
+<div class="page-header">
+	<div class="row">
+		<div class="col-sm-10">
+			<h1>Abrir ticket</h1>
+		</div>
+		
+		<div class="col-sm-2">
+			<a href="@controllers.administracion.routes.TicketsController.index()" class="btn btn-default"><i class="glyphicon glyphicon-list"></i> Tickets abiertos</a> 
+		</div>
+	</div>
+</div>
+
+@views.html.tags.successError()
+
+	@helper.form(action = controllers.administracion.routes.TicketsController.actualizar()) {
+	@inputText(ticketForm("estado_id"), 'hidden -> "hidden")
+	@inputText(ticketForm("usuario_id"), 'hidden -> "hidden")
+	@inputText(ticketForm("leido"), 'hidden -> "hidden")	
+	@inputText(ticketForm("fecha"), 'hidden -> "hidden")	
+	@inputText(ticketForm("id"), 'hidden -> "hidden")	
+		
+		
+		<div class="row">
+			<div class="col-sm-8">
+				<label class="control-label">Asunto</label> 
+				<div class="form-group">
+					@inputText(ticketForm("asunto"), 'class -> "form-control")
+					@ticketForm("asunto").error.map{ error =>
+						<div class="text-error"><i class="glyphicon glyphicon-remove-sign"></i> @error.message</div>
+					}
+				</div>
+			</div>
+			
+			<div class="col-sm-4">
+				<div class="form-group @if(ticketForm.error("prioridad") != null) {has-error}">
+					<label class="control-label">Prioridad</label>
+					@select(ticketForm("prioridad"), options("baja" -> "Baja",
+															"media" -> "Media",
+															"alta"  -> "Alta"
+															), 
+					'class -> "form-control select")
+				</div>
+			</div>
+		</div>	
+	
+		<div class="row">	
+			<div class="col-sm-12">
+				<div class="form-group">
+					<label for="detalle" class="control-label">Detalles</label>
+					@textarea(ticketForm("detalles"), 'class -> "form-control", 'id -> "detalle", 'rows -> "5")
+					@ticketForm("detalles").error.map{ error => 
+						<div class="text-error">
+							<i class="glyphicon glyphicon-remove-sign"></i> @error.message
+						</div>
+					}
+				</div>
+			</div>
+		</div>
+		<div class="row">	
+			<div class="col-sm-12">
+				<div class="form-group">
+					<label for="detalle" class="control-label">Respuesta</label>
+					@textarea(ticketForm("respuesta"), 'class -> "form-control", 'id -> "respuesta", 'rows -> "5")
+					 
+				</div>
+			</div>
+		</div>
+	
+		<div class="row form-actions">
+		    <div class="col-lg-offset-4 col-lg-8">
+		      <a href="" class="btn btn-default">Cancelar</a>
+		      <button type="submit" class="btn btn-primary">Guardar</button>
+		    </div>
+		</div>
+		
+	}
+
+}

@@ -1,0 +1,8 @@
+@(lineaForm: Form[CertificacionServicioLinea])
+@import helper._
+@implicitFieldConstructor = @{ FieldConstructor(simpleInput.render) } 
+
+@helper.form(action = controllers.patrimonio.routes.LineasCertificacionesController.guardar()) {
+	@views.html.patrimonio.lineasCertificaciones.formLineaProducto(lineaForm)
+	
+}

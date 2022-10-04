@@ -1,0 +1,30 @@
+@(recuperoPagoForm: Form[models.recupero.RecuperoPago])
+@import helper._
+
+@scripts = {
+	<script src="@routes.Assets.at("javascripts/recupero/pago.js")" type="text/javascript"></script>
+}
+
+@views.html.recupero.mainRecupero("Crear Pago", scripts) {
+
+	<div class="page-header">
+		<div class="row">
+			<div class="col-sm-7">
+				<h1>Crear nuevo pago</h1>
+			</div>
+		</div>
+	</div>
+	@if(flash.containsKey("error")) {
+		<div class="alert alert-danger">
+			@flash.get("error")
+		</div>
+    }
+    
+    @helper.form(action = controllers.recupero.routes.RecuperoPagosController.guardar()) {
+
+		@views.html.recupero.recuperoPago.formRecuperoPago(recuperoPagoForm,null) 
+		@views.html.recupero.recuperoPago.tabsRecuperoPago(true,recuperoPagoForm)	
+
+
+	}
+}

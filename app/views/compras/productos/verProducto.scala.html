@@ -1,0 +1,147 @@
+@(producto: Producto, paginadorFicha: utils.pagination.PaginadorFicha,productoDepositoArray:List[Integer] = null)
+@import utils._
+
+@paginadorFicha.setActual(producto.id.toString)
+@views.html.compras.mainCompras("Producto") {
+	<div class="page-header">
+		<div class="row">
+			<div class="col-sm-3">
+				<h1>Vista de Producto</h1>
+			</div>
+
+		</div>
+	</div>
+	
+	@if(flash.containsKey("error")) {
+	<div class="alert alert-danger">
+		@flash.get("error")
+	</div>
+	}
+	
+<div class="row menu-acciones">
+	<div class="col-sm-9">
+		<a href="@controllers.compras.routes.ProductosController.crearProducto()@UriTrack.get("?")"  class="btn btn-default"><i class="glyphicon glyphicon-plus-sign"></i> Nuevo</a>
+		<a href="@controllers.compras.routes.ProductosController.editarProducto(producto.id)@UriTrack.get("&")"  class="btn btn-default"><i class="glyphicon glyphicon-edit"></i> Editar</a>
+		<a href="@controllers.compras.routes.ProductosController.eliminarProducto(producto.id)@UriTrack.get("&")"  class="btn btn-default delete-confirm-link"><i class="glyphicon glyphicon-trash icono-eliminar"></i> Eliminar</a>
+	</div>
+	<div class="col-sm-3">
+		<a href="@UriTrack.getOnNull(controllers.compras.routes.ProductosController.indexProducto().absoluteURL())" class="btn btn-default"><i class="glyphicon glyphicon-list"></i></a>
+		
+		@if(paginadorFicha.getLista().size() > 1){
+
+		<div class="btn-group">
+			@if(paginadorFicha.hasPrev()) {
+				<a  role="group" href="@controllers.compras.routes.ProductosController.ver(paginadorFicha.prev().toLong)@UriTrack.get("&")" class="btn btn-default"><i class="glyphicon glyphicon-chevron-left"></i></a>
+			}
+			<p style="padding-top: 3px" href=""  role="group" class="btn btn-default">@paginadorFicha.posicionActual() de @paginadorFicha.getLista().size()</p>
+			@if(paginadorFicha.hasNext()) {
+				<a  role="group" href="@controllers.compras.routes.ProductosController.ver(paginadorFicha.next().toLong)@UriTrack.get("&")" class="btn btn-default"><i class="glyphicon glyphicon-chevron-right"></i></a>
+			}  
+		</div>
+		}
+		
+	</div>
+</div>
+	
+	
+	<div class="row">
+		<div class="col-sm-9">
+			<div class="form-group">
+				<label for="inputNombre" class="control-label">Nombre</label> 
+				<input value="@producto.nombre" class="form-control" disabled /> 
+			</div>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-sm-3">
+			<div class="form-group">
+				<label for="inputReferencia" class="control-label">Referencia</label> 
+				<input value="@producto.referencia" class="form-control" disabled /> 
+			</div>
+		</div>
+		<div class="col-sm-3">
+			<div class="form-group">
+				<label for="inputCodigoRismi" class="control-label">Codigo Rismi</label>
+				<input value="@producto.codigo_rismi" class="form-control" disabled />
+			</div>
+		</div>
+		<div class="col-sm-3">
+			<div class="form-group">
+				<label for="inputCodigoIps" class="control-label">Codigo IPS</label>
+				<input value="@producto.codigo_ips" class="form-control" disabled />
+			</div>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-sm-3">
+			<div class="form-group">
+				<label for="inputCategoria" class="control-label">Categor&iacute;a</label> 
+				<input value="@producto.categoria.nombre" class="form-control" disabled />
+			</div>
+		</div>
+		<div class="col-sm-3">
+			<div class="form-group">
+				<label for="inputTipoProducto" class="control-label">Tipo Producto</label> 
+				<input value="@producto.tipo_producto.nombre" class="form-control" disabled />
+			</div>
+		</div>
+		<div class="col-sm-3">
+			<div class="form-group">
+				<label for="inputUdm" class="control-label">Udm</label>
+				<input value="@if(producto.udm != null){producto.udm.nombre}" class="form-control" disabled />
+			</div>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-sm-3">
+			<div class="form-group">
+				<label for="inputPrecioCoste" class="control-label">Precio Coste</label> 
+				<p class="form-control-static form-control">@utils.NumberUtils.moneda(producto.precio_coste)</p>
+			</div>
+		</div>
+		 <div class="col-sm-3">
+			<div class="form-group">
+				<label for="inputCuentaIngresos" class="control-label">Cuenta de Ingresos</label>
+				<input value="@if(producto.cuenta_ingreso != null){@producto.cuenta_ingreso.nombre}" class="form-control" disabled />
+			</div>
+		</div>
+		<div class="col-sm-3">
+			<div class="form-group">
+				<label for="inputCuentaGastos" class="control-label">Cuenta de gastos</label> 
+				<input value="@if(producto.cuenta_gasto != null){@producto.cuenta_gasto.nombre}" class="form-control" disabled />
+			</div>
+		</div>
+	</div> 
+	<div class="row">
+		
+		<div class="col-sm-6">
+			<table class="table table-striped table-bordered">
+				<thead>
+					<tr>
+						<th width="50">#</th>
+						<th width="100">Deposito</th>
+					
+					</tr>
+				</thead>
+				<tbody>
+					@for( d <- Deposito.find.all()){
+						
+						<tr>
+							<td>
+								<input type="checkbox" class="permiso" name="productoDeposito[]" 
+								@if(productoDepositoArray != null){ 
+								@if(productoDepositoArray.contains(d.id.intValue())) {checked}} 
+								value="@d.id" disabled />
+								
+							</td>
+							<td>@d.nombre</td>
+						</tr>
+					}
+				</tbody>	
+			</table>
+		</div>
+		 
+	</div>
+	
+
+}

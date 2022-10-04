@@ -1,0 +1,52 @@
+@(baseForm: Form[models.haberes.LiquidacionBaseCalculo])
+@import helper._
+@import utils._
+@import models.auth._
+@import models.haberes._
+@implicitFieldConstructor = @{ FieldConstructor(simpleInput.render) } 
+	
+	<div class="row menu-acciones">
+		<div class="col-sm-10">
+			<button type="submit" class="btn btn-default" title="Guardar base calculo"><i class="glyphicon glyphicon-floppy-disk"></i> Guardar</button>
+			<a href="@if(request().getHeader("referer")){ @request().getHeader("referer") } else {@controllers.haberes.routes.LiquidacionBaseCalculosController.index()@UriTrack.decode()}" title="Cancelar editar" class="btn btn-default"><i class="glyphicon glyphicon-floppy-remove"></i> Cancelar</a>
+		</div>
+		<div class="col-sm-2">
+			<a href="@UriTrack.decode()" title="Volver al listado" class="btn btn-default"><i class="glyphicon glyphicon-list"></i></a> 
+			@if(baseForm.field("id").value){<a href="@controllers.haberes.routes.LiquidacionBaseCalculosController.ver(baseForm.field("id").value.toLong)@UriTrack.get("&")" title="Ver tipo de concepto" class="btn btn-default"><i class="glyphicon glyphicon-align-justify"></i></a>}
+		</div>	
+	</div>
+	<div class="row">
+		 
+		<div class="col-sm-2">
+			<div class="form-group @if(baseForm.error("nombre") != null) {has-error}else{has-required}">
+				<label for="inputDenominacion" class="control-label">Nombre</label> 
+				@inputText(baseForm("nombre"), 'class -> "form-control")
+				@baseForm("nombre").error.map{ error =>
+					<div class="text-error">@error.message</div>
+				}
+			</div>
+		</div>
+		
+		 <div class="col-sm-8	">
+			<div class="form-group @if(baseForm.error("parametros") != null) {has-error}">
+				<label for="inputParametros" class="control-label">Parámetros</label> 
+				@inputText(baseForm("parametros"), 'class -> "form-control")
+				@baseForm("parametros").error.map{ error =>
+					<div class="text-error">@error.message</div>
+				}
+			</div>
+		</div> 
+		 
+	</div>
+	<div class="row">
+		<div class="col-sm-10	">
+			<div class="form-group @if(baseForm.error("calculo") != null) {has-error}else{has-required}">
+				<label for="inputParametros" class="control-label">Cálculo</label> 
+				@textarea(baseForm("calculo"), 'class -> "form-control", 'rows -> 12)
+				@baseForm("calculo").error.map{ error =>
+					<div class="text-error">@error.message</div>
+				}
+			</div>
+		</div> 
+	</div>
+	

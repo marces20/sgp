@@ -1,0 +1,71 @@
+@(paginador: utils.pagination.Pagination[_], link: Call)
+
+
+<ul class="pagination">
+	@if(paginador.hasPrev) {
+	    <li><a href="@link?@paginador.getPrevLink()">&laquo; Anterior</a></li></li>
+	} else {
+	    <li class="disabled"><a>&laquo; Anterior</a></li>
+	}
+        <li>
+	        <div>
+	        <form action="@link" method="get" class="paginador-page-size">
+	        	@for(q <- paginador.getQueryMap().entrySet()) {
+	        		@if(q.getKey() != "pageSize" && q.getKey() != "pageNum"){
+	        			<input type="hidden" name="@q.getKey()" value="@q.getValue()" />
+	        		}
+	        	}
+	        
+				<select name="pageSize">
+					<!--<option @if(paginador.getPageSize() == 10){selected="selected"}>10</option>-->
+					<option @if(paginador.getPageSize() == 20){selected="selected"}>25</option>
+					<option @if(paginador.getPageSize() == 50){selected="selected"}>50</option>
+					<option @if(paginador.getPageSize() == 100){selected="selected"}>100</option>
+					<option @if(paginador.getPageSize() == 200){selected="selected"}>200</option>
+					<option @if(paginador.getPageSize() == 500){selected="selected"}>500</option>
+					<option @if(paginador.getPageSize() == 1000){selected="selected"}>1000</option>
+					<option @if(paginador.getPageSize() == 2000){selected="selected"}>2000</option>
+					<option @if(paginador.getPageSize() == 3000){selected="selected"}>3000</option>
+					<option @if(paginador.getPageSize() == 5000){selected="selected"}>5000</option>
+					<!-- <option @if(paginador.getPageSize == paginador.getTotalRowCount()){selected="selected"} value="@paginador.getTotalRowCount()">Todos</option> -->
+				</select>
+			</form>
+			<script>
+				$( function(){
+					
+					$('.ajaxPaginador ul li:not(".disabled") a, .ajaxPaginador a.ordenPaginador').on('click', function(){
+						var href = $(this).attr("href");
+						var contenedor = $(this).closest('.contenedorPaginador');
+						cargarContenido(href, contenedor);
+						return false;
+					});
+					
+					$('.pagination select[name=pageSize]').on('change', function(){
+						if($(this).closest('.ajaxPaginador').length) {
+							var url = $(this).closest('form').attr("action");
+							var query =  $(this).closest('form').serialize();
+							var contenedor = $(this).closest('.contenedorPaginador');
+							cargarContenido(url+"?"+query, contenedor);
+						} else {
+							$(this).closest('form').submit();
+						}
+						
+					});
+				
+					
+					
+					function cargarContenido(href, contenedor){
+						$.get(href, function(data){
+							contenedor.parent().html(data);
+						});
+					}
+				});
+			</script>
+	        </div>
+		</li>
+    @if(paginador.hasNext) {
+        <li><a href="@link?@paginador.getNextLink()">Siguiente &raquo;</a></li>
+    } else {
+    	<li class="disabled"><a>Siguiente &raquo;</a></li>
+    }
+</ul>

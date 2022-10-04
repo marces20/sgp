@@ -1,0 +1,9 @@
+@(lineaForm: Form[CajaChicaMovimiento])
+@import helper._
+@implicitFieldConstructor = @{ FieldConstructor(simpleInput.render) } 
+
+@helper.form(action = controllers.compras.routes.CajaChicaMovimientosController.actualizar()) {
+	@views.html.compras.cajaChica.movimientos.formLineaMovimiento(lineaForm)
+	@inputText(lineaForm("id"), 'hidden -> "hidden")
+	
+}

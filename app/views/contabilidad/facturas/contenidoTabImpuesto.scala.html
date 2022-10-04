@@ -1,0 +1,18 @@
+@(formularioCarga: Boolean, facturaForm: Form[Factura] = null,factura:Factura)
+@import java.util.List
+
+@if(facturaForm.field("id").value == null || facturaForm.field("id").value == ""){
+	<!--<p><i class="glyphicon glyphicon-info-sign"></i> Para cargar impuestos primero debe dar de alta la factura</p>-->
+} else {
+	<script>
+		$( function (){
+			$.get('@controllers.contabilidad.routes.FacturasLineasImpuestosController.index(facturaForm.field("id").value.toLong, formularioCarga)', function(data){
+				$('#listaLineaImpuestos').parent().html(data);
+			})
+		});
+	</script>
+}
+
+<div id="listaLineaImpuestos">
+
+</div>

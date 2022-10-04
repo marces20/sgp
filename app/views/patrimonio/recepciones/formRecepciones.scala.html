@@ -1,0 +1,36 @@
+@(recepcionForm: Form[Recepcion])
+@import helper._
+@import utils._
+@implicitFieldConstructor = @{ FieldConstructor(simpleInput.render) } 
+
+@views.html.tags.successError()
+
+@inputText(recepcionForm("orden_provision_id"), 'type -> "hidden")
+
+	<div class="row menu-acciones">
+		<div class="col-sm-10">
+			<button type="submit" class="btn btn-default" title="Guardar solicitud"><i class="glyphicon glyphicon-floppy-disk"></i> Guardar</button>	
+	    	<a href="@controllers.patrimonio.routes.RecepcionesController.index()" title="Cancelar" class="btn btn-default"><i class="glyphicon glyphicon-floppy-remove"></i> Cancelar</a>
+	    </div>
+
+	</div>
+
+@inputText(recepcionForm("id"), 'type -> "hidden")
+<input type="hidden" name=@UriTrack.getKey() value="@UriTrack.code()" />
+ <div class="row">
+	<div class="col-sm-3">
+		<div class="form-group has-required @if(recepcionForm.error("numero") != null) {has-error}">
+			<label for="nombre" class="control-label">Número</label>
+			@inputText(recepcionForm("numero"), 'class -> "form-control",'id -> "numero")
+			@recepcionForm("numero").error.map{ error =>
+				<div class="text-error">@error.message</div>
+			}
+		</div>
+	</div>
+
+</div>
+<script>
+$( function(){
+	$("#numero").numeric_input({allowNegative: true});
+})
+</script>		

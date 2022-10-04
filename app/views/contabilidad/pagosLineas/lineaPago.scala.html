@@ -1,0 +1,18 @@
+@(linea: PagoLinea, editable: Boolean,pago:Pago)
+
+<tr data-id="@linea.id">
+	@if(editable && pago.estado_id == models.Estado.PAGO_ESTADO_BORRADOR){
+		<td class="accion-editar"><a class="btn btn-default btn-xs modificarPago" href="@controllers.contabilidad.routes.PagosLineasController.editar(linea.id)"><i class="glyphicon glyphicon-edit"></i></a></td>
+	}
+	<td>@if(linea.pago == null){No asociado} else {@linea.pago.proveedor.nombre}</td>
+	<td>@if(linea.cuenta == null){No asociada} else {@linea.cuenta.nombre}</td>
+	<td>@if(linea.cuentaAnalitica == null){No asociada} else {@linea.cuentaAnalitica.codigo @linea.cuentaAnalitica.nombre}</td>
+	<td>@if(linea.periodo == null){No asociado} else {@linea.periodo.nombre}</td>
+	<td>@if(linea.pago == null){No asociado} else {@utils.DateUtils.formatDate(linea.pago.fecha_pago)}</td>
+	<!--<td> @utils.NumberUtils.moneda(linea.monto_original, 10) </td>-->
+	<td>@utils.NumberUtils.moneda(linea.monto, 2)</td>
+	<td>@utils.NumberUtils.moneda(linea.monto_credito, 2)</td>
+	@if(editable && pago.estado_id == models.Estado.PAGO_ESTADO_BORRADOR){
+		<td><a class="btn btn-default btn-xs eliminarPago" href="@controllers.contabilidad.routes.PagosLineasController.eliminar(linea.id)"><i class="glyphicon glyphicon-trash icono-eliminar"></i></a></td>
+	}
+</tr>

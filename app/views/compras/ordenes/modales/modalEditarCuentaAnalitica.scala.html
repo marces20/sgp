@@ -1,0 +1,136 @@
+@(formBuscador: DynamicForm , tipo:String)
+@import helper._
+@implicitFieldConstructor = @{ FieldConstructor(simpleInput.render) } 
+
+<div id="modalEditarCuentaAnalitica" class="contenedorPaginador ajaxPaginador">
+ 	<input type="hidden" name="tipo" id="tipo" value="@tipo">
+	<div class="row margin-bottom-10">
+		<div class="col-sm-8 col-sm-offset-2">
+			<div class="input-group">
+				@inputText(formBuscador("cuentaAnalitica_id"), 'hidden -> "hidden", 'id -> "cuentaAnalitica_id")
+				@inputText(formBuscador("cuentaAnalitica"), 'class -> "form-control", 'id -> "cuentaAnalitica")
+				<span class="input-group-addon">
+					<a href="#" 
+					   id="searchCuentaAnalitica" 
+					   class="searchModal"
+					   data-title="Selección de Cuenta Analitica" 
+					   data-url="@controllers.contabilidad.routes.CuentasAnaliticasController.modalBuscar()" 
+					   data-height="650" 
+					   data-width="700" 
+					   data-listen="modal.seleccion.cuentaAnalitica.simple" 
+					   data-label="#cuentaAnalitica" data-field="#cuentaAnalitica_id">
+					   <i class="glyphicon glyphicon-search"></i>
+					 </a>
+				</span>
+			</div>
+		</div>		
+		
+	</div>
+	
+	<div class="row margin-bottom-10">	
+		<div class="col-sm-5 col-sm-offset-4">
+			<div class="input-group pull-center">
+				<label>
+					<button class="btn btn-default form-control" id="cerrarEditarCuentaAnaliticaOrden">
+						<i class="glyphicon glyphicon-minus-sign"></i>
+						Cerrar
+					</button>
+				</label>
+				<label>
+					<button class="btn btn-default form-control" id="editarCuentaAnaliticaOrden">
+						<i class="glyphicon glyphicon-ok"></i>
+						Editar
+					</button>
+				</label>
+			</div>	
+		</div>
+	</div>		
+	<div class="row">	
+		<div class="col-sm-12" id="responseEditarCuenta">
+			
+		</div>
+	</div>	 
+</div>
+
+<script>
+$( function(){
+	 
+	$('#editarCuentaAnaliticaOrden').click( function(){editarCuentaAnaliticaOrden()});
+	$('#cerrarEditarCuentaAnaliticaOrden').click( function(){cerrarEditarCuentaAnaliticaOrden()});
+	if($("#cuentaAnalitica").length){
+		 
+		var options = {
+				script:"/contabilidad/suggestCuentaAnalitica/",
+				varname:"",
+				json:true,
+				shownoresults:true,
+				maxresults:6,
+				callback: function (obj) { 
+											$("#cuentaAnalitica_id").val(obj.id); 
+										 }
+			};
+		var as_json = new bsn.AutoSuggest('cuentaAnalitica', options);
+	} 
+	
+	$('#searchCuentaAnalitica').modalSearch();
+});
+
+function cerrarEditarCuentaAnaliticaOrden(){
+	$("#modalEditarCuentaAnalitica").dialog("destroy");
+}
+
+function editarCuentaAnaliticaOrden(){
+	
+	
+	if($("#tipo").val() != ""){
+	
+		if($("#cuentaAnalitica_id").val() != "" && $("#cuentaAnalitica").val() != ""){
+			if($("input[name='check_listado[]']").length > 0){
+				
+					data = $("input[name='check_listado[]']").serialize();
+					
+			}else{
+				if($("#tipo").val() != "editar"){
+					s = '- Debe seleccionar una orden.';
+				}else{
+					s = '- Debe seleccionar una linea.';
+				}
+				
+				r = '<p class="responseError">'+s+'</p>'
+				$("#responseEditarCuenta").html(r);
+			}
+			
+			data += "&"+$("#cuentaAnalitica_id").serialize();
+			data += "&"+$("#tipo").serialize();
+			
+			$.ajax({
+		        url: "/compras/orden/editarCuentaAnalitica",
+		        type: "post",
+		        data: data,
+		        success: function(r){
+		        	$("#responseEditarCuenta").html(r);
+		        	if($(".cuentaAnaliticaEnLinea").length > 0){
+		        		if($("#tipo").val() != "editar"){
+		        			$(".cuentaAnaliticaEnLinea").html($("#cuentaAnalitica").val());
+		        		}else{
+		        			$('#listaDeProductos tr:has(input:checked) .cuentaAnaliticaEnLinea').html($("#cuentaAnalitica").val())
+		        		}
+		        	}
+		        	
+		        },
+		        error:function(){
+		        
+		        }
+		    });
+			
+		}else{
+			r = '<p class="responseError">- Debe seleccionar una cuenta.</p>'
+			$("#responseEditarCuenta").html(r);
+		}
+	}else{	
+		r = '<p class="responseError">- No se pudo seleccionar un tipo de operacion.</p>'
+			$("#responseEditarCuenta").html(r);
+	}	
+	
+}
+</script>

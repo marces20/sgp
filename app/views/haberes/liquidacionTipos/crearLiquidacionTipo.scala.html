@@ -1,0 +1,18 @@
+@(tipoForm: Form[models.haberes.LiquidacionTipo])
+@import helper._
+
+@views.html.haberes.mainHaberes("Crear Tipo de Liquidación") {
+
+	<div class="page-header">
+		<div class="row">
+			<div class="col-sm-10">
+				<h1>Crear nuevo Tipo de Liquidación</h1>
+			</div>
+		</div>
+	</div>
+	@views.html.tags.successError()
+    
+    @helper.form(action = controllers.haberes.routes.LiquidacionTiposController.guardar()) {
+		@views.html.haberes.liquidacionTipos.formLiquidacionTipo(tipoForm) 	
+	}
+}

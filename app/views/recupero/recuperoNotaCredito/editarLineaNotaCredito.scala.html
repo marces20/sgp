@@ -1,0 +1,9 @@
+@(lineaForm: Form[models.recupero.RecuperoNotaCredito])
+@import helper._
+@implicitFieldConstructor = @{ FieldConstructor(simpleInput.render) } 
+
+@helper.form(action = controllers.recupero.routes.RecuperoNotasCreditosController.actualizar()) {
+	@views.html.recupero.recuperoNotaCredito.formLineaNotaCredito(lineaForm)
+	@inputText(lineaForm("id"), 'hidden -> "hidden")
+	
+}

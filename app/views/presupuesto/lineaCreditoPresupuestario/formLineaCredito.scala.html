@@ -1,0 +1,58 @@
+@(lineaForm: Form[LineaCreditoPresupuestario])
+@import helper._
+@implicitFieldConstructor = @{ FieldConstructor(simpleInput.render) } 
+
+@if(flash.containsKey("error")) {
+	<div class="alert alert-danger">
+		<i class="glyphicon glyphicon-remove-sign"></i> @flash.get("error")
+	</div>
+}
+
+ <div class="row">
+	@inputText(lineaForm("credito_presupuestario_id"), 'type -> "hidden")
+	<div class="col-sm-6">
+		<div class="form-group @if(lineaForm.error("cuenta_analitica_id") != null) {has-error} else {has-required}">
+			<label for="cliente" class="control-label">Cuenta Analitica</label>
+			<div class="input-group">
+				@inputText(lineaForm("cuentaAnalitica.nombre"), 'class -> "form-control", 'autofocus -> "autofocus", 'id -> "cuentaAnalitica")
+				@inputText(lineaForm("cuenta_analitica_id"), 'hidden -> "hidden", 'id -> "cuenta_analitica_id")
+				<span class="input-group-addon">
+					<a href="#" 
+					   id="searchCuentaAnalitica" 
+					   class="searchModal"
+					   data-title="Selección de Cuenta Analitica" 
+					   data-url="@controllers.contabilidad.routes.CuentasAnaliticasController.modalBuscar()" 
+					   data-height="650" 
+					   data-width="700" 
+					   data-listen="modal.seleccion.cuentaAnalitica.simple" 
+					   data-label="#cuentaAnalitica" data-field="#cuenta_analitica_id">
+					   <i class="glyphicon glyphicon-search"></i>
+					 </a>
+				</span>
+			</div>
+			@lineaForm("cuenta_analitica_id").error.map{ error => <div class="text-error">@error.message</div>}
+		</div>
+	</div>
+	<div class="col-sm-3">
+		<div class="form-group @if(lineaForm.error("monto") != null) {has-error} else {has-required}">
+			<label for="monton" class="control-label">Monto</label>
+			@inputText(lineaForm("monto"), 'class -> "form-control", 'id -> "monto")
+			@lineaForm("monto").error.map{ error => <div class="text-error">@error.message</div>}
+		</div>	
+	</div>
+</div>
+<div class="row">
+	<div class="col-sm-9">
+		<div class="form-group">
+			<label for="monton" class="control-label">Observacion</label>
+			@inputText(lineaForm("nombre"), 'class -> "form-control", 'id -> "nombre")
+			@lineaForm("nombre").error.map{ error => <div class="text-error">@error.message</div>}
+		</div>	
+	</div>
+</div>
+
+<script>
+$(function(){
+	$('#searchCuentaAnalitica').modalSearch();
+});
+</script>

@@ -1,0 +1,113 @@
+@(ticket: Ticket,ticketForm: Form[Ticket])
+@import helper._
+@import utils._
+@import models.auth._
+@implicitFieldConstructor = @{ FieldConstructor(simpleInput.render) }
+
+
+@views.html.administracion.mainTicket(title = "Lista de tickets") {
+
+<div class="page-header">
+	<div class="row">
+		<div class="col-sm-8">
+			<h1>Detalles de ticket</h1>
+		</div>
+		<div class="col-sm-4">
+		<a href="@controllers.administracion.routes.TicketsController.index()"  class="btn btn-default"><i class="glyphicon glyphicon-list"></i> Lista de tickets</a>
+		<a href="@controllers.administracion.routes.TicketsController.crear()"  class="btn btn-default"><i class="glyphicon glyphicon-plus-sign"></i> Abrir ticket</a>
+		<a href="@controllers.administracion.routes.TicketsController.eliminar(ticket.id)"  class="btn btn-default delete-confirm-link"><i class="glyphicon glyphicon-trash icono-eliminar"></i> Eliminar</a>
+		</div>
+	</div>
+</div>
+
+
+@if(flash.containsKey("success")) {
+    <div class="alert alert-success"><i class="glyphicon glyphicon-ok-sign"></i> @flash.get("success")</div>
+} 
+
+
+
+<div class="row">
+		<div class="col-sm-2">
+			<label class="control-label">Número</label>
+			<p class="form-control-static form-control">@ticket.id</p>
+		</div>
+		
+		<div class="col-sm-2">
+			<label class="control-label">Fecha</label> 
+			<p class="form-control-static form-control">@(DateUtils.formatDate(ticket.fecha))</p>
+		</div>
+		
+		<div class="col-sm-2">
+			<label class="control-label">Prioridad</label> 
+			<p class="form-control-static form-control">@ticket.getPrioridad()</p>
+		</div>
+		
+		<div class="col-sm-2">
+			<label class="control-label">Usuario</label> 
+			<p class="form-control-static form-control">@ticket.usuario.nombre</p>
+		</div>
+	</div>
+<br />
+	<div class="row">
+		<div class="col-sm-12">
+			<label class="control-label">Asunto</label> 
+			<p class="form-control-static form-control">@ticket.asunto</p>
+		</div>
+	</div>
+<br />
+	<div class="row">
+		<div class="col-sm-12">
+			<label class="control-label">Detalle</label> 
+			<p class="form-control-static form-control">@ticket.detalles</p>
+		</div>
+	</div>
+	 
+		<div class="row">
+			<div class="col-sm-12">
+				<label class="control-label">Respuesta</label> 
+				<p class="form-control-static form-control">@ticket.respuesta</p>
+			</div>
+		</div>
+ 
+
+<div style="margin-top: 50px">
+
+	<h4>Estado actual: 	<b>@ticket.estado.nombre</b></h4>
+
+	<div class="row margin-bottom-25">	
+	
+		<div class="col-sm-2">
+			<a href="@controllers.administracion.routes.TicketsController.cambiarEstado(ticket.id, models.Estado.TICKET_ABIERTO)" class="btn btn-default">
+				<i class="glyphicon glyphicon glyphicon-unchecked"></i> Abierto
+			</a>
+		</div>	
+		
+		<div class="col-sm-2">
+			<a href="@controllers.administracion.routes.TicketsController.cambiarEstado(ticket.id, models.Estado.TICKET_EN_PROCESO)" class="btn btn-default">
+				<i class="glyphicon glyphicon-refresh"></i> En proceso
+			</a>
+		</div>	
+	
+	
+		<div class="col-sm-2">
+			<a href="@controllers.administracion.routes.TicketsController.cambiarEstado(ticket.id, models.Estado.TICKET_CERRADO)" class="btn btn-default">
+				<i class="glyphicon glyphicon-stop"></i> Cerrado
+			</a>
+		</div>	
+	
+		<div class="col-sm-2">
+			<a href="@controllers.administracion.routes.TicketsController.cambiarEstado(ticket.id, models.Estado.TICKET_CANCELADO)" class="btn btn-default">
+				<i class="glyphicon glyphicon-remove-sign"></i> Cancelado
+			</a>
+		</div>	
+
+	</div>
+
+
+</div>
+
+
+
+
+}

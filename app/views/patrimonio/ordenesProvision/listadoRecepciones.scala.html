@@ -1,0 +1,45 @@
+@(orden_provision_id: Long, buscador: utils.pagination.Pagination[Recepcion])
+@import helper._
+@import models.auth._
+@import utils._
+
+
+<div class="contenedorPaginador ajaxPaginador">
+
+	@if(buscador.getTotalRowCount == 0) {
+       <div class="well">
+           <em>No se encuentran resultados</em>
+       </div>
+       
+   } else {
+   	Mostrando @buscador.getDisplayXtoYofZ(" a "," de ") resultado(s). 
+   
+	<table class="table table-striped table-bordered table-hover" style="margin-top: 20px">
+		<thead>
+			<tr>
+				<th>Numero</th>
+				<th>Fecha</th>
+				<th>Acta</th>
+			</tr>
+		</thead>
+		<tbody>
+		@for(o <- buscador.getList) {
+			<tr class="pointer" data-href="@controllers.patrimonio.routes.RecepcionesController.ver(o.id)">
+				<td>@o.numero</td>
+				<td>@if(o.create_date != null){@(utils.DateUtils.formatDate(o.create_date))}</td>
+				<td>@if(o.acta != null){@o.acta.numero}</td>
+			</tr>
+		}
+		</tbody>
+	</table>
+	<div class="pagination pull-right">
+	    @views.html.helpers.paginador(buscador, controllers.patrimonio.routes.OrdenesProvisionController.getRecepciones())
+	</div>
+   }
+		   
+</div>
+<script>
+$('table tr.pointer td:not(:has(.notSeleccion))').click( function(){
+	window.location.href = $(this).closest('tr').attr('data-href');
+});
+</script>

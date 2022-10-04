@@ -1,0 +1,25 @@
+@( cForm: Form[RemitoBaul])
+@import helper._
+@import utils._
+@implicitFieldConstructor = @{ FieldConstructor(simpleInput.render) } 
+    
+@views.html.patrimonio.mainPatrimonio("Crear remito en baúl") {
+
+	<div class="page-header">
+		<div class="row">
+			<div class="col-sm-10">
+				<h1>Crear remito en baúl</h1>
+			</div>
+			
+			 
+		</div>
+	</div> 
+    
+    @views.html.tags.successError()
+    
+	@helper.form(action = controllers.patrimonio.routes.RemitosBaulController.guardar()) {
+		@views.html.patrimonio.baul.formRemitoBaul(cForm) 
+		@views.html.patrimonio.baul.tabsProductoRemitoBaul(false)	
+	}
+
+}

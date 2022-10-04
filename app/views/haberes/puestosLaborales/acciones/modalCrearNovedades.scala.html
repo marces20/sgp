@@ -1,0 +1,70 @@
+@(formBuscador: DynamicForm)
+@import helper._
+@implicitFieldConstructor = @{ FieldConstructor(simpleInput.render) } 
+
+																					
+@helper.form(action = controllers.haberes.routes.PuestosLaboralesAccionesController.crearNovedadesBasicas(), 'id -> "formCrearNovedadesBasicas") {											
+ 	
+ 	@views.html.tags.successError()
+ 	
+	<div class="row">
+		<div class="col-sm-3">
+			<div class="form-group">
+				<label for="periodo" class="control-label">Periodo Desde</label>
+				<div class="input-group">
+					@inputText(formBuscador("periodo_desde.nombre"), 'class -> "form-control", 'id -> "periodo_desde")
+					@inputText(formBuscador("periodo_desde_id"),'hidden -> "hidden", 'id -> "periodo_desde_id")
+					<span class="input-group-addon">
+						<a href="#" class="searchModal"
+									id="searchPeriodoDesde" 
+									data-title="Selección de Periodo" 
+									data-url="@controllers.contabilidad.routes.PeriodosController.modalBuscar()" 
+									data-height="650" 
+									data-width="700" 
+									data-listen="modal.seleccion.periodo.simple" 
+									data-label="#periodo_desde" 
+									data-field="#periodo_desde_id">
+							<i class="glyphicon glyphicon-search"></i>
+						</a>
+					</span>
+				</div>
+			</div>
+		</div>
+		<div class="col-sm-3">
+			<div class="form-group ">
+				<label for="periodo" class="control-label">Periodo Hasta</label>
+				<div class="input-group">
+					@inputText(formBuscador("periodoHasta.nombre"), 'class -> "form-control", 'id -> "periodo_hasta")
+					@inputText(formBuscador("periodo_hasta_id"),'hidden -> "hidden", 'id -> "periodo_hasta_id")
+					<span class="input-group-addon">
+						<a href="#" class="searchModal"
+									id="searchPeriodoHasta" 
+									data-title="Selección de Periodo" 
+									data-url="@controllers.contabilidad.routes.PeriodosController.modalBuscar()" 
+									data-height="650" 
+									data-width="700" 
+									data-listen="modal.seleccion.periodo.simple" 
+									data-label="#periodo_hasta" 
+									data-field="#periodo_hasta_id">
+							<i class="glyphicon glyphicon-search"></i>
+						</a>
+					</span>
+				</div>
+			</div>
+		</div>
+		
+	</div>
+	<div class="row">
+		<div class="col-sm-5"><br />
+			<button type="submit" class="btn btn-default" title="Crear Novedades"><i class="glyphicon glyphicon-arrow-right"></i> Crear Novedades</button>
+		</div>
+	</div>
+
+} 
+<script>
+$( function(){
+	$('#searchPeriodoDesde').modalSearch();
+	$('#searchPeriodoHasta').modalSearch();
+});
+</script>
+@flash().clear()

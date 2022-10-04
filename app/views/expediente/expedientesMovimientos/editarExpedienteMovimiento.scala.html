@@ -1,0 +1,8 @@
+@(lineaForm: Form[ExpedienteMovimiento])
+@import helper._
+@implicitFieldConstructor = @{ FieldConstructor(simpleInput.render) } 
+
+@helper.form(action = controllers.expediente.routes.ExpedientesMovimientosController.actualizar()) {
+	@views.html.expediente.expedientesMovimientos.formExpedienteMovimiento(lineaForm)
+	@inputText(lineaForm("id"), 'hidden -> "hidden")
+}

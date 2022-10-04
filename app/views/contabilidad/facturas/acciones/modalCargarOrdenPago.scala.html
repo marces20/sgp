@@ -1,0 +1,42 @@
+@(formBuscador: DynamicForm)
+@import helper._
+@implicitFieldConstructor = @{ FieldConstructor(simpleInput.render) } 
+	
+@helper.form(action = controllers.contabilidad.routes.FacturasAccionesController.cargarOrdenPagoMasivo(), 'id -> "formCargarOrdenPagoFactura") {	
+	
+	@views.html.tags.successError()
+	
+	<div class="row">
+		<div class="col-sm-3">
+			<div class="input-group">
+				<input type="text" name="orden_pago" id="orden_pago_modal" class="form-control" value=""/>
+				<input type="hidden" name="orden_pago_id" id="orden_pago_id_modal" class="" value=""/>
+				<span class="input-group-addon">
+					<a href="#" class="searchModal"
+								id="searchOrdenPago" 
+								data-title="Selección de órdenes de pago" 
+								data-url="@controllers.contabilidad.routes.OrdenesPagosController.modalBuscar()" 
+								data-height="650" 
+								data-width="700" 
+								data-listen="modal.seleccion.orden-pago.simple" 
+								data-label="#orden_pago_modal" 
+								data-field="#orden_pago_id_modal">
+						<i class="glyphicon glyphicon-search"></i>
+					</a>
+				</span>
+			</div>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-sm-5"><br />
+			<button type="submit" class="btn btn-default" title="Agregar Orden de Pago"><i class="glyphicon glyphicon-arrow-right"></i> Cargar Orden de Pago</button>
+		</div>
+	</div>
+
+}
+<script>
+$( function(){
+	$('#searchOrdenPago').modalSearch();
+});
+</script>
+@flash().clear()

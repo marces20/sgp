@@ -1,0 +1,81 @@
+@(ordenPagoCircuitoForm: Form[OrdenPagoCircuito])
+@import helper._
+@import utils._
+@implicitFieldConstructor = @{ FieldConstructor(simpleInput.render) } 
+
+<script>
+$( function(){ $('.searchModal').modalSearch();})
+</script>
+
+<div class="row menu-acciones">
+	<div class="col-sm-10">
+		<button type="submit" class="btn btn-default" title="Guardar orden de pago"><i class="glyphicon glyphicon-floppy-disk"></i> Guardar</button>	
+    	<a href="@if( UriTrack.decode() ){ @UriTrack.decode() } else {@controllers.contabilidad.routes.OrdenesPagosCircuitosController.index()@UriTrack.decode()}" title="Cancelar editar" class="btn btn-default"><i class="glyphicon glyphicon-floppy-remove"></i> Cancelar</a>
+    </div>
+	<div class="col-sm-2">
+		<a href="@UriTrack.decode()" title="Volver al listado" class="btn btn-default"><i class="glyphicon glyphicon-list"></i></a> 
+	</div>
+</div>
+
+<input type="hidden" name=@UriTrack.getKey() value="@UriTrack.code()" />
+<div class="row">
+
+	<div class="col-sm-4">
+		<div class="form-group">
+			<label class="control-label">Contraparte</label>
+			@inputText(ordenPagoCircuitoForm("proveedor.nombre"), 'class -> "form-control",'readOnly -> "readOnly")	
+		    @inputText(ordenPagoCircuitoForm("proveedor_id"),'hidden -> "hidden", 'id -> "proveedor_id",'readOnly -> "readOnly")
+		</div>
+	</div>
+	
+	
+	<div class="col-sm-2">
+		<div class="form-group">
+			<label class="control-label">Expediente</label>
+			@inputText(ordenPagoCircuitoForm("expediente.expedienteEjercicio"), 'class -> "form-control",'readOnly -> "readOnly")	
+		    @inputText(ordenPagoCircuitoForm("expediente_id"),'hidden -> "hidden", 'id -> "expediente_id",'readOnly -> "readOnly")
+		</div>
+	</div>
+	<div class="col-sm-2">
+		<div class="form-group">
+			<label class="control-label">Orden de pago N°</label>
+			@inputText(ordenPagoCircuitoForm("ordenPago.ordenEjercicio"), 'class -> "form-control",'readOnly -> "readOnly")	
+		    @inputText(ordenPagoCircuitoForm("orden_pago_id"),'hidden -> "hidden", 'id -> "expediente_id",'readOnly -> "readOnly")
+		</div>
+	</div>	
+	
+	<div class="col-sm-2">
+			<div class="form-group @if(ordenPagoCircuitoForm.error("expediente_fisico_id") != null) {has-error}else{has-required}">
+				<label for="inputExpediente" class="control-label">Expediente Fisico</label>
+				<div class="input-group">
+					@inputText(ordenPagoCircuitoForm("expedienteFisico.expedienteEjercicio"),'class -> "form-control",'id -> "expedienteFisico")
+					@inputText(ordenPagoCircuitoForm("expediente_fisico_id"),'hidden -> "hidden", 'id -> "expediente_fisico_id")
+					<span class="input-group-addon">
+						<a href="#" class="searchModal"
+									id="searchExpediente" 
+									data-title="Selección de expediente" 
+									data-url="@controllers.expediente.routes.ExpedientesController.modalBuscarCopia()" 
+									data-height="650" 
+									data-width="700" 
+									data-listen="modal.seleccion.expediente.simple" 
+									data-label="#expedienteFisico" 
+									data-field="#expediente_fisico_id">
+							<i class="glyphicon glyphicon-search"></i>
+						</a>
+					</span>
+				</div>
+				@ordenPagoCircuitoForm("expediente_id").error.map{ error =>
+					<div class="text-error">@error.message</div>
+				}
+			</div>
+		</div>
+	@inputText(ordenPagoCircuitoForm("estado_id"), 'hidden -> "hidden")
+	@inputText(ordenPagoCircuitoForm("fecha_creacion"), 'hidden -> "hidden") 
+	@inputText(ordenPagoCircuitoForm("fecha_contabilidad"), 'hidden -> "hidden") 
+	@inputText(ordenPagoCircuitoForm("fecha_rendiciones"), 'hidden -> "hidden") 
+	@inputText(ordenPagoCircuitoForm("fecha_rendicion"), 'hidden -> "hidden")  
+	@inputText(ordenPagoCircuitoForm("fecha_pago"), 'hidden -> "hidden") 
+	@inputText(ordenPagoCircuitoForm("fecha_mayor"), 'hidden -> "hidden")  
+
+</div>
+ 

@@ -1,0 +1,52 @@
+@(r:List[models.informes.InformeDeudaProveedoresMaterializada])
+@import helper._
+@implicitFieldConstructor = @{ FieldConstructor(simpleInput.render) } 
+
+<table class="table table-striped table-bordered" id="listaInforme">
+	<thead>
+		<tr>
+			<th width="40">Orden</th>
+			<th width="60">Expediente</th>
+			<th width="30">Cuenta</th>
+			<th width="130">Rubro</th>
+			<th width="80">Inst.</th>
+			<th>Proveedor</th>
+			<th width="90">Orden</th>
+			<th width="90">Autorizado</th>
+			<th width="90">Pagado</th>
+			<th width="90">Deuda</th>
+			<th width="30">Compromiso</th>
+		</tr>
+	</thead>
+	<tbody>
+	
+		@for(informe <- r) {
+         
+		<tr>
+			<td>@informe.numero_orden_provision
+			<br>@if(informe.tipo_moneda != null){<span style="color:green;font-weight:bold;font-size: 12px;">M.E.</span>}
+			</td>
+			<td>@informe.expediente</td>
+			<td>@if(informe.tipoCuenta != null) {@informe.tipoCuenta.nombre}</td>
+			<td>@informe.rubro</td>
+			<td>@informe.deposito.nombre</td>
+			<td>@informe.nombreProveedor</td>
+			<td class="totalOrden" data-valor="@informe.totalOrden">@utils.NumberUtils.moneda(informe.totalOrden)</td>
+			<td class="totalAutorizado" data-valor="@informe.totalAutorizado">@utils.NumberUtils.moneda(informe.totalAutorizado)</td>
+			<td class="totalPagado" data-valor="@informe.totalPagado">@utils.NumberUtils.moneda(informe.totalPagado)</td>
+			<td class="totalDeuda" data-valor="@informe.totalDeuda">
+
+					@utils.NumberUtils.moneda(informe.totalDeuda)
+
+			</td>
+			<td class="totalCompromiso" data-valor="@informe.totalCompromiso">
+			
+
+					@utils.NumberUtils.moneda(informe.totalCompromiso)
+
+				
+			</td>		
+		</tr>
+        }
+	</tbody>
+	</table>

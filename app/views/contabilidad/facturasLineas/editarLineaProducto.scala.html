@@ -1,0 +1,9 @@
+@(lineaForm: Form[FacturaLinea])
+@import helper._
+@implicitFieldConstructor = @{ FieldConstructor(simpleInput.render) } 
+
+@helper.form(action = controllers.contabilidad.routes.FacturasLineasController.actualizar()) {
+	@views.html.contabilidad.facturasLineas.formLineaProducto(lineaForm)
+	@inputText(lineaForm("id"), 'hidden -> "hidden")
+	
+}

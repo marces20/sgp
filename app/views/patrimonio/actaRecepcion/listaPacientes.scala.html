@@ -1,0 +1,23 @@
+@(p:Map[Integer,Map[String,String]])
+@import helper._
+<table id="listaProdutosActas" class="table table-striped table-bordered table-hover">
+	<thead>
+		<tr>
+			<th>Producto</th>
+			<th>Cantidad</th>
+			<th>Paciente</th>
+			<th>Referencia</th>	
+		</tr>
+	</thead>
+	<tbody>
+        @for((key,value) <- p) {
+        	<tr class="pointer">
+				<td>@value.get("producto")</td>
+				<td>@value.get("cantidad")</td>
+				<td>@value.get("nombre")</td>
+				<td>@if(value.get("referencia") != null){@value.get("referencia")}</td>
+			</tr>
+			 
+        }
+	</tbody>
+</table>

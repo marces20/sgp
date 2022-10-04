@@ -1,0 +1,159 @@
+@(provForm: Form[Proveedor], proveedorExiste: Boolean)
+@import helper._
+@implicitFieldConstructor = @{ FieldConstructor(simpleInput.render) } 
+
+<div id="formularioContacto">
+
+<p>
+	@if(proveedorExiste){
+		<a class="btn btn-xs btn-default" id="cancelarEdicion" href="#"> Cancelar</a>
+	}
+</p>
+
+  	@inputText(provForm("direcciones[0].id"), 'hidden -> "hidden")
+  	
+  	<div class="row">
+  		<div class="col-sm-5">
+	   		<div class="form-group @if(provForm.error("direcciones[0].nombre") != null)  {has-error} else {has-required}">
+	   			<label for="@provForm("direcciones[0].nombre").id" class="control-label">Nombre del contacto</label>
+	   				@inputText(provForm("direcciones[0].nombre"), 'class -> "direccion form-control")
+	   				@provForm("direcciones[0].nombre").error.map{ error =>
+						<div class="text-error">@error.message</div>
+					}
+			</div>
+		</div>
+  	</div>
+  	
+  	
+  	<div class="row">
+  		<div class="col-sm-6">
+  			<legend>Dirección postal</legend>
+  				<div class="row">
+				<div class="col-sm-6">
+					<div class="form-group @if(provForm.error("direcciones[0].calle") != null)  {has-error} else {has-required}">
+						<label for="@provForm("direcciones[0].calle").id" class="control-label">Calle</label>
+						@inputText(provForm("direcciones[0].calle"), 'class -> "form-control")
+						@provForm("direcciones[0].calle").error.map{ error =>
+							<div class="text-error">@error.message</div>
+						}
+					</div>
+				</div>
+			
+				<div class="col-sm-3">
+					<div class="form-group @if(provForm.error("direcciones[0].numero") != null)  {has-error} else {has-required}">
+						<label for="provForm("direcciones[0].numero").id" class="control-label">Número</label>
+						@inputText(provForm("direcciones[0].numero"), 'class -> "form-control")
+						@provForm("direcciones[0].numero").error.map{ error =>
+							<div class="text-error">@error.message</div>
+						}
+					</div>
+				</div>
+				
+				<div class="col-sm-3">
+					<div class="form-group @if(provForm.error("direcciones[0].zip") != null) {has-error}">
+						<label for="@provForm("direcciones[0].zip").id" class="control-label">C. Postal</label>
+						@inputText(provForm("direcciones[0].zip"), 'class -> "form-control")
+						@provForm("direcciones[0].zip").error.map{ error =>
+							<div class="text-error">@error.message</div>
+						}
+					</div>
+				</div>
+				
+ 				</div>
+
+				<div class="row contenedorUbicacion">
+					<div class="col-sm-4">
+						<div class="seleccionPais form-group @if(provForm.error("direcciones[0].localidad.provincia.pais.id") != null) {has-error}">
+							<label for="@provForm("direcciones[0].localidad.provincia.pais.id").id" class="control-label">País</label>
+							@select(provForm("direcciones[0].localidad.provincia.pais.id"), Pais.find.all().map { p => p.id.toString -> p.nombre}, 'class -> "form-control select", '_default -> "Seleccionar")
+							@provForm("direcciones[0].localidad.provincia.pais.id").error.map{ error =>
+								<div class="text-error">@error.message</div>
+							}
+						</div>
+					</div>
+		
+					<div class="col-sm-4">
+						<div class="seleccionProvincia form-group @if(provForm.error("direcciones[0].localidad.provincia.id") != null) {has-error}">
+							<label for="@provForm("direcciones[0].localidad.provincia.id").id" class="control-label">Provincia</label>
+							@select(provForm("direcciones[0].localidad.provincia.id"), 
+								provForm("direcciones[0].localidad.provincia.pais.id").value match {
+									case null => {options()}
+									case v if v.matches("\\d+") => {Provincia.getProvincias(v.toInt).map { p => p.id.toString -> p.nombre}}
+									case _ => {options()}
+								}, 
+							'class -> "form-control select", '_default -> "Seleccionar")
+							@provForm("direcciones[0].localidad.provincia.id").error.map{ error =>
+								<div class="text-error">@error.message</div>
+							}
+						</div>
+					</div>
+
+					<div class="col-sm-4">
+						<div class="seleccionLocalidad form-group @if(provForm.error("direcciones[0].localidad.id") != null) {has-error} else {has-required}">
+							<label for="@provForm("direcciones[0].localidad.id").id" class="control-label">Localidad</label>
+							@select(provForm("direcciones[0].localidad.id"), 
+								provForm("direcciones[0].localidad.provincia.id").value match {
+									case null => {options()}
+									case v if v.matches("\\d+") => {Localidad.getLocalidades(v.toInt).map { p => p.id.toString -> p.nombre}}
+									case _ => {options()}
+								}, 
+							'class -> "form-control select", '_default -> "Seleccionar")
+							@provForm("direcciones[0].localidad.id").error.map{ error =>
+								<div class="text-error">@error.message</div>
+							}
+						</div>
+					</div>
+				</div>
+
+  		</div>
+  		
+  		<div class="col-sm-6">
+  			<legend>Comunicación</legend>
+  			
+  			<div class="row">
+				<div class="col-sm-12">
+			   		<div class="form-group @if(provForm.error("direcciones[0].email") != null) {has-error}">
+			   			<label for="@provForm("direcciones[0].email").id" class="control-label">Correo electrónico</label>
+			   				@inputText(provForm("direcciones[0].email"), 'class -> "direccion form-control")
+			   				@provForm("direcciones[0].email").error.map{ error =>
+								<div class="text-error">@error.message</div>
+							}
+					</div>
+		  		</div>
+  			</div>
+  			
+  			<div class="row">
+					<div class="col-sm-4">
+				   		<div class="form-group @if(provForm.error("direcciones[0].telefono") != null) {has-error}">
+				   			<label for="@provForm("direcciones[0].telefono").id" class="control-label">Teléfono fijo</label>
+				   				@inputText(provForm("direcciones[0].telefono"), 'class -> "direccion form-control")
+				   				@provForm("direcciones[0].telefono").errors.map{ error =>
+									<div class="text-error">@error.message</div>
+								}
+						</div>
+			  		</div>
+			  		
+			  		<div class="col-sm-4">
+				   		<div class="form-group @if(provForm.error("direcciones[0].mobile") != null) {has-error}">
+				   			<label for="@provForm("direcciones[0].mobile").id" class="control-label">Teléfono celular</label>
+				   				@inputText(provForm("direcciones[0].mobile"), 'class -> "direccion form-control")
+				   				@provForm("direcciones[0].mobile").error.map{ error =>
+									<div class="text-error">@error.message</div>
+								}
+						</div>
+			  		</div>
+			  		
+			  		<div class="col-sm-4">
+				   		<div class="form-group @if(provForm.error("direcciones[0].fax") != null) {has-error}">
+				   			<label for="@provForm("direcciones[0].fax").id" class="control-label">Fax</label>
+				   				@inputText(provForm("direcciones[0].fax"), 'class -> "direccion form-control")
+				   				@provForm("direcciones[0].fax").error.map{ error =>
+									<div class="text-error">@error.message</div>
+								}
+						</div>
+			  		</div>
+  			</div>
+
+  		</div>
+  	</div>
+</div>

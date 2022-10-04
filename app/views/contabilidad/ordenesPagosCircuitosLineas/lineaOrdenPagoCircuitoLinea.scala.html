@@ -1,0 +1,9 @@
+@(linea: OrdenPagoCircuitoLinea)
+
+<tr data-id="@linea.id">
+	<td>@if(linea.id == null){No asociada} else {@linea.id}</td>
+	<td>@if(linea.pago == null){No asociado} else {@linea.pago.nombre}</td>
+	<td>@if(linea.pago == null){No asociado} else {@linea.pago.proveedor.nombre}</td>
+	<td>@if(linea.pago.periodo != null) {@linea.pago.periodo.nombre}</td>
+	<td class="total" rel="@linea.pago.total">@(utils.NumberUtils.moneda(linea.pago.total))</td>
+</tr>

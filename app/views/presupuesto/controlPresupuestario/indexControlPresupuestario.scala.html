@@ -1,0 +1,170 @@
+@(ol: List[OrdenLineaAjuste],formBuscador: DynamicForm)
+@import helper._
+@import models.auth._
+@import utils._
+@implicitFieldConstructor = @{ FieldConstructor(simpleInput.render) } 
+@import java.lang.Long;var ordenId=new java.lang.Long(0);var expId=new java.lang.Long(0);var cuentaId=new java.lang.Long(0);
+@import java.math.BigDecimal;var total=new java.math.BigDecimal(0);
+@views.html.presupuesto.mainPresupuesto("Control Presupuesto") {
+<script>
+
+$( function() {
+	var baseUrl = $('#reporteControlAnulacionProductosAutomaticos').attr('href')
+	$('#reporteControlAnulacionProductosAutomaticos').attr('href', baseUrl + '?descarga=&' + window.location.href.slice(window.location.href.indexOf('?') + 1))
+});
+
+</script>
+	
+<div class="page-header">
+	<div class="row">
+		<div class="col-sm-7">
+			<h1>Lista Anulaciones Automaticas Patrimonio</h1>
+		</div>
+		<div class="col-sm-5">
+			<div class="dropdown pull-right">
+				<button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown">
+			 		<i class="glyphicon glyphicon-list-alt"></i> Reportes<span class="caret"></span>
+				</button>
+				<ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
+					<li><a id="reporteControlAnulacionProductosAutomaticos" href="@controllers.presupuesto.routes.ControlPresupuestarioController.controlAnulacionProductosAutomaticosExcel()">Descargar Excel</a></li>
+							
+				</ul>
+			</div>
+		</div>
+	</div>
+</div>	
+	@views.html.tags.successError()
+
+<div id="actions">
+	<form action="" id="formSearchFacturas" method="GET">
+		<div class="row">
+			<div class="col-sm-2 input-group">
+				<label class="control-label">Fecha Creacion</label>
+				<div>
+					@inputText(formBuscador("fecha_desde"), 'class -> "form-control inputDateMascara", 'id -> "fecha_desde", 'placeholder -> "Desde")
+					@inputText(formBuscador("fecha_hasta"), 'class -> "form-control inputDateMascara", 'id -> "fecha_hasta", 'placeholder -> "Hasta")
+				</div>
+			</div>
+			<div class="col-sm-2">
+				<label class="control-label">Expediente</label>
+					<div class="input-group">
+						@inputText(formBuscador("expediente.nombre"), 'name -> "", 'class -> "form-control", 'id -> "expediente")
+						@inputText(formBuscador("expediente.id"), 'hidden -> "hidden", 'id -> "expediente_id")
+						<span class="input-group-addon">
+							<a href="#" class="searchModal"
+										id="searchExpediente" 
+										data-title="Selección de expediente" 
+										data-url="@controllers.expediente.routes.ExpedientesController.modalBuscar()" 
+										data-height="650" 
+										data-width="700" 
+										data-listen="modal.seleccion.expediente.simple" 
+										data-label="#expediente" 
+										data-field="#expediente_id">
+								<i class="glyphicon glyphicon-search"></i>
+							</a>
+						</span>
+					</div>
+			</div>			
+			<div class="col-sm-2 input-group">
+				<label class="control-label"> 
+					Creacion Automatica
+					@select(formBuscador("auto"),options("SI"->"SI","NO"->"NO"), 'class -> "form-control select")
+				</label>
+			</div>
+			<div class="col-sm-2">
+				<label class="control-label">Ejercicio
+					@select(formBuscador("ejercicio"), Ejercicio.getEjercicios().map { p => p.id.toString -> p.nombre}, 
+					'class -> "form-control select", '_default -> "Seleccionar")
+					
+				</label>
+			</div>
+		</div>	
+		<div class="row">	
+			<div class="col-sm-2">
+				<div class="form-group">
+				<label for="nombre" class="control-label">&nbsp;</label>
+				<button  class="form-control btn btn-primary"><i class="glyphicon glyphicon-search"></i> Buscar</button>
+				</div>
+			</div>
+			<div class="col-sm-2">
+				<div class="form-group">
+				<label for="nombre" class="control-label">&nbsp;</label>
+				<a href="@controllers.presupuesto.routes.ControlPresupuestarioController.movimientosSaldoPreventivo()"  class="form-control btn btn-default">Limpiar</a>
+				</div>
+			</div>
+		</div>
+	</form>
+</div>
+	@if(ol != null){
+		@if(ol.size() == 0) {
+	        
+	        <div class="well">
+	            <em>No se encuentran resultados</em>
+	        </div>
+	        
+	    } else {
+	    
+	    	<table class="table table-bordered tablaPresupuesto">
+				<thead>
+					<tr>
+						<th>Fecha</th>
+						<th>Usuario</th>
+						<th>Orden</th>
+						<th>OP</th>
+						<th>Expediente</th>
+						<th>Cuenta</th>
+						<th>Producto</th>
+						<th>Cantidad</th>
+						<th>Precio</th>
+						<th>Total</th>
+						<th>Nota</th>
+					</tr>
+				</thead>
+				<tbody>
+					
+					@for(p <- ol) {
+						@if(ordenId.compareTo(new Long(0)) != 0 && ordenId.compareTo(p.orden.id) != 0 && cuentaId.compareTo(p.cuentaAnalitica.cuenta_reporta_id) != 0 && expId.compareTo(p.orden.expediente_id) != 0){
+							<tr>
+								<td colspan="8">Total</td>
+								<td>@utils.NumberUtils.moneda(total, 2)</td>
+							</tr>
+							<tr>
+								<td colspan="9"></td>
+							</tr>
+							@{total = new java.math.BigDecimal(0)}
+						}
+						@{ordenId = p.orden.id}
+						@{cuentaId = p.cuentaAnalitica.cuenta_reporta_id}
+						@{expId = p.orden.expediente_id}
+						
+						
+						<tr>
+							<td>@if(p.create_date != null){@(utils.DateUtils.formatDate(p.create_date))}</td>
+							<td>@if(p.create_usuario != null){@p.create_usuario.nombre} </td>
+							<td>ORD@ordenId</td>
+							<td>@if(p.orden.numero_orden_provision != null){@p.orden.numero_orden_provision}</td>
+							<td>@p.orden.expediente.getExpedienteEjercicio()</td>
+							<td>@p.cuentaAnalitica.cuentaReporta.codigo - @p.cuentaAnalitica.cuentaReporta.nombre</td>
+							<td>@p.producto.nombre</td>
+							<td>@p.cantidad</td>
+							<td>@utils.NumberUtils.moneda(p.precio, 2)</td>
+							<td>@(utils.NumberUtils.moneda(p.precio.multiply(p.cantidad), 2))</td>
+							<td>@p.nota</td>
+						</tr>
+						@{total = total.add(p.precio.multiply(p.cantidad))}
+					}
+					<tr>
+						<td colspan="9">Total</td>
+						<td>@utils.NumberUtils.moneda(total, 2)</td>
+					</tr>
+				</tbody>
+			</table>	
+	    
+	    }
+    }
+}
+<script>
+$(function(){
+	$('#searchExpediente').modalSearch();
+});
+</script>

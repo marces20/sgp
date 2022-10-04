@@ -1,0 +1,15 @@
+@(linea: AgenteSeguimientoLinea, editable: Boolean)
+
+<tr data-id="@linea.id">
+	@if(editable){
+		<td class="accion-editar"><a class="btn btn-default btn-xs modificarEvento" 
+		href="@controllers.rrhh.routes.AgentesSeguimientoLineasController.editar(linea.id)"><i class="glyphicon glyphicon-edit"></i></a></td>
+	}
+	
+	<td>@linea.observacion</td>
+	<td>@if(linea.fecha != null){@(utils.DateUtils.formatDate(linea.fecha))}</td>
+	 
+	@if(editable){
+		<td><a class="btn btn-default btn-xs eliminarEvento" href="@controllers.rrhh.routes.AgentesSeguimientoLineasController.eliminar(linea.id)"><i class="glyphicon glyphicon-trash icono-eliminar"></i></a></td>
+	}
+</tr>

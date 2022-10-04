@@ -1,0 +1,70 @@
+@(buscador: utils.pagination.Pagination[TipoProducto], formBuscador: DynamicForm)
+@import helper._
+@implicitFieldConstructor = @{ FieldConstructor(simpleInput.render) } 
+
+<div id="modalBusquedaTipoProductos" class="contenedorPaginador ajaxPaginador">
+<form action="@controllers.compras.routes.TipoProductosController.modalBuscar()" method="GET">
+	<div class="row">
+		<div class="col-sm-6">
+			<label class="control-label">Nombre</label>
+			@inputText(formBuscador("nombre"), 'class -> "form-control", 'autofocus -> "autofocus")
+			
+		</div>
+		<div class="col-sm-3">
+			<label class="control-label">&nbsp 
+			<button class="btn btn-primary form-control">Buscar</button>
+			</label>
+		</div>
+	</div>
+</form>
+
+@if(buscador.getTotalRowCount == 0) {
+	<div class="well">
+	    <em>No se encuentran Tipo de Producto</em>
+	</div>
+} else {
+    Mostrando @buscador.getDisplayXtoYofZ(" a "," de ") resultado(s). 
+    	
+	<table class="table table-striped table-bordered table-hover">
+		<thead>
+			<tr>
+				<th>Nombre</th>
+			</tr>
+		</thead>
+		<tbody>
+    	
+    @for(tipoProducto <- buscador.getList) {
+	<tr data-id="@tipoProducto.id" class="modalSeleccionTipoProducto">
+		<td> @tipoProducto.nombre</td>
+	</tr>    
+    }
+    </tbody>
+    </table>
+    
+	<div class="pagination pull-right">
+	    @views.html.helpers.paginador(buscador, controllers.compras.routes.TipoProductosController.modalBuscar())
+	</div>	
+}
+</div>
+
+<script>
+$( function(){
+	var contenedor = $("#modalBusquedaTipoProductos");
+	var url = "@controllers.compras.routes.TipoProductosController.get()"
+	contenedor.find('.modalSeleccionTipoProducto').on('click', function(){
+		var id = $(this).attr('data-id');
+		$.get(url+"?id="+id, function(data){
+			$(document).trigger("modal.seleccion.tipoProducto.simple", data);
+		});
+	});
+	
+	contenedor.find('form').on('submit', function(){
+		var url = $(this).attr("action");
+		var query = $(this).serialize();
+		$.get(url+"?"+query, function(data){
+			contenedor.parent().html(data);
+		});
+		return false;
+	});
+});
+</script>

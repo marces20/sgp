@@ -1,0 +1,39 @@
+@(form: Form[models.auth.LoginForm])
+<!DOCTYPE html>
+<html lang="es">
+	<head>
+		<link rel="shortcut icon" href="/assets/images/favicon.png" />
+		<link rel="stylesheet" media="screen" href="@routes.Assets.at("plugins/bootstrap/css/bootstrap.min.css")">
+		<link rel="stylesheet" media="screen" href="@routes.Assets.at("stylesheets/login.css")">
+	</head>
+<body>
+@helper.form(routes.Authentication.authenticate, 'class -> "form-signin") {
+    <div class="container">
+      <form class="form-signin">
+        <h2 class="form-signin-heading">Autentificación</h2>
+        
+		@if(form.hasGlobalErrors) {
+	    	<p class="alert alert-danger">
+	      		<i class="glyphicon glyphicon-info-sign"></i> @form.globalError.message
+	     	</p>
+	    }
+	    
+
+        
+        <input type="nick" class="form-control" name="nick" placeholder="Usuario" value="@form("nick").value" autofocus>
+        <input type="password" class="form-control" name="password" placeholder="Password">
+
+        <div class="row">
+        	<div class="col-sm-3">
+        		<img alt="Logo" src="/assets/images/logo.png" />
+        	</div>
+        	<div class="col-sm-9">
+        		<button class="btn btn-lg btn-primary btn-block" type="submit">Entrar</button>
+        	</div>
+        </div>
+        
+      </form>
+    </div>
+}
+  </body>
+</html>

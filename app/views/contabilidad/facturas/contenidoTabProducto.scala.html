@@ -1,0 +1,18 @@
+@(formularioCarga: Boolean, facturaForm: Form[Factura] = null)
+@import java.util.List
+
+@if(facturaForm.field("id").value == null || facturaForm.field("id").value == ""){
+	<p><i class="glyphicon glyphicon-info-sign"></i> Para cargar productos primero debe dar de alta la factura</p>
+} else {
+	<script>
+		$( function (){
+			$.get('@controllers.contabilidad.routes.FacturasLineasController.index(facturaForm.field("id").value.toLong, formularioCarga)', function(data){
+				$('#listaLineaProductos').parent().html(data);
+			})
+		});
+	</script>
+}
+
+<div id="listaLineaProductos">
+
+</div>

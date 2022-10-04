@@ -1,0 +1,41 @@
+@(pedidoForm: Form[PedidoFondo],pedido:PedidoFondo)
+@import helper._
+@implicitFieldConstructor = @{ FieldConstructor(simpleInput.render) }
+
+@scripts = {
+
+}
+
+@views.html.compras.mainCompras("Modificar Pedido", scripts) {
+
+	<div class="page-header">
+		<div class="row">
+			<div class="col-sm-7">
+				<h1>Editar pedido</h1>
+			</div>
+
+			<div class="col-sm-5">
+				
+				<div class="pull-right btn-header">
+					<a href="@controllers.compras.routes.PedidosFondosController.crear()"  class="btn btn-default"><i class="glyphicon glyphicon-plus-sign"></i> Nuevo Pedido</a>
+				</div>
+			</div>
+			
+			
+		</div>
+	</div>
+	
+	@if(flash.containsKey("error")) {
+		<div class="alert alert-danger">
+			@flash.get("error")
+		</div>
+	}
+	
+
+	@helper.form(action = controllers.compras.routes.PedidosFondosController.actualizar(pedido.id)) {
+
+		@views.html.compras.pedidosFondos.formPedidoFondo(pedidoForm)
+		@views.html.compras.pedidosFondos.tabsPedidoFondo(true, pedidoForm)	
+	}
+
+}

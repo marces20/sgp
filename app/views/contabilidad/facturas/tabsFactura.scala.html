@@ -1,0 +1,139 @@
+@(formularioCarga: Boolean,formularioCargaImpuestos: Boolean, facturaForm: Form[Factura] = null,factura:Factura, verDetalle: Boolean = false)
+	
+	<hr />
+
+	<ul id="facturaTab" class="nav nav-tabs">
+		<li class="active"><a class="tabProducto" href="#contenedorProductos" data-toggle="tab">Productos</a></li>
+		
+		<!--  <li><a id="tabActas" data-url="@controllers.contabilidad.routes.FacturasController.actasAsociadas(factura.id)" href="#contenedorActas" data-toggle="tab">Actas de recepción</a></li>
+		-->
+		<li><a id="tabOtraInfo" href="#contenedorOtraInfo" data-toggle="tab">Otra Informacion</a></li>
+		<li><a id="tabInfoRet" href="#contenedorInfoProveedor" data-toggle="tab">Info para Retenciones</a></li>
+		<li><a id="tabParciales" href="#contenedorParciales" data-toggle="tab">Facturas Parciales</a></li>
+		<li><a id="tabReintegros" href="#contenedorReintegros" data-toggle="tab">Reintegros</a></li>
+		<li><a id="tabFacturaDatos" href="#contenedorFacturaDatos" data-toggle="tab">Numeros Facturas</a></li>
+	</ul>
+	<div class="tab-content">
+		<div class="tab-pane active" id="contenedorProductos">
+			@views.html.contabilidad.facturas.contenidoTabProducto(formularioCarga, facturaForm)	
+		</div>
+		
+		<!--  <div class="tab-pane" id="contenedorActas"></div>-->
+		<div class="tab-pane" id="contenedorOtraInfo">
+			@views.html.contabilidad.facturas.contenidoTabOtraInfo(formularioCarga, facturaForm)	
+		</div>
+		<div class="tab-pane" id="contenedorInfoProveedor">
+			<div id="contenedorInfoProveedorDiv">
+			
+			</div>
+		</div>
+		<div class="tab-pane" id="contenedorParciales">
+			@views.html.contabilidad.facturas.contenidoTabParciales(formularioCarga, facturaForm,factura)	
+		</div>
+		<div class="tab-pane" id="contenedorReintegros">
+			@views.html.contabilidad.facturas.contenidoTabReintegros(formularioCarga, facturaForm)	
+		</div>
+		<div class="tab-pane" id="contenedorFacturaDatos">
+			@views.html.contabilidad.facturas.contenidoTabFacturaDatos(formularioCarga, facturaForm,factura)	
+		</div>
+		
+
+	</div>
+
+	<hr />
+
+	<div class="row">
+		<div class="col-sm-7">
+			@views.html.contabilidad.facturas.contenidoTabImpuesto(formularioCargaImpuestos, facturaForm, factura)
+		</div>
+		@if(verDetalle) {
+		<div class="col-sm-5">
+			@views.html.contabilidad.facturas.contenidoTabDetalle(formularioCarga, facturaForm,factura)
+		</div>
+		}
+	</div>
+	
+	<input id="formularioCargaImpuestos" value="@formularioCargaImpuestos" type="hidden"/>
+	
+	<script>
+	
+	$( function () {
+
+		$('#tabInfoRet').on("click", function() { 
+																						 
+			var url = "/contabilidad/facturaProveedor/getInfoRetenciones?id="+$('#facturaId').val()+"&fci="+$('#formularioCargaImpuestos').val();
+					
+			$("#contenedorInfoProveedorDiv").html('<div class="loading"></div>');
+			$.get(url, function(data){
+				$('#contenedorInfoProveedorDiv').html(data);
+			})
+			 
+		});
+		
+		
+		/*$('#tabActas').click(function () {
+
+			var url = $(this).attr("data-url");
+			var href = $(this).attr("href");
+			$.get(url, function(data) {
+				$(href).html(data);
+			});
+			
+		});*/
+	
+		$( function() {
+			var contenedor = $('#contenedorActas');	
+			
+			
+			contenedor.on('click', '.eliminarActaAsociada', function(){
+				var url = $(this).attr('href');
+				var mensaje = "¿Confirma que desea desasociar el acta a la factura?";
+				if(confirm(mensaje)){
+					$this = $(this);
+					$.get(url, function(data){
+						if(data.success){
+							$this.closest("tr").remove();
+						} else {
+							alert("No se puedo eliminar el registro.");
+						}
+					});
+				}
+				return false;
+			});
+
+			modalSeleccionActa = $('<div></div>');
+			
+			contenedor.on('click', '#cargarActa', function(){
+				var url = $(this).attr('href');
+				modalSeleccionActa = $('<div></div>').dialog({
+					resizable: false,
+				    title: "Seleccionar acta",
+				    height: 400,
+				    width: 750,
+				    modal: false,
+				    open: function( event, ui ) {
+						$.get(url, function(data){
+							modalSeleccionActa.html(data);
+						});
+				    },
+				    close: function(event, ui ){
+				    	modalSeleccionActa.dialog('destroy');
+					}
+				  });
+				return false;
+			});
+
+
+			
+			modalSeleccionActa.on('click', '.cancelar', function(){
+				modalSeleccionActa.dialog('destroy');
+				return false;
+			});
+			
+			
+		});
+
+	
+});
+
+</script>

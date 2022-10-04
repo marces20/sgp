@@ -1,0 +1,52 @@
+@(clienteForm: Form[Cliente])
+@import helper._
+@implicitFieldConstructor = @{ FieldConstructor(simpleInput.render) } 
+
+<div id="listaContactos" class="@if(clienteForm.data().containsKey("direcciones[0].calle")){hide}">
+	
+@for(direccion <- DireccionCliente.getDireccionesById(clienteForm("id").value.toInt))  {
+	<p>
+		<div class="btn-group">
+			<a class="btn btn-xs btn-default" id="nuevoContacto" href="#"><i class="glyphicon glyphicon-plus"></i> Agregar</a>
+			<a class="btn btn-xs btn-default" id='modificarDireccion' href="@controllers.compras.routes.ClientesController.formularioContacto(direccion.id)"><i class="glyphicon glyphicon-pencil"></i> Modificar</a>
+			
+			<a class="btn btn-xs btn-default" href="@controllers.compras.routes.ClientesController.eliminarContacto(clienteForm("id").value.toInt, direccion.id)"><i class="glyphicon glyphicon-remove-circle"></i> Eliminar</a>
+		</div>
+	</p>
+
+	<div class="panel panel-default">
+	  	<div class="panel-body">
+	  	
+	  	<div class="row">
+	  		<div class="col-sm-6">
+	  			<legend>Dirección</legend>
+	  			
+	  			<div class="row">
+	  				<div class="col-sm-7"><b>Calle:</b> @direccion.calle</div>
+	  				<div class="col-sm-3"><b>Número:</b> @direccion.numero</div>
+	  				<div class="col-sm-2"><b>CP:</b>  @direccion.cp</div>
+	  			</div>
+	  			<div class=""><b>Localidad:</b>  @direccion.localidad.nombre. @direccion.localidad.provincia.nombre, @direccion.localidad.provincia.pais.nombre.</div>
+	  			
+	  		</div>	
+	  		<div class="col-sm-6">
+	  			<legend>Comunicación</legend>
+			  	<div class="row">
+			  		<div class="col-sm-7"><b>Email:</b> @direccion.email</div>
+			  		<div class="col-sm-5"><b>Fijo:</b>  @direccion.telefono</div>
+			  	</div>
+			  	<div class="row">
+			  		<div class="col-sm-6"><b>Celular:</b>  @direccion.mobile</div>
+			  		<div class="col-sm-6"><b>Fax:</b>  @direccion.fax</div>
+			  	</div>
+	  		</div>  	
+	  	</div>
+	  	
+	  	
+	  	
+
+	  	
+	  	</div>
+	</div>
+}
+</div>

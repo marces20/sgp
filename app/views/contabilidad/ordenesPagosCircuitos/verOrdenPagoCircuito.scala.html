@@ -1,0 +1,91 @@
+@(ordenPagoCircuitoForm: Form[OrdenPagoCircuito], ordenPagoCircuito:OrdenPagoCircuito)
+@import helper._
+@import utils._
+@import models.auth._
+@implicitFieldConstructor = @{ FieldConstructor(simpleInput.render) } 
+@views.html.contabilidad.mainContabilidad("Lista de Circuito Ordenes de Pago") {
+<div class="page-header">
+	<div class="row">
+		<div class="col-sm-3">
+			<h1>Vista Orden de Pago</h1>
+		</div>
+	</div>		
+</div>		
+@views.html.tags.successError()
+<div class="row menu-acciones">
+	<div class="col-sm-9">
+		<a href="@controllers.contabilidad.routes.OrdenesPagosCircuitosController.editar(ordenPagoCircuitoForm.field("id").value.toLong)@UriTrack.get("&")"  class="btn btn-default"><i class="glyphicon glyphicon-edit"></i> Editar</a>
+	</div>
+	<div class="col-sm-3">
+		<a href="@UriTrack.getOnNull(controllers.contabilidad.routes.OrdenesPagosCircuitosController.index().absoluteURL())" class="btn btn-default"><i class="glyphicon glyphicon-list"></i></a>
+	</div>	
+</div>
+<div class="row">
+	<div class="col-sm-4">
+		<div class="form-group">
+			<label class="control-label">Contraparte</label>
+			<p class="form-control-static form-control">
+				<a href="#" class="infoProveedor" data-url="@controllers.compras.routes.ProveedoresAccionesController.modalInformacionProveedor(ordenPagoCircuito.proveedor.id)">
+					@ordenPagoCircuitoForm.field("proveedor.nombre").value
+				</a>
+			</p>
+		</div>
+	</div>
+	<div class="col-sm-2">
+		<div class="form-group">
+			<label class="control-label">Expediente</label>
+			<p class="form-control-static form-control">@ordenPagoCircuitoForm.field("expediente.expedienteEjercicio").value</p>
+		</div>
+	</div>
+	<div class="col-sm-2">
+		<div class="form-group">
+			<label class="control-label">Orden de pago N°</label>
+			<p class="form-control-static form-control">
+				@if(ordenPagoCircuito.ordenPago != null){ 
+					@ordenPagoCircuitoForm.field("ordenPago.ordenEjercicio").value
+				}
+			</p>
+		</div>
+	</div>
+	<div class="col-sm-2">
+		<div class="form-group">
+			<label class="control-label">Expediente Fisico</label>
+			<p class="form-control-static form-control">@ordenPagoCircuitoForm.field("expedienteFisico.expedienteEjercicio").value</p>
+		</div>
+	</div>
+</div>		
+
+@views.html.contabilidad.ordenesPagosCircuitos.tabsOrdenPagoCircuito(ordenPagoCircuitoForm,ordenPagoCircuito)
+
+<h4>Total: 	<b>@(utils.NumberUtils.moneda(ordenPagoCircuito.total))</b></h4>	
+<h4>Estado actual: 	<b>@ordenPagoCircuito.estado.nombre</b></h4>
+
+<div class="row margin-bottom-25">
+	@for(estado <- models.Estado.getSiguienteEstadoPorAprobar(ordenPagoCircuito.estado.orden,models.Estado.ORDEN_PAGO_CIRCUITO)) {	
+		@if(estado.orden <= 4) {
+			<div class="col-sm-3">
+				<a href="@controllers.contabilidad.routes.OrdenesPagosCircuitosController.cambiarEstado(ordenPagoCircuitoForm.field("id").value.toInt, estado.id.toLong)@UriTrack.get("&")" class="btn btn-default">
+					<i class="glyphicon glyphicon-arrow-right"></i> @estado.nombre
+				</a>
+			</div>
+		}
+	}	
+		 
+	@if(ordenPagoCircuito.estado.id == models.Estado.ORDEN_PAGO_CIRCUITO_ESTADO_CANCELADO) {
+		<div class="col-sm-3">
+			<a href="@controllers.contabilidad.routes.OrdenesPagosCircuitosController.cambiarEstado(ordenPagoCircuitoForm.field("id").value.toInt, models.Estado.ORDEN_PAGO_CIRCUITO_ESTADO_BORRADOR)@UriTrack.get("&")" class="btn btn-default">
+				<i class="glyphicon glyphicon-arrow-right"></i> Volver a Borrador
+			</a>
+		</div>
+	}else{
+		<div class="col-sm-3">
+			<a href="@controllers.contabilidad.routes.OrdenesPagosCircuitosController.cambiarEstado(ordenPagoCircuitoForm.field("id").value.toInt, models.Estado.ORDEN_PAGO_CIRCUITO_ESTADO_CANCELADO)@UriTrack.get("&")" class="btn btn-default">
+				<i class="glyphicon glyphicon-minus-sign"></i> Cancelar Circuito
+			</a>
+		</div>
+	}
+		
+</div>
+
+
+}

@@ -1,0 +1,94 @@
+@(formBuscador: DynamicForm)
+@import helper._
+@implicitFieldConstructor = @{ FieldConstructor(simpleInput.render) } 
+@import java.math.BigDecimal;var total=new java.math.BigDecimal(0);var totalf=new java.math.BigDecimal(0);var totali=new java.math.BigDecimal(0);
+@import java.util.Map;var li = new java.util.ArrayList[Long];
+
+ 
+ 
+@views.html.dashboard.mainDashboard(title = "Informe Proveedor") {
+
+<div class="page-header">
+	<div class="row">
+		<div class="col-sm-4">
+			<h1>Informe Proveedor</h1>
+		</div>
+
+		
+		<form action="" method="GET" id="filtroInforme">
+			<div class="col-sm-4">
+				<label class="control-label">Proveedor
+					<div class="input-group">	
+						@inputText(formBuscador("proveedor_nombre"), 'name -> "", 'autofocus -> "autofocus", 'class -> "form-control", 'id -> "proveedor")
+						@inputText(formBuscador("proveedor_id"), 'hidden -> "hidden", 'id -> "proveedor_id")
+						<span class="input-group-addon">
+							<a href="#" class="searchModal"
+										id="searchProveedor" 
+										data-title="Selección de Proveedores" 
+										data-url="@controllers.compras.routes.ProveedoresController.modalBuscar()" 
+										data-height="650" 
+										data-width="700" 
+										data-listen="modal.seleccion.proveedor.simple" 
+										data-label="#proveedor" 
+										data-field="#proveedor_id">
+								<i class="glyphicon glyphicon-search"></i>
+							</a>
+						</span>
+					</div>
+				</label>
+			</div>
+			<div class="col-sm-2">
+				<div class="form-group">
+					<label for="nombre" class="control-label">&nbsp;</label>
+					<button  class="form-control btn btn-primary" id="btn-buscar">Buscar</button>
+				</div>
+			</div>
+			<div class="col-sm-2">
+				<div class="form-group">
+					<label for="nombre" class="control-label">&nbsp;</label>
+					<a href="@controllers.dashboard.routes.InformeEstadisticoPagoProveedoresController.informePeriodoProveedor()"  class="form-control btn btn-default">Limpiar</a>
+				</div>
+			</div>
+		</form>
+		
+	</div>
+</div>
+
+@views.html.tags.successError()
+
+<div class="row seccion">
+   	 <div class="col-sm-4">
+	  	 <div class="small-box bg-green">
+	  	  	<div class="inner">
+	          <h3>Total Pagado - 12/21</h3>
+	          <p>$44.524.411,89</p>
+	  	  	</div>
+		 </div>
+	 </div>
+	 <div class="col-sm-4">
+	  	 <div class="small-box bg-green">
+	  	  	<div class="inner">
+	          <h3>Total Deuda</h3>
+	          <p>$44.524.411,89</p>
+	  	  	</div>
+		 </div>
+	 </div>
+	 <div class="col-sm-4">
+	  	 <div class="small-box bg-green">
+	  	  	<div class="inner">
+	          <h3>Total Deuda en Tramite</h3>
+	          <p>$44.524.411,89</p>
+	  	  	</div>
+		 </div>
+	 </div>   
+</div>
+   <hr>
+
+
+
+<script type="text/javascript">
+$( function() {
+	$('#searchProveedor,#searchPeriodo').modalSearch();
+});
+</script>
+}

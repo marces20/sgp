@@ -1,0 +1,1011 @@
+@(formBuscador: DynamicForm,
+pId:Long,
+total:java.math.BigDecimal,
+totalp:java.math.BigDecimal,
+totalsp:java.math.BigDecimal,
+totalParque:java.math.BigDecimal,
+totalpParque:java.math.BigDecimal,
+totalspParque:java.math.BigDecimal,
+totalConvenio:java.math.BigDecimal,
+totalpConvenio:java.math.BigDecimal,
+totalspConvenio:java.math.BigDecimal)
+@import helper._
+@import utils._
+@import models.auth._
+@implicitFieldConstructor = @{ FieldConstructor(simpleInput.render) }
+
+@views.html.informes.mainInformes("Honorarios - Costo por Periodo") {
+
+@views.html.informes.navInformes()
+
+@views.html.tags.successError()
+ 
+	<div class="row">
+		<div class="col-sm-4">
+			<h1>Honorarios  - Costo por Periodo</h1>
+			 
+		
+		</div>
+		<div class="col-sm-4">
+			
+		</div>
+
+		<div class="col-sm-4">
+			
+			 
+		
+		</div>
+	</div>
+ 
+<form action="" method="GET" id="filtroInforme">
+    	 
+	<div class="row seccion">
+		<div class="col-sm-2">
+			<div class="form-group @if(formBuscador.error("periodo_id") != null) {has-error}">
+				<label for="periodo" class="control-label">Periodo</label> 
+				<div class="input-group">
+					@inputText(formBuscador("periodo.nombre"), 'class -> "form-control", 'id -> "periodo")
+					@inputText(formBuscador("periodo.id"),'hidden -> "hidden", 'id -> "periodo_id")
+					<span class="input-group-addon">
+						<a href="#" class="searchModal"
+									id="searchPeriodo" 
+									data-title="Selección de Periodo" 
+									data-url="@controllers.contabilidad.routes.PeriodosController.modalBuscar()" 
+									data-height="650" 
+									data-width="700" 
+									data-listen="modal.seleccion.periodo.simple" 
+									data-label="#periodo" 
+									data-field="#periodo_id">
+							<i class="glyphicon glyphicon-search"></i>
+						</a>
+					</span>
+				</div>
+			</div>
+		</div>
+		
+		<div class="col-sm-2">
+			<div class="form-group">
+				<label for="nombre" class="control-label">&nbsp;</label>
+				<button  class="form-control btn btn-primary" id="btn-buscar">Buscar</button>
+			</div>
+		</div>
+		<div class="col-sm-2">
+			<div class="form-group">
+				<label for="nombre" class="control-label">&nbsp;</label>
+				<a href="@controllers.informes.routes.InformesHonorariosController.honorario()"  class="form-control btn btn-default">Limpiar</a>
+			</div>
+		</div>
+		
+	</div>
+</form>
+<hr>
+@if(pId != null){
+<div class="row seccion">
+   	 <div class="col-sm-4">
+	  	  <div class="small-box bg-green">
+	  	  	<div class="inner">
+	          <h3>Total Liquidado</h3>
+	          <p>@utils.NumberUtils.moneda(total)</p>
+	  	  </div>
+		 </div>
+	 </div>
+	 <div class="col-sm-4">
+	  	  <div class="small-box bg-green">
+	  	  	<div class="inner">
+	          <h3>Total Patronales</h3>
+	          <p>@utils.NumberUtils.moneda(totalp)</p>
+	  	  </div>
+		 </div>
+	 </div> 
+	 <div class="col-sm-4">
+	  	  <div class="small-box bg-green">
+	  	  	<div class="inner">
+	          <h3>Total Liquidado S/P</h3>
+	          <p>@utils.NumberUtils.moneda(totalsp)</p>
+	  	  </div>
+		 </div>
+	 </div> 
+</div>
+
+<div class="row seccion">
+   	 <div class="col-sm-3">
+	  	  <div class="small-box bg-green">
+	  	  	<div class="inner">
+	          <h4>Total Liquidado Parque</h4>
+	          <p>@utils.NumberUtils.moneda(totalParque)</p>
+	  	  </div>
+		 </div>
+	 </div>
+	
+	 <div class="col-sm-3">
+	  	  <div class="small-box bg-green">
+	  	  	<div class="inner">
+	          <h4>Total Liquidado Parque S/P</h4>
+	          <p>@utils.NumberUtils.moneda(totalspParque)</p>
+	  	  </div>
+		 </div>
+	 </div> 
+	 <div class="col-sm-3">
+	  	  <div class="small-box bg-green">
+	  	  	<div class="inner">
+	          <h4>Total Liquidado Conv.</h4>
+	          <p>@utils.NumberUtils.moneda(totalConvenio)</p>
+	  	  </div>
+		 </div>
+	 </div>
+	
+	 <div class="col-sm-3">
+	  	  <div class="small-box bg-green">
+	  	  	<div class="inner">
+	          <h4>Total Liquidado Conv. S/P</h4>
+	          <p>@utils.NumberUtils.moneda(totalspConvenio)</p>
+	  	  </div>
+		 </div>
+	 </div> 
+</div>
+<hr>
+		
+ <h3 class="card-title">Escala</h3>
+	<div class="row">
+		<div class="col-sm-5">
+   	 		<!-- PIE CHART -->
+            <div class="card card-danger">
+              <div class="card-header">
+                <h3 class="card-title">Parque</h3>
+
+                <div class="card-tools">
+                   
+                </div>
+              </div>
+              <div class="card-body">
+                <canvas id="pieChart0" style="height:230px; min-height:230px"></canvas>
+              </div>
+              <!-- /.card-body -->
+            </div>
+            <!-- /.card -->
+		   
+           
+		<div class="card card-info">
+             
+            <div class="card-body p-0">
+              <table class="table table-bordered">
+                <thead>
+                  <tr>
+                    <th></th>
+                    <th>Totales Bruto</th>
+                     
+                  </tr>
+                </thead>
+                <tbody>
+				  <tr>
+                    <td>Escala I</td>
+                    <td id="escala1parque"></td>
+                  </tr> 
+                  <tr>
+                    <td>Escala II</td>
+                    <td id="escala2parque"></td>
+                  </tr>
+                  <tr>
+                    <td>Escala III</td>
+                    <td id="escala3parque"></td>
+                  </tr>   
+                  <tr>
+                    <td>Escala IV</td>
+                    <td id="escala4parque"></td>
+                  </tr>   
+                  <tr>
+                    <td>Escala V</td>
+                    <td id="escala5parque"></td>
+                  </tr>
+                  <tr>
+                    <td style="font-weight:bold;font-size: 15px;">Total</td>
+                    <td id="escalaTotalParque" style="font-weight:bold;font-size: 15px;"></td>
+                  </tr>  
+                   
+                </tbody>
+              </table>
+            </div>
+            <!-- /.card-body -->
+          </div>
+	</div>
+	<div class="col-sm-2">
+	</div>
+	<div class="col-sm-5">
+		<!-- PIE CHART -->
+        <div class="card card-danger">
+          <div class="card-header">
+            <h3 class="card-title">Convenio</h3>
+
+            <div class="card-tools">
+               
+            </div>
+          </div>
+          <div class="card-body">
+            <canvas id="pieChart00" style="height:230px; min-height:230px"></canvas>
+          </div>
+          <!-- /.card-body -->
+        </div>
+        <!-- /.card -->
+		<div class="card card-info">
+             
+            <div class="card-body p-0">
+              <table class="table table-bordered">
+                <thead>
+                  <tr>
+                    <th></th>
+                    <th>Totales Bruto</th>
+                     
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>Escala I</td>
+                    <td id="escala1convenio"></td>
+                  </tr> 
+                  <tr>
+                    <td>Escala II</td>
+                    <td id="escala2convenio"></td>
+                  </tr>
+                  <tr>
+                    <td>Escala III</td>
+                    <td id="escala3convenio"></td>
+                  </tr>   
+                  <tr>
+                    <td>Escala IV</td>
+                    <td id="escala4convenio"></td>
+                  </tr>   
+                  <tr>
+                    <td>Escala V</td>
+                    <td id="escala5convenio"></td>
+                  </tr>
+                  <tr>
+                    <td style="font-weight:bold;font-size: 15px;">Total</td>
+                    <td id="escalaTotalConvenio" style="font-weight:bold;font-size: 15px;"></td>
+                  </tr>   
+                </tbody>
+              </table>
+            </div>
+            <!-- /.card-body -->
+          </div>
+	</div> 
+</div>
+
+<hr>
+		
+ <h3 class="card-title">Conceptos</h3>
+	<div class="row">
+		<div class="col-sm-5">
+   	 		<!-- PIE CHART -->
+            <div class="card card-danger">
+              <div class="card-header">
+                <h3 class="card-title">Parque</h3>
+
+                <div class="card-tools">
+                   
+                </div>
+              </div>
+              <div class="card-body">
+                <canvas id="pieChart" style="height:230px; min-height:230px"></canvas>
+              </div>
+              <!-- /.card-body -->
+            </div>
+            <!-- /.card -->
+		   
+           
+		<div class="card card-info">
+             
+            <div class="card-body p-0">
+              <table class="table table-bordered">
+                <thead>
+                  <tr>
+                    <th></th>
+                    <th>Totales Bruto</th>
+                     
+                  </tr>
+                </thead>
+                <tbody>
+				  <tr>
+                    <td>bruto</td>
+                    <td id="brutoparque"></td>
+                  </tr> 
+                  <tr>
+                    <td>hca</td>
+                    <td id="hcaparque"></td>
+                  </tr>
+                  <tr>
+                    <td>hsa</td>
+                    <td id="hsaparque"></td>
+                  </tr>   
+                  <tr>
+                    <td>totalret</td>
+                    <td id="retparque"></td>
+                  </tr>   
+                  <tr>
+                    <td>neto</td>
+                    <td id="netoparque"></td>
+                  </tr>   
+                
+                </tbody>
+              </table>
+            </div>
+            <!-- /.card-body -->
+          </div>
+	</div>
+	<div class="col-sm-2">
+	</div>
+	<div class="col-sm-5">
+		<!-- PIE CHART -->
+        <div class="card card-danger">
+          <div class="card-header">
+            <h3 class="card-title">Convenio</h3>
+
+            <div class="card-tools">
+               
+            </div>
+          </div>
+          <div class="card-body">
+            <canvas id="pieChart2" style="height:230px; min-height:230px"></canvas>
+          </div>
+          <!-- /.card-body -->
+        </div>
+        <!-- /.card -->
+		<div class="card card-info">
+             
+            <div class="card-body p-0">
+              <table class="table table-bordered">
+                <thead>
+                  <tr>
+                    <th></th>
+                    <th>Totales Bruto</th>
+                     
+                  </tr>
+                </thead>
+                <tbody>
+				  <tr>
+                    <td>bruto</td>
+                    <td id="brutoconvenio"></td>
+                  </tr> 
+                  <tr>
+                    <td>hca</td>
+                    <td id="hcaconvenio"></td>
+                  </tr>
+                  <tr>
+                    <td>hsa</td>
+                    <td id="hsaconvenio"></td>
+                  </tr>   
+                  <tr>
+                    <td>totalret</td>
+                    <td id="retconvenio"></td>
+                  </tr>   
+                  <tr>
+                    <td>neto</td>
+                    <td id="netoconvenio"></td>
+                  </tr>   
+                  
+                </tbody>
+              </table>
+            </div>
+            <!-- /.card-body -->
+          </div>
+	</div> 
+</div>
+
+ 
+<hr>
+		
+ <h3 class="card-title">Clasificaciones</h3>
+	<div class="row">
+		<div class="col-sm-5">
+   	 		<!-- PIE CHART -->
+            <div class="card card-danger">
+              <div class="card-header">
+                <h3 class="card-title">Parque</h3>
+
+                <div class="card-tools">
+                   
+                </div>
+              </div>
+              <div class="card-body">
+                <canvas id="pieChart3" style="height:230px; min-height:230px"></canvas>
+              </div>
+              <!-- /.card-body -->
+            </div>
+            <!-- /.card -->
+		
+		<div class="card card-info">
+             
+            <div class="card-body p-0">
+              <table class="table table-bordered">
+                <thead>
+                  <tr>
+                    <th></th>
+                    <th>Totales bruto</th>
+                  </tr>
+                </thead>
+                <tbody>
+				  <tr>
+                    <td>Haber Contrato</td>
+                    <td id="haberParque"></td>
+                  </tr> 
+                  <tr>
+                    <td>Guardias</td>
+                    <td id="guardiaParque"></td>
+                  </tr>
+                  <tr>
+                    <td>Produccion</td>
+                   	<td id="produccionParque"></td>
+                  </tr>   
+                    
+                  <tr>
+                    <td>Descuento Ley</td>
+                    <td id="descuentosParque"></td>
+                  </tr>  
+                  <tr>
+                    <td>Adicionales</td>
+                    <td id="adicionalesParque"></td>
+                  </tr> 
+                  <tr>
+                    <td>Ganancias</td>
+                    <td id="gananciasParque"></td>
+                  </tr>  
+                  <tr>
+                    <td>Otros</td>
+                    <td id="otrosParque"></td>
+                  </tr>  
+                </tbody>
+              </table>
+            </div>
+            <!-- /.card-body -->
+          </div>
+	</div>
+	<div class="col-sm-2">
+	</div>
+	<div class="col-sm-5">
+		<!-- PIE CHART -->
+        <div class="card card-danger">
+          <div class="card-header">
+            <h3 class="card-title">Convenio</h3>
+
+            <div class="card-tools">
+               
+            </div>
+          </div>
+          <div class="card-body">
+            <canvas id="pieChart4" style="height:230px; min-height:230px"></canvas>
+          </div>
+          <!-- /.card-body -->
+        </div>
+        <!-- /.card -->
+		<div class="card card-info">
+             
+            <div class="card-body p-0">
+              <table class="table table-bordered">
+                <thead>
+                  <tr>
+                    <th></th>
+                    <th>Totales bruto</th>
+                     
+                  </tr>
+                </thead>
+                <tbody>
+				  <tr>
+                    <td>Haber Contrato</td>
+                    <td id="haberConvenio"></td>
+                  </tr> 
+                  <tr>
+                    <td>Guardias</td>
+                    <td id="guardiaConvenio"></td>
+                  </tr>
+                  <tr>
+                    <td>Produccion</td>
+                   	<td id="produccionConvenio"></td>
+                  </tr>   
+                    
+                  <tr>
+                    <td>Descuento Ley</td>
+                    <td id="descuentosConvenio"></td>
+                  </tr>  
+                  <tr>
+                    <td>Adicionales</td>
+                    <td id="adicionalesConvenio"></td>
+                  </tr> 
+                  <tr>
+                    <td>Ganancias</td>
+                    <td id="gananciasConvenio"></td>
+                  </tr>  
+                  <tr>
+                    <td>Otros</td>
+                    <td id="otrosConvenio"></td>
+                  </tr>  
+                   
+                </tbody>
+              </table>
+            </div>
+            <!-- /.card-body -->
+          </div>
+	</div> 
+</div>
+
+<hr>
+}
+
+<script>
+
+$( function() {
+	$('#searchProveedor,#searchPeriodo').modalSearch();
+});
+
+var pieOptions = {
+					maintainAspectRatio : false,
+	      			responsive : true,
+	    		}
+
+
+var idPeriodo = $('#periodo_id').val();
+
+
+if(idPeriodo != ''){
+	var url = '/informes/honorarios/getCostoPorEscala';	
+	var data = 'idPeriodo='+idPeriodo+'&convenio=false';
+	$.post(url, data, function(data){
+		var labels = [];
+		var dataEscalaParque = [0,0,0,0,0];
+		var totalEscalaParque = 0;
+		if(data.success) {
+			$.each(data.results, function(idx,valor) {
+				$.each(valor, function(valor1,valor2) {
+					 
+					switch(valor1) {
+						case '1':
+				 			dataEscalaParque[0]= valor2;
+				 			$('#escala1parque').html(formatNumberPesos(parseFloat(valor2).toFixed(2))); 
+				 		break;
+						case '2':
+				 			dataEscalaParque[1]= valor2;
+				 			$('#escala2parque').html(formatNumberPesos(parseFloat(valor2).toFixed(2))); 
+				 		break;
+						case '3':
+				 			dataEscalaParque[2]= valor2;
+				 			$('#escala3parque').html(formatNumberPesos(parseFloat(valor2).toFixed(2))); 
+				 		break;
+						case '4':
+				 			dataEscalaParque[3]= valor2;
+				 			$('#escala4parque').html(formatNumberPesos(parseFloat(valor2).toFixed(2)));
+				 		break;
+						case '5':
+				 			dataEscalaParque[4]= valor2;
+				 			$('#escala5parque').html(formatNumberPesos(parseFloat(valor2).toFixed(2)));
+				 		break;
+					}
+					 
+					totalEscalaParque = parseFloat(totalEscalaParque) + parseFloat(valor2);
+					
+				}); 
+				$('#escalaTotalParque').html(formatNumberPesos(parseFloat(totalEscalaParque).toFixed(2)));
+			});
+			
+			
+			
+			setDataEscalaParque(dataEscalaParque);
+		}
+	});
+	
+	var url = '/informes/honorarios/getCostoPorEscala';
+	var data = 'idPeriodo='+idPeriodo+'&convenio=true';
+	$.post(url, data, function(data){
+		var labels = [];
+		var dataEscalaConvenio = [0,0,0,0,0];
+		var totalEscalaConvenio = 0;
+		if(data.success) {
+			$.each(data.results, function(idx,valor) {
+				$.each(valor, function(valor1,valor2) {
+					 
+					switch(valor1) {
+						case '1':
+							dataEscalaConvenio[0]= valor2;
+							$('#escala1convenio').html(formatNumberPesos(parseFloat(valor2).toFixed(2)))
+				  		break;
+						case '2':
+							dataEscalaConvenio[1]= valor2;
+							$('#escala2convenio').html(formatNumberPesos(parseFloat(valor2).toFixed(2)))
+				  		break;
+						case '3':
+							dataEscalaConvenio[2]= valor2;
+							$('#escala3convenio').html(formatNumberPesos(parseFloat(valor2).toFixed(2)))
+				  		break;
+						case '4':
+							dataEscalaConvenio[3]= valor2;
+							$('#escala4convenio').html(formatNumberPesos(parseFloat(valor2).toFixed(2)))
+				  		break;
+						case '5':
+							dataEscalaConvenio[4]= valor2;
+							$('#escala5convenio').html(formatNumberPesos(parseFloat(valor2).toFixed(2)))
+				  		break;
+					}
+					totalEscalaConvenio = parseFloat(totalEscalaConvenio) + parseFloat(valor2);
+				}); 
+				$('#escalaTotalConvenio').html(formatNumberPesos(parseFloat(totalEscalaConvenio).toFixed(2)));
+			});
+			
+			setDataEscalaConvenio(dataEscalaConvenio);
+		}
+	});
+	
+	
+	function setDataEscalaParque(data){
+		var donutData0        = {
+			      labels: [
+			          'Escala I', 
+			          'Escala II',
+			          'Escala III',
+			          'Escala IV',
+			          'Escala V'
+			      ],
+			      datasets: [
+			        {
+			          data: data,
+			          backgroundColor : ['#f56954', '#00a65a', '#f39c12', '#00c0ef', '#3c8dbc'],
+			        }
+			      ]
+			    }
+			    
+		var pieChartCanvas0 = $('#pieChart0').get(0).getContext('2d')
+		var pieData0       = donutData0;
+		
+		 
+		var pieChart0 = new Chart(pieChartCanvas0, {
+			type: 'pie',
+			data: pieData0,
+			options: pieOptions      
+		})
+	}
+	
+	function setDataEscalaConvenio(data){
+		var donutData00        = {
+			      labels: [
+			          'Escala I', 
+			          'Escala II',
+			          'Escala III',
+			          'Escala IV',
+			          'Escala V'
+			      ],
+			      datasets: [
+			        {
+			          data: data,
+			          backgroundColor : ['#f56954', '#00a65a', '#f39c12', '#00c0ef', '#3c8dbc'],
+			        }
+			      ]
+			    }
+			    
+		var pieChartCanvas00 = $('#pieChart00').get(0).getContext('2d')
+		var pieData00       = donutData00;
+		
+		var pieChart00 = new Chart(pieChartCanvas00, {
+			type: 'pie',
+			data: pieData00,
+			options: pieOptions      
+		})
+	}
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+	var url = '/informes/honorarios/getCostoPorTipoConcepto';
+	var data = 'idPeriodo='+idPeriodo+'&convenio=true';
+	$.post(url, data, function(data){
+		var labels = [];
+		var dataConceptoConvenio = [0,0,0,0];
+		var brutoc = 0;
+		var hcac = 0;
+		var hsac = 0;
+		var retc = 0;
+		var descc = 0;
+		if(data.success) {
+			$.each(data.results, function(idx,valor) {
+				$.each(valor, function(valor1,valor2) {
+					brutoc = brutoc+valor2;  
+					switch(valor1) {
+						case '1':
+							dataConceptoConvenio[0]= valor2;
+							$('#hcaconvenio').html(formatNumberPesos(parseFloat(valor2).toFixed(2)));
+							hcac = valor2;
+						break;
+						case '2':
+							dataConceptoConvenio[1]= valor2;
+							$('#hsaconvenio').html(formatNumberPesos(parseFloat(valor2).toFixed(2)));
+							hsac = valor2;
+				  		break;
+						case '3':
+							dataConceptoConvenio[2]= valor2;
+							$('#retconvenio').html(formatNumberPesos(parseFloat(valor2).toFixed(2)));
+							retc = valor2;
+				  		break;
+						case '4'://descuento
+							dataConceptoConvenio[3]= valor2;
+							descc = valor2; 
+				  		break;
+					}//brutoconvenio hcaconvenio hsaconvenio retconvenio netoconvenio
+				}); 
+			});
+			$('#brutoconvenio').html(formatNumberPesos(parseFloat(brutoc).toFixed(2)));
+			var netoc = (hcac+hsac+descc)-retc;
+			$('#netoconvenio').html(formatNumberPesos(parseFloat(netoc).toFixed(2))) 
+			setDataConceptoConvenio(dataConceptoConvenio);
+		}
+	});
+	
+	var url = '/informes/honorarios/getCostoPorTipoConcepto';
+	var data = 'idPeriodo='+idPeriodo+'&convenio=false';
+	$.post(url, data, function(data){
+		var labels = [];
+		var dataConceptoParque = [0,0,0,0];
+		var bruto = 0;
+		var hca = 0;
+		var hsa = 0;
+		var ret = 0;
+		var desc = 0;
+		if(data.success) {
+			$.each(data.results, function(idx,valor) {
+				$.each(valor, function(valor1,valor2) {
+					bruto = bruto+valor2; 
+					switch(valor1) {
+						case '1':
+							dataConceptoParque[0]= valor2;
+							$('#hcaparque').html(formatNumberPesos(parseFloat(valor2).toFixed(2)))
+							hca = valor2;
+						break;
+						case '2':
+							dataConceptoParque[1]= valor2;
+							$('#hsaparque').html(formatNumberPesos(parseFloat(valor2).toFixed(2)));
+							hsa = valor2;
+						break;
+						case '3':
+							dataConceptoParque[2]= valor2;
+							$('#retparque').html(formatNumberPesos(parseFloat(valor2).toFixed(2)))
+							ret = valor2;
+				  		break;
+						case '4'://descuento
+							dataConceptoParque[3]= valor2;
+							desc = valor2;
+							 
+				  		break;
+					}//brutoconvenio hcaconvenio hsaconvenio retconvenio netoconvenio
+				}); 
+			});
+			$('#brutoparque').html(formatNumberPesos(parseFloat(bruto).toFixed(2)));
+			var neto = (hca+hsa+desc)-ret;
+			$('#netoparque').html(formatNumberPesos(parseFloat(neto).toFixed(2)))
+			setDataConceptoParque(dataConceptoParque);
+		}
+	});
+	
+	function setDataConceptoParque(data){
+		var donutData        = {
+			      labels: [
+			          'Haberes con Aporte', 
+			          'Haberes Sin Aporte',
+			          'Renteciones',
+			          'Descuentos'
+			      ],
+			      datasets: [
+			        {
+			          data: data,
+			          backgroundColor : ['#f56954', '#00a65a', '#f39c12', '#00c0ef'],
+			        }
+			      ]
+			    }
+		
+		var pieChartCanvas = $('#pieChart').get(0).getContext('2d')
+	    var pieData        = donutData;
+	    var pieOptions     = {
+	      maintainAspectRatio : false,
+	      responsive : true,
+	    }
+	    
+	    var pieChart = new Chart(pieChartCanvas, {
+	      type: 'pie',
+	      data: pieData,
+	      options: pieOptions      
+	    })
+	}
+	
+    function setDataConceptoConvenio(data){
+		var donutData2        = {
+			      labels: [
+			          'Haberes con Aporte', 
+			          'Haberes Sin Aporte',
+			          'Renteciones',
+			          'Descuentos'
+			      ],
+			      datasets: [
+			        {
+			          data: data,
+			          backgroundColor : ['#f56954', '#00a65a', '#f39c12', '#00c0ef'],
+			        }
+			      ]
+			    }
+	    var pieChartCanvas2 = $('#pieChart2').get(0).getContext('2d')
+	    var pieData2       = donutData2;
+	    
+	    
+	    var pieChart2 = new Chart(pieChartCanvas2, {
+	      type: 'pie',
+	      data: pieData2,
+	      options: pieOptions      
+	    })
+    }
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	var url = '/informes/honorarios/getCostoPorClasificacionConcepto';
+	var data = 'idPeriodo='+idPeriodo+'&convenio=false';
+	$.post(url, data, function(data){
+		var labels = [];
+		var dataClasificacionParque = [0,0,0,0,0,0,0];
+		var otro = 0; 
+		if(data.success) {
+			$.each(data.results, function(idx,valor) {
+				$.each(valor, function(valor1,valor2) {
+					
+					switch(valor1) {
+						case '1':
+							dataClasificacionParque[0]= valor2;
+							$('#haberParque').html(formatNumberPesos(parseFloat(valor2).toFixed(2)))
+						break;
+						case '2':
+							dataClasificacionParque[1]= valor2;
+							$('#guardiaParque').html(formatNumberPesos(parseFloat(valor2).toFixed(2)));
+						break;
+						case '3':
+							dataClasificacionParque[2]= valor2;
+							$('#produccionParque').html(formatNumberPesos(parseFloat(valor2).toFixed(2)))
+						break;
+						case '5':
+							dataClasificacionParque[3]= valor2;
+							$('#descuentosParque').html(formatNumberPesos(parseFloat(valor2).toFixed(2))) 
+				  		break;
+						case '6': 
+							dataClasificacionParque[4]= valor2;
+							$('#adicionalesParque').html(formatNumberPesos(parseFloat(valor2).toFixed(2))) 
+				  		break;
+						case '9': 
+							dataClasificacionParque[5]= valor2;
+							$('#gananciasParque').html(formatNumberPesos(parseFloat(valor2).toFixed(2))) 
+						break;
+						default:
+							otro = otro + valor2;	
+						break;
+					}
+				}); 
+			});
+			dataClasificacionParque[6]= otro;
+			$('#otrosParque').html(formatNumberPesos(parseFloat(otro).toFixed(2)))    
+			setDataClasificiacionParque(dataClasificacionParque);
+		}
+	});
+	
+	var data = 'idPeriodo='+idPeriodo+'&convenio=true';
+	$.post(url, data, function(data){
+		var labels = [];
+		var dataClasificacionConvenio = [0,0,0,0,0,0,0];
+		var otroc = 0; 
+		if(data.success) {
+			$.each(data.results, function(idx,valor) {
+				$.each(valor, function(valor1,valor2) {
+					
+					switch(valor1) {
+						case '1':
+							dataClasificacionConvenio[0]= valor2;
+							$('#haberConvenio').html(formatNumberPesos(parseFloat(valor2).toFixed(2)))
+						break;
+						case '2':
+							dataClasificacionConvenio[1]= valor2;
+							$('#guardiaConvenio').html(formatNumberPesos(parseFloat(valor2).toFixed(2)));
+						break;
+						case '3':
+							dataClasificacionConvenio[2]= valor2;
+							$('#produccionConvenio').html(formatNumberPesos(parseFloat(valor2).toFixed(2)))
+						break;
+						case '5':
+							dataClasificacionConvenio[3]= valor2;
+							$('#descuentosConvenio').html(formatNumberPesos(parseFloat(valor2).toFixed(2))) 
+				  		break;
+						case '6': 
+							dataClasificacionConvenio[4]= valor2;
+							$('#adicionalesConvenio').html(formatNumberPesos(parseFloat(valor2).toFixed(2))) 
+				  		break;
+						case '9': 
+							dataClasificacionConvenio[5]= valor2;
+							$('#gananciasConvenio').html(formatNumberPesos(parseFloat(valor2).toFixed(2))) 
+						break;
+						default:
+							otroc = otroc + valor2;	
+						break;
+					}
+				}); 
+			});
+			dataClasificacionConvenio[6]= otroc;
+			$('#otrosConvenio').html(formatNumberPesos(parseFloat(otroc).toFixed(2)))    
+			setDataClasificiacionConvenio(dataClasificacionConvenio);
+		}
+	});
+	
+	
+	function setDataClasificiacionParque(data){
+	
+		var donutData3        = {
+			      labels: [
+			          'Haber Contrato', 
+			          'Guardias',
+			          'Produccion',
+			          'Descuento Ley',
+			          'Adicionales',
+			          'Ganancias',
+			          'Otros'
+			      ],
+			      datasets: [
+			        {
+			          data: data,
+			          backgroundColor : ['#f56954', '#00a65a', '#f39c12', '#00c0ef', '#3c8dbc', '#d2d6de', '#d2d6de'],
+			        }
+			      ]
+			    }
+	    var pieChartCanvas3 = $('#pieChart3').get(0).getContext('2d')
+	    var pieData3       = donutData3;
+	     
+	    var pieChart3 = new Chart(pieChartCanvas3, {
+	      type: 'pie',
+	      data: pieData3,
+	      options: pieOptions      
+	    })
+	}
+	
+	function setDataClasificiacionConvenio(data){
+		
+		var donutData4        = {
+			      labels: [
+			    	  'Haber Contrato', 
+			          'Guardias',
+			          'Produccion',
+			          'Descuento Ley',
+			          'Adicionales',
+			          'Ganancias',
+			          'Otros'
+			      ],
+			      datasets: [
+			        {
+			          data: data,
+			          backgroundColor : ['#f56954', '#00a65a', '#f39c12', '#00c0ef', '#3c8dbc', '#d2d6de', '#d2d6de'],
+			        }
+			      ]
+			    }
+	    var pieChartCanvas4 = $('#pieChart4').get(0).getContext('2d')
+	    var pieData4       = donutData4;
+	     
+	    var pieChart4 = new Chart(pieChartCanvas4, {
+	      type: 'pie',
+	      data: pieData4,
+	      options: pieOptions      
+	    })
+	}
+}
+/*
+
+$(function () {
+
+	 
+    
+    
+///////////////////////////////////////////////////////////////
+    
+    
+///////////////////////////////////////////////////////////////
+    
+
+	  
+ 
+///////////////////////////////////////////////////////////////
+
+
+  
+})*/
+
+</script> 
+
+}

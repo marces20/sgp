@@ -1,0 +1,22 @@
+@(tipoForm: Form[models.haberes.LiquidacionConceptoTipo])
+@import helper._
+@implicitFieldConstructor = @{ FieldConstructor(simpleInput.render) }
+
+@views.html.haberes.mainHaberes("Modificar Tipo de Concepto") {
+
+	<div class="page-header">
+		<div class="row">
+			<div class="col-sm-10">
+				<h1>Editar Tipo de Concepto</h1>
+			</div>
+		</div>
+	</div>
+	
+	@views.html.tags.successError()
+	
+	@helper.form(action = controllers.haberes.routes.LiquidacionConceptoTiposController.actualizar()) {
+		@inputText(tipoForm("id"), 'hidden -> "hidden")
+		@views.html.haberes.liquidacionConceptoTipos.formLiquidacionConceptoTipo(tipoForm)
+	}
+
+}

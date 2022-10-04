@@ -1,0 +1,15 @@
+@(formularioCarga: Boolean, certificacionForm: Form[Certificacion] = null)
+
+<ul id="certificacionTab" class="nav nav-tabs">
+	<li class="active"><a class="tabProducto" href="#contenedorProductos" data-toggle="tab">Productos</a></li>
+	<li><a class="tabNotas" href="#contenedorNotas" data-toggle="tab">Notas</a></li>
+</ul>
+
+<div class="tab-content">
+
+	<div class="tab-pane active" id="contenedorProductos">
+		@views.html.compras.certificaciones.contenidoTabProducto(formularioCarga, certificacionForm)	
+	</div>
+	 
+
+</div>

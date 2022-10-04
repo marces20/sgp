@@ -1,0 +1,228 @@
+@(linea: RemitoLinea, iForm: Form[Inventario])
+@import helper._
+@import utils._
+@implicitFieldConstructor = @{ FieldConstructor(simpleInput.render) } 
+
+<div class="row">
+
+	<div class="col-sm-2">
+		<label class="control-label">Remito</label>
+		<p class="form-control-static form-control">@linea.remito_id</p>
+	</div>
+
+	<div class="col-sm-8">
+		<label class="control-label">Producto</label>
+		<p class="form-control-static form-control">@linea.lineaOrden.producto.nombre</p>
+	</div>
+	
+	<div class="col-sm-2">
+		<label class="control-label">Cantidad</label>
+		<p class="form-control-static form-control">@linea.cantidad</p>
+	</div>
+</div>
+
+<h3 style="margin-top:15px">Números de inventario</h3>
+<hr />
+
+
+	<label for="cuenta" class="control-label">Prefijo</label>
+	<div class="input-group @if(iForm.error("cuenta_analitica_id") != null) {has-error} else {has-required}">
+		@inputText(iForm("profijo.nombre"), 'class -> "form-control", 'id -> "prefijo")
+		@inputText(iForm("nomenclador_inventario_id"), 'hidden -> "hidden", 'id -> "prefijo_id")
+		<span class="input-group-addon">
+			<a href="#" 
+			   id="searchPrefijo" 
+			   class="searchModal"
+			   data-title="Selección de prefijo" 
+			   data-url="@controllers.patrimonio.routes.PrefijosController.modalBuscar()" 
+			   data-height="650" 
+			   data-width="700" 
+			   data-listen="modal.seleccion.prefijo.simple" 
+			   data-label="#prefijo" data-field="#prefijo_id">
+			   <i class="glyphicon glyphicon-search"></i>
+			 </a>
+		</span>
+	</div>
+	@iForm("cuenta_analitica_id").error.map{ error =>
+		<div class="text-error">@error.message</div>
+	}
+<hr />
+
+<input type="hidden" id="remito_id"  value="@linea.remito_id" />
+<input type="hidden" id="producto_id"  value="@linea.lineaOrden.producto_id" />
+
+
+
+
+<div id="listaInventario">
+
+	@for( inventario <- linea.getInventario() ){
+	<div class="row lineaNumeroInventario" data-id="@inventario.id">
+		
+		<div class="col-sm-3">
+			<div class="row">
+				<div class="col-sm-8">
+					<div class="form-group">
+						<input type="text" name="numero" value="@inventario.numero" class="form-control numero" >
+					</div>
+				</div>
+				<div class="col-sm-4">
+					<div class="form-group">
+						<input type="text" name="division" value="@inventario.division" class="form-control division" size="3">
+					</div>
+				</div>
+			</div>
+		</div>
+		
+		<div class="col-sm-5">
+			<button type="submit" class="btn btn-default enviar" title="Guardar"><i class="glyphicon glyphicon-pencil" data-href=""></i></button>
+			<button type="submit" class="btn btn-default dividir" title="Dividir"><i class="glyphicon glyphicon-align-justify" data-href=""></i></button>
+			<button type="submit" class="btn btn-default eliminar icono-eliminar pull-right" title="Dividir"><i class="glyphicon glyphicon-remove" data-href=""></i></button>
+		</div>
+		
+	</div>
+	}
+
+</div>
+
+	<div class="row lineaNumeroInventario hidden" id="estructura">
+		<div class="col-sm-3">
+			<div class="row">
+				<div class="col-sm-8">
+					<div class="form-group">
+						@inputText(iForm("numero"), 'class -> "form-control numero", 'placeholder -> "Número")
+					</div>
+				</div>
+				<div class="col-sm-4">
+					<div class="form-group">
+						@inputText(iForm("division"), 'class -> "form-control division", 'size -> "3")
+					</div>
+				</div>
+			</div>
+		</div>
+		
+		<div class="col-sm-5">
+			<button type="submit" class="btn btn-default enviar" title="Editar"><i class="glyphicon glyphicon-floppy-disk"></i></button>
+			<button type="submit" class="btn btn-default dividir hidden" title="Dividir"><i class="glyphicon glyphicon-align-justify" data-href=""></i></button>
+			<button type="submit" class="btn btn-default eliminar hidden icono-eliminar pull-right" title="Dividir"><i class="glyphicon glyphicon-remove" data-href=""></i></button>
+		</div>
+	</div>
+
+
+<script>
+$( function(){
+	
+	var remito_id = $('#remito_id').val();
+
+	$('#searchPrefijo').modalSearch();
+
+	
+	var options = {
+			script:"/patrimonio/suggestPrefijo/",
+			varname:"",
+			json:true,
+			shownoresults:true,
+			maxresults:6,
+			callback: function (obj) { 
+										$("#prefijo").next().val(obj.id); 
+									 }
+		};
+	var as_json = new bsn.AutoSuggest('prefijo', options);
+	
+	function crearLinea() {
+		var estructura = $('#estructura').clone(true).removeAttr('id');
+		$('#listaInventario').prepend(estructura);
+		estructura.removeClass('hidden');
+	}
+	crearLinea();
+	
+	
+	
+	$('#listaInventario').on('click', '.dividir', function() {
+		var contenedor = $(this).closest('.lineaNumeroInventario');
+		var copia = contenedor.clone();
+		copia.find('.enviar i').addClass("glyphicon-floppy-disk").removeClass("glyphicon-pencil");
+		copia.attr("data-id", "");	
+		copia.find(".numero").val("");
+		$(contenedor).after(copia);
+		copia.find('.numero').focus();
+	});
+	
+	$('#listaInventario').on('click', '.enviar', function() {
+		var btn = $(this);
+		var linea = $(this).closest('.lineaNumeroInventario');
+		var prefijo = $('#prefijo_id').val();
+		var numero = linea.find('.numero').val();
+		var division =  linea.find('.division').val();
+		var producto_id =  $('#producto_id').val();
+		var id = linea.attr("data-id");
+		
+		if(prefijo == "") {
+			alert("Debe elegir un prefijo.");
+			return false;
+		} else if (numero == "") {
+			alert("Debe indicar un número de inventario.");
+			return false;
+		}
+
+		if(typeof id != "undefined" && id != "") {
+			var url = '@controllers.patrimonio.routes.InventarioController.actualizar()';
+		} else {
+			var url = '@controllers.patrimonio.routes.InventarioController.guardar()';
+		}
+		
+		linea.find('button').attr('disabled', true);
+		$.post(url, {id: id, remito_id: remito_id, nomenclador_inventario_id: prefijo, numero: numero, division: division, producto_id:producto_id}, function(data){
+			if(data.success) {
+				alert("El número de inventario se ha creado correctamente.");
+				if(data.id) {
+					btn.find('i').addClass("glyphicon-pencil").removeClass("glyphicon-floppy-disk");
+					linea.find('.dividir').removeClass('hidden');
+					linea.find('.eliminar').removeClass('hidden');
+					linea.attr('data-id', data.id);
+				}
+			} else {
+				alert(data.message);
+			}
+			linea.find('button').removeAttr('disabled');
+			
+		});
+	});
+	
+	$('#listaInventario').on('click', '.eliminar', function() {
+		var btn = $(this);
+		var linea = $(this).closest('.lineaNumeroInventario');
+		var id = linea.attr("data-id");
+
+		if(id == "") {
+			linea.remove();
+			
+			alert($('#listaInventario .lineaNumeroInventario').length);
+			if($('#listaInventario .lineaNumeroInventario').length < 1){
+				crearLinea();
+			}
+			
+		} else {
+			var url = '@controllers.patrimonio.routes.InventarioController.eliminar()';
+			$.get(url, {id: id}, function(data){
+				
+				if(data.success) {
+					alert("El número de inventario se ha eliminado correctamente.");
+					linea.remove();
+				} else {
+					alert(data.message);
+				}
+				
+				if($('#listaInventario .lineaNumeroInventario').length < 1){
+					crearLinea();
+				}
+				
+			});
+		}
+
+	});
+	
+})
+</script>
+
+

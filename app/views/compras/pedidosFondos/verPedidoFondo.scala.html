@@ -1,0 +1,54 @@
+@(pedidoForm: Form[PedidoFondo], pedido: PedidoFondo)
+@import utils._
+@import helper._
+@implicitFieldConstructor = @{ FieldConstructor(simpleInput.render) } 
+
+
+@views.html.compras.mainCompras("Vista de Pedidos") {
+	<div class="page-header">
+		<div class="row">
+			<div class="col-sm-7">
+				<h1>Vista de Pedidos</h1>
+			</div>
+			
+		</div>
+	</div>
+	
+@views.html.tags.successError()
+
+<div class="row menu-acciones">
+	<div class="col-sm-10">
+		<a href="@controllers.compras.routes.PedidosFondosController.crear()@UriTrack.get("?")"  class="btn btn-default"><i class="glyphicon glyphicon-plus-sign"></i> Nuevo</a>
+		<a href="@controllers.compras.routes.PedidosFondosController.editar(pedido.id)@UriTrack.get("&")"  class="btn btn-default"><i class="glyphicon glyphicon-edit"></i> Editar</a>
+		<a href="@controllers.compras.routes.PedidosFondosController.eliminar(pedido.id)@UriTrack.get("&")"  class="btn btn-default delete-confirm-link"><i class="glyphicon glyphicon-trash icono-eliminar"></i> Eliminar</a>
+	</div>
+	<div class="col-sm-2">
+		<a href="@UriTrack.getOnNull(controllers.compras.routes.PedidosFondosController.index().absoluteURL())" class="btn btn-default"><i class="glyphicon glyphicon-list"></i></a>
+	</div>
+</div>
+	<div class="row">
+		<div class="col-sm-2">
+			<label class="control-label">ID</label>
+			<p class="form-control-static form-control">@pedidoForm("id").value</p>
+		</div> 
+		<div class="col-sm-2">
+			<label class="control-label">Fecha pedido</label>
+			<p class="form-control-static form-control">@pedidoForm("fecha_pedido").value</p>
+		</div> 
+		<div class="col-sm-1">
+			<div class="checkbox">
+				<label class="control-label"> 
+					Profe
+					@checkbox(pedidoForm("profe"), 'disabled -> "disabled")
+				</label>
+			</div>
+		</div>
+	</div>
+	<div class="row">
+		
+	</div>	
+	
+	@views.html.compras.pedidosFondos.tabsPedidoFondo(false, pedidoForm)
+}
+
+

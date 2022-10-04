@@ -1,0 +1,79 @@
+@(idOrdenCompra: Long, lineas: List[OrdenLineaAnulacion],listaFacturas:List[Factura])
+@import helper._
+@import models.auth._
+@import utils._
+@implicitFieldConstructor = @{ FieldConstructor(simpleInput.render) } 
+@import java.math.BigDecimal;var total=new java.math.BigDecimal(0);
+<div id="listaLineaProductos" class="contenedorPaginador ajaxPaginador">
+
+@if(Permiso.check("anulacionRecepcionProductosCrear")) {
+<p><a class="btn btn-default btn-xs" href="@controllers.patrimonio.routes.AnulacionRecepcionProductosController.crear(idOrdenCompra)" id="nuevoProducto"><i class="glyphicon glyphicon-plus"></i> Nuevo</a></p>
+}
+		@if(listaFacturas.size() > 0){
+			<p style="font-weight:bold;font-size:20px; color:red;">ESTA ORDEN POSEE FACTURAS O PAGOS EN PROCESO !!!</p>	
+		}  
+		<table id="listaProductosAnulados" class="table table-striped table-bordered table-hover">
+			<thead>
+				<tr>
+					<th width="30">
+						<input type="checkbox" name="checkAllLineaAnulacion"  data-check=".data-check-linea-anulacion"  id="checkAllLineaAnulacion"/>
+					</th>
+					<th>Producto</th>
+					<th>Cantidad</th>	
+					<th>UDM</th>	
+					<th>Unitario</th>	
+					<th>Total</th>
+					<th>Observacion</th>
+					<th>Pacientes</th>
+					 		
+				</tr>
+			</thead>
+			<tbody>
+		        @for(linea <- lineas) {
+					@views.html.patrimonio.anulacionRecepcion.lineaProducto(linea)
+					@{total = total.add(linea.getTotal())}
+              	}
+			</tbody>
+			<tfoot>
+				<tr>
+					<td colspan="5" align="right">TOTAL</td>
+					<td align="center" class="totalAnuladoFooter">@utils.NumberUtils.moneda(total)</td>
+					<td colspan="2"></td>
+				</tr>
+			</tfoot>
+		</table>
+</div>    
+<script>
+	$( function(){
+		
+		 
+		
+		$('#checkAllLineaAnulacion').on('change', function(){
+			var c = $(this).prop("checked");
+			var target = $(this).attr('data-check');
+			if(c) $(target).prop( "checked", true );
+			else $(target).prop( "checked", false );
+		});
+		
+		var trs = $('#listaProductosAnulados tbody tr');
+		
+		$('#checkAllLineaAnulacion').click( function() {
+			sumarFilas(trs);
+		});
+		
+		$('input[name="check_linea_anulacion[]"]').click( function() {
+			sumarFilas( $('#listaProductosAnulados tbody tr:has(td:eq(0):has(input:checked))') );
+		});
+		
+		function sumarFilas(trs) {
+			var base = 0; 
+			trs.each( function() {
+				base += Number($('.totalAnulado',this).attr("data-valor"));
+				 
+			});
+			
+			$(".totalAnuladoFooter").html(formatNumberPesos(parseFloat(base).toFixed(2)));
+			
+		}
+	});
+</script>

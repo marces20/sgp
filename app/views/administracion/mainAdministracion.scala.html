@@ -1,0 +1,17 @@
+@(title: String, scripts: Html = Html(""))(content: Html)
+@import models.auth._
+
+@main(title: String, scripts){
+		<div class="row">
+			<div class="col-sm-2">
+				<div class="menu-contenido">
+				<ul class="nav nav-pills nav-stacked">
+					<li class="titulo">Administración</li>
+						<li><a href="@controllers.administracion.routes.UsuariosController.index()">Usuarios</a></li>
+						<li><a href="@controllers.administracion.routes.PermisosController.index()">Permisos</a></li>
+				</ul>
+				</div>
+			</div>
+			<div class="col-sm-10">@content</div>
+		</div>
+}

@@ -1,0 +1,8 @@
+@(formularioCarga: Boolean, facturaForm: Form[Factura] = null)
+<div class="tab-pane" id="contenedorNotas">
+	@if(formularioCarga){
+		<textarea name="comentario" class="form-control" rows="5">@facturaForm.field("comentario").value</textarea>
+	} else {
+		<textarea name="comentario" disabled="disabled" class="form-control" rows="5">@facturaForm.field("comentario").value</textarea>
+	}
+</div>

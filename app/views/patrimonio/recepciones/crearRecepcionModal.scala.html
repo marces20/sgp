@@ -1,0 +1,10 @@
+@(recepcionForm: Form[Recepcion])
+@import helper._
+@import utils._
+@implicitFieldConstructor = @{ FieldConstructor(simpleInput.render) } 
+    
+@helper.form(action = controllers.patrimonio.routes.RecepcionesController.guardar(), 'id -> "formCrearActaRecepcion") {
+	@views.html.patrimonio.recepciones.formRecepciones(recepcionForm) 
+}
+
+@flash().clear()

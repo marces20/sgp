@@ -1,0 +1,18 @@
+@(lc:  models.haberes.LiquidacionPuesto)
+
+
+
+<tr>
+	<td colspan="3" align="right"> <b>TOTALES</b></td>
+	<td align="center"><b>@utils.NumberUtils.moneda(lc.getTotalCA())</b></td>
+	<td align="center"><b>@utils.NumberUtils.moneda(lc.getTotalSA() )</b></td>
+	<td align="center"><b>@utils.NumberUtils.moneda(lc.getTotalRetenciones() )</b></td>
+	<td></td>
+</tr>
+
+<tr>
+	<td colspan="3" align="right"> <b style="font-size: 20px;color:green;">IMPORTE A COBRAR</b></td>
+	<td colspan="3" align="center"><b style="font-size: 20px;color:green;">@utils.NumberUtils.moneda(lc.getTotalACobrar())</b></td>
+	<td></td>
+</tr>
+

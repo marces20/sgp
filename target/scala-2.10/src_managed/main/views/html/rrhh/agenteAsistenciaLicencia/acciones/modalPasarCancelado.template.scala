@@ -1,0 +1,60 @@
+
+package views.html.rrhh.agenteAsistenciaLicencia.acciones
+
+import play.templates._
+import play.templates.TemplateMagic._
+
+import play.api.templates._
+import play.api.templates.PlayMagic._
+import models._
+import controllers._
+import java.lang._
+import java.util._
+import scala.collection.JavaConversions._
+import scala.collection.JavaConverters._
+import play.api.i18n._
+import play.core.j.PlayMagicForJava._
+import play.mvc._
+import play.data._
+import play.api.data.Field
+import play.mvc.Http.Context.Implicit._
+import views.html._
+/**/
+object modalPasarCancelado extends BaseScalaTemplate[play.api.templates.HtmlFormat.Appendable,Format[play.api.templates.HtmlFormat.Appendable]](play.api.templates.HtmlFormat) with play.api.templates.Template1[DynamicForm,play.api.templates.HtmlFormat.Appendable] {
+
+    /**/
+    def apply/*1.2*/(formBuscador: DynamicForm):play.api.templates.HtmlFormat.Appendable = {
+        _display_ {import helper._
+
+implicit def /*3.2*/implicitFieldConstructor/*3.26*/ = {{ FieldConstructor(simpleInput.render) }};
+Seq[Any](format.raw/*1.29*/("""
+"""),format.raw/*3.70*/(""" 
+	
+"""),_display_(Seq[Any](/*5.2*/helper/*5.8*/.form(action = controllers.rrhh.routes.AgentesAsistenciasLicenciasController.pasarCanceladoMasivo(), 'id -> "formPasarCanceladoLicencia")/*5.145*/ {_display_(Seq[Any](format.raw/*5.147*/("""	
+	"""),_display_(Seq[Any](/*6.3*/views/*6.8*/.html.tags.successError())),format.raw/*6.33*/("""
+	
+	<div class="col-sm-5"><br />
+		<button type="submit" class="btn btn-default" title="Pasar a Cancelado"><i class="glyphicon glyphicon-arrow-right"></i> Pasar a Cancelado</button>
+	</div>
+
+""")))})),format.raw/*12.2*/("""
+"""),_display_(Seq[Any](/*13.2*/flash()/*13.9*/.clear())))}
+    }
+    
+    def render(formBuscador:DynamicForm): play.api.templates.HtmlFormat.Appendable = apply(formBuscador)
+    
+    def f:((DynamicForm) => play.api.templates.HtmlFormat.Appendable) = (formBuscador) => apply(formBuscador)
+    
+    def ref: this.type = this
+
+}
+                /*
+                    -- GENERATED --
+                    DATE: Tue Oct 04 11:43:30 ART 2022
+                    SOURCE: /home/marce/hspwork/play/sgpgit/sgp/app/views/rrhh/agenteAsistenciaLicencia/acciones/modalPasarCancelado.scala.html
+                    HASH: 5bb3d9d97971815adab5358f1c248990f87a7588
+                    MATRIX: 832->1|961->47|993->71|1067->28|1095->115|1134->120|1147->126|1293->263|1333->265|1371->269|1383->274|1429->299|1652->491|1689->493|1704->500
+                    LINES: 26->1|29->3|29->3|30->1|31->3|33->5|33->5|33->5|33->5|34->6|34->6|34->6|40->12|41->13|41->13
+                    -- GENERATED --
+                */
+            

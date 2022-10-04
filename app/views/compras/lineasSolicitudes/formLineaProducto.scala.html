@@ -1,0 +1,159 @@
+@(lineaForm: Form[SolicitudLinea],s:Solicitud)
+@import helper._
+@implicitFieldConstructor = @{ FieldConstructor(simpleInput.render) } 
+
+@if(flash.containsKey("error")) {
+	<div class="alert alert-danger">
+		<i class="glyphicon glyphicon-remove-sign"></i> @flash.get("error")
+	</div>
+}
+
+ <div class="row">
+	@inputText(lineaForm("solicitud_id"), 'type -> "hidden")
+
+	<div class="col-sm-5">
+		<label for="producto_nombre" class="control-label">Producto</label>
+		<div class="input-group @if(lineaForm.error("producto_id") != null) {has-error} else {has-required}">
+			@inputText(lineaForm("producto.nombre"), 'class -> "form-control", 'autofocus -> "autofocus", 'id -> "productoSolicitud")
+			@inputText(lineaForm("producto_id"), 'hidden -> "hidden", 'id -> "producto_id_solicitud")
+			<span class="input-group-addon">
+											<a href="#" id="searchProducto" 
+											data-title="Selección de producto" 
+											data-url="@controllers.compras.routes.ProductosController.modalBuscarSolicitudes(s.id)" 
+											data-height="650" 
+											data-width="700" 
+											data-listen="modal.seleccion.producto.simple" 
+											data-label="#productoSolicitud" 
+											data-field="#producto_id_solicitud">
+											<i class="glyphicon glyphicon-search"></i></a></span>
+														
+			<span class="input-group-addon">
+				<a href="#" id="searchProductoCarga" 
+				data-title="Selección de producto" 
+				data-url="@controllers.compras.routes.ProductosController.modalCarga()" 
+				data-height="650" 
+				data-width="700" 
+				data-listen="modal.seleccion.producto.simple" 
+				data-label="#producto" data-field="#producto_id">
+				<i class="glyphicon glyphicon-plus"></i></a></span>											
+				 
+		</div>
+		@lineaForm("producto_id").error.map{ error =>
+			<div class="text-error">@error.message</div>
+		}
+	</div>
+	
+	<div class="col-sm-3">
+		<div class="form-group @if(lineaForm.error("precio_estimado") != null) {has-error} else {has-required}">
+			<label class="control-label">Precio estimado
+			@inputText(lineaForm("precio_estimado"), 'class -> "form-control", 'id -> "precioEstimado")
+			</label>
+			@lineaForm("precio_estimado").error.map{ error => <div class="text-error">@error.message</div>}
+		</div>
+	</div>
+	
+</div>
+
+<div class="row">	
+	<div class="col-sm-2">
+		<div class="form-group @if(lineaForm.error("cantidad") != null) {has-error} else {has-required}">
+			<label for="cantidad" class="control-label">Cantidad</label>
+			@inputText(lineaForm("cantidad"), 'class -> "form-control", 'id -> "cantidad")
+			@lineaForm("cantidad").error.map{ error => <div class="text-error">@error.message</div>}
+		</div>
+	</div>
+
+	<div class="col-sm-3">
+		<div class="form-group @if(lineaForm.error("udm_id") != null) {has-error} else {has-required}">
+			<label class="control-label">UDM
+			@select(lineaForm("udm_id"), Udm.find.all().map { p => p.id.toString -> p.nombre}, 'class -> "form-control select", '_default -> "Seleccionar")
+			</label>
+			@lineaForm("udm_id").error.map{ error => <div class="text-error">@error.message</div> }
+		</div>
+	</div>
+	
+	<div class="col-sm-5">
+		<label for="cuenta_presupuestaria" class="control-label">Cuenta Presupuestaria</label>
+		<div class="input-group @if(lineaForm.error("cuenta_analitica_id") != null) {has-error} else {has-required}">
+			@inputText(lineaForm("cuentaAnalitica.nombre"), 'class -> "form-control", 'id -> "cuenta_analitica")
+			@inputText(lineaForm("cuenta_analitica_id"), 'hidden -> "hidden", 'id -> "cuenta_analitica_id")
+			
+			<span class="input-group-addon"><a href="#" 
+												id="searchCuentaAnalitica" 
+												data-title="Selección de cuenta analítica" 
+												data-url="@controllers.contabilidad.routes.CuentasAnaliticasController.modalBuscar()" 
+												data-height="650" 
+												data-width="700" 
+												data-listen="modal.seleccion.cuentaAnalitica.simple" 
+												data-label="#cuenta_analitica" data-field="#cuenta_analitica_id"><i class="glyphicon glyphicon-search"></i></a></span>
+		</div>
+		@lineaForm("cuenta_analitica_id").error.map{ error =>
+			<div class="text-error">@error.message</div>
+		}
+	</div>
+	
+</div>	
+
+<br />
+<p class="help-block">
+<b>Nota:</b> El separador de decimales de los campos cantidad y precio es el símbolo ",".<br />
+No llevan separador de millar, pero puede presionar la tecla "punto" que automáticamente se transforma en "coma" para mejor manejo del teclado numérico.
+</p>
+
+<script>
+$(function(){
+	
+	
+	$('#searchProductoCarga').click( function() { 
+		var url = $(this).attr("data-url");
+		dialogoProductoCarga = crearDialogoGeneral(url);
+		dialogoProductoCarga.dialog({title: "Cargar Producto",height:500});
+	});
+	
+	$("#precioEstimado, #cantidad").numeric_input();
+	$('#searchProducto,#searchCuentaAnalitica').modalSearch();
+	
+	if($("#productoSolicitud").length){
+		var idDeposito = $('#deposito_id').val();
+		if($("#deposito_id").val().length > 0){
+			var options = {
+					script:"/suggestProductoSolicitud/"+idDeposito+"/",
+					varname:"",
+					json:true,
+					shownoresults:true,
+					maxresults:6,
+					callback: function (obj) { 
+												$("#producto_id_solicitud").val(obj.id); 
+											 }
+				};
+			var as_json = new bsn.AutoSuggest('productoSolicitud', options);
+		}else{
+			var options = {
+					script:"/suggestProducto/",
+					varname:"",
+					json:true,
+					shownoresults:true,
+					maxresults:6,
+					callback: function (obj) { 
+												$("#producto_id_solicitud").val(obj.id); 
+											 }
+				};
+			var as_json = new bsn.AutoSuggest('productoSolicitud', options);
+		}
+	}
+	
+	if($("#cuenta_analitica").length){
+		var options = {
+				script:"/contabilidad/suggestCuentaAnalitica/",
+				varname:"",
+				json:true,
+				shownoresults:true,
+				maxresults:6,
+				callback: function (obj) { 
+											$("#cuenta_analitica_id").val(obj.id); 
+										 }
+			};
+		var as_json = new bsn.AutoSuggest('cuenta_analitica', options);
+	}
+});
+</script>

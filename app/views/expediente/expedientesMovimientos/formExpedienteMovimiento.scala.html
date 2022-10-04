@@ -1,0 +1,49 @@
+@(lineaForm: Form[ExpedienteMovimiento])
+@import helper._
+@implicitFieldConstructor = @{ FieldConstructor(simpleInput.render) } 
+
+
+
+@if(flash.containsKey("error")) {
+	<div class="alert alert-danger">
+		<i class="glyphicon glyphicon-remove-sign"></i> @flash.get("error")
+	</div>
+}
+<script>
+$(function(){
+});
+</script>
+
+ <div class="row">
+	@inputText(lineaForm("expediente_id"), 'type -> "hidden")
+	<div class="col-sm-8">
+		<label for="inputOrganigrama" class="control-label">Departamento/Servicio</label> 
+		<div class="input-group @if(lineaForm.error("organigrama_id") != null) {has-error}">
+			@select(lineaForm("organigrama_id"), 
+			Organigrama.find.where().eq("circuito_expediente", true).orderBy("nombre asc").findList().map{ p => p.id.toString -> p.nombre}, 'class -> 
+			"form-control select", '_default -> "Seleccionar")
+		</div>
+		@lineaForm("organigrama_id").error.map{ error =><div class="text-error">@error.message</div>}
+	</div>
+</div>
+
+
+<div class="row">
+	<div class="col-sm-12">
+		<label for="Descripción" class="control-label">Descripción</label>
+		<div class="input-group @if(lineaForm.error("descripcion") != null) {has-error}">
+			@textarea(lineaForm("descripcion"), 'class -> "form-control", 'id -> "descripcion", 'rows -> "3", 'cols -> "50")
+			@lineaForm("descripcion").error.map{ error => <div class="text-error">@error.message</div>}
+		</div>
+	</div>	
+</div>
+ 
+<div class="row form-actions">
+    <div class="col-lg-offset-4 col-lg-8">
+      <button type="submit" class="btn btn-default"><i class="glyphicon glyphicon-floppy-disk"></i>Guardar</button>	
+      <a href="" class="btn btn-default cancelar"><i class="glyphicon glyphicon-floppy-remove"></i>Cancelar</a>
+    </div>
+</div>
+<script>
+
+</script>

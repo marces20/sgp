@@ -1,0 +1,38 @@
+@import helper._
+@import utils._
+@import models.auth._
+@implicitFieldConstructor = @{ FieldConstructor(simpleInput.render) }
+
+@views.html.dashboard.mainDashboard("Control Deuda") {
+
+<div class="page-header">
+	<div class="row">
+		<div class="col-sm-7">
+			<h1>Control Deuda</h1>
+		</div>
+	</div>
+</div>
+
+<div class="row"  style="">
+	<nav class="navbar navbar-default" role="navigation">
+		<div class="container-fluid">
+			<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+		      <ul class="nav navbar-nav">
+		      	<!-- <li class="active"><a href="@controllers.dashboard.routes.DeudasGlobalizadasController.deudasResumidas()">Deudas Resumen <span class="sr-only">(current)</span></a></li> -->
+		        <li class="dropdown">
+		         	
+		          <a href="#" class="dropdown-toggle" data-toggle="dropdown">Control Deuda<b class="caret"></b></a>
+		          <ul class="dropdown-menu">
+		          	<!-- <li><a href="@controllers.dashboard.routes.ControlDeudaController.autorizadoDistintoDePagado()">Listado Deuda Autorizado Distinto de Pagado</a></li>-->
+		          	<li><a href="@controllers.dashboard.routes.ControlDeudaController.controlDeudaMonedaExtranjera()">Control Deuda Moneda Extranjera</a></li>
+		          	<li><a href="@controllers.dashboard.routes.ControlDeudaController.autorizadoDistintoDePagado()">Diferencia entre pagado y autorizado</a></li>
+		          </ul>
+		        </li>
+		        </ul>
+		    </div>  
+		</div>
+	</nav>
+</div>
+
+
+}

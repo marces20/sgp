@@ -1,0 +1,36 @@
+@(datos:List[com.avaje.ebean.SqlRow])
+
+@import helper._
+@import utils._
+@import models.auth._
+@implicitFieldConstructor = @{ FieldConstructor(simpleInput.render) }
+@import java.math.BigDecimal;var totalDeudaOtros=new java.math.BigDecimal(0);
+@import java.lang.Integer;var proveedorId =0; 
+@import java.lang.String;var proveedorNombre =""
+@views.html.dashboard.mainDashboard("Devengado") {
+@views.html.dashboard.presupuesto.navPresupuesto()
+
+<div class="page-header">
+	<div class="row">
+		<div class="col-sm-7">
+			<h1>Devengado</h1>
+		</div>
+		<div class="col-sm-5">
+			<div class="dropdown pull-right">
+			 <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown">
+			 	<i class="glyphicon glyphicon-list-alt"></i>
+			    Reportes
+			    <span class="caret"></span>
+			  </button>
+			  <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
+			  	<li role="presentation">
+			</ul>
+			</div>
+		</div>
+	</div>
+</div>
+
+
+
+
+}

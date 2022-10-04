@@ -1,0 +1,258 @@
+@(idTipoCliente:Long,
+deudasPorPaciente:List[com.avaje.ebean.SqlRow],
+deudasPorExtrajero:List[com.avaje.ebean.SqlRow],
+deudasPorObrasSociales:List[com.avaje.ebean.SqlRow],
+deudasPorArt:List[com.avaje.ebean.SqlRow],
+deudasPorSeguro:List[com.avaje.ebean.SqlRow]
+)
+@import helper._
+@import utils._
+@import models.auth._
+@implicitFieldConstructor = @{ FieldConstructor(simpleInput.render) }
+@import java.math.BigDecimal;var ptfactura=new java.math.BigDecimal(0);var ptpago=new java.math.BigDecimal(0);var ptdeuda=new java.math.BigDecimal(0);var mtfactura=new java.math.BigDecimal(0);var mtpago=new java.math.BigDecimal(0);var mtdeuda=new java.math.BigDecimal(0);
+@import java.lang.Integer;var clienteId =0;var bandera =0
+@import java.lang.String;var clienteNombre =""
+
+@views.html.dashboard.mainDashboard("Deudas Recupero") {				
+						
+ 
+
+@views.html.dashboard.informesRecupero.navinformes()
+				
+
+<div class="page-header">
+	<div class="row">
+		<div class="col-sm-7">
+			<h1>Deudas</h1>
+		</div>
+		<div class="col-sm-5">
+			<div class="dropdown pull-right">
+			 <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown">
+			 	<i class="glyphicon glyphicon-list-alt"></i>
+			    Reportes
+			    <span class="caret"></span>
+			  </button>
+			  <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
+			  	<li role="presentation">
+				  <a id="" role="menuitem" tabindex="-1" 
+				  href="@controllers.dashboard.routes.InformesRecuperoReportesController.deudasPorTipoDeCliente(idTipoCliente)">Reporte Excel</a></li>
+			  </ul>
+			</div>
+		</div>
+	</div>
+</div>
+
+@if(deudasPorPaciente.size() >0){
+<div class="row"  style="">
+	<div class="col-sm-12" style="">
+		<table class="table table-bordered table-hover" id="listaInforme">
+			@views.html.dashboard.informesRecupero.tablaDetalleDeudas("Pacientes")
+			<tbody>
+				@for(s <- deudasPorPaciente){
+					
+					@{ptfactura = ptfactura.add(s.getBigDecimal("total_factura"))}
+					@{ptpago = ptpago.add(s.getBigDecimal("total_pago"))}
+					@{ptdeuda = ptdeuda.add(s.getBigDecimal("total_deuda"))}
+					 
+					 <tr style="background-color:#ffffff;">
+						<td>@s.getString("cliente_nombre")</td>
+						<td>@utils.NumberUtils.moneda(s.getBigDecimal("total_factura"))</td>
+						<td>@utils.NumberUtils.moneda(s.getBigDecimal("total_pago"))</td>
+						<td>@utils.NumberUtils.moneda(s.getBigDecimal("total_deuda"))</td>
+					</tr> 
+					
+					
+					@{mtfactura= mtfactura.add(s.getBigDecimal("total_factura"))}
+					@{mtpago= mtpago.add(s.getBigDecimal("total_pago"))}
+					@{mtdeuda= mtdeuda.add(s.getBigDecimal("total_deuda"))}
+					@{clienteId = s.getInteger("cliente_id")}
+					@{clienteNombre = s.getString("cliente_nombre")}
+				}
+			</tbody>
+			<tfoot>
+				<tr style="background-color:#dfdfdf;">
+					<td align="right"><b>TOTALES</b></td>
+					<td><b>@utils.NumberUtils.moneda(ptfactura)</b></td>
+					<td><b>@utils.NumberUtils.moneda(ptpago)</b></td>
+					<td><b>@utils.NumberUtils.moneda(ptdeuda)</b></td>
+				</tr>
+			</tfoot>
+		</table>			
+	</div>
+</div>	
+}
+
+@if(deudasPorExtrajero.size() >0){
+<div class="row"  style="">
+	<div class="col-sm-12" style="">
+		<table class="table table-bordered table-hover" id="listaInforme">
+			@views.html.dashboard.informesRecupero.tablaDetalleDeudas("Extranjeros")
+			<tbody>
+				@{ptfactura = new java.math.BigDecimal(0)}
+				@{ptpago = new java.math.BigDecimal(0)}
+				@{ptdeuda = new java.math.BigDecimal(0)}
+				@for(s <- deudasPorExtrajero){
+					
+					@{ptfactura = ptfactura.add(s.getBigDecimal("total_factura"))}
+					@{ptpago = ptpago.add(s.getBigDecimal("total_pago"))}
+					@{ptdeuda = ptdeuda.add(s.getBigDecimal("total_deuda"))}
+					 
+					 <tr style="background-color:#ffffff;">
+						<td>@s.getString("cliente_nombre")</td>
+						<td>@utils.NumberUtils.moneda(s.getBigDecimal("total_factura"))</td>
+						<td>@utils.NumberUtils.moneda(s.getBigDecimal("total_pago"))</td>
+						<td>@utils.NumberUtils.moneda(s.getBigDecimal("total_deuda"))</td>
+					</tr> 
+					
+					
+					@{mtfactura= mtfactura.add(s.getBigDecimal("total_factura"))}
+					@{mtpago= mtpago.add(s.getBigDecimal("total_pago"))}
+					@{mtdeuda= mtdeuda.add(s.getBigDecimal("total_deuda"))}
+					@{clienteId = s.getInteger("cliente_id")}
+					@{clienteNombre = s.getString("cliente_nombre")}
+				}
+			</tbody>
+			<tfoot>
+				<tr style="background-color:#dfdfdf;">
+					<td align="right"><b>TOTALES</b></td>
+					<td><b>@utils.NumberUtils.moneda(ptfactura)</b></td>
+					<td><b>@utils.NumberUtils.moneda(ptpago)</b></td>
+					<td><b>@utils.NumberUtils.moneda(ptdeuda)</b></td>
+				</tr>
+			</tfoot>
+		</table>
+	</div>
+</div>	
+}
+
+@if(deudasPorObrasSociales.size() >0){
+<div class="row"  style="">
+	<div class="col-sm-12" style="">
+		<table class="table table-bordered table-hover" id="listaInforme">
+			@views.html.dashboard.informesRecupero.tablaDetalleDeudas("Obras Sociales")
+			<tbody>
+				@{ptfactura = new java.math.BigDecimal(0)}
+				@{ptpago = new java.math.BigDecimal(0)}
+				@{ptdeuda = new java.math.BigDecimal(0)}
+				@for(s <- deudasPorObrasSociales){
+					
+					@{ptfactura = ptfactura.add(s.getBigDecimal("total_factura"))}
+					@{ptpago = ptpago.add(s.getBigDecimal("total_pago"))}
+					@{ptdeuda = ptdeuda.add(s.getBigDecimal("total_deuda"))}
+					 
+					 <tr style="background-color:#ffffff;">
+						<td>@s.getString("cliente_nombre")</td>
+						<td>@utils.NumberUtils.moneda(s.getBigDecimal("total_factura"))</td>
+						<td>@utils.NumberUtils.moneda(s.getBigDecimal("total_pago"))</td>
+						<td>@utils.NumberUtils.moneda(s.getBigDecimal("total_deuda"))</td>
+					</tr> 
+					
+					
+					@{mtfactura= mtfactura.add(s.getBigDecimal("total_factura"))}
+					@{mtpago= mtpago.add(s.getBigDecimal("total_pago"))}
+					@{mtdeuda= mtdeuda.add(s.getBigDecimal("total_deuda"))}
+					@{clienteId = s.getInteger("cliente_id")}
+					@{clienteNombre = s.getString("cliente_nombre")}
+				}
+			</tbody>
+			<tfoot>
+				<tr style="background-color:#dfdfdf;">
+					<td align="right"><b>TOTALES</b></td>
+					<td><b>@utils.NumberUtils.moneda(ptfactura)</b></td>
+					<td><b>@utils.NumberUtils.moneda(ptpago)</b></td>
+					<td><b>@utils.NumberUtils.moneda(ptdeuda)</b></td>
+				</tr>
+			</tfoot>
+		</table>
+	</div>
+</div>	
+}
+
+@if(deudasPorSeguro.size() >0){
+<div class="row"  style="">
+	<div class="col-sm-12" style="">
+		<table class="table table-bordered table-hover" id="listaInforme">
+			@views.html.dashboard.informesRecupero.tablaDetalleDeudas("SEGUROS")
+			<tbody>
+				@{ptfactura = new java.math.BigDecimal(0)}
+				@{ptpago = new java.math.BigDecimal(0)}
+				@{ptdeuda = new java.math.BigDecimal(0)}
+				@for(s <- deudasPorSeguro){
+					
+					@{ptfactura = ptfactura.add(s.getBigDecimal("total_factura"))}
+					@{ptpago = ptpago.add(s.getBigDecimal("total_pago"))}
+					@{ptdeuda = ptdeuda.add(s.getBigDecimal("total_deuda"))}
+					 
+					 <tr style="background-color:#ffffff;">
+						<td>@s.getString("cliente_nombre")</td>
+						<td>@utils.NumberUtils.moneda(s.getBigDecimal("total_factura"))</td>
+						<td>@utils.NumberUtils.moneda(s.getBigDecimal("total_pago"))</td>
+						<td>@utils.NumberUtils.moneda(s.getBigDecimal("total_deuda"))</td>
+					</tr> 
+					
+					
+					@{mtfactura= mtfactura.add(s.getBigDecimal("total_factura"))}
+					@{mtpago= mtpago.add(s.getBigDecimal("total_pago"))}
+					@{mtdeuda= mtdeuda.add(s.getBigDecimal("total_deuda"))}
+					@{clienteId = s.getInteger("cliente_id")}
+					@{clienteNombre = s.getString("cliente_nombre")}
+				}
+			</tbody>
+			<tfoot>
+				<tr style="background-color:#dfdfdf;">
+					<td align="right"><b>TOTALES</b></td>
+					<td><b>@utils.NumberUtils.moneda(ptfactura)</b></td>
+					<td><b>@utils.NumberUtils.moneda(ptpago)</b></td>
+					<td><b>@utils.NumberUtils.moneda(ptdeuda)</b></td>
+				</tr>
+			</tfoot>
+		</table>
+	</div>
+</div>
+
+}
+
+@if(deudasPorArt.size() >0){
+<div class="row"  style="">
+	<div class="col-sm-12" style="">
+		<table class="table table-bordered table-hover" id="listaInforme">
+			@views.html.dashboard.informesRecupero.tablaDetalleDeudas("ART")
+			<tbody>
+				@{ptfactura = new java.math.BigDecimal(0)}
+				@{ptpago = new java.math.BigDecimal(0)}
+				@{ptdeuda = new java.math.BigDecimal(0)}
+				@for(s <- deudasPorArt){
+					
+					@{ptfactura = ptfactura.add(s.getBigDecimal("total_factura"))}
+					@{ptpago = ptpago.add(s.getBigDecimal("total_pago"))}
+					@{ptdeuda = ptdeuda.add(s.getBigDecimal("total_deuda"))}
+					 
+					 <tr style="background-color:#ffffff;">
+						<td>@s.getString("cliente_nombre")</td>
+						<td>@utils.NumberUtils.moneda(s.getBigDecimal("total_factura"))</td>
+						<td>@utils.NumberUtils.moneda(s.getBigDecimal("total_pago"))</td>
+						<td>@utils.NumberUtils.moneda(s.getBigDecimal("total_deuda"))</td>
+					</tr> 
+					
+					
+					@{mtfactura= mtfactura.add(s.getBigDecimal("total_factura"))}
+					@{mtpago= mtpago.add(s.getBigDecimal("total_pago"))}
+					@{mtdeuda= mtdeuda.add(s.getBigDecimal("total_deuda"))}
+					@{clienteId = s.getInteger("cliente_id")}
+					@{clienteNombre = s.getString("cliente_nombre")}
+				}
+			</tbody>
+			<tfoot>
+				<tr style="background-color:#dfdfdf;">
+					<td align="right"><b>TOTALES</b></td>
+					<td><b>@utils.NumberUtils.moneda(ptfactura)</b></td>
+					<td><b>@utils.NumberUtils.moneda(ptpago)</b></td>
+					<td><b>@utils.NumberUtils.moneda(ptdeuda)</b></td>
+				</tr>
+			</tfoot>
+		</table>
+	</div>
+</div>	
+}
+
+}

@@ -1,0 +1,385 @@
+@(buscador: utils.pagination.Pagination[BalancePresupuestario], formBuscador: DynamicForm,lbp:List[BalancePresupuestario],idEjercicio:String)
+@import helper._
+@implicitFieldConstructor = @{ FieldConstructor(simpleInput.render) } 
+@import java.math.BigDecimal;var saldoTotal=new java.math.BigDecimal(0);var saldoDisponible=new java.math.BigDecimal(0);var preventivoTotal=new java.math.BigDecimal(0);var preventivoDisponible=new java.math.BigDecimal(0);var definitivoTotal=new java.math.BigDecimal(0);var definitivoDisponible=new java.math.BigDecimal(0);var obligaciónTotal=new java.math.BigDecimal(0);var obligaciónDisponible=new java.math.BigDecimal(0);var pago=new java.math.BigDecimal(0);var epreventivoTotal=new java.math.BigDecimal(0);var epreventivoDisponible=new java.math.BigDecimal(0);var edefinitivoTotal=new java.math.BigDecimal(0);var edefinitivoDisponible=new java.math.BigDecimal(0);var eobligaciónTotal=new java.math.BigDecimal(0);var eobligaciónDisponible=new java.math.BigDecimal(0);var epago=new java.math.BigDecimal(0);
+@views.html.presupuesto.mainPresupuesto("Balance presupuestario") {
+
+	<div class="page-header">
+		<div class="row">
+			<div class="col-sm-7">
+				<h1>Balance presupuestario</h1>
+			</div>
+			<div class="col-sm-5">
+				<div class="dropdown pull-right">
+				 <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown">
+				 	<i class="glyphicon glyphicon-list-alt"></i>
+				    Reportes
+				    <span class="caret"></span>
+				  </button>
+				  <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
+				  
+				  	
+ 				  	
+				  	
+				  	<li role="presentation"><a role="menuitem" id="accionReporteGeneralPorExpedientePorCuenta" 
+				    tabindex="-1" 
+				    href="#" data-url="@controllers.presupuesto.routes.BalancePresupuestarioReportesController.modalReporteBalancePorCuentaPorExpediente(1)">
+				    Reporte General por Cuenta por Expedientes</a></li>
+				  	
+				  	<li role="presentation"><a role="menuitem" id="accionReporteGeneralPorExpedientePorCuentaResumido" 
+				    tabindex="-1" 
+				    href="#" data-url="@controllers.presupuesto.routes.BalancePresupuestarioReportesController.modalReporteBalancePorCuentaPorExpediente(2)">
+				    Reporte General por Cuenta por Expedientes Resumido</a></li>
+				  	 
+				   	<!--  ---------------------------------------------------------------------------- -->
+				   	<li role="presentation"><a role="menuitem" id="reporteGeneralPorExpedientePorCuenta" 
+				    data-url="" tabindex="-1" 
+				    href="@controllers.presupuesto.routes.BalancePresupuestarioReportesController.reporteBalanceDiferenciaPreventivoDefinitivo(13)">
+				    Reporte 2022 Saldos en Preventivos</a></li>
+				   	<li role="presentation"><a role="menuitem" id="reporteGeneralPorExpedientePorCuenta" 
+				    data-url="" tabindex="-1" 
+				    href="@controllers.presupuesto.routes.BalancePresupuestarioReportesController.reporteBalanceDiferenciaPreventivoDefinitivo(12)">
+				    Reporte 2021 Saldos en Preventivos</a></li>
+				   	<li role="presentation"><a role="menuitem" id="reporteGeneralPorExpedientePorCuenta" 
+				    data-url="" tabindex="-1" 
+				    href="@controllers.presupuesto.routes.BalancePresupuestarioReportesController.reporteBalanceDiferenciaPreventivoDefinitivo(9)">
+				    Reporte 2020 Saldos en Preventivos</a></li>
+				   	<li role="presentation"><a role="menuitem" id="reporteGeneralPorExpedientePorCuenta" 
+				    data-url="" tabindex="-1" 
+				    href="@controllers.presupuesto.routes.BalancePresupuestarioReportesController.reporteBalanceDiferenciaPreventivoDefinitivo(8)">
+				    Reporte 2019 Saldos en Preventivos</a></li>
+				  
+				    <!-- <li role="presentation"><a role="menuitem" id="reporteGeneralPorExpedientePorCuenta" 
+				    data-url="" tabindex="-1" 
+				    href="@controllers.presupuesto.routes.BalancePresupuestarioReportesController.reporteBalanceDiferenciaPreventivoDefinitivo(6)">
+				    Reporte 2017 Saldos en Preventivos</a></li>
+				    <li role="presentation"><a role="menuitem" id="reporteGeneralPorExpedientePorCuenta" 
+				    data-url="" tabindex="-1" 
+				    href="@controllers.presupuesto.routes.BalancePresupuestarioReportesController.reporteBalanceDiferenciaPreventivoDefinitivo(5)">
+				    Reporte 2016 Saldos en Preventivos</a></li>
+				    <li role="presentation"><a role="menuitem" id="reporteGeneralPorExpedientePorCuenta" 
+				    data-url="" tabindex="-1" 
+				    href="@controllers.presupuesto.routes.BalancePresupuestarioReportesController.reporteBalanceDiferenciaPreventivoDefinitivo(4)">
+				    Reporte 2015 Saldos en Preventivos</a></li>
+				    <li role="presentation"><a role="menuitem" id="reporteGeneralPorExpedientePorCuenta" 
+				    data-url="" tabindex="-1" 
+				    href="@controllers.presupuesto.routes.BalancePresupuestarioReportesController.reporteBalanceDiferenciaPreventivoDefinitivo(3)">
+				    Reporte 2014 Saldos en Preventivos</a></li> -->
+				    <li><a id="reporteBalancePorFecha" href="#" 
+				    data-url="@controllers.presupuesto.routes.BalancePresupuestarioReportesController.modalReporteBalancePorFecha()">Reporte por Fecha</a></li>
+				  </ul>
+				</div>
+				
+			</div>
+		</div>
+	</div>
+	
+	
+	<div id="actions">
+
+		
+		<form action="" method="GET">
+
+				
+		<div class="row">		
+			<div class="col-sm-4">
+				<label for="cuenta" class="control-label">Cuenta Presupuestaria Padre</label>
+				<div class="input-group">
+					@inputText(formBuscador("cuenta"), 'class -> "form-control", 'id -> "cuentaAnalitica")
+					@inputText(formBuscador("cuenta_analitica_padre_id"), 'hidden -> "hidden", 'id -> "cuentaAnalitica_id")
+					<span class="input-group-addon">
+						<a href="#" 
+						   id="searchCuentaAnalitica" 
+						   class="searchModal"
+						   data-title="Selección de cuenta analítica" 
+						   data-url="@controllers.contabilidad.routes.CuentasAnaliticasController.modalBuscar()" 
+						   data-height="650" 
+						   data-width="700" 
+						   data-listen="modal.seleccion.cuentaAnalitica.simple" 
+						   data-label="#cuentaAnalitica" 
+						   data-field="#cuentaAnalitica_id">
+						   <i class="glyphicon glyphicon-search"></i>
+						 </a>
+					</span>
+				</div>
+			</div>
+			<div class="col-sm-4">
+				<label for="cuenta" class="control-label">Cuenta Presupuestaria Hija</label>
+				<div class="input-group">
+					@inputText(formBuscador("cuentaHija"), 'class -> "form-control", 'id -> "cuentaAnaliticaHija")
+					@inputText(formBuscador("cuenta_analitica_hija_id"), 'hidden -> "hidden", 'id -> "cuentaAnaliticaHija_id")
+					<span class="input-group-addon">
+						<a href="#" 
+						   id="searchCuentaAnalitica" 
+						   class="searchModal"
+						   data-title="Selección de cuenta analítica" 
+						   data-url="@controllers.contabilidad.routes.CuentasAnaliticasController.modalBuscar()" 
+						   data-height="650" 
+						   data-width="700" 
+						   data-listen="modal.seleccion.cuentaAnalitica.simple" 
+						   data-label="#cuentaAnaliticaHija" 
+						   data-field="#cuentaAnaliticaHija_id">
+						   <i class="glyphicon glyphicon-search"></i>
+						 </a>
+					</span>
+				</div>
+			</div>
+			<div class="col-sm-2">
+				<label class="control-label">Expediente</label>
+					<div class="input-group">
+						@inputText(formBuscador("expediente.nombre"), 'name -> "", 'class -> "form-control", 'id -> "expediente")
+						@inputText(formBuscador("expediente.id"), 'hidden -> "hidden", 'id -> "expediente_id")
+						<span class="input-group-addon">
+							<a href="#" class="searchModal"
+										id="searchExpediente" 
+										data-title="Selección de expediente" 
+										data-url="@controllers.expediente.routes.ExpedientesController.modalBuscar()" 
+										data-height="650" 
+										data-width="700" 
+										data-listen="modal.seleccion.expediente.simple" 
+										data-label="#expediente" 
+										data-field="#expediente_id">
+								<i class="glyphicon glyphicon-search"></i>
+							</a>
+						</span>
+					</div>
+			</div>			
+		 	<div class="col-sm-2">
+				<label class="control-label">Ejercicio
+				@select(formBuscador("ejercicio"), Ejercicio.getEjercicios().map { p => p.id.toString -> p.nombre}, 
+				'class -> "form-control select")
+				</label>
+			</div>
+		</div>		
+		<div class="row">		
+			<!-- <div class="col-sm-2">
+				<label class="control-label"> 
+					PROFE
+					@select(formBuscador("profe"),options(""->"","true"->"SI","false"->"NO"), 'class -> "form-control select")
+				</label>
+			</div>		 -->	
+			<div class="col-sm-2">
+					<label class="control-label"> 
+						Tipo Cuenta
+						@select(formBuscador("tipo_cuenta_id"), 
+						TipoCuenta.find.all().map { p => p.id.toString -> p.nombre}, 'class -> "form-control select", '_default -> "Seleccionar")
+					</label>
+				</div>
+			<div class="col-sm-2">
+				<label for="obpaciente" class="control-label">Obra Social Pac.</label>
+				<div class="input-group"> 
+					@inputText(formBuscador("obrasocial.nombre"),'class -> "form-control", 'id -> "obrasocial", 'autocomplete -> "off")
+					@inputText(formBuscador("obrasocial_id"),'hidden -> "hidden", 'id -> "obrasocial_id")
+					<span class="input-group-addon">
+						<a href="#" id="searchObraSocial" 
+						data-title="Selección de obra social" 
+						data-url="@controllers.compras.routes.ObrasSocialesController.modalBuscar()" 
+						data-height="650" data-width="700" 
+						data-listen="modal.seleccion.ob.simple" 
+						data-label="#obrasocial" data-field="#obrasocial_id"><i class="glyphicon glyphicon-search"></i></a>
+					</span>
+				</div>
+			</div>
+		</div>	
+		<div class="row">		
+			<div class="col-sm-2">
+				<div class="form-group">
+				<label for="nombre" class="control-label">&nbsp;</label>
+				<button  class="form-control btn btn-primary"><i class="glyphicon glyphicon-search"></i> Buscar</button>
+				</div>
+			</div>
+			<div class="col-sm-2">
+				<div class="form-group">
+				<label for="nombre" class="control-label">&nbsp;</label>
+				<a href="@controllers.presupuesto.routes.BalancePresupuestarioController.index()"  class="form-control btn btn-default">Limpiar</a>
+				</div>
+			</div>
+		</div>
+		</form>
+	</div>
+	
+	@if(buscador.getTotalRowCount == 0) {
+        
+        <div class="well">
+            <em>No se encuentran resultados</em>
+        </div>
+        
+    } else {
+		
+		<!-- Mostrando @buscador.getDisplayXtoYofZ(" a "," de ") resultado(s).  -->
+		<table class="table table-bordered tablaPresupuesto">
+			<thead>
+				<tr>
+					<th width="30" >Cuenta</th>
+					<th width="30" colspan="2">Saldo</th>
+					<th width="30" colspan="2">Preventivo</th>
+					<th width="30" colspan="2">Definitivo</th>
+					<th width="30" colspan="2">Obligación</th>
+					<th width="30" colspan="2">Pago</th>
+				</tr>
+				<tr>
+					<th></th>
+					<th>Total</th>
+					<th>Disponible</th>
+					<th>Total</th>
+					<th>Disponible</th>
+					<th>Total</th>
+					<th>Disponible</th>
+					<th>Total</th>
+					<th>Disponible</th>
+					<th colspan="2">Total</th>
+				</tr>
+			</thead>
+			<tbody>
+			@for(presupuesto <- buscador.getList) {
+				<tr>
+					<td>@presupuesto.nombre</td>
+					<td>@(utils.NumberUtils.moneda(BalancePresupuestario.getSaldoTotalPorCuenta(presupuesto.cuenta_analitica_padre_id,idEjercicio)))
+						<!-- @(utils.NumberUtils.moneda(presupuesto.saldo)) -->
+					</td>
+					<td class="@if(BalancePresupuestario.getSaldoTotalPorCuenta(presupuesto.cuenta_analitica_padre_id,idEjercicio).subtract(presupuesto.preventivo).compareTo(java.math.BigDecimal.ZERO) < 0){negativo}">
+						@(utils.NumberUtils.moneda(BalancePresupuestario.getSaldoTotalPorCuenta(presupuesto.cuenta_analitica_padre_id,idEjercicio).subtract(presupuesto.preventivo)))
+					</td>
+					<td>@(utils.NumberUtils.moneda(presupuesto.preventivo))</td>
+					<td class="@if(presupuesto.preventivo.subtract(presupuesto.definitivo).compareTo(java.math.BigDecimal.ZERO) < 0){negativo}">
+						@(utils.NumberUtils.moneda(presupuesto.preventivo.subtract(presupuesto.definitivo)))
+					</td>
+					<td>@(utils.NumberUtils.moneda(presupuesto.definitivo))</td>
+					<td class="@if(presupuesto.definitivo.subtract(presupuesto.obligacion).compareTo(java.math.BigDecimal.ZERO) < 0){negativo}">
+						@(utils.NumberUtils.moneda(presupuesto.definitivo.subtract(presupuesto.obligacion)))
+					</td>
+					
+					<td>@(utils.NumberUtils.moneda(presupuesto.obligacion))</td>
+					<td class="@if(presupuesto.obligacion.subtract(presupuesto.pago).compareTo(java.math.BigDecimal.ZERO) < 0){negativo}">
+						@(utils.NumberUtils.moneda(presupuesto.obligacion.subtract(presupuesto.pago)))
+					</td>
+					
+					<td colspan="2">@(utils.NumberUtils.moneda(presupuesto.pago))</td>
+				</tr>
+			
+				@{saldoTotal = saldoTotal.add(BalancePresupuestario.getSaldoTotalPorCuenta(presupuesto.cuenta_analitica_padre_id,idEjercicio))}
+				@{saldoDisponible = saldoDisponible.add(BalancePresupuestario.getSaldoTotalPorCuenta(presupuesto.cuenta_analitica_padre_id,idEjercicio).subtract(presupuesto.preventivo))}
+				@{preventivoTotal = preventivoTotal.add(presupuesto.preventivo)}
+				@{preventivoDisponible = preventivoDisponible.add(presupuesto.preventivo.subtract(presupuesto.definitivo))}
+				@{definitivoTotal = definitivoTotal.add(presupuesto.definitivo)}
+				@{definitivoDisponible = definitivoDisponible.add(presupuesto.definitivo.subtract(presupuesto.obligacion))}
+				@{obligaciónTotal = obligaciónTotal.add(presupuesto.obligacion)}
+				@{obligaciónDisponible = obligaciónDisponible.add(presupuesto.obligacion.subtract(presupuesto.pago))}
+				@{pago = pago.add(presupuesto.pago)}
+			}
+            </tbody>
+            <tfoot>
+				<tr>
+					<td align="right"><b>TOTALES</b></td>
+					<td align="center"><b>@utils.NumberUtils.moneda(saldoTotal)</b></td>
+					<td align="center"><b>@utils.NumberUtils.moneda(saldoDisponible)</b></td>
+					<td align="center"><b>@utils.NumberUtils.moneda(preventivoTotal)</b></td>
+					<td align="center"><b>@utils.NumberUtils.moneda(preventivoDisponible)</b></td>
+					<td align="center"><b>@utils.NumberUtils.moneda(definitivoTotal)</b></td>
+					<td align="center"><b>@utils.NumberUtils.moneda(definitivoDisponible)</b></td>
+					<td align="center"><b>@utils.NumberUtils.moneda(obligaciónTotal)</b></td>
+					<td align="center"><b>@utils.NumberUtils.moneda(obligaciónDisponible)</b></td>
+					<td align="center"><b>@utils.NumberUtils.moneda(pago)</b></td>
+				</tr>
+			</tfoot>
+        </table>
+		
+		@if(lbp != null){
+			<table class="table table-bordered tablaPresupuesto">
+				<thead>
+					<tr>
+						<th width="30" >Expediente</th>
+						<th width="30" colspan="2">Preventivo</th>
+						<th width="30" colspan="2">Definitivo</th>
+						<th width="30" colspan="2">Obligación</th>
+						<th width="30" colspan="2">Pago</th>
+					</tr>
+					<tr>
+					<th></th>
+						<th>Total</th>
+						<th>Disponible</th>
+						<th>Total</th>
+						<th>Disponible</th>
+						<th>Total</th>
+						<th>Disponible</th>
+						<th colspan="2">Total</th>
+					</tr>
+				</thead>
+				<tbody>	
+			@for(l <- lbp) {
+				<tr>
+					<td>@l.expediente.nombre</td>
+					<td>@(utils.NumberUtils.moneda(l.preventivo))</td>
+					<td class="@if(l.preventivo.subtract(l.definitivo).compareTo(java.math.BigDecimal.ZERO) < 0){negativo}">
+						@(utils.NumberUtils.moneda(l.preventivo.subtract(l.definitivo)))
+					</td>
+					<td>@(utils.NumberUtils.moneda(l.definitivo))</td>
+					<td class="@if(l.definitivo.subtract(l.obligacion).compareTo(java.math.BigDecimal.ZERO) < 0){negativo}">
+						@(utils.NumberUtils.moneda(l.definitivo.subtract(l.obligacion)))
+					</td>
+					
+					<td>@(utils.NumberUtils.moneda(l.obligacion))</td>
+					<td class="@if(l.obligacion.subtract(l.pago).compareTo(java.math.BigDecimal.ZERO) < 0){negativo}">
+						@(utils.NumberUtils.moneda(l.obligacion.subtract(l.pago)))
+					</td>
+					
+					<td colspan="2">@(utils.NumberUtils.moneda(l.pago))</td>
+				</tr>	
+				@{epreventivoTotal = epreventivoTotal.add(l.preventivo)}
+				@{epreventivoDisponible = epreventivoDisponible.add(l.preventivo.subtract(l.definitivo))}
+				@{edefinitivoTotal = edefinitivoTotal.add(l.definitivo)}
+				@{edefinitivoDisponible = edefinitivoDisponible.add(l.definitivo.subtract(l.obligacion))}
+				@{eobligaciónTotal = eobligaciónTotal.add(l.obligacion)}
+				@{eobligaciónDisponible = eobligaciónDisponible.add(l.obligacion.subtract(l.pago))}
+				@{epago = epago.add(l.pago)}
+			}
+				</tbody>
+				<tfoot>
+					<tr>
+						<td align="right"><b>TOTALES</b></td>
+						<td align="center"><b>@utils.NumberUtils.moneda(epreventivoTotal)</b></td>
+						<td align="center"><b>@utils.NumberUtils.moneda(epreventivoDisponible)</b></td>
+						<td align="center"><b>@utils.NumberUtils.moneda(edefinitivoTotal)</b></td>
+						<td align="center"><b>@utils.NumberUtils.moneda(edefinitivoDisponible)</b></td>
+						<td align="center"><b>@utils.NumberUtils.moneda(eobligaciónTotal)</b></td>
+						<td align="center"><b>@utils.NumberUtils.moneda(eobligaciónDisponible)</b></td>
+						<td align="center"><b>@utils.NumberUtils.moneda(epago)</b></td>
+					</tr>
+				</tfoot>
+				
+        	</table>
+		}
+		
+		
+ 	 }
+
+}
+		
+<script>
+$(function(){
+	$('#searchCuentaAnalitica').modalSearch();
+	$('#searchExpediente').modalSearch();
+	$('#searchObraSocial').modalSearch();
+	
+	$('#reporteBalancePorFecha').click( function() {  
+		var url = $(this).attr("data-url");
+		dialogoPasarBorrador = crearDialogoGeneral(url);
+		dialogoPasarBorrador.dialog({title: "Reporte Balance por Fecha",width:850,height: 300,});
+	});
+	
+	$('#accionReporteGeneralPorExpedientePorCuenta').click( function() {  
+		var url = $(this).attr("data-url");
+		dialogoPasarBorrador = crearDialogoGeneral(url);
+		dialogoPasarBorrador.dialog({title: "Reporte Balance",});
+	});
+	
+	$('#accionReporteGeneralPorExpedientePorCuentaResumido').click( function() {  
+		var url = $(this).attr("data-url");
+		dialogoPasarBorrador = crearDialogoGeneral(url);
+		dialogoPasarBorrador.dialog({title: "Reporte Balance Resumido",});
+	});
+	
+});
+</script>
+	
+	

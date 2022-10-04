@@ -1,0 +1,67 @@
+@(formBuscador: DynamicForm)
+@import helper._
+@import utils._
+@import models.auth._
+@implicitFieldConstructor = @{ FieldConstructor(simpleInput.render) }
+
+@views.html.dashboard.mainDashboard("Deudas por Proveedor") {
+@views.html.dashboard.deudasGlobalizadas.navdeudas(formBuscador)
+
+<div class="page-header">
+	<div class="row">
+		<div class="col-sm-7">
+			<h1>Deudas Globalizadas</h1>
+		</div>
+		
+		<div class="col-sm-5">
+			<div class="dropdown pull-right">
+			 <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown">
+			 	<i class="glyphicon glyphicon-list-alt"></i>
+			    Reportes
+			    <span class="caret"></span>
+			  </button>
+			  <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
+			  	
+			  	
+			  </ul>
+			</div>
+			
+			<div class="dropdown pull-right btn-header">
+			 <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown">
+			 	<i class="glyphicon glyphicon-cog"></i>
+			    Acciones
+			    <span class="caret"></span>
+			  </button>
+			  <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
+			  	<li role="presentation" class="dropdown-header">Acciones Masivas</li>
+			  </ul>
+			</div>
+				
+			
+		</div>
+	</div>
+</div>
+<div class="row"  style="">
+	<div class="col-sm-12" style="">
+	</div>
+</div>
+
+<script>
+$( function (){
+	$('#tr-otrosProveedores').click( function(){
+		if($("#listaOtrosProveedores").hasClass("hidden")){
+			$( "#listaOtrosProveedores" ).removeClass( "hidden");
+		}else{
+			$( "#listaOtrosProveedores" ).addClass( "hidden");
+		}
+	});
+	$('#tr-otrosProveedoresProfe').click( function(){
+		if($("#listaOtrosProveedoresProfe").hasClass("hidden")){
+			$( "#listaOtrosProveedoresProfe" ).removeClass( "hidden");
+		}else{
+			$( "#listaOtrosProveedoresProfe" ).addClass( "hidden");
+		}
+	});
+});	
+</script>
+}

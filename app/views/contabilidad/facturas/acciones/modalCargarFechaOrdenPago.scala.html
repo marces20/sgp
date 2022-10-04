@@ -1,0 +1,28 @@
+@(formBuscador: DynamicForm)
+@import helper._
+@implicitFieldConstructor = @{ FieldConstructor(simpleInput.render) } 
+																			
+@helper.form(action = controllers.contabilidad.routes.FacturasAccionesController.cargarFechaOrdenPagoMasivo(), 'id -> "formCargarFechaOrdenPagoFactura") {	
+	
+	@views.html.tags.successError()
+	<div class="row">
+		<div class="col-sm-3">
+			<div class="form-group">
+				<label for="fecha_orden_pago_modal" class="control-label">Fecha orden de pago</label> 
+				<input name="fecha_orden_pago_modal" id="fecha_orden_pago_modal" class="form-control date"/>
+			</div>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-sm-5"><br />
+			<button type="submit" class="btn btn-default" title="Agregar Fecha Orden de Pago"><i class="glyphicon glyphicon-arrow-right"></i> Cargar Fecha Orden de Pago</button>
+		</div>
+	</div>
+
+}
+<script>
+$( function(){
+	$("#fecha_orden_pago_modal").mask("99/99/9999");
+});
+</script>
+@flash().clear()

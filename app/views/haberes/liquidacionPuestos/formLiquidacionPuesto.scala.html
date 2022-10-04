@@ -1,0 +1,61 @@
+@(baseForm: Form[models.haberes.LiquidacionPuesto])
+@import helper._
+@import utils._
+@import models.auth._
+@import models.haberes._
+@implicitFieldConstructor = @{ FieldConstructor(simpleInput.render) } 
+<script>
+$( function(){ $('.searchModal').modalSearch();})
+</script>		
+	<div class="row menu-acciones">
+		<div class="col-sm-10">
+			<button type="submit" class="btn btn-default" title="Guardar liquidacion puesto"><i class="glyphicon glyphicon-floppy-disk"></i> Guardar</button>
+			<a href="@if(request().getHeader("referer")){ @request().getHeader("referer") } else {@controllers.haberes.routes.LiquidacionPuestosController.index()@UriTrack.decode()}" title="Cancelar editar" class="btn btn-default"><i class="glyphicon glyphicon-floppy-remove"></i> Cancelar</a>
+		</div>
+		<div class="col-sm-2">
+			<a href="@UriTrack.decode()" title="Volver al listado" class="btn btn-default"><i class="glyphicon glyphicon-list"></i></a> 
+		</div>	
+	</div>
+	
+	<input type="hidden" name=@UriTrack.getKey() value="@UriTrack.code()" />
+	@inputText(baseForm("id"), 'type -> "hidden", 'id -> "liquidacionPuestoId")
+	@inputText(baseForm("liquidacion_mes_id"), 'type -> "hidden", 'id -> "liquidacionMesId")
+	<div class="row">
+		<div class="col-sm-4">
+			<div class="form-group">
+				<label for="inputliquidacionMes" class="control-label">N° Liquidación</label> 
+				<p class="form-control-static form-control">@baseForm.field("liquidacionMes.nro_liquidacion_parque").value</p>
+			</div>
+		</div>
+		<div class="col-sm-4">
+			<div class="form-group @if(baseForm.error("nro_liq_puesto") != null) {has-error}">
+				<label for="inputLiqPuesto" class="control-label">N° Liquidación Puesto</label> 
+				@inputText(baseForm("nro_liq_puesto"), 'class -> "form-control")
+				@baseForm("nro_liq_puesto").error.map{ error =>
+					<div class="text-error">@error.message</div>
+				}
+			</div>
+		</div>
+		
+		<div class="col-sm-4">
+			<label for="puestoLaboral" class="control-label">Puesto Laboral</label> 
+			<div class="input-group @if(baseForm.error("puesto_laboral_id") != null) {has-error}else{has-required}">
+				@inputText(baseForm("puestoLaboral.legajo.agente.apellido"),'class -> "form-control", 'id -> "puesto_laboral")
+				@inputText(baseForm("puesto_laboral_id"),'hidden -> "hidden", 'id -> "puesto_laboral_id")
+				<span class="input-group-addon"><a href="#" class="searchModal" id="searchPuestoLaboral" 
+															data-title="Selección de Puesto Laboral" 
+															data-url="@controllers.haberes.routes.PuestosLaboralesController.modalBuscar()" 
+															data-height="650" 
+															data-width="700" 
+															data-listen="modal.seleccion.puestoLaboral.simple" 
+															data-label="#puesto_laboral" 
+															data-field="#puesto_laboral_id">
+															<i class="glyphicon glyphicon-search"></i></a></span>
+			</div>
+			@baseForm("puesto_laboral_id").error.map{ error =>
+				<div class="text-error">@error.message</div>
+			}
+		</div>
+		 
+	</div>
+	

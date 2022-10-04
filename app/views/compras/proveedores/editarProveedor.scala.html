@@ -1,0 +1,40 @@
+@(provForm: Form[Proveedor])
+@import helper._
+@implicitFieldConstructor = @{ FieldConstructor(simpleInput.render) } 
+@views.html.compras.mainCompras("Editar proveedor") {
+
+<div class="page-header">
+	<div class="row">
+		<div class="col-sm-9">
+			<h1>Editar proveedor</h1>
+		</div>
+		
+		<div class="col-sm-3">
+			<a href="@controllers.compras.routes.ProveedoresController.crear"  class="btn btn-default"><i class="glyphicon glyphicon-plus-sign"></i> Nuevo proveedor</a>
+		</div>
+	</div>
+</div>
+@if(flash.containsKey("success")) {
+	<div class="alert alert-success">
+		<i class="glyphicon glyphicon-ok-circle"></i> @flash.get("success")
+	</div>
+}
+@if(flash.containsKey("error")) {
+	<div class="alert alert-danger">
+		<i class="glyphicon glyphicon-remove-sign"></i> @flash.get("error")
+	</div>
+}
+
+@helper.form(action = controllers.compras.routes.ProveedoresController.actualizar()) {
+	@inputText(provForm("id"), 'hidden -> "hidden",'id->"idProveeedor")
+	@views.html.compras.proveedores.form(provForm)
+	@views.html.compras.proveedores.tabsProveedores(provForm, true)
+	@views.html.compras.proveedores.tabsAtributos(provForm, true)
+	
+	
+}
+
+
+
+
+}

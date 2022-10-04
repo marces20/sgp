@@ -1,0 +1,24 @@
+@(provForm: Form[Proveedor] = null,formularioCarga: Boolean)
+@import java.util.List
+	
+	<ul class="nav nav-tabs">
+	  <li class="active"><a href="#contenedorAtributos" data-toggle="tab">Atributos</a></li>
+	   <li><a href="#contenedorDatosDgr" data-toggle="tab">Datos DGR 44/2018</a></li>
+	</ul>
+	<div class="tab-content">
+		<div class="tab-pane active" id="contenedorAtributos">
+			<div class="row">
+				<div class="col-sm-12">
+					@views.html.compras.proveedores.contenidoTabAtributos(formularioCarga, provForm)
+				</div>
+			</div>	
+		</div>
+		
+		<div class="tab-pane" id="contenedorDatosDgr">
+			<div class="row">
+				<div class="col-sm-12">
+					@views.html.compras.proveedores.contenidoTabDatosDgr(formularioCarga, provForm)
+				</div>
+			</div>	
+		</div>
+	</div>

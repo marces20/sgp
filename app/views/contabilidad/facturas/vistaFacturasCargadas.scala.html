@@ -1,0 +1,158 @@
+@(buscador: utils.pagination.Pagination[FacturaDato], formBuscador: DynamicForm, paginadorFicha: utils.pagination.PaginadorFicha)
+@import helper._
+@import utils._
+@import models.auth._
+@implicitFieldConstructor = @{ FieldConstructor(simpleInput.render) } 
+@scripts = {
+	<script src="@routes.Assets.at("javascripts/contabilidad/facturas.js")" type="text/javascript"></script>
+}
+
+@views.html.contabilidad.mainContabilidad("Vista de facturas cargadas", scripts) {
+
+<div class="page-header">
+	<div class="row">
+		<div class="col-sm-7"><h1>Vista de facturas cargadas</h1></div>
+		<div class="col-sm-5">
+			<div class="dropdown pull-right">
+				<button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown"> <i class="glyphicon glyphicon-list-alt"></i> Reportes <span class="caret"></span></button>
+
+				<ul class="dropdown-menu">
+					<li><a id="reporteFacturasCargadas" href="#" data-url="@controllers.contabilidad.routes.FacturasReportesController.reporteFacturasCargadas()">Reporte</a></li>
+				</ul>
+			</div>
+			<div class="dropdown pull-right btn-header">
+			</div>
+		</div>
+	</div>
+</div>
+
+	@views.html.tags.successError()
+	<div id="actions">
+		<form action="" id="formSearchFacturas" method="GET">
+			<div class="row" >
+			
+				<div class="col-sm-2">
+					<label class="control-label">Expediente</label>
+					<div class="input-group">
+						@inputText(formBuscador("expediente.nombre"), 'name -> "", 'class -> "form-control", 'id -> "expediente")
+						@inputText(formBuscador("expediente.id"), 'hidden -> "hidden", 'id -> "expediente_id")
+						<span class="input-group-addon">
+							<a href="#" class="searchModal"
+										id="searchExpediente" 
+										data-title="Selección de expediente" 
+										data-url="@controllers.expediente.routes.ExpedientesController.modalBuscar()" 
+										data-height="650" 
+										data-width="700" 
+										data-listen="modal.seleccion.expediente.simple" 
+										data-label="#expediente" 
+										data-field="#expediente_id">
+								<i class="glyphicon glyphicon-search"></i>
+							</a>
+						</span>
+					</div>
+				</div>	
+				<div class="col-sm-2">
+					<label class="control-label">Proveedores
+						<div class="input-group">
+							@inputText(formBuscador("proveedor.nombre"), 'name -> "", 'class -> "form-control", 'id -> "proveedor")
+							@inputText(formBuscador("proveedor.id"), 'hidden -> "hidden", 'id -> "proveedor_id")
+							<span class="input-group-addon">
+								<a href="#" class="searchModal"
+											id="searchProveedor" 
+											data-title="Selección de Proveedores" 
+											data-url="@controllers.compras.routes.ProveedoresController.modalBuscar()" 
+											data-height="650" 
+											data-width="700" 
+											data-listen="modal.seleccion.proveedor.simple" 
+											data-label="#proveedor" 
+											data-field="#proveedor_id">
+									<i class="glyphicon glyphicon-search"></i>
+								</a>
+							</span>
+						</div>
+					</label>
+				</div>
+				<div class="col-sm-2">
+				<label for="orden_pago_id" class="control-label">Orden de pago N° 
+					<div class="input-group">
+						@inputText(formBuscador("ordenPago.numero"), 'class -> "form-control", 'id -> "orden_pago")
+						@inputText(formBuscador("ordenPago.id"),'hidden -> "hidden", 'id -> "orden_pago_id")
+						<span class="input-group-addon">
+							<a href="#" class="searchModal"
+										id="searchOp" 
+										data-title="Selección de órdenes de pago" 
+										data-url="@controllers.contabilidad.routes.OrdenesPagosController.modalBuscar()" 
+										data-height="650" 
+										data-width="700" 
+										data-listen="modal.seleccion.orden-pago.simple" 
+										data-label="#orden_pago" 
+										data-field="#orden_pago_id">
+								<i class="glyphicon glyphicon-search"></i>
+							</a>
+						</span>
+					</div>
+				</label>
+				</div>
+				<div class="col-sm-2">
+					<div class="form-group">
+					<label for="nombre" class="control-label">&nbsp;</label>
+					<button  class="form-control btn btn-primary"><i class="glyphicon glyphicon-search"></i> Buscar</button>
+					</div>
+				</div>
+				<div class="col-sm-2">
+					<div class="form-group">
+					<label for="nombre" class="control-label">&nbsp;</label>
+					<a href="@controllers.contabilidad.routes.FacturasController.index()"  class="form-control btn btn-default">Limpiar</a>
+					</div>
+				</div>
+			</div>
+		</form>
+	</div>	
+	<form  id="tabla">
+		<table id="listaFacturas" class="table table-bordered">
+			<thead>
+				 <tr style="background: #FFFFFF;"><td colspan="6">Mostrando @buscador.getDisplayXtoYofZ(" a "," de ") resultado(s). </td></tr>
+				 <tr>
+				 	<th width="50"><input type="checkbox" name="checkAll" id="checkAll"/></th>
+				 	<th>Proveedor</th>
+				 	<th>Expediente</th>
+				 	<th>OP</th>
+				 	<th>N° Factura</th>
+				 	<th>Fecha Pago</th>
+				 	<th>Monto Orden Pago</th>
+				 	<th>Monto OP</th>
+				 	<th>Monto F/C</th>
+				 	<th>Monto</th>
+				 </tr>
+			</thead>
+			<tbody>
+				
+			@for(f <- buscador.getList) {
+				@paginadorFicha.add(f.id.toString)
+				
+				<tr data-estado="" data-href="">
+					<td><input type="checkbox" name="check_listado[]" value="@f.id" class="notSeleccion" id="check-@f.id"/></td>		
+					<td>@if(f.factura.proveedor != null){@(f.factura.proveedor.nombre)}</td>
+					<td>@if(f.factura.expediente != null){@(f.factura.expediente.getExpedienteEjercicio())}</td>	
+					<td>@if(f.factura.ordenPago != null){@(f.factura.ordenPago.getNombreCompleto())}</td>	
+					<td>@if(f.numero_factura != null){@(f.numero_factura)}</td>	
+					<td>@if(f.factura.fecha_pago != null){@(utils.DateUtils.formatDate(f.factura.fecha_pago))}</td>		
+					<td>@(utils.NumberUtils.moneda(Factura.getTotalPorOp(f.factura.orden_pago_id)))</td>
+					<td>@(utils.NumberUtils.moneda(f.factura.orden.getTotalTotal()))</td>
+					<td>@(utils.NumberUtils.moneda(Factura.getTotalMontoFacturasCargadas(f.factura.id)))</td>
+					<td>@(utils.NumberUtils.moneda(f.getMonto()))</td>
+				</tr>
+             }
+             @paginadorFicha.guardar()
+	        </tbody>
+	        <tfoot>
+	        	<tr>
+	        		<td colspan="6">Mostrando @buscador.getDisplayXtoYofZ(" a "," de ") resultado(s).</td>
+	        	</tr>
+	        </tfoot>
+        </table>
+	</form>
+		<div class="pagination pull-right">
+		    @views.html.helpers.paginador(buscador, controllers.contabilidad.routes.FacturasController.vistaFacturasCargadas())
+		</div>
+}		

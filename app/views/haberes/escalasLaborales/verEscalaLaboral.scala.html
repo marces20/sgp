@@ -1,0 +1,49 @@
+@(lcForm: Form[models.haberes.EscalaLaboral],lc:models.haberes.EscalaLaboral)
+@import helper._
+@import utils._
+@scripts = {
+	<script src="@routes.Assets.at("javascripts/haberes/escalaLaboral.js")" type="text/javascript"></script>
+}
+@implicitFieldConstructor = @{ FieldConstructor(simpleInput.render) } 
+
+@views.html.haberes.mainHaberes("Vista Escala Laboral",scripts) {
+	<div class="page-header">
+		<div class="row">
+			<div class="col-sm-7">
+				<h1>Vista Escala Laboral</h1>
+			</div>
+			<div class="col-sm-5">
+				
+			</div>
+		</div>
+	</div>		
+	<div class="row menu-acciones">
+		<div class="col-sm-10">
+			<a href="@controllers.haberes.routes.EscalasLaboralesController.crear()"  class="btn btn-default"><i class="glyphicon glyphicon-plus-sign"></i> Nueva Escala</a>
+			<a href="@controllers.haberes.routes.EscalasLaboralesController.editar(lc.id)@UriTrack.get("&")"  class="btn btn-default"><i class="glyphicon glyphicon-edit"></i> Editar</a>
+			<a href="@controllers.haberes.routes.EscalasLaboralesController.eliminar(lc.id)@UriTrack.get("&")"  class="btn btn-default delete-confirm-link"><i class="glyphicon glyphicon-trash icono-eliminar"></i> Eliminar</a>
+		</div>
+		<div class="col-sm-2">
+			<a href="@UriTrack.getOnNull(controllers.haberes.routes.EscalasLaboralesController.index().absoluteURL())" class="btn btn-default"><i class="glyphicon glyphicon-list"></i></a> 
+		</div> 
+	</div>	
+	
+	<input type="hidden" id="escalaId" name="escalaId" value="@lc.id"/>
+	<div class="row">
+		
+		 <div class="col-sm-5">
+			<div class="form-group">
+				<label class="control-label">Denominacion</label>
+				<p class="form-control-static form-control">@lcForm.field("nombre").value</p>
+			</div>
+		</div>
+		 
+	</div>
+	 
+	 
+	 
+	 
+	 
+	
+	 
+}

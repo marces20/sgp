@@ -1,0 +1,36 @@
+@(formBuscador: DynamicForm)
+@import helper._
+@implicitFieldConstructor = @{ FieldConstructor(simpleInput.render) } 
+
+@helper.form(action = controllers.contabilidad.routes.PagosAccionesController.modificarFecha(), 'id -> "formModificarFecha") {
+	
+	@views.html.tags.successError()
+	
+	@formBuscador("id_pago").error.map{ error =>
+		<div class="alert alert-danger"><i class="glyphicon glyphicon-remove-sign"></i> @error.message</div>
+	}		
+				
+	<div class="row">
+		<div class="col-sm-3">
+			<div class="form-group @if(formBuscador.error("fecha_pago") != null) {has-error}">
+				<label for="inputFechaPago" class="control-label">Fecha Pago</label> 
+				@inputText(formBuscador("fecha_pago"), 'class -> "form-control", 'id -> "fechaParaModificar", 'autofocus -> "autofocus")
+			</div>
+				@formBuscador("fecha_pago").error.map{ error =>
+					<div class="text-error">@error.message</div>
+				}
+		</div>
+		
+		<div class="col-sm-5"><br />
+			<button type="submit" class="btn btn-default" title="Guardar"><i class="glyphicon glyphicon-floppy-disk"></i> Guardar</button>
+		</div>
+		
+	</div>
+	
+}
+@flash().clear()
+<script>
+ $( function () {
+	 $('#fechaParaModificar').mask("99/99/9999");
+ });
+</script>

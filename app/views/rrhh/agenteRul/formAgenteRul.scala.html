@@ -1,0 +1,66 @@
+@(lineaForm: Form[AgenteRul])
+@import helper._
+@implicitFieldConstructor = @{ FieldConstructor(simpleInput.render) } 
+
+@if(flash.containsKey("error")) {
+	<div class="alert alert-danger">
+		<i class="glyphicon glyphicon-remove-sign"></i> @flash.get("error")
+	</div>
+}
+
+<div class="row">
+	@inputText(lineaForm("agente_id"), 'type -> "hidden")
+	<div class="col-sm-4">
+		<div class="form-group @if(lineaForm.error("tipo_relacion_laboral_id") != null) {has-error}else{has-required}">
+			<label for="@lineaForm("tipo_relacion_laboral_id")" class="control-label">Tipo Relación Laboral</label>
+			@select(lineaForm("tipo_relacion_laboral_id"), 
+			TipoRelacionLaboral.find.orderBy("orden asc").findList().map { p => p.id.toString -> p.nombre}, 
+			'class -> "form-control select", '_default -> "Seleccionar")
+			
+			@lineaForm("tipo_relacion_laboral_id").error.map{ error =>
+				<div class="text-error">@error.message</div>
+			}
+		</div>
+	</div>
+	 
+	<div class="col-sm-3">
+		<div class="form-group @if(lineaForm.error("institucion_externa_id") != null) {has-error}else{has-required}">
+			<label for="@lineaForm("institucion_externa_id")" class="control-label">Institucion Externa</label>
+			@select(lineaForm("institucion_externa_id"), 
+			InstitucionExterna.find.all().map { p => p.id.toString -> p.nombre}, 
+			'class -> "form-control select", '_default -> "Seleccionar")
+			
+			@lineaForm("institucion_externa_id").error.map{ error =>
+				<div class="text-error">@error.message</div>
+			}
+		</div>
+	</div>
+	
+	
+</div>	
+
+<div class="row">
+
+	<div class="col-sm-8">
+		<div class="form-group">
+			<label for="inputNota" class="control-label">Nota</label> 
+			@inputText(lineaForm("nota"), 'class -> "form-control", 'id -> "nota")
+		</div>
+	</div>
+</div>
+
+<div class="row form-actions">
+    <div class="col-lg-offset-4 col-lg-8">
+    	<a href="" class="btn btn-default cancelar"><i class="glyphicon glyphicon-floppy-remove"></i>Cancelar</a>
+     	<button type="submit" class="btn btn-default"><i class="glyphicon glyphicon-floppy-disk"></i>Guardar</button>	
+    </div>
+</div>
+<script>
+$( function(){
+ 
+
+});
+</script>	
+
+
+@flash().clear()

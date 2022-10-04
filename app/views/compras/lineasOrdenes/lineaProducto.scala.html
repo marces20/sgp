@@ -1,0 +1,44 @@
+@(linea: OrdenLinea, editable: Boolean)
+
+@getPacientes(linea: OrdenLinea) = @{
+	var pacientes:String = new String()
+	if(linea != null && linea.ordenLineaCliente != null && linea.ordenLineaCliente.size() > 0){
+		for(olp <- linea.ordenLineaCliente) {
+			pacientes += olp.cliente.nombre.toUpperCase()+" - ID:"+olp.cliente.id_paciente_rismi+"\n" 
+		}
+	}
+	pacientes
+}
+
+					
+
+<tr data-id="@linea.id">
+	@if(editable){
+		<td><input type="checkbox" name="check_listado[]" value="@linea.id" class="check_listado notSeleccion" id="check-@linea.id"/></td>
+		<td class="accion-editar"><a class="btn btn-default btn-xs modificarProducto" href="@controllers.compras.routes.LineasOrdenesController.editar(linea.id)"><i class="glyphicon glyphicon-edit"></i></a></td>
+	}
+	<td>@linea.producto.nombre</td>
+	<td>@linea.cantidad</td>
+	<td>@linea.udm.nombre</td>
+	<td>@utils.NumberUtils.moneda(linea.precio, 2)</td>
+	<td class="cuentaAnaliticaEnLinea">@if(linea.cuentaAnalitica == null){No asociada} else {@linea.cuentaAnalitica.codigo @linea.cuentaAnalitica.nombre}</td>
+	<td>@if(linea.departamento != null){@linea.departamento.nombre}</td>
+	<td>@(utils.NumberUtils.moneda(linea.precio.multiply(linea.cantidad), 2))</td>
+	@if(editable){
+		<td>
+			<a class="btn btn-default btn-xs eliminarProducto" href="@controllers.compras.routes.LineasOrdenesController.eliminar(linea.id)">
+			<i class="glyphicon glyphicon-trash icono-eliminar"></i></a>
+			@if(linea != null && linea.ordenLineaCliente != null && linea.ordenLineaCliente.size() > 0){
+				<div class='tip-top pointer' style="display: inline;" title='@getPacientes(linea)'>
+				<i class="glyphicon glyphicon-user"></i></div>
+			}
+		</td>
+		 
+	}else{
+		@if(linea != null && linea.ordenLineaCliente != null && linea.ordenLineaCliente.size() > 0){
+			<td><div class='tip-top pointer' title='@getPacientes(linea)'><i class="glyphicon glyphicon-user"></i></div></td>
+		}else{
+			<td></td>
+		}
+	}
+</tr>

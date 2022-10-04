@@ -1,0 +1,18 @@
+@(categoriaForm: Form[models.haberes.CategoriaLaboral])
+@import helper._
+
+@views.html.haberes.mainHaberes("Crear Categoria Laboral") {
+
+	<div class="page-header">
+		<div class="row">
+			<div class="col-sm-10">
+				<h1>Crear nueva Categoria</h1>
+			</div>
+		</div>
+	</div>
+	@views.html.tags.successError()
+    
+    @helper.form(action = controllers.haberes.routes.CategoriasLaboralesController.guardar()) {
+		@views.html.haberes.categoriasLaborales.formCategoriaLaboral(categoriaForm) 	
+	}
+}

@@ -1,0 +1,15 @@
+@(formBuscador: DynamicForm)
+@import helper._
+@implicitFieldConstructor = @{ FieldConstructor(simpleInput.render) } 
+	
+@helper.form(action = controllers.haberes.routes.LiquidacionPuestosAccionesController.pasarAprobadoMasivo(), 'id -> "formPasarAprobadoLiquidacionPuestos") {	
+	
+	@views.html.tags.successError()
+	
+	<div class="col-sm-5"><br />
+		<button type="submit" class="btn btn-default" title="Pasar a Aprobado">
+		<i class="glyphicon glyphicon-arrow-right"></i> Pasar a Aprobado</button>
+	</div>
+
+}
+@flash().clear()

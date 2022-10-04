@@ -1,0 +1,19 @@
+@(formularioCarga: Boolean, autorizadoForm: Form[Autorizado] = null,autorizado:Autorizado= null)
+
+@import java.util.List
+
+@if(autorizado == null){
+	<p>Para cargar autorizado primero debe dar de alta el Autorizado</p>
+} else {
+	<script>
+		$( function (){
+			$.get('@controllers.dashboard.routes.AutorizadoLineasController.index(autorizado.id, formularioCarga)', function(data){
+				$('#listaLineaAutorizados').parent().html(data);
+			})
+		});
+	</script>
+}
+
+<div id="listaLineaAutorizados">
+
+</div>

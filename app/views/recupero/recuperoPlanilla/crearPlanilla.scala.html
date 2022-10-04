@@ -1,0 +1,29 @@
+@(planillaForm: Form[models.recupero.RecuperoPlanilla])
+@import helper._
+
+@scripts = {
+	<script src="@routes.Assets.at("javascripts/recupero/planilla.js")" type="text/javascript"></script>
+}
+
+@views.html.recupero.mainRecupero("Crear Planilla", scripts) {
+
+	<div class="page-header">
+		<div class="row">
+			<div class="col-sm-7">
+				<h1>Crear nueva planilla</h1>
+			</div>
+		</div>
+	</div>
+	@if(flash.containsKey("error")) {
+		<div class="alert alert-danger">
+			@flash.get("error")
+		</div>
+    }
+    
+    @helper.form(action = controllers.recupero.routes.RecuperoPlanillasController.guardar()) {
+
+		@views.html.recupero.recuperoPlanilla.formPlanilla(planillaForm) 
+
+
+	}
+}

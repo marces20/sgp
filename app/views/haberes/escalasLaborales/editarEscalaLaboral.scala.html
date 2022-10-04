@@ -1,0 +1,25 @@
+@(escalaForm: Form[models.haberes.EscalaLaboral])
+@import helper._
+@implicitFieldConstructor = @{ FieldConstructor(simpleInput.render) }
+
+@views.html.haberes.mainHaberes("Modificar Escala Laboral") {
+
+	<div class="page-header">
+		<div class="row">
+			<div class="col-sm-10">
+				<h1>Editar Escala laboral</h1>
+			</div>
+			
+			<div class="col-sm-2">
+			</div>
+		</div>
+	</div>
+	
+	@views.html.tags.successError()
+	
+	@helper.form(action = controllers.haberes.routes.EscalasLaboralesController.actualizar()) {
+		@inputText(escalaForm("id"), 'hidden -> "hidden")
+		@views.html.haberes.escalasLaborales.formEscalaLaboral(escalaForm)
+	}
+
+}

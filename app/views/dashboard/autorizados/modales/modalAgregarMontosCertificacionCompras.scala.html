@@ -1,0 +1,117 @@
+@(listaCert: List[CertificacionCompra],idAutorizado:Long,idOrdenCompra:Long,tipo_cuenta_id:Long)
+@import java.math.BigDecimal;var monto_t=new java.math.BigDecimal(0);
+<form action="@controllers.dashboard.routes.AutorizadosController.cargarLineasAutorizadosCertificacionesCompras()" method="POST" id="formCargarLineasAutorizadosActas">
+
+<input type="hidden" name="idAutorizado" value="@idAutorizado"/>
+<input type="hidden" name="profe" value=""/>
+<input type="hidden" name="idOrdenCompra" value="@idOrdenCompra"/> 
+<input type="hidden" name="tipo_cuenta_id" value="@tipo_cuenta_id"/> 
+
+<table id="tablaAutorizadosActas" class="table table-bordered table-hover">
+	<thead>
+		<tr>
+ 			<th colspan="4" align="right">
+	 			 <span style="font-weight:bold;font-size:14px;">TOTAL A CARGAR</span>
+			</th>
+			<th colspan="2" align="center">
+	 			 <span class="totales" style="font-weight:bold;font-size:14px;">$0.00</span>
+			</th>
+ 		</tr>
+ 		 
+		<tr>
+			<th width="30">
+				<input type="checkbox" name="" id="seleccionarTodos"/>
+			</th>
+			<th width="40">N°</th>
+			<th width="40">Fecha</th>
+			<th width="40">Periodo</th>
+			<th width="100">Total</th>
+			<th width="100">Monto a Cargar</th>
+		</tr>
+		
+	</thead>
+	<tbody>
+		
+	   		@for(a <- listaCert) {
+				<tr data-id="@a.id" class="seleccionarFila">
+					<td>
+						<input type="checkbox" class="checkFila" name="id[]" value="@a.id"/>
+					</td>
+					<td>CC</td>
+					
+					<td align="center">@if(a.fecha_certificacion != null){@(utils.DateUtils.formatDate(a.fecha_certificacion))}</td>
+					<td>@if(a.periodo_id != null) {@Periodo.find.byId(a.periodo_id).nombre}</td>
+					<td align="center">
+						@(utils.NumberUtils.moneda(a.base))
+						<input type="hidden" name="monto_total[]" disabled="disabled" class="montoTotal form-control" value="@a.base"/>
+					</td>
+					<td>
+						<input type="input" name="monto[]" disabled="disabled" class="monto form-control" />
+						<p class="pErrores" style="font-weight:bold;"></p>
+					</td>
+				</tr>    
+				@{monto_t= monto_t.add(a.getTotal())}
+		 	}	 	
+		 	<tr>
+					<td colspan="4" align="right"><span style="font-weight:bold;font-size:14px;">Total Certificaciones</span></td>
+					<td align="center">
+						@(utils.NumberUtils.moneda(monto_t))
+						<input type="hidden" name="monto_t" class="" value="@monto_t"/>
+					</td>
+					<td></td>
+			</tr>		
+   	</tbody>
+   	<tfoot>
+   		<tr>
+ 			<td colspan="4" align="right">
+	 			 <span style="font-weight:bold;font-size:14px;">TOTAL A CARGAR</span>
+			</td>
+			<td colspan="2" align="center">
+	 			 <span class="totales" style="font-weight:bold;font-size:14px;">$0.00</span>
+			</td>
+ 		</tr>
+ 		<tr>
+ 			<td colspan="6" align="center">
+	 			<div class="form-group">
+					<label for="nombre" class="control-label">&nbsp;</label>
+					<div id="loadingAgregarMontoActa" class="loading hide"></div>
+					<button  id="btn-agregarMontoActa" class="form-control btn btn-primary">Cargar</button>
+				</div>
+			</td>
+ 		</tr>
+	</tfoot>
+   </table>
+ </form>  
+ 
+ 
+ 
+ 
+ 
+<script>
+$( function(){
+	$(".monto,.monto_general").numeric_input({allowNegative: false});
+	
+	$('.monto').focusout( function(){
+		calcularTotal ($("#tablaAutorizados tr"));
+	});
+	
+	$('.checkFila').change( function(){	
+		seleccionAutorizado( $(this).closest('tr') );
+		$("#tablaAutorizadosActas tr").removeClass("alert alert-danger");
+		$(".pErrores").html("");
+		calcularTotal($("#tablaAutorizados tr"));
+	});
+	
+	$('#seleccionarTodos').change( function(){
+		var table = $(this).closest('table');
+		table.find("input[name='id[]']").prop("checked", $(this).prop("checked"));
+		seleccionAutorizado( $('#tablaAutorizadosActas tbody tr') );
+		$("#tablaAutorizadosActas tr").removeClass("alert alert-danger");
+		$(".pErrores").html("");
+		calcularTotal ($("#tablaAutorizadosActas tr"));
+	});
+	 
+	
+	
+});
+</script>

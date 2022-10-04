@@ -1,0 +1,527 @@
+@(countAgentes:java.util.TreeMap[String,java.util.Map[String,String]],
+altaList:java.util.TreeMap[String,java.util.Map[String,String]],
+bajaList:java.util.TreeMap[String,java.util.Map[String,String]],
+escalasNoCmList:java.util.TreeMap[String,java.util.Map[String,String]],
+escalasLaborales:List[models.haberes.EscalaLaboral],
+escalasCmList:java.util.TreeMap[String,java.util.Map[String,String]],
+escalasProfesionNoCm:java.util.TreeMap[String,java.util.Map[String,java.math.BigDecimal]],
+escalasProfesionCm:java.util.TreeMap[String,java.util.Map[String,java.math.BigDecimal]],
+countServicioNoCm:java.util.Map[String,Integer],
+countServicioCm:java.util.Map[String,Integer],
+countCostoTotal:java.util.TreeMap[String,java.util.Map[String,java.math.BigDecimal]],
+countCostoSinSacTotal:java.util.TreeMap[String,java.util.Map[String,java.math.BigDecimal]],
+tipoConceptos:java.util.List[String],
+countTipoConceptoNoCmTotal:java.util.TreeMap[String,java.util.Map[String,java.math.BigDecimal]],
+countTipoConceptoCmTotal:java.util.TreeMap[String,java.util.Map[String,java.math.BigDecimal]],
+countTipoConceptoNoCmTotalSinSac:java.util.TreeMap[String,java.util.Map[String,java.math.BigDecimal]],
+countTipoConceptoCmTotalSinSac:java.util.TreeMap[String,java.util.Map[String,java.math.BigDecimal]],
+lcc:List[models.haberes.LiquidacionConceptoClasificacion],
+countCostoTotalPorClasificacionConceptosNoCm:java.util.TreeMap[String,java.util.Map[String,String]],
+countCostoTotalPorClasificacionConceptosCm:java.util.TreeMap[String,java.util.Map[String,String]]
+
+)
+@import helper._
+@implicitFieldConstructor = @{ FieldConstructor(simpleInput.render) } 
+@import java.math.BigDecimal;var x=new java.math.BigDecimal(0);
+@views.html.dashboard.mainDashboard("Honorarios") {
+
+<div class="page-header">
+	<div class="row">
+		<div class="col-sm-7"><h1>Estado de Honorarios</h1></div>
+		<div class="col-sm-5">
+			<div class="dropdown pull-right">
+			 <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown">
+			 	<i class="glyphicon glyphicon-list-alt"></i>
+			    Reportes
+			    <span class="caret"></span>
+			  </button>
+			  <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
+			  	
+			  </ul>
+			</div>
+		</div>
+	</div>
+</div>
+<div class="row">
+		<div class="col-sm-12">
+			<h2>Cantidad agentes</h2>
+			<table class="table table-bordered">
+				<thead>
+					<tr>
+						<td>Agentes/Periodo</td>
+						@for((key,value) <- countAgentes){
+							<td>@key</td>
+						}
+					</tr>
+				</thead>
+				<tbody>
+					<tr>
+						<td>PS</td>
+						@for((key,value) <- countAgentes){
+							<td>@if(value.get("nocm") != null){@value.get("nocm")}</td>
+						}
+						</tr>
+					<tr>
+						<td>CM</td>
+						@for((key,value) <- countAgentes){
+							<td>@if(value.get("cm") != null){@value.get("cm")}</td>
+						}
+					</tr>
+				</tbody>
+			</table>		
+		</div>
+</div>
+<div class="row">
+	<div class="col-sm-12">
+		<h2>Cantidad Altas agentes</h2>
+		<table class="table table-bordered">
+			<thead>
+				<tr>
+					<td>Agentes/Periodo</td>
+					@for((key,value) <- altaList){
+						<td>@key</td>
+					}
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+					<td>PS</td>
+					@for((key,value) <- altaList){
+						<td>@if(value.get("nocm") != null){@value.get("nocm")}</td>
+					}
+					</tr>
+				<tr>
+					<td>CM</td>
+					@for((key,value) <- altaList){
+						<td>@if(value.get("cm") != null){@value.get("cm")}</td>
+					}
+				</tr>
+			</tbody>
+		</table>		
+	</div>
+</div>
+<div class="row">
+	<div class="col-sm-12">
+		<h2>Cantidad bajas agentes</h2>
+		<table class="table table-bordered">
+			<thead>
+				<tr>
+					<td>Agentes/Periodo</td>
+					@for((key,value) <- bajaList){
+						<td>@key</td>
+					}
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+					<td>PS</td>
+					@for((key,value) <- bajaList){
+						<td>@if(value.get("nocm") != null){@value.get("nocm")}</td>
+					}
+					</tr>
+				<tr>
+					<td>CM</td>
+					@for((key,value) <- bajaList){
+						<td>@if(value.get("cm") != null){@value.get("cm")}</td>
+					}
+				</tr>
+			</tbody>
+		</table>		
+	</div>
+</div>
+<div class="row">
+	<div class="col-sm-12">
+		<h2>Cantidad por Escala Parque Salud</h2>
+		<table class="table table-bordered">
+			<thead>
+				<tr>
+					<td>Agentes/Periodo</td>
+					@for((key,value) <- escalasNoCmList){
+						<td>@key</td>
+						
+					}
+				</tr>
+			</thead>
+			<tbody>
+				@for(el <- escalasLaborales){
+				<tr>
+					<td>@el.nombre</td>
+					@for((key,value) <- escalasNoCmList){
+						<td>@if(value.get(el.nombre) != null){@value.get(el.nombre)}</td>
+					}
+				</tr>
+				}
+			</tbody>
+		</table>		
+	</div>
+</div>
+<div class="row">
+	<div class="col-sm-12">
+		<h2>Cantidad por Escala CM</h2>
+		<table class="table table-bordered">
+			<thead>
+				<tr>
+					<td>Agentes/Periodo</td>
+					@for((key,value) <- escalasCmList){
+						<td>@key</td>
+						
+					}
+				</tr>
+			</thead>
+			<tbody>
+				@for(el <- escalasLaborales){
+				<tr>
+					<td>@el.nombre</td>
+					@for((key,value) <- escalasCmList){
+						<td>@if(value.get(el.nombre) != null){@value.get(el.nombre)}</td>
+					}
+				</tr>
+				}
+			</tbody>
+		</table>		
+	</div>
+</div>
+<div class="row">
+	<div class="col-sm-12">
+		<h2>Cantidad por Escala por Profesion PS</h2>
+		 
+		<table class="table table-bordered">
+		<thead>
+			<tr>
+				<td colspan="2">Cantidad por Escala por Profesion Ps</td>
+			</tr>
+		</thead>
+		<tbody>
+			@for(el <- escalasLaborales){
+				
+				@if(escalasProfesionNoCm.get(el.nombre) != null){
+					<tr>
+						<td align="center" colspan="2" ></td>
+					</tr>
+					<tr>
+						<td align="center" colspan="2" style="font-size: 14px;font-weight: bold;" >@el.nombre</td>
+					</tr>
+					@{x =new java.math.BigDecimal(0)}
+					@for((key,value) <- escalasProfesionNoCm.get(el.nombre)){
+						<tr>
+							<td>@key</td>
+							<td>@value</td>
+						</tr>
+						@{x = x.add(value)}
+					}
+					<tr>
+						<td>Total</td>
+						<td>@x</td>
+					</tr>
+				} 
+			}
+			
+		</tbody>
+		</table>	
+	</div>	
+</div>
+<div class="row">
+	<div class="col-sm-12">
+		<h2>Cantidad por Escala por Profesion CM</h2>
+		 
+		<table class="table table-bordered">
+		<thead>
+			<tr>
+				<td colspan="2">Cantidad por Escala por Profesion CM</td>
+			</tr>
+		</thead>
+		<tbody>
+			@for(el <- escalasLaborales){
+				
+				@if(escalasProfesionCm.get(el.nombre) != null){
+					@{x =new java.math.BigDecimal(0)}
+					<tr>
+						<td align="center" colspan="2" ></td>
+					</tr>
+					<tr>
+						<td align="center" colspan="2" style="font-size: 14px;font-weight: bold;" >@el.nombre</td>
+					</tr>
+					@for((key,value) <- escalasProfesionCm.get(el.nombre)){
+						<tr>
+							<td>@key</td>
+							<td>@value</td>
+						</tr>
+						@{x = x.add(value)}
+					}
+					<tr>
+						<td>Total</td>
+						<td>@x</td>
+					</tr>
+				} 
+			}
+		</tbody>
+		</table>	
+	</div>	
+</div>
+
+ 
+<div class="row">
+	<div class="col-sm-12">
+		<h2>Cantidad por Profesion PS</h2> 
+		<table class="table table-bordered">
+		<thead>
+			<tr>
+				<td>Servicio</td>
+				<td>Cantidad</td>
+			</tr>
+		</thead>
+		<tbody>
+			@for((key,value) <- countServicioNoCm){
+				<tr>
+					<td>@key</td>
+					<td>@value</td>
+				</tr>
+			}
+		</tbody>
+		</table>	
+	</div>	
+</div>
+
+<div class="row">
+	<div class="col-sm-12">
+		<h2>Cantidad por Profesion CM</h2> 
+		<table class="table table-bordered">
+		<thead>
+			<tr>
+				<td>Servicio</td>
+				<td>Cantidad</td>
+			</tr>
+		</thead>
+		<tbody>
+			@for((key,value) <- countServicioCm){
+				<tr>
+					<td>@key</td>
+					<td>@value</td>
+				</tr>
+			}
+		</tbody>
+		</table>	
+	</div>	
+</div>
+<hr>
+<div class="row">
+	<div class="col-sm-12">
+		<h2>Costo total periodo</h2>
+		<table class="table table-bordered">
+			<thead>
+				<tr>
+					<td>Agentes/Periodo</td>
+					@for((key,value) <- countCostoTotal){
+						<td>@key</td>
+					}
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+					<td>PS</td>
+					@for((key,value) <- countCostoTotal){
+						<td>@if(value.get("nocm") != null){@value.get("nocm")}</td>
+					}
+					</tr>
+				<tr>
+					<td>CM</td>
+					@for((key,value) <- countCostoTotal){
+						<td>@if(value.get("cm") != null){@value.get("cm")}</td>
+					}
+				</tr>
+			</tbody>
+		</table>		
+	</div>
+</div>
+
+<div class="row">
+	<div class="col-sm-12">
+		<h2>Costo total SIN SAC periodo</h2>
+		<table class="table table-bordered">
+			<thead>
+				<tr>
+					<td>Agentes/Periodo</td>
+					@for((key,value) <- countCostoSinSacTotal){
+						<td>@key</td>
+					}
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+					<td>PS</td>
+					@for((key,value) <- countCostoSinSacTotal){
+						<td>@if(value.get("nocm") != null){@value.get("nocm")}</td>
+					}
+					</tr>
+				<tr>
+					<td>CM</td>
+					@for((key,value) <- countCostoSinSacTotal){
+						<td>@if(value.get("cm") != null){@value.get("cm")}</td>
+					}
+				</tr>
+			</tbody>
+		</table>		
+	</div>
+</div>
+
+<hr>
+<div class="row">
+	<div class="col-sm-12">
+		<h2>Costo por Tipo Concepto PS</h2>
+		<table class="table table-bordered">
+			<thead>
+				<tr>
+					<td>Tipo Concepto/Periodo</td>
+					@for((key,value) <- countTipoConceptoNoCmTotal){
+						<td>@key</td>
+					}
+				</tr>
+			</thead>
+			<tbody>
+				@for(nombreTc <- tipoConceptos){
+				<tr>
+					<td>@nombreTc</td>
+					@for((key,value) <- countTipoConceptoNoCmTotal){
+						<td>@if(value.get(nombreTc) != null){@value.get(nombreTc)}</td>
+					}
+				</tr>
+				}	
+			</tbody>
+		</table>		
+	</div>
+</div>
+
+<div class="row">
+	<div class="col-sm-12">
+		<h2>Costo por Tipo Concepto CM</h2>
+		<table class="table table-bordered">
+			<thead>
+				<tr>
+					<td>Tipo Concepto/Periodo</td>
+					@for((key,value) <- countTipoConceptoCmTotal){
+						<td>@key</td>
+					}
+				</tr>
+			</thead>
+			<tbody>
+				@for(nombreTc <- tipoConceptos){
+				<tr>
+					<td>@nombreTc</td>
+					@for((key,value) <- countTipoConceptoCmTotal){
+						<td>@if(value.get(nombreTc) != null){@value.get(nombreTc)}</td>
+					}
+				</tr>
+				}	
+			</tbody>
+		</table>		
+	</div>
+</div>
+
+<div class="row">
+	<div class="col-sm-12">
+		<h2>Costo por Tipo Concepto PS SIN SAC</h2>
+		<table class="table table-bordered">
+			<thead>
+				<tr>
+					<td>Tipo Concepto/Periodo</td>
+					@for((key,value) <- countTipoConceptoNoCmTotalSinSac){
+						<td>@key</td>
+					}
+				</tr>
+			</thead>
+			<tbody>
+				@for(nombreTc <- tipoConceptos){
+				<tr>
+					<td>@nombreTc</td>
+					@for((key,value) <- countTipoConceptoNoCmTotalSinSac){
+						<td>@if(value.get(nombreTc) != null){@value.get(nombreTc)}</td>
+					}
+				</tr>
+				}	
+			</tbody>
+		</table>		
+	</div>
+</div>
+
+<div class="row">
+	<div class="col-sm-12">
+		<h2>Costo por Tipo Concepto CM SIN SAC</h2>
+		<table class="table table-bordered">
+			<thead>
+				<tr>
+					<td>Tipo Concepto/Periodo</td>
+					@for((key,value) <- countTipoConceptoCmTotalSinSac){
+						<td>@key</td>
+					}
+				</tr>
+			</thead>
+			<tbody>
+				@for(nombreTc <- tipoConceptos){
+				<tr>
+					<td>@nombreTc</td>
+					@for((key,value) <- countTipoConceptoCmTotalSinSac){
+						<td>@if(value.get(nombreTc) != null){@value.get(nombreTc)}</td>
+					}
+				</tr>
+				}	
+			</tbody>
+		</table>		
+	</div>
+</div>
+<hr>
+<div class="row">
+	<div class="col-sm-12">
+		<h2>Costo por Clasificacion de concepto Parque Salud</h2>
+		<table class="table table-bordered">
+			<thead>
+				<tr>
+					<td>Agentes/Periodo</td>
+					@for((key,value) <- countCostoTotalPorClasificacionConceptosNoCm){
+						<td>@key</td>
+						
+					}
+				</tr>
+			</thead>
+			<tbody>
+				@for(el <- lcc){
+				<tr>
+					<td>@el.nombre</td>
+					@for((key,value) <- countCostoTotalPorClasificacionConceptosNoCm){
+						<td>@if(value.get(el.nombre) != null){@value.get(el.nombre)}</td>
+					}
+				</tr>
+				}
+			</tbody>
+		</table>		
+	</div>
+</div>
+
+<div class="row">
+	<div class="col-sm-12">
+		<h2>Costo por Clasificacion de concepto CM</h2>
+		<table class="table table-bordered">
+			<thead>
+				<tr>
+					<td>Agentes/Periodo</td>
+					@for((key,value) <- countCostoTotalPorClasificacionConceptosCm){
+						<td>@key</td>
+						
+					}
+				</tr>
+			</thead>
+			<tbody>
+				@for(el <- lcc){
+				<tr>
+					<td>@el.nombre</td>
+					@for((key,value) <- countCostoTotalPorClasificacionConceptosCm){
+						<td>@if(value.get(el.nombre) != null){@value.get(el.nombre)}</td>
+					}
+				</tr>
+				}
+			</tbody>
+		</table>		
+	</div>
+</div>
+<hr>
+
+}

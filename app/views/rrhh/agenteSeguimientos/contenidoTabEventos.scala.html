@@ -1,0 +1,18 @@
+@(formularioCarga: Boolean, agenteSeguimientoForm: Form[AgenteSeguimiento] = null)
+@import java.util.List
+
+@if(agenteSeguimientoForm.field("id").value == null || agenteSeguimientoForm.field("id").value == ""){
+	<p>Para cargar eventos primero debe dar de alta el Seguimiento</p>
+} else {
+	<script>
+	$( function (){
+		$.get('@controllers.rrhh.routes.AgentesSeguimientoLineasController.index(agenteSeguimientoForm.field("id").value.toLong, formularioCarga)', function(data){
+			$('#listaLineaEventos').parent().html(data);
+		})
+	});
+	</script>
+}
+
+<div id="listaLineaEventos">
+
+</div>

@@ -1,0 +1,18 @@
+@(formularioCarga: Boolean, agenteForm: Form[Agente] = null,agente:Agente)
+@import java.util.List
+
+@if(agenteForm.field("id").value == null || agenteForm.field("id").value == ""){
+	<p><i class="glyphicon glyphicon-info-sign"></i> Para cargar datos primero debe guardar el agente</p>
+} else {
+	<script>
+		$( function (){
+			$.get('@controllers.rrhh.routes.AgentesNovedadesController.index(agenteForm.field("id").value.toLong, formularioCarga)', function(data){
+				$('#listaAgenteNovedad').parent().html(data);
+			})
+		});
+	</script>
+}
+
+<div id="listaAgenteNovedad">
+
+</div>

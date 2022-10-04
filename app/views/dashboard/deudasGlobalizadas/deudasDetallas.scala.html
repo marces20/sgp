@@ -1,0 +1,635 @@
+@(ra:Boolean,idProveedor:Integer,
+listaFinal:java.util.Map[String,java.util.Map[String,java.util.Map[Integer,List[com.avaje.ebean.SqlRow]]]],
+proveedor:String,
+formBuscador: DynamicForm)
+@import java.math.BigDecimal;var ptmpcompromiso=new java.math.BigDecimal(0);var ptmpdeuda=new java.math.BigDecimal(0);var mtdoh=new java.math.BigDecimal(0);var mtcoh=new java.math.BigDecimal(0);var mtdoo=new java.math.BigDecimal(0);var mtcoo=new java.math.BigDecimal(0);var mtdos=new java.math.BigDecimal(0);var mtcos=new java.math.BigDecimal(0);var mtdph=new java.math.BigDecimal(0);var mtcph=new java.math.BigDecimal(0);var mtdpo=new java.math.BigDecimal(0);var mtcpo=new java.math.BigDecimal(0);var mtdps=new java.math.BigDecimal(0);var mtcps=new java.math.BigDecimal(0)
+@import java.lang.Integer;var proveedorId =0;var bandera =0;var xx =0
+@import java.lang.String;var proveedorNombre =""
+@views.html.dashboard.mainDashboard("Deudas Detalles") {
+
+@views.html.dashboard.deudasGlobalizadas.navdeudas(formBuscador)
+
+<div class="page-header">
+	<div class="row">
+		<div class="col-sm-7">
+			<h1>Deudas Detalles - @proveedor</h1>
+		</div>
+		
+		<div class="col-sm-5">
+			<div class="dropdown pull-right">
+			 <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown">
+			 	<i class="glyphicon glyphicon-list-alt"></i>
+			    Reportes
+			    <span class="caret"></span>
+			  </button>
+			  <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
+			  	<li role="presentation">
+				  <a id="" role="menuitem" tabindex="-1" 
+				  href="@controllers.dashboard.routes.DeudasGlobalizadasReportesController.deudasDetallesReporte(idProveedor,ra)">Reporte Excel</a></li>
+			  	
+			  </ul>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div class="row"  style="">
+	<div class="col-sm-12" style="">
+		@if(listaFinal.get("OPERATIVA") != null){
+			@if(listaFinal.get("OPERATIVA").get("HEARM") != null){
+				@if(listaFinal.get("OPERATIVA").get("HEARM").size() > 0){
+					<table class="table table-striped table-bordered table-hover" id="listaInforme">
+						@views.html.dashboard.deudasGlobalizadas.tablaDetalles("OPERATIVA","HEARM",proveedor)
+						<tbody>
+							@for((key,value) <- listaFinal.get("OPERATIVA").get("HEARM")){
+								@for(s <- value){
+									@if(s.getString("rubro").compareTo("SERVICIOS") != 0){
+										@{xx = 1}
+										@if(proveedorId != 0 && proveedorId != s.getInteger("proveedorId")){
+											<tr>
+												<td colspan="4" align="right"><b>@proveedorNombre - TOTAL</b></td>
+												<td><b>@utils.NumberUtils.moneda(ptmpdeuda)</b></td>
+												<td><b>@utils.NumberUtils.moneda(ptmpcompromiso)</b></td>
+												<td colspan="2"></td>
+											</tr>
+											<tr><td colspan="8"></td></tr>
+											@{ptmpdeuda = new java.math.BigDecimal(0)}
+											@{ptmpcompromiso = new java.math.BigDecimal(0)}
+											@{bandera = 0}
+										} 
+										@if(bandera == 0){
+											<tr style="background-color:#dfdfdf;">
+												<td colspan="8" align="center"><b>@s.getString("nombre_proveedor")</b></td>
+											</tr>
+											@{bandera = 1}
+										}
+										@{ptmpdeuda = ptmpdeuda.add(s.getBigDecimal("total_deuda"))}
+										@{ptmpcompromiso = ptmpcompromiso.add(s.getBigDecimal("total_compromiso"))}
+										<tr>
+											<td>@s.getInteger("numeroProvision")</td>
+											<td>@(utils.DateUtils.formatDate(s.getDate("fechaExpediente")))</td>
+											<td>@s.getString("expediente")</td>
+											<td>@s.getString("nombre_proveedor")</td>
+											<td>@utils.NumberUtils.moneda(s.getBigDecimal("total_deuda"))</td>
+											<td>@utils.NumberUtils.moneda(s.getBigDecimal("total_compromiso"))</td>
+											<td>@s.getString("rubro")</td>
+											<td>@s.getString("descripcion")</td>
+										</tr>
+										@{mtdoh= mtdoh.add(s.getBigDecimal("total_deuda"))}
+										@{mtcoh= mtcoh.add(s.getBigDecimal("total_compromiso"))}
+										
+										@{proveedorId = s.getInteger("proveedorId")}
+										@{proveedorNombre = s.getString("nombre_proveedor")}
+									}
+								}
+								
+							}
+							@if(listaFinal.get("OPERATIVA").get("HEARM").size() >0 && xx == 1){ 
+								<tr>
+									<td colspan="4" align="right"><b>@proveedorNombre - TOTAL</b></td>
+									<td><b>@utils.NumberUtils.moneda(ptmpdeuda)</b></td>
+									<td><b>@utils.NumberUtils.moneda(ptmpcompromiso)</b></td>
+									<td colspan="2"></td>
+								</tr>
+							}
+							@{ptmpdeuda = new java.math.BigDecimal(0)}
+							@{ptmpcompromiso = new java.math.BigDecimal(0)}
+							@{proveedorId =0}
+							@{bandera = 0}
+							@{xx = 0}
+						</tbody>
+						<tfoot>
+							<tr>
+								<td colspan="4" align="right"><b>TOTALES</b></td>
+								<td><b>@utils.NumberUtils.moneda(mtdoh)</b></td>
+								<td><b>@utils.NumberUtils.moneda(mtcoh)</b></td>
+								<td colspan="2" align="right"></td>
+							</tr>
+						</tfoot>
+					</table>
+				}
+			}
+		}	
+	</div>
+</div>
+<div class="row"  style="">
+	<div class="col-sm-12" style="">
+		@if(listaFinal.get("OPERATIVA") != null){
+			@if(listaFinal.get("OPERATIVA").get("OTRAS INSTITUCIONES") != null){
+				@if(listaFinal.get("OPERATIVA").get("OTRAS INSTITUCIONES").size() > 0){
+					<table class="table table-striped table-bordered table-hover" id="listaInforme">
+						@views.html.dashboard.deudasGlobalizadas.tablaDetalles("OPERATIVA","OTRAS INSTITUCIONES",proveedor)
+						<tbody>
+							@for((key,value) <- listaFinal.get("OPERATIVA").get("OTRAS INSTITUCIONES")){
+								@for(s <- value){
+									@if(s.getString("rubro").compareTo("SERVICIOS") != 0){
+										@{xx = 1}
+										@if(proveedorId != 0 && proveedorId != s.getInteger("proveedorId")){
+											<tr>
+												<td colspan="4" align="right"><b>@proveedorNombre - TOTAL</b></td>
+												<td><b>@utils.NumberUtils.moneda(ptmpdeuda)</b></td>
+												<td><b>@utils.NumberUtils.moneda(ptmpcompromiso)</b></td>
+												<td colspan="2"></td>
+											</tr>
+											<tr><td colspan="8"></td></tr>
+											@{ptmpdeuda = new java.math.BigDecimal(0)}
+											@{ptmpcompromiso = new java.math.BigDecimal(0)}
+											@{bandera = 0}
+										} 
+										@if(bandera == 0){
+											<tr style="background-color:#dfdfdf;">
+												<td colspan="8" align="center"><b>@s.getString("nombre_proveedor")</b></td>
+											</tr>
+											@{bandera = 1}
+										}
+										@{ptmpdeuda = ptmpdeuda.add(s.getBigDecimal("total_deuda"))}
+										@{ptmpcompromiso = ptmpcompromiso.add(s.getBigDecimal("total_compromiso"))}
+										<tr>
+											<td>@s.getInteger("numeroProvision")</td>
+											<td>@(utils.DateUtils.formatDate(s.getDate("fechaExpediente")))</td>
+											<td>@s.getString("expediente")</td>
+											<td>@s.getString("nombre_proveedor")</td>
+											<td>@utils.NumberUtils.moneda(s.getBigDecimal("total_deuda"))</td>
+											<td>@utils.NumberUtils.moneda(s.getBigDecimal("total_compromiso"))</td>
+											<td>@s.getString("rubro")</td>
+											<td>@s.getString("descripcion")</td>
+										</tr>
+										@{mtdoo= mtdoo.add(s.getBigDecimal("total_deuda"))}
+										@{mtcoo= mtcoo.add(s.getBigDecimal("total_compromiso"))}
+										@{proveedorId = s.getInteger("proveedorId")}
+										@{proveedorNombre = s.getString("nombre_proveedor")}
+									}	
+								}
+								 
+							}
+							@if(listaFinal.get("OPERATIVA").get("OTRAS INSTITUCIONES").size() >0 && xx == 1){ 
+								<tr>
+									<td colspan="4" align="right"><b>@proveedorNombre - TOTAL</b></td>
+									<td><b>@utils.NumberUtils.moneda(ptmpdeuda)</b></td>
+									<td><b>@utils.NumberUtils.moneda(ptmpcompromiso)</b></td>
+									<td colspan="2"></td>
+								</tr>
+							}
+							@{ptmpdeuda = new java.math.BigDecimal(0)}
+							@{ptmpcompromiso = new java.math.BigDecimal(0)}
+							@{proveedorId =0}
+							@{bandera = 0}
+							@{xx = 0}
+						</tbody>
+						<tfoot>
+							<tr>
+								<td colspan="4" align="right"><b>TOTALES</b></td>
+								<td><b>@utils.NumberUtils.moneda(mtdoo)</b></td>
+								<td><b>@utils.NumberUtils.moneda(mtcoo)</b></td>
+								<td colspan="2" align="right"></td>
+							</tr>
+						</tfoot>
+					</table>
+				}
+			}
+		}	
+	</div>
+</div>
+
+<div class="row"  style="">
+	<div class="col-sm-12" style="">
+		@if(listaFinal.get("OPERATIVA") != null){
+			@if(listaFinal.get("OPERATIVA").get("OTRAS INSTITUCIONES") != null && listaFinal.get("OPERATIVA").get("HEARM") != null){
+				<table class="table table-striped table-bordered table-hover" id="listaInforme">
+					@views.html.dashboard.deudasGlobalizadas.tablaDetalles("SERVICIOS - OPERATIVA","",proveedor)
+					<tbody>
+					@if(listaFinal.get("OPERATIVA").get("HEARM").size() > 0){
+						@for((key,value) <- listaFinal.get("OPERATIVA").get("HEARM")){
+							@for(s <- value){
+								@if(s.getString("rubro").compareTo("SERVICIOS") == 0){
+									@{xx = 1}
+									@if(proveedorId != 0 && proveedorId != s.getInteger("proveedorId")){
+										<tr>
+											<td colspan="4" align="right"><b>@proveedorNombre - TOTAL</b></td>
+											<td><b>@utils.NumberUtils.moneda(ptmpdeuda)</b></td>
+											<td><b>@utils.NumberUtils.moneda(ptmpcompromiso)</b></td>
+											<td colspan="2"></td>
+										</tr>
+										<tr><td colspan="8"></td></tr>
+										@{ptmpdeuda = new java.math.BigDecimal(0)}
+										@{ptmpcompromiso = new java.math.BigDecimal(0)}
+										@{bandera = 0}
+									} 
+									@if(bandera == 0){
+										<tr style="background-color:#dfdfdf;">
+											<td colspan="8" align="center"><b>@s.getString("nombre_proveedor")</b></td>
+										</tr>
+										@{bandera = 1}
+									}
+									@{ptmpdeuda = ptmpdeuda.add(s.getBigDecimal("total_deuda"))}
+									@{ptmpcompromiso = ptmpcompromiso.add(s.getBigDecimal("total_compromiso"))}
+									<tr>
+										<td>@s.getInteger("numeroProvision")</td>
+										<td>@(utils.DateUtils.formatDate(s.getDate("fechaExpediente")))</td>
+										<td>@s.getString("expediente")</td>
+										<td>@s.getString("nombre_proveedor")</td>
+										<td>@utils.NumberUtils.moneda(s.getBigDecimal("total_deuda"))</td>
+										<td>@utils.NumberUtils.moneda(s.getBigDecimal("total_compromiso"))</td>
+										<td>@s.getString("rubro")</td>
+										<td>@s.getString("descripcion")</td>
+									</tr>
+									@{mtdos= mtdos.add(s.getBigDecimal("total_deuda"))}
+									@{mtcos= mtcos.add(s.getBigDecimal("total_compromiso"))}
+									@{proveedorId = s.getInteger("proveedorId")}
+									@{proveedorNombre = s.getString("nombre_proveedor")}
+								}	
+							}
+						}
+						@if(listaFinal.get("OPERATIVA").get("HEARM").size() >0 && xx == 1){ 
+							<tr>
+								<td colspan="4" align="right"><b>@proveedorNombre - TOTAL</b></td>
+								<td><b>@utils.NumberUtils.moneda(ptmpdeuda)</b></td>
+								<td><b>@utils.NumberUtils.moneda(ptmpcompromiso)</b></td>
+								<td colspan="2"></td>
+							</tr>
+						}
+						@{ptmpdeuda = new java.math.BigDecimal(0)}
+						@{ptmpcompromiso = new java.math.BigDecimal(0)}
+						@{proveedorId =0}
+						@{bandera = 0}
+						@{xx = 0}
+					}
+					@if(listaFinal.get("OPERATIVA").get("OTRAS INSTITUCIONES").size() > 0){
+						@for((key,value) <- listaFinal.get("OPERATIVA").get("OTRAS INSTITUCIONES")){
+							@for(s <- value){
+								@if(s.getString("rubro").compareTo("SERVICIOS") == 0){
+									@{xx = 1}
+									@if(proveedorId != 0 && proveedorId != s.getInteger("proveedorId")){
+										<tr>
+											<td colspan="4" align="right"><b>@proveedorNombre - TOTAL</b></td>
+											<td><b>@utils.NumberUtils.moneda(ptmpdeuda)</b></td>
+											<td><b>@utils.NumberUtils.moneda(ptmpcompromiso)</b></td>
+											<td colspan="2"></td>
+										</tr>
+										<tr><td colspan="8"></td></tr>
+										@{ptmpdeuda = new java.math.BigDecimal(0)}
+										@{ptmpcompromiso = new java.math.BigDecimal(0)}
+										@{bandera = 0}
+									} 
+									@if(bandera == 0){
+										<tr style="background-color:#dfdfdf;">
+											<td colspan="8" align="center"><b>@s.getString("nombre_proveedor")</b></td>
+										</tr>
+										@{bandera = 1}
+									}
+									@{ptmpdeuda = ptmpdeuda.add(s.getBigDecimal("total_deuda"))}
+									@{ptmpcompromiso = ptmpcompromiso.add(s.getBigDecimal("total_compromiso"))}
+									<tr>
+										<td>@s.getInteger("numeroProvision")</td>
+										<td>@(utils.DateUtils.formatDate(s.getDate("fechaExpediente")))</td>
+										<td>@s.getString("expediente")</td>
+										<td>@s.getString("nombre_proveedor")</td>
+										<td>@utils.NumberUtils.moneda(s.getBigDecimal("total_deuda"))</td>
+										<td>@utils.NumberUtils.moneda(s.getBigDecimal("total_compromiso"))</td>
+										<td>@s.getString("rubro")</td>
+										<td>@s.getString("descripcion")</td>
+									</tr>
+									@{mtdos= mtdos.add(s.getBigDecimal("total_deuda"))}
+									@{mtcos= mtcos.add(s.getBigDecimal("total_compromiso"))}
+									@{proveedorId = s.getInteger("proveedorId")}
+									@{proveedorNombre = s.getString("nombre_proveedor")}
+								}	
+							}
+					 	
+					  }
+						  @if(listaFinal.get("OPERATIVA").get("OTRAS INSTITUCIONES").size() >0 && xx == 1){ 
+							<tr>
+								<td colspan="4" align="right"><b>@proveedorNombre - TOTAL</b></td>
+								<td><b>@utils.NumberUtils.moneda(ptmpdeuda)</b></td>
+								<td><b>@utils.NumberUtils.moneda(ptmpcompromiso)</b></td>
+								<td colspan="2"></td>
+							</tr>
+						  }
+						@{ptmpdeuda = new java.math.BigDecimal(0)}
+						@{ptmpcompromiso = new java.math.BigDecimal(0)}
+						@{proveedorId =0}
+						@{bandera = 0}
+						@{xx = 0}
+					}
+					</tbody>
+					<tfoot>
+						<tr>
+							<td colspan="4" align="right"><b>TOTALES</b></td>
+							<td><b>@utils.NumberUtils.moneda(mtdos)</b></td>
+							<td><b>@utils.NumberUtils.moneda(mtcos)</b></td>
+							<td colspan="2" align="right"></td>
+						</tr>
+					</tfoot>
+				</table>
+			}
+		}	
+	</div>
+</div>
+
+
+
+<div class="row"  style="">
+	<div class="col-sm-12" style="">
+		@if(listaFinal.get("PROFE") != null){
+			@if(listaFinal.get("PROFE").get("HEARM") != null){
+				@if(listaFinal.get("PROFE").get("HEARM").size() > 0){
+					<table class="table table-striped table-bordered table-hover" id="listaInforme">
+						@views.html.dashboard.deudasGlobalizadas.tablaDetalles("PROFE","HEARM",proveedor)
+						<tbody>
+							@for((key,value) <- listaFinal.get("PROFE").get("HEARM")){
+								@for(s <- value){
+									@if(s.getString("rubro").compareTo("SERVICIOS") != 0){
+										@{xx = 1}
+										@if(proveedorId != 0 && proveedorId != s.getInteger("proveedorId")){
+											<tr>
+												<td colspan="4" align="right"><b>@proveedorNombre - TOTAL</b></td>
+												<td><b>@utils.NumberUtils.moneda(ptmpdeuda)</b></td>
+												<td><b>@utils.NumberUtils.moneda(ptmpcompromiso)</b></td>
+												<td colspan="2"></td>
+											</tr>
+											<tr><td colspan="8"></td></tr>
+											@{ptmpdeuda = new java.math.BigDecimal(0)}
+											@{ptmpcompromiso = new java.math.BigDecimal(0)}
+											@{bandera = 0}
+										} 
+										@if(bandera == 0){
+											<tr style="background-color:#dfdfdf;">
+												<td colspan="8" align="center"><b>@s.getString("nombre_proveedor")</b></td>
+											</tr>
+											@{bandera = 1}
+										}
+										@{ptmpdeuda = ptmpdeuda.add(s.getBigDecimal("total_deuda"))}
+										@{ptmpcompromiso = ptmpcompromiso.add(s.getBigDecimal("total_compromiso"))}
+										<tr>
+											<td>@s.getInteger("numeroProvision")</td>
+											<td>@(utils.DateUtils.formatDate(s.getDate("fechaExpediente")))</td>
+											<td>@s.getString("expediente")</td>
+											<td>@s.getString("nombre_proveedor")</td>
+											<td>@utils.NumberUtils.moneda(s.getBigDecimal("total_deuda"))</td>
+											<td>@utils.NumberUtils.moneda(s.getBigDecimal("total_compromiso"))</td>
+											<td>@s.getString("rubro")</td>
+											<td>@s.getString("descripcion")</td>
+										</tr>
+										@{mtdph= mtdph.add(s.getBigDecimal("total_deuda"))}
+										@{mtcph= mtcph.add(s.getBigDecimal("total_compromiso"))}
+										@{proveedorId = s.getInteger("proveedorId")}
+										@{proveedorNombre = s.getString("nombre_proveedor")}
+									}
+								}
+								 
+							}
+							@if(listaFinal.get("PROFE").get("HEARM").size() >0 && xx == 1){ 
+								<tr>
+									<td colspan="4" align="right"><b>@proveedorNombre - TOTAL</b></td>
+									<td><b>@utils.NumberUtils.moneda(ptmpdeuda)</b></td>
+									<td><b>@utils.NumberUtils.moneda(ptmpcompromiso)</b></td>
+									<td colspan="2"></td>
+								</tr>
+							}
+							@{ptmpdeuda = new java.math.BigDecimal(0)}
+							@{ptmpcompromiso = new java.math.BigDecimal(0)}
+							@{proveedorId =0}
+							@{bandera = 0}
+							@{xx = 0}
+						</tbody>
+						<tfoot>
+							<tr>
+								<td colspan="4" align="right"><b>TOTALES</b></td>
+								<td><b>@utils.NumberUtils.moneda(mtdph)</b></td>
+								<td><b>@utils.NumberUtils.moneda(mtcph)</b></td>
+								<td colspan="2" align="right"></td>
+							</tr>
+						</tfoot>
+					</table>
+				}
+			}
+		}	
+	</div>
+</div>
+<div class="row"  style="">
+	<div class="col-sm-12" style="">
+		@if(listaFinal.get("PROFE") != null){
+			@if(listaFinal.get("PROFE").get("OTRAS INSTITUCIONES") != null){
+				@if(listaFinal.get("PROFE").get("OTRAS INSTITUCIONES").size() > 0){
+					<table class="table table-striped table-bordered table-hover" id="listaInforme">
+						@views.html.dashboard.deudasGlobalizadas.tablaDetalles("PROFE","OTRAS INSTITUCIONES",proveedor)
+						<tbody>
+							@for((key,value) <- listaFinal.get("PROFE").get("OTRAS INSTITUCIONES")){
+								@for(s <- value){
+									@if(s.getString("rubro").compareTo("SERVICIOS") != 0){
+										@{xx = 1}
+										@if(proveedorId != 0 && proveedorId != s.getInteger("proveedorId")){
+											<tr>
+												<td colspan="4" align="right"><b>@proveedorNombre - TOTAL</b></td>
+												<td><b>@utils.NumberUtils.moneda(ptmpdeuda)</b></td>
+												<td><b>@utils.NumberUtils.moneda(ptmpcompromiso)</b></td>
+												<td colspan="2"></td>
+											</tr>
+											<tr><td colspan="8"></td></tr>
+											@{ptmpdeuda = new java.math.BigDecimal(0)}
+											@{ptmpcompromiso = new java.math.BigDecimal(0)}
+											@{bandera = 0}
+										} 
+										@if(bandera == 0){
+											<tr style="background-color:#dfdfdf;">
+												<td colspan="8" align="center"><b>@s.getString("nombre_proveedor")</b></td>
+											</tr>
+											@{bandera = 1}
+										}
+										@{ptmpdeuda = ptmpdeuda.add(s.getBigDecimal("total_deuda"))}
+										@{ptmpcompromiso = ptmpcompromiso.add(s.getBigDecimal("total_compromiso"))}
+										<tr>
+											<td>@s.getInteger("numeroProvision")</td>
+											<td>@(utils.DateUtils.formatDate(s.getDate("fechaExpediente")))</td>
+											<td>@s.getString("expediente")</td>
+											<td>@s.getString("nombre_proveedor")</td>
+											<td>@utils.NumberUtils.moneda(s.getBigDecimal("total_deuda"))</td>
+											<td>@utils.NumberUtils.moneda(s.getBigDecimal("total_compromiso"))</td>
+											<td>@s.getString("rubro")</td>
+											<td>@s.getString("descripcion")</td>
+										</tr>
+										@{mtdpo= mtdpo.add(s.getBigDecimal("total_deuda"))}
+										@{mtcpo= mtcpo.add(s.getBigDecimal("total_compromiso"))}
+										@{proveedorId = s.getInteger("proveedorId")}
+										@{proveedorNombre = s.getString("nombre_proveedor")}
+									}
+								}
+								@if(value.size() >0){ 
+									<tr>
+										<td colspan="4" align="right"><b>@proveedorNombre - TOTAL</b></td>
+										<td><b>@utils.NumberUtils.moneda(ptmpdeuda)</b></td>
+										<td><b>@utils.NumberUtils.moneda(ptmpcompromiso)</b></td>
+										<td colspan="2"></td>
+									</tr>
+								}
+								@{ptmpdeuda = new java.math.BigDecimal(0)}
+								@{ptmpcompromiso = new java.math.BigDecimal(0)}
+								@{proveedorId =0}
+								@{bandera = 0}
+							}
+							@if(listaFinal.get("PROFE").get("OTRAS INSTITUCIONES").size() >0 && xx == 1){ 
+								<tr>
+									<td colspan="4" align="right"><b>@proveedorNombre - TOTAL</b></td>
+									<td><b>@utils.NumberUtils.moneda(ptmpdeuda)</b></td>
+									<td><b>@utils.NumberUtils.moneda(ptmpcompromiso)</b></td>
+									<td colspan="2"></td>
+								</tr>
+							}
+							@{ptmpdeuda = new java.math.BigDecimal(0)}
+							@{ptmpcompromiso = new java.math.BigDecimal(0)}
+							@{proveedorId =0}
+							@{bandera = 0}
+							@{xx = 0}
+						</tbody>
+						<tfoot>
+							<tr>
+								<td colspan="4" align="right"><b>TOTALES</b></td>
+								<td><b>@utils.NumberUtils.moneda(mtdpo)</b></td>
+								<td><b>@utils.NumberUtils.moneda(mtcpo)</b></td>
+								<td colspan="2" align="right"></td>
+							</tr>
+						</tfoot>
+					</table>
+				}
+			}
+		}	
+	</div>
+</div>
+
+<div class="row"  style="">
+	<div class="col-sm-12" style="">
+		@if(listaFinal.get("PROFE") != null){
+			@if(listaFinal.get("PROFE").get("OTRAS INSTITUCIONES") != null && listaFinal.get("PROFE").get("HEARM") != null){
+				<table class="table table-striped table-bordered table-hover" id="listaInforme">
+					@views.html.dashboard.deudasGlobalizadas.tablaDetalles("SERVICIOS - PROFE","",proveedor)
+					<tbody>
+					@if(listaFinal.get("PROFE").get("HEARM").size() > 0){
+						@for((key,value) <- listaFinal.get("PROFE").get("HEARM")){
+							@for(s <- value){
+								@if(s.getString("rubro").compareTo("SERVICIOS") == 0){
+									@{xx = 1}
+									@if(proveedorId != 0 && proveedorId != s.getInteger("proveedorId")){
+										<tr>
+											<td colspan="4" align="right"><b>@proveedorNombre - TOTAL</b></td>
+											<td><b>@utils.NumberUtils.moneda(ptmpdeuda)</b></td>
+											<td><b>@utils.NumberUtils.moneda(ptmpcompromiso)</b></td>
+											<td colspan="2"></td>
+										</tr>
+										<tr><td colspan="8"></td></tr>
+										@{ptmpdeuda = new java.math.BigDecimal(0)}
+										@{ptmpcompromiso = new java.math.BigDecimal(0)}
+										@{bandera = 0}
+									} 
+									@if(bandera == 0){
+										<tr style="background-color:#dfdfdf;">
+											<td colspan="8" align="center"><b>@s.getString("nombre_proveedor")</b></td>
+										</tr>
+										@{bandera = 1}
+									}
+									@{ptmpdeuda = ptmpdeuda.add(s.getBigDecimal("total_deuda"))}
+									@{ptmpcompromiso = ptmpcompromiso.add(s.getBigDecimal("total_compromiso"))}
+									<tr>
+										<td>@s.getInteger("numeroProvision")</td>
+										<td>@(utils.DateUtils.formatDate(s.getDate("fechaExpediente")))</td>
+										<td>@s.getString("expediente")</td>
+										<td>@s.getString("nombre_proveedor")</td>
+										<td>@utils.NumberUtils.moneda(s.getBigDecimal("total_deuda"))</td>
+										<td>@utils.NumberUtils.moneda(s.getBigDecimal("total_compromiso"))</td>
+										<td>@s.getString("rubro")</td>
+										<td>@s.getString("descripcion")</td>
+									</tr>
+									@{mtdps= mtdps.add(s.getBigDecimal("total_deuda"))}
+									@{mtcps= mtcps.add(s.getBigDecimal("total_compromiso"))}
+									@{proveedorId = s.getInteger("proveedorId")}
+									@{proveedorNombre = s.getString("nombre_proveedor")}
+								}	
+							}
+							 
+						}
+						@if(listaFinal.get("PROFE").get("HEARM").size() >0 && xx == 1){ 
+							<tr>
+								<td colspan="4" align="right"><b>@proveedorNombre - TOTAL</b></td>
+								<td><b>@utils.NumberUtils.moneda(ptmpdeuda)</b></td>
+								<td><b>@utils.NumberUtils.moneda(ptmpcompromiso)</b></td>
+								<td colspan="2"></td>
+							</tr>
+						}
+						@{ptmpdeuda = new java.math.BigDecimal(0)}
+						@{ptmpcompromiso = new java.math.BigDecimal(0)}
+						@{proveedorId =0}
+						@{bandera = 0}
+						@{xx = 0}
+					}
+					@if(listaFinal.get("PROFE").get("OTRAS INSTITUCIONES").size() > 0){
+						@for((key,value) <- listaFinal.get("PROFE").get("OTRAS INSTITUCIONES")){
+							@for(s <- value){
+								@if(s.getString("rubro").compareTo("SERVICIOS") == 0){
+									@{xx = 1}
+									@if(proveedorId != 0 && proveedorId != s.getInteger("proveedorId")){
+										<tr>
+											<td colspan="4" align="right"><b>@proveedorNombre - TOTAL</b></td>
+											<td><b>@utils.NumberUtils.moneda(ptmpdeuda)</b></td>
+											<td><b>@utils.NumberUtils.moneda(ptmpcompromiso)</b></td>
+											<td colspan="2"></td>
+										</tr>
+										<tr><td colspan="8"></td></tr>
+										@{ptmpdeuda = new java.math.BigDecimal(0)}
+										@{ptmpcompromiso = new java.math.BigDecimal(0)}
+										@{bandera = 0}
+									} 
+									@if(bandera == 0){
+										<tr style="background-color:#dfdfdf;">
+											<td colspan="8" align="center"><b>@s.getString("nombre_proveedor")</b></td>
+										</tr>
+										@{bandera = 1}
+									}
+									<tr>
+										<td>@s.getInteger("numeroProvision")</td>
+										<td>@(utils.DateUtils.formatDate(s.getDate("fechaExpediente")))</td>
+										<td>@s.getString("expediente")</td>
+										<td>@s.getString("nombre_proveedor")</td>
+										<td>@utils.NumberUtils.moneda(s.getBigDecimal("total_deuda"))</td>
+										<td>@utils.NumberUtils.moneda(s.getBigDecimal("total_compromiso"))</td>
+										<td>@s.getString("rubro")</td>
+										<td>@s.getString("descripcion")</td>
+									</tr>
+									@{mtdps= mtdps.add(s.getBigDecimal("total_deuda"))}
+									@{mtcps= mtcps.add(s.getBigDecimal("total_compromiso"))}
+									@{proveedorId = s.getInteger("proveedorId")}
+									@{proveedorNombre = s.getString("nombre_proveedor")}
+								}	
+							}
+						}
+						@if(listaFinal.get("PROFE").get("OTRAS INSTITUCIONES").size() >0 && xx == 1){ 
+							<tr>
+								<td colspan="4" align="right"><b>@proveedorNombre - TOTAL</b></td>
+								<td><b>@utils.NumberUtils.moneda(ptmpdeuda)</b></td>
+								<td><b>@utils.NumberUtils.moneda(ptmpcompromiso)</b></td>
+								<td colspan="2"></td>
+							</tr>
+						}
+						@{ptmpdeuda = new java.math.BigDecimal(0)}
+						@{ptmpcompromiso = new java.math.BigDecimal(0)}
+						@{proveedorId =0}
+						@{bandera = 0}
+						@{xx = 0}
+					}
+					</tbody>
+					<tfoot>
+						<tr>
+							<td colspan="4" align="right"><b>TOTALES</b></td>
+							<td><b>@utils.NumberUtils.moneda(mtdps)</b></td>
+							<td><b>@utils.NumberUtils.moneda(mtcps)</b></td>
+							<td colspan="2" align="right"></td>
+						</tr>
+					</tfoot>
+				</table>
+			}
+		}	
+	</div>
+</div>
+
+
+}
+ 
+

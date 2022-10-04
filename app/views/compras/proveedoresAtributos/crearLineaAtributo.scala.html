@@ -1,0 +1,9 @@
+@(lineaForm: Form[ProveedorAtributo],linea:ProveedorAtributo)
+@import helper._
+@implicitFieldConstructor = @{ FieldConstructor(simpleInput.render) } 
+
+@helper.form(action = controllers.compras.routes.ProveedorAtributosController.guardar()) {
+	
+	@views.html.compras.proveedoresAtributos.formLineaAtributo(lineaForm,linea)
+	
+}

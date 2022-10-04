@@ -1,0 +1,17 @@
+@(linea: LineaRecursoPresupuestario, editable: Boolean)
+
+<tr data-id="@linea.id">
+	@if(editable){
+		<td class="accion-editar">
+			<a class="btn btn-default btn-xs modificarRecurso" 
+			   href="@controllers.presupuesto.routes.LineasRecursosPresupuestariosController.editar(linea.id)"><i class="glyphicon glyphicon-edit"></i></a></td>
+	}
+	<td>@linea.cuentaAnalitica.codigo - @linea.cuentaAnalitica.nombre</td>
+	<td>@utils.NumberUtils.moneda(linea.monto)</td>
+	<td>@linea.nombre</td>
+	
+	@if(editable){
+		<td><a class="btn btn-default btn-xs eliminarRecurso" 
+			   href="@controllers.presupuesto.routes.LineasRecursosPresupuestariosController.eliminar(linea.id)"><i class="glyphicon glyphicon-trash icono-eliminar"></i></a></td>
+	}
+</tr>

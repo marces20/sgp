@@ -1,0 +1,192 @@
+@(buscador: utils.pagination.Pagination[models.recupero.RecuperoPlanilla], formBuscador: DynamicForm)
+@import helper._
+@import utils._
+@import models.auth._
+@implicitFieldConstructor = @{ FieldConstructor(simpleInput.render) }
+@scripts = {
+	<script src="@routes.Assets.at("javascripts/recupero/planilla.js")" type="text/javascript"></script>
+}
+
+ 
+
+@views.html.recupero.mainRecupero("Lista de Planillas", scripts) {
+	<div class="page-header">
+		<div class="row">
+			<div class="col-sm-7">
+				<h1>Lista de Planillas</h1>
+			</div>
+			
+			<div class="col-sm-5">
+				 
+				
+				<div class="dropdown pull-right btn-header">
+				 <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown">
+				 	<i class="glyphicon glyphicon-cog"></i>
+				    Acciones
+				    <span class="caret"></span>
+				  </button>
+				  <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
+				  	
+				  </ul>
+				</div>
+					
+				<div class="pull-right btn-header">
+					<a href="@controllers.recupero.routes.RecuperoPlanillasController.crear()?@UriTrack.encode()"  class="btn btn-default"><i class="glyphicon glyphicon-plus-sign"></i> Nueva Planilla</a>
+				</div>
+			</div>
+		</div>
+	</div>
+	
+	@views.html.tags.successError()
+	
+	<div id="actions">
+		<form action="" id="formSearchPlanillas" method="GET">
+		 
+		<div class="row">	
+    		
+			<div class="col-sm-2">
+				<div class="form-group">
+					<label for="nombre" class="control-label">Numero
+					@inputText(formBuscador("numero"), 'class -> "form-control", 'autofocus -> "autofocus")
+					</label>
+				</div>
+			</div>
+			
+			 
+			
+			<div class="col-sm-2 input-group">
+				<label class="control-label">Fecha</label>
+				<div>
+				@inputText(formBuscador("fecha_desde"), 'class -> "form-control dateMask inputDateMascara", 'id -> "desde", 'placeholder -> "Desde")
+				@inputText(formBuscador("fecha_hasta"), 'class -> "form-control dateMask inputDateMascara", 'id -> "hasta", 'placeholder -> "Hasta")
+				</div>
+				
+			</div>
+			
+			<div class="col-sm-4">
+			<label for="deposito" class="control-label">Institucion</label> 
+			<div class="input-group">
+				@inputText(formBuscador("deposito.nombre"),'class -> "form-control", 'id -> "deposito_nombre", 'autocomplete -> "off")
+				@inputText(formBuscador("deposito_id"),'hidden -> "hidden", 'id -> "deposito_id")
+				<span class="input-group-addon">
+                	<a href="#" id="searchDeposito" data-title="Selección de Institucion" 
+                	data-url="@controllers.delegacion.routes.DepositosController.modalBuscar()" 
+                	data-height="650" data-width="700" 
+                	data-listen="modal.seleccion.deposito.simple" 
+                	data-label="#deposito_nombre" data-field="#deposito_id" /> <i class="glyphicon glyphicon-search"></i></a>
+                </span>
+			</div>
+		</div>
+			
+		</div>
+		<div class="row">
+			<div class="col-sm-2">
+				<div class="form-group">
+				<label for="nombre" class="control-label">&nbsp;</label>
+				<button  class="form-control btn btn-primary">Buscar</button>
+				</div>
+			</div>
+			<div class="col-sm-2">
+				<div class="form-group">
+				<label for="nombre" class="control-label">&nbsp;</label>
+				<a href="@controllers.recupero.routes.RecuperoPlanillasController.index()"  class="form-control btn btn-default">Limpiar</a>
+				</div>
+			</div>
+		</div>
+		 
+		</form>
+	</div>
+	
+	@if(buscador.getTotalRowCount == 0) {
+        
+        <div class="well">
+            <em>No se encuentran Planillas</em>
+        </div>
+        
+    } else {
+    	
+		<table id="listaPlanillas" class="table table-striped table-bordered">
+			<thead>
+				<tr style="background: #FFFFFF;">
+			        <td colspan="6">Mostrando @buscador.getDisplayXtoYofZ(" a "," de ") resultado(s). </td>
+			    </tr>
+				<tr>
+					<th width="30"><input type="checkbox" name="checkAll" id="checkAll"/></th>
+					<th width="30">#</th>
+					<th width="80">Institucion</th>
+					<th width="80">Numero</th>
+					<th width="70">Fecha</th>
+					<th width="300">Expediente</th>
+					<th width="30">#</th>
+				</tr>
+			</thead>
+			<tbody>
+			@for(planilla <- buscador.getList) {
+				
+				<tr class="pointer" data-estado="" data-href="@controllers.recupero.routes.RecuperoPlanillasController.ver(planilla.id)&@UriTrack.encode()">
+					<td><input type="checkbox" name="check_listado[]" value="@planilla.id" class="notSeleccion" id="check-@planilla.id"/></td>
+					<td><a class="btn btn-default btn-xs notSeleccion" href="@controllers.recupero.routes.RecuperoPlanillasController.editar(planilla.id)&@UriTrack.encode()"><i class="glyphicon glyphicon-edit"></i></a></td>
+					<td>@(planilla.deposito.nombre)</td>
+					<td>@(planilla.numero)</td>
+					<td class="fecha">@if(planilla.fecha != null){@(utils.DateUtils.formatDate(planilla.fecha))}</td>
+					<td>@if(planilla.expediente != null){@(planilla.expediente.getExpedienteEjercicio())}</td>
+				 
+					<td>
+						<a class="btn btn-default btn-xs delete-confirm-link notSeleccion" href="@controllers.recupero.routes.RecuperoPlanillasController.eliminar(planilla.id)&@UriTrack.encode()">
+							<i class="glyphicon glyphicon-trash icono-eliminar"></i>
+						</a>
+					</td>
+				</tr>
+             }
+             
+	        </tbody>
+	        <tfoot>
+		        <tr>
+			        <td colspan="6">&nbsp</td>
+			         
+		        </tr>
+	        </tfoot>
+        </table>
+    	
+    	<div class="pagination pull-right">
+		    @views.html.helpers.paginador(buscador, controllers.recupero.routes.RecuperoPlanillasController.index())
+		</div>
+<script>
+$( function (){
+	var n = 0;
+	var b = 0;
+	var c = 0;
+	 
+	
+	$( "#checkAll" ).click(function() {
+		
+		  	selectAll();
+	});
+	$( "input[name='check_listado[]']" ).click(function() {
+		selectTrList();
+	});
+});
+
+function selectTrList(){
+	var n = 0;
+	var b = 0;
+	var c = 0;
+}
+
+function selectAll(){
+	var n = 0; 
+	var b = 0; 
+	var c = 0; 
+	if($("#checkAll").prop("checked")){
+		$("input[name='check_listado[]']").prop( "checked", true );
+		
+	}else{
+		$( "input[name='check_listado[]']").prop( "checked", false );
+	}
+	
+	 
+}
+
+</script>		
+ 	 }
+}

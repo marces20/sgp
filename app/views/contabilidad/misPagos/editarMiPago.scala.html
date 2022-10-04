@@ -1,0 +1,27 @@
+@(formMiPago: Form[MiPago],miPago:MiPago)
+@import helper._
+@implicitFieldConstructor = @{ FieldConstructor(simpleInput.render) }
+
+@views.html.contabilidad.mainContabilidad("Modificar mi pago") {
+
+	<div class="page-header">
+		<div class="row">
+			<div class="col-sm-10">
+				<h1>Editar mi pago</h1>
+			</div>
+		</div>
+	</div>
+	
+	@if(flash.containsKey("error")) {
+		<div class="alert alert-danger">
+			@flash.get("error")
+		</div>
+	}
+	
+	@helper.form(action = controllers.contabilidad.routes.MisPagosController.actualizar(miPago.id)) {
+		@inputText(formMiPago("id"), 'hidden -> "hidden")
+
+		@views.html.contabilidad.misPagos.formMiPago(formMiPago)
+	}
+
+}

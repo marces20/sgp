@@ -1,0 +1,152 @@
+@(buscador: utils.pagination.Pagination[UltimaCotizacion], formBuscador: DynamicForm, paginadorFicha: utils.pagination.PaginadorFicha)
+@import helper._
+@import utils._
+@import models.auth._
+@implicitFieldConstructor = @{ FieldConstructor(simpleInput.render) }
+@scripts = {
+	 
+}
+ 
+
+@views.html.dashboard.mainDashboard("Lista de Cotizaciones", scripts) {
+	<div class="page-header">
+		<div class="row">
+			<div class="col-sm-7">
+				<h1>Lista de Cotizaciones</h1>
+			</div>
+			
+			<div class="col-sm-5">
+				<div class="dropdown pull-right">
+				 <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown">
+				 	<i class="glyphicon glyphicon-list-alt"></i>
+				    Reportes
+				    <span class="caret"></span>
+				  </button>
+				  <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
+				  	
+				  	
+				  </ul>
+				</div>
+				
+				<div class="dropdown pull-right btn-header">
+				 <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown">
+				 	<i class="glyphicon glyphicon-cog"></i>
+				    Acciones
+				    <span class="caret"></span>
+				  </button>
+				  <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
+				  	<li role="presentation" class="dropdown-header">Acciones Masivas</li>
+				  </ul>
+				</div>
+					
+				<div class="pull-right btn-header">
+					<a href="@controllers.dashboard.routes.UltimasCotizacionesController.crearUltimaCotizaciones()?@UriTrack.encode()"  class="btn btn-default"><i class="glyphicon glyphicon-plus-sign"></i> Nueva Cotizacion</a>
+				</div>
+			</div>
+		</div>
+	</div>
+	
+	@views.html.tags.successError()
+	
+	<div id="actions">
+		<form action="" id="formSearchUltimasCotizaciones" method="GET">
+		<div class="row">
+			
+		</div>
+
+		<div class="row">	
+    		
+			<div class="col-sm-2">
+				<div class="col-sm-2 input-group">
+					<label class="control-label">Fecha</label>
+					<div>
+						@inputText(formBuscador("fecha_desde"), 'class -> "form-control inputDateMascara", 'id -> "fecha_desde", 'placeholder -> "Desde")
+						@inputText(formBuscador("fecha_hasta"), 'class -> "form-control inputDateMascara", 'id -> "fecha_hasta", 'placeholder -> "Hasta")
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="row">
+			 
+			<div class="col-sm-2">
+				<div class="form-group">
+				<label for="nombre" class="control-label">&nbsp;</label>
+				<button  class="form-control btn btn-primary">Buscar</button>
+				</div>
+			</div>
+			<div class="col-sm-2">
+				<div class="form-group">
+				<label for="nombre" class="control-label">&nbsp;</label>
+				<a href="@controllers.dashboard.routes.UltimasCotizacionesController.indexUltimaCotizaciones()"  class="form-control btn btn-default">Limpiar</a>
+				</div>
+			</div>
+		</div>
+		 
+		</form>
+	</div>
+	
+	@if(buscador.getTotalRowCount == 0) {
+        
+        <div class="well">
+            <em>No se encuentran Cotizaciones</em>
+        </div>
+        
+    } else {
+    	
+		<table id="listaAutorizados" class="table table-striped table-bordered">
+			<thead>
+				 <tr style="background: #FFFFFF;">
+			        <td colspan="3">Mostrando @buscador.getDisplayXtoYofZ(" a "," de ") resultado(s). </td>
+			    </tr>
+				<tr>
+					<th width="40">Fecha</th>
+					<th width="40">Moneda</th>
+					<th width="40">Cotizacion</th>
+					<th width="30">#</th>
+				</tr>
+			</thead>
+			<tbody>
+			@for(co <- buscador.getList) {
+				@paginadorFicha.add(co.id.toString)
+				<tr class="pointer">
+					<td class="fecha">@if(co.fecha != null){@(utils.DateUtils.formatDate(co.fecha))}</td>
+					<td rel="@co.cotizacion">@UltimaCotizacion.getMoneda(co.tipo_moneda)</td>
+					<td class="total" rel="@co.cotizacion">@(utils.NumberUtils.moneda(co.cotizacion))</td>
+					
+					<td>
+						<a class="btn btn-default btn-xs delete-confirm-link notSeleccion" href="@controllers.dashboard.routes.UltimasCotizacionesController.eliminar(co.id)&@UriTrack.encode()">
+							<i class="glyphicon glyphicon-trash icono-eliminar"></i>
+						</a>
+					</td>
+				</tr>
+             }
+             @paginadorFicha.guardar()
+	        </tbody>
+	        <tfoot>
+		        <tr>
+			        <td colspan="3">&nbsp</td>
+			        
+		        </tr>
+	        </tfoot>
+        </table>
+    	
+    	<div class="pagination pull-right">
+		    @views.html.helpers.paginador(buscador, controllers.dashboard.routes.UltimasCotizacionesController.indexUltimaCotizaciones())
+		</div>
+<script>
+$( function (){
+	 
+});
+
+function selectTrList(){
+	 
+	
+}
+
+function selectAll(){
+	 
+}
+
+</script>		
+ 	 }
+}

@@ -1,0 +1,171 @@
+@(formBuscador: DynamicForm,s:List[com.avaje.ebean.SqlRow])
+@import helper._
+@import models.auth._
+@import utils._
+@implicitFieldConstructor = @{ FieldConstructor(simpleInput.render) }
+@import java.math.BigDecimal;var totalPreventivo=new java.math.BigDecimal(0);var totalSaldo=new java.math.BigDecimal(0);var ultimoSaldo=new java.math.BigDecimal(0);
+@views.html.presupuesto.mainPresupuesto("Control Presupuesto") {
+
+	
+<div class="page-header">
+	<div class="row">
+		<div class="col-sm-7">
+			<h1>Movimientos Saldos/Preventivos</h1>
+		</div>
+		<div class="col-sm-5">
+			<div class="dropdown pull-right">
+				<button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown">
+			 		<i class="glyphicon glyphicon-list-alt"></i> Reportes<span class="caret"></span>
+				</button>
+				<ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
+					<li></li>
+							
+				</ul>
+			</div>
+		</div>
+	</div>
+</div>	
+	@views.html.tags.successError()
+<div id="actions">
+	<form action="" id="formSearchFacturas" method="GET">
+		<div class="row">
+			<div class="col-sm-4">
+				<label for="cuenta" class="control-label">Cuenta Presupuestaria Padre</label>
+				<div class="input-group">
+					@inputText(formBuscador("cuenta"), 'class -> "form-control", 'id -> "cuentaAnalitica")
+					@inputText(formBuscador("cuenta_analitica_padre_id"), 'hidden -> "hidden", 'id -> "cuentaAnalitica_id")
+					<span class="input-group-addon">
+						<a href="#" 
+						   id="searchCuentaAnalitica" 
+						   class="searchModal"
+						   data-title="Selección de cuenta analítica" 
+						   data-url="@controllers.contabilidad.routes.CuentasAnaliticasController.modalBuscar()" 
+						   data-height="650" 
+						   data-width="700" 
+						   data-listen="modal.seleccion.cuentaAnalitica.simple" 
+						   data-label="#cuentaAnalitica" 
+						   data-field="#cuentaAnalitica_id">
+						   <i class="glyphicon glyphicon-search"></i>
+						 </a>
+					</span>
+				</div>
+			</div>
+			 			
+			 
+			<div class="col-sm-2">
+				<label class="control-label">Ejercicio
+					@select(formBuscador("ejercicio"), Ejercicio.getEjercicios().map { p => p.id.toString -> p.nombre}, 
+					'class -> "form-control select", '_default -> "Seleccionar")
+					
+				</label>
+			</div>
+		</div>	
+		<div class="row">	
+			<div class="col-sm-2">
+				<div class="form-group">
+				<label for="nombre" class="control-label">&nbsp;</label>
+				<button  class="form-control btn btn-primary"><i class="glyphicon glyphicon-search"></i> Buscar</button>
+				</div>
+			</div>
+			<div class="col-sm-2">
+				<div class="form-group">
+				<label for="nombre" class="control-label">&nbsp;</label>
+				<a href="@controllers.presupuesto.routes.ControlPresupuestarioController.controlAnulacionProductosAutomaticos()"  class="form-control btn btn-default">Limpiar</a>
+				</div>
+			</div>
+		</div>
+	</form>
+</div>
+<div class="row">
+	<div class="col-sm-6">	 
+		@if(s.size() > 0){
+			<table id="" class="table table-striped table-bordered">
+				<thead>
+					<tr>
+					 	<th>Saldo</th>
+						<th>Preventivo</th> 
+						<th>Total</th>
+						<th>Expediente</th>
+						<th>Fecha</th>
+					<tr>	
+				</thead>
+				<tbody>
+				@for(sx <- s) {
+					@if(sx.getInteger("etapa") == 5){
+						<tr data-id="">
+							 
+								
+							@{totalSaldo = ultimoSaldo.add(totalSaldo).subtract(totalPreventivo)}
+							
+							
+							<td><b>SALDO</b></td>
+							<td><b>@utils.NumberUtils.moneda(totalSaldo)</b></td>
+							
+							
+							
+							<!-- =(B267+A269)-SUMA(B270:B342) -->
+							<!-- ultimoSaldo+totalSaldo-(totalPreventivo) -->
+							
+							@{ultimoSaldo = sx.getBigDecimal("total")}	
+							@{totalPreventivo = new java.math.BigDecimal(0)}
+								
+							 
+							<td></td>
+							<td></td>
+							<td></td>
+						</tr>
+					
+					}
+					<tr data-id="">
+					
+						@if(sx.getInteger("etapa") == 5){
+							<td>@utils.NumberUtils.moneda(sx.getBigDecimal("total"))</td>
+							<td></td>
+						}else{
+							<td></td>
+							<td>@utils.NumberUtils.moneda(sx.getBigDecimal("total"))</td>
+							@{totalPreventivo = totalPreventivo.add(sx.getBigDecimal("total"))}
+						}	
+						<td></td>
+						<td>@sx.getString("expediente")</td>
+						<td>@utils.DateUtils.formatDate(sx.getDate("fecha"))</td>
+					</tr>
+				}
+						<tr data-id="">
+							 
+								
+							@{totalSaldo = ultimoSaldo.add(totalSaldo).subtract(totalPreventivo)}
+							
+							
+							<td><b>SALDO</b></td>
+							<td><b>@utils.NumberUtils.moneda(totalSaldo)</b></td>
+							
+							
+							
+							<!-- =(B267+A269)-SUMA(B270:B342) -->
+							<!-- ultimoSaldo+totalSaldo-(totalPreventivo) -->
+							
+							 
+								
+							 
+							<td></td>
+							<td></td>
+							<td></td>
+						</tr>
+				</tbody>
+			</table>
+		
+		}
+	</div>
+</div>		
+}
+
+<script>
+$(function(){
+	$('#searchCuentaAnalitica').modalSearch();
+	 
+	
+	 
+	
+});
+</script>

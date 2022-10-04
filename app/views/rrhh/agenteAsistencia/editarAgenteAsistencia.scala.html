@@ -1,0 +1,159 @@
+@(agente:Agente)
+@import helper._
+@import utils._
+@import models.auth._
+@scripts = {
+	<script src="@routes.Assets.at("javascripts/rrhh/agentes.js")" type="text/javascript"></script>
+}
+@implicitFieldConstructor = @{ FieldConstructor(simpleInput.render) } 
+
+@views.html.rrhh.mainRrhh("Editar Asistencias Agentes",scripts) {
+
+<div class="page-header">
+		<div class="row">
+			<div class="col-sm-7">
+				<h1>Editar Asistencias Agentes</h1>
+			</div>
+
+			<div class="col-sm-5">
+				<div class="dropdown pull-right">
+				 <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown">
+				 	<i class="glyphicon glyphicon-list-alt"></i>
+				    Reportes
+				    <span class="caret"></span>
+				  </button>
+				  <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
+				  	<li><a id="reporteLicencia" href="#" data-url="@controllers.rrhh.routes.AgentesAsistenciasReportesController.reporteLicencia()">Ficha Licencia</a></li>
+				  	<li><a id="reporteLicenciaMedica" href="#" data-url="@controllers.rrhh.routes.AgentesAsistenciasReportesController.reporteLicenciaMedicinaLaboral()">Ficha Licencia Medicina Laboral</a></li>
+				  </ul>
+				</div>
+				<div class="dropdown pull-right btn-header">
+					<button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown"> <i class="glyphicon glyphicon-cog"></i> Acciones <span class="caret"></span> </button>
+					<ul class="dropdown-menu">
+						@if(Permiso.check("agentesLicenciasPasarBorrador")) {    
+					    	<li role="presentation"><a role="menuitem" id="accionLicenciaPasarBorrador" tabindex="-1" href="#" data-url="@controllers.rrhh.routes.AgentesAsistenciasLicenciasController.modalPasarBorrador()">Pasar a Borrador</a></li>
+						}  
+						@if(Permiso.check("agentesLicenciasPasarAprobado")) {    
+							<li role="presentation"><a role="menuitem" id="accionLicenciaPasarPreAprobado" tabindex="-1" href="#" data-url="@controllers.rrhh.routes.AgentesAsistenciasLicenciasController.modalPasarPreAprobado()">Pasar a PreAprobado</a></li>
+							<li role="presentation"><a role="menuitem" id="accionLicenciaPasarAprobado" tabindex="-1" href="#" data-url="@controllers.rrhh.routes.AgentesAsistenciasLicenciasController.modalPasarAprobado()">Pasar a Aprobado</a></li>
+						}  
+						@if(Permiso.check("agentesLicenciasPasarCancelado")) {    
+					    	<li role="presentation"><a role="menuitem" id="accionLicenciaPasarCancelado" tabindex="-1" href="#" data-url="@controllers.rrhh.routes.AgentesAsistenciasLicenciasController.modalPasarCancelado()">Pasar a Cancelado</a></li>
+						}  												  									 																							
+					</ul>
+				</div>	
+			</div>
+			
+			
+		</div>
+	</div>
+	<div class="row menu-acciones">
+		<div class="col-sm-9">
+		</div>	
+		<div class="col-sm-2">
+			<a href="@UriTrack.getOnNull(controllers.rrhh.routes.AgentesAsistenciasController.index().absoluteURL())" class="btn btn-default"><i class="glyphicon glyphicon-list"></i></a> 
+		</div>
+	</div>
+</hr>
+
+<h2>@agente.apellido - Fecha Ingreso @DateUtils.formatDate(agente.fingreso,"dd/MM/yyyy")</h2>
+
+<input type="hidden" value="@agente.id" id="agenteId"/>
+@views.html.rrhh.agenteAsistencia.tabsAgenteAsistencia(agente,true,0)
+
+<script>
+$( function(){
+	/**
+	 * Ventana de carga linea de productos en ordenes
+	 */
+	 
+	var contenedor = $("#contenedorInasistencia");
+
+	contenedor.on('click', '#nuevoAgenteAsistenciaLicencia', function(){
+		urlContenidoModal = '/rrhh/agente-asistencia-licencia/crear?agenteId='+$('#agenteId').val();
+		mostrarModal(urlContenidoModal);
+		return false;
+	});
+	
+	contenedor.on('click', '.modificarAgenteAsistenciaLicencia', function(){
+		lineaParaEditar = $(this).closest('tr');
+		var modal = mostrarModal($(this).attr('href'));
+		modal.dialog('option', 'title', 'Editar Licencia');	
+		return false;
+	});
+	
+	contenedor.on('click', '.eliminarAgenteAsistenciaLicencia', function(){
+		var mensaje = "¿Confirma que desea eliminar el registro?";
+		if(confirm(mensaje)){
+			var url = $(this).attr('href');
+			$this = $(this);
+			$.get(url, function(data){
+				if(data.success){
+					$this.closest("tr").remove();
+				} else {
+					alert("No se puedo eliminar el registro.");
+				}
+			});
+		}
+		return false;
+	});
+	
+	function mostrarModal(url){
+		modalCargaLicencias = $('<div></div>').dialog({
+			resizable: false,
+		    title: "Cargar Licencia",
+		    height: 400,
+		    width: 750,
+		    modal: true,
+		    open: function( event, ui ) {
+				$.get(url, function(data){
+					modalCargaLicencias.html(data);
+				});
+		    },
+		    close: function(event, ui ){
+		    	modalCargaLicencias.dialog('destroy');
+			}
+		  });
+		
+		
+		modalCargaLicencias.on('click', '.cancelar', function(){
+			modalCargaLicencias.dialog('destroy');
+			return false;
+		});
+		
+		modalCargaLicencias.on('submit', function(e){
+			var href = $(e.target).attr('action');
+			var data = $(e.target).serialize();
+			$("#btn-guardar-asistencia").attr("disabled", true);
+			$.post(href, data, function(resultado){
+				if(resultado.success && resultado.nuevo){
+					$('#listaDeAgenteAsistenciaLicencias tbody').prepend(resultado.html);
+					modalCargaLicencias.dialog( "destroy" );
+				} else if(resultado.success && resultado.modificar){
+					$(lineaParaEditar).replaceWith(resultado.html);
+					modalCargaLicencias.dialog( "destroy" );
+				} else {
+					modalCargaLicencias.html(resultado);
+				}
+				$("#btn-guardar-asistencia").attr("disabled", false);
+			});
+			return false;
+		});
+		
+		
+		return modalCargaLicencias;
+	}
+	
+	
+	contenedor.find('form').on('submit', function(){
+		var url = $(this).attr("action");
+		var query = $(this).serialize();
+		$.get(url+"?"+query, function(data){
+			contenedor.parent().html(data);
+		});
+		return false;
+	});
+});
+</script>
+
+}

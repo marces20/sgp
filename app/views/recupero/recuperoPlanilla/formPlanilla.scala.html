@@ -1,0 +1,78 @@
+@(planillaForm: Form[models.recupero.RecuperoPlanilla])
+@import helper._
+@import utils._
+@implicitFieldConstructor = @{ FieldConstructor(simpleInput.render) } 
+	
+	
+	<div class="row menu-acciones">
+		<div class="col-sm-10">
+			<button type="submit" class="btn btn-default" title="Guardar orden"><i class="glyphicon glyphicon-floppy-disk"></i> Guardar</button>	
+																																   
+	    	<a href="@if(request().getHeader("referer")){ @request().getHeader("referer") } else {@controllers.recupero.routes.RecuperoPlanillasController.index()@UriTrack.decode()}" title="Cancelar editar" class="btn btn-default"><i class="glyphicon glyphicon-floppy-remove"></i> Cancelar</a>
+	    </div>
+		<div class="col-sm-2">
+			<a href="@UriTrack.decode()" title="Volver al listado" class="btn btn-default"><i class="glyphicon glyphicon-list"></i></a> 
+			@if(planillaForm.field("id").value){<a href="@controllers.recupero.routes.RecuperoPlanillasController.ver(planillaForm.field("id").value.toLong)@UriTrack.get("&")" title="Ver planilla" class="btn btn-default"><i class="glyphicon glyphicon-align-justify"></i></a>}
+		</div>
+	</div>
+	
+	
+	@inputText(planillaForm("id"), 'type -> "hidden", 'id -> "planillaId")
+	<input type="hidden" name=@UriTrack.getKey() value="@UriTrack.code()" />
+	<div class="row">
+		<div class="col-sm-2">
+			<label class="control-label">Numero</label> 
+			<div class="form-group @if(planillaForm.error("numero") != null) {has-error}else{has-required}">
+				@inputText(planillaForm("numero"), 'class -> "form-control", 'id -> "numero")
+				
+				@planillaForm("numero").error.map{ error =>
+					<div class="text-error">@error.message</div>
+				}
+			</div>
+		</div>
+		<div class="col-sm-2">
+			<label for="expediente" class="control-label">Expediente</label> 
+			<div class="input-group @if(planillaForm.error("expediente_id") != null) {has-error}else{has-required}">
+				@inputText(planillaForm("expediente.expedienteEjercicio"),'class -> "form-control", 'id -> "expediente")
+				@inputText(planillaForm("expediente_id"),'hidden -> "hidden", 'id -> "expediente_id")
+
+				<span class="input-group-addon"><a href="#" id="searchExpediente" data-title="Selección de expediente" 
+				data-url="@controllers.expediente.routes.ExpedientesController.modalBuscar()" 
+				data-height="650" data-width="700" 
+				data-listen="modal.seleccion.expediente.simple" 
+				data-label="#expediente" data-field="#expediente_id"><i class="glyphicon glyphicon-search"></i></a></span>
+				
+			</div>
+			@planillaForm("expediente_id").error.map{ error =>
+					<div class="text-error">@error.message</div>
+				}
+		</div>
+		
+		<div class="col-sm-2">
+			<label class="control-label">Fecha planilla</label> 
+			<div class="form-group @if(planillaForm.error("fecha")  != null) {has-error}else{has-required}">
+				@inputText(planillaForm("fecha"),'class -> "form-control date", 'autocomplete -> "off")
+			</div>
+			@planillaForm("fecha").error.map{ error =>
+				<div class="text-error">@error.message</div>
+			}
+		</div>
+		
+		<div class="col-sm-4">
+			<label for="deposito" class="control-label">Institucion</label> 
+			<div class="input-group @if(planillaForm.error("deposito_id") != null) {has-error}else{has-required}">
+				@inputText(planillaForm("deposito.nombre"),'class -> "form-control", 'id -> "deposito_nombre", 'autocomplete -> "off")
+				@inputText(planillaForm("deposito_id"),'hidden -> "hidden", 'id -> "deposito_id")
+				<span class="input-group-addon">
+                	<a href="#" id="searchDeposito" data-title="Selección de Institucion" 
+                	data-url="@controllers.delegacion.routes.DepositosController.modalBuscar()" 
+                	data-height="650" data-width="700" 
+                	data-listen="modal.seleccion.deposito.simple" 
+                	data-label="#deposito_nombre" data-field="#deposito_id" /> <i class="glyphicon glyphicon-search"></i></a>
+                </span>
+			</div>
+			@planillaForm("deposito_id").error.map{ error =>
+				<div class="text-error">@error.message</div>
+			}
+		</div>
+	</div>

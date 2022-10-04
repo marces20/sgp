@@ -1,0 +1,18 @@
+@(formularioCarga: Boolean, presupuestoForm: Form[models.recupero.Presupuesto] = null)
+@import java.util.List
+
+@if(presupuestoForm.field("id").value == null || presupuestoForm.field("id").value == ""){
+	<p>Para cargar productos primero debe dar de alta el presupuesto</p>
+} else {
+	<script>
+	$( function (){
+		$.get('@controllers.recupero.routes.PresupuestoLineasController.index(presupuestoForm.field("id").value.toLong, formularioCarga)', function(data){
+			$('#listaLineaProductos').parent().html(data);
+		})
+	});
+	</script>
+}
+
+<div id="listaLineaProductos">
+
+</div>

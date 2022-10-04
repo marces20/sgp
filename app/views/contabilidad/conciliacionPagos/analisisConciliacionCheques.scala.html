@@ -1,0 +1,63 @@
+@(lista: List[HashMap[String, Object]], conciliar: List[Integer])
+
+@views.html.contabilidad.mainContabilidad(title = "Analisis de información de cheques") {
+
+<div class="page-header">
+	<div class="row">
+		<div class="col-sm-9">
+			<h1>Analisis de información de cheques</h1>
+		</div>
+	</div>
+</div>
+
+@views.html.tags.successError()
+        
+<div class="content">
+
+	@if(!lista.isEmpty()) {
+	
+
+		<div class="alert alert-error" role="alert">Se han encontrado algunas incidencias <b>(@lista.size())</b></div>
+		
+		<table id="listaActasRecepcion" class="table table-striped table-bordered table-hover">
+			<thead>	
+				<tr>
+					
+					<th width="100">Referencia</th>
+					<th width="100">Débito</th>
+					<th width="100">Pago</th>
+					<th>Mensaje</th>
+					
+				</tr>
+			</thead>
+			<tbody>
+				@for(l <- lista) {
+				<tr>
+					<td>@l.get("referencia")</td>
+					<td>@l.get("debito")</td>
+					<td>@l.get("total")</td>
+					<td>@l.get("mensajes")</td>
+				</tr>
+				}
+			</tbody>
+		</table>
+		
+		<a href="@controllers.contabilidad.routes.ConciliacionPagosController.index()"  class="form-control btn btn-default"><i class="glyphicon glyphicon-repeat"></i> Volver a procesar el archivo</a>
+
+	} else {
+	
+		@helper.form(action = controllers.contabilidad.routes.ConciliacionPagosController.conciliarCheques()) {
+		
+			@for(c <- conciliar) {
+				<input type="hidden" name="referencia" value="@c" />
+			}
+
+			<div class="alert alert-success"><i class="glyphicon glyphicon-ok-sign"></i> Archivo procesado correctamente! <button type="submit" class="btn btn-success">Conciliar pagos</button></div>
+		}
+	
+	}
+
+
+</div>
+
+}

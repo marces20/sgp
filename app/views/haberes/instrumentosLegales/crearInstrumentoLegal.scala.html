@@ -1,0 +1,18 @@
+@(ilForm: Form[models.haberes.InstrumentoLegal])
+@import helper._
+
+@views.html.haberes.mainHaberes("Crear Instrumento Legal") {
+
+	<div class="page-header">
+		<div class="row">
+			<div class="col-sm-10">
+				<h1>Crear nuevo Instrumento Legal</h1>
+			</div>
+		</div>
+	</div>
+	@views.html.tags.successError()
+    
+    @helper.form(action = controllers.haberes.routes.InstrumentosLegalesController.guardar()) {
+		@views.html.haberes.instrumentosLegales.formInstrumentoLegal(ilForm) 	
+	}
+}

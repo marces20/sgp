@@ -1,0 +1,42 @@
+@(lista: List[String])
+
+@views.html.contabilidad.mainContabilidad(title = "Diferencias") {
+
+<div class="page-header">
+	<div class="row">
+		<div class="col-sm-9">
+			<h1>Diferencias</h1>
+		</div>
+	</div>
+</div>
+
+@views.html.tags.successError()
+        
+<div class="content">
+@helper.form(action = controllers.dashboard.routes.InformeEstadisticoDeudaProveedoresController.procesarDiferencias(), 'enctype -> "multipart/form-data") {
+
+
+
+	<input type="file" name="archivo">
+
+	<div class="row form-actions">
+	    <div class="col-lg-offset-4 col-lg-8">
+	      <button type="submit" class="btn btn-sistema">Procesar</button>
+	    </div>
+	</div>
+
+
+	@if(!lista.isEmpty()) {
+	
+		<h4>Diferencias (@lista.size())</h4>
+	
+		@for(l <- lista) {
+			@l <br />
+		}
+	}
+
+
+}
+</div>
+
+}

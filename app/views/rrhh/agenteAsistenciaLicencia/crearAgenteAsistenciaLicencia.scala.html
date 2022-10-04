@@ -1,0 +1,9 @@
+@(lineaForm: Form[AgenteAsistenciaLicencia])
+@import helper._
+@implicitFieldConstructor = @{ FieldConstructor(simpleInput.render) } 
+											   
+@helper.form(action = controllers.rrhh.routes.AgentesAsistenciasLicenciasController.guardar()) {
+	@views.html.rrhh.agenteAsistenciaLicencia.formAgenteAsistenciaLicencia(lineaForm)
+												   
+	
+}

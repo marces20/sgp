@@ -1,0 +1,34 @@
+@(linea: List[CertificacionServicioLinea])
+
+@if(linea.size() > 0){
+
+
+<table id="listaDePacientes" class="table table-striped table-bordered">
+	<thead>
+		<tr>
+			<th>Producto</th>
+			<th>Paciente</th>
+			<th>Cantidad</th>
+			<th>Precio</th>
+			<th>Total</th>
+		<tr>	
+	</thead>
+	<tbody>
+	@for(ll <- linea) {
+		@if(ll.certificacionServicioLineaCliente.size() > 0){
+			@for(lcc <- ll.certificacionServicioLineaCliente) {
+				<tr>
+				 <td>@ll.producto.nombre</td>
+				 <td>@lcc.cliente.nombre.toUpperCase() - ID:@lcc.cliente.id_paciente_rismi</td>
+				 <td>@lcc.cantidad</td>
+				 <td>@utils.NumberUtils.moneda(ll.precio)</td>
+				 <td>@utils.NumberUtils.moneda(lcc.cantidad.multiply(ll.precio))</td>
+				</tr> 
+			}
+		}else{
+			<tr><td>@ll.producto.nombre</td><td colspan="4">NO TIENE PACIENTES</td></tr>
+		}
+	}	
+	</tbody>
+</table>
+}

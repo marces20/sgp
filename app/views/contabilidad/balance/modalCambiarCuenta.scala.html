@@ -1,0 +1,52 @@
+@(formBuscador: DynamicForm)
+@import helper._
+@implicitFieldConstructor = @{ FieldConstructor(simpleInput.render) } 
+	
+@helper.form(action = controllers.contabilidad.routes.BalanceController.cambiarCuentaMasivo(), 'id -> "formCambiarCuentaBalance") {	
+	
+	@views.html.tags.successError()
+	<div class="col-sm-4">
+		<label class="control-label">Cuenta Balance
+			<div class="input-group">
+				@inputText(formBuscador("cuenta.nombre"), 'name -> "", 'class -> "form-control", 'id -> "cuenta_modal")
+				@inputText(formBuscador("cuenta_id"), 'hidden -> "hidden", 'id -> "cuenta_id_modal")
+				<span class="input-group-addon">
+					<a href="#" class="searchModal"
+								id="searchCuentaModal" 
+								data-title="Selección de Cuenta" 
+								data-url="@controllers.contabilidad.routes.CuentasController.modalBuscar()" 
+								data-height="650" 
+								data-width="700" 
+								data-listen="modal.seleccion.cuenta.simple" 
+								data-label="#cuenta_modal" 
+								data-field="#cuenta_id_modal">
+						<i class="glyphicon glyphicon-search"></i>
+					</a>
+				</span>
+			</div>
+		</label>
+	</div>
+	<div class="col-sm-5"><br />
+		<button type="submit" class="btn btn-default" title="cambiar cuenta"><i class="glyphicon glyphicon-arrow-right"></i> Cambiar Cuenta</button>
+	</div>
+
+}
+<script>
+$( function(){
+	$('#searchCuentaModal').modalSearch();
+	if($("#cuenta_modal").length){
+		var options = {
+				script:"/contabilidad/suggestCuenta/",
+				varname:"",
+				json:true,
+				shownoresults:true,
+				maxresults:6,
+				callback: function (obj) { 
+											$("#cuenta_id_modal").val(obj.id); 
+										 }
+			};
+		var as_json = new bsn.AutoSuggest('cuenta_modal', options);
+	}	
+});
+</script>
+@flash().clear()

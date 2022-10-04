@@ -1,0 +1,4 @@
+@if(flash.containsKey("success")) {
+	<div class="alert alert-success"><i class="glyphicon glyphicon-ok-circle"></i> @flash.get("success")</div>
+}	
+@flash().clear()

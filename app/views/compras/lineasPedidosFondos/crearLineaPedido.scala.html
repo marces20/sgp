@@ -1,0 +1,8 @@
+@(lineaForm: Form[PedidoFondoLinea])
+@import helper._
+@implicitFieldConstructor = @{ FieldConstructor(simpleInput.render) } 
+
+@helper.form(action = controllers.compras.routes.LineasPedidosFondosController.guardar()) {
+	@views.html.compras.lineasPedidosFondos.formLineaPedido(lineaForm)
+	
+}

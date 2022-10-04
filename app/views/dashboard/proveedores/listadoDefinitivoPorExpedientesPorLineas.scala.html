@@ -1,0 +1,127 @@
+@(formBuscador: DynamicForm,ol:java.util.List[Orden],proveedorId:Long = null,rubroId:Long = null,ejercicioId:Long = null)
+@import helper._
+@implicitFieldConstructor = @{ FieldConstructor(simpleInput.render) } 
+
+@getPacientes(linea: java.util.List[OrdenLineaCliente]) = @{
+	var pacientes:String = new String()
+	
+	for(olp <- linea) {
+		pacientes += olp.cliente.nombre.toUpperCase()+"\n" 
+	}
+	
+	pacientes
+}
+
+@views.html.dashboard.mainDashboard("Proveedores estado definitivo") {
+
+<script src="@routes.Assets.at("javascripts/dashboard/proveedores.js")" type="text/javascript"></script>
+<div class="page-header">
+	<div class="row">
+		<div class="col-sm-7"><h1>Proveedores estado definitivo</h1></div>
+		<div class="col-sm-5">
+			<div class="dropdown pull-right">
+			 <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown">
+			 	<i class="glyphicon glyphicon-list-alt"></i>
+			    Reportes
+			    <span class="caret"></span>
+			  </button>
+			  <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
+			  	<li role="presentation"><a role="menuitem" id="reporteGeneralPorExpedientePorCuenta" data-url="" tabindex="-1" 
+				    href="@controllers.dashboard.routes.ProveedoresController.reporteEstadoDefinitivoExpedienteLineas(proveedorId,rubroId,ejercicioId)">
+				    Reporte Estado Definitivo Expediente Lineas</a></li>
+			  </ul>
+			</div>
+		</div>
+	</div>
+</div>
+@views.html.tags.successError()
+<form action="" method="GET">
+	<div class="row">
+		<div class="col-sm-4">
+			<div class="seleccionOrdenRubro">
+				<label for="" class="control-label">Rubro</label>
+				@select(formBuscador("orden_rubro_id"),OrdenRubro.find.all().map { p => p.id.toString -> p.nombre}, 'class -> "form-control select", '_default -> "Seleccionar")
+			</div>
+		</div>
+			
+		<div class="col-sm-6">
+			<label class="control-label">Proveedor
+				<div class="input-group">
+					@inputText(formBuscador("proveedor.id"), 'hidden -> "hidden", 'id -> "proveedor_id")
+					@inputText(formBuscador("proveedor.nombre"), 'name -> "", 'class -> "form-control", 'id -> "proveedor")
+					<span class="input-group-addon">
+						<a href="#" class="searchModal"
+									id="searchProveedor" 
+									data-title="Selección de Proveedores" 
+									data-url="@controllers.compras.routes.ProveedoresController.modalBuscar()" 
+									data-height="650" 
+									data-width="700" 
+									data-listen="modal.seleccion.proveedor.simple" 
+									data-label="#proveedor" 
+									data-field="#proveedor_id">
+							<i class="glyphicon glyphicon-search"></i>
+						</a>
+					</span>
+				</div>
+			</label>
+		</div>
+		
+		<div class="col-sm-2">
+			<label class="control-label">Ejercicio
+			@select(formBuscador("ejercicio"), Ejercicio.getEjercicios().map { p => p.id.toString -> p.nombre}, 
+			'class -> "form-control select")
+			</label>
+		</div>
+	
+	</div>
+	
+	<div class="row">
+		<div class="col-sm-2">
+			<div class="form-group">
+			<label for="nombre" class="control-label">&nbsp;</label>
+			<button  class="form-control btn btn-primary">Buscar</button>
+			</div>
+		</div>
+		<div class="col-sm-2">
+			<div class="form-group">
+			<label for="nombre" class="control-label">&nbsp;</label>
+			<a href="@controllers.dashboard.routes.ProveedoresController.estadoPorExpedientePorLinea()"  class="form-control btn btn-default">Limpiar</a>
+			</div>
+		</div>
+	</div>
+</form>
+<div id="row">
+	<table class="table table-bordered">
+	<thead>
+		<tr>
+			<th align="center">Fecha-expediente</th>	
+			<th align="center"  width="80">Expediente</th>		
+			<th align="center">Proveedor</th>	
+			<th align="center">Producto</th>	
+			<th align="center">Cantidad</th>	
+			<th align="center">Precio</th>
+			<th align="center">Total</th>	
+			<th align="center">Paciente</th>		
+		</tr>
+	</thead>					
+	@for(x <- ol){
+		@for(l <- x.lineas){
+			<tr class="" data-url="">
+				<td align="center">@utils.DateUtils.formatDate(x.expediente.fecha)</td>
+				<td align="center">@x.expediente.getExpedienteEjercicio()</td>
+				<td align="">@x.proveedor.nombre</td>
+				<td align="">@l.producto.nombre</td>
+				<td align="center">@l.cantidad.toString()</td>
+				<td align="center">@utils.NumberUtils.moneda(l.precio)</td>
+				<td align="center"><b>@utils.NumberUtils.moneda(l.precio.multiply(l.cantidad))</b></td>
+				<td align="center">
+					@if(l.ordenLineaCliente.size() > 0){
+						<div class='tip-top pointer' title='@getPacientes(l.ordenLineaCliente)'><i class="glyphicon glyphicon-user"></i></div>
+					}
+				</td>
+			</tr>
+		}
+	}
+	</table>
+</div>
+}	

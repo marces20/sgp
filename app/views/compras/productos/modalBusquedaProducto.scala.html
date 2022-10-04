@@ -1,0 +1,72 @@
+@(buscador: utils.pagination.Pagination[Producto], formBuscador: DynamicForm)
+@import helper._
+@implicitFieldConstructor = @{ FieldConstructor(simpleInput.render) } 
+
+<div id="modalBusquedaProductos" class="contenedorPaginador ajaxPaginador">
+<form action="@controllers.compras.routes.ProductosController.modalBuscar()" method="GET">
+	<div class="row">
+		<div class="col-sm-6">
+			<label class="control-label">Nombre</label>
+			@inputText(formBuscador("nombre"), 'class -> "form-control", 'autofocus -> "autofocus")
+			
+		</div>
+		<div class="col-sm-3">
+			<label class="control-label">&nbsp 
+			<button class="btn btn-primary form-control">Buscar</button>
+			</label>
+		</div>
+	</div>
+</form>
+
+@if(buscador.getTotalRowCount == 0) {
+	<div class="well">
+	    <em>No se encuentran Productos</em>
+	</div>
+} else {
+    Mostrando @buscador.getDisplayXtoYofZ(" a "," de ") resultado(s). 
+    	
+	<table class="table table-striped table-bordered table-hover">
+		<thead>
+			<tr>
+				<th>Nombre</th>
+			</tr>
+		</thead>
+		<tbody>
+    	
+    @for(producto <- buscador.getList) {
+	<tr data-id="@producto.id" class="modalSeleccionProducto">
+		<td> @producto.nombre</td>
+	</tr>    
+    }
+    </tbody>
+    </table>
+    
+	<div class="pagination pull-right">
+	    @views.html.helpers.paginador(buscador, controllers.compras.routes.ProductosController.modalBuscar())
+	</div>	
+}
+</div>
+
+<script>
+$( function(){
+	var contenedor = $("#modalBusquedaProductos");
+	var url = "@controllers.compras.routes.ProductosController.get()"
+
+	$(document).off('click', '.modalSeleccionProducto');
+	$(document).on('click', '.modalSeleccionProducto', function(){
+		var id = $(this).attr('data-id');
+		$.get(url+"?id="+id, function(data){
+			$(document).trigger("modal.seleccion.producto.simple", data);
+		});
+	});
+	
+	contenedor.find('form').on('submit', function(){
+		var url = $(this).attr("action");
+		var query = $(this).serialize();
+		$.get(url+"?"+query, function(data){
+			contenedor.parent().html(data);
+		});
+		return false;
+	});
+});
+</script>

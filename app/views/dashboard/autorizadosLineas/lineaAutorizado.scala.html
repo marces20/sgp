@@ -1,0 +1,29 @@
+@(linea: AutorizadoLinea, editable: Boolean)
+
+<tr>
+	<td>
+		@if(linea.ordenProvision != null){
+			@linea.ordenProvision.numero
+		}
+		<br>@if(linea.orden.tipo_moneda != null){<span style="color:green;font-weight:bold;font-size: 12px;">M.E.</span>}
+	</td>
+	 
+	<td>@if(linea.orden.tipo_cuenta_id != null){@linea.orden.tipoCuenta.nombre}</td>
+	<td>@linea.expediente.getExpedienteEjercicio()</td>
+	<td>@linea.proveedor.nombre</td>
+	<td>@utils.NumberUtils.moneda(linea.getTotal(), 10)</td>
+	<td>
+		<a href="@controllers.dashboard.routes.AutorizadoLineasController.getActas(linea.id)" class="lineasActas">
+		<i class="glyphicon glyphicon-align-justify"></i></a>
+	</td>
+	@if(editable){
+		<td>
+			 
+			@if(linea.autorizado.id != null && linea.orden.id != null){
+				<a class="btn btn-default btn-xs eliminarAutorizado" 
+				   href="@controllers.dashboard.routes.AutorizadoLineasController.eliminar(linea.autorizado.id,linea.orden.id)">
+				<i class="glyphicon glyphicon-trash icono-eliminar"></i></a>
+			}
+		</td>
+	}
+</tr>

@@ -1,0 +1,83 @@
+@(certificaciones:List[Certificacion])
+@getClassEstado(i:Estado) = @{
+	var classEstado:String = new String()
+	if(i != null && i.id == 28){
+		classEstado = "borrador"
+	}else if(i != null && i.id == 32){
+		classEstado = "cancelada"
+	}else if(i != null && i.id == 31){
+		classEstado = "autorizado"
+	}
+	classEstado
+	
+}
+
+@getTotalBase(cl:List[Certificacion]) = @{
+	var total:java.math.BigDecimal = new java.math.BigDecimal(0)
+	for(c <- cl){
+		total = total.add(c.getBase())
+	}
+	total
+}
+
+@getTotalDescuento(cl:List[Certificacion]) = @{
+	var total:java.math.BigDecimal = new java.math.BigDecimal(0)
+	for(c <- cl){
+		total = total.add(c.getDescuento())
+	}
+	total
+}
+
+@getTotalTotal(cl:List[Certificacion]) = @{
+	var total:java.math.BigDecimal = new java.math.BigDecimal(0)
+	for(c <- cl){
+		total = total.add(c.getTotal())
+	}
+	total
+}
+
+<h3>Certificaciones</h3>
+<table class="table table-striped table-bordered tableEstadoGeneral">
+	<thead>
+		<tr>
+			<th width="80">Referencia</th>
+			<th width="70">Fecha</th>
+			<th width="95">Expediente</th>
+			<th width="95">Periodo</th>
+			<th width="30">Tipo Cuenta</th>
+			<th width="95">Base</th>
+			<th width="95">Descuento</th>
+			<th width="95">Total</th>
+			<th width="100">Estado</th>
+			<th width="30">Detalle</th> 
+		</tr>
+	</thead>
+	<tbody>
+		@for(certificacion <- certificaciones) {
+			<tr class="@getClassEstado(certificacion.estado)">
+				<td>@(certificacion.nombre)</td>
+				<td class="fechaCertificacion">@if(certificacion.fecha_certificacion != null){@(utils.DateUtils.formatDate(certificacion.fecha_certificacion))}</td>
+				<td>@if(certificacion.expediente != null){@certificacion.expediente.getExpedienteEjercicio()}</td>
+				<td>@if(certificacion.periodo != null){@(certificacion.periodo.nombre)}</td>
+				<td>@if(certificacion.tipoCuenta != null){@certificacion.tipoCuenta.nombre}</td>
+				<td class="base" >@(utils.NumberUtils.moneda(certificacion.getBase()))</td>
+				<td class="descuento">@(utils.NumberUtils.moneda(certificacion.getDescuento()))</td>
+				<td class="total">@(utils.NumberUtils.moneda(certificacion.getTotal()))</td>
+				<td class="estado">
+					<div class="tip-top" title="@if(certificacion.estado != null){@(certificacion.estado.significado)}">@if(certificacion.estado != null){@(certificacion.estado.nombre)}</div>
+				</td>
+				<td>
+					<a href='#' class='detalleCertificacionModal' data-url='@controllers.compras.routes.CertificacionesAccionesController.modalDetalleCertificacion(certificacion.id)'>
+					<i class='glyphicon glyphicon-tasks'></i></a>
+				</td>
+			</tr>
+		}
+		<tr>	
+			<td colspan='5' style='text-align: right;'><b>Totales:</b></td>
+			<td>@utils.NumberUtils.moneda(getTotalBase(certificaciones))</td>
+			<td>@utils.NumberUtils.moneda(getTotalDescuento(certificaciones))</td>
+			<td>@utils.NumberUtils.moneda(getTotalTotal(certificaciones))</td>
+			<td colspan='2'></td>
+		</tr>
+	</tbody>
+</table>

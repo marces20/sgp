@@ -1,0 +1,115 @@
+@(idOrdenCompra: Long, lineaForm: Form[OrdenLineaAnulacion],opl:List[OrdenProvisionLineas])
+@import helper._
+@implicitFieldConstructor = @{ FieldConstructor(simpleInput.render) } 
+
+
+	
+	<table id="listaProductos" class="table table-striped table-bordered table-hover">
+		<thead>
+			<tr>	
+				<th>Producto</th>
+				<th>Pendiente</th>
+				<th>Anular</th>
+			</tr>
+		</thead>	
+		<tbody>
+			@for(o <- opl){
+				@if(o.pendiente.compareTo(java.math.BigDecimal.ZERO) > 0){
+				<tr>
+					<td>@o.producto.nombre</td>
+					<td>@o.pendiente</td>
+					<td>
+						<input class="linea_orden_id" type="hidden" value="@o.orden_linea_id" name="linea_orden_id" /> 
+						<input class="cantidad" type="text" name="cantidad" value="@o.pendiente" style="width: 60px"/>
+						<button class="anular" data-url="@controllers.patrimonio.routes.AnulacionRecepcionProductosController.modalAnularConClientes()">
+						<i class="glyphicon glyphicon-ok-sign"></i></button>
+					</td>
+				</tr>	
+				}	
+			}
+			<tr>
+				<td colspan="3">
+					<div class="col-sm-12">
+						<label for="obs" class="control-label">Observaciones</label> 
+						@textarea(lineaForm("observaciones"), 'class -> "form-control", 'rows -> "4", 'id -> "obs")
+					</div>
+				</td>
+			</tr>
+		</tbody>
+	</table>
+<script>
+$( function() {
+	$(".cantidad").numeric_input();
+	$('#listaProductos tbody tr .anular').click( function(){
+		$this = $(this);
+		$this.prop('disabled', true);
+		var tr = $(this).closest('tr')
+		var cantidad = tr.find('.cantidad').val().replace(",",".");
+		var linea_orden_id = tr.find('.linea_orden_id').val();
+		var observaciones =  $("#obs").val();
+		
+		var url = $(this).attr("data-url");
+		
+		$.get('@controllers.patrimonio.routes.AnulacionRecepcionProductosController.tienePacientes()', {orden_linea_id: linea_orden_id}, function(datac) {
+			if(datac.success){
+			
+				$.post('@controllers.patrimonio.routes.AnulacionRecepcionProductosController.controlesAnularConCliente()', {cantidad:cantidad, orden_linea_id: linea_orden_id,observaciones:observaciones}, function(data) {
+					if(data.message) {
+						alert(data.message);
+						$this.removeAttr('disabled');
+					} else {
+						
+						var dialogo = $('<div id="dialogo-carga-pacientes-cantidad"></div>');
+						dialogo.dialog({
+					    	resizable: false,
+							autoOpen: true,
+							modal: true,
+							height: 350,
+							width:750,
+							position: 'top',
+							title: "Anular cantidades de cada Paciente",
+							buttons: {
+						          Cerrar: function() {
+						            $( this ).dialog( "destroy" );
+						            $("#dialogo-anulacion-productos").dialog( "destroy" );
+						            $this.removeAttr('disabled');
+						            $('#menuAnulados').click();
+						          }
+						    },
+					    	close: function(event, ui ){
+					    		$(this).dialog( "destroy" );
+					    		$("#dialogo-anulacion-productos").dialog( "destroy" );
+					    		$this.removeAttr('disabled');
+					    		$('#menuAnulados').click();
+					    	},
+						    open: function( event, ui ) {
+								$.get(url,{cantidad:cantidad, orden_linea_id: linea_orden_id,observaciones:observaciones}, function(data){
+									dialogo.html(data);
+								});	
+								
+						    }
+					      });
+						 
+					}
+				});
+			}else{
+			
+				$.post('@controllers.patrimonio.routes.AnulacionRecepcionProductosController.anular()', {cantidad:cantidad, orden_linea_id: linea_orden_id,observaciones:observaciones}, function(data) {
+					 
+					if(data.success) {
+						tr.remove();
+						$("#dialogo-anulacion-productos").dialog( "destroy" );
+					} else {
+						alert(data.message);
+					}
+					$this.removeAttr('disabled');
+					$('#menuAnulados').click();
+				});
+			}
+		});
+	});
+	
+	
+});
+</script>	
+ 

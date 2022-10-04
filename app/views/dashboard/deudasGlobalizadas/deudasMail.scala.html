@@ -1,0 +1,237 @@
+@(proveedoresDestacados: List[com.avaje.ebean.SqlRow],
+proveedoresDestacadosServicios: List[com.avaje.ebean.SqlRow],
+proveedoresDestacadosProfe: List[com.avaje.ebean.SqlRow],
+proveedoresDestacadosServiciosProfe: List[com.avaje.ebean.SqlRow],
+titulo:String)
+@import java.math.BigDecimal;var hayra:Boolean = new Boolean(false);var monto_total_deuda_profe=new java.math.BigDecimal(0);var monto_total_compro_profe=new java.math.BigDecimal(0);var monto_total_deuda_ser_profe=new java.math.BigDecimal(0);var monto_total_compro_ser_profe=new java.math.BigDecimal(0);var monto_total_deuda_ser=new java.math.BigDecimal(0);var monto_total_compro_ser=new java.math.BigDecimal(0);var monto_total_deuda=new java.math.BigDecimal(0);var monto_total_compro=new java.math.BigDecimal(0);
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<title>Demystifying Email Design</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+</head>
+<body style="margin: 0; padding: 0;">
+	@if(proveedoresDestacados.size() > 0 || proveedoresDestacadosServicios.size() > 0){
+	<table border="0" cellpadding="0" cellspacing="0" width="100%">	
+		<tr>
+			<td style="padding: 10px 0 30px 0;">
+				<table align="center" border="0" cellpadding="0" cellspacing="0" width="800" style="border: 1px solid #cccccc; border-collapse: collapse;">
+					<tr>
+						<td align="center" bgcolor="#70bbd9" style="padding: 10px 0 10px 0; color: #153643; font-size: 14px; font-weight: bold; font-family: Arial, sans-serif;">
+							<h1>OPERATIVA @titulo</h1>
+						</td>
+					</tr>
+					
+					@if(proveedoresDestacados.size() > 0){
+					<tr>
+						<td bgcolor="#ffffff" style="padding: 10px;">
+							<table border="1" cellpadding="0" cellspacing="0" width="100%">
+								<tr>
+									<td style="padding:10px;font-weight: bold;color: #153643; font-family: Arial, sans-serif; font-size: 12px;">
+										<b>PROVEDORES</b>
+									</td>
+									<td align="center" style="padding:10px;font-weight: bold;color: #153643; font-family: Arial, sans-serif; font-size: 12px;">
+										<b>MONTO DEUDA</b>
+									</td>
+									<td align="center" style="padding:10px;font-weight: bold;color: #153643; font-family: Arial, sans-serif; font-size: 12px;">
+										<b>MONTRO COMPROMISO</b>
+									</td>
+								</tr>
+								 @for(pd <- proveedoresDestacados) {
+									<tr>
+										<td style="padding:10px;font-weight: bold; color: #153643; font-family: Arial, sans-serif; font-size: 12px; line-height: 10px;">
+											@pd.getString("nombre_proveedor")
+										</td>
+										<td align="right" style="padding:10px; color: #153643; font-family: Arial, sans-serif; font-size: 12px; line-height: 10px;">@utils.NumberUtils.moneda(pd.getBigDecimal("total_deuda"))</td>
+										<td align="right" style="padding:10px; color: #153643; font-family: Arial, sans-serif; font-size: 12px; line-height: 10px;">@utils.NumberUtils.moneda(pd.getBigDecimal("total_compromiso"))</td>
+									</tr>
+									@{monto_total_deuda= monto_total_deuda.add(pd.getBigDecimal("total_deuda"))}
+									@{monto_total_compro= monto_total_compro.add(pd.getBigDecimal("total_compromiso"))}
+								}	
+									<tr>
+										<td align="right" style="padding:10px;font-weight: bold;color: #153643; font-family: Arial, sans-serif; font-size: 12px;">
+											<b>TOTAL</b>
+										</td>
+										<td align="right" style="padding:10px;font-weight: bold;color: #153643; font-family: Arial, sans-serif; font-size: 13px;">
+											<b>@utils.NumberUtils.moneda(monto_total_deuda)</b>
+										</td>
+										<td align="right" style="padding:10px;font-weight: bold;color: #153643; font-family: Arial, sans-serif; font-size: 13px;">
+											<b>@utils.NumberUtils.moneda(monto_total_compro)</b>
+										</td>
+									</tr>
+								
+							</table>
+							
+						</td>
+					</tr> 
+					}
+					
+					@if(proveedoresDestacadosServicios.size() > 0){
+					<tr>
+						<td bgcolor="#ffffff" style="padding: 10px;">
+							<table border="1" cellpadding="0" cellspacing="0" width="100%">
+								<tr align="center">
+									<td colspan="3" style="padding:10px;font-weight: bold;color: #153643; font-family: Arial, sans-serif; font-size: 12px;">
+										<b>SERVICIOS</b>
+									</td>
+								</tr>
+								<tr>
+									<td style="padding:10px;font-weight: bold;color: #153643; font-family: Arial, sans-serif; font-size: 12px;">
+										<b>PROVEDORES</b>
+									</td>
+									<td align="center" style="padding:10px;font-weight: bold;color: #153643; font-family: Arial, sans-serif; font-size: 12px;">
+										<b>MONTO DEUDA</b>
+									</td>
+									<td align="center" style="padding:10px;font-weight: bold;color: #153643; font-family: Arial, sans-serif; font-size: 12px;">
+										<b>MONTRO COMPROMISO</b>
+									</td>
+								</tr>
+								 
+								@for(pd <- proveedoresDestacadosServicios) {
+									<tr>
+										<td style="padding:10px;font-weight: bold; color: #153643; font-family: Arial, sans-serif; font-size: 12px; line-height: 10px;">
+											@pd.getString("nombre_proveedor")
+										</td>
+										<td align="right" style="padding:10px; color: #153643; font-family: Arial, sans-serif; font-size: 12px; line-height: 10px;">@utils.NumberUtils.moneda(pd.getBigDecimal("total_deuda"))</td>
+										<td align="right" style="padding:10px; color: #153643; font-family: Arial, sans-serif; font-size: 12px; line-height: 10px;">@utils.NumberUtils.moneda(pd.getBigDecimal("total_compromiso"))</td>
+									</tr>
+									@{monto_total_deuda_ser= monto_total_deuda_ser.add(pd.getBigDecimal("total_deuda"))}
+									@{monto_total_compro_ser= monto_total_compro_ser.add(pd.getBigDecimal("total_compromiso"))}
+								}	
+								<tr>
+									<td align="right" style="padding:5px;font-weight: bold;color: #153643; font-family: Arial, sans-serif; font-size: 12px;">
+										<b>TOTAL</b>
+									</td>
+									<td align="center" style="padding:5px;font-weight: bold;color: #153643; font-family: Arial, sans-serif; font-size: 13px;">
+										<b>@utils.NumberUtils.moneda(monto_total_deuda_ser)</b>
+									</td>
+									<td align="center" style="padding:5px;font-weight: bold;color: #153643; font-family: Arial, sans-serif; font-size: 13px;">
+										<b>@utils.NumberUtils.moneda(monto_total_compro_ser)</b>
+									</td>
+								</tr>
+							</table>
+							
+						</td>
+					</tr> 
+					}
+					<tr><td bgcolor="#ee4c50" style="padding: 10px;"></td></tr>
+				</table>
+			</td>
+		</tr>
+	</table>
+	}
+	
+	@if(proveedoresDestacadosProfe.size() > 0 || proveedoresDestacadosProfe.size() > 0){
+	<table border="0" cellpadding="0" cellspacing="0" width="100%">	
+		<tr>
+			<td style="padding: 10px 0 30px 0;">
+				<table align="center" border="0" cellpadding="0" cellspacing="0" width="800" style="border: 1px solid #cccccc; border-collapse: collapse;">
+					<tr>
+						<td align="center" bgcolor="#70bbd9" style="padding: 10px 0 10px 0; color: #153643; font-size: 14px; font-weight: bold; font-family: Arial, sans-serif;">
+							<h1>PROFE @titulo</h1>
+						</td>
+					</tr>
+					
+					
+					@if(proveedoresDestacadosProfe.size() > 0){
+					<tr>
+						<td bgcolor="#ffffff" style="padding: 10px;">
+							<table border="1" cellpadding="0" cellspacing="0" width="100%">
+								<tr>
+									<td style="padding:10px;font-weight: bold;color: #153643; font-family: Arial, sans-serif; font-size: 12px;">
+										<b>PROVEDORES</b>
+									</td>
+									<td align="center" style="padding:10px;font-weight: bold;color: #153643; font-family: Arial, sans-serif; font-size: 12px;">
+										<b>MONTO DEUDA</b>
+									</td>
+									<td align="center" style="padding:10px;font-weight: bold;color: #153643; font-family: Arial, sans-serif; font-size: 12px;">
+										<b>MONTRO COMPROMISO</b>
+									</td>
+								</tr>
+								 @for(pd <- proveedoresDestacadosProfe) {
+									<tr>
+										<td style="padding:10px;font-weight: bold; color: #153643; font-family: Arial, sans-serif; font-size: 12px; line-height: 10px;">
+											@pd.getString("nombre_proveedor")
+										</td>
+										<td align="right" style="padding:10px; color: #153643; font-family: Arial, sans-serif; font-size: 12px; line-height: 10px;">@utils.NumberUtils.moneda(pd.getBigDecimal("total_deuda"))</td>
+										<td align="right" style="padding:10px; color: #153643; font-family: Arial, sans-serif; font-size: 12px; line-height: 10px;">@utils.NumberUtils.moneda(pd.getBigDecimal("total_compromiso"))</td>
+									</tr>
+									@{monto_total_deuda_profe= monto_total_deuda_profe.add(pd.getBigDecimal("total_deuda"))}
+									@{monto_total_compro_profe= monto_total_compro_profe.add(pd.getBigDecimal("total_compromiso"))}
+								}	
+									<tr>
+										<td align="right" style="padding:10px;font-weight: bold;color: #153643; font-family: Arial, sans-serif; font-size: 12px;">
+											<b>TOTAL</b>
+										</td>
+										<td align="right" style="padding:10px;font-weight: bold;color: #153643; font-family: Arial, sans-serif; font-size: 13px;">
+											<b>@utils.NumberUtils.moneda(monto_total_deuda_profe)</b>
+										</td>
+										<td align="right" style="padding:10px;font-weight: bold;color: #153643; font-family: Arial, sans-serif; font-size: 13px;">
+											<b>@utils.NumberUtils.moneda(monto_total_compro_profe)</b>
+										</td>
+									</tr>
+								
+							</table>
+							
+						</td>
+					</tr> 
+					}
+					
+					@if(proveedoresDestacadosServiciosProfe.size() > 0){
+					<tr>
+						<td bgcolor="#ffffff" style="padding: 10px;">
+							<table border="1" cellpadding="0" cellspacing="0" width="100%">
+								<tr align="center">
+									<td colspan="3" style="padding:10px;font-weight: bold;color: #153643; font-family: Arial, sans-serif; font-size: 12px;">
+										<b>SERVICIOS</b>
+									</td>
+								</tr>
+								<tr>
+									<td style="padding:10px;font-weight: bold;color: #153643; font-family: Arial, sans-serif; font-size: 12px;">
+										<b>PROVEDORES</b>
+									</td>
+									<td align="center" style="padding:10px;font-weight: bold;color: #153643; font-family: Arial, sans-serif; font-size: 12px;">
+										<b>MONTO DEUDA</b>
+									</td>
+									<td align="center" style="padding:10px;font-weight: bold;color: #153643; font-family: Arial, sans-serif; font-size: 12px;">
+										<b>MONTRO COMPROMISO</b>
+									</td>
+								</tr>
+								 
+								@for(pd <- proveedoresDestacadosServiciosProfe) {
+									<tr>
+										<td style="padding:10px;font-weight: bold; color: #153643; font-family: Arial, sans-serif; font-size: 12px; line-height: 10px;">
+											@pd.getString("nombre_proveedor")
+										</td>
+										<td align="right" style="padding:10px; color: #153643; font-family: Arial, sans-serif; font-size: 12px; line-height: 10px;">@utils.NumberUtils.moneda(pd.getBigDecimal("total_deuda"))</td>
+										<td align="right" style="padding:10px; color: #153643; font-family: Arial, sans-serif; font-size: 12px; line-height: 10px;">@utils.NumberUtils.moneda(pd.getBigDecimal("total_compromiso"))</td>
+									</tr>
+									@{monto_total_deuda_ser_profe= monto_total_deuda_ser_profe.add(pd.getBigDecimal("total_deuda"))}
+									@{monto_total_compro_ser_profe= monto_total_compro_ser_profe.add(pd.getBigDecimal("total_compromiso"))}
+								}	
+								<tr>
+									<td align="right" style="padding:5px;font-weight: bold;color: #153643; font-family: Arial, sans-serif; font-size: 12px;">
+										<b>TOTAL</b>
+									</td>
+									<td align="center" style="padding:5px;font-weight: bold;color: #153643; font-family: Arial, sans-serif; font-size: 13px;">
+										<b>@utils.NumberUtils.moneda(monto_total_deuda_ser_profe)</b>
+									</td>
+									<td align="center" style="padding:5px;font-weight: bold;color: #153643; font-family: Arial, sans-serif; font-size: 13px;">
+										<b>@utils.NumberUtils.moneda(monto_total_compro_ser_profe)</b>
+									</td>
+								</tr>
+							</table>
+							
+						</td>
+					</tr> 
+					} 
+					
+					<tr><td bgcolor="#ee4c50" style="padding: 10px;"></td></tr>
+				</table>
+			</td>
+		</tr>
+	</table>
+	}
+</body>
+</html>

@@ -1,0 +1,39 @@
+@(detalle: models.haberes.LiquidacionDetalle, editable: Boolean)
+
+<tr data-id="@detalle.id">
+		
+		<td class="accion-editar">
+			@if(editable){
+				<a class="btn btn-default btn-xs modificarLiquidacionDetalle" href="@controllers.haberes.routes.LiquidacionDetallesController.editar(detalle.id)">
+				<i class="glyphicon glyphicon-edit"></i></a>
+			}
+		</td>
+		
+	
+	<td>@detalle.liquidacionConcepto.codigo - @detalle.liquidacionConcepto.denominacion</td>
+	<td align="center">@utils.NumberUtils.formatNumber(detalle.cantidad.doubleValue())</td>
+	<td align="center">
+		@if(detalle.liquidacionConcepto.liquidacionConceptoTipo.id == models.haberes.LiquidacionConceptoTipo.HABERES_CON_APORTE){
+			@utils.NumberUtils.moneda(detalle.getTotal())
+		}
+		@if(detalle.liquidacionConcepto.liquidacionConceptoTipo.id == models.haberes.LiquidacionConceptoTipo.DESCUENTOS){
+			@utils.NumberUtils.moneda(detalle.getTotal())
+		}
+	</td>
+	<td align="center">
+		@if(detalle.liquidacionConcepto.liquidacionConceptoTipo.id == models.haberes.LiquidacionConceptoTipo.HABERES_SIN_APORTE){
+			@utils.NumberUtils.moneda(detalle.getTotal())
+		}
+	</td>
+	<td align="center">
+		@if(detalle.liquidacionConcepto.liquidacionConceptoTipo.id == models.haberes.LiquidacionConceptoTipo.RETENCIONES){
+			@utils.NumberUtils.moneda(detalle.getTotal())
+		}
+	</td>
+	<td>
+	@if(editable){	
+		<a class="btn btn-default btn-xs eliminarLiquidacionDetalle" href="@controllers.haberes.routes.LiquidacionDetallesController.eliminar(detalle.id)"><i class="glyphicon glyphicon-trash icono-eliminar"></i></a>
+	}
+	</td>
+	
+</tr>

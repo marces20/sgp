@@ -1,0 +1,34 @@
+@(title: String, scripts: Html = Html(""))(content: Html)
+@import models.auth._
+
+@main(title: String, scripts){
+	<div class="row">
+		<div class="col-sm-2">
+			<div class="menu-contenido">
+				<ul class="nav nav-pills nav-stacked">
+					<li class="titulo">Liquidación</li>
+						<li><a href="@controllers.haberes.routes.LiquidacionMesesController.index()">Liquidaciones</a></li>
+						<li><a href="@controllers.haberes.routes.LiquidacionPuestosController.index()">Liquidaciones Puestos</a></li>
+						<li><a href="@controllers.haberes.routes.NovedadesController.index()?activo=activo">Novedades</a></li>
+						<li><a href="@controllers.haberes.routes.LiquidacionConceptosController.index()">Conceptos</a></li>
+						<li><a href="@controllers.haberes.routes.LiquidacionBaseCalculosController.index()">Base cálculo</a></li>
+						<li><a href="@controllers.haberes.routes.PuestosLaboralesController.index()">Puestos Laborales</a></li>
+					
+					<li class="titulo">Configuración</li>
+						<li><a href="@controllers.haberes.routes.EscalasLaboralesMontosController.index()">Montos Conceptos</a></li>
+						<li><a href="@controllers.haberes.routes.EscalasLaboralesController.index()">Escalas Laborales</a></li>
+						<li><a href="@controllers.haberes.routes.LiquidacionTiposController.index()">Tipos de liquidación</a></li>
+						<li><a href="@controllers.haberes.routes.LiquidacionConceptoTiposController.index()">Tipos concepto</a></li>
+						<li><a href="@controllers.haberes.routes.CategoriasLaboralesController.index()">Categorias laborales</a></li>
+						<li><a href="@controllers.haberes.routes.UnidadesLaboralesController.index()">Unidades laborales</a></li>
+						<li><a href="@controllers.haberes.routes.CargosLaboralesController.index()">Cargos laborales</a></li>
+						<li><a href="@controllers.haberes.routes.CentrosCostosController.index()">Centros Costos</a></li>
+						<li><a href="@controllers.haberes.routes.ConveniosBancosController.index()">Convenios Bancos</a></li>
+						<li><a href="@controllers.haberes.routes.LegajosController.index()">Legajos</a></li>
+						<li><a href="@controllers.haberes.routes.InstrumentosLegalesController.index()">Instrumentos Legales</a></li>
+				</ul>
+			</div>
+		</div>
+		<div class="col-sm-10">@content</div>
+	</div>
+}

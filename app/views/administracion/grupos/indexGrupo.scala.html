@@ -1,0 +1,90 @@
+@(buscador: utils.pagination.Pagination[Grupo], formBuscador: DynamicForm)
+@import helper._
+@implicitFieldConstructor = @{ FieldConstructor(simpleInput.render) } 
+
+@views.html.administracion.mainAdministracion(title = "Lista de grupos") {
+    
+<div class="page-header">
+	<div class="row">
+		<div class="col-sm-9">
+			<h1>Lista de grupos</h1>
+		</div>
+		<div class="col-sm-3">
+		<a href="@controllers.administracion.routes.GruposController.crear"  class="btn btn-default"><i class="glyphicon glyphicon-plus-sign"></i> Nuevo grupo</a>
+			<a href="@controllers.administracion.routes.GruposController.index()" class="btn btn-default"><i class="glyphicon glyphicon-list"></i></a>
+			<a href="#" class="btn btn-default"><i
+				class="glyphicon glyphicon-align-justify"></i></a>
+		</div>
+	</div>
+</div>
+
+    @if(flash.containsKey("success")) {
+        <div class="alert alert-success"><i class="glyphicon glyphicon-ok-sign"></i> @flash.get("success")</div>
+    } 
+        
+<div class="row seccion">
+	<form action="" method="GET">
+		<div class="col-sm-3">
+			<div class="form-group">
+				<label for="nombre" class="control-label">Nombre
+				@inputText(formBuscador("nombre"), 'class -> "form-control", 'autofocus -> "autofocus")
+				</label>
+			</div>
+		</div>
+		
+		<div class="col-sm-2">
+			<div class="form-group">
+			<label for="nombre" class="control-label">&nbsp;</label>
+			<button  class="form-control btn btn-primary">Buscar</button>
+			</div>
+		</div>
+		<div class="col-sm-2">
+			<div class="form-group">
+			<label for="nombre" class="control-label">&nbsp;</label>
+			<a href="@controllers.administracion.routes.GruposController.index()"  class="form-control btn btn-default">Limpiar</a>
+			</div>
+		</div>
+</form>
+</div>
+    
+    @if(buscador.getTotalRowCount == 0) {
+        
+        <div class="well">
+            <em>No se encuentran grupos</em>
+        </div>
+        
+    } else {
+Mostrando @buscador.getDisplayXtoYofZ(" a "," de ") resultado(s).   
+<table class="table table-striped table-bordered">
+	<thead>
+		<tr>
+			<th width="50">#</th>
+			<th width="100">Código</th>
+			<th width="700">Nombre</th>
+			<th class="50">#</th>
+		</tr>
+	</thead>
+	<tbody>
+
+        @for(grupos <- buscador.getList) {
+		<tr>
+			<td><a
+				href="@controllers.administracion.routes.GruposController.editar(grupos.id)"><i
+					class="glyphicon glyphicon-edit"></i></a></td>
+			<td>@(grupos.id)</td>
+			<td>@(grupos.nombre)</td>
+			<td><a href="@controllers.administracion.routes.GruposController.eliminar(grupos.id)"><i class="glyphicon glyphicon-remove-circle"></i></a></td>
+		</tr>
+                }
+
+            </tbody>
+        </table>
+
+
+		<div class="pagination pull-right">
+		    @views.html.helpers.paginador(buscador, controllers.administracion.routes.GruposController.index())
+		</div>
+        
+    }
+        
+}

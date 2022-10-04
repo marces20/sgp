@@ -1,0 +1,21 @@
+@(linea: FacturaLinea, editable: Boolean)
+
+<tr data-id="@linea.id">
+	@if(editable){
+		<td><input type="checkbox" name="check_listado[]" value="@linea.id" class="check_listado notSeleccion" id="check-@linea.id"/></td>
+		<td class="accion-editar"><a class="btn btn-default btn-xs modificarProducto" href="@controllers.contabilidad.routes.FacturasLineasController.editar(linea.id)"><i class="glyphicon glyphicon-edit"></i></a></td>
+	}
+	<td>@linea.producto.nombre</td>
+	<td>@if(linea.cuenta == null){No asociada} else {@linea.cuenta.nombre}</td>
+	<td>@if(linea.cuentaAnalitica == null){No asociada} else {@linea.cuentaAnalitica.codigo @linea.cuentaAnalitica.nombre}</td>
+	<td>@if(linea.cuentaAnaliticaOriginal == null){No asociada} else {@linea.cuentaAnaliticaOriginal.codigo @linea.cuentaAnaliticaOriginal.nombre}</td>
+	<td>@utils.NumberUtils.formatNumber(linea.cantidad.doubleValue())</td>
+	<td>@linea.udm.nombre</td>
+	<td>@utils.NumberUtils.moneda(linea.precio)</td>
+	<td>@linea.descuento</td>
+	<td>@utils.NumberUtils.moneda(linea.getTotalDescuento())</td>
+	<td>@utils.NumberUtils.moneda(linea.getTotal())</td>
+	@if(editable){
+		<td><a class="btn btn-default btn-xs eliminarProducto" href="@controllers.contabilidad.routes.FacturasLineasController.eliminar(linea.id)"><i class="glyphicon glyphicon-trash icono-eliminar"></i></a></td>
+	}
+</tr>

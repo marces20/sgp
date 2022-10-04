@@ -1,0 +1,129 @@
+@(paginador:  utils.pagination.Pagination[PagoLinea], editable: Boolean,pago: Pago)
+<div id="listaLineaPagos" class="contenedorPaginador ajaxPaginador">
+
+<p>
+	<b>Pagos</b>
+	@if(editable && pago.estado_id == models.Estado.PAGO_ESTADO_BORRADOR){
+	<a class="btn btn-default btn-xs" href="#" id="nuevoPago"><i class="glyphicon glyphicon-plus"></i> Nuevo</a>	 	
+	}
+</p>
+
+<table id="listaDePagos" class="table table-striped table-bordered">
+	<thead>
+		<tr>
+			@if(editable && pago.estado_id == models.Estado.PAGO_ESTADO_BORRADOR){
+				<th class="accion-editar">#</th>
+			}
+			<th>Contraparte</th> 
+			<th>Cuenta</th>
+			<th>Cuenta Analitica</th>
+			<th>Periodo</th>
+			<th>Fecha Pago</th>
+			<!-- <th>Importe Original</th> -->
+			<th>Importe Debito</th>
+			<th>Importe Credito</th>
+			@if(editable && pago.estado_id == models.Estado.PAGO_ESTADO_BORRADOR){
+				<th></th>
+			}
+		<tr>	
+	</thead>
+	<tbody>
+	@for(linea <- paginador.getList) {
+		@views.html.contabilidad.pagosLineas.lineaPago(linea, editable,pago)
+	}
+	</tbody>
+</table>
+
+<div class="pagination pull-right">
+    @views.html.helpers.paginador(paginador, controllers.contabilidad.routes.PagosLineasController.index())
+</div>
+</div>
+
+<script>
+$( function(){
+	/**
+	 * Ventana de carga linea de  Pagos en pago
+	 */
+	 
+	var contenedor = $("#listaLineaPagos");
+
+	contenedor.on('click', '#nuevoPago', function(){
+		urlContenidoModal = '/contabilidad/pago-linea/crear?pagoId='+$('#pagoId').val();
+		mostrarModal(urlContenidoModal);
+		return false;
+	});
+	
+	contenedor.on('click', '.modificarPago', function(){
+		lineaParaEditar = $(this).closest('tr');
+		var modal = mostrarModal($(this).attr('href'));
+		modal.dialog('option', 'title', 'Editar pago');	
+		return false;
+	});
+	
+	contenedor.on('click', '.eliminarPago', function(){
+		var url = $(this).attr('href');
+		$this = $(this);
+		$.get(url, function(data){
+			if(data.success){
+				$this.closest("tr").remove();
+			} else {
+				alert("No se puedo eliminar el registro.");
+			}
+		});
+		return false;
+	});
+	
+	function mostrarModal(url){
+		modalCargaPagos = $('<div></div>').dialog({
+			resizable: false,
+		    title: "Cargar pago",
+		    height: 400,
+		    width: 750,
+		    modal: true,
+		    open: function( event, ui ) {
+				$.get(url, function(data){
+					modalCargaPagos.html(data);
+				});
+		    },
+		    close: function(event, ui ){
+		    	modalCargaPagos.dialog('destroy');
+			}
+		  });
+		
+		modalCargaPagos.on('click', '.cancelar', function(){
+			modalCargaPagos.dialog('destroy');
+			return false;
+		});
+		
+		modalCargaPagos.on('submit', function(e){
+			var href = $(e.target).attr('action');
+			var data = $(e.target).serialize();
+			$.post(href, data, function(resultado){
+				if(resultado.success && resultado.nuevo){
+					$('#listaDePagos tbody').prepend(resultado.html);
+					modalCargaPagos.dialog( "destroy" );
+				} else if(resultado.success && resultado.modificar){
+					$(lineaParaEditar).replaceWith(resultado.html);
+					modalCargaPagos.dialog( "destroy" );
+				} else {
+					modalCargaPagos.html(resultado);
+				}
+			});
+			return false;
+		});
+		
+		
+		return modalCargaPagos;
+	}
+	
+	
+	contenedor.find('form').on('submit', function(){
+		var url = $(this).attr("action");
+		var query = $(this).serialize();
+		$.get(url+"?"+query, function(data){
+			contenedor.parent().html(data);
+		});
+		return false;
+	});
+});
+</script>

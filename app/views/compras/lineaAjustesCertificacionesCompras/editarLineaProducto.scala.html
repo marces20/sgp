@@ -1,0 +1,9 @@
+@(lineaForm: Form[CertificacionesComprasLineaAjustes])
+@import helper._
+@implicitFieldConstructor = @{ FieldConstructor(simpleInput.render) } 
+
+@helper.form(action = controllers.compras.routes.CertificacionesComprasLineaAjustesController.actualizar()) {
+	@views.html.compras.lineaAjustesCertificacionesCompras.formLineaProducto(lineaForm)
+	@inputText(lineaForm("id"), 'hidden -> "hidden")
+	
+}

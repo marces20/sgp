@@ -1,0 +1,36 @@
+@(cuentaForm: Form[Cuenta], cuentaPadre: Cuenta)
+@import helper._
+@implicitFieldConstructor = @{ FieldConstructor(simpleInput.render) }
+
+
+ <div class="row">
+	<div class="col-sm-4">
+		<div class="form-group">
+			<label for="nombre" class="control-label">Cuenta Padre</label>
+			<p>@cuentaPadre.nombre</p>
+			<p>@cuentaPadre.code</p>
+		</div>
+	</div>
+	
+	<div class="col-sm-3">
+		<div class="form-group @if(cuentaForm.error("code") != null) {has-error} else {has-required}">
+			<label for="codigo" class="control-label">Código</label>
+			@inputText(cuentaForm("code"), 'class -> "form-control")
+			@cuentaForm("code").error.map{ error =>
+				<div class="text-error">@error.message</div>
+			}
+		</div>
+	</div>
+	
+	<div class="col-sm-5">
+		<div class="form-group @if(cuentaForm.error("nombre") != null) {has-error} else {has-required}">
+			<label for="nombre" class="control-label">Nombre</label>
+			@inputText(cuentaForm("nombre"), 'class -> "form-control")
+			@cuentaForm("nombre").error.map{ error =>
+				<div class="text-error">@error.message</div>
+			}
+		</div>
+	</div>
+	
+
+</div>

@@ -1,0 +1,17 @@
+
+GET  /             						controllers.informes.IndexController.index()
+GET  /creditosPresup            		controllers.informes.InformesPresupuestoController.creditos(lugarId:Int)
+GET  /getDatosInformesCreditosPresupuestarios            controllers.informes.InformesPresupuestoController.getDatosInformesCreditosPresupuestarios()
+
+GET  /obligaciones             							controllers.informes.InformesObligacionController.obligacion()
+POST /obligaciones/getObligaciones 						controllers.informes.InformesObligacionController.getObligaciones()
+
+GET  /honorarios             							controllers.informes.InformesHonorariosController.honorario()
+POST /honorarios/getCostoPorEscala						controllers.informes.InformesHonorariosController.getCostoPorEscala()
+POST /honorarios/getCostoPorTipoConcepto				controllers.informes.InformesHonorariosController.getCostoPorTipoConcepto()
+POST /honorarios/getCostoPorClasificacionConcepto		controllers.informes.InformesHonorariosController.getCostoPorClasificacionConcepto()
+
+GET  /honorario/RrhhPorPeriodo             				controllers.informes.InformesHonorariosController.honorarioRrhhPorPeriodo()
+POST /honorarios/getCountRrrhPorEscala					controllers.informes.InformesHonorariosController.getCountRrrhPorEscala()
+
+GET  /deuda/deudasFotoPorFecha             				controllers.informes.InformesDeudasController.deudasFotoPorFecha()

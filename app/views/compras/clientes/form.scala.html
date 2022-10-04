@@ -1,0 +1,230 @@
+@(clienteForm: Form[Cliente])
+@import helper._
+@implicitFieldConstructor = @{ FieldConstructor(simpleInput.render) } 
+	
+<div class="row menu-acciones">
+	<div class="col-sm-10">
+		<button type="submit" class="btn btn-default" title="Guardar orden">
+			<i class="glyphicon glyphicon-floppy-disk"></i> Guardar
+		</button>	
+																															   
+    	<a href="@if(request().getHeader("referer")){ @request().getHeader("referer") } else {@controllers.compras.routes.ClientesController.index()}" title="Cancelar editar" class="btn btn-default"><i class="glyphicon glyphicon-floppy-remove"></i> Cancelar</a>
+    </div>
+	<div class="col-sm-2">
+		<a href="@controllers.compras.routes.ClientesController.index()" title="Volver al listado" class="btn btn-default"><i class="glyphicon glyphicon-list"></i></a> 
+		@if(clienteForm.field("id").value){<a href="@controllers.compras.routes.ClientesController.ver(clienteForm.field("id").value.toLong)" title="Ver cliente" class="btn btn-default"><i class="glyphicon glyphicon-align-justify"></i></a>}
+	</div>
+</div>
+
+ <div class="row">
+	<div class="col-sm-3">
+		<div class="form-group @if(clienteForm.error("nombre") != null) {has-error} else {has-required}">
+			<label for="nombre" class="control-label">Nombre</label>
+			@inputText(clienteForm("nombre"), 'class -> "form-control" )
+			@clienteForm("nombre").error.map{ error =>
+				<div class="text-error">@error.message</div>
+			}
+		</div>
+	</div>
+	<div class="col-sm-3">
+		<div class="checkbox" @if(clienteForm.error("activo") != null) {has-error}">
+			<label for="activo" class="control-label"> @checkbox(clienteForm("activo")) ¿cliente activo?</label>
+		</div>
+	</div>
+	
+	<div class="col-sm-3">
+		<div class=" form-group @if(clienteForm.error("cliente_tipo_id") != null) {has-error} else {has-required}">
+			<label for="@clienteForm("cliente_tipo_id").id" class="control-label">Tipo de cliente</label>
+			@select(clienteForm("cliente_tipo_id"), ClienteTipo.find.all().map { p => p.id.toString -> p.nombre}, 'class -> "form-control select", '_default -> "Seleccionar")
+			@clienteForm("cliente_tipo_id").error.map{ error =>
+				<div class="text-error">@error.message</div>
+			}
+		</div>
+	</div>
+	
+</div>	
+<div class="row">
+	<div class="col-sm-3">
+		<div class="form-group">
+			<label for="cuit" class="control-label">CUIT</label>
+			@inputText(clienteForm("cuit2"), 'class -> "form-control" , 'id -> "cuit2")
+			@clienteForm("cuit2").error.map{ error =>
+				<div class="text-error">@error.message</div>
+			}
+		</div>
+	</div>		
+	<div class="col-sm-3">
+		<div class="form-group">
+			<label for="dni" class="control-label">DNI</label>
+			@inputText(clienteForm("dni"), 'class -> "form-control", 'id -> "dni")
+			@clienteForm("dni").error.map{ error =>
+				<div class="text-error">@error.message</div>
+			}
+		</div>
+	</div>
+	<div class="col-sm-3">
+		<div class="form-group">
+			<label for="dni" class="control-label">CIE</label>
+			@inputText(clienteForm("cie"), 'class -> "form-control", 'id -> "cie")
+			@clienteForm("cie").error.map{ error =>
+				<div class="text-error">@error.message</div>
+			}
+		</div>
+	</div>
+	<div class="col-sm-3">
+		<label for="servicio" class="control-label">Obra Social</label>
+		<div class="input-group"> 
+			@inputText(clienteForm("obrasocial.nombre"),'class -> "form-control", 'id -> "obrasocial", 'autocomplete -> "off")
+			@inputText(clienteForm("obrasocial_id"),'hidden -> "hidden", 'id -> "obrasocial_id")
+			<span class="input-group-addon">
+				<a href="#" id="searchObraSocial" 
+				data-title="Selección de obra social" 
+				data-url="@controllers.compras.routes.ObrasSocialesController.modalBuscar()" 
+				data-height="650" data-width="700" 
+				data-listen="modal.seleccion.ob.simple" 
+				data-label="#obrasocial" data-field="#obrasocial_id"><i class="glyphicon glyphicon-search"></i></a>
+			</span>
+		</div>
+	</div>
+</div>	
+<div class="row">
+	<div class="col-sm-3">
+		<div class="form-group">
+			<label for="idPaciente" class="control-label">ID Paciente</label>
+			@inputText(clienteForm("id_paciente_rismi"), 'class -> "form-control", 'id -> "id_paciente_rismi")
+			@clienteForm("id_paciente_rismi").error.map{ error =>
+				<div class="text-error">@error.message</div>
+			}
+		</div>
+	</div>
+	<div class="col-sm-3">
+		<div class="form-group">
+			<label for="referencia" class="control-label">Referencia</label>
+			@inputText(clienteForm("referencia"), 'class -> "form-control")
+			@clienteForm("referencia").error.map{ error =>
+				<div class="text-error">@error.message</div>
+			}
+		</div>
+	</div>
+	<div class="col-sm-3">
+		<div class="form-group">
+			<label for="otraReferencia" class="control-label">Otra referencia</label>
+			@inputText(clienteForm("referencia_2"), 'class -> "form-control")
+			@clienteForm("referencia_2").error.map{ error =>
+				<div class="text-error">@error.message</div>
+			}
+		</div>
+	</div>
+	<div class="col-sm-3">
+		<div class="form-group">
+			<label for="nafliado" class="control-label">N° Afiliado</label>
+			@inputText(clienteForm("nafiliado"), 'class -> "form-control")
+		</div>
+	</div>
+</div>		
+<div class="row">
+	<div class="col-sm-2">
+		<div class="form-group @if(clienteForm.error("sexo") != null) {has-error}">
+			<label for="@clienteForm("sexo")" class="control-label">Sexo</label>
+			@select(clienteForm("sexo"), options("M"->"Masculino","F"->"Femenino"),'class -> "form-control select", '_default -> "Seleccionar")
+		</div>
+	</div>
+	<div class="col-sm-2">
+		<div class="form-group @if(clienteForm.error("fnacimiento") != null) {has-error}">
+			<label for="inputNombre" class="control-label">Fecha nacimiento</label> 
+			@inputText(clienteForm("fnacimiento"), 'class -> "form-control date", 'id -> "nacimiento")
+		</div>
+	</div>
+</div>	
+@if(clienteForm("id").value != null) {
+<script>
+	$( function() {
+		
+		$("#id_paciente_rismi").numeric_input(); 
+		urlProvincias  = '@controllers.administracion.routes.ProvinciasController.listOptions()';
+		urlLocalidades = '@controllers.administracion.routes.LocalidadesController.listOptions()';
+		urlFormularioContacto  = '@controllers.compras.routes.ClientesController.formularioContacto(clienteForm("id").value.toInt)';
+		
+		var contenedorContactos = $('#contenedorContactos');
+		var formularioContacto = $('#formularioContacto');
+		
+		contenedorContactos.on('change', '.seleccionPais .select', function(){
+			var id = $(this).find('option:selected').val();
+			var contenedor = $(this).closest('.contenedorUbicacion');
+			contenedor.find('.seleccionProvincia .select, .seleccionLocalidad .select').find('option:gt(0)').remove();
+			
+			if(id == "") return false;
+
+			$.get(urlProvincias + '?paisId='+id, function(data){
+				contenedor.find('.seleccionProvincia .select').html(data);
+			});
+		});
+		
+		contenedorContactos.on('change', '.seleccionProvincia .select', function(){
+			var id = $(this).find('option:selected').val();
+			
+			var contenedor = $(this).closest('.contenedorUbicacion');
+			contenedor.find('.seleccionLocalidad .select').find('option:gt(0)').remove();
+			
+			if(id == "") return false;
+
+			$.get(urlLocalidades + '?provinciaId='+id, function(data){
+				contenedor.find('.seleccionLocalidad .select').html(data);
+			});
+		});
+		
+        var contenedor = $('#contenedorDirecciones');
+        var primerElemento = $('#contenedorDirecciones .linea-direccion:eq(0)');
+        
+        contenedor.find('.linea-direccion').hide();
+        primerElemento.show();
+
+
+        if (getCantidadLineas() == 1)
+            primerElemento.find('.eliminar').hide();
+
+        
+        $('#nuevoContacto').on('click', function() { 
+        	$('#listaContactos').toggleClass('hide');
+        	$.get(urlFormularioContacto, function(data){
+        		$('#contenedorContactos').append(data);
+        	});
+        	return false;
+        });
+        
+        $('#contenedorContactos').on('click', '#modificarDireccion', function() { 
+        	var url = $(this).attr('href');
+        	$('#listaContactos').toggleClass('hide');
+        	$.get(url, function(data){
+        		$('#contenedorContactos').append(data);
+        	});
+        	return false;
+        });
+        
+        $('#contenedorContactos').on('click', '#cancelarEdicion', function() { 
+        	$('#formularioContacto').remove();
+        	$('#listaContactos').toggleClass('hide');
+        });
+        
+        $('#contenedorContactos').on('click', '#guardarContacto', function() { 
+        	var url = $(this).closest('form').attr('action');
+        	$this = $(this);
+
+        	$.post(url, $(this).closest('form').serialize(), function(data){
+        		if(data.success)
+        			window.location.href = data.redirect;
+        		else {
+        			$this.closest("#formularioContacto").remove();
+        			$('#contenedorContactos').append(data);
+        		}
+        	});
+        	return false;
+        });
+
+        function getCantidadLineas() {
+            return contenedor.find('.linea-direccion').length;
+        }
+		
+	});
+</script>
+}

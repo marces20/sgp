@@ -1,0 +1,168 @@
+@(buscador: utils.pagination.Pagination[RemitoBaul], formBuscador: DynamicForm)
+
+@import helper._
+@import models.auth._
+@import utils._
+@implicitFieldConstructor = @{ FieldConstructor(simpleInput.render) } 
+
+
+@views.html.patrimonio.mainPatrimonio("Remitos en baúl") {
+
+
+<div class="page-header">
+	<div class="row">
+		<div class="col-sm-7">
+			<h1>Lista de remitos en baúl</h1>
+		</div>
+			<div class="col-sm-5">
+					
+				<div class="pull-right btn-header">
+					<a href="@controllers.patrimonio.routes.RemitosBaulController.crear()"  class="btn btn-default"><i class="glyphicon glyphicon-plus-sign"></i> Nuevo remito</a>
+				</div>
+			</div>
+	</div>
+</div>
+@views.html.tags.successError()
+
+
+@helper.form(action = controllers.patrimonio.routes.RemitosBaulController.index(), 'id -> "buscadorRemitos") {
+<div class="row">	
+
+	<div class="form-group col-sm-2">
+		<label for="numero" class="control-label">Número
+		@inputText(formBuscador("numero"), 'class -> "form-control", 'numero -> "form-control", 'autofocus -> "autofocus")
+		</label>
+	</div>
+
+	<div class="col-sm-2 input-group">
+		<label class="control-label">Fecha Fin</label>
+		<div>
+		@inputText(formBuscador("fecha_desde"), 'class -> "form-control inputDateMascara", 'id -> "desde", 'placeholder -> "Desde")
+		@inputText(formBuscador("fecha_hasta"), 'class -> "form-control inputDateMascara", 'id -> "hasta", 'placeholder -> "Hasta")
+		</div>
+		
+	</div>
+
+	<div class="col-sm-3">
+		<label for="producto" class="control-label">Producto</label>
+		<div class="input-group">
+			@inputText(formBuscador("producto.nombre"), 'class -> "form-control", 'id -> "producto")
+			@inputText(formBuscador("producto_id"), 'hidden -> "hidden", 'id -> "producto_id")
+			<span class="input-group-addon"><a href="#" id="searchProducto" data-title="Selección de producto" data-url="@controllers.compras.routes.ProductosController.modalBuscar()" data-height="650" data-width="700" data-listen="modal.seleccion.producto.simple" data-label="#producto" data-field="#producto_id"><i class="glyphicon glyphicon-search"></i></a></span>
+		</div>
+	</div>
+
+
+	
+</div>
+
+<div class="row">	
+	<div class="col-sm-3">
+		<label class="control-label">Proveedor
+			<div class="input-group">
+				@inputText(formBuscador("proveedor_id"), 'hidden -> "hidden", 'id -> "proveedor_id")
+				@inputText(formBuscador("proveedor_nombre"), 'name -> "", 'class -> "form-control", 'id -> "proveedor")
+				<span class="input-group-addon">
+					<a href="#" class="searchModal"
+								id="searchProveedor" 
+								data-title="Selección de Proveedores" 
+								data-url="@controllers.compras.routes.ProveedoresController.modalBuscar()" 
+								data-height="650" 
+								data-width="700" 
+								data-listen="modal.seleccion.proveedor.simple" 
+								data-label="#proveedor" 
+								data-field="#proveedor_id">
+						<i class="glyphicon glyphicon-search"></i>
+					</a>
+				</span>
+			</div>
+		</label>
+	</div>
+	
+	<div class="col-sm-3">
+		<label class="control-label">Responsable
+			<div class="input-group">
+				@inputText(formBuscador("create_usuario_id"), 'hidden -> "hidden", 'id -> "create_usuario_id")
+				@inputText(formBuscador("create_usuario.nombre"), 'name -> "", 'class -> "form-control", 'id -> "create_usuario")
+				<span class="input-group-addon">
+					<a href="#" class="searchModal"
+								id="searchResponsable" 
+								data-title="Selección de responsables" 
+								data-url="@controllers.administracion.routes.UsuariosController.modalBuscar()" 
+								data-height="650" 
+								data-width="700" 
+								data-listen="modal.seleccion.usuario.simple" 
+								data-label="#create_usuario" 
+								data-field="#create_usuario_id">
+						<i class="glyphicon glyphicon-search"></i>
+					</a>
+				</span>
+			</div>
+		</label>
+	</div>
+
+	<div class="col-sm-3">
+		<div class="row">
+			<div class="col-sm-8">
+				<div class="form-group">
+					<label for="nombre" class="control-label">&nbsp;</label>
+					<button  class="form-control btn btn-primary"><i class="glyphicon glyphicon-search"></i> Buscar</button>
+				</div>
+			</div>
+			<div class="col-sm-4">
+				<div class="form-group">
+				<label for="nombre" class="control-label">&nbsp;</label>	
+				<a href="@controllers.patrimonio.routes.RemitosBaulController.index()"  class="form-control btn btn-default">Limpiar</a>
+				</div>
+			</div>
+		</div>
+
+	</div>	
+	
+	
+</div>
+}
+
+
+@if(buscador.getTotalRowCount == 0) {
+      
+     <div class="well">
+         <em>No se encuentran remitos</em>
+     </div>
+      
+} else {
+
+	Mostrando @buscador.getDisplayXtoYofZ(" a "," de ") resultado(s).   
+	<table id="listaRemitos" class="table table-striped table-bordered table-hover">
+		<thead>
+			<tr>
+				<th width="120">Número</th>
+				<th>Proveedor</th>
+				<th width="100">Fecha</th>
+			</tr>
+		</thead>
+		<tbody>
+	        @for(remito <- buscador.getList) {
+			<tr class="pointer" data-href="@controllers.patrimonio.routes.RemitosBaulController.ver(remito.id)">
+				<td>@remito.numero</td>
+				<td>@remito.proveedor.nombre</td>
+				<td>@DateUtils.formatDate(remito.fecha)</td>
+			</tr>
+	        }
+		</tbody>
+	</table>
+	
+	<div class="pagination pull-right">
+	    @views.html.helpers.paginador(buscador, controllers.patrimonio.routes.RemitosController.index())
+	</div>
+  }
+}
+
+
+<script>
+$( function() {
+	$('#searchProducto, #searchResponsable, #searchProveedor').modalSearch();
+	$("#desde, #hasta").mask("99/99/9999");
+
+})
+</script>

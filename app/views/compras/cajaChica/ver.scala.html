@@ -1,0 +1,158 @@
+@(caja: CajaChica, paginadorFicha: utils.pagination.PaginadorFicha,cajaForm: Form[CajaChica])
+@import utils._
+@import helper._
+@implicitFieldConstructor = @{ FieldConstructor(simpleInput.render) } 
+
+@paginadorFicha.setActual(caja.id.toString)
+
+@views.html.compras.mainCompras("Vista de caja chica") {
+	<div class="page-header">
+		<div class="row">
+			<div class="col-sm-7">
+				<h1>Vista de caja chica</h1>
+			</div>
+		
+			<div class="col-sm-5">
+				<div class="dropdown pull-right">
+				 <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown">
+				 	<i class="glyphicon glyphicon-list-alt"></i>
+				    Reportes
+				    <span class="caret"></span>
+				  </button>
+				  <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
+				  	<li role="presentation">
+					  <a id="" role="menuitem" tabindex="-1" 
+					  href="@controllers.compras.routes.CajaChicaController.reporteImputacionPreventivaLista(caja.id)">Imputacion Preventiva</a></li>
+					<li role="presentation">
+					  <a id="" role="menuitem" tabindex="-1" 
+					  href="@controllers.compras.routes.CajaChicaController.reporteImputacionPreventivaAjustesLista(caja.id)">Imputacion Preventiva Ajustes</a></li>  
+				  	<li role="presentation">
+					  <a id="" role="menuitem" tabindex="-1" 
+					  href="@controllers.compras.routes.CajaChicaController.reporteImputacionDefinitiva(caja.id)">Imputacion Definitiva</a></li> 
+					<li role="presentation">
+					  <a id="" role="menuitem" tabindex="-1" 
+					  href="@controllers.compras.routes.CajaChicaController.reporteCajaChica(caja.id)">Resumen</a></li> 
+					  <li role="presentation">
+					  <a id="" role="menuitem" tabindex="-1" 
+					  href="@controllers.compras.routes.CajaChicaController.reporteCajaChicaOrdenCargo(caja.id)">Orden Cargo</a></li>    
+				  	
+				  </ul>
+				</div>
+			</div>
+		</div>
+	</div>
+	
+@views.html.tags.successError()
+@inputText(cajaForm("id"), 'type -> "hidden",'id -> "cajaId")
+<div class="row menu-acciones">
+	<div class="col-sm-9">
+		<a href="@controllers.compras.routes.CajaChicaController.crear()@UriTrack.get("?")"  class="btn btn-default"><i class="glyphicon glyphicon-plus-sign"></i> Nuevo</a>
+		<a href="@controllers.compras.routes.CajaChicaController.editar(caja.id)@UriTrack.get("&")"  class="btn btn-default"><i class="glyphicon glyphicon-edit"></i> Editar</a>
+		<a href="@controllers.compras.routes.CajaChicaController.eliminar(caja.id)@UriTrack.get("&")"  class="btn btn-default delete-confirm-link"><i class="glyphicon glyphicon-trash icono-eliminar"></i> Eliminar</a>
+	</div>
+	<div class="col-sm-3">
+		<a href="@UriTrack.getOnNull(controllers.compras.routes.CajaChicaController.index().absoluteURL())" class="btn btn-default"><i class="glyphicon glyphicon-list"></i></a>
+		
+		@if(paginadorFicha.getLista().size() > 1){
+
+		<div class="btn-group">
+			@if(paginadorFicha.hasPrev()) {
+				<a  role="group" href="@controllers.compras.routes.CajaChicaController.ver(paginadorFicha.prev().toLong)@UriTrack.get("&")" class="btn btn-default"><i class="glyphicon glyphicon-chevron-left"></i></a>
+			}
+			<p style="padding-top: 3px" href=""  role="group" class="btn btn-default">@paginadorFicha.posicionActual() de @paginadorFicha.getLista().size()</p>
+			@if(paginadorFicha.hasNext()) {
+				<a  role="group" href="@controllers.compras.routes.CajaChicaController.ver(paginadorFicha.next().toLong)@UriTrack.get("&")" class="btn btn-default"><i class="glyphicon glyphicon-chevron-right"></i></a>
+			}  
+		</div>
+		}
+		
+	</div>
+</div>
+	<div class="row">
+		<div class="col-sm-2">
+			<label class="control-label">Nombre</label>
+			<p class="form-control-static form-control">@caja.nombre</p>
+		</div>
+		<div class="col-sm-2">
+			<label class="control-label">Referencia</label>
+			<p class="form-control-static form-control">@caja.referencia</p>
+		</div>
+		<div class="col-sm-2">
+			<label class="control-label">Fecha</label>
+			<p class="form-control-static form-control">@utils.DateUtils.formatDate(caja.fecha)</p>
+		</div>
+		<div class="col-sm-2">
+			<label class="control-label">Monto límite</label>
+			<p class="form-control-static form-control">@utils.NumberUtils.moneda(caja.monto_limite)</p>
+		</div>
+		<div class="col-sm-2">
+			<label class="control-label">N° Cheque</label>
+			<p class="form-control-static form-control" id="inputNumeroCheque">@caja.numero_cheque</p>
+		</div>
+		<div class="col-sm-2">
+			<label class="control-label">Monto Cheque</label>
+			<p class="form-control-static form-control" id="inputNumeroCheque">@if(caja.monto_cheque != null){@utils.NumberUtils.moneda(caja.monto_cheque)}</p>
+		</div>
+	</div>	
+	<div class="row">	
+		<div class="col-sm-4">
+			<label for="deposito" class="control-label">Institucion</label> 
+			<p class="form-control-static form-control">@caja.deposito.nombre</p>
+		</div>
+		<div class="col-sm-2">
+			<label>Expediente</label> 
+			<p class="form-control-static form-control">@caja.expediente.getExpedienteEjercicio()</p>
+		</div>
+		<div class="col-sm-2">
+			<label>Orden de pago N° </label> 
+			<p class="form-control-static form-control">@if(caja.ordenPago != null){@caja.ordenPago.getNombreCompleto()}</p>
+		</div>
+		<div class="col-sm-2">
+			<label class="control-label">Cuenta propia</label>
+			<p class="form-control-static form-control">@caja.cuentaPropia.numero</p>
+		</div>
+		<div class="col-sm-2">
+			<label class="control-label">Orden Cargo</label>
+			<p class="form-control-static form-control" id="inputNumeroCheque">@if(caja.orden_cargo != null){@caja.orden_cargo}</p>
+		</div>
+	</div>
+	
+
+	
+	
+	@views.html.compras.cajaChica.tabsMovimientos(false, caja)	
+	
+	
+	<h4>Estado actual: 	<b>@caja.estado.nombre</b></h4>
+	<h4>Total: 	<b>@utils.NumberUtils.moneda(caja.getTotal())</b></h4>
+	<h4>Total Disponible: 	<b>@utils.NumberUtils.moneda(caja.getTotalDisponible())</b></h4>
+	<div class="row margin-bottom-25">	
+		@for(estado <- models.Estado.getSiguienteEstadoPorAprobar(caja.estado.orden, models.Estado.TIPO_CAJA_CHICA)) {	
+			@if(estado.orden <= 5) {
+				<div class="col-sm-3">
+					<a href="@controllers.compras.routes.CajaChicaController.cambiarEstado(caja.id, estado.id.toLong)@UriTrack.get("&")" class="btn btn-default">
+						<i class="glyphicon glyphicon-arrow-right"></i> @estado.nombre
+					</a>
+				</div>
+				
+			}
+		}
+		@if(caja.estado.id == models.Estado.CAJA_CHICA_CANCELADA) {
+			<div class="col-sm-3">
+				<a href="@controllers.compras.routes.CajaChicaController.cambiarEstado(caja.id, models.Estado.CAJA_CHICA_BORRADOR)@UriTrack.get("&")" class="btn btn-default">
+					<i class="glyphicon glyphicon-arrow-right"></i> Volver a Borrador
+				</a>
+			</div>
+		}else{
+			<div class="col-sm-3">
+				<a href="@controllers.compras.routes.CajaChicaController.cambiarEstado(caja.id, models.Estado.CAJA_CHICA_CANCELADA)@UriTrack.get("&")" class="btn btn-default">
+					<i class="glyphicon glyphicon-minus-sign"></i> Cancelar Caja
+				</a>
+			</div>
+		}
+	</div>
+	
+	
+}
+
+

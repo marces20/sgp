@@ -1,0 +1,69 @@
+@(buscador: utils.pagination.Pagination[Organigrama], formBuscador: DynamicForm)
+@import helper._
+@implicitFieldConstructor = @{ FieldConstructor(simpleInput.render) } 
+
+<div id="modalBusquedaServicios" class="contenedorPaginador ajaxPaginador">
+<form action="@controllers.administracion.routes.OrganigramasController.modalBuscarServicios()" method="GET">
+	<div class="row">
+		<div class="col-sm-6">
+			<label class="control-label">Nombre</label>
+			@inputText(formBuscador("nombre"), 'class -> "form-control", 'autofocus -> "autofocus")
+			
+		</div>
+		<div class="col-sm-3">
+			<label class="control-label">&nbsp 
+			<button class="btn btn-primary form-control">Buscar</button>
+			</label>
+		</div>
+	</div>
+</form>
+
+@if(buscador.getTotalRowCount == 0) {
+	<div class="well">
+	    <em>No se encuentran Servicios</em>
+	</div>
+} else {
+    Mostrando @buscador.getDisplayXtoYofZ(" a "," de ") resultado(s). 
+    	
+	<table class="table table-striped table-bordered table-hover">
+		<thead>
+			<tr>
+				<th>Nombre</th>
+			</tr>
+		</thead>
+		<tbody>
+    	
+    @for(o <- buscador.getList) {
+	<tr data-href="@controllers.administracion.routes.OrganigramasController.get(o.id.toLong)" class="modalSeleccionServicio">
+		<td>@o.nombre</td>
+	</tr>    
+    }
+    </tbody>
+    </table>
+    
+	<div class="pagination pull-right">
+	    @views.html.helpers.paginador(buscador, controllers.administracion.routes.OrganigramasController.modalBuscarServicios())
+	</div>	
+}
+</div>
+
+<script>
+$( function(){
+	var contenedor = $("#modalBusquedaServicios");
+	contenedor.find('.modalSeleccionServicio').on('click', function(){
+		var url = $(this).attr('data-href');
+		$.get(url, function(data){
+			$(document).trigger("modal.seleccion.servicio.simple", data);
+		});
+	});
+	
+	contenedor.find('form').on('submit', function(){
+		var url = $(this).attr("action");
+		var query = $(this).serialize();
+		$.get(url+"?"+query, function(data){
+			contenedor.parent().html(data);
+		});
+		return false;
+	});
+});
+</script>

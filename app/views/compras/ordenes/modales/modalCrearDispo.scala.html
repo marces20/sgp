@@ -1,0 +1,76 @@
+@(dispoForm: DynamicForm,id:Long)
+@import helper._
+@implicitFieldConstructor = @{ FieldConstructor(simpleInput.render) } 
+								
+																			
+@helper.form(action = controllers.compras.routes.OrdenesAccionesController.crearDispo(), 'id -> "formCrearDispo") {	
+@views.html.tags.successError()	
+	<input name="id_orden" id="id_orden" type="hidden" value="@id"/>
+	
+	
+	<div class="row">
+		 
+		<div class="col-sm-3">
+			<label for="inputNombre" class="control-label">Numero</label> 
+			<div class="input-group @if(dispoForm.error("numero") != null) {has-error}else{has-required}">
+				@inputText(dispoForm("numero"), 'class -> "form-control")
+			 	<span class="input-group-addon">
+				<a href="#" id="getLastNumeroDispo" 
+							data-url="@controllers.expediente.routes.DisposController.getLastNumeroDispoByOrden()">
+							<i class="glyphicon glyphicon-record"></i></a></span>
+			</div>
+			<div class="hide errorOp text-error"></div>
+		</div>
+		
+		<div class="col-sm-2">
+			<div class="form-group @if(dispoForm.error("fecha") != null) {has-error}">
+				<label for="fecha" class="control-label">Fecha</label> 
+				@inputText(dispoForm("fecha"),'class -> "form-control date", 'id -> "fecha")
+				 
+			</div>
+		</div>
+		 
+		<div class="col-sm-6">
+			<div class="form-group">
+				<label for="inputNombre" class="control-label">Descripción</label> 
+				@inputText(dispoForm("descripcion"), 'class -> "form-control")
+				 
+			</div>
+		</div>
+	</div>
+	
+	<div class="row">
+		<div class="col-sm-5"><br />
+			<button type="submit" class="btn btn-default" title="Crear dispo"><i class="glyphicon glyphicon-arrow-right"></i> 
+			Crear</button>
+		</div>
+	</div>
+
+}
+<script>
+$( function(){
+	$(".inputNumericMask").numeric_input();
+	 
+	$(document).on("click", '#getLastNumeroDispo', function(){
+		 
+		if($("#id_orden").val() == ""){
+			alert ("Debe tener asignado una orden para poder sugerir el N° disposicion.");
+		}else{ 
+			 
+			var url = $(this).attr("data-url");
+			var data = $("#id_orden").serialize();
+			$.post(url, data, function(data){
+				if(data.success) {
+					$(".errorOp").html("N° sugerido: "+data.numero);
+					$(".errorOp").removeClass("hide");
+				} else {
+					$(".errorOp").html(data.message)
+					$(".errorOp").removeClass("hide");
+				}
+			});
+			 
+		}
+	});
+});
+</script>
+ 

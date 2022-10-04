@@ -1,0 +1,57 @@
+@(formBuscador: DynamicForm,id:Long,url:String = null)
+@import helper._
+@implicitFieldConstructor = @{ FieldConstructor(simpleInput.render) } 
+																			
+@helper.form(action = controllers.patrimonio.routes.ActasMovimientosController.pasarOtroServicio(), 'id -> "formPasarOtroServicio") {	
+	
+	@views.html.tags.successError()
+	@if(url) {
+		<div class="panel panel-default">
+		<div class="panel-body">
+	    	<i class="glyphicon glyphicon-save"></i> <a href="@controllers.contabilidad.routes.FacturasAccionesController.descargar322(url)">Descargar reporte pase</a>
+		</div>
+		</div>
+	}else{
+	@if(id != null){
+		<input type="hidden" name="idActa" id="idActa"  value="@id"/>
+	}
+	<div class="row">
+		<div class="col-sm-8">
+			<label for="inputOrganigrama" class="control-label">Departamento/Servicio</label> 
+			<div class="input-group @if(formBuscador.error("organigrama_id") != null) {has-error}">
+				
+				@select(formBuscador("organigrama_id"), 
+				Organigrama.find.where().eq("circuito_expediente", true).orderBy("nombre asc").findList().map{ p => p.id.toString -> p.nombre}, 'class -> 
+				"form-control select", '_default -> "Seleccionar")
+			</div>
+			@formBuscador("organigrama_id").error.map{ error =><div class="text-error">@error.message</div>}
+		</div>
+	
+	</div>
+	<div class="row">
+		<div class="col-sm-12">
+			<label for="Descripción" class="control-label">Descripción</label>
+			<div class="input-group @if(formBuscador.error("descripcion") != null) {has-error}">
+				@textarea(formBuscador("descripcion"), 'class -> "form-control", 'id -> "descripcion", 'rows -> "3", 'cols -> "50")
+				@formBuscador("descripcion").error.map{ error => <div class="text-error">@error.message</div>}
+			</div>
+		</div>	
+	</div>	
+	
+	
+	<div class="row">
+		<div class="col-sm-5"><br />
+			<button type="submit" class="btn btn-default" title="Pasar a otro Servicio">
+				<i class="glyphicon glyphicon-arrow-right"></i> Pasar a otro Servicio
+			</button>
+		</div>
+	</div>
+	}
+	
+}
+<script>
+$( function(){
+	
+});
+</script>
+@flash().clear()

@@ -1,0 +1,69 @@
+@(formBuscador: DynamicForm,masivo: Boolean = false)
+@import helper._
+@import utils._
+@import models.auth._
+@implicitFieldConstructor = @{ FieldConstructor(simpleInput.render) } 
+	
+@helper.form(action = controllers.compras.routes.SolicitudAccionesController.asignarUsuario(), 'id -> "formAsignarUsuario") {	
+	
+	@views.html.tags.successError()
+	
+	@if(masivo == false){
+		@inputText(formBuscador("id"),'hidden -> "hidden", 'id -> "id_solicitud_modal") 
+		
+	}
+		<div class="row">
+			<div class="col-sm-6">
+				<label for="paciente" class="control-label">Usuario</label> 
+					<div class="input-group">
+					@inputText(formBuscador("asignacion_usuario.nombre"),'class -> "form-control", 'id -> "user", 'autocomplete -> "off")
+					@inputText(formBuscador("asignacion_usuario_id"),'hidden -> "hidden", 'id -> "user_id")
+					<span class="input-group-addon">
+						<a href="#" class="searchModal"
+									id="searchUser" 
+									data-title="Selección de paciente" 
+									data-url="@controllers.administracion.routes.UsuariosController.modalBuscar()"
+									data-height="650" 
+									data-width="700" 
+									data-listen="modal.seleccion.usuario.simple"
+									data-label="#user" 
+									data-field="#user_id">
+							<i class="glyphicon glyphicon-search"></i>
+						</a>
+					</span>
+			 
+				</div>
+				
+			</div>
+		</div>
+	<div class="row">
+		<div class="col-sm-5"><br />
+ 			
+			<button type="submit" class="btn btn-default" title="Asignar Usuario">
+			<i class="glyphicon glyphicon-arrow-right"></i> Asignar Usuario</button>
+		</div>
+	</div>
+
+}
+
+<script>
+$( function(){
+	
+	$('#searchUser').modalSearch();
+	
+	if($("#user").length){
+		var options = {
+				script:"/administracion/usuarios/suggest/",
+				varname:"",
+				json:true,
+				shownoresults:true,
+				maxresults:6,
+				callback: function (obj) { 
+											$("#user").next().val(obj.id); 
+										 }
+			};
+		var as_json = new bsn.AutoSuggest('user', options);
+	}
+});
+</script>
+@flash().clear()

@@ -1,0 +1,17 @@
+@(grupoForm: Form[Grupo])
+@import helper._
+@implicitFieldConstructor = @{ FieldConstructor(simpleInput.render) } 
+
+
+ <div class="row">
+		<div class="col-sm-2">
+			<div class="form-group has-required @if(grupoForm.error("nombre") != null) {has-error}">
+				<label for="nombre" class="control-label">Nombre</label>
+				@inputText(grupoForm("nombre"), 'class -> "form-control")
+				@grupoForm("nombre").error.map{ error =>
+					<div class="text-error">@error.message</div>
+				}
+			</div>
+		</div>
+
+	</div>	

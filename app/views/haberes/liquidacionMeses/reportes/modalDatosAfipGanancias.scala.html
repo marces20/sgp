@@ -1,0 +1,61 @@
+@(url: String = null,formBuscador: DynamicForm)
+@import helper._
+@implicitFieldConstructor = @{ FieldConstructor(simpleInput.render) } 
+@views.html.tags.successError()
+@if(url) {
+	<div class="panel panel-default">
+		<div class="panel-body">
+	    	<i class="glyphicon glyphicon-save"></i> <a href="@controllers.contabilidad.routes.FacturasAccionesController.descargar322(url)">Descargar archivo de informe</a>
+		</div>
+	</div>
+}else{
+	
+	@helper.form(action = controllers.haberes.routes.LiquidacionMesesReportesController.reportesDatosAfipGanancias(), 'id -> "formDatosAfipGanancias") {
+		
+		<div class="row">
+			<div class="col-sm-3">
+				<label for="inputPeriodo" class="control-label">Periodo</label> 
+				<div class="input-group">
+					@inputText(formBuscador("periodo"),'class -> "form-control",'id -> "periodo_modal")
+					@inputText(formBuscador("periodo_id"),'hidden -> "hidden",'id -> "periodo_id_modal")
+					<span class="input-group-addon">
+					<a href="#" class="searchModal"
+								id="searchPeriodo" 
+								data-title="Selección de Periodo" 
+								data-url="@controllers.contabilidad.routes.PeriodosController.modalBuscar()" 
+								data-height="650" 
+								data-width="700" 
+								data-listen="modal.seleccion.periodo.simple" 
+								data-label="#periodo_modal" 
+								data-field="#periodo_id_modal">
+						<i class="glyphicon glyphicon-search"></i>
+					</a>
+					</span>
+				</div>
+			</div>
+			<div class="col-sm-5"><br />
+				<button type="submit" class="btn btn-default" title="Buscar"><i class="glyphicon glyphicon-floppy-disk"></i> Crear Archvio</button>
+			</div>
+		</div>
+	}
+}	
+@flash().clear()
+
+<script>
+ $( function () {
+	 $('.searchModal').modalSearch();
+	 if($("#periodo_modal").length){
+			var options = {
+					script:"/contabilidad/suggestPeriodo/",
+					varname:"",
+					json:true,
+					shownoresults:true,
+					maxresults:6,
+					callback: function (obj) { 
+												$("#periodo_id_modal").val(obj.id); 
+											 }
+				};
+			var as_json = new bsn.AutoSuggest('periodo_modal', options);
+		}
+ });
+ </script>		

@@ -1,0 +1,25 @@
+@(convenioForm: Form[models.haberes.ConvenioBanco])
+@import helper._
+@implicitFieldConstructor = @{ FieldConstructor(simpleInput.render) }
+
+@views.html.haberes.mainHaberes("Modificar Convenio Banco") {
+
+	<div class="page-header">
+		<div class="row">
+			<div class="col-sm-10">
+				<h1>Editar Convenio Banco</h1>
+			</div>
+			
+			<div class="col-sm-2">
+			</div>
+		</div>
+	</div>
+	
+	@views.html.tags.successError()
+													 
+	@helper.form(action = controllers.haberes.routes.ConveniosBancosController.actualizar()) {
+		@inputText(convenioForm("id"), 'hidden -> "hidden")
+		@views.html.haberes.conveniosBancos.formConvenioBanco(convenioForm)
+	}
+
+}

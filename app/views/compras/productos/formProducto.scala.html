@@ -1,0 +1,162 @@
+@(productoForm: Form[Producto],editarNombre:Boolean,productoDepositoArray:List[Integer] = null)
+@import helper._
+@implicitFieldConstructor = @{ FieldConstructor(simpleInput.render) } 
+
+	<div class="row">
+		<div class="col-sm-9">
+			@if(editarNombre){
+			<div class="form-group @if(productoForm.error("nombre") != null) {has-error}else{has-required}">
+				<label for="inputNombre" class="control-label">Nombre</label> 
+				@inputText(productoForm("nombre"), 'class -> "form-control")
+				@productoForm("nombre").error.map{ error =>
+					<div class="text-error">@error.message</div>
+				}
+			</div>
+			}else{
+				@inputText(productoForm("nombre"), 'class -> "form-control",'readOnly -> "readOnly")
+			}
+		</div>
+	</div>
+	
+	<div class="row">
+		<div class="col-sm-3">
+			<div class="form-group">
+				<label for="inputReferencia" class="control-label">Referencia</label> 
+				@inputText(productoForm("referencia"), 'class -> "form-control")
+			</div>
+		</div>
+		<div class="col-sm-3">
+			<div class="form-group">
+				<label for="inputCodigoRismi" class="control-label">Codigo Rismi</label> 
+				@inputText(productoForm("codigo_rismi"), 'class -> "form-control")
+			</div>
+		</div>
+		<div class="col-sm-3">
+			<div class="form-group">
+				<label for="inputCodigoIps" class="control-label">Codigo IPS</label> 
+				@inputText(productoForm("codigo_ips"), 'class -> "form-control")
+			</div>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-sm-3">
+			<div class="form-group @if(productoForm.error("categoria_id") != null) {has-error}else{has-required}">
+				<label for="inputCategoria" class="control-label">Categor&iacute;a</label> 
+				@inputText(productoForm("categoria.nombre"),'class -> "form-control")
+				@inputText(productoForm("categoria_id"),'hidden -> "hidden")
+				@productoForm("categoria_id").error.map{ error =>
+					<div class="text-error">@error.message</div>
+				}
+			</div>
+		</div>
+		<div class="col-sm-3">
+			<div class="form-group @if(productoForm.error("tipo_producto_id") != null) {has-error}else{has-required}">
+				<label for="inputTipoProducto" class="control-label">Tipo Producto</label> 
+				@inputText(productoForm("tipo_producto.nombre"),'class -> "form-control")
+				@inputText(productoForm("tipo_producto_id"),'hidden -> "hidden")
+				@productoForm("tipo_producto_id").error.map{ error =>
+					<div class="text-error">@error.message</div>
+				}
+			</div>
+		</div>
+		<!-- <div class="col-sm-3">
+			<div class="form-group @if(productoForm.error("articulo.id") != null) {has-error}else{has-required}">
+				<label for="inputArticulo" class="control-label">Articulo</label> 
+				@inputText(productoForm("articulo.nombre"),'class -> "form-control")
+				@inputText(productoForm("articulo_id"),'hidden -> "hidden")
+				@productoForm("articulo_id").error.map{ error =>
+					<div class="text-error">@error.message</div>
+				}
+			</div>
+		</div> -->
+		<div class="col-sm-3">
+			<div class="form-group @if(productoForm.error("udm.id") != null) {has-error}else{has-required}">
+				<label for="inputUdm" class="control-label">Udm</label> 
+				@inputText(productoForm("udm.nombre"),'class -> "form-control")
+				@inputText(productoForm("udm_id"),'hidden -> "hidden")
+				@productoForm("udm_id").error.map{ error =>
+					<div class="text-error">@error.message</div>
+				}
+			</div>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-sm-3">
+			<div class="form-group @if(productoForm.error("precio_coste") != null) {has-error}else{has-required}">
+				<label for="inputPrecioCoste" class="control-label">Precio Coste</label> 
+				@inputText(productoForm("precio_coste"), 'class -> "form-control")
+				@productoForm("precio_coste").error.map{ error =>
+					<div class="text-error">@error.message</div>
+				}
+			</div>
+		</div>
+		<div class="col-sm-3">
+			<div class="form-group @if(productoForm.error("cuenta_ingreso.id") != null) {has-error}else{has-required}">
+				<label for="inputCuentaIngresos" class="control-label">Cuenta de Ingresos</label> 
+				@inputText(productoForm("cuenta_ingreso.nombre"),'class -> "form-control")
+										 
+				@inputText(productoForm("cuenta_ingreso_id"),'hidden -> "hidden")
+				@productoForm("cuenta_ingreso_id").error.map{ error =>
+					<div class="text-error">@error.message</div>
+				}
+			</div>
+		</div>
+		<div class="col-sm-3">
+			<div class="form-group @if(productoForm.error("cuenta_gasto.id") != null) {has-error}else{has-required}">
+				<label for="inputCuentaGastos" class="control-label">Cuenta de gastos</label> 
+				@inputText(productoForm("cuenta_gasto.nombre"),'class -> "form-control")
+				@inputText(productoForm("cuenta_gasto_id"),'hidden -> "hidden")
+				@productoForm("cuenta_gasto_id").error.map{ error =>
+					<div class="text-error">@error.message</div>
+				}
+			</div>
+		</div>
+		@checkbox(productoForm("producto.venta"), 'hidden -> "hidden")
+		@checkbox(productoForm("producto.compra"), 'hidden -> "hidden")
+		<!-- <div class="col-sm-3">
+			<div class="form-group">
+				<div class="checkbox">
+					<label for="inputPuedeSerVendido" class="control-label">
+						Puede ser Vendido 
+						
+					</label>
+				</div>
+				<div class="checkbox">
+					<label for="inputPuedeSerComprado" class="control-label"> 
+						Puede ser Comprado
+						
+					</label>
+				</div> 
+			</div>
+		</div> -->
+		
+		 
+	</div> 
+	<div class="row">
+		<div class="col-sm-6">
+			<table class="table table-striped table-bordered">
+				<thead>
+					<tr>
+						<th width="50">#</th>
+						<th width="100">Deposito</th>
+					
+					</tr>
+				</thead>
+				<tbody>
+					@for( d <- Deposito.find.all()){
+						
+						<tr>
+							<td>
+								<input type="checkbox" class="permiso" name="productoDeposito[]" 
+								@if(productoDepositoArray != null){ 
+								@if(productoDepositoArray.contains(d.id.intValue())) {checked}} 
+								value="@d.id" />
+								
+							</td>
+							<td>@d.nombre</td>
+						</tr>
+					}
+				</tbody>	
+			</table>
+		</div>
+	</div>

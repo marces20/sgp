@@ -1,0 +1,377 @@
+@(ordenForm: Form[Orden])
+@import helper._
+@import utils._
+@implicitFieldConstructor = @{ FieldConstructor(simpleInput.render) } 
+	
+	
+	<div class="row menu-acciones">
+		<div class="col-sm-5">
+			<button type="submit" class="btn btn-default" title="Guardar orden"><i class="glyphicon glyphicon-floppy-disk"></i> Guardar</button>	
+	    	<a href="@if(request().getHeader("referer")){ @request().getHeader("referer") } else {@controllers.compras.routes.OrdenesController.index()@UriTrack.decode()}" title="Cancelar editar" class="btn btn-default"><i class="glyphicon glyphicon-floppy-remove"></i> Cancelar</a>
+	    </div>
+	    <div class="col-sm-5">
+			@if(ordenForm("tipoCuenta").value != null){
+				<span style="color:red;font-size: 25px;font-weight: bold;">@ordenForm("tipoCuenta.nombre").value</span>
+			}
+		</div>
+		<div class="col-sm-2">
+			<a href="@UriTrack.getOnNull(controllers.compras.routes.OrdenesController.index().absoluteURL())" title="Volver al listado" class="btn btn-default"><i class="glyphicon glyphicon-list"></i></a> 
+			@if(ordenForm.field("id").value){<a href="@controllers.compras.routes.OrdenesController.ver(ordenForm.field("id").value.toLong)@UriTrack.get("&")" title="Ver orden" class="btn btn-default"><i class="glyphicon glyphicon-align-justify"></i></a>}
+		</div>
+	</div>
+	
+	<input type="hidden" name=@UriTrack.getKey() value="@UriTrack.code()" />
+	@inputText(ordenForm("id"), 'type -> "hidden", 'id -> "ordenId")
+	<div class="row">
+		<div class="col-sm-2">
+			<label class="control-label">Referencia</label> 
+			<div class="form-group @if(ordenForm.error("nombre") != null) {has-error}">
+				@inputText(ordenForm("nombre"), 'class -> "form-control",'readOnly -> "readOnly")
+				@ordenForm("nombre").error.map{ error =>
+					<div class="text-error">@error.message</div>
+				}
+			</div>
+		</div>
+		<div class="col-sm-4">
+			<label class="control-label">Proveedor</label> 
+			<div class="input-group @if(ordenForm.error("proveedor_id") != null) {has-error}else{has-required}">	
+				@inputText(ordenForm("proveedor.nombre"), 'class -> "form-control", 'id -> "proveedor")
+				@inputText(ordenForm("proveedor_id"), 'hidden -> "hidden", 'id -> "proveedor_id")
+				<span class="input-group-addon">
+                	<a href="#" id="searchDeposito" data-title="Selección de proveedor" data-url="@controllers.compras.routes.ProveedoresController.modalBuscar()" data-height="650" data-width="700" data-listen="modal.seleccion.proveedor.simple" data-label="#proveedor" data-field="#proveedor_id" /> <i class="glyphicon glyphicon-search"></i></a>
+                </span>
+			</div>
+			@ordenForm("proveedor_id").error.map{ error =>
+				<div class="text-error">@error.message</div>
+			}
+		</div>
+		<div class="col-sm-2">
+			<label class="control-label">Fecha orden</label> 
+			<div class="form-group ">
+				@inputText(ordenForm("fecha_orden"),'class -> "form-control date", 'autocomplete -> "off")
+			</div>
+			@ordenForm("fecha_orden").error.map{ error =>
+				<div class="text-error">@error.message</div>
+			}
+		</div>
+		<div class="col-sm-2">
+			<label for="expediente" class="control-label">Expediente</label> 
+			<div class="input-group @if(ordenForm.error("expediente_id") != null) {has-error}else{has-required}">
+				@inputText(ordenForm("expediente.expedienteEjercicio"),'class -> "form-control", 'id -> "expediente")
+				@inputText(ordenForm("expediente_id"),'hidden -> "hidden", 'id -> "expediente_id")
+				<span class="input-group-addon"><a href="#" id="searchExpediente" data-title="Selección de expediente" data-url="@controllers.expediente.routes.ExpedientesController.modalBuscar()" data-height="650" data-width="700" data-listen="modal.seleccion.expediente.simple" data-label="#expediente" data-field="#expediente_id"><i class="glyphicon glyphicon-search"></i></a></span>
+			</div>
+			@ordenForm("expediente_id").error.map{ error =>
+				<div class="text-error">@error.message</div>
+			}
+		</div>
+		<div class="col-sm-2">
+			<label class="control-label">Periodo</label> 
+			<div class="form-group @if(ordenForm.error("periodo.id") != null) {has-error}">
+				<div class="input-group">
+				@inputText(ordenForm("periodo.nombre"),'class -> "form-control", 'id -> "periodo")
+				@inputText(ordenForm("periodo_id"),'hidden -> "hidden", 'id -> "periodo_id")
+				<span class="input-group-addon">
+						<a href="#" class="searchModal"
+									id="searchPeriodo" 
+									data-title="Selección de Periodo" 
+									data-url="@controllers.contabilidad.routes.PeriodosController.modalBuscar()" 
+									data-height="650" 
+									data-width="700" 
+									data-listen="modal.seleccion.periodo.simple" 
+									data-label="#periodo" 
+									data-field="#periodo_id">
+							<i class="glyphicon glyphicon-search"></i>
+						</a>
+					</span>
+				</div>	
+			</div>
+		</div>
+		
+	
+	</div>
+	
+	
+	<div class="row">
+		<div class="col-sm-2">
+			<label class="control-label">Solicitud de Compras</label>
+			<div class="input-group @if(ordenForm.error("solicitud_id") != null) {has-error}">
+				
+				@inputText(ordenForm("solicitud.referencia"),'class -> "form-control",'id -> "solicitud") 
+				@inputText(ordenForm("solicitud_id"),'hidden -> "hidden",'id -> "solicitud_id")
+				<span class="input-group-addon"><a href="#" id="searchSolicitud" 
+															data-title="Selección de solicitud" 
+															data-url="@controllers.compras.routes.SolicitudesController.modalBuscar()" 
+															data-height="650" 
+															data-width="700" 
+															data-listen="modal.seleccion.solicitud.simple" 
+															data-label="#solicitud" 
+															data-field="#solicitud_id">
+															<i class="glyphicon glyphicon-search"></i></a></span>
+			</div>
+		</div>
+		<div class="col-sm-2">
+			<label class="control-label">Orden de provisión</label>
+			<div class="input-group">
+				@inputText(ordenForm("numero_orden_provision"), 'class -> "form-control",'id -> "numero_orden_provision")
+				<span class="input-group-addon">
+				<a href="#" id="getLastNumeroProvision" 
+							data-url="@controllers.patrimonio.routes.OrdenesProvisionController.getLastNumeroProvision()"
+				/><i class="glyphicon glyphicon-record"></i></a></span>
+			</div>
+			@ordenForm("numero_orden_provision").error.map{ error =>
+				<div class="text-error">@error.message</div>
+			}
+			<div class="hide errorOp text-error"></div>
+		</div>
+		<div class="col-sm-2">
+			<label class="control-label">Fecha provisión</label> 
+			<div class="form-group @if(ordenForm.error("fecha_provision")  != null) {has-error}">
+				@inputText(ordenForm("fecha_provision"),'class -> "form-control date", 'autocomplete -> "off")
+			</div>
+			@ordenForm("fecha_provision").error.map{ error =>
+				<div class="text-error">@error.message</div>
+			}
+		</div>
+		
+		<div class="col-sm-4">
+			<label for="deposito" class="control-label">Institucion</label> 
+			<div class="input-group @if(ordenForm.error("deposito_id") != null) {has-error}else{has-required}">
+				@inputText(ordenForm("deposito.nombre"),'class -> "form-control", 'id -> "deposito_nombre", 'autocomplete -> "off")
+				@inputText(ordenForm("deposito_id"),'hidden -> "hidden", 'id -> "deposito_id")
+				<span class="input-group-addon">
+                	<a href="#" id="searchDeposito" data-title="Selección de Institucion" 
+                	data-url="@controllers.delegacion.routes.DepositosController.modalBuscar()" 
+                	data-height="650" data-width="700" 
+                	data-listen="modal.seleccion.deposito.simple" 
+                	data-label="#deposito_nombre" data-field="#deposito_id" /> <i class="glyphicon glyphicon-search"></i></a>
+                </span>
+			</div>
+			@ordenForm("deposito_id").error.map{ error =>
+				<div class="text-error">@error.message</div>
+			}
+		</div>		
+		<div class="col-sm-2">
+			<div class="form-group @if(ordenForm.error("tipo_contratacion") != null) {has-error}">
+				<label class="control-label">Tipo contratación
+				@select(ordenForm("tipo_contratacion"), options("compras"->"Compra Directa",
+														"licitacion"->"Licitacion Pública",
+														"licitacion_pri"->"Licitacion Privada",
+														"contratacion"->"Contratacion",
+														"contratacion_directa"->"Contratacion Directa",
+														"concurso_precios"->"Concurso de Precios"
+														), 
+				'class -> "form-control select")</label>
+			</div>
+		</div>		
+				
+	</div>
+	<div class="row" id="">
+		
+		<div class="col-sm-4">
+			<div class="form-group @if(ordenForm.error("tipo_orden") != null) {has-error}">
+				<label class="control-label">Tipo Orden</label>
+				@select(ordenForm("tipo_orden"), options(
+														""->"Seleccion Tipo de Orden",
+														"comun"->"Recepcion de Productos (Patrimonio)",
+														"servicio"->"Certificacion de Servicios (Patrimonio)",
+														"personal"->"Contratos Personal (Personal)",
+														"certificacioncompra"->"Certificaciones Compras (Compras)",
+														"certificacionobra"->"Certificaciones Obras (Infraestructura)",
+														"haberesrelacion"->"Haberes Contratos Relacion (Liquidaciones)",
+														"imputacion"->"Imputacion Presupuesto (Contabilidad)"), 
+				'class -> "form-control select",'id -> "tipo_orden_id")
+				<!-- "sinop"->"Sin Orden de Provision (Compras)", -->
+				@ordenForm("tipo_orden").error.map{ error =>
+					<div class="text-error">@error.message</div>
+				}
+			</div>
+		</div>	
+		<div class="col-sm-3">
+			<!--<div class="col-sm-6">
+				<div class="checkbox">
+					<label class="control-label">Creacion Automatica
+					@checkbox(ordenForm("creacion_automatica"))</label> 
+				</div>
+			</div>
+			  <div class="col-sm-6">
+				<div class="checkbox">
+					<label class="control-label"> 
+						Profe
+						@checkbox(ordenForm("profe"))
+					</label>
+				</div>
+			</div>-->
+			<input type="hidden" name="creacion_automatica" id="creacion_automatica" value="true"/>
+			 
+			<div class="form-group @if(ordenForm.error("tipo_cuenta_id") != null) {has-error}">
+				<label class="control-label">Tipo Cuenta</label>
+				@select(ordenForm("tipo_cuenta_id"),TipoCuenta.find.all().map { p => p.id.toString -> p.nombre}, 'class -> "form-control select", '_default -> "Seleccionar")
+				@ordenForm("tipo_cuenta_id").error.map{ error =>
+					<div class="text-error">@error.message</div>
+				}
+			</div>
+		</div>
+		
+		<div class="col-sm-3">	
+			<div class="col-sm-6">
+				<div class="form-group @if(ordenForm.error("fecha_inicio") != null) {has-error}">
+					<label class="control-label">Fecha inicio</label> 
+					@inputText(ordenForm("fecha_inicio"),'class -> "form-control date", 'autocomplete -> "off")
+					@ordenForm("fecha_inicio").error.map{ error =>
+						<div class="text-error">@error.message</div>
+					}
+				</div>
+			</div>
+				
+			<div class="col-sm-6">
+				<div class="form-group @if(ordenForm.error("fecha_fin") != null) {has-error}">
+					<label class="control-label">Fecha fin</label> 
+					@inputText(ordenForm("fecha_fin"),'class -> "form-control date", 'autocomplete -> "off")
+				</div>
+			</div>
+		</div>
+		<div class="col-sm-2">
+			<div class="form-group @if(ordenForm.error("fecha_entrega") != null) {has-error}">
+				<label class="control-label">Fecha entrega</label> 
+				@inputText(ordenForm("fecha_entrega"),'class -> "form-control date", 'autocomplete -> "off")
+				@ordenForm("fecha_entrega").error.map{ error =>
+					<div class="text-error">@error.message</div>
+				}
+			</div>
+		</div>
+	</div>
+	
+	
+	<div class="row contenedorRubros">
+		<div class="col-sm-3">
+			<div class="seleccionOrdenRubro form-group @if(ordenForm.error("orden_rubro_id") != null) {has-error}">
+				<label for="@ordenForm("orden_rubro_id").id" class="control-label">Rubro</label>
+				@select(ordenForm("orden_rubro_id"), 
+				OrdenRubro.find.all().map { p => p.id.toString -> p.nombre}, 'class -> "form-control select", '_default -> "Seleccionar")
+				@ordenForm("orden_rubro_id").error.map{ error =>
+					<div class="text-error">@error.message</div>
+				}
+			</div>
+		</div>
+		<div class="col-sm-3">
+			<div class="seleccionSubrubros form-group @if(ordenForm.error("orden_subrubro_id") != null) {has-error}">
+				<label for="@ordenForm("orden_subrubro_id").id" class="control-label">Sub-Rubro</label>
+				@select(ordenForm("orden_subrubro_id"), 
+					ordenForm("ordenRubro.id").value match {
+						case null => {options()}
+						case v if v.matches("\\d+") => {OrdenSubrubro.getOrdenSubrubro(v.toInt).map { p => p.id.toString -> p.nombre}}
+						case _ => {options()}
+					}, 
+				'class -> "form-control select", '_default -> "Seleccionar")
+				@ordenForm("orden_subrubro_id").error.map{ error =>
+					<div class="text-error">@error.message</div>
+				}
+			</div>
+		</div>
+		
+		<div class="col-sm-2">
+			<label class="control-label">Detalle Rubro</label>
+			<div class="form-group">
+				@inputText(ordenForm("detalle_rubro"), 'class -> "form-control",'id -> "detalle_rubro")
+				@ordenForm("detalle_rubro").error.map{ error =>
+					<div class="text-error">@error.message</div>
+				}
+			</div>
+		</div>
+		
+		<div class="col-sm-2">
+			<label class="control-label">Monto adelanto</label>
+			<div class="form-group">
+				@inputText(ordenForm("monto_adelanto"), 'class -> "form-control",'id -> "monto_adelanto")
+				@ordenForm("monto_adelanto").error.map{ error =>
+					<div class="text-error">@error.message</div>
+				}
+			</div>
+		</div>
+		
+		<div class="col-sm-2">
+			<div class="row">
+
+				<div class="col-sm-6">
+					<label class="control-label">Cotización</label>
+					<div class="form-group">
+						@inputText(ordenForm("cot_dolar"), 'class -> "form-control",'id -> "monto_adelanto")
+						@ordenForm("cot_dolar").error.map{ error =>
+							<div class="text-error">@error.message</div>
+						}
+					</div>
+				</div>
+				
+				<div class="col-sm-6">
+					<label class="control-label">Moneda</label>
+					<div class="form-group">
+						@select(ordenForm("tipo_moneda"),TipoMoneda.find.all().map { p => p.id.toString -> p.nombre}, 'class -> "form-control select", '_default -> "Seleccionar")
+						@ordenForm("tipo_moneda").error.map{ error =>
+							<div class="text-error">@error.message</div>
+						}
+					</div>
+				</div>
+			</div>		
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-sm-2">
+			<label class="control-label">N° Presupuesto</label>
+			<div class="form-group">
+				@inputText(ordenForm("numero_presupuesto"), 'class -> "form-control",'id -> "numero_presupuesto")
+			</div>
+		</div>
+		<div class="col-sm-10">
+			<label class="control-label">Plazo Entrega</label>
+			<div class="form-group">
+				@inputText(ordenForm("plazo_entrega"), 'class -> "form-control",'id -> "detalle_rubro")
+			</div>
+		</div>
+	</div>
+<script>
+$( function() {
+	
+	$('#getLastNumeroProvision').click( function() {  
+		if($("#expediente_id").val() == ""){
+			alert ("Debe tener asignado un expediente para poder sugerir el N° provision.");
+		}else{ 
+			if($('#tipo_orden_id option:selected').val() == "comun" || $('#tipo_orden_id option:selected').val() == "servicio"){
+				var url = $(this).attr("data-url");
+				var data = $("#expediente_id").serialize();
+				$.post(url, data, function(data){
+					if(data.success) {
+						$(".errorOp").html("N° sugerido: "+data.numero);
+						$(".errorOp").removeClass("hide");
+					} else {
+						$(".errorOp").html(data.message)
+						$(".errorOp").removeClass("hide");
+					}
+				});
+			}else{
+				alert ("El tipo de orden de ser certificacion o recepción de patrimonio.");
+			}
+		}
+	});
+	
+	 
+	
+	urlOrdenSubrubro  = '@controllers.compras.routes.OrdenSubrubroController.listOptions()';
+	
+	var contenedorRubros = $('.contenedorRubros');
+	
+	contenedorRubros.on('change', '.seleccionOrdenRubro .select', function(){
+		var id = $(this).find('option:selected').val();
+		var contenedor = $(this).closest('.contenedorRubros');
+		contenedor.find('.seleccionSubrubros .select').find('option:gt(0)').remove();
+		
+		if(id == "") return false;
+
+		$.get(urlOrdenSubrubro + '?rubroId='+id, function(data){
+			contenedor.find('.seleccionSubrubros .select').html(data);
+		});
+	});
+	
+});
+</script>
+	

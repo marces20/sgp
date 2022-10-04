@@ -1,0 +1,252 @@
+@(formBuscador: DynamicForm,escala_laboral_id:String,
+rowParque:List[com.avaje.ebean.SqlRow],
+rowConvenio:List[com.avaje.ebean.SqlRow],
+rowPlanta:List[com.avaje.ebean.SqlRow])
+@import helper._
+@import utils._
+@import models.auth._
+@implicitFieldConstructor = @{ FieldConstructor(simpleInput.render) }
+@import java.lang.Integer;var c =0;var x =0
+@views.html.dashboard.mainDashboard("Liquidaciones por Escala Laboral") {
+<script>
+$( function(){ $('.searchModal').modalSearch();})
+
+</script>
+<script src="@routes.Assets.at("javascripts/dashboard/liquidacionesPorProfesion.js")" type="text/javascript"></script>
+<div class="page-header">
+	<div class="row">
+		<div class="col-sm-7">
+			<h1>Liquidaciones por Escala Laboral</h1>
+		</div>
+		<div class="col-sm-5">
+			<div class="dropdown pull-right">
+			 <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown">
+			 	<i class="glyphicon glyphicon-list-alt"></i>
+			    Reportes
+			    <span class="caret"></span>
+			  </button>
+			  <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
+			  	<li><a tabindex="-1" href="#" id="liquidacionesPorEscalaReporte" data-url="@controllers.dashboard.routes.LiquidacionesReportesController.liquidacionesPorEscala()">Exportar</a></li>
+			  </ul>
+			</div>
+		</div>
+	</div>
+</div>	
+
+<div id="actions">
+	<form action="" method="GET">
+		<div class="row">
+			<form action="" id="formSearchLiquidacionesPorEscala" method="GET">
+			<div class="col-sm-2">
+				<label for="inputPeriodo" class="control-label">Periodo</label> 
+				<div class="input-group">
+					@inputText(formBuscador("periodo"),'class -> "form-control",'id -> "periodo")
+					@inputText(formBuscador("periodo_id"),'hidden -> "hidden",'id -> "periodo_id")
+					<span class="input-group-addon">
+					<a href="#" class="searchModal"
+								id="searchPeriodo" 
+								data-title="Selección de Periodo" 
+								data-url="@controllers.contabilidad.routes.PeriodosController.modalBuscar()" 
+								data-height="650" 
+								data-width="700" 
+								data-listen="modal.seleccion.periodo.simple" 
+								data-label="#periodo" 
+								data-field="#periodo_id">
+						<i class="glyphicon glyphicon-search"></i>
+					</a>
+					</span>
+				</div>
+			</div>
+			<div class="col-sm-4">
+				<label for="solicitante" class="control-label">Escala Laboral</label> 
+				<div class="input-group">
+					@inputText(formBuscador("escalaLaboral.nombre"), 'name -> "", 'class -> "form-control", 'id -> "escala_laboral")
+					@inputText(formBuscador("escala_laboral_id"), 'hidden -> "hidden", 'id -> "escala_laboral_id")
+					<span class="input-group-addon">
+					<a href="#" class="searchModal" id="searchEscalaLaboral" 
+							 	data-title="Selección de escala" 
+							 	data-url="@controllers.haberes.routes.EscalasLaboralesController.modalBuscar()" 
+							 	data-height="650" data-width="700" 
+							 	data-listen="modal.seleccion.escalaLaboral.simple" 
+							 	data-label="#escala_laboral" 
+							 	data-field="#escala_laboral_id">
+					<i class="glyphicon glyphicon-search"></i></a></span>
+				</div>
+			</div>
+			<div class="col-sm-2">
+				<div class="form-group">
+				<label for="nombre" class="control-label">&nbsp;</label>
+				<button  class="form-control btn btn-primary"><i class="glyphicon glyphicon-search"></i> Buscar</button>
+				</div>
+			</div>
+			</form>
+		</div>
+	</form>
+</div>
+<hr>
+	@if(rowParque != null){
+		@if(rowParque.size() > 0){
+			<div class="row">
+				<div class="col-sm-12">
+					<h2>PARQUE SALUD</h2>
+					
+					<table class="table table-bordered">
+						<thead>
+							<tr>
+								<td>CANTIDAD</td>
+								<td>PROFESION</td>
+								<td align="center">HABER BRUTO</td>
+								<td align="center">GUARDIA</td>
+								<td align="center">PRODUCCION</td>	
+								<td align="center">ADICIONALES</td>	
+								<td align="center">DESCUENTOS</td>	
+								<td align="center">NETO</td>
+							</tr>
+						</thead>
+						<tbody>
+							@for(rp <- rowParque){
+								@if(rp.getInteger("idTipoRelacion").compareTo(1) == 0){
+									@{c = c+rp.getInteger("cant")}
+									<tr>
+										<td align="center">@rp.getInteger("cant")</td>
+										<td>@rp.getString("profesion")</td>
+										<td align="center">	
+											@(utils.NumberUtils.moneda(rp.getBigDecimal("haber")))
+										</td>
+										<td align="center">
+											@(utils.NumberUtils.moneda(rp.getBigDecimal("guardias")))
+										</td>
+										<td align="center">
+											@(utils.NumberUtils.moneda(rp.getBigDecimal("produccion")))
+										</td>
+										<td align="center">
+											@(utils.NumberUtils.moneda(rp.getBigDecimal("adicional")))
+										</td>
+										<td align="center">
+											@(utils.NumberUtils.moneda(rp.getBigDecimal("descuentos")))
+										</td>
+										<td align="center">@(utils.NumberUtils.moneda(rp.getBigDecimal("neto")))</td>
+									</tr>
+								}
+							}		
+							<tr>
+										<td>TOTAL @c</td>
+							</tr>						
+						</tbody>
+					</table>		
+				</div>
+			</div>	
+		}
+	}
+	@{c = 0}
+	@if(rowConvenio != null){
+		@if(rowConvenio.size() > 0){
+			<div class="row">
+				<div class="col-sm-12">
+					<h2>CONVENIO MINISTERIO</h2>
+					
+					<table class="table table-bordered">
+						<thead>
+							<tr>
+								<td>CANTIDAD</td>
+								<td>PROFESION</td>
+								<td align="center">HABER BRUTO</td>
+								<td align="center">GUARDIA</td>
+								<td align="center">PRODUCCION</td>	
+								<td align="center">ADICIONALES</td>	
+								<td align="center">DESCUENTOS</td>	
+								<td align="center">NETO</td>
+							</tr>
+						</thead>
+						<tbody>
+							@for(rp <- rowConvenio){
+								@if(rp.getInteger("idTipoRelacion").compareTo(3) == 0){
+								@{c = c+rp.getInteger("cant")}
+									<tr>
+										<td align="center">@rp.getInteger("cant")</td>
+										<td>@rp.getString("profesion")</td>
+										<td align="center">	
+											@(utils.NumberUtils.moneda(rp.getBigDecimal("haber")))
+										</td>
+										<td align="center">
+											@(utils.NumberUtils.moneda(rp.getBigDecimal("guardias")))
+										</td>
+										<td align="center">
+											@(utils.NumberUtils.moneda(rp.getBigDecimal("produccion")))
+										</td>
+										<td align="center">
+											@(utils.NumberUtils.moneda(rp.getBigDecimal("adicional")))
+										</td>
+										<td align="center">
+											@(utils.NumberUtils.moneda(rp.getBigDecimal("descuentos")))
+										</td>
+										<td align="center">@(utils.NumberUtils.moneda(rp.getBigDecimal("neto")))</td>
+									</tr>
+								}
+							}			
+							<tr>
+										<td>TOTAL @c</td>
+							</tr>		
+						</tbody>
+					</table>		
+				</div>
+			</div>	
+		}
+	}
+	@{c = 0}
+	@if(rowPlanta != null){
+		@if(rowPlanta.size() > 0){
+			<div class="row">
+				<div class="col-sm-12">
+					<h2>PLANTA</h2>
+					
+					<table class="table table-bordered">
+						<thead>
+							<tr>
+								<td>CANTIDAD</td>
+								<td>PROFESION</td>
+								
+								<td align="center">HABER BRUTO</td>
+								<td align="center">GUARDIA</td>
+								<td align="center">PRODUCCION</td>	
+								<td align="center">ADICIONALES</td>	
+								<td align="center">DESCUENTOS</td>	
+								<td align="center">NETO</td>
+							</tr>
+						</thead>
+						<tbody>
+							@for(rp <- rowPlanta){
+								@if(rp.getInteger("idTipoRelacion").compareTo(3) != 0 && rp.getInteger("idTipoRelacion").compareTo(1) != 0){
+								@{c = c+rp.getInteger("cant")}
+									<tr>
+										<td align="center">@rp.getInteger("cant")</td>
+										<td>@rp.getString("profesion")</td>
+										<td align="center">	
+											@(utils.NumberUtils.moneda(rp.getBigDecimal("haber")))
+										</td>
+										<td align="center">
+											@(utils.NumberUtils.moneda(rp.getBigDecimal("guardias")))
+										</td>
+										<td align="center">
+											@(utils.NumberUtils.moneda(rp.getBigDecimal("produccion")))
+										</td>
+										<td align="center">
+											@(utils.NumberUtils.moneda(rp.getBigDecimal("adicional")))
+										</td>
+										<td align="center">
+											@(utils.NumberUtils.moneda(rp.getBigDecimal("descuentos")))
+										</td>
+										<td align="center">@(utils.NumberUtils.moneda(rp.getBigDecimal("neto")))</td>
+									</tr>
+								}
+							}		
+							<tr>
+										<td>TOTAL @c</td>
+							</tr>			
+						</tbody>
+					</table>		
+				</div>
+			</div>	
+		}
+	}
+}

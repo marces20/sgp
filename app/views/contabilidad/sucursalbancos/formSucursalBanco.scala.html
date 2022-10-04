@@ -1,0 +1,46 @@
+@(sucursalBancoForm: Form[SucursalBanco])
+@import helper._
+@implicitFieldConstructor = @{ FieldConstructor(simpleInput.render) } 
+
+	<div class="row">
+		<div class="col-sm-4">
+			<div class="form-group @if(sucursalBancoForm.error("nombre") != null) {has-error}else{has-required}">
+				<label for="inputNombre" class="control-label">Nombre</label> 
+				@inputText(sucursalBancoForm("nombre"), 'class -> "form-control")
+				@sucursalBancoForm("nombre").error.map{ error =>
+					<div class="text-error">@error.message</div>
+				}
+			</div>
+		</div>
+		<div class="col-sm-4">
+			<div class="form-group @if(sucursalBancoForm.error("banco.id") != null) {has-error}else{has-required}">
+				<label for="inputEjercicio" class="control-label">Banco</label> 
+				@inputText(sucursalBancoForm("banco.nombre"),'class -> "form-control")
+				@inputText(sucursalBancoForm("banco.id"),'hidden -> "hidden")
+				@sucursalBancoForm("banco.id").error.map{ error =>
+					<div class="text-error">@error.message</div>
+				}
+			</div>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-sm-4">
+			<div class="form-group @if(sucursalBancoForm.error("codigo") != null) {has-error}else{has-required}">
+				<label for="inputNombre" class="control-label">Codigo</label> 
+				@inputText(sucursalBancoForm("codigo"), 'class -> "form-control")
+				@sucursalBancoForm("codigo").error.map{ error =>
+					<div class="text-error">@error.message</div>
+				}
+			</div>
+		</div>
+		<div class="col-sm-4">
+			<div class="form-group @if(sucursalBancoForm.error("localidad.id") != null) {has-error}else{has-required}">
+				<label for="inputEjercicio" class="control-label">Localidad</label> 
+				@inputText(sucursalBancoForm("localidad.nombre"),'class -> "form-control")
+				@inputText(sucursalBancoForm("localidad.id"),'hidden -> "hidden")
+				@sucursalBancoForm("localidad.id").error.map{ error =>
+					<div class="text-error">@error.message</div>
+				}
+			</div>
+		</div>
+	</div>	

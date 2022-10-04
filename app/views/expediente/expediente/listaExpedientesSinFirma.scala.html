@@ -1,0 +1,57 @@
+@(lr:List[OrdenProvision])
+@import helper._
+@import java.math.BigDecimal;var diferencia=new java.math.BigDecimal(0);var totalOrden=new java.math.BigDecimal(0);var totalRecepcion=new java.math.BigDecimal(0);var totalDeuda=new java.math.BigDecimal(0);
+@implicitFieldConstructor = @{ FieldConstructor(simpleInput.render) } 
+
+
+<div id="modalBusquedaExpedientes" class="contenedorPaginador ajaxPaginador">
+
+	<table class="table table-striped table-bordered">
+		<thead>
+			<tr><td colspan="7" align="left"> <a href="@controllers.expediente.routes.ExpedientesController.getExpedientesSinFirmaReporte()" ><span id="getExpedientesRecepcionSinFirmaReporte" 
+			class="glyphicon glyphicon-print pointer" 
+			data-url=""></span></a>
+			</td></tr>
+			 <tr>
+				<td><b>Expediente</b></td>
+				<td><b>Proveedor</b></td>
+				<td><b>Total Orden</b></td>
+				<td><b>Recepcionado</b></td> 
+				<td><b>Diferencia</b></td> 
+				<td><b>Servicio<b></td>
+				<td><b>Tiempo<b></td>
+			</tr>
+		</thead>
+		<tbody>
+			@for(op <- lr){
+				
+				@{diferencia = new java.math.BigDecimal(0)}
+				@{diferencia = op.ordenCompra.getTotalTotal().subtract(op.getTotalRecepcionado())}
+				<tr>
+				 	<td>@op.ordenCompra.expediente.getExpedienteEjercicio()</td>
+					<td>@op.ordenCompra.proveedor.nombre</td>
+					<td>@utils.NumberUtils.moneda(op.ordenCompra.getTotalTotal())</td>
+					<td>@utils.NumberUtils.moneda(op.getTotalRecepcionado())</td> 
+					<td>@utils.NumberUtils.moneda(diferencia)</td> 
+					<td>@op.ordenCompra.expediente.getServicio()</td>
+					<td>@ExpedienteMovimiento.tiempoEnMovimiento(ExpedienteMovimiento.getLastMovimiento(op.ordenCompra.expediente.id))</td>
+				</tr>
+				@{totalOrden = totalOrden.add(op.ordenCompra.getTotalTotal())}
+				@{totalRecepcion = totalRecepcion.add(op.getTotalRecepcionado())}
+				@{totalDeuda = totalDeuda.add(diferencia)}
+			}
+			 
+		</tbody>
+		<tfoot>
+			<tr>
+				<td colspan="2" align="right"><b>Totales</b></td>
+				<td><b>@utils.NumberUtils.moneda(totalOrden)</b></td>
+				<td><b>@utils.NumberUtils.moneda(totalRecepcion)</b></td> 
+				<td><b>@utils.NumberUtils.moneda(totalDeuda)</b></td> 
+				<td colspan="2">
+				</td>
+			</tr>
+		</tfoot>
+	</table>	
+
+</div>

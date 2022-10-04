@@ -1,0 +1,53 @@
+@(c:Certificacion)
+
+<div class="row">
+	<div class="col-sm-6">
+		<h4>Expediente: <b>@c.expediente.getExpedienteEjercicio()</b></h4>
+		<h4>Periodo: <b>@c.periodo.nombre</b></h4>
+		<h4>Fecha certificacion: <b>@utils.DateUtils.formatDate(c.fecha_certificacion)</b></h4>
+		<h4>Tipo Cuenta: <b>@c.tipoCuenta.nombre</b></h4>
+	</div>
+	<div class="col-sm-6">
+		<h4>Base: 	   <b>@utils.NumberUtils.moneda(c.getBase())</b></h4>	
+		<h4>Descuento: <b>@utils.NumberUtils.moneda(c.getDescuento())</b></h4>	
+		<h4>Total: 	   <b>@utils.NumberUtils.moneda(c.getTotal())</b></h4>	
+		<h4>Estado actual: 	<b>@c.estado.nombre</b></h4>
+	</div>
+</div>
+<div class="row">
+	<div class="col-sm-12">
+		<div class="panel panel-default">
+			<div class="panel-heading">
+				<b>Lineas</b>
+			</div>
+			<div class="panel-body">
+				<table class="table table-striped table-bordered">
+					<thead>
+						<tr>
+							<th>Producto</th>
+							<th>Cantidad</th>
+							<th>UDM</th>
+							<th>Precio</th>
+							<th>Descuento (%)</th>
+							<th>Subtotal desc.</th>
+							<th>Subtotal</th>
+						</tr>
+					</thead>
+					@for(linea <- c.certificacionLinea) {
+						<tr>
+							<td>@linea.producto.nombre</td>
+							<td>@linea.cantidad</td>
+							<td>@linea.udm.nombre</td>
+							<td>@utils.NumberUtils.moneda(linea.precio, 10)</td>
+							<td>@linea.descuento</td>
+							<td>@utils.NumberUtils.moneda(linea.getTotalDescuento(),10)</td>
+							<td>@utils.NumberUtils.moneda(linea.getTotal(), 10)</td>
+						</tr>
+					}
+				</table>
+			</div>
+		</div>	
+	</div>
+</div>
+
+	

@@ -1,0 +1,19 @@
+@(linea: OrdenLineaAjuste, editable: Boolean)
+<tr data-id="@linea.id">
+	<td>
+		<input type="checkbox" name="check_linea_ajuste_orden[]" value="@linea.id" class="check_listado notSeleccion" id="check-@linea.id"/>
+	</td>
+	<td>@if(linea.create_date != null){@(utils.DateUtils.formatDate(linea.create_date))}</td>
+	<td>@if(linea.create_usuario != null){@linea.create_usuario.nombre} </td>
+	<td>@linea.producto.nombre</td>
+	<td class="cuentaAnaliticaEnLinea">@if(linea.cuentaAnalitica == null){No asociada} else {@linea.cuentaAnalitica.codigo @linea.cuentaAnalitica.nombre}</td>
+	<td>@linea.udm.nombre</td>
+	<td>@linea.cantidad</td>
+	<td>@utils.NumberUtils.moneda(linea.precio, 2)</td>
+	<td>@(utils.NumberUtils.moneda(linea.precio.multiply(linea.cantidad), 2))</td>
+	<td>
+		<!-- <a class="btn btn-default btn-xs eliminarAjuste" href="@controllers.compras.routes.OrdenesLineasAjustesController.eliminar(linea.id)">
+		<i class="glyphicon glyphicon-trash icono-eliminar"></i></a> -->
+		@linea.nota
+	</td>
+</tr>

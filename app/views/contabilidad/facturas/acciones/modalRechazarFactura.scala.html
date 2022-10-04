@@ -1,0 +1,27 @@
+@(formBuscador: DynamicForm)
+@import helper._
+@implicitFieldConstructor = @{ FieldConstructor(simpleInput.render) } 
+	
+@helper.form(action = controllers.contabilidad.routes.FacturasAccionesController.rechazar(), 'id -> "formRechazarFactura") {	
+	
+	@views.html.tags.successError()
+	
+	@for(facturaMotivoRechazo <- models.FacturaMotivoRechazo.getFacturaMotivoRechazo()) {
+		<div class="row">
+			<div class="col-sm-12"><br />
+				<label><input type="checkbox" name="motivo_rechazo[]" value="@facturaMotivoRechazo.id"> @facturaMotivoRechazo.descripcion</label>
+			</div>
+		</div>
+	}
+	<div class="row">
+		<div class="col-sm-12"><br />
+			<label>Otro Motivo: <input type="text" name="otro" value=""></label>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-sm-5"><br />
+			<button type="submit" class="btn btn-default" title="Rechazar"><i class="glyphicon glyphicon-arrow-right"></i> Rechazar</button>
+		</div>
+	</div>
+}
+@flash().clear()

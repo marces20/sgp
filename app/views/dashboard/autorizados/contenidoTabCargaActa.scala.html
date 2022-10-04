@@ -1,0 +1,468 @@
+@(buscador: utils.pagination.Pagination[models.informes.InformeDeudaPorActaMaterializada], formBuscador: DynamicForm,idAutorizado:Long,autorizado:Autorizado)
+@import helper._
+@implicitFieldConstructor = @{ FieldConstructor(simpleInput.render) }
+@import java.math.BigDecimal;var resto_autorizar=new java.math.BigDecimal(0);
+
+<div class="page-header">
+	<div class="row">
+		<div class="col-sm-9">
+			<h2>Carga de Autorizados por Acta</h1>
+		</div>
+		<div class="col-sm-3" style="border: 1px solid grey;">
+			<div class="form-group">
+				<p style="font-weight: bold;">Total Seleccionado:<span id="totalDeudaSeleccionada">$0.00</span></p>
+				<div id="loadingBtnCargaMasiva" class="loading hide"></div>
+				<a href="#" id="BtnCargaMasiva"  class="form-control btn btn-default">Carga Masiva</a>
+			</div>
+		</div>	
+	</div>
+	
+</div>
+
+<div id="contenedorListadoDeudasActas" class="contenedorPaginador ajaxPaginador">
+
+<form action="@controllers.dashboard.routes.AutorizadosController.getListadoDeudasActas()" method="GET" id="filtroInformeActa">
+	@inputText(formBuscador("idAutorizado"), 'hidden -> "hidden")
+	<div class="row seccion">
+		
+	<div class="form-group col-sm-2">
+		<label for="nombre" class="control-label">Número
+		@inputText(formBuscador("acta_numero"), 'class -> "form-control", 'autofocus -> "autofocus")
+		</label>
+	</div>
+
+	<div class="form-group col-sm-2">
+		<label for="nombre" class="control-label">Orden provisión
+		@inputText(formBuscador("orden_provision"), 'class -> "form-control")
+		</label>
+	</div>
+			
+	<div class="col-sm-4">
+		<label class="control-label">Proveedor
+			<div class="input-group">	
+				@inputText(formBuscador("proveedor_nombre"), 'name -> "", 'class -> "form-control", 'id -> "proveedorActa")
+				@inputText(formBuscador("proveedor_id"), 'hidden -> "hidden", 'id -> "proveedor_idActa")
+				<span class="input-group-addon">
+					<a href="#" class="searchModal"
+								id="searchProveedorActa" 
+								data-title="Selección de Proveedores" 
+								data-url="@controllers.compras.routes.ProveedoresController.modalBuscar()" 
+								data-height="650" 
+								data-width="700" 
+								data-listen="modal.seleccion.proveedor.simple" 
+								data-label="#proveedorActa" 
+								data-field="#proveedor_idActa">
+						<i class="glyphicon glyphicon-search"></i>
+					</a>
+				</span>
+			</div>
+		</label>
+	</div>
+			
+	<div class="col-sm-2">
+		<label class="control-label">Expediente
+			<div class="input-group">
+				@inputText(formBuscador("expediente.nombre"), 'name -> "", 'class -> "form-control", 'id -> "expedienteActa")
+				@inputText(formBuscador("expediente_id"), 'hidden -> "hidden", 'id -> "expediente_idActa")
+				
+				<span class="input-group-addon">
+					<a href="#" class="searchModal"
+								id="searchExpedienteActa" 
+								data-title="Selección de expediente" 
+								data-url="@controllers.expediente.routes.ExpedientesController.modalBuscar()" 
+								data-height="650" 
+								data-width="700" 
+								data-listen="modal.seleccion.expediente.simple" 
+								data-label="#expedienteActa" 
+								data-field="#expediente_idActa">
+						<i class="glyphicon glyphicon-search"></i>
+					</a>
+				</span>
+			</div>
+		</label>
+	</div>  
+		
+	<div class="col-sm-2">
+		<label class="control-label">Ejercicio</label>
+			@select(formBuscador("ejercicio"), Ejercicio.getEjercicios().map { p => p.id.toString -> p.nombre}, 'class -> "form-control select", '_default -> "Seleccionar")
+	</div>	
+			
+	</div>
+	
+	<div class="row">
+	
+		<!-- <div class="col-sm-2">
+			<label class="control-label"> 
+				Cuenta
+				@select(formBuscador("profe"),options(""->"","profe"->"PROFE","operativa"->"OPERATIVA"), 'class -> "form-control select")
+			</label>
+		</div> --> 
+		<div class="col-sm-2">
+			<label class="control-label"> 
+				Tipo Cuenta
+				@select(formBuscador("tipo_cuenta_id"), 
+				TipoCuenta.find.all().map { p => p.id.toString -> p.nombre}, 'class -> "form-control select", '_default -> "Seleccionar")
+			</label>
+		</div>		
+			
+		<div class="col-sm-2">
+			<div class="form-group">
+			<label for="nombre" class="control-label">&nbsp;</label>
+			<div id="loadingBtnBuscarActa" class="loading hide"></div>
+			<button id="BtnBuscarActa"  class="form-control btn btn-primary">Buscar</button>
+			</div>
+		</div>
+		<div class="col-sm-4">
+		
+		</div>
+		
+		 
+	</div>
+</form>
+    @if(buscador.getTotalRowCount == 0) {
+        
+        <div class="well">
+            <em>No se encuentran resultados</em>
+        </div>
+        
+    } else {
+		Mostrando @buscador.getDisplayXtoYofZ(" a "," de ") resultado(s).   
+		<table class="table table-striped table-bordered" id="listaInformeActa">
+			<thead>
+				<tr>
+					<th width="30"><input type="checkbox" name="checkAll" id="checkAll"/></th>
+					<th>Acta</th>
+					<th>Cuenta</th>
+					<th>Ejercicio</th>
+					<th>Periodo</th>
+					<th>Institucion</th>
+					<th>Fecha acta</th>
+					<th width="40">OP</th>
+					<th>Proveedor</th>
+					<th width="90">Expediente</th>
+					<th>Total autorizado</th>
+					<th>Total acta</th>
+					<th width="90">Total pagado</th>
+					<th width="90">Total deuda</th>
+					<th></th>
+				</tr>
+			</thead>
+			<tbody>
+		        @for(informe <- buscador.getList) {
+				<tr >
+					<td>
+						@if(!Ejercicio.isPerimido(informe.ejercicio_id)){
+							@if(!informe.es_dolar){
+								@if(informe.acta_numero == "Anticipo"){
+									<input type="checkbox" name="check_listado_informe_acta[]" value="ANT@informe.id" class="notSeleccion" id="check-@informe.id_fake"/>
+								}else{
+									@if(informe.certificacion_id != null){
+										<input type="checkbox" name="check_listado_informe_acta[]" value="CC@informe.certificacion_id" class="notSeleccion" id="check-@informe.id_fake"/>
+									}else{
+										<input type="checkbox" name="check_listado_informe_acta[]" value="AC@informe.id" class="notSeleccion" id="check-@informe.id_fake"/>
+									}
+								}
+							}
+						}
+					</td>
+					<td>@informe.acta_numero
+						<br>@if(informe.es_dolar){<span style="color:green;font-weight:bold;font-size: 12px;">M.E.</span>}
+					</td>
+					 
+					<td>@if(informe.tipoCuenta != null){@informe.tipoCuenta.nombre}</td>
+					<td>@if(informe.ejercicio != null){@informe.ejercicio.nombre}</td>
+					<td>@if(informe.periodo != null){@informe.periodo} </td>
+					<td>@informe.ordenCompra.deposito.nombre</td>
+					<td>@utils.DateUtils.formatDate(informe.fecha)</td>
+					<td>@if(informe.ordenProvision != null){@informe.ordenProvision.numero}</td>
+					<td>@informe.proveedor.nombre</td>			
+					<td>@informe.expediente.getExpedienteEjercicio()</td>
+					<td class="totalAutorizado" data-valor="@informe.totalAutorizado">@utils.NumberUtils.moneda(informe.totalAutorizado)</td>
+					<td class="totalActa" data-valor="@informe.totalActa">@utils.NumberUtils.moneda(informe.totalActa)</td>
+					<td class="totalPagado" data-valor="@informe.totalPagado">@utils.NumberUtils.moneda(informe.totalPagado)</td>
+					<td class="totalDeuda" data-valor="@informe.totalDeuda">@utils.NumberUtils.moneda(informe.totalDeuda)</td>		
+					<td>
+						
+					 	@if(!Ejercicio.isPerimido(informe.ejercicio_id)){
+							@if(informe.es_dolar && autorizado.cot_dolar == null){
+								<span style="color:green;font-weight:bold;font-size: 12px;">EXPEDIENTE MONEDA EXTRANJERA DEBE CARGAR UNA COTIZACION EN EL AUTORIZADO.</span>
+							}else{
+								@if(informe.es_dolar && autorizado.tipo_moneda_id == null){
+									<span style="color:green;font-weight:bold;font-size: 12px;">EXPEDIENTE MONEDA EXTRANJERA DEBE CARGAR UN TIPO DE MONEDA PARA LA COTIZACION.</span>
+								}else{ 
+									 
+									@if(informe.es_dolar && autorizado.tipo_moneda_id != null && informe.ordenCompra.tipo_moneda != autorizado.tipo_moneda_id.intValue()){
+										<span style="color:green;font-weight:bold;font-size: 12px;">EL TIPO DE MONEDA DEL AUTORIZADO NO CORRESPONDE AL TIPO DE MONEDA DE LA ORDEN.</span>
+									}else{
+										@if(autorizado.estado.id ==  models.Estado.AUTORIZADO_ESTADO_BORRADOR){
+											
+											@if(informe.ordenProvision != null) {
+												@{resto_autorizar= new java.math.BigDecimal(0)}
+												@{resto_autorizar= informe.totalPagado.add(informe.totalDeuda).subtract(informe.totalAutorizado)}
+												<a data-url="@controllers.dashboard.routes.AutorizadosController.modalAgregarMontosActas(informe.id,informe.orden_provision_id,idAutorizado,informe.ordenProvision.orden_compra_id,informe.tipo_cuenta_id)" href="#"  class="btn btn-default agregarMontos">
+													<i class="glyphicon glyphicon-plus"></i>
+												</a>
+											}else{
+												@if(informe.acta_numero == "CC"){
+													<a data-url="@controllers.dashboard.routes.AutorizadosController.modalAgregarMontosCertificacionesCompras(informe.certificacion_id,idAutorizado,informe.orden_id,informe.tipo_cuenta_id)" href="#"  class="btn btn-default agregarMontos">
+														<i class="glyphicon glyphicon-plus"></i>
+													</a>
+												}	
+											}	
+										}
+									}
+								}		
+							}
+						}
+					</td>
+				</tr>
+		        }
+			</tbody>
+			<tfoot>
+				<tr>
+					<td colspan="10"></td>
+					<td><b>Total:</b><br /><span id="autorizadoFooter"></span></td>
+					<td><b>Total:</b><br /><span id="actaFooter"></span></td>
+					<td><b>Total:</b><br /><span id="pagadoFooter"></span></td>
+					<td><b>Total:</b><br /><span id="deudaFooter"></span></td>
+					<td></td>
+				</tr>
+			</tfoot>
+		</table>
+		<div class="pagination pull-right">
+		    @views.html.helpers.paginador(buscador, controllers.dashboard.routes.AutorizadosController.getListadoDeudasActas())
+		</div>
+	}
+</div>	
+<script type="text/javascript">
+	$(function(){
+		
+		var trs = $('#listaInformeActa tbody tr');
+		 
+		$('#checkAll').change( function(){
+			var table = $(this).closest('table');
+			table.find("input[name='check_listado_informe_acta[]']").prop("checked", $(this).prop( "checked" ) );
+			var trsx = $('#listaInformeActa tbody tr:has(td:eq(0):has(input:checked))'); 
+			sumarFilas(trsx);
+		});
+		
+		 
+		
+		$('input[name="check_listado_informe_acta[]"]').click( function() {
+			sumarFilas( $('#listaInformeActa tbody tr:has(td:eq(0):has(input:checked))') );
+		});
+		
+		function sumarFilas(trs) {
+			var deudax = 0; 
+			trs.each( function() {
+				deudax += Number($('.totalDeuda',this).attr("data-valor"));
+			});
+			$("#totalDeudaSeleccionada").html(formatNumberPesos(parseFloat(deudax).toFixed(2)));
+		}
+		
+		
+		
+		$('.agregarMontos').click( function() { //abrir modal para pasar en PreCurso
+			var url = $(this).attr("data-url");
+			var dialogo = $('<div id="modalAgregarMontosActas"></div>');
+			dialogo.dialog({
+				title: "Carga Autorizado",
+		    	resizable: false,
+				autoOpen: true,
+				modal: true,
+				height: 450,
+				width:900,
+		        /*buttons: {
+			          Cerrar: function() {
+			            $( this ).dialog( "destroy" );
+			          }
+			    },*/
+		    	close: function(event, ui ){
+		    		$(this).dialog( "destroy" );
+		    	},
+			    open: function( event, ui ) {
+					$.post(url, function(data){
+						dialogo.html(data);
+					});	
+			    }
+		      });
+		});
+		
+		
+		$("#BtnCargaMasiva").click( function() { 
+			$('#loadingBtnCargaMasiva').removeClass('hide');
+			$('#BtnCargaMasiva').hide();
+			$('.agregarMontos').hide();
+			
+			$('#loadingBtnBuscarActa').removeClass('hide');
+			$('#BtnBuscarActa').hide();
+			
+			var url2 = "/dashboard/autorizado/cargarLineasAutorizadosMasivamente";
+			var data = "idAutorizado="+$("#idAutorizado").val()+"&"+$("input[name='check_listado_informe_acta[]']").serialize();
+			 
+			$.ajax({
+	            url:url2,
+	            type: 'POST',
+	            data: data,
+	            
+	            success: function(data1) {
+	            	 
+	            	if(data1.error) {
+	            		alert(data1.errorTexto); 
+	            		$('#loadingBtnBuscarActa').addClass('hide');
+						$('#BtnBuscarActa').show();
+						
+						$('#loadingBtnCargaMasiva').addClass('hide');
+						$('#BtnCargaMasiva').show();
+						$('.agregarMontos').show();
+	            	}else{
+	            		 
+	            		if(data1.success) {
+	            			 
+							var contenedorx = $("#contenedorListadoDeudasActas");
+							var urlx = contenedorx.find('form').attr("action");
+	            			var queryx = contenedorx.find('form').serialize();
+	            			 
+	            			$.get(urlx+"?"+queryx, function(data2x){
+								contenedorx.parent().html(data2x);
+								$('#loadingBtnBuscarActa').addClass('hide');
+								$('#BtnBuscarActa').show();
+								
+								$('#loadingBtnCargaMasiva').addClass('hide');
+								$('#BtnCargaMasiva').show();
+								$('.agregarMontos').show();
+							});
+							
+						} 
+	            	}
+	            	
+	            	
+	            }
+			}); 
+		});
+		
+		
+		$('#searchExpedienteActa, #searchProveedorActa').modalSearch();
+		
+		var contenedor = $("#contenedorListadoDeudasActas");
+		contenedor.find('form').on('submit', function(e){
+			 
+			var url2 = "/dashboard/autorizado/controlCargaCotizacion";
+			var data = "idAutorizado="+$("#idAutorizado").val()+"&tipo_moneda_id="+$("#tipo_moneda_id").val()+"&cot_dolar="+$("#cot_dolar").val().replace(",", ".")
+			var control = false;
+			var url = $(this).attr("action");
+			var query = $(this).serialize();
+			
+			$.ajax({
+	            url:url2,
+	            type: 'POST',
+	            data: data,
+	            async: false, 
+	            success: function(data1) {
+	            	
+	            	if(data1.success) {
+						
+						alert(data1.texto);
+						control = false; 
+					}else{
+						
+						
+						$('#loadingBtnBuscarActa').removeClass('hide');
+						$('#BtnBuscarActa').hide();
+						$.get(url+"?"+query, function(data2){
+							contenedor.parent().html(data2);
+							$('#loadingBtnBuscarActa').addClass('hide');
+							$('#BtnBuscarActa').show();
+						});
+						 
+					}
+	            	
+	            }
+			});
+			
+			
+			/*$.post(url,data, function(data){
+				
+				 
+				
+				if(data.success) {
+					
+					alert(data.texto);
+					control = false; 
+				}else{
+					
+					var url = $(this).attr("action");
+					var query = $(this).serialize();
+					$('#loadingBtnBuscarActa').removeClass('hide');
+					$('#BtnBuscarActa').hide();
+					$.get(url+"?"+query, function(data){
+						contenedor.parent().html(data);
+						$('#loadingBtnBuscarActa').addClass('hide');
+						$('#BtnBuscarActa').show();
+					});
+					 
+				}
+				 
+			});*/
+			
+			return control;
+			
+			
+		});
+		
+		$('.actas').click( function() {
+			var $this = $(this);
+			var url = $this.attr('href');
+			var oid = $(this).data('data-id-provision');
+			$.get(url, function(data) {
+				$this.parent().html(data);
+			});
+			return false;
+		});
+		
+		var trs = $('#listaInformeActa tbody tr');
+
+		var orden = 0; var pagado = 0; var deuda = 0; var compromiso = 0;var autorizado = 0;
+		
+		trs.each( function() {
+			autorizado += Number($('.totalAutorizado',this).attr("data-valor"));
+			orden += Number($('.totalActa',this).attr("data-valor"));
+			pagado += Number($('.totalPagado',this).attr("data-valor"));
+			deuda += Number($('.totalDeuda',this).attr("data-valor"));
+		});
+
+		$("#actaFooter").html(formatNumberPesos(parseFloat(orden).toFixed(2)));
+		$("#pagadoFooter").html(formatNumberPesos(parseFloat(pagado).toFixed(2)));
+		$("#deudaFooter").html(formatNumberPesos(parseFloat(deuda).toFixed(2)));
+		$("#autorizadoFooter").html(formatNumberPesos(parseFloat(autorizado).toFixed(2)));
+		
+		
+		if($("#proveedorActa").length){
+			var options = {
+					script:"/suggestProveedor/",
+					varname:"",
+					json:true,
+					shownoresults:true,
+					maxresults:6,
+					callback: function (obj) { 
+												$("#proveedor_idActa").val(obj.id); 
+											 }
+				};
+			var as_json = new bsn.AutoSuggest('proveedorActa', options);
+		}
+		
+		if($("#expedienteActa").length){
+			var options = {
+					script:"/suggestExpediente/",
+					varname:"",
+					json:true,
+					shownoresults:true,
+					maxresults:6,
+					callback: function (obj) { 
+												$("#expediente_idActa").val(obj.id); 
+											 }
+				};
+			var as_json = new bsn.AutoSuggest('expedienteActa', options);
+		}
+	});
+</script>

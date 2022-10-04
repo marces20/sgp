@@ -1,0 +1,16 @@
+@(formBuscador: DynamicForm)
+@import helper._
+@implicitFieldConstructor = @{ FieldConstructor(simpleInput.render) } 
+																				  
+@helper.form(action = controllers.patrimonio.routes.ActasMovimientosController.asignarAMiServicioMasivo(), 'id -> "formAsignarAMiServicioMasivo") {	
+	
+	@views.html.tags.successError()
+	
+	<div class="col-sm-5"><br />
+		<button type="submit" class="btn btn-default" title="Asignar"><i class="glyphicon glyphicon-arrow-right"></i> Asignar</button>
+	</div>
+
+}
+@flash().clear()
+<script>
+</script>	

@@ -1,0 +1,126 @@
+@(lineaForm: Form[SolicitudLineaAjuste])
+@import helper._
+@implicitFieldConstructor = @{ FieldConstructor(simpleInput.render) } 
+
+@views.html.tags.successError()
+
+@inputText(lineaForm("solicitud_id"), 'type -> "hidden")
+	<div class="row">
+		<div class="col-sm-5">
+			<label for="producto_nombre" class="control-label">Producto</label>
+			<div class="input-group @if(lineaForm.error("producto_id") != null) {has-error} else {has-required}">
+				@inputText(lineaForm("producto.nombre"), 'class -> "form-control", 'autofocus -> "autofocus", 'id -> "producto")
+				@inputText(lineaForm("producto_id"), 'hidden -> "hidden", 'id -> "producto_id")
+				<span class="input-group-addon"><a href="#" id="searchProducto" 
+															data-title="Selección de producto" 
+															data-url="@controllers.compras.routes.ProductosController.modalBuscar()" 
+															data-height="650" 
+															data-width="700" 
+															data-listen="modal.seleccion.producto.simple" 
+															data-label="#producto" data-field="#producto_id">
+															<i class="glyphicon glyphicon-search"></i></a></span>
+			</div>
+			@lineaForm("producto_id").error.map{ error =>
+				<div class="text-error">@error.message</div>
+			}
+		</div>
+		<div class="col-sm-2">
+			<div class="form-group @if(lineaForm.error("cantidad") != null) {has-error} else {has-required}">
+				<label for="cantidad" class="control-label">Cantidad</label>
+				@inputText(lineaForm("cantidad"), 'class -> "form-control", 'id -> "cantidad")
+				@lineaForm("cantidad").error.map{ error => <div class="text-error">@error.message</div>}
+			</div>
+		</div>
+		<div class="col-sm-3">
+			<div class="form-group @if(lineaForm.error("precio_estimado") != null) {has-error} else {has-required}">
+				<label class="control-label">Precio
+				@inputText(lineaForm("precio"), 'class -> "form-control", 'id -> "precioEstimado")
+				</label>
+				@lineaForm("precio").error.map{ error => <div class="text-error">@error.message</div>}
+			</div>
+		</div>
+		
+	</div>
+
+<div class="row">
+	<div class="col-sm-9">
+		<label for="cuenta_nombre" class="control-label">Cuenta analítica a ajustar</label>
+		<div class="input-group @if(lineaForm.error("cuenta_analitica_id") != null) {has-error} else {has-required}">
+			@inputText(lineaForm("CuentaAnalitica.nombre"), 'class -> "form-control", 'autofocus -> "autofocus", 'id -> "cuenta_nombre_ajuste")
+			@inputText(lineaForm("cuenta_analitica_id"), 'hidden -> "hidden", 'id -> "cuenta_analitica_id_ajuste")
+			<span class="input-group-addon">
+			<a href="#" id="searchCuentaAnalitica" 
+						data-title="Selección de cuenta analítica" 
+						data-url="@controllers.contabilidad.routes.CuentasAnaliticasController.modalBuscar()" 
+						data-height="650" 
+						data-width="700" 
+						data-listen="modal.seleccion.cuentaAnalitica.simple" 
+						data-label="#cuenta_nombre_ajuste" 
+						data-field="#cuenta_analitica_id_ajuste"><i class="glyphicon glyphicon-search"></i></a></span>
+		</div>
+		@lineaForm("cuenta_analitica_id").error.map{ error =>
+			<div class="text-error">@error.message</div>
+		}
+	</div>
+	
+	<!-- <div class="col-sm-3">
+		<div class="form-group @if(lineaForm.error("valor") != null) {has-error} else {has-required}">
+			<label class="control-label">Valor a ajustar
+			@inputText(lineaForm("valor"), 'class -> "form-control", 'id -> "valor")
+			</label>
+			@lineaForm("valor").error.map{ error => <div class="text-error">@error.message</div>}
+		</div>
+	</div> -->
+	
+</div>
+
+<div class="row">	
+	<div class="col-sm-12">
+		<div class="form-group">
+			<label for="cantidad" class="control-label">Observación</label>
+			@textarea(lineaForm("observacion"), 'class -> "form-control", 'id -> "cantidad", 'rows -> "3")
+			@lineaForm("observacion").error.map{ error => <div class="text-error">@error.message</div>}
+		</div>
+	</div>
+
+</div>
+
+<br />
+<p class="help-block">
+<b>Nota:</b> El separador de decimales del campo valor es el símbolo ",".<br />
+No lleva separador de millar, pero puede presionar la tecla "punto" que automáticamente se transforma en "coma" para mejor manejo del teclado numérico.
+</p>
+ 
+<script>
+$(function(){
+	$("#valor").numeric_input({allowNegative: true});
+	$('#searchCuentaAnalitica,#searchProducto').modalSearch();
+	if($("#producto").length){
+		var options = {
+				script:"/suggestProducto/",
+				varname:"",
+				json:true,
+				shownoresults:true,
+				maxresults:6,
+				callback: function (obj) { 
+											$("#producto_id").val(obj.id); 
+										 }
+			};
+		var as_json = new bsn.AutoSuggest('producto', options);
+	}
+	if($("#cuenta_nombre_ajuste").length){
+		var options = {
+				script:"/contabilidad/suggestCuentaAnalitica/",
+				varname:"",
+				json:true,
+				shownoresults:true,
+				maxresults:26,
+				cache:false,
+				callback: function (obj) { 
+											$("#cuenta_analitica_id_ajuste").val(obj.id); 
+										 }
+			};
+		var as_json = new bsn.AutoSuggest('cuenta_nombre_ajuste', options);
+	}
+});
+</script>

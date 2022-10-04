@@ -1,0 +1,57 @@
+ 
+@import helper._
+@implicitFieldConstructor = @{ FieldConstructor(simpleInput.render) } 
+
+<div class="row"  style="">
+
+	<nav class="navbar navbar-default" role="navigation">
+		<div class="container-fluid">
+			<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+		      <ul class="nav navbar-nav">
+		      	<li>
+		        <!--  <a href="@controllers.informes.routes.InformesObligacionController.obligacion()" >OBLIGACIONES</a>-->
+		        </li>
+		        <li>
+		        	<a href="#" class="dropdown-toggle" data-toggle="dropdown">HONORARIOS <b class="caret"></b></a>
+		        	<ul class="dropdown-menu">
+			        	<li><a href="@controllers.informes.routes.InformesHonorariosController.honorario()" >Costos Por periodos</a></li>
+			        	<li><a href="@controllers.informes.routes.InformesHonorariosController.honorarioRrhhPorPeriodo()" >RRHH Por periodos</a></li>
+		        	</ul>
+		        </li>
+		        <li>
+		        	<a href="#" class="dropdown-toggle" data-toggle="dropdown">DEUDAS <b class="caret"></b></a>
+		        	<ul class="dropdown-menu">
+			        	<li><a href="@controllers.informes.routes.InformesDeudasController.deudasFotoPorFecha()" >Corte Por Fecha Otros Proveedores</a></li>
+			        </ul>
+		        </li>
+		        <!--<li class="dropdown">
+		         	
+		           <a href="#" class="dropdown-toggle" data-toggle="dropdown">PRESUPUESTO <b class="caret"></b></a>
+		          <ul class="dropdown-menu">
+		          	<li><a href="@controllers.informes.routes.InformesPresupuestoController.creditos(-1)">Todos</a></li>
+		          	<li><a href="@controllers.informes.routes.InformesPresupuestoController.creditos(0)">PRESUPUESTOS OPERATIVOS</a></li>
+		          	<li><a href="@controllers.informes.routes.InformesPresupuestoController.creditos(1)">PROGRAMA FEDERAL DE SALUD</a></li>
+		          	<li><a href="@controllers.informes.routes.InformesPresupuestoController.creditos(2)">INSTITUTO MISIONERO DEL CANCER</a></li>
+		          	<li><a href="@controllers.informes.routes.InformesPresupuestoController.creditos(3)">INSTITUTO GENETICA HUMANA</a></li>
+		          	<li><a href="@controllers.informes.routes.InformesPresupuestoController.creditos(4)">PROGRAMA TRANSPLANTE DE MEDULA</a></li>
+		          	<li><a href="@controllers.informes.routes.InformesPresupuestoController.creditos(5)">LABORATORIO DE ALTA COMPLEJIDA</a></li>
+		          	<li><a href="@controllers.informes.routes.InformesPresupuestoController.creditos(6)">HOSPITAL NUESTRA SEÑORA DE FATIMA</a></li>
+		          	<li><a href="@controllers.informes.routes.InformesPresupuestoController.creditos(7)">JARDIN MATERNAL EVITA</a></li>
+		          	<li><a href="@controllers.informes.routes.InformesPresupuestoController.creditos(8)">CONVENIO CON FDO. FEDERAL DE INSFRAESTRUCTURA REGIONAL</a></li>
+		          </ul>
+		        </li> -->
+		     </ul>
+		      	
+		    </div>  
+	   		
+		</div>
+		 
+	</nav>
+</div>
+<script type="text/javascript">
+	$(function(){
+		$('#searchProveedor').modalSearch();
+	});
+</script>
+
+

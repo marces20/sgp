@@ -1,0 +1,18 @@
+@(escalaForm: Form[models.haberes.EscalaLaboral])
+@import helper._
+
+@views.html.haberes.mainHaberes("Crear Escala Laboral") {
+
+	<div class="page-header">
+		<div class="row">
+			<div class="col-sm-10">
+				<h1>Crear nueva Escala</h1>
+			</div>
+		</div>
+	</div>
+	@views.html.tags.successError()
+    
+    @helper.form(action = controllers.haberes.routes.EscalasLaboralesController.guardar()) {
+		@views.html.haberes.escalasLaborales.formEscalaLaboral(escalaForm) 	
+	}
+}

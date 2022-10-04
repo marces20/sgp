@@ -1,0 +1,26 @@
+@(linea: ActaMovimiento, editable: Boolean)
+
+ 
+			
+
+<tr data-id="@linea.id" @if(linea.cancelado){class="cancelada"}>
+	@if(editable){
+		
+	}
+	<td>@linea.organigrama.nombre</td>
+	<td>@linea.usuario.nombre</td>
+	<td>@if(linea.usuario_receptor != null){@linea.usuario_receptor.nombre}</td>
+	<td>@utils.DateUtils.formatDate(linea.fecha_llegada,"dd/MM/yyyy HH:mm:ss")</td>
+	<td>@utils.DateUtils.formatDate(linea.fecha_salida,"dd/MM/yyyy HH:mm:ss")</td>
+	<td>@ActaMovimiento.tiempoEnMovimiento(linea)</td>
+	<td>@if(linea.estado !=  null){@linea.estado.nombre}</td>
+	<td>@if(linea.cancelado){CANCELADO}</td>
+	
+	
+	<td>
+		@if(linea != null && linea.descripcion != null && !linea.descripcion.isEmpty()){
+			<div class='tip-top pointer' style="display: inline;" title='@linea.descripcion'>
+				<i class="glyphicon glyphicon-list-alt"></i></div>
+		}
+	</td>
+</tr>

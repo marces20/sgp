@@ -1,0 +1,90 @@
+@(cantidad:java.math.BigDecimal,linea_orden_id:Long,olSqlRow:List[com.avaje.ebean.SqlRow],dispo:java.math.BigDecimal)
+@import helper._
+@import models.auth._
+@import utils._
+@implicitFieldConstructor = @{ FieldConstructor(simpleInput.render) } 
+
+<div class="col-sm-12">
+	<div class="panel panel-default">
+		<div class="panel-heading"><b>Lineas con Pacientes</b></div>
+		<div class="panel-body">
+			<table class="table table-bordered table-hover" id="">
+				<thead>
+					<tr>
+						<td>id-Paciente</td>
+						<td>Nombre</td>
+						<td>Cantidad Disponible</td>
+						<td></td>
+					</tr>
+				</thead>
+				<tbody>
+					@for(p <- olSqlRow){
+						@if(p.getBigDecimal("cantidad").compareTo(java.math.BigDecimal.ZERO) > 0){
+							<tr class="tr-carga-pacientes-cantidad">
+								<td><b>@p.getString("idPacienteRismi")</b></td>
+								<td><b>@p.getString("nombreCliente")</b></td>
+								<td><b>@p.getBigDecimal("cantidad")</b></td>
+								<td>
+								<input class="linea_orden_id" type="hidden" value="@linea_orden_id" name="linea_orden_id" /> 	
+								<input class="cantidadCarga" type="text" name="cantidadCarga" value="@p.getBigDecimal("""cantidad""")"" style="width: 60px" />
+								<button class="anularConCliente"  data-cantidad="@p.getBigDecimal("""cantidad""")" data-clienteId="@p.getLong("""cliente_id""")" data-url="@controllers.patrimonio.routes.AnulacionRecepcionProductosController.anularConCliente()"><i class="glyphicon glyphicon-ok-sign"></i></button> </td></td>
+							</tr>
+						}
+					}
+					
+					@if(dispo.compareTo(java.math.BigDecimal.ZERO) > 0){
+						<tr class="tr-carga-pacientes-cantidad">
+							<td><b>SIN PACIENTE</b></td>
+							<td><b></b></td>
+							<td><b>@dispo</b></td>
+							<td>
+							<input class="linea_orden_id" type="hidden" value="@linea_orden_id" name="linea_orden_id" /> 	
+							<input class="cantidadCarga" type="text" name="cantidadCarga" value="@dispo" style="width: 60px" />
+							<button class="anularConCliente"  data-cantidad="@dispo" data-clienteId="" data-url="@controllers.patrimonio.routes.AnulacionRecepcionProductosController.anularConCliente()"><i class="glyphicon glyphicon-ok-sign"></i></button> </td></td>
+						</tr>
+					}
+				</tbody>
+			</table>
+			<input id="linea_orden_id_clientemodal" type="hidden" value="@linea_orden_id" name="linea_orden_id_clientemodal" />
+			
+		</div>
+	</div>	
+</div>
+<script>
+$( function() {
+	$(".cantidadCarga").numeric_input();
+	$('.anularConCliente').click( function(){
+		$this = $(this);
+		$this.prop('disabled', true);
+		var tr = $(this).closest('tr');
+		var idRemito = $('#remitoId').val();
+		var linea_orden_id = $('#linea_orden_id_clientemodal').val();
+		var url = $(this).attr('data-url');
+		var cantidadCargar = tr.find('.cantidadCarga').val();
+		var cantidad = $(this).attr('data-cantidad');
+		var clienteId = $(this).attr('data-clienteId');
+		var observaciones =  $("#obs").val();
+		
+		$.get(url, {orden_linea_id: linea_orden_id, clienteId: clienteId, cantidad: cantidad,cantidadCargar:cantidadCargar,observaciones:observaciones}, function(data) {
+			 
+			if(data.success) {
+				tr.remove();
+				$("#tr-"+linea_orden_id).remove();
+				$('#menuAnulados').click();
+			} else {
+				alert(data.message);
+			}
+			
+			if($(".tr-carga-pacientes-cantidad").length == 0){
+				 $("#dialogo-carga-pacientes-cantidad").remove();
+				 $("#dialogo-anulacion-productos").dialog( "destroy" );
+			}
+			
+			$("#tr-"+linea_orden_id).find('.agregar').removeAttr('disabled');
+			$this.removeAttr('disabled');
+		});
+	});
+	
+});
+</script>
+

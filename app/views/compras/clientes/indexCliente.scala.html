@@ -1,0 +1,160 @@
+@(buscador: utils.pagination.Pagination[Cliente], formBuscador: DynamicForm)
+@import helper._
+@implicitFieldConstructor = @{ FieldConstructor(simpleInput.render) } 
+
+@views.html.compras.mainCompras(title = "Gestión de clientes") {
+ <div class="page-header">
+	<div class="row">
+		<div class="col-sm-9">
+			<h1>Gestión de clientes</h1>
+		</div>
+
+		<div class="col-sm-3">
+			<a href="@controllers.compras.routes.ClientesController.crear()"  class="btn btn-default"><i class="glyphicon glyphicon-plus-sign"></i> Nuevo cliente</a>
+			<a href="@controllers.compras.routes.ClientesController.index()" class="btn btn-default"><i class="glyphicon glyphicon-list"></i></a>
+			<a href="#" class="btn btn-default"><i
+				class="glyphicon glyphicon-align-justify"></i></a>
+		</div>
+	</div>
+</div>
+
+@if(flash.containsKey("success")) {
+	<div class="alert alert-success"><i class="glyphicon glyphicon-ok-sign"></i> @flash.get("success")</div>
+}
+@if(flash.containsKey("error")) {
+	<div class="alert alert-danger"><i class="glyphicon glyphicon-remove-sign"></i> @flash.get("error")</div>
+} 
+<form action="" method="GET">
+	<div class="row">
+		<div class="col-sm-3">
+			<div class="form-group">
+				<label for="nombre" class="control-label">Nombre
+				@inputText(formBuscador("nombre"), 'class -> "form-control")
+				</label>
+			</div>
+		</div>
+		
+		<div class="col-sm-3">
+			<div class="form-group">
+				<label for="idPaciente" class="control-label">Id Paciente
+				@inputText(formBuscador("idPaciente"), 'class -> "form-control")
+				</label>
+			</div>
+		</div>
+		
+		<div class="col-sm-3">
+			<div class="form-group">
+				<label for="idPaciente" class="control-label">DNI
+				@inputText(formBuscador("dni"), 'class -> "form-control")
+				</label>
+			</div>
+		</div>
+		
+		<div class="col-sm-3">
+			<div class="form-group">
+				<label for="idPaciente" class="control-label">CUIT
+				@inputText(formBuscador("cuit"), 'class -> "form-control")
+				</label>
+			</div>
+		</div>
+	</div>		
+	<div class="row">
+		<div class="col-sm-3">
+			<div class=" form-group">
+				<label class="control-label">Tipo de cliente</label>
+				@select(formBuscador("cliente_tipo_id"), ClienteTipo.find.all().map { p => p.id.toString -> p.nombre}, 'class -> "form-control select", '_default -> "Seleccionar")
+			</div>
+		</div>
+		
+		<div class="col-sm-2">
+			<div class="form-group">
+			<label for="nombre" class="control-label">&nbsp;</label>
+			<button  class="form-control btn btn-primary">Buscar</button>
+			</div>
+		</div>
+		
+		<div class="col-sm-2">
+			<div class="form-group">
+			<label for="nombre" class="control-label">&nbsp;</label>
+			<a href="@controllers.compras.routes.ClientesController.index()"  class="form-control btn btn-default">Limpiar</a>
+			</div>
+		</div>
+	</div>		
+</form>
+
+	
+   
+@if(buscador.getTotalRowCount == 0) {
+	<div class="well"><em>No se encuentran resultados</em></div>
+} else {
+
+Mostrando @buscador.getDisplayXtoYofZ(" a "," de ") resultado(s).   
+<table class="table table-striped table-bordered table-hover">
+	<thead>
+		<tr>
+			<th width="50">#</th>
+			<th width="">Nombre</th>
+			<th width="">Pais</th>
+			<th width="">Provincia</th>
+			<th width="">Ciudad</th>
+			<th>Obra Social</th>
+			<th width="">CUIT</th>
+			<th width="">DNI</th>
+			<th width="">ID-PACIENTE</th>
+			<th width="">Referencia</th>
+			<th class="30">#</th>
+		</tr>
+	</thead>
+	<tbody>
+        @for(cliente <- buscador.getList) {
+		<tr class="pointer" data-href="@controllers.compras.routes.ClientesController.ver(cliente.id)">
+			<td class="notSeleccion"><a class="btn btn-default btn-xs notSeleccion" href="@controllers.compras.routes.ClientesController.editar(cliente.id)"><i class="glyphicon glyphicon-edit"></i></a></td>
+			<td>@(cliente.nombre)</td>
+			@if(cliente.direcciones != null && cliente.direcciones.size() > 0) {
+			
+				@if(cliente.direcciones.size() > 0 && cliente.direcciones.get(0) != null){
+				<td>@if(cliente.direcciones.get(0).localidad != null && cliente.direcciones.get(0).localidad.provincia != null && cliente.direcciones.get(0).localidad.provincia.pais != null){@(cliente.direcciones.get(0).localidad.provincia.pais.nombre)}</td>
+				<td>@if(cliente.direcciones.get(0).localidad != null && cliente.direcciones.get(0).localidad.provincia != null){@(cliente.direcciones.get(0).localidad.provincia.nombre)}</td>
+				<td>@if(cliente.direcciones.get(0).localidad != null){@(cliente.direcciones.get(0).localidad.nombre)}</td>
+				}
+			
+			}else{
+				<td>&nbsp</td>
+				<td>&nbsp</td>
+				<td>&nbsp</td>
+			}
+			<td>
+				@if(cliente.obrasocial != null){
+					@(cliente.obrasocial.nombre)
+				}
+			</td>
+			<td>@(cliente.cuit2)</td>
+			<td>@(cliente.dni)</td>
+			<td>@(cliente.id_paciente_rismi)</td>
+			<td>@(cliente.referencia)</td>
+			<td class="notSeleccion"><a  class="btn btn-default btn-xs delete-confirm-link notSeleccion" href="@controllers.compras.routes.ClientesController.eliminar(cliente.id)"><i class="glyphicon glyphicon-remove-circle"></i></a></td>
+		</tr>
+        }
+	</tbody>
+</table>
+		<div class="pagination pull-right">
+		    @views.html.helpers.paginador(buscador, controllers.compras.routes.ClientesController.index())
+		</div>
+
+        
+}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+}

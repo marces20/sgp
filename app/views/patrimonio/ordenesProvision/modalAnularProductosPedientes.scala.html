@@ -1,0 +1,28 @@
+@(formBuscador: DynamicForm,ordenId:Long,listaFacturas:List[Factura])
+@import helper._
+@implicitFieldConstructor = @{ FieldConstructor(simpleInput.render) } 
+	
+@helper.form(action = controllers.patrimonio.routes.OrdenesProvisionController.anularProductosPediente(), 'id -> "formAnularProductosPediente") {	
+	
+	@if(listaFacturas.size() > 0){
+		<p style="font-weight:bold;font-size:20px; color:red;">ESTA ORDEN POSEE FACTURAS O PAGOS EN PROCESO !!!</p>	
+	}  
+	
+	@views.html.tags.successError()
+	<input type="hidden" value="@ordenId" name="id"/>
+	<div class="row">
+
+		<div class="col-sm-12">
+			<label for="obs" class="control-label">Observaciones</label> 
+			@textarea(formBuscador("observaciones"), 'class -> "form-control", 'rows -> "2", 'id -> "observaciones")
+		</div>
+
+	</div>
+	<div class="col-sm-5"><br />
+		<button type="submit" class="btn btn-default" title="Anular Productos"><i class="glyphicon glyphicon-arrow-right"></i> Anular</button>
+	</div>
+
+}
+@flash().clear()
+<script>
+</script>	

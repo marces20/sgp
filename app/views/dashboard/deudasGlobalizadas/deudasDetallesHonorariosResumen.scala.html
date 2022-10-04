@@ -1,0 +1,64 @@
+@(proveedorTodos:List[com.avaje.ebean.SqlRow], 
+formBuscador: DynamicForm)
+@import helper._
+@import utils._
+@import models.auth._
+@implicitFieldConstructor = @{ FieldConstructor(simpleInput.render) }
+@import java.math.BigDecimal;var ptmpcompromiso=new java.math.BigDecimal(0);var ptmpdeuda=new java.math.BigDecimal(0);var mtdoh=new java.math.BigDecimal(0);var mtcoh=new java.math.BigDecimal(0);var mtdoo=new java.math.BigDecimal(0);var mtcoo=new java.math.BigDecimal(0)
+@import java.lang.Integer;var proveedorId =0;var bandera =0
+@import java.lang.String;var proveedorNombre =""
+@views.html.dashboard.mainDashboard("Deudas Servicios") {
+@views.html.dashboard.deudasGlobalizadas.navdeudas(formBuscador)
+
+<div class="page-header">
+	<div class="row">
+		<div class="col-sm-7">
+			<h1>Deudas Honorarios RESUMEN</h1>
+		</div>
+		<div class="col-sm-5">
+			<div class="dropdown pull-right">
+			 <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown">
+			 	<i class="glyphicon glyphicon-list-alt"></i>
+			    Reportes
+			    <span class="caret"></span>
+			  </button>
+			  <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
+			  	<li role="presentation">
+				  <a id="" role="menuitem" tabindex="-1" 
+				  href="@controllers.dashboard.routes.DeudasGlobalizadasReportesController.deudasHonorariosProveedoresResumenReportes()">Reporte Excel</a></li>
+			  </ul>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div class="row"  style="">
+	<div class="col-sm-12" style="">
+		<table class="table table-bordered table-hover" id="listaInforme">
+			<thead>
+				<th colspan="2" align="center" style="font-size:20px;text-align:center;">Operativa</th>
+			</thead>
+			<thead>
+				<th>PROVEEDOR</th>
+				<th>DEUDA</th>
+			</thead>
+			<tbody>
+				@for(s <- proveedorTodos){
+					<tr style="background-color:#ffffff;">
+						<td>@s.getString("nombre_proveedor")</td>
+						<td>@utils.NumberUtils.moneda(s.getBigDecimal("total_deuda"))</td>
+					</tr>
+					@{mtdoh= mtdoh.add(s.getBigDecimal("total_deuda"))}
+				}
+			</tbody>
+			<tfoot>
+				<tr style="background-color:#dfdfdf;">
+					<td align="right"><b>TOTALES</b></td>
+					<td><b>@utils.NumberUtils.moneda(mtdoh)</b></td>
+				</tr>
+			</tfoot>
+		</table>
+	</div>
+</div>
+
+}

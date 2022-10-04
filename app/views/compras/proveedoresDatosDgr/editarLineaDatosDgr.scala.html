@@ -1,0 +1,10 @@
+@(lineaForm: Form[ProveedorDatoDgr],linea:ProveedorDatoDgr)
+@import helper._
+@implicitFieldConstructor = @{ FieldConstructor(simpleInput.render) } 
+
+@helper.form(action = controllers.compras.routes.ProveedorDatosDgrController.actualizar()) {
+	
+	@views.html.compras.proveedoresDatosDgr.formLineaDatosDgr(lineaForm,linea)
+	@inputText(lineaForm("id"), 'hidden -> "hidden")
+	
+}

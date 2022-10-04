@@ -1,0 +1,106 @@
+@(buscador: utils.pagination.Pagination[SucursalBanco], formBuscador: DynamicForm)
+@import helper._
+@implicitFieldConstructor = @{ FieldConstructor(simpleInput.render) }
+
+@views.html.contabilidad.mainContabilidad("Lista Sucursal Bancos") {
+
+	<div class="page-header">
+		<div class="row">
+			<div class="col-sm-10">
+				<h1>Lista de sucursal bancos</h1>
+			</div>
+	
+			<div class="col-sm-2">
+				<a href="@controllers.contabilidad.routes.SucursalBancosController.indexSucursalBanco()" class="btn btn-default">
+					<i class="glyphicon glyphicon-list"></i>
+				</a>
+				<a href="#" class="btn btn-default">
+					<i class="glyphicon glyphicon-align-justify"></i>
+				</a>
+			</div>
+		</div>
+	</div>
+	
+	@views.html.tags.successError()
+	
+	<div id="actions">
+		<div class="row">
+			<form action="" method="GET">
+				<div class="col-sm-3">
+					<div class="form-group">
+						<label for="nombre" class="control-label">Nombre
+						@inputText(formBuscador("nombre"), 'class -> "form-control", 'autofocus -> "autofocus")
+						</label>
+					</div>
+				</div>
+				<div class="col-sm-2">
+					<div class="form-group">
+					<label for="nombre" class="control-label">&nbsp;</label>
+					<button  class="form-control btn btn-primary">Buscar</button>
+					</div>
+				</div>
+				<div class="col-sm-2">
+					<div class="form-group">
+					<label for="nombre" class="control-label">&nbsp;</label>
+					<a href="@controllers.contabilidad.routes.SucursalBancosController.indexSucursalBanco()"  class="form-control btn btn-default">Limpiar</a>
+					</div>
+				</div>
+			</form>
+		</div>
+	</div>
+	
+	<div class="row">
+		<div class="col-sm-2">
+			<a href="@controllers.contabilidad.routes.SucursalBancosController.crearSucursalBanco"  class="form-control btn btn-default">Nueva sucursal</a>
+		</div>
+	</div>
+	
+	@if(buscador.getTotalRowCount == 0) {
+        
+        <div class="well">
+            <em>No se encuentran sucursales</em>
+        </div>
+        
+    } else {
+    
+    	Mostrando @buscador.getDisplayXtoYofZ(" a "," de ") resultado(s). 
+		
+		<table class="table table-striped table-bordered">
+			<thead>
+				<tr>
+					<th width="50">#</th>
+					<th width="200">Nombre</th>
+					<th width="200">Banco</th>
+					<th width="200">Codigo</th>
+					<th width="200">Localidad</th>
+					<th class="50">#</th>
+				</tr>
+			</thead>
+			<tbody>
+			@for(sucursalBanco <- buscador.getList) {
+				<tr>
+					<td>
+						<a href="@controllers.contabilidad.routes.SucursalBancosController.editarSucursalBanco(sucursalBanco.id)">
+							<i class="glyphicon glyphicon-edit"></i>
+						</a>
+					</td>
+					<td>@(sucursalBanco.nombre)</td>
+					<td>@(sucursalBanco.banco.nombre)</td>
+					<td>@(sucursalBanco.codigo)</td>
+					<td>@(sucursalBanco.localidad.nombre)</td>
+					<td>
+						<a href="@controllers.contabilidad.routes.SucursalBancosController.eliminarSucursalBanco(sucursalBanco.id)">
+							<i class="glyphicon glyphicon-remove-circle"></i>
+						</a>
+					</td>
+				</tr>
+             }
+	        </tbody>
+        </table>
+        
+        <div class="pagination pull-right">
+		    @views.html.helpers.paginador(buscador, controllers.contabilidad.routes.SucursalBancosController.indexSucursalBanco())
+		</div>
+        </div>
+ 	 }
+}

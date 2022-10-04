@@ -1,0 +1,17 @@
+@(urlReferer: String)
+
+@main("Acceso denegado") {
+<style>
+	body {background: rgb(242, 222, 222)}
+</style> 
+    
+<div class="">
+	<p class="alert alert-danger" style="width: 450px; text-align: center; margin-left: auto ; margin-right: auto; margin-top: 10%; padding: 30px">
+		<i class="glyphicon glyphicon-warning-sign" style="font-size: 30px;"></i><br />
+		No tiene permiso para realizar esta acción.<br />
+		<a href="@urlReferer">Volver a la página previa</a>
+	</p>
+</div>	
+			 
+		
+}

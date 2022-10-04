@@ -1,0 +1,11 @@
+@(linea: CertificacionesComprasLineaAjustes, editable: Boolean)
+
+<tr data-id="@linea.id">
+	
+	<td>@linea.producto.nombre</td>
+	<td class="cuentaAnaliticaEnLinea">@if(linea.cuentaAnalitica == null){No asociada} else {@linea.cuentaAnalitica.codigo @linea.cuentaAnalitica.nombre}</td>
+	<td>@linea.udm.nombre</td>
+	<td>@linea.cantidad</td>
+	<td>@utils.NumberUtils.moneda(linea.precio, 10)</td>
+	<td>@utils.NumberUtils.moneda(linea.getTotal(), 10)</td>
+</tr>

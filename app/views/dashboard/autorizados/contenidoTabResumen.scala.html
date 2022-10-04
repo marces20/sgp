@@ -1,0 +1,40 @@
+@(autorizadoForm: Form[Autorizado] = null,a:Autorizado,rp:List[com.avaje.ebean.SqlRow],rr:List[com.avaje.ebean.SqlRow])
+@import helper._
+@implicitFieldConstructor = @{ FieldConstructor(simpleInput.render) } 
+
+<div class="row">
+	<div class="col-sm-6">
+		<div class="panel panel-default">
+			<div class="panel-heading"><b>Total por Proveedor</b></div>
+			<div class="panel-body">
+				<table class="table table-bordered table-hover" id="">
+					<tbody>
+						@for(p <- rp){
+							<tr>
+								<td><b>@p.getString("proveedor")</b></td>
+								<td><b>@utils.NumberUtils.moneda(p.getBigDecimal("monto"))</b></td>
+							</tr>
+						}
+					</tbody>
+				</table>
+			</div>
+		</div>	
+	</div>
+	<div class="col-sm-6">
+		<div class="panel panel-default">
+			<div class="panel-heading"><b>Total por Rubro</b></div>
+			<div class="panel-body">
+				<table class="table table-bordered table-hover" id="">
+					<tbody>
+						@for(r <- rr){
+							<tr>
+								<td><b>@r.getString("rubro")</b></td>
+								<td><b>@utils.NumberUtils.moneda(r.getBigDecimal("monto"))</b></td>
+							</tr>
+						}
+					</tbody>
+				</table>
+			</div>
+		</div>	
+	</div>
+</div>

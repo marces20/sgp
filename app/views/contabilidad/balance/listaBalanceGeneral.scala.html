@@ -1,0 +1,17 @@
+@(id : Long, balance: Map[Long,List[Balance]])
+
+@if(balance.containsKey(id)){
+    @for(b <- balance.get(id)) {
+    	<div class="row"  style="padding-left: 30px; border-left:1px solid #ccc">
+    	
+    		<div class="col-xs-4">@b.cuenta.nombre</div>
+    		<div class="col-xs-2 pull-right" >$@b.debe</div>
+    		<div class="col-xs-2 pull-right">$@b.haber</div>
+    		
+			@if(balance.containsKey(b.cuenta.id)){
+				<div class="clearfix"></div>
+				@views.html.contabilidad.balance.listaBalanceGeneral(b.cuenta.id, balance)
+			}
+    	</div>
+    }
+}

@@ -1,0 +1,48 @@
+@(title: String, scripts: Html = Html(""))(content: Html)
+@import models.auth._
+
+@main(title: String, scripts){
+	<div class="row">
+		<div class="col-sm-2">
+			<div class="menu-contenido">
+				<ul class="nav nav-pills nav-stacked">
+					<li class="titulo">Gestión</li>
+					@if(Componente.check("ordenesProvision")) {
+						<li><a href="@controllers.patrimonio.routes.OrdenesProvisionController.index()">Ordenes de provisión</a></li>
+					}
+					@if(Componente.check("recepciones")) {
+						<li><a href="@controllers.patrimonio.routes.RecepcionesController.index()">Recepciones</a></li>
+					}
+					@if(Componente.check("remitos")) {
+						<li><a href="@controllers.patrimonio.routes.RemitosController.index()">Remitos</a></li>
+					}
+					@if(Componente.check("actasRecepcion")) {
+						<li><a href="@controllers.patrimonio.routes.ActasRecepcionController.index()">Actas</a></li>
+						<li><a href="@controllers.patrimonio.routes.ActasMovimientosController.indexGeneral()">Actas Recepcion Pases</a></li>
+						<li><a href="@controllers.patrimonio.routes.ActasMovimientosController.indexPasesPorUsuario()">Actas Pases por Usuario</a></li>
+					}
+
+					@if(Componente.check("certificacionesServicios")) {
+						<li><a href="@controllers.patrimonio.routes.CertificacionesServiciosController.index()">Certificaciones</a></li>
+					}
+					
+					@if(Componente.check("inventario")) {
+					<li><a href="@controllers.patrimonio.routes.InventarioController.index()">Inventario</a></li>
+					}
+					@if(Componente.check("infoPaciente")) {
+					<li><a href="@controllers.patrimonio.routes.OrdenesProvisionController.informacionPorPacientes()">Info por Paciente</a></li>
+					}
+				</ul>
+				
+				<ul class="nav nav-pills nav-stacked">
+					<li class="titulo">Baúl</li>
+					@if(Componente.check("remitos")) {
+						<li><a href="@controllers.patrimonio.routes.RemitosBaulController.index()">Remitos</a></li>
+					}
+				</ul>
+				
+			</div>
+		</div>
+		<div class="col-sm-10">@content</div>
+	</div>
+}

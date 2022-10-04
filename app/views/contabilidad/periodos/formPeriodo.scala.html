@@ -1,0 +1,39 @@
+@(periodoForm: Form[Periodo])
+@import helper._
+@implicitFieldConstructor = @{ FieldConstructor(simpleInput.render) } 
+
+	<div class="row">
+		<div class="col-sm-4">
+			<div class="form-group @if(periodoForm.error("nombre") != null) {has-error}else{has-required}">
+				<label for="inputNombre" class="control-label">Nombre</label> 
+				@inputText(periodoForm("nombre"), 'class -> "form-control")
+				@periodoForm("nombre").error.map{ error =>
+					<div class="text-error">@error.message</div>
+				}
+			</div>
+		</div>
+		<div class="col-sm-2">
+			<div class="form-group @if(periodoForm.error("ejercicio.id") != null) {has-error}else{has-required}">
+				<label for="inputEjercicio" class="control-label">Ejercicio</label> 
+				@inputText(periodoForm("ejercicio.nombre"),'class -> "form-control")
+				@inputText(periodoForm("ejercicio.id"),'hidden -> "hidden")
+				@periodoForm("ejercicio.id").error.map{ error =>
+					<div class="text-error">@error.message</div>
+				}
+			</div>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-sm-4">
+			<div class="form-group">
+				<label for="inputFDesde" class="control-label">Fecha Comienzo</label> 
+				@inputText(periodoForm("date_start"), 'class -> "form-control")
+			</div>
+		</div>
+		<div class="col-sm-4">
+			<div class="form-group">
+				<label for="inputFHasta" class="control-label">Fecha Fin</label> 
+				@inputText(periodoForm("date_end"), 'class -> "form-control")
+			</div>
+		</div>
+	</div>

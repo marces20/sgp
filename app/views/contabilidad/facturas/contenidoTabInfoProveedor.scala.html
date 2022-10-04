@@ -1,0 +1,139 @@
+@(formularioCarga: Boolean, facturaForm: Form[Factura] = null,factura:Factura)
+@import helper._
+@implicitFieldConstructor = @{ FieldConstructor(simpleInput.render) } 
+
+@if(factura != null){
+<div class="row">
+	<div class="col-sm-3">
+		<div class="panel panel-default">
+			<div class="panel-heading"><b>Facturacion</b></div>
+			<div class="panel-body">
+				<h4>Monto Orden: 		<b>@if(factura != null && factura.orden != null){@utils.NumberUtils.moneda(factura.orden.getTotal())}</b></h4>
+				<!-- 
+				<h4>Monto Bienes: 		<b>@if(factura != null){@utils.NumberUtils.moneda(Factura.getTotalPorBienes(factura.id))}else{0,00}</b></h4>
+				<h4>Monto Servicios: 	<b>@if(factura != null){@utils.NumberUtils.moneda(Factura.getTotalPorServicios(factura.id))}else{0,00}</b></h4>
+				 -->
+			</div>
+		</div>	
+	</div>
+	<div class="col-sm-9">
+		<div class="panel panel-default">
+			<div class="panel-heading" id="listaLineaAtributos">
+				<b>Proveedor</b>
+				@if(formularioCarga){
+					<a class="btn btn-default btn-xs" data-href="@controllers.compras.routes.ProveedorAtributosController.crear(factura.proveedor.id.toString)"
+					href="#" id="nuevoAtributo"><i class="glyphicon glyphicon-plus"></i> Nuevo Atributo</a>
+				}
+			</div>
+			<div class="panel-body">
+				<table id="listaDeAtributos" class="table table-striped table-bordered">
+					<thead>
+						<tr>
+							<th>Gcias</th>
+							<th>Exento IVA</th>
+							<th>AFIP Condicion</th>
+							<th>Suss Tipo</th>
+							<th>DGR Condicion</th>
+							<th>Exento Sello</th>
+							 
+							<th>F.Ex. Gcias</th>
+							<th>F.Ex. Suss</th>
+							<th>F.Ex. IIBB</th>
+							<th>F.Ex. Sellos</th>
+							<th>Fecha Creacion</th>
+							
+						<tr>	
+					</thead>
+					<tbody>
+					@if(factura != null && factura.proveedor != null && factura.proveedor.getLastAtributo() != null){
+						
+						@views.html.compras.proveedoresAtributos.lineaAtributo(factura.proveedor.getLastAtributo(),false)
+						
+					}
+					</tbody>
+				</table>
+				
+			</div>
+		</div>	
+	</div>
+</div>
+<div class="row">
+	<div class="col-sm-12">
+		<div class="panel panel-default">
+			<div class="panel-heading"><b>Otros Pagos en el mismo Mes</b></div>
+			<div class="panel-body">
+				@views.html.contabilidad.facturas.listaFactura(Factura.facturasDelMismoMes(factura),factura)
+			</div>
+		</div>	
+	</div>
+</div>
+<div class="row">
+	<div class="col-sm-12">
+		<div class="panel panel-default">
+			<div class="panel-heading"><b>Otros Pagos con sellos de la misma orden</b></div>
+			<div class="panel-body">
+				@views.html.contabilidad.facturas.listaFactura(Factura.facturasConSellosMismaOrden(factura),factura)
+			</div>
+		</div>	
+	</div>
+</div>
+<script>
+$( function(){
+	/**
+	 * Ventana de carga linea de productos en ordenes
+	 */
+	 
+	var contenedor = $("#listaLineaAtributos");
+
+	contenedor.on('click', '#nuevoAtributo', function(){
+		/*urlContenidoModal = '/compras/linea-proveedor-atributo/crear?proveedorId='+$('#proveedorId').val();*/
+		var urlContenidoModal = $(this).attr('data-href')
+		mostrarModal(urlContenidoModal);
+		return false;
+	});
+	
+	function mostrarModal(url){
+		modalCargaProductos = $('<div></div>').dialog({
+			resizable: false,
+		    title: "Cargar atributo",
+		    height: 500,
+		    width: 750,
+		    modal: true,
+		    open: function( event, ui ) {
+				$.get(url, function(data){
+					modalCargaProductos.html(data);
+				});
+		    },
+		    close: function(event, ui ){
+		    	modalCargaProductos.dialog('destroy');
+			}
+		  });
+		
+		modalCargaProductos.on('click', '.cancelar', function(){
+			modalCargaProductos.dialog('destroy');
+			return false;
+		});
+		
+		modalCargaProductos.on('submit', function(e){
+			var href = $(e.target).attr('action');
+			var data = $(e.target).serialize();
+			$.post(href, data, function(resultado){
+				if(resultado.success && resultado.nuevo){
+					$('#listaDeAtributos tbody').prepend(resultado.html);
+					modalCargaProductos.dialog( "destroy" );
+				} else if(resultado.success && resultado.modificar){
+					$(lineaParaEditar).replaceWith(resultado.html);
+					modalCargaProductos.dialog( "destroy" );
+				} else {
+					modalCargaProductos.html(resultado);
+				}
+			});
+			return false;
+		});
+		
+		
+		return modalCargaProductos;
+	}
+});
+</script>	
+}

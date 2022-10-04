@@ -1,0 +1,25 @@
+@( cForm: Form[RemitoBaul])
+@import helper._
+@import utils._
+@implicitFieldConstructor = @{ FieldConstructor(simpleInput.render) } 
+    
+@views.html.patrimonio.mainPatrimonio("Ediar remito en baúl") {
+
+	<div class="page-header">
+		<div class="row">
+			<div class="col-sm-10">
+				<h1>Editar remito en baúl</h1>
+			</div>
+			
+			 
+		</div>
+	</div> 
+    
+    @views.html.tags.successError()
+    
+	@helper.form(action = controllers.patrimonio.routes.RemitosBaulController.actualizar()) {
+		@views.html.patrimonio.baul.formRemitoBaul(cForm) 
+		@views.html.patrimonio.baul.tabsProductoRemitoBaul(true,  cForm.field("id").value.toLong)	
+	}
+
+}

@@ -1,0 +1,18 @@
+@(legajoForm: Form[models.haberes.Legajo])
+@import helper._
+
+@views.html.haberes.mainHaberes("Crear Legajo") {
+
+	<div class="page-header">
+		<div class="row">
+			<div class="col-sm-10">
+				<h1>Crear nuevo Legajo</h1>
+			</div>
+		</div>
+	</div>
+	@views.html.tags.successError()
+    
+    @helper.form(action = controllers.haberes.routes.LegajosController.guardar()) {
+		@views.html.haberes.legajos.formLegajo(legajoForm) 	
+	}
+}

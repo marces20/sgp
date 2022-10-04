@@ -1,0 +1,18 @@
+@(formularioCarga: Boolean, solicitudForm: Form[Solicitud] = null)
+@import java.util.List
+
+@if(solicitudForm.field("id").value == null || solicitudForm.field("id").value == ""){
+	<p>Para cargar ajustes primero debe dar de alta la solicitud</p>
+} else {
+	<script>
+		$( function (){
+			$.get('@controllers.compras.routes.AjustesSolicitudesController.index(solicitudForm.field("id").value.toLong, formularioCarga)', function(data){
+				$('#listaLineaAjustes').parent().html(data);
+			})
+		});
+	</script>
+}
+
+<div id="listaLineaAjustes">
+
+</div>

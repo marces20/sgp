@@ -1,0 +1,23 @@
+@(pagoForm: Form[Pago])
+@import helper._
+
+@views.html.contabilidad.mainContabilidad("Crear pago") {
+
+	<div class="page-header">
+		<div class="row">
+			<div class="col-sm-10">
+				<h1>Crear nuevo pago</h1>
+			</div>
+			
+			 
+		</div>
+	</div>
+	
+	@views.html.tags.successError()
+    
+    @helper.form(action = controllers.contabilidad.routes.PagosController.guardar()) {
+		@views.html.contabilidad.pagos.formPagoProveedor(pagoForm)
+		<hr>
+		@views.html.contabilidad.pagos.tabsPago(true,pagoForm,null)	
+	}
+}	

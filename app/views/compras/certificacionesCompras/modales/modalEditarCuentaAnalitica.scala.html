@@ -1,0 +1,121 @@
+@(formBuscador: DynamicForm)
+@import helper._
+@implicitFieldConstructor = @{ FieldConstructor(simpleInput.render) } 
+
+<div id="modalEditarCuentaAnalitica" class="contenedorPaginador ajaxPaginador">
+ 
+	<div class="row margin-bottom-10">
+		<div class="col-sm-8 col-sm-offset-2">
+			<div class="input-group">
+				@inputText(formBuscador("cuentaAnalitica_id"), 'hidden -> "hidden", 'id -> "cuentaAnalitica_id")
+				@inputText(formBuscador("cuentaAnalitica"), 'class -> "form-control", 'id -> "cuentaAnalitica")
+				<span class="input-group-addon">
+					<a href="#" 
+					   id="searchCuentaAnalitica" 
+					   class="searchModal"
+					   data-title="Selección de Cuenta Analitica" 
+					   data-url="@controllers.contabilidad.routes.CuentasAnaliticasController.modalBuscar()" 
+					   data-height="650" 
+					   data-width="700" 
+					   data-listen="modal.seleccion.cuentaAnalitica.simple" 
+					   data-label="#cuentaAnalitica" data-field="#cuentaAnalitica_id">
+					   <i class="glyphicon glyphicon-search"></i>
+					 </a>
+				</span>
+			</div>
+		</div>		
+		
+	</div>
+	
+	<div class="row margin-bottom-10">	
+		<div class="col-sm-5 col-sm-offset-4">
+			<div class="input-group pull-center">
+				<label>
+					<button class="btn btn-default form-control" id="cerrarEditarCuentaAnaliticaCertificacion">
+						<i class="glyphicon glyphicon-minus-sign"></i>
+						Cerrar
+					</button>
+				</label>
+				<label>
+					<button class="btn btn-default form-control" id="editarCuentaAnaliticaCertificacion">
+						<i class="glyphicon glyphicon-ok"></i>
+						Editar
+					</button>
+				</label>
+			</div>	
+		</div>
+	</div>		
+	<div class="row">	
+		<div class="col-sm-12" id="responseEditarCuenta">
+			
+		</div>
+	</div>	 
+</div>
+
+<script>
+$( function(){
+	 
+	$('#editarCuentaAnaliticaCertificacion').click( function(){editarCuentaAnaliticaCertificacion()});
+	$('#cerrarEditarCuentaAnaliticaCertificacion').click( function(){cerrarEditarCuentaAnaliticaCertificacion()});
+	if($("#cuentaAnalitica").length){
+		 
+		var options = {
+				script:"/contabilidad/suggestCuentaAnalitica/",
+				varname:"",
+				json:true,
+				shownoresults:true,
+				maxresults:6,
+				callback: function (obj) { 
+											$("#cuentaAnalitica_id").val(obj.id); 
+										 }
+			};
+		var as_json = new bsn.AutoSuggest('cuentaAnalitica', options);
+	} 
+	
+	$('#searchCuentaAnalitica').modalSearch();
+});
+
+function cerrarEditarCuentaAnaliticaCertificacion(){
+	$("#modalEditarCuentaAnalitica").dialog("destroy");
+}
+
+function editarCuentaAnaliticaCertificacion(){
+	
+	if($("#cuentaAnalitica_id").val() != "" && $("#cuentaAnalitica").val() != ""){
+		if($("input[name='check_listado[]']").length > 0){
+			
+				data = $("input[name='check_listado[]']").serialize();
+				
+		}else{
+			if($("#certificacionId").length > 0){
+				data = $("#certificacionId").serialize();
+			}else{
+				r = '<p class="responseError">- Debe seleccionar una Certificacion.</p>'
+					$("#responseEditarCuenta").html(r);
+			}
+		}
+		
+		data += "&"+$("#cuentaAnalitica_id").serialize();
+		
+		$.ajax({
+	        url: "/compras/certificacion-compra/editarCuentaAnalitica",
+	        type: "post",
+	        data: data,
+	        success: function(r){
+	        	$("#responseEditarCuenta").html(r);
+	        	if($(".cuentaAnaliticaEnLinea").length > 0){
+	        		$(".cuentaAnaliticaEnLinea").html($("#cuentaAnalitica").val());
+	        	}
+	        	
+	        },
+	        error:function(){
+	        
+	        }
+	    });
+		
+	}else{
+		r = '<p class="responseError">- Debe seleccionar una cuenta.</p>'
+		$("#responseEditarCuenta").html(r);
+	}
+}
+</script>

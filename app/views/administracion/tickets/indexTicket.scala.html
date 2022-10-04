@@ -1,0 +1,133 @@
+@(buscador: utils.pagination.Pagination[Ticket], formBuscador: DynamicForm)
+@import helper._
+@import utils._
+@import models.auth._
+@implicitFieldConstructor = @{ FieldConstructor(simpleInput.render) }
+
+
+@getClassEstado(i:Estado) = @{
+	var classEstado:String = new String()
+	if(i != null && i.id == 97){
+		classEstado = "borrador"
+	}else if(i != null && i.id == 98){
+		classEstado = "autorizado"
+	}else if(i != null && i.id == 99){
+		classEstado = "cancelado"
+	}
+	classEstado
+	
+}
+
+
+
+@views.html.administracion.mainTicket(title = "Lista de tickets") {
+
+<div class="page-header">
+	<div class="row">
+		<div class="col-sm-9">
+			<h1>Lista de tickets</h1>
+		</div>
+		<div class="col-sm-3">
+		<a href="@controllers.administracion.routes.TicketsController.crear()"  class="btn btn-default"><i class="glyphicon glyphicon-plus-sign"></i> Abrir ticket</a>
+		</div>
+	</div>
+</div>
+
+
+@if(flash.containsKey("success")) {
+    <div class="alert alert-success"><i class="glyphicon glyphicon-ok-sign"></i> @flash.get("success")</div>
+} 
+        
+<div class="row seccion">
+	<form action="" method="GET">
+		<div class="col-sm-3">
+			<div class="form-group">
+				<label for="nombre" class="control-label">Asunto
+				@inputText(formBuscador("asunto"), 'class -> "form-control", 'autofocus -> "autofocus")
+				</label>
+			</div>
+		</div>
+		
+		<div class="col-sm-3">
+			<div class="form-group">
+				<label for="nombre" class="control-label">Estado
+				@select(formBuscador("estado"),options(
+				"97" ->"Abierto",
+				"98"->"Proceso",
+				"99"->"Cerrado",
+				"100"->"Cancelado"), 
+				'class -> "form-control select")
+				</label>
+			</div>
+		</div>
+		
+		<div class="col-sm-2">
+			<div class="form-group">
+			<label for="nombre" class="control-label">&nbsp;</label>
+			<button  class="form-control btn btn-primary">Buscar</button>
+			</div>
+		</div>
+		<div class="col-sm-2">
+			<div class="form-group">
+			<label for="nombre" class="control-label">&nbsp;</label>
+			<a href="@controllers.administracion.routes.TicketsController.index()"  class="form-control btn btn-default">Limpiar</a>
+			</div>
+		</div>
+</form>
+</div>
+    
+    @if(buscador.getTotalRowCount == 0) {
+        
+        <div class="well">
+            <em>No se registran tickets</em>
+        </div>
+        
+    } else {
+Mostrando @buscador.getDisplayXtoYofZ(" a "," de ") resultado(s).   
+<table class="table table-striped table-bordered">
+	<thead>
+		<tr>
+			<th width="50">#</th>
+			<th width="50">Número</th>
+			<th>Asunto</th>
+			<th width="250">Usuario</th>
+			<th width="100">Fecha</th>
+			<th width="100">Fecha cierra</th>
+			<th width="130">Prioridad</th>
+			<th width="130">Estado</th>
+		</tr>
+	</thead>
+	<tbody>
+
+        @for(ticket <- buscador.getList) {
+		<tr class="pointer @if(!ticket.leido && Usuario.getUsuarioSesion() == 1){ rojo } else {@getClassEstado(ticket.estado)}" data-href="@controllers.administracion.routes.TicketsController.ver(ticket.id)">
+			<td class="notSeleccion" align="center">
+				@if(Usuario.getUsuarioSesion() == 1) {
+				<a class="btn btn-default btn-xs notSeleccion" href="@controllers.administracion.routes.TicketsController.editar(ticket.id)&@UriTrack.encode()">
+					<i class="glyphicon glyphicon-edit"></i>
+				</a><br>
+				}
+			</td>
+			<td>@ticket.id</td>
+			<td>@(ticket.asunto)</td>
+			<td>@ticket.usuario.nombre</td>
+			<td>@utils.DateUtils.formatDate(ticket.fecha)</td>
+			<td>@if(ticket.fecha_cierre != null){@utils.DateUtils.formatDate(ticket.fecha_cierre)}</td>
+			<td>@(ticket.getPrioridad())</td>
+			<td>@(ticket.estado.nombre)</td>
+		</tr>
+        }
+
+            </tbody>
+        </table>
+
+
+		<div class="pagination pull-right">
+		    @views.html.helpers.paginador(buscador, controllers.administracion.routes.TicketsController.index())
+		</div>
+        
+    }
+
+
+
+}

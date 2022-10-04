@@ -1,0 +1,115 @@
+package models;
+
+import java.math.BigDecimal;
+import java.util.Date;
+import java.util.List;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
+import javax.persistence.Transient;
+
+import play.data.validation.Constraints.Required;
+import play.db.ebean.Model;
+import play.db.ebean.Model.Finder;
+import utils.formatters.DecimalComa;
+import utils.pagination.Pagination;
+@Entity 
+@Table(name = "certificaciones_servicios_lineas")
+public class CertificacionServicioLinea extends Model{
+	
+	private static final long serialVersionUID = 1L;
+	@Id  														 
+	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="certificaciones_servicios_lineas_id_seq")
+	public Long id;
+	
+	@ManyToOne
+	@JoinColumn(name="certificaciones_servicio_id", referencedColumnName="id", insertable=false, updatable=false)
+	public CertificacionServicio certificacionServicio;
+	@Required(message="Debe tener una certificacion asociada")
+	public Long certificaciones_servicio_id;
+	
+	@ManyToOne
+	@JoinColumn(name="producto_id", referencedColumnName="id", insertable=false, updatable=false)
+	public  Producto producto;
+	@Required(message="Requiere producto")
+	public Long producto_id;
+	
+	@DecimalComa(value="")
+	@Required(message="Requiere precio")
+	public BigDecimal precio;
+	
+	@DecimalComa(value="")
+	@Required(message="Requiere cantidad")
+	public BigDecimal cantidad;
+	
+	@Transient
+	public BigDecimal subtotal;
+	
+	@Transient
+	public BigDecimal totalDescuento;
+	
+	@DecimalComa(value="")
+	public BigDecimal descuento;
+	
+	@ManyToOne
+	@JoinColumn(name="udm_id", referencedColumnName="id", insertable=false, updatable=false)
+	public Udm udm;
+	@Required(message="Requiere UDM")
+	public Long udm_id;
+	
+	@ManyToOne
+	@JoinColumn(name="cuenta_analitica_id", referencedColumnName="id", insertable=false, updatable=false)
+	public CuentaAnalitica cuentaAnalitica;
+	@Required(message="Requiere Cuenta analitica")
+	public Long cuenta_analitica_id;
+	
+	@ManyToOne
+	@JoinColumn(name="create_usuario_id", referencedColumnName="id", insertable=false, updatable=false)
+	public Usuario create_usuario; 
+	@Column(name="create_usuario_id")
+	public Long create_usuario_id;
+	 
+	public Date create_date; 
+	public Date write_date; 
+	
+	@ManyToOne
+	@JoinColumn(name="write_usuario_id", referencedColumnName="id", insertable=false, updatable=false)
+	public Usuario write_usuario; 
+	@Column(name="write_usuario_id")
+	public Long write_usuario_id;
+	
+	public Long linea_orden_id;
+	
+	@OneToMany
+	@JoinColumn(name="certificaciones_servicios_linea_id", referencedColumnName="id", insertable=false, updatable=false)
+	public List<CertificacionServicioLineaCliente> certificacionServicioLineaCliente;
+	
+	public BigDecimal getTotalDescuento(){
+		if (descuento == null)
+			return new BigDecimal(0);
+		return cantidad.multiply(precio).multiply(descuento).divide(new java.math.BigDecimal("100")).setScale(2, BigDecimal.ROUND_HALF_UP);
+	}
+	
+	public BigDecimal getTotal(){
+		return cantidad.multiply(precio).subtract(getTotalDescuento()).setScale(2, BigDecimal.ROUND_HALF_UP);
+	}
+	
+	public static Model.Finder<Long,CertificacionServicioLinea> find = new Finder<Long,CertificacionServicioLinea>(Long.class, CertificacionServicioLinea.class);
+	
+	public static Pagination<CertificacionServicioLinea> page(Long certificacionId) {    	
+    	Pagination<CertificacionServicioLinea> p = new Pagination<CertificacionServicioLinea>();
+    	p.setOrderDefault("DESC");
+    	p.setSortByDefault("id");
+    	
+    	p.setExpressionList(find.fetch("producto").where().eq("certificaciones_servicio_id", certificacionId));
+    	return p;
+	}
+	
+}

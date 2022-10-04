@@ -1,0 +1,236 @@
+@(formBuscador: Form[BalanceCuentaPropia])
+@import helper._
+@implicitFieldConstructor = @{ FieldConstructor(simpleInput.render) } 
+																			
+@helper.form(action = controllers.contabilidad.routes.BalanceCuentaPropiaController.agregarMovimientoBalanceCuentaPropia(), 'id -> "formAgregarMovimientoBalanceCuentaPropia") {	
+
+<script>
+$(function(){
+	$('#searchExpedienteModal,#searchOrdenPagoModal,#searchProveedorModal').modalSearch();
+	$("#debito,#deposito").numeric_input();
+ 	$(".inputDateMascara").mask("99/99/9999");
+ 	$( ".date" ).mask("99/99/9999");
+});
+</script>
+@views.html.tags.successError()
+	<div class="row">
+		<div class="col-sm-7">
+			<div class="col-sm-4">
+				<div class="form-group @if(formBuscador.error("fecha") != null) {has-error} else {has-required}">
+					<label for="inputFecha" class="control-label">Fecha</label> 
+					@inputText(formBuscador("fecha"),'class -> "form-control date ") 
+				</div>
+				@formBuscador("fecha").error.map{ error =>
+					<div class="text-error">@error.message</div>
+				}
+			</div>
+			<div class="col-sm-4">
+				<div class="form-group @if(formBuscador.error("fecha_debito") != null) {has-error} else {has-required}">
+					<label for="inputFechaDebito" class="control-label">Fecha Debito</label> 
+					@inputText(formBuscador("fecha_debito"),'class -> "form-control date")
+				</div>
+				@formBuscador("fecha_debito").error.map{ error =>
+					<div class="text-error">@error.message</div>
+				}
+			</div>
+			<div class="col-sm-4">
+				<div class="form-group @if(formBuscador.error("fecha_cancelado") != null) {has-error} else {has-required}">
+					<label for="inputFechaDebito" class="control-label">Fec. Cancelado</label> 
+					@inputText(formBuscador("fecha_cancelado"),'class -> "form-control date")
+				</div>
+				@formBuscador("fecha_cancelado").error.map{ error =>
+					<div class="text-error">@error.message</div>
+				}
+			</div>
+		</div>
+		<div class="col-sm-2">
+			<div class="form-group @if(formBuscador.error("numero_cheque") != null) {has-error} else {has-required}">
+				<label for="inputCheque" class="control-label">Cheque/Trasf.</label> 
+				@inputText(formBuscador("numero_cheque"),'class -> "form-control")
+			</div>
+			@formBuscador("numero_cheque").error.map{ error =>
+				<div class="text-error">@error.message</div>
+			}
+		</div>
+		<div class="col-sm-3">
+			<div class="form-group @if(formBuscador.error("referencia") != null) {has-error} else {has-required}">
+				<label for="inputReferencia" class="control-label">Referencia</label> 
+				@inputText(formBuscador("referencia"), 'class -> "form-control")
+			</div>
+			@formBuscador("referencia").error.map{ error =>
+				<div class="text-error">@error.message</div>
+			}
+		</div>
+		
+		
+	</div>	
+	<div class="row">	
+		<div class="col-sm-6">
+			<div class="form-group @if(formBuscador.error("cuenta_propia_id") != null) {has-error} else {has-required}">
+				<label class="control-label">Cuenta</label>
+				@select(formBuscador("cuenta_propia_id"),CuentaPropia.find.all().map { p => p.id.toString -> p.nombre},'class -> "form-control select", '_default -> "Seleccionar") 	
+			</div>
+			@formBuscador("cuenta_propia_id").error.map{ error =>
+				<div class="text-error">@error.message</div>
+			}
+		</div>
+		<div class="col-sm-3">
+			<label class="control-label">Importe Deposito</label>
+			<div class="form-group @if(formBuscador.error("deposito") != null) {has-error} else {has-required}">
+				@inputText(formBuscador("deposito"), 'class -> "form-control",'id -> "deposito")
+				@formBuscador("deposito").error.map{ error => <div class="text-error">@error.message</div>}
+			</div>
+		</div>
+		<div class="col-sm-3">
+			<label class="control-label">Importe Debito</label>
+			<div class="form-group @if(formBuscador.error("debito") != null) {has-error} else {has-required}">
+				@inputText(formBuscador("debito"), 'class -> "form-control",'id -> "haber")
+				@formBuscador("debito").error.map{ error => <div class="text-error">@error.message</div>}
+			</div>
+		</div>
+		
+	</div>	
+
+	<div class="row">	
+		<div class="col-sm-2">
+			<div class="form-group">
+				<label class="control-label">Estado</label>
+				@select(formBuscador("estado_id"), options("25"->"Conciliado","26"->"Cancelado"), 'class -> "form-control select")
+			</div>
+			
+		</div>
+		<div class="col-sm-6">
+			<div class="form-group @if(formBuscador.error("a_la_orden") != null) {has-error}">
+				<label for="inputAlaorden" class="control-label">A la Orden</label> 
+				@inputText(formBuscador("a_la_orden"), 'class -> "form-control")
+			</div>
+		</div>
+		<!-- <div class="col-sm-4">
+			<div class="form-group @if(formBuscador.error("expediente_id") != null) {has-error}">
+				<label for="inputExpediente" class="control-label">Expediente</label>
+				<div class="input-group">
+					@inputText(formBuscador("expediente.expedienteEjercicio"),'class -> "form-control",'id -> "expediente_modal")
+					@inputText(formBuscador("expediente_id"),'hidden -> "hidden", 'id -> "expediente_id_modal")
+					<span class="input-group-addon">
+						<a href="#" class="searchModal"
+									id="searchExpedienteModal" 
+									data-title="Selección de expediente" 
+									data-url="@controllers.expediente.routes.ExpedientesController.modalBuscar()" 
+									data-height="650" 
+									data-width="700" 
+									data-listen="modal.seleccion.expediente.simple" 
+									data-label="#expediente_modal" 
+									data-field="#expediente_id_modal">
+							<i class="glyphicon glyphicon-search"></i>
+						</a>
+					</span>
+				</div>
+				@formBuscador("expediente_id").error.map{ error =>
+					<div class="text-error">@error.message</div>
+				}
+			</div>
+		</div>
+		<div class="col-sm-4">
+			<div class="form-group @if(formBuscador.error("orden_pago_id") != null) {has-error}">
+				<label for="orden_pago_id" class="control-label">Orden de pago N° </label> 
+				<div class="input-group">
+					@inputText(formBuscador("ordenPago.nombreCompleto"), 'class -> "form-control", 'id -> "orden_pago_modal")
+					@inputText(formBuscador("orden_pago_id"),'hidden -> "hidden", 'id -> "orden_pago_id_modal")
+					<span class="input-group-addon">
+						<a href="#" class="searchModal"
+									id="searchOrdenPagoModal" 
+									data-title="Selección de órdenes de pago" 
+									data-url="@controllers.contabilidad.routes.OrdenesPagosController.modalBuscar()" 
+									data-height="650" 
+									data-width="700" 
+									data-listen="modal.seleccion.orden-pago.simple" 
+									data-label="#orden_pago_modal" 
+									data-field="#orden_pago_id_modal">
+							<i class="glyphicon glyphicon-search"></i>
+						</a>
+					</span>
+				</div>
+				@formBuscador("orden_pago_id").error.map{ error =>
+					<div class="text-error">@error.message</div>
+				}
+			</div>
+		</div>	 -->
+		<div class="col-sm-4">
+			<div class="form-group @if(formBuscador.error("proveedor_id") != null) {has-error}">
+				<label for="inputProveedor" class="control-label">Proveedor</label>
+				<div class="input-group"> 
+					@inputText(formBuscador("proveedor.nombre"), 'class -> "form-control", 'id -> "proveedor_modal")
+					@inputText(formBuscador("proveedor_id"), 'hidden -> "hidden", 'id -> "proveedor_id_modal")
+					<span class="input-group-addon">
+						<a href="#" class="searchModal"
+									id="searchProveedorModal" 
+									data-title="Selección de Proveedores" 
+									data-url="@controllers.compras.routes.ProveedoresController.modalBuscar()" 
+									data-height="650" 
+									data-width="700" 
+									data-listen="modal.seleccion.proveedor.simple" 
+									data-label="#proveedor_modal" 
+									data-field="#proveedor_id_modal">
+							<i class="glyphicon glyphicon-search"></i>
+						</a>
+					</span>
+				</div>
+				@formBuscador("proveedor_id").error.map{ error =>
+					<div class="text-error">@error.message</div>
+				}
+			</div>
+		</div>	
+	</div>
+	
+	<div class="row">
+		<div class="col-sm-4 col-sm-offset-4">
+			<button type="submit" class="btn btn-default"><i class="glyphicon glyphicon-floppy-disk"></i> Guardar</button>
+			<a href="" class="btn btn-default cancelar"><i class="glyphicon glyphicon-floppy-remove"></i>Cancelar</a>
+		</div>
+	</div>
+ 
+@flash().clear()
+<script>
+$( function(){
+	if($("#proveedor_modal").length){
+		var options = {
+				script:"/suggestProveedor/",
+				varname:"",
+				json:true,
+				shownoresults:true,
+				maxresults:6,
+				callback: function (obj) { 
+											$("#proveedor_id_modal").val(obj.id); 
+										 }
+			};
+		var as_json = new bsn.AutoSuggest('proveedor_modal', options);
+	}		
+if($("#expediente_modal").length){
+	var options = {
+			script:"/suggestExpediente/",
+			varname:"",
+			json:true,
+			shownoresults:true,
+			maxresults:6,
+			callback: function (obj) { 
+										$("#expediente_id_modal").val(obj.id); 
+									 }
+		};
+	var as_json = new bsn.AutoSuggest('expediente_modal', options);
+}	
+if($("#orden_pago_modal").length){
+	var options = {
+			script:"/contabilidad/suggestOrdenPago/",
+			varname:"",
+			json:true,
+			shownoresults:true,
+			maxresults:6,
+			callback: function (obj) { 
+										$("#orden_pago_id_modal").val(obj.id); 
+									 }
+		};
+	var as_json = new bsn.AutoSuggest('orden_pago_modal', options);
+}	
+});
+</script>
+}

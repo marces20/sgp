@@ -1,0 +1,14 @@
+@(formBuscador: DynamicForm)
+@import helper._
+@implicitFieldConstructor = @{ FieldConstructor(simpleInput.render) } 
+	
+@helper.form(action = controllers.rrhh.routes.AgentesAccionesController.pasarAPreaprobado(), 'id -> "formPasarPreaprobado") {	
+	
+	@views.html.tags.successError()
+	
+	<div class="col-sm-5"><br />
+		<button type="submit" class="btn btn-default" title="Pasar a Preaprobado"><i class="glyphicon glyphicon-arrow-right"></i> Pasar a Preaprobado</button>
+	</div>
+
+}
+@flash().clear()

@@ -1,0 +1,16 @@
+@(formBuscador: DynamicForm)
+@import helper._
+@implicitFieldConstructor = @{ FieldConstructor(simpleInput.render) } 
+	
+@helper.form(action = controllers.contabilidad.routes.FacturasAccionesController.pasarEnPreCursoMasivo(), 'id -> "formPasarEnPreCursoFactura") {	
+	
+	@views.html.tags.successError()
+	
+	<div class="col-sm-5"><br />
+		<button type="submit" class="btn btn-default" title="Pasar En PreCurso"><i class="glyphicon glyphicon-arrow-right"></i> Pasar a PreCurso</button>
+	</div>
+
+}
+@flash().clear()
+<script>
+</script>	

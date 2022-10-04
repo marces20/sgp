@@ -1,0 +1,156 @@
+@(buscador: utils.pagination.Pagination[ActaMovimiento], formBuscador: DynamicForm, paginadorFicha: utils.pagination.PaginadorFicha)
+@import helper._
+@import models.auth._
+@import utils._
+@implicitFieldConstructor = @{ FieldConstructor(simpleInput.render) } 
+@import java.math.BigDecimal;var total=new java.math.BigDecimal(0);var ajustes=new java.math.BigDecimal(0);var tt=new java.math.BigDecimal(0);
+
+@scripts = {
+	<script src="@routes.Assets.at("javascripts/patrimonio/actasRecepcion.js")" type="text/javascript"></script>
+}
+
+@views.html.patrimonio.mainPatrimonio("Actas Pases", scripts) {
+
+<div class="page-header">
+	<div class="row">
+		<div class="col-sm-7">
+			<h1>Actas Pases Por Usuario</h1>
+		</div>			
+		<div class="col-sm-5">
+						 
+			<div class="pull-right btn-header">
+				 
+			</div> 
+			 
+			<div class="dropdown pull-right btn-header">
+				<button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown">
+			 		<i class="glyphicon glyphicon-list-alt"></i> Reportes<span class="caret"></span>
+				</button>
+				<ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
+					 
+				</ul>
+			</div>
+			
+			<div class="dropdown pull-right btn-header">
+			 <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown">
+			 	<i class="glyphicon glyphicon-cog"></i>
+			    Acciones
+			    <span class="caret"></span>
+			  </button>
+			  <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
+			  	  
+			  </ul>
+			</div>
+			
+		</div>
+	</div>
+</div>
+@views.html.tags.successError()
+  
+<form action="" id="buscadorActasRecepcion" method="GET">
+	<div class="row" >
+		<!-- <div class="col-sm-2 input-group">
+			<label class="control-label"> 
+				Servicio/depto
+				@select(formBuscador("organigrama_id"), 
+				Organigrama.find.where().eq("circuito_expediente", true).orderBy("nombre asc").findList().map{ p => p.id.toString -> p.nombre}, 'class -> 
+				"form-control select", '_default -> "Seleccionar")
+			</label>
+		</div>-->
+		
+		<div class="form-group col-sm-2">
+			<label for="nombre" class="control-label">Número Acta
+			@inputText(formBuscador("numero"), 'class -> "form-control")
+			</label>
+		</div>
+			
+		<div class="col-sm-2">
+			<label class="control-label">Expediente
+				<div class="input-group">
+					@inputText(formBuscador("expediente_id"), 'hidden -> "hidden", 'id -> "expediente_id")
+					@inputText(formBuscador("expediente.nombre"), 'name -> "", 'class -> "form-control", 'id -> "expediente")
+					<span class="input-group-addon">
+						<a href="#" class="searchModal"
+									id="searchExpedienteActa" 
+									data-title="Selección de expediente" 
+									data-url="@controllers.expediente.routes.ExpedientesController.modalBuscar()" 
+									data-height="650" 
+									data-width="700" 
+									data-listen="modal.seleccion.expediente.simple" 
+									data-label="#expediente" 
+									data-field="#expediente_id">
+							<i class="glyphicon glyphicon-search"></i>
+						</a>
+					</span>
+				</div>
+			</label>	
+		</div>
+		<div class="col-sm-2">
+			<div class="form-group">
+			<label for="nombre" class="control-label">&nbsp;</label>
+			<button  class="form-control btn btn-primary"><i class="glyphicon glyphicon-search"></i>  Buscar</button>
+			</div>
+		</div>
+		<div class="col-sm-2">
+			<div class="form-group">
+			<label for="nombre" class="control-label">&nbsp;</label>
+			<a href="@controllers.patrimonio.routes.ActasMovimientosController.indexPasesPorUsuario()"  class="form-control btn btn-default">Limpiar</a>
+			</div>
+		</div>
+	</div>
+</form> 
+
+	@if(buscador.getTotalRowCount == 0) {
+        
+        <div class="well">
+            <em>No se encuentran pases</em>
+        </div>
+        
+    } else {
+		
+		
+		
+		Mostrando @buscador.getDisplayXtoYofZ(" a "," de ") resultado(s).   
+		<table id="listaActasRecepcion" class="table table-striped table-bordered table-hover">
+			<thead>
+				<tr>
+					<!-- <th width="30">
+						<input type="checkbox" name="checkAll" id="checkAll"/>
+					</th> -->
+					<th>Acta</th>
+					<th>Expediente</th>
+					<th>Servicio/Depto</th>
+					<th>Usuario Rte.</th>
+					<th>Fecha llegada</th>
+					<th>Fecha salida</th>
+					<th>Tiempo en el servicio</th>
+					 
+				</tr>
+			</thead>
+			<tbody>
+		        @for(pase <- buscador.getList) {
+			        @paginadorFicha.add(pase.id.toString)
+					<tr class="" data-href="">
+						<!-- <td><input type="checkbox" name="check_listado[]" value="@pase.id" class="notSeleccion" id="check-@pase.id"/></td> -->
+						<td>@pase.acta.getNombre()</td>
+						<td>@pase.acta.ordenProvision.ordenCompra.expediente.getExpedienteEjercicio()</td>
+						<td>@pase.organigrama.nombre</td>
+						<td>@pase.usuario.nombre</td>
+						<td>@utils.DateUtils.formatDate(pase.fecha_llegada,"dd/MM/yyyy HH:mm:ss")</td>
+						<td>@utils.DateUtils.formatDate(pase.fecha_salida,"dd/MM/yyyy HH:mm:ss")</td>
+						<td>@ActaMovimiento.tiempoEnMovimiento(pase)</td>
+						 
+					</tr>
+					
+				}
+				@paginadorFicha.guardar() 
+			</tbody>
+			<tfoot>
+				<td colspan="5"></td>
+			</tfoot>
+		</table>
+		<div class="pagination pull-right">
+		    @views.html.helpers.paginador(buscador, controllers.patrimonio.routes.ActasMovimientosController.indexPasesPorUsuario())
+		</div>
+	}
+}

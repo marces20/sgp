@@ -1,0 +1,19 @@
+@(formularioCarga: Boolean, pago: Pago = null)
+@import java.util.List
+
+@if(pago == null){
+	<p>Para cargar pago primero debe dar de alta el Pago</p>
+} else {
+
+	<script>
+		$( function (){
+			$.get('@controllers.contabilidad.routes.PagosLineasController.index(pago.id, formularioCarga)', function(data){
+				$('#listaLineaPagos').parent().html(data);
+			})
+		});
+	</script>
+}
+
+<div id="listaLineaPagos">
+
+</div>

@@ -1,0 +1,19 @@
+@(formularioCarga: Boolean,pagoForm: Form[Pago], pago: Pago = null)
+
+
+	<ul id="pagoTab" class="nav nav-tabs">
+		<li class="active"><a class="tabPago" href="#contenedorPagos" data-toggle="tab">Pagos</a></li>
+		<li><a class="tabNotas" href="#contenedorNotas" data-toggle="tab">Notas</a></li>
+	</ul>
+	<div class="tab-content">
+		<div class="tab-pane active" id="contenedorPagos">
+			@views.html.contabilidad.pagos.contenidoTabPago(formularioCarga, pago)	
+		</div>
+		<div class="tab-pane" id="contenedorNotas">
+		@if(formularioCarga){
+			<textarea name="nota" class="form-control" rows="5">@pagoForm.field("nota").value</textarea>
+		} else {
+			<textarea name="nota" disabled="disabled" class="form-control" rows="5">@pagoForm.field("nota").value</textarea>
+		}
+		</div>
+	</div>

@@ -1,0 +1,68 @@
+@(planillaForm: Form[models.recupero.RecuperoPlanilla],planilla:models.recupero.RecuperoPlanilla)
+@import helper._
+@implicitFieldConstructor = @{ FieldConstructor(simpleInput.render) }
+
+@scripts = {
+	<script src="@routes.Assets.at("javascripts/recupero/planilla.js")" type="text/javascript"></script>
+}
+
+@views.html.recupero.mainRecupero("Modificar Planilla", scripts) {
+
+	<div class="page-header">
+		<div class="row">
+			<div class="col-sm-7">
+				<h1>Editar Planilla</h1>
+			</div>
+
+			<div class="col-sm-5">
+				<div class="dropdown pull-right">
+				 <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown">
+				 	<i class="glyphicon glyphicon-list-alt"></i>
+				    Reportes
+				    <span class="caret"></span>
+				  </button>
+				  <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
+				    
+				  </ul>
+				</div>
+				
+				<div class="dropdown pull-right btn-header">
+				 <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown">
+				 	<i class="glyphicon glyphicon-cog"></i>
+				    Acciones
+				    <span class="caret"></span>
+				  </button>
+				  <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
+				  	
+				  </ul>
+				</div>
+					
+				<div class="pull-right btn-header">
+					<a href="@controllers.recupero.routes.RecuperoPlanillasController.crear()"  class="btn btn-default"><i class="glyphicon glyphicon-plus-sign"></i> Nueva Planilla</a>
+				</div>
+			</div>
+			
+			
+		</div>
+	</div>
+	
+	@if(flash.containsKey("error")) {
+		<div class="alert alert-danger">
+			@flash.get("error")
+		</div>
+	}
+	
+													  
+	@helper.form(action = controllers.recupero.routes.RecuperoPlanillasController.actualizar(planilla.id)) {
+
+	
+		@inputText(planillaForm("id"), 'hidden -> "hidden")
+		@views.html.recupero.recuperoPlanilla.formPlanilla(planillaForm)
+		 
+		<div class="row margin-bottom-25">	
+			
+		</div>
+		
+	}
+
+}

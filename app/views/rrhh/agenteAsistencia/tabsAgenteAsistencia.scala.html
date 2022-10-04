@@ -1,0 +1,38 @@
+@(agente:Agente,formularioCarga: Boolean,tipoLicencia:Long)
+
+<ul id="" class="nav nav-tabs">
+	<li><a id="tabInasistenciaResumen" class="tabInasistenciaResumen" href="#contenedorInasistenciaResumen" data-toggle="tab">Resumen Inasistencia</a></li>
+	<li class="active"><a class="tabInasistencia" href="#contenedorInasistencia" data-toggle="tab">Inasistencia</a></li>
+	 
+</ul>
+
+<div class="tab-content">
+	<div class="tab-pane" id="contenedorInasistenciaResumen">
+		@views.html.rrhh.agenteAsistencia.contenidoTabInasistenciaResumen(agente,formularioCarga)	
+	</div>
+	<div class="tab-pane active" id="contenedorInasistencia">
+		@views.html.rrhh.agenteAsistencia.contenidoTabInasistencia(agente,formularioCarga,tipoLicencia)	
+	</div>
+	 
+	 
+</div>	
+<script>
+
+$( function () {
+	$('#tabInasistenciaResumen').on("click", function() { 
+		$('#listaLicenciasResumen').html('<div class="loading"></div>');														
+		$.get('@controllers.rrhh.routes.AgentesAsistenciasLicenciasController.resumen(agente.id, formularioCarga)', function(data){
+			$('#listaLicenciasResumen').parent().html(data);
+		})
+			
+			/*var url = "/contabilidad/facturaProveedor/getInfoRetenciones?id="+$('#facturaId').val()+"&fci="+$('#formularioCargaImpuestos').val();
+				
+			$("#contenedorInfoProveedor").html('<div class="loading"></div>');
+			$.get(url, function(data){
+				$('#contenedorInfoProveedor').parent().html(data);
+			})*/
+	
+	});
+});
+
+</script>	

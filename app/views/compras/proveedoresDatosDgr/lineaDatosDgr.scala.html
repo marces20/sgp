@@ -1,0 +1,22 @@
+@(linea: ProveedorDatoDgr, editable: Boolean)
+
+<tr data-id="@linea.id">
+	
+	<td>@if(linea.periodo_fiscal != null){@linea.periodo_fiscal}</td>
+	<td>@if(linea.proveedor_dgr_dato_regimen_id != null){@linea.proveedor_dgr_dato_regimen.regimen - @linea.proveedor_dgr_dato_regimen.descripcion}</td>
+	<td>@if(linea.cuit != null){@linea.cuit}</td>
+	<td>@if(linea.razon_social != null){@linea.razon_social}</td>
+	<td>@if(linea.alicuota != null){@linea.alicuota}</td>
+	<td>@if(linea.proveedor_dgr_dato_motivo_id != null){@linea.proveedor_dgr_dato_motivo.motivo - @linea.proveedor_dgr_dato_motivo.descripcion}</td>
+	<td>@if(linea.tipo_contribuyente != null){@linea.tipo_contribuyente}</td>
+	<td>@if(linea.tipo_documento != null){@linea.tipo_documento}</td>
+	<td>@if(linea.numero_documento != null){@linea.numero_documento}</td>
+	<td>@(utils.DateUtils.formatDate(linea.create_date))</td>
+		
+	@if(editable){
+		 
+		 
+	}else{
+		 
+	}
+</tr>

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version last-->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Simple_Report" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="30" bottomMargin="30" uuid="0abfd058-fa83-4283-aa0a-ad50d2eca6ca">
+	<detail>
+		<band height="20" splitType="Stretch">
+			<staticText>
+				<reportElement x="180" y="0" width="200" height="20" uuid="6692cca2-a8d2-41d9-a5d9-99f8444242e2"/>
+				<text><![CDATA[Hello World!]]></text>
+			</staticText>
+		</band>
+	</detail>
+</jasperReport>

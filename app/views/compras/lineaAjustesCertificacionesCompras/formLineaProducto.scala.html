@@ -1,0 +1,131 @@
+@(lineaForm: Form[CertificacionesComprasLineaAjustes])
+@import helper._
+@implicitFieldConstructor = @{ FieldConstructor(simpleInput.render) } 
+
+<script src="@routes.Assets.at("plugins/jquery.numeric_input.min.js")" type="text/javascript"></script>
+
+@views.html.tags.successError()
+<script>
+$(function(){
+	$('#searchProductoModal').modalSearch();
+	$('#searchCuentaAnalitica').modalSearch();
+	$("#descuento, #cantidad").numeric_input();
+	$("#precio").numeric_input({allowNegative: true});
+});
+
+</script>
+
+ <div class="row">
+	@inputText(lineaForm("certificacion_compra_id"), 'type -> "hidden")
+	 
+	<div class="col-sm-6">
+		<label for="producto_nombre" class="control-label">Producto</label>
+		<div class="input-group @if(lineaForm.error("producto_id") != null) {has-error} else {has-required}">
+			@inputText(lineaForm("producto.nombre"), 'class -> "form-control", 'autofocus -> "autofocus", 'id -> "producto_modal")
+			@inputText(lineaForm("producto_id"), 'hidden -> "hidden", 'id -> "producto_id_modal")
+			<span class="input-group-addon">
+				<a href="#" id="searchProductoModal" 
+							data-title="Selección de producto" 
+							data-url="@controllers.compras.routes.ProductosController.modalBuscar()" 
+							data-height="650" 
+							data-width="700" 
+							data-listen="modal.seleccion.producto.simple" 
+							data-label="#producto_modal" 
+							data-field="#producto_id_modal">
+							<i class="glyphicon glyphicon-search"></i>
+				</a>
+			</span>
+		</div>
+		@lineaForm("producto_id").error.map{ error =>
+			<div class="text-error">@error.message</div>
+		}
+	</div>
+	<div class="col-sm-6">
+		<label for="cuenta" class="control-label">Cuenta analitica</label>
+		<div class="input-group @if(lineaForm.error("cuenta_analitica_id") != null) {has-error} else {has-required}">
+			@inputText(lineaForm("cuentaAnalitica.nombre"), 'class -> "form-control", 'id -> "cuentaAnalitica")
+			@inputText(lineaForm("cuenta_analitica_id"), 'hidden -> "hidden", 'id -> "cuentaAnalitica_id")
+			<span class="input-group-addon">
+				<a href="#" 
+				   id="searchCuentaAnalitica" 
+				   class="searchModal"
+				   data-title="Selección de Cuenta Analitica" 
+				   data-url="@controllers.contabilidad.routes.CuentasAnaliticasController.modalBuscar()" 
+				   data-height="650" 
+				   data-width="700" 
+				   data-listen="modal.seleccion.cuentaAnalitica.simple" 
+				   data-label="#cuentaAnalitica" data-field="#cuentaAnalitica_id">
+				   <i class="glyphicon glyphicon-search"></i>
+				 </a>
+			</span>
+		</div>
+		@lineaForm("cuenta_analitica_id").error.map{ error =>
+			<div class="text-error">@error.message</div>
+		}
+	</div>
+</div>
+
+<div class="row">
+	<div class="col-sm-3">
+		<label class="control-label">Precio</label>
+		<div class="form-group @if(lineaForm.error("precio") != null) {has-error} else {has-required}">
+			@inputText(lineaForm("precio"), 'class -> "form-control", 'id -> "precio")
+			@lineaForm("precio").error.map{ error => <div class="text-error">@error.message</div>}
+		</div>
+	</div>
+		
+	<div class="col-sm-3">
+		<label for="cantidad" class="control-label">Cantidad</label>
+		<div class="form-group @if(lineaForm.error("cantidad") != null) {has-error} else {has-required}">
+			@inputText(lineaForm("cantidad"), 'class -> "form-control", 'id -> "cantidad")
+			@lineaForm("cantidad").error.map{ error => <div class="text-error">@error.message</div>}
+		</div>
+	</div>
+
+	<div class="col-sm-3"><label class="control-label">UDM</label>
+		<div class="form-group @if(lineaForm.error("udm_id") != null) {has-error} else {has-required}">
+			@select(lineaForm("udm_id"), Udm.find.all().map { p => p.id.toString -> p.nombre}, 'class -> "form-control select", '_default -> "Seleccionar")
+			@lineaForm("udm_id").error.map{ error => <div class="text-error">@error.message</div> }
+		</div>
+	</div>
+	 
+</div>
+<div class="row form-actions">
+    <div class="col-lg-offset-4 col-lg-8">
+      <a href="" class="btn btn-default cancelar" title="Cancelar"><i class="glyphicon glyphicon-floppy-remove"></i> Cancelar</a>
+      <button type="submit" id="btn-guardar-linea-ajuste-cc" class="btn btn-default" title="Guardar Linea"><i class="glyphicon glyphicon-floppy-disk"></i> Guardar</button>
+    </div>
+</div>
+	
+<script>
+$( function(){
+	if($("#producto_modal").length){
+		var options = {
+				script:"/suggestProducto/",
+				varname:"",
+				json:true,
+				shownoresults:true,
+				maxresults:6,
+				callback: function (obj) { 
+											$("#producto_id_modal").val(obj.id); 
+										 }
+			};
+		var as_json = new bsn.AutoSuggest('producto_modal', options);
+	}
+	
+	if($("#cuentaAnalitica").length){
+		var options = {
+				script:"/contabilidad/suggestCuentaAnalitica/",
+				varname:"",
+				json:true,
+				shownoresults:true,
+				maxresults:6,
+				callback: function (obj) { 
+											$("#cuentaAnalitica_id").val(obj.id); 
+										 }
+			};
+		var as_json = new bsn.AutoSuggest('cuentaAnalitica', options);
+	}
+})
+</script>	
+	

@@ -1,0 +1,168 @@
+@(formBuscador: Form[Balance])
+@import helper._
+@implicitFieldConstructor = @{ FieldConstructor(simpleInput.render) } 
+																			
+@helper.form(action = controllers.contabilidad.routes.BalanceController.agregarMovimientoBalance(), 'id -> "formAgregarMovimientoBalance") {	
+
+<script>
+$(function(){
+	$('#searchCuenta').modalSearch();
+	$("#debito,#deposito").numeric_input();
+ 	$(".inputDateMascara").mask("99/99/9999");
+});
+</script>
+@views.html.tags.successError()
+	<div class="row">
+		 
+			
+			<div class="col-sm-2">	
+				<div class="form-group @if(formBuscador.error("fecha") != null) {has-error} else {has-required}">
+					<label for="inputFecha" class="control-label">Fecha</label> 
+					@inputText(formBuscador("fecha"),'class -> "form-control date inputDateMascara")
+				</div>
+				@formBuscador("fecha").error.map{ error =>
+					<div class="text-error">@error.message</div>
+				}
+			</div>
+			
+			 
+			
+			<div class="col-sm-4">
+				<div class="form-group @if(formBuscador.error("cuenta_propia_id") != null) {has-error} else {has-required}">
+					<label class="control-label">Cuenta</label>
+					@select(formBuscador("cuenta_propia_id"),CuentaPropia.find.all().map { p => p.id.toString -> p.nombre},'class -> "form-control select", '_default -> "Seleccionar") 	
+				</div>
+				@formBuscador("cuenta_propia_id").error.map{ error =>
+					<div class="text-error">@error.message</div>
+				}
+			</div>
+			
+			
+			<div class="col-sm-4">
+				
+				<div class="form-group @if(formBuscador.error("cuenta_id") != null) {has-error}else{has-required}">
+					<label for="inputCuenta" class="control-label">Cuenta</label> 
+					<div class="input-group">
+					@inputText(formBuscador("cuenta.nombre"),'class -> "form-control",'id -> "cuenta")
+					@inputText(formBuscador("cuenta_id"),'hidden -> "hidden",'id -> "cuenta_id")
+					
+					
+					<span class="input-group-addon"><a href="#" id="searchCuenta" 
+																data-title="Selección de expediente" 
+																data-url="@controllers.contabilidad.routes.CuentasController.modalBuscar()" 
+																data-height="650" data-width="700" 
+																data-listen="modal.seleccion.cuenta.simple" 
+																data-label="#cuenta" data-field="#cuenta_id">
+																<i class="glyphicon glyphicon-search"></i></a></span>
+					</div>
+				</div>
+				@formBuscador("cuenta_id").error.map{ error =>
+					<div class="text-error">@error.message</div>
+				}
+			</div>
+		 
+		 
+		  
+	 
+		 
+	</div>				 
+		
+		
+		
+	 
+	<div class="row">	
+		 
+			<div class="col-sm-3">
+				<label class="control-label">Importe DEBE</label>
+				<div class="form-group @if(formBuscador.error("debe") != null) {has-error} else {has-required}">
+					@inputText(formBuscador("debe"), 'class -> "form-control",'id -> "debe")
+					@formBuscador("debe").error.map{ error => <div class="text-error">@error.message</div>}
+				</div>
+			</div>
+			<div class="col-sm-3">
+				<label class="control-label">Importe HABER</label>
+				<div class="form-group @if(formBuscador.error("haber") != null) {has-error} else {has-required}">
+					@inputText(formBuscador("haber"), 'class -> "form-control",'id -> "haber")
+					@formBuscador("haber").error.map{ error => <div class="text-error">@error.message</div>}
+				</div>
+			</div>
+		 
+	</div>	
+
+	<div class="row">	
+		<div class="col-sm-2">
+			<div class="form-group">
+				<label class="control-label">Estado</label>
+				@select(formBuscador("estado_id"), options("25"->"Conciliado","26"->"Cancelado"), 'class -> "form-control select")
+			</div>
+			
+		</div>
+		
+	</div>
+	
+	<div class="row">
+		<div class="col-sm-4 col-sm-offset-4">
+			<button type="submit" class="btn btn-default"><i class="glyphicon glyphicon-floppy-disk"></i> Guardar</button>
+			<a href="" class="btn btn-default cancelar"><i class="glyphicon glyphicon-floppy-remove"></i>Cancelar</a>
+		</div>
+	</div>
+ 
+@flash().clear()
+<script>
+$( function(){
+	if($("#proveedor_modal").length){
+		var options = {
+				script:"/suggestProveedor/",
+				varname:"",
+				json:true,
+				shownoresults:true,
+				maxresults:6,
+				callback: function (obj) { 
+											$("#proveedor_id_modal").val(obj.id); 
+										 }
+			};
+		var as_json = new bsn.AutoSuggest('proveedor_modal', options);
+	}	
+	
+	if($("#cuenta").length){
+		var options = {
+				script:"/contabilidad/suggestCuenta/",
+				varname:"",
+				json:true,
+				shownoresults:true,
+				maxresults:6,
+				callback: function (obj) { 
+											$("#cuenta_id").val(obj.id); 
+										 }
+			};
+		var as_json = new bsn.AutoSuggest('cuenta', options);
+	}	
+if($("#expediente_modal").length){
+	var options = {
+			script:"/suggestExpediente/",
+			varname:"",
+			json:true,
+			shownoresults:true,
+			maxresults:6,
+			callback: function (obj) { 
+										$("#expediente_id_modal").val(obj.id); 
+									 }
+		};
+	var as_json = new bsn.AutoSuggest('expediente_modal', options);
+}	
+if($("#orden_pago_modal").length){
+	var options = {
+			script:"/contabilidad/suggestOrdenPago/",
+			varname:"",
+			json:true,
+			shownoresults:true,
+			maxresults:6,
+			callback: function (obj) { 
+										$("#orden_pago_id_modal").val(obj.id); 
+									 }
+		};
+	var as_json = new bsn.AutoSuggest('orden_pago_modal', options);
+}	
+});
+</script>
+}

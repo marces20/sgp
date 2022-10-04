@@ -1,0 +1,9 @@
+@(lineaForm: Form[OrdenLineaAjuste],linea:OrdenLineaAjuste)
+@import helper._
+@implicitFieldConstructor = @{ FieldConstructor(simpleInput.render) } 
+
+@helper.form(action = controllers.compras.routes.OrdenesLineasAjustesController.guardar()) {
+	
+	@views.html.compras.lineasAjustesOrdenes.formLineaAjuste(lineaForm,linea)
+	
+}

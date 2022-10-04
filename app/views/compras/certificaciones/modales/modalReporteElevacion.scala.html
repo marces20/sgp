@@ -1,0 +1,23 @@
+@(url: String = null)
+
+@if(flash.containsKey("error")) {
+	<div class="alert alert-danger"><i class="glyphicon glyphicon-remove-sign"></i> @flash.get("error")</div>
+}
+
+@if(flash.containsKey("success")) {
+	<div class="alert alert-success"><i class="glyphicon glyphicon-ok-circle"></i> @flash.get("success")</div>
+}
+
+
+@if(url) {
+	<div class="panel panel-default">
+		<div class="panel-body">
+	    	<i class="glyphicon glyphicon-save"></i> 
+	    	<a href="@controllers.contabilidad.routes.FacturasAccionesController.descargar322(url)">
+	    	Descargar archivo Elevacion
+	    	</a>
+		</div>
+	</div>
+}
+
+@flash().clear()

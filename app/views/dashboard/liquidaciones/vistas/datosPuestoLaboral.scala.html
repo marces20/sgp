@@ -1,0 +1,10 @@
+@(pl:models.haberes.PuestoLaboral)
+@import helper._
+@import utils._
+@import models.auth._
+@implicitFieldConstructor = @{ FieldConstructor(simpleInput.render) }
+
+
+<h4>@pl.legajo.agente.apellido</h4>
+<h4><b>Especialidad:</b> @pl.legajo.agente.especialidad.nombre</h4>
+<h4><b>Depto/Servicio:</b>@if(pl.legajo.agente.organigrama != null){ @pl.legajo.agente.organigrama.nombre}</h4>

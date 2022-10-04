@@ -1,0 +1,137 @@
+@(lcForm: Form[Dispo],lc:Dispo)
+@import helper._
+@import utils._
+@import models.auth._
+@scripts = {
+	<script src="@routes.Assets.at("javascripts/expediente/expediente.js")" type="text/javascript"></script>
+}
+@implicitFieldConstructor = @{ FieldConstructor(simpleInput.render) } 
+
+@views.html.expediente.mainExpediente("Vista Disposicion",scripts) {
+	<div class="page-header">
+		<div class="row">
+			<div class="col-sm-3">
+				<h1>Vista Disposicion</h1>
+			</div>
+			<div class="col-sm-4">
+				 
+			</div>
+			<div class="col-sm-5">
+				<div class="dropdown pull-right btn-header">
+				 <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown">
+				 	<i class="glyphicon glyphicon-list-alt"></i>
+				    Reportes
+				    <span class="caret"></span>
+				  </button>
+				  <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
+				  </ul>
+				</div>
+				
+				<div class="dropdown pull-right btn-header">
+				 <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown">
+				 	<i class="glyphicon glyphicon-list-alt"></i>
+				    Acciones
+				    <span class="caret"></span>
+				  </button>
+				  <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
+				  
+				  </ul>
+				</div>
+				
+				<div class="pull-right btn-header">
+					<a href="@controllers.expediente.routes.DisposController.crear()"  class="btn btn-default"><i class="glyphicon glyphicon-plus-sign"></i> Nueva Disposicion</a>
+				</div>
+			</div>
+		</div>
+	</div>		
+@views.html.tags.successError()	
+	<div class="row menu-acciones">
+		<div class="col-sm-4">
+			<a href="@controllers.expediente.routes.DisposController.editar(lc.id)"  class="btn btn-default"><i class="glyphicon glyphicon-edit"></i> Editar</a>
+			<a href="@controllers.expediente.routes.DisposController.eliminar(lc.id)"  class="btn btn-default delete-confirm-link"><i class="glyphicon glyphicon-trash icono-eliminar"></i> Eliminar</a>
+		</div>
+		<div class="col-sm-6">
+				
+		</div>
+		<div class="col-sm-2">
+			<a href="@UriTrack.getOnNull(controllers.expediente.routes.DisposController.index().absoluteURL())" class="btn btn-default"><i class="glyphicon glyphicon-list"></i></a> 
+		</div> 
+	</div>	
+	
+	<input type="hidden" id="dispoId" name="dispoId" value="@lc.id"/>
+	<div class="row">
+		<div class="col-sm-2">
+			<div class="form-group">
+				<label class="control-label">Numero</label>
+				<p class="form-control-static form-control">@lcForm.field("numero").value</p>
+			</div>
+		</div>
+		<div class="col-sm-2">
+			<div class="form-group">
+				<label class="control-label">Expediente</label>
+				<p class="form-control-static form-control">@if(lc.expediente != null){@lc.expediente.getExpedienteEjercicio()}</p>
+			</div>
+		</div>
+		<div class="col-sm-2">
+			<div class="form-group ">
+				<label class="control-label">Fecha</label>
+				<p class="form-control-static form-control">@(utils.DateUtils.formatDate(lc.fecha))</p>
+			</div>
+		</div>
+		<div class="col-sm-2">
+			<div class="form-group">
+				<label for="creacion_orden_compra" class="control-label"> Institucion</label>
+				<p class="form-control-static form-control">
+					
+					 
+					@lc.organigrama_id.toString match {
+				    	case "1" => {PARQUE}
+				    	case "3" => {HEARM}
+				    	case _ => {}
+					}
+				</p>
+			</div>
+		</div>
+		<div class="col-sm-2">
+			<div class="form-group ">
+				<label class="control-label">Fecha Creacion</label>
+				<p class="form-control-static form-control">@(utils.DateUtils.formatDate(lc.create_date))</p>
+			</div>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-sm-7">
+			<div class="form-group">
+				<label class="control-label">Descripcion</label>
+				<p class="form-control-static form-control">@lcForm.field("descripcion").value</p>
+			</div>
+		</div> 
+	</div>  
+	<div class="row">
+		<div class="col-sm-7">
+			<div class="form-group">
+				<label class="control-label">Motivo Baja</label>
+				<p class="form-control-static form-control">@lcForm.field("motivo_baja").value</p>
+			</div>
+		</div> 
+	</div>  
+	
+	<h4>Estado actual: 	<b>@lc.estado.nombre</b></h4>
+	<div class="row margin-bottom-25">	
+	
+		@if(lc.estado.id == models.Estado.DISPO_ACTIVA) {
+			<div class="col-sm-3">
+				<a href="@controllers.expediente.routes.DisposController.cambiarEstado(lcForm.field("id").value.toInt, models.Estado.DISPO_DESACTIVA)@UriTrack.get("&")" class="btn btn-default btn-disable-onclick">
+					<i class="glyphicon glyphicon-arrow-right"></i> Pasar a No Activa
+				</a>
+			</div>
+		}else{
+			<div class="col-sm-3">
+				<a href="@controllers.expediente.routes.DisposController.cambiarEstado(lcForm.field("id").value.toInt, models.Estado.DISPO_ACTIVA)@UriTrack.get("&")" class="btn btn-default btn-disable-onclick">
+					<i class="glyphicon glyphicon-minus-sign"></i>  Pasar a Activa
+				</a>
+			</div>
+		}
+	</div>
+	 
+}

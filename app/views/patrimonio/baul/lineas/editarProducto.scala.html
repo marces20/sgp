@@ -1,0 +1,9 @@
+@(lineaForm: Form[RemitoLineaBaul])
+@import helper._
+@implicitFieldConstructor = @{ FieldConstructor(simpleInput.render) } 
+
+@helper.form(action = controllers.patrimonio.routes.RemitosLineasBaulController.actualizar()) {
+	@views.html.patrimonio.baul.lineas.formProducto(lineaForm)
+	@inputText(lineaForm("id"), 'hidden -> "hidden")
+	@inputText(lineaForm("remito_baul_id"), 'hidden -> "hidden")
+}

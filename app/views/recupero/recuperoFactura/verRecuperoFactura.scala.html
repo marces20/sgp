@@ -1,0 +1,118 @@
+@(recuperoFacturaForm: Form[models.recupero.RecuperoFactura], recuperoFactura: models.recupero.RecuperoFactura)
+@import utils._
+@import helper._
+@implicitFieldConstructor = @{ FieldConstructor(simpleInput.render) } 
+
+
+@views.html.recupero.mainRecupero("Vista de factura") {
+	<div class="page-header">
+		<div class="row">
+			<div class="col-sm-7">
+				<h1>Vista de factura</h1>
+			</div>
+			<div class="col-sm-5">
+				<div class="dropdown pull-right">
+				 <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown">
+				 	<i class="glyphicon glyphicon-list-alt"></i>
+				    Reportes
+				    <span class="caret"></span>
+				  </button>
+				  <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
+					<li role="presentation"><a role="menuitem" tabindex="-1" href="@controllers.recupero.routes.RecuperoReportesController.imprimirFactura(recuperoFactura.id)">Imprimir factura</a></li>
+				  </ul>
+				</div>
+				
+				<div class="dropdown pull-right btn-header">
+				 <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown">
+				 	<i class="glyphicon glyphicon-cog"></i>
+				    Acciones
+				    <span class="caret"></span>
+				  </button>
+				  <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
+				  	
+				  </ul>
+				</div>
+
+			</div>
+		</div>
+	</div>
+	
+@views.html.tags.successError()
+
+<div class="row menu-acciones">
+	<div class="col-sm-9">
+		<a href="@controllers.recupero.routes.RecuperoFacturasController.crear()@UriTrack.get("?")"  class="btn btn-default"><i class="glyphicon glyphicon-plus-sign"></i> Nuevo</a>
+		<a href="@controllers.recupero.routes.RecuperoFacturasController.editar(recuperoFactura.id)@UriTrack.get("&")"  class="btn btn-default"><i class="glyphicon glyphicon-edit"></i> Editar</a>
+		<a href="@controllers.recupero.routes.RecuperoFacturasController.eliminar(recuperoFactura.id)@UriTrack.get("&")"  class="btn btn-default delete-confirm-link"><i class="glyphicon glyphicon-trash icono-eliminar"></i> Eliminar</a>
+	</div>
+	<div class="col-sm-3">
+		<a href="@UriTrack.getOnNull(controllers.recupero.routes.RecuperoFacturasController.index().absoluteURL())" class="btn btn-default"><i class="glyphicon glyphicon-list"></i></a>
+	</div>
+</div>
+	@inputText(recuperoFacturaForm("id"), 'type -> "hidden", 'id -> "recuperoFacturaId")
+	<div class="row">
+		<div class="col-sm-2">
+			<label class="control-label">Nombre</label>
+			<p class="form-control-static form-control">@recuperoFactura.nombre</p>
+		</div>
+		<div class="col-sm-3">
+			<label class="control-label">Numero</label>
+			<p class="form-control-static form-control">@recuperoFactura.getNumeroFactura()</p>
+		</div>
+		 
+		<div class="col-sm-4">
+			<label class="control-label">Cliente</label> 
+			<p class="form-control-static form-control" style="height: 25px; overflow: hidden;">
+				@recuperoFacturaForm("cliente.nombre").value
+			</p>
+		</div>
+	</div>	
+	<div class="row">	
+		<div class="col-sm-2">
+			<label class="control-label">Planilla</label>
+			<p class="form-control-static form-control">
+			@if(recuperoFactura.planilla_id != null){
+				@recuperoFactura.planilla.getRecuperoPlanillaEjercicio()
+			}
+			</p>
+		</div>	
+		<div class="col-sm-2">
+			<label class="control-label">Fecha factura</label>
+			<p class="form-control-static form-control">@recuperoFacturaForm("fecha").value</p>
+		</div>
+	</div>
+		
+	@views.html.recupero.recuperoFactura.tabsRecuperoFactura(false, recuperoFacturaForm,recuperoFactura)
+	<!-- <h4>Total: 	   <b>@utils.NumberUtils.moneda(recuperoFactura.getBase())</b></h4>	
+	<h4>Estado actual: 	<b>@recuperoFactura.estado.nombre</b></h4>-->
+	 
+	<div class="row">	
+	
+		@for(estado <- models.Estado.getSiguienteEstadoPorAprobar(recuperoFactura.estado.orden,models.Estado.TIPO_RECUPERO_FACTURA)) {	
+			@if(estado.orden <= 4) {
+				<div class="col-sm-3">
+					<a href="@controllers.recupero.routes.RecuperoFacturasController.cambiarEstado(recuperoFacturaForm.field("id").value.toInt, estado.id.toLong)@UriTrack.get("&")" class="btn btn-default">
+						<i class="glyphicon glyphicon-arrow-right"></i> @estado.nombre
+					</a>
+				</div>
+				
+			}
+		} 
+		
+		@if(recuperoFactura.estado.id == models.Estado.RECUPERO_FACTURA_CANCELADO) {
+			<div class="col-sm-3">
+				<a href="@controllers.recupero.routes.RecuperoFacturasController.cambiarEstado(recuperoFacturaForm.field("id").value.toInt, models.Estado.RECUPERO_FACTURA_BORRADOR)@UriTrack.get("&")" class="btn btn-default">
+					<i class="glyphicon glyphicon-arrow-right"></i> Volver a Borrador
+				</a>
+			</div>
+		}else{
+			<div class="col-sm-3">
+				<a href="@controllers.recupero.routes.RecuperoFacturasController.cambiarEstado(recuperoFacturaForm.field("id").value.toInt, models.Estado.RECUPERO_FACTURA_CANCELADO)@UriTrack.get("&")" class="btn btn-default">
+					<i class="glyphicon glyphicon-minus-sign"></i> Cancelar Factura
+				</a>
+			</div>
+		}
+	</div>
+}
+
+

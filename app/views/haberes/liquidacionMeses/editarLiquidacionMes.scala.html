@@ -1,0 +1,22 @@
+@(lmForm: Form[models.haberes.LiquidacionMes])
+@import helper._
+@implicitFieldConstructor = @{ FieldConstructor(simpleInput.render) }
+
+@views.html.haberes.mainHaberes("Modificar Liquidacion") {
+
+	<div class="page-header">
+		<div class="row">
+			<div class="col-sm-10">
+				<h1>Editar Liquidacion</h1>
+			</div>
+		</div>
+	</div>
+	
+	@views.html.tags.successError()
+	
+	@helper.form(action = controllers.haberes.routes.LiquidacionMesesController.actualizar()) {
+		@inputText(lmForm("id"), 'hidden -> "hidden")
+		@views.html.haberes.liquidacionMeses.formLiquidacionMes(lmForm)
+	}
+
+}

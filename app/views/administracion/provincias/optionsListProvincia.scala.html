@@ -1,0 +1,3 @@
+@(provincias: List[Provincia])
+<option value>Seleccionar</option>
+@for(p <- provincias) {<option value="@p.id.toString">@p.nombre</option>}

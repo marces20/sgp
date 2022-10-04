@@ -1,0 +1,70 @@
+@(detalleForm: Form[models.haberes.LiquidacionDetalle])
+@import helper._
+@implicitFieldConstructor = @{ FieldConstructor(simpleInput.render) } 
+
+
+
+@if(flash.containsKey("error")) {
+	<div class="alert alert-danger">
+		<i class="glyphicon glyphicon-remove-sign"></i> @flash.get("error")
+	</div>
+}
+<script>
+$(function(){
+	$('.searchModal').modalSearch();
+	$("#cantidad").numeric_input();
+	$("#importe").numeric_input({allowNegative: true});
+});
+</script>
+ 
+<div class="row">
+	@inputText(detalleForm("liquidacion_puesto_id"), 'type -> "hidden")
+	<div class="col-sm-6">
+		<label for="concepto_nombre" class="control-label">Concepto</label>
+		<div class="input-group @if(detalleForm.error("liquidacion_concepto_id") != null) {has-error} else {has-required}">
+			@inputText(detalleForm("liquidacionConcepto.denominacion"), 'class -> "form-control", 'autofocus -> "autofocus", 'id -> "liquidacion_concepto_modal")
+			@inputText(detalleForm("liquidacion_concepto_id"), 'hidden -> "hidden", 'id -> "liquidacion_concepto_id_modal")
+			<span class="input-group-addon">
+				<a href="#" class="searchModal" id="searchProductoModal" 
+							data-title="Selección de Concepto" 
+							data-url="@controllers.haberes.routes.LiquidacionConceptosController.modalBuscar()"
+							data-height="650" 
+							data-width="700" 
+							data-listen="modal.seleccion.concepto.simple" 
+							data-label="#liquidacion_concepto_modal" 
+							data-field="#liquidacion_concepto_id_modal">
+							<i class="glyphicon glyphicon-search"></i>
+				</a>
+			</span>
+		</div>
+		@detalleForm("liquidacion_concepto_id").error.map{ error =>
+			<div class="text-error">@error.message</div>
+		}
+	</div>
+	<div class="col-sm-3">
+		<label class="control-label">Importe</label>
+		<div class="form-group @if(detalleForm.error("importe") != null) {has-error} else {has-required}">
+			@inputText(detalleForm("importe"), 'class -> "form-control", 'id -> "importe")
+			@detalleForm("importe").error.map{ error => <div class="text-error">@error.message</div>}
+		</div>
+	</div>
+	<div class="col-sm-3">
+		<label for="cantidad" class="control-label">Cantidad</label>
+		<div class="form-group @if(detalleForm.error("cantidad") != null) {has-error} else {has-required}">
+			@inputText(detalleForm("cantidad"), 'class -> "form-control", 'id -> "cantidad")
+			@detalleForm("cantidad").error.map{ error => <div class="text-error">@error.message</div>}
+		</div>
+	</div>
+</div>
+<div class="row form-actions">
+    <div class="col-lg-offset-4 col-lg-8">
+      <button type="submit" class="btn btn-default"><i class="glyphicon glyphicon-floppy-disk"></i>Guardar</button>	
+      <a href="" class="btn btn-default cancelar"><i class="glyphicon glyphicon-floppy-remove"></i>Cancelar</a>
+    </div>
+</div>
+<script>
+$( function(){
+	
+	
+});
+</script>

@@ -1,0 +1,28 @@
+@(agenteSeguimientoForm: Form[AgenteSeguimiento],agenteSeguimiento:AgenteSeguimiento)
+@import helper._
+@scripts = {
+	<script src="@routes.Assets.at("javascripts/rrhh/agentes.js")" type="text/javascript"></script>
+}
+@views.html.rrhh.mainRrhh("Crear Agente Seguimiento",scripts) {
+
+	<div class="page-header">
+		<div class="row">
+			<div class="col-sm-7">
+				<h1>Crear nuevo Seguimiento</h1>
+			</div>
+			
+			<div class="col-sm-5">
+			</div>
+		</div>
+	</div>
+	@if(flash.containsKey("error")) {
+		<div class="alert alert-danger">
+			@flash.get("error")
+		</div>
+    }
+    
+    @helper.form(action = controllers.rrhh.routes.AgentesSeguimientoController.guardarAgenteSeguimiento()) {
+		@views.html.rrhh.agenteSeguimientos.formAgenteSeguimiento(agenteSeguimientoForm,agenteSeguimiento)
+		@views.html.rrhh.agenteSeguimientos.tabsAgenteSeguimiento(false, agenteSeguimientoForm,agenteSeguimiento)
+	}
+}	

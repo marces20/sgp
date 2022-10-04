@@ -1,0 +1,107 @@
+@(lineaForm: Form[ProveedorDatoDgr],linea:ProveedorDatoDgr)
+@import helper._
+@implicitFieldConstructor = @{ FieldConstructor(simpleInput.render) } 
+
+@if(flash.containsKey("error")) {
+	<div class="alert alert-danger">
+		<i class="glyphicon glyphicon-remove-sign"></i> @flash.get("error")
+	</div>
+}
+
+<script>
+$(function(){
+	$("#descuento, #cantidad").numeric_input();
+	$("#periodo_fiscal").mask("999999");
+	$("#regimen").mask("999");
+	$("#alicuota").mask("99.99");
+	$("#numero_documento").mask("99999999");
+});
+</script>
+ <div class="row">
+	@inputText(lineaForm("cuit"), 'type -> "hidden")
+	 
+	<div class="col-sm-2">
+		<label class="control-label">Periodo</label>
+		<div class="form-group @if(lineaForm.error("periodo_fiscal") != null) {has-error} else {has-required}">
+			@inputText(lineaForm("periodo_fiscal"), 'class -> "form-control", 'id -> "periodo_fiscal")
+			@lineaForm("periodo_fiscal").error.map{ error => <div class="text-error">@error.message</div>}
+		</div>
+	</div> 
+	
+	<div class="col-sm-2">
+		 
+		<div class="form-group @if(lineaForm.error("proveedor_dgr_dato_regimen_id") != null) {has-error}else{has-required}">
+			<label for="@lineaForm("proveedor_dgr_dato_regimen_id")" class="control-label">Regimen</label>
+			@select(lineaForm("proveedor_dgr_dato_regimen_id"), 
+			ProveedorDatoDgrRegimen.find.all().map { p => p.id.toString -> p.descripcion}, 
+			'class -> "form-control select", '_default -> "Seleccionar"), 
+			
+			@lineaForm("proveedor_dgr_dato_regimen_id").error.map{ error =>
+				<div class="text-error">@error.message</div>
+			}
+		</div>
+	</div> 
+	<div class="col-sm-2">
+		<label class="control-label">Alicuota</label>
+		<div class="form-group @if(lineaForm.error("alicuota") != null) {has-error} else {has-required}">
+			@inputText(lineaForm("alicuota"), 'class -> "form-control", 'id -> "alicuota")
+			@lineaForm("alicuota").error.map{ error => <div class="text-error">@error.message</div>}
+		</div>
+	</div> 
+	<div class="col-sm-6">
+		<label class="control-label">Razon Social</label>
+		<div class="form-group @if(lineaForm.error("razon_social") != null) {has-error} else {has-required}">
+			@inputText(lineaForm("razon_social"), 'class -> "form-control", 'id -> "razon_social")
+			@lineaForm("razon_social").error.map{ error => <div class="text-error">@error.message</div>}
+		</div>
+	</div> 
+	 
+</div>	
+<div class="row">	
+	 
+	<div class="col-sm-2">
+		<div class="form-group @if(lineaForm.error("proveedor_dgr_dato_motivo_id") != null) {has-error}else{has-required}">
+			<label for="@lineaForm("proveedor_dgr_dato_motivo_id")" class="control-label">Motivo</label>
+			@select(lineaForm("proveedor_dgr_dato_motivo_id"), 
+			ProveedorDatoDgrMotivo.find.all().map { p => p.id.toString -> p.descripcion}, 
+			'class -> "form-control select", '_default -> "Seleccionar"), 
+			
+			@lineaForm("proveedor_dgr_dato_motivo_id").error.map{ error =>
+				<div class="text-error">@error.message</div>
+			}
+		</div>
+	</div> 
+	
+	<div class="col-sm-4">
+		<label class="control-label">Tipo Contr.</label>
+		<div class="form-group @if(lineaForm.error("tipo_contribuyente") != null) {has-error} else {has-required}">
+			@inputText(lineaForm("tipo_contribuyente"), 'class -> "form-control", 'id -> "tipo_contribuyente")
+			@lineaForm("tipo_contribuyente").error.map{ error => <div class="text-error">@error.message</div>}
+		</div>
+	</div> 
+	
+	<div class="col-sm-2">
+		<label class="control-label">Tipo Doc.</label>
+		<div class="form-group @if(lineaForm.error("tipo_documento") != null) {has-error} else {has-required}">
+			@inputText(lineaForm("tipo_documento"), 'class -> "form-control", 'id -> "tipo_documento")
+			@lineaForm("tipo_documento").error.map{ error => <div class="text-error">@error.message</div>}
+		</div>
+	</div>
+	
+	<div class="col-sm-2">
+		<label class="control-label">N° Doc.</label>
+		<div class="form-group @if(lineaForm.error("numero_documento") != null) {has-error} else {has-required}">
+			@inputText(lineaForm("numero_documento"), 'class -> "form-control", 'id -> "numero_documento")
+			@lineaForm("numero_documento").error.map{ error => <div class="text-error">@error.message</div>}
+		</div>
+	</div>
+	
+</div>
+
+
+<div class="row margin-top-20">
+	<div class="col-sm-4 col-sm-offset-4">
+		<button type="submit" class="btn btn-default"><i class="glyphicon glyphicon-floppy-disk"></i> Guardar</button>
+		<a href="" class="btn btn-default cancelar"><i class="glyphicon glyphicon-floppy-remove"></i>Cancelar</a>
+	</div>
+</div>

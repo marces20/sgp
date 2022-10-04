@@ -1,0 +1,24 @@
+<div class="row"  style="">
+	<nav class="navbar navbar-default" role="navigation">
+		<div class="container-fluid">
+			<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+		      <ul class="nav navbar-nav">
+		      	<li class="dropdown">
+		          <a href="#" class="dropdown-toggle" data-toggle="dropdown">Reportes Financieros <b class="caret"></b></a>
+		          <ul class="dropdown-menu">
+		          	<li><a href="@controllers.dashboard.routes.MovimientosCuentasController.resumenFinancieroGeneral()">Resumen Financiero General</a></li>
+		          	<li><a href="@controllers.dashboard.routes.MovimientosCuentasController.resumenFinancieroDetalle()">Resumen Financiero por Tipo Orden</a></li>
+		          	<li><a href="@controllers.dashboard.routes.MovimientosCuentasController.resumenFinancieroDetallePorInstitucion()">Resumen Financiero por Institucion</a></li>
+		          </ul>
+		        </li>
+		        <li class="dropdown">
+		          <a href="#" class="dropdown-toggle" data-toggle="dropdown">Conciliacion<b class="caret"></b></a>
+		          <ul class="dropdown-menu">
+		          	<li><a href="@controllers.dashboard.routes.MovimientosCuentasController.conciliacion()">Conciliacion</a></li>
+		          </ul>
+		        </li>
+		      </ul>
+		    </div>  
+		</div>
+	</nav>
+</div>

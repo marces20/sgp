@@ -1,0 +1,8 @@
+@(lineaForm: Form[FacturaLinea])
+@import helper._
+@implicitFieldConstructor = @{ FieldConstructor(simpleInput.render) } 
+
+@helper.form(action = controllers.contabilidad.routes.FacturasLineasController.guardar()) {
+	@views.html.contabilidad.facturasLineas.formLineaProducto(lineaForm)
+	 
+}

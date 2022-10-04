@@ -1,0 +1,92 @@
+@(listaFinal:List[com.avaje.ebean.SqlRow],formBuscador: DynamicForm,idCuenta:Integer)
+@import java.math.BigDecimal;var ptmpcompromiso=new java.math.BigDecimal(0);var ptmpdeuda=new java.math.BigDecimal(0);var mtdoh=new java.math.BigDecimal(0);var mtcoh=new java.math.BigDecimal(0);var mtdoo=new java.math.BigDecimal(0);var mtcoo=new java.math.BigDecimal(0);var mtdos=new java.math.BigDecimal(0);var mtcos=new java.math.BigDecimal(0);var mtdph=new java.math.BigDecimal(0);var mtcph=new java.math.BigDecimal(0);var mtdpo=new java.math.BigDecimal(0);var mtcpo=new java.math.BigDecimal(0);var mtdps=new java.math.BigDecimal(0);var mtcps=new java.math.BigDecimal(0)
+@import java.lang.Integer;var proveedorId =0;var bandera =0;var xx =0
+@import java.lang.String;var institucionNombre ="";var fecha ="";var proveedor =""
+@views.html.dashboard.mainDashboard("Deudas Detalles Por Cuenta") {
+
+@views.html.dashboard.deudasPorAntiguedad.navdeudas(formBuscador)
+
+<div class="page-header">
+	<div class="row">
+		<div class="col-sm-7">
+			<h1>Deudas Detalles por Cuenta</h1>
+		</div>
+		
+		<div class="col-sm-5">
+			<div class="dropdown pull-right">
+			 <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown">
+			 	<i class="glyphicon glyphicon-list-alt"></i>
+			    Reportes
+			    <span class="caret"></span>
+			  </button>
+			  <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
+			  	<li role="presentation">
+				  <a id="" role="menuitem" tabindex="-1" 
+				  href="@controllers.dashboard.routes.DeudasPorAntiguedadReportesController.deudasDetallesReporte(0,false,idCuenta,true)">Reporte Excel</a></li>
+			  	
+			  </ul>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div class="row"  style="">
+	<div class="col-sm-12" style="">
+		 
+			@if(listaFinal != null){
+				@if(listaFinal.size() > 0){
+					<table class="table table-striped table-bordered table-hover" id="listaInforme">
+						@views.html.dashboard.deudasPorAntiguedad.tablaDetalles("OPERATIVA","",proveedor)
+						<tbody>
+							
+							@for(s <- listaFinal){
+								@{xx = 1}
+								 
+								
+								@{ptmpdeuda = ptmpdeuda.add(s.getBigDecimal("total_deuda"))}
+								 
+								<tr>
+									<td>@s.getInteger("numeroProvision")</td>
+									<td>@(utils.DateUtils.formatDate(s.getDate("fecha")))</td>
+									<td>@s.getString("expediente")</td>
+									<td>@s.getString("nombre_proveedor")</td>
+									<td>@utils.NumberUtils.moneda(s.getBigDecimal("total_deuda"))</td>
+									<td>@s.getString("deposito")</td>
+									<td>@s.getString("rubro")</td>
+									<td>@s.getString("descripcion")</td>
+								</tr>
+								@{mtdoh= mtdoh.add(s.getBigDecimal("total_deuda"))}
+								@{proveedorId = s.getInteger("proveedorId")}
+								@{fecha = s.getString("fecha_mes_ano")}
+								@{institucionNombre = s.getString("deposito")}
+							}
+							
+							
+							@{ptmpdeuda = new java.math.BigDecimal(0)}
+							@{proveedorId =0}
+							@{fecha =""}		
+							@{institucionNombre =""}					
+							@{bandera = 0}
+							@{xx = 0}
+						</tbody>
+						<tfoot>
+							<tr>
+								<td colspan="4" align="right"><b>TOTALES</b></td>
+								<td><b>@utils.NumberUtils.moneda(mtdoh)</b></td>
+								<td></td>
+								<td colspan="2" align="right"></td>
+							</tr>
+						</tfoot>
+					</table>
+				}
+			}
+		 	
+	</div>
+</div>
+
+
+
+
+
+
+}

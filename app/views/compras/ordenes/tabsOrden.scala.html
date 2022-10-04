@@ -1,0 +1,50 @@
+@(formularioCarga: Boolean, ordenForm: Form[Orden] = null)
+<hr />
+<ul id="ordenTab" class="nav nav-tabs">
+	<li class="active"><a class="tabProducto" href="#contenedorProductos" data-toggle="tab">Productos</a></li>
+	<li><a class="tabLineaAjuste" href="#contenedorLineasAjuste" data-toggle="tab">Ajustes</a></li>
+	@if(ordenForm.field("tipo_orden").value != null && ordenForm.field("tipo_orden").value == "comun"){
+	<li><a class="tabProductosAnulados" href="#contenedorProductosAnulados" data-toggle="tab">Producto anulados</a></li>
+	}
+	@if(ordenForm.field("tipo_orden").value != null && ordenForm.field("tipo_orden").value == "servicio"){
+	<li><a class="tabNoCertificados" href="#contenedorNoCertificados" data-toggle="tab">No Certificados</a></li>
+	}
+	<li><a class="tabNotas" href="#contenedorNotas" data-toggle="tab">Notas</a></li>
+	<li><a class="tabDispos" href="#contenedorDispos" data-toggle="tab">Disposiciones</a></li>
+</ul>
+
+
+
+<div class="tab-content">
+
+	<div class="tab-pane active" id="contenedorProductos">
+		@views.html.compras.ordenes.contenidoTabProducto(formularioCarga, ordenForm)	
+	</div>
+	
+	<div class="tab-pane" id="contenedorLineasAjuste">
+		@views.html.compras.ordenes.contenidoTabAjuste(true, ordenForm)	
+	</div>
+	@if(ordenForm.field("tipo_orden").value != null && ordenForm.field("tipo_orden").value == "comun"){
+	<div class="tab-pane" id="contenedorProductosAnulados">
+		@views.html.compras.ordenes.contenidoTabProductosAnulados(formularioCarga, ordenForm)
+	</div>
+	}
+	@if(ordenForm.field("tipo_orden").value != null && ordenForm.field("tipo_orden").value == "servicio"){
+	<div class="tab-pane" id="contenedorNoCertificados">
+		@views.html.compras.ordenes.contenidoTabNoCertificados(formularioCarga, ordenForm)
+	</div>
+	}
+	<div class="tab-pane" id="contenedorNotas">
+		@if(formularioCarga){
+			<textarea name="descripcion" class="form-control" rows="5">@ordenForm.field("descripcion").value</textarea>
+		} else {
+			<textarea name="descripcion" disabled="disabled" class="form-control" rows="5">@ordenForm.field("descripcion").value</textarea>
+		}
+	</div>
+	@if(ordenForm.field("expediente_id").value != null){
+	<div class="tab-pane" id="contenedorDispos">
+		@views.html.expediente.expediente.contenidoTabDispos(ordenForm.field("expediente_id").value.toLong)
+	</div>
+	}
+	
+</div>

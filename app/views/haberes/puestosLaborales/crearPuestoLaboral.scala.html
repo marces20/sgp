@@ -1,0 +1,18 @@
+@(puestoForm: Form[models.haberes.PuestoLaboral])
+@import helper._
+
+@views.html.haberes.mainHaberes("Crear Puesto Laboral") {
+
+	<div class="page-header">
+		<div class="row">
+			<div class="col-sm-10">
+				<h1>Crear nuevo Puesto Laboral</h1>
+			</div>
+		</div>
+	</div>
+	@views.html.tags.successError()
+    
+    @helper.form(action = controllers.haberes.routes.PuestosLaboralesController.guardar()) {
+		@views.html.haberes.puestosLaborales.formPuestoLaboral(puestoForm) 	
+	}
+}

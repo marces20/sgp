@@ -1,0 +1,68 @@
+@(facturaId: Long, listaActas: List[ActaRecepcion])
+@import utils._
+
+
+<div id="modalBusquedaActas" class="contenedorPaginador ajaxPaginador">
+
+
+@if(listaActas.size() == 0) {
+	<div class="well">
+	    <em>No se encuentran actas relacionadas</em>
+	</div>
+} else {
+    	
+		<table id="listaActasModal" class="table table-striped table-bordered table-hover">
+
+			<tbody>
+		        @for(acta <- listaActas) {
+				<tr data-href="@controllers.contabilidad.routes.FacturasController.asignarActasAsociada(facturaId, acta.id)">
+					<td>@acta.numero</td>
+					<td>@if(acta.ejercicio != null) {@acta.ejercicio.nombre}</td>
+					<td>@acta.ordenProvision.ordenCompra.expediente.getExpedienteEjercicio()</td>
+					<td>@utils.NumberUtils.moneda(acta.total)</td>
+					<td>@acta.ordenProvision.numero</td>
+					<td>@acta.ordenProvision.ordenCompra.proveedor.nombre</td>
+					<td>@DateUtils.formatDate(acta.fecha)</td>
+					<td>@if(acta.cierre) {Cierre} else {Parcial}</td>
+				</tr>
+              	}
+			</tbody>
+		</table>
+}
+    
+</div>
+
+<style>
+#listaActasModal tr {cursor: pointer}
+</style>
+
+<script>
+$( function(){
+	var contenedor = $("#modalBusquedaActas");
+	
+
+	$(document).off('click', '#listaActasModal tbody tr');
+	$(document).on('click', '#listaActasModal tbody tr', function(){
+		var url = $(this).attr('data-href');
+		var $this = $(this);
+		$.get(url, function(data){
+			if(data.success) {
+				$('#tabActas').click();
+				modalSeleccionActa.dialog('destroy');
+			} else {
+				alert("No se puede asociar el acta a la factura.");
+			}
+			
+		});
+	});
+	
+	contenedor.find('form').on('submit', function(){
+		var url = $(this).attr("action");
+		var query = $(this).serialize();
+		$.get(url+"?"+query, function(data){
+			contenedor.parent().html(data);
+		});
+		return false;
+	});
+});
+</script>

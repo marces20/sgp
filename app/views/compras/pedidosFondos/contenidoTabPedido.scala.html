@@ -1,0 +1,18 @@
+@(formularioCarga: Boolean, pedidoForm: Form[PedidoFondo] = null)
+@import java.util.List
+
+@if(pedidoForm.field("id").value == null || pedidoForm.field("id").value == ""){
+	<p>Para cargar productos primero debe dar de alta el Pedido</p>
+} else {
+	<script>
+	$( function (){
+		$.get('@controllers.compras.routes.LineasPedidosFondosController.index(pedidoForm.field("id").value.toLong, formularioCarga)', function(data){
+			$('#listaLineaPedidos').parent().html(data);
+		})
+	});
+	</script>
+}
+
+<div id="listaLineaPedidos">
+
+</div>

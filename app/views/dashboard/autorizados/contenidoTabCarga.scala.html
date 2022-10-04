@@ -1,0 +1,378 @@
+@(buscador: utils.pagination.Pagination[models.informes.InformeDeudaProveedoresMaterializada], formBuscador: DynamicForm,idAutorizado:Long,autorizado:Autorizado)
+@import helper._
+@implicitFieldConstructor = @{ FieldConstructor(simpleInput.render) }
+@import java.math.BigDecimal;var resto_autorizar=new java.math.BigDecimal(0); 
+
+<div class="row">
+	<div class="col-sm-9">
+		<h2>Carga de Autorizados por OP</h1>
+	</div>
+</div>
+<div id="contenedorListadoDeudas" class="contenedorPaginador ajaxPaginador">
+	<form action="@controllers.dashboard.routes.AutorizadosController.getListadoDeudas()" method="GET" id="formCargaAutorizados">
+		@inputText(formBuscador("idAutorizado"), 'hidden -> "hidden")
+		<div class="row seccion">
+			
+			<div class="col-sm-4">
+				<label class="control-label">Proveedor
+					<div class="input-group">	
+						@inputText(formBuscador("proveedor_nombre"), 'name -> "", 'autofocus -> "autofocus", 'class -> "form-control", 'id -> "proveedor")
+						@inputText(formBuscador("proveedor_id"), 'hidden -> "hidden", 'id -> "proveedor_id")
+						<span class="input-group-addon">
+							<a href="#" class="searchModal"
+										id="searchProveedor" 
+										data-title="Selección de Proveedores" 
+										data-url="@controllers.compras.routes.ProveedoresController.modalBuscar()" 
+										data-height="650" 
+										data-width="700" 
+										data-listen="modal.seleccion.proveedor.simple" 
+										data-label="#proveedor" 
+										data-field="#proveedor_id">
+								<i class="glyphicon glyphicon-search"></i>
+							</a>
+						</span>
+					</div>
+				</label>
+			</div>
+			
+			<div class="col-sm-2">
+				<label class="control-label">Expediente
+					<div class="input-group">
+						@inputText(formBuscador("expediente.nombre"), 'name -> "", 'class -> "form-control", 'id -> "expediente")
+						@inputText(formBuscador("expediente_id"), 'hidden -> "hidden", 'id -> "expediente_id")
+						
+						<span class="input-group-addon">
+							<a href="#" class="searchModal"
+										id="searchExpediente" 
+										data-title="Selección de expediente" 
+										data-url="@controllers.expediente.routes.ExpedientesController.modalBuscar()" 
+										data-height="650" 
+										data-width="700" 
+										data-listen="modal.seleccion.expediente.simple" 
+										data-label="#expediente" 
+										data-field="#expediente_id">
+								<i class="glyphicon glyphicon-search"></i>
+							</a>
+						</span>
+					</div>
+				</label>
+			</div>  
+				
+			<div class="col-sm-2">
+				<label class="control-label">Ejercicio</label>
+					@select(formBuscador("ejercicio"), Ejercicio.getEjercicios().map { p => p.id.toString -> p.nombre}, 'class -> "form-control select", '_default -> "Seleccionar")
+				
+			</div>	
+			
+		<div class="col-sm-2">
+			<div class="seleccionOrdenRubro">
+				<label for="@formBuscador("rubro_id").id" class="control-label">Rubro</label>
+				@select(formBuscador("rubro_id"), 
+				OrdenRubro.find.all().map { p => p.id.toString -> p.nombre}, 'class -> "form-control select", '_default -> "Seleccionar")
+			</div>
+		</div>
+
+		<!-- <div class="col-sm-2">
+			<label class="control-label"> 
+				Cuenta
+				@select(formBuscador("profe"),options(""->"","profe"->"PROFE","operativa"->"OPERATIVA"), 'class -> "form-control select")
+			</label>
+		</div> --> 
+		<div class="col-sm-2">
+			<label class="control-label"> 
+				Tipo Cuenta
+				@select(formBuscador("tipo_cuenta_id"), 
+				TipoCuenta.find.all().map { p => p.id.toString -> p.nombre}, 'class -> "form-control select", '_default -> "Seleccionar")
+			</label>
+		</div>	
+	</div>
+	
+	<div class="row">
+		 
+		<div class="col-sm-4">
+			<label class="control-label">Institucion
+				<div class="input-group">
+					@inputText(formBuscador("deposito.nombre"),'class -> "form-control", 'id -> "deposito_nombre", 'autocomplete -> "off")
+					@inputText(formBuscador("deposito_id"),'hidden -> "hidden", 'id -> "deposito_id")
+					
+					<span class="input-group-addon">
+						<a href="#" class="searchModal"
+									id="searchExpediente" 
+									data-title="Selección de Institucion" 
+									data-url="@controllers.delegacion.routes.DepositosController.modalBuscar()" 
+									data-height="650" 
+									data-width="700" 
+									data-listen="modal.seleccion.deposito.simple" 
+									data-label="#deposito_nombre" 
+									data-field="#deposito_id">
+							<i class="glyphicon glyphicon-search"></i>
+						</a>
+					</span>
+				</div>
+			</label>
+		</div>  
+		<!-- <div class="col-sm-2">		
+			<div class="form-group">
+				<label for="mayor_a">Deuda entre</label>
+				<div class="input-group">
+					@inputText(formBuscador("deuda_mayor"), 'class -> "form-control", 'id -> "mayor_a", 'placeholder -> "Mayor a")
+					<div class="input-group-addon"> y </div>
+		    		@inputText(formBuscador("deuda_menor"), 'class -> "form-control", 'placeholder -> "Menor a")
+				</div>
+			</div>
+		</div> 	
+				
+		<div class="col-sm-2">		
+			<div class="form-group">
+				<label for="pago_ma">Pago entre</label>
+				<div class="input-group">
+					@inputText(formBuscador("pago_mayor"), 'class -> "form-control", 'id -> "pago_ma", 'placeholder -> "Mayor a")
+					<div class="input-group-addon"> y </div>
+		    		@inputText(formBuscador("pago_menor"), 'class -> "form-control", 'placeholder -> "Menor a")
+				</div>
+			</div>
+		</div>			
+				
+		<div class="col-sm-2">		
+			<div class="form-group">
+				<label for="compromiso_ma">Compromiso entre</label>
+				<div class="input-group">
+					@inputText(formBuscador("compromiso_mayor"), 'class -> "form-control", 'id -> "compromiso_ma", 'placeholder -> "Mayor a")
+					<div class="input-group-addon"> y </div>
+		    		@inputText(formBuscador("compromiso_menor"), 'class -> "form-control", 'placeholder -> "Menor a")
+				</div>
+			</div>
+		</div>		-->		
+			
+				
+		<div class="col-sm-2">
+			<div class="form-group">
+			<label for="nombre" class="control-label">&nbsp;</label>
+			<div id="loadingBtnBuscar" class="loading hide"></div>
+			<button id="BtnBuscar" class="form-control btn btn-primary">Buscar</button>
+			</div>
+		</div>
+		<div class="col-sm-2">
+			 
+		</div>
+			
+		</div>
+    </form>
+
+	@if(buscador.getTotalRowCount == 0) {
+		<div class="well">
+		    <em>No se encuentran resultados</em>
+		</div>
+	} else {
+	    Mostrando @buscador.getDisplayXtoYofZ(" a "," de ") resultado(s). 
+	    	
+		<table class="table table-striped table-bordered table-hover" id="listaInforme">
+			<thead>
+				<tr>
+					<th width="40">Orden</th>
+					<th width="60">Expediente</th>
+					<th width="30">Cuenta</th>
+					<th width="130">Rubro</th>
+					<th width="80">Inst.</th>
+					<th>Proveedor</th>
+					<th width="90">Orden</th>
+					<th width="90">Autorizado</th>
+					<th width="90">Pagado</th>
+					<th width="90">Deuda</th>
+					<th width="30">Compromiso</th>
+					<th>Acta</th>
+					<th>#</th>
+				</tr>
+			</thead>
+			<tbody>
+	    		@for(informe <- buscador.getList) {
+				<tr data-id="@informe.id" class="modalSeleccionIniciadorExpediente">
+					<td>@informe.numero_orden_provision
+						<br>@if(informe.tipo_moneda != null){<span style="color:green;font-weight:bold;font-size: 12px;">M.E.</span>}
+
+					</td>
+					<td>@informe.expediente</td>
+					<td>@if(informe.tipoCuenta != null){@informe.tipoCuenta.nombre}</td>
+					<td>@informe.rubro</td>
+					<td>@informe.deposito.nombre</td>
+					<td>@informe.nombreProveedor</td>
+					<td class="totalOrden" data-valor="@informe.totalOrden">@utils.NumberUtils.moneda(informe.totalOrden)</td>
+					<td class="totalAutorizado" data-valor="@informe.totalAutorizado">@utils.NumberUtils.moneda(informe.totalAutorizado)</td>
+					<td class="totalPagado" data-valor="@informe.totalPagado">@utils.NumberUtils.moneda(informe.totalPagado)</td>
+					<td class="totalDeuda" data-valor="@informe.totalDeuda">@utils.NumberUtils.moneda(informe.totalDeuda)</td>
+					<td class="totalCompromiso" data-valor="@informe.totalCompromiso">@utils.NumberUtils.moneda(informe.totalCompromiso)</td>
+					<td>
+						@if(informe.orden_provision_id != null) {
+							<a href="@controllers.dashboard.routes.InformeEstadisticoDeudaProveedoresController.getActas(informe.orden_provision_id)" class="actas">
+							<i class="glyphicon glyphicon-align-justify"></i></a>
+						} 
+					</td>
+					<td>
+					
+						 	
+							@if(autorizado.estado.id ==  models.Estado.AUTORIZADO_ESTADO_BORRADOR && !Ejercicio.isPerimido(informe.ejercicio_id)){
+								@if(informe.orden_provision_id != null) {
+									@{resto_autorizar= new java.math.BigDecimal(0)}
+									@{resto_autorizar= informe.totalPagado.add(informe.totalDeuda).subtract(informe.totalAutorizado)}
+									<a data-url="@controllers.dashboard.routes.AutorizadosController.modalAgregarMontos(informe.orden_provision_id,idAutorizado,informe.ordenProvision.orden_compra_id,informe.tipo_cuenta_id)" href="#"  class="btn btn-default agregarMontos">
+										<i class="glyphicon glyphicon-plus"></i>
+									</a>
+								}else{
+									<a data-url="@controllers.dashboard.routes.AutorizadosController.modalAgregarMontosSinOp(idAutorizado,informe.orden_id,informe.tipo_cuenta_id)" href="#"  class="btn btn-default agregarMontos">
+										<i class="glyphicon glyphicon-plus"></i>
+									</a>
+								}
+							}
+						 
+					</td>
+				</tr>    
+			 	}
+	    	</tbody>
+	    	<tfoot>
+				<tr>
+					<td colspan="6"></td>
+					<td><b>Total:</b><br /><span id="ordenFooter"></span></td>
+					<td><b>Total:</b><br /><span id="autorizadoFooter"></span></td>
+					<td><b>Total:</b><br /><span id="pagadoFooter"></span></td>
+					<td><b>Total:</b><br /><span id="deudaFooter"></span></td>
+					<td><b>Total:</b><br /><span id="compromisoFooter"></span></td>
+					<td colspan="2"></td>
+				</tr>
+			</tfoot>
+	    </table>
+    
+		<div class="pagination pull-right">
+		    @views.html.helpers.paginador(buscador, controllers.dashboard.routes.AutorizadosController.getListadoDeudas())
+		</div>	
+	}
+</div>	
+<script>
+$( function(){
+	
+	
+	
+	$('.agregarMontos').click( function() { //abrir modal para pasar en PreCurso
+		var url = $(this).attr("data-url");
+		var dialogo = $('<div id="modalAgregarMontos"></div>');
+		dialogo.dialog({
+			title: "Carga Autorizado",
+	    	resizable: false,
+			autoOpen: true,
+			modal: true,
+			height: 450,
+			width:900,
+	        /*buttons: {
+		          Cerrar: function() {
+		            $( this ).dialog( "destroy" );
+		          }
+		    },*/
+	    	close: function(event, ui ){
+	    		$(this).dialog( "destroy" );
+	    	},
+		    open: function( event, ui ) {
+				$.post(url, function(data){
+					dialogo.html(data);
+				});	
+		    }
+	      });
+	});
+	
+	$('.searchModal').modalSearch();
+	var contenedor = $("#contenedorListadoDeudas");
+	/*var url = "@controllers.expediente.routes.IniciadorExpedientesController.get()"
+	contenedor.find('.modalSeleccionIniciadorExpediente').on('click', function(){
+		var id = $(this).attr('data-id');
+		$.get(url+"?id="+id, function(data){
+			$(document).trigger("modal.seleccion.iniciadorExpediente.simple", data);
+		});
+	});*/
+	
+	
+	
+	contenedor.find('form').on('submit', function(){
+		
+		var url = $(this).attr("action");
+		var query = $(this).serialize();
+		$('#loadingBtnBuscar').removeClass('hide');
+		$('#BtnBuscar').hide();
+		$.get(url+"?"+query, function(data){
+			contenedor.parent().html(data);
+			$('#loadingBtnBuscar').addClass('hide');
+			$('#BtnBuscar').show();
+		});
+		return false;
+	});
+	
+	$('.actas').click( function() {
+		var $this = $(this);
+		var url = $this.attr('href');
+		var oid = $(this).data('data-id-provision');
+		$.get(url, function(data) {
+			$this.parent().html(data);
+		});
+		return false;
+	});
+	
+	var trs = $('#listaInforme tbody tr');
+
+	var orden = 0; var pagado = 0; var deuda = 0; var compromiso = 0;var autorizado = 0;
+	
+	trs.each( function() {
+		orden += Number($('.totalOrden',this).attr("data-valor"));
+		autorizado += Number($('.totalAutorizado',this).attr("data-valor"));
+		pagado += Number($('.totalPagado',this).attr("data-valor"));
+		deuda += Number($('.totalDeuda',this).attr("data-valor"));
+		compromiso += Number($('.totalCompromiso',this).attr("data-valor"));
+	});
+
+	$("#ordenFooter").html(formatNumberPesos(parseFloat(orden).toFixed(2)));
+	$("#autorizadoFooter").html(formatNumberPesos(parseFloat(autorizado).toFixed(2)));
+	$("#pagadoFooter").html(formatNumberPesos(parseFloat(pagado).toFixed(2)));
+	$("#deudaFooter").html(formatNumberPesos(parseFloat(deuda).toFixed(2)));
+	$("#compromisoFooter").html(formatNumberPesos(parseFloat(compromiso).toFixed(2)));
+	
+	if($("#proveedor").length){
+		var options = {
+				script:"/suggestProveedor/",
+				varname:"",
+				json:true,
+				shownoresults:true,
+				maxresults:6,
+				callback: function (obj) { 
+											$("#proveedor_id").val(obj.id); 
+										 }
+			};
+		var as_json = new bsn.AutoSuggest('proveedor', options);
+	}
+	
+	if($("#deposito_nombre").length){
+		var options = {
+				script:"/suggestDeposito/",
+				varname:"",
+				json:true,
+				shownoresults:true,
+				maxresults:6,
+				callback: function (obj) { 
+											$("#deposito_id").val(obj.id); 
+										 }
+			};
+		var as_json = new bsn.AutoSuggest('deposito_nombre', options);
+	}
+	
+	if($("#expediente").length){
+		var options = {
+				script:"/suggestExpediente/",
+				varname:"",
+				json:true,
+				shownoresults:true,
+				maxresults:6,
+				callback: function (obj) { 
+											$("#expediente_id").val(obj.id); 
+										 }
+			};
+		var as_json = new bsn.AutoSuggest('expediente', options);
+	}
+	
+});
+</script>	
+   

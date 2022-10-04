@@ -1,0 +1,227 @@
+@(rowParque:List[com.avaje.ebean.SqlRow],rowConvenio:List[com.avaje.ebean.SqlRow],rowPlanta:List[com.avaje.ebean.SqlRow])
+@import helper._
+@import utils._
+@import models.auth._
+@implicitFieldConstructor = @{ FieldConstructor(simpleInput.render) }
+
+	@if(rowParque != null){
+		@if(rowParque.size() > 0){
+			<div class="row">
+				<div class="col-sm-12">
+					<h2>PARQUE SALUD</h2>
+					
+					<table class="table table-bordered">
+						<thead>
+							<tr>
+								<td>NOMBRE</td>
+								<td>PROFESION</td>
+								<td align="center">HABER BRUTO</td>
+								<td align="center">GUARDIA</td>
+								<td align="center">PRODUCCION</td>	
+								<td align="center">ADICIONALES</td>	
+								<td align="center">DESCUENTOS</td>	
+								<td align="center">NETO</td>
+							</tr>
+						</thead>
+						<tbody>
+							@for(rp <- rowParque){
+								@if(rp.getInteger("idTipoRelacion").compareTo(1) == 0){
+									<tr>
+										<td>@rp.getString("nombre")</td>
+										<td>@rp.getString("profesion")</td>
+										<td align="center">	
+											@if(rp.getBigDecimal("haber").compareTo(java.math.BigDecimal.ZERO) > 0){
+												<a href="#" data-url="@controllers.dashboard.routes.LiquidacionesController.getDetalleLiquidacionClasificacion(rp.getInteger("""idPuestoLaboral"""),rp.getInteger("""idPeriodo"""),1)" class="getDetalleLiquidacionClasificacion">
+													@(utils.NumberUtils.moneda(rp.getBigDecimal("haber")))
+												</a>
+											}else{@(utils.NumberUtils.moneda(rp.getBigDecimal("haber")))}
+										</td>
+										<td align="center">
+											@if(rp.getBigDecimal("guardias").compareTo(java.math.BigDecimal.ZERO) > 0){
+												<a href="#" data-url="@controllers.dashboard.routes.LiquidacionesController.getDetalleLiquidacionClasificacion(rp.getInteger("""idPuestoLaboral"""),rp.getInteger("""idPeriodo"""),2)" class="getDetalleLiquidacionClasificacion">
+													@(utils.NumberUtils.moneda(rp.getBigDecimal("guardias")))
+												</a>
+											}else{@(utils.NumberUtils.moneda(rp.getBigDecimal("guardias")))}
+										</td>
+										<td align="center">
+											@if(rp.getBigDecimal("produccion").compareTo(java.math.BigDecimal.ZERO) > 0){
+												<a href="#" data-url="@controllers.dashboard.routes.LiquidacionesController.getDetalleLiquidacionClasificacion(rp.getInteger("""idPuestoLaboral"""),rp.getInteger("""idPeriodo"""),3)" class="getDetalleLiquidacionClasificacion">
+													@(utils.NumberUtils.moneda(rp.getBigDecimal("produccion")))
+												</a>
+											}else{@(utils.NumberUtils.moneda(rp.getBigDecimal("produccion")))}
+										</td>
+										<td align="center">
+											@if(rp.getBigDecimal("adicional").compareTo(java.math.BigDecimal.ZERO) > 0){
+												<a href="#" data-url="@controllers.dashboard.routes.LiquidacionesController.getDetalleLiquidacionClasificacion(rp.getInteger("""idPuestoLaboral"""),rp.getInteger("""idPeriodo"""),6)" class="getDetalleLiquidacionClasificacion">
+													@(utils.NumberUtils.moneda(rp.getBigDecimal("adicional")))
+												</a>
+											}else{@(utils.NumberUtils.moneda(rp.getBigDecimal("adicional")))}
+										</td>
+										<td align="center">
+											@if(rp.getBigDecimal("descuentos").compareTo(java.math.BigDecimal.ZERO) > 0){
+												<a href="#" data-url="@controllers.dashboard.routes.LiquidacionesController.getDetalleLiquidacionClasificacion(rp.getInteger("""idPuestoLaboral"""),rp.getInteger("""idPeriodo"""),5)" class="getDetalleLiquidacionClasificacion">
+													@(utils.NumberUtils.moneda(rp.getBigDecimal("descuentos")))
+												</a>
+											}else{@(utils.NumberUtils.moneda(rp.getBigDecimal("descuentos")))}
+										</td>
+										<td align="center">@(utils.NumberUtils.moneda(rp.getBigDecimal("neto")))</td>
+									</tr>
+								}
+							}					
+						</tbody>
+					</table>		
+					
+					
+				</div>
+			</div>	
+		}
+	}
+	
+	@if(rowConvenio != null){
+		@if(rowConvenio.size() > 0){
+			<div class="row">
+				<div class="col-sm-12">
+					<h2>CONVENIO MINISTERIO</h2>
+					
+					<table class="table table-bordered">
+						<thead>
+							<tr>
+								<td>NOMBRE</td>
+								<td>PROFESION</td>
+								<td>LUGAR</td>
+								<td>HABER BRUTO</td>
+								<td>GUARDIA</td>
+								<td>PRODUCCION</td>	
+								<td>ADICIONALES</td>	
+								<td>DESCUENTOS</td>	
+								<td>NETO</td>
+							</tr>
+						</thead>
+						<tbody>
+							@for(rp <- rowConvenio){
+								@if(rp.getInteger("idTipoRelacion").compareTo(3) == 0){
+								<tr>
+									<td>@rp.getString("nombre")</td>
+									<td>@rp.getString("PROFESION")</td>
+									<td>@rp.getString("organigrama")</td>
+									<td align="center">	
+										@if(rp.getBigDecimal("haber").compareTo(java.math.BigDecimal.ZERO) > 0){
+											<a href="#" data-url="@controllers.dashboard.routes.LiquidacionesController.getDetalleLiquidacionClasificacion(rp.getInteger("""idPuestoLaboral"""),rp.getInteger("""idPeriodo"""),1)" class="getDetalleLiquidacionClasificacion">
+												@(utils.NumberUtils.moneda(rp.getBigDecimal("haber")))
+											</a>
+										}else{@(utils.NumberUtils.moneda(rp.getBigDecimal("haber")))}
+									</td>
+									<td align="center">
+										@if(rp.getBigDecimal("guardias").compareTo(java.math.BigDecimal.ZERO) > 0){
+											<a href="#" data-url="@controllers.dashboard.routes.LiquidacionesController.getDetalleLiquidacionClasificacion(rp.getInteger("""idPuestoLaboral"""),rp.getInteger("""idPeriodo"""),2)" class="getDetalleLiquidacionClasificacion">
+												@(utils.NumberUtils.moneda(rp.getBigDecimal("guardias")))
+											</a>
+										}else{@(utils.NumberUtils.moneda(rp.getBigDecimal("guardias")))}
+									</td>
+									<td align="center">
+										@if(rp.getBigDecimal("produccion").compareTo(java.math.BigDecimal.ZERO) > 0){
+											<a href="#" data-url="@controllers.dashboard.routes.LiquidacionesController.getDetalleLiquidacionClasificacion(rp.getInteger("""idPuestoLaboral"""),rp.getInteger("""idPeriodo"""),3)" class="getDetalleLiquidacionClasificacion">
+												@(utils.NumberUtils.moneda(rp.getBigDecimal("produccion")))
+											</a>
+										}else{@(utils.NumberUtils.moneda(rp.getBigDecimal("produccion")))}
+									</td>
+									<td align="center">
+										@if(rp.getBigDecimal("adicional").compareTo(java.math.BigDecimal.ZERO) > 0){
+											<a href="#" data-url="@controllers.dashboard.routes.LiquidacionesController.getDetalleLiquidacionClasificacion(rp.getInteger("""idPuestoLaboral"""),rp.getInteger("""idPeriodo"""),6)" class="getDetalleLiquidacionClasificacion">
+												@(utils.NumberUtils.moneda(rp.getBigDecimal("adicional")))
+											</a>
+										}else{@(utils.NumberUtils.moneda(rp.getBigDecimal("adicional")))}
+									</td>
+									<td align="center">
+										@if(rp.getBigDecimal("descuentos").compareTo(java.math.BigDecimal.ZERO) > 0){
+											<a href="#" data-url="@controllers.dashboard.routes.LiquidacionesController.getDetalleLiquidacionClasificacion(rp.getInteger("""idPuestoLaboral"""),rp.getInteger("""idPeriodo"""),5)" class="getDetalleLiquidacionClasificacion">
+												@(utils.NumberUtils.moneda(rp.getBigDecimal("descuentos")))
+											</a>
+										}else{@(utils.NumberUtils.moneda(rp.getBigDecimal("descuentos")))}
+									</td>									
+									<td>@(utils.NumberUtils.moneda(rp.getBigDecimal("neto")))</td>
+								</tr>
+								}
+							}					
+						</tbody>
+					</table>		
+					
+					
+				</div>
+			</div>	
+		}
+	}
+	@if(rowPlanta != null){
+		@if(rowPlanta.size() > 0){
+			<div class="row">
+				<div class="col-sm-12">
+					<h2>PLANTA/OTROS</h2>
+					
+					<table class="table table-bordered">
+						<thead>
+							<tr>
+								<td>NOMBRE</td>
+								<td>PROFESION</td>
+								<td>LUGAR</td>
+								<td>HABER BRUTO</td>
+								<td>GUARDIA</td>
+								<td>PRODUCCION</td>	
+								<td>ADICIONALES</td>	
+								<td>DESCUENTOS</td>	
+								<td>NETO</td>
+							</tr>
+						</thead>
+						<tbody>
+							@for(rp <- rowPlanta){
+								@if(rp.getInteger("idTipoRelacion").compareTo(3) != 0 && rp.getInteger("idTipoRelacion").compareTo(1) != 0){
+								<tr>
+									<td>@rp.getString("nombre")</td>
+									<td>@rp.getString("profesion")</td>
+									<td>@rp.getString("organigrama")</td>
+									<td align="center">	
+										@if(rp.getBigDecimal("haber").compareTo(java.math.BigDecimal.ZERO) > 0){
+											<a href="#" data-url="@controllers.dashboard.routes.LiquidacionesController.getDetalleLiquidacionClasificacion(rp.getInteger("""idPuestoLaboral"""),rp.getInteger("""idPeriodo"""),1)" class="getDetalleLiquidacionClasificacion">
+												@(utils.NumberUtils.moneda(rp.getBigDecimal("haber")))
+											</a>
+										}else{@(utils.NumberUtils.moneda(rp.getBigDecimal("haber")))}
+									</td>
+									<td align="center">
+										@if(rp.getBigDecimal("guardias").compareTo(java.math.BigDecimal.ZERO) > 0){
+											<a href="#" data-url="@controllers.dashboard.routes.LiquidacionesController.getDetalleLiquidacionClasificacion(rp.getInteger("""idPuestoLaboral"""),rp.getInteger("""idPeriodo"""),2)" class="getDetalleLiquidacionClasificacion">
+												@(utils.NumberUtils.moneda(rp.getBigDecimal("guardias")))
+											</a>
+										}else{@(utils.NumberUtils.moneda(rp.getBigDecimal("guardias")))}
+									</td>
+									<td align="center">
+										@if(rp.getBigDecimal("produccion").compareTo(java.math.BigDecimal.ZERO) > 0){
+											<a href="#" data-url="@controllers.dashboard.routes.LiquidacionesController.getDetalleLiquidacionClasificacion(rp.getInteger("""idPuestoLaboral"""),rp.getInteger("""idPeriodo"""),3)" class="getDetalleLiquidacionClasificacion">
+												@(utils.NumberUtils.moneda(rp.getBigDecimal("produccion")))
+											</a>
+										}else{@(utils.NumberUtils.moneda(rp.getBigDecimal("produccion")))}
+									</td>
+									<td align="center">
+										@if(rp.getBigDecimal("adicional").compareTo(java.math.BigDecimal.ZERO) > 0){
+											<a href="#" data-url="@controllers.dashboard.routes.LiquidacionesController.getDetalleLiquidacionClasificacion(rp.getInteger("""idPuestoLaboral"""),rp.getInteger("""idPeriodo"""),6)" class="getDetalleLiquidacionClasificacion">
+												@(utils.NumberUtils.moneda(rp.getBigDecimal("adicional")))
+											</a>
+										}else{@(utils.NumberUtils.moneda(rp.getBigDecimal("adicional")))}
+									</td>
+									<td align="center">
+										@if(rp.getBigDecimal("descuentos").compareTo(java.math.BigDecimal.ZERO) > 0){
+											<a href="#" data-url="@controllers.dashboard.routes.LiquidacionesController.getDetalleLiquidacionClasificacion(rp.getInteger("""idPuestoLaboral"""),rp.getInteger("""idPeriodo"""),5)" class="getDetalleLiquidacionClasificacion">
+												@(utils.NumberUtils.moneda(rp.getBigDecimal("descuentos")))
+											</a>
+										}else{@(utils.NumberUtils.moneda(rp.getBigDecimal("descuentos")))}
+									</td>
+									<td>@(utils.NumberUtils.moneda(rp.getBigDecimal("neto")))</td>
+								</tr>
+								}
+							}					
+						</tbody>
+					</table>		
+					
+					
+				</div>
+			</div>	
+		}
+	}

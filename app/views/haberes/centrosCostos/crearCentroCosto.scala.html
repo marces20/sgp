@@ -1,0 +1,18 @@
+@(centroForm: Form[models.haberes.CentroCosto])
+@import helper._
+
+@views.html.haberes.mainHaberes("Crear Centro Costo") {
+
+	<div class="page-header">
+		<div class="row">
+			<div class="col-sm-10">
+				<h1>Crear nuevo Centro</h1>
+			</div>
+		</div>
+	</div>
+	@views.html.tags.successError()
+    
+    @helper.form(action = controllers.haberes.routes.CentrosCostosController.guardar()) {
+		@views.html.haberes.centrosCostos.formCentroCosto(centroForm) 	
+	}
+}

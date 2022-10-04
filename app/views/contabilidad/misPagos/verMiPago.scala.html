@@ -1,0 +1,56 @@
+@(miPagoForm: Form[MiPago], miPago:MiPago)
+@import helper._
+@import utils._
+@implicitFieldConstructor = @{ FieldConstructor(simpleInput.render) } 
+
+
+@views.html.contabilidad.mainContabilidad("Ver Mi Pago") {
+	<div class="page-header">
+		<div class="row">
+			<div class="col-sm-3">
+				<h1>Ver pago</h1>
+			</div>
+		</div>
+	</div>
+	
+	@if(flash.containsKey("success")) {
+		<div class="alert alert-success"><i class="glyphicon glyphicon-ok-sign"></i> @flash.get("success")</div>
+	}
+	@if(flash.containsKey("error")) {
+		<div class="alert alert-danger"><i class="glyphicon glyphicon-remove-sign"></i> @flash.get("error")</div>
+	} 
+	<div class="row menu-acciones">
+		<div class="col-sm-10">
+			
+		</div>
+		<div class="col-sm-2">
+			<a href="@UriTrack.getOnNull(controllers.contabilidad.routes.MisPagosController.index().absoluteURL())" class="btn btn-default"><i class="glyphicon glyphicon-list"></i></a>
+		</div>
+	</div>
+	
+	<div class="row">
+		<div class="col-sm-2">
+			<label class="control-label">Fecha</label>
+			<p class="form-control-static form-control">@miPagoForm.field("fecha").value</p>
+		</div>
+		<div class="col-sm-2">
+			<label class="control-label">N° Envio</label>
+			<p class="form-control-static form-control">@miPagoForm.field("numero_envio").value</p>
+		</div>
+		<div class="col-sm-2">
+			<label class="control-label">N° Lote</label>
+			<p class="form-control-static form-control">@miPagoForm.field("numero_lote").value</p>
+		</div>
+		<div class="col-sm-4">
+			<label class="control-label">Cantidad</label>
+			<p class="form-control-static form-control">@miPagoForm.field("cantidad").value</p>
+		</div>
+		<div class="col-sm-2">
+			<label class="control-label">Monto Total</label>
+			<p class="form-control-static form-control">@miPagoForm.field("monto").value</p>
+		</div>
+	</div>
+	
+	
+
+}

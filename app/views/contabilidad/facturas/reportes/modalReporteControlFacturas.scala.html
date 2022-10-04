@@ -1,0 +1,16 @@
+@(url: String = null)
+
+@views.html.tags.successError()
+
+@if(url) {
+	<div class="panel panel-default">
+		<div class="panel-body">
+	    	<i class="glyphicon glyphicon-save"></i> 
+	    	<a href="@controllers.contabilidad.routes.FacturasAccionesController.descargar322(url)">
+	    	Descargar archivo
+	    	</a>
+		</div>
+	</div>
+}
+
+@flash().clear()

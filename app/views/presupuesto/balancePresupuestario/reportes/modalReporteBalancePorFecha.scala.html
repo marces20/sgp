@@ -1,0 +1,116 @@
+@(url: String = null,url2: String = null,formBuscador: DynamicForm)
+@import helper._
+@implicitFieldConstructor = @{ FieldConstructor(simpleInput.render) } 
+
+@if(url) {
+	<div class="panel panel-default">
+		<div class="panel-body">
+	    	<i class="glyphicon glyphicon-save"></i> 
+	    	<a href="@controllers.contabilidad.routes.FacturasAccionesController.descargar322(url)">Descargar archivo</a>
+		</div>
+	</div>
+	
+	
+}else{
+
+	@helper.form(action = controllers.presupuesto.routes.BalancePresupuestarioReportesController.reporteBalancePorFechaPorExpediente(), 'id -> "formReporteBalancePorFecha") {
+		@if(flash.containsKey("error")) {
+			<div class="alert alert-danger"><i class="glyphicon glyphicon-remove-sign"></i> @flash.get("error")</div>
+		}
+		
+		@if(flash.containsKey("success")) {
+			<div class="alert alert-success"><i class="glyphicon glyphicon-ok-circle"></i> @flash.get("success")</div>
+		}
+	
+		<div class="row">
+			<div class="col-sm-3">
+				<div class="form-group">
+					<label for="inputFechaPago" class="control-label">Fecha Desde Preventivo</label> 
+					@inputText(formBuscador("fecha_desde_preventivo"), 'class -> "form-control date", 'id -> "fecha_desde_preventivo", 'autofocus -> "autofocus")
+				</div>
+					@formBuscador("fecha_desde_preventivo").error.map{ error =>
+						<div class="text-error">@error.message</div>
+					}
+			</div>
+			<div class="col-sm-3">
+				<div class="form-group">
+					<label for="inputFechaPago" class="control-label">Fecha Hasta Preventivo</label> 
+					@inputText(formBuscador("fecha_hasta_preventivo"), 'class -> "form-control date", 'id -> "fecha_hasta_preventivo", 'autofocus -> "autofocus")
+				</div>
+					@formBuscador("fecha_hasta_preventivo").error.map{ error =>
+						<div class="text-error">@error.message</div>
+					}
+			</div>
+			<div class="col-sm-3">
+				<div class="form-group">
+					<label for="inputFechaPago" class="control-label">Fecha Desde Definitivo</label> 
+					@inputText(formBuscador("fecha_desde_definitivo"), 'class -> "form-control date", 'id -> "fecha_desde_definitivo", 'autofocus -> "autofocus")
+				</div>
+					@formBuscador("fecha_desde_definitivo").error.map{ error =>
+						<div class="text-error">@error.message</div>
+					}
+			</div>
+			<div class="col-sm-3">
+				<div class="form-group">
+					<label for="inputFechaPago" class="control-label">Fecha Hasta Definitivo</label> 
+					@inputText(formBuscador("fecha_hasta_definitivo"), 'class -> "form-control date", 'id -> "fecha_hasta_definitivo", 'autofocus -> "autofocus")
+				</div>
+					@formBuscador("fecha_hasta_definitivo").error.map{ error =>
+						<div class="text-error">@error.message</div>
+					}
+			</div>
+			
+			
+		</div>
+		<div class="row">	
+			<div class="col-sm-2">
+				<label class="control-label">Ejercicio
+				@select(formBuscador("ejercicio"), Ejercicio.getEjercicios().map { p => p.id.toString -> p.nombre}, 
+				'class -> "form-control select")
+				</label>
+			</div>
+			<div class="col-sm-5"><br />
+				<button type="submit" class="btn btn-default" title="Buscar"><i class="glyphicon glyphicon-floppy-disk"></i> Buscar</button>
+			</div>
+		</div>	
+	}	
+}
+
+@flash().clear()
+<script>
+ $( function () {
+	 $( ".date" ).mask("99/99/9999");
+	 
+	 $(document).on("submit", '#formReporteBalancePorFecha', function(){
+			var form = $(this);
+			var url = form.attr('action');
+			var data = form.serialize();
+			var submit = form.find("button[type='submit']");
+			submit.replaceWith(getLoading());
+			$.post(url, data, function(data){
+				if(data.success) {
+					 
+					form.replaceWith(data.html);
+				} else {
+					form.replaceWith(data);
+				}
+			});
+			
+			return false;
+		});
+	 
+	 if($("#cuenta_modal").length){
+			var options = {
+					script:"/contabilidad/suggestCuenta/",
+					varname:"",
+					json:true,
+					shownoresults:true,
+					maxresults:6,
+					callback: function (obj) { 
+												$("#cuenta_id_modal").val(obj.id); 
+											 }
+				};
+			var as_json = new bsn.AutoSuggest('cuenta_modal', options);
+		}	
+ });
+</script>

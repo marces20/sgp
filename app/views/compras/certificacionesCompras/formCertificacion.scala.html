@@ -1,0 +1,151 @@
+@(certificacionForm: Form[CertificacionCompra])
+@import helper._
+@import utils._
+@implicitFieldConstructor = @{ FieldConstructor(simpleInput.render) } 
+	
+	
+	<div class="row menu-acciones">
+		<div class="col-sm-5">
+			<button type="submit" class="btn btn-default" title="Guardar orden"><i class="glyphicon glyphicon-floppy-disk"></i> Guardar</button>	
+			<a href="@if(request().getHeader("referer")){ @request().getHeader("referer") } else {@controllers.compras.routes.CertificacionesComprasController.index()@UriTrack.decode()}" title="Cancelar editar" class="btn btn-default"><i class="glyphicon glyphicon-floppy-remove"></i> Cancelar</a>
+	    </div>
+	    <div class="col-sm-4">
+			@if(certificacionForm("tipoCuenta").value != null){
+				<span style="color:red;font-size: 25px;font-weight: bold;">@certificacionForm("tipoCuenta.nombre").value</span>
+			}
+		</div>
+		<div class="col-sm-2">
+			<a href="@UriTrack.decode()" title="Volver al listado" class="btn btn-default"><i class="glyphicon glyphicon-list"></i></a> 
+			@if(certificacionForm.field("id").value){<a href="@controllers.compras.routes.CertificacionesComprasController.ver(certificacionForm.field("id").value.toLong)@UriTrack.get("&")" title="Ver orden" class="btn btn-default"><i class="glyphicon glyphicon-align-justify"></i></a>}
+		</div>
+	</div>
+	
+	
+	@inputText(certificacionForm("id"), 'type -> "hidden", 'id -> "certificacionId")
+	<input type="hidden" name=@UriTrack.getKey() value="@UriTrack.code()" />
+	<div class="row">
+		<div class="col-sm-2">
+			<label class="control-label">Referencia</label> 
+			<div class="form-group @if(certificacionForm.error("nombre") != null) {has-error}">
+				@inputText(certificacionForm("nombre"), 'class -> "form-control",'readOnly -> "readOnly")
+				
+				@certificacionForm("nombre").error.map{ error =>
+					<div class="text-error">@error.message</div>
+				}
+			</div>
+		</div>
+		<div class="col-sm-4">
+			<label class="control-label">Proveedor</label> 
+			<div class="input-group @if(certificacionForm.error("proveedor_id") != null) {has-error}else{has-required}">	
+				@inputText(certificacionForm("proveedor.nombre"), 'class -> "form-control", 'id -> "proveedor")
+				@inputText(certificacionForm("proveedor_id"), 'hidden -> "hidden", 'id -> "proveedor_id")
+				<span class="input-group-addon">
+                	<a href="#" id="searchProveedor" data-title="Selección de proveedor" data-url="@controllers.compras.routes.ProveedoresController.modalBuscar()" data-height="650" data-width="700" data-listen="modal.seleccion.proveedor.simple" data-label="#proveedor" data-field="#proveedor_id" /> <i class="glyphicon glyphicon-search"></i></a>
+                </span>
+			</div>
+			@certificacionForm("proveedor_id").error.map{ error =>
+				<div class="text-error">@error.message</div>
+			}
+		</div>
+		<div class="col-sm-2">
+			<label for="expediente" class="control-label">Expediente</label> 
+			<div class="input-group @if(certificacionForm.error("expediente_id") != null) {has-error}else{has-required}">
+				@inputText(certificacionForm("expediente.expedienteEjercicio"),'class -> "form-control", 'id -> "expediente")
+				@inputText(certificacionForm("expediente_id"),'hidden -> "hidden", 'id -> "expediente_id")
+				<span class="input-group-addon"><a href="#" id="searchExpediente" data-title="Selección de expediente" data-url="@controllers.expediente.routes.ExpedientesController.modalBuscar()" data-height="650" data-width="700" data-listen="modal.seleccion.expediente.simple" data-label="#expediente" data-field="#expediente_id"><i class="glyphicon glyphicon-search"></i></a></span>
+			</div>
+			@certificacionForm("expediente_id").error.map{ error =>
+				<div class="text-error">@error.message</div>
+			}
+		</div>
+		
+		<div class="col-sm-2">
+			<label for="inputPeriodo" class="control-label">Periodo</label> 
+			<div class="input-group @if(certificacionForm.error("periodo_id") != null) {has-error}else{has-required}">
+				
+				@inputText(certificacionForm("periodo.nombre"),'class -> "form-control",'id -> "periodo")
+				@inputText(certificacionForm("periodo_id"),'hidden -> "hidden",'id -> "periodo_id")
+				<span class="input-group-addon">
+				<a href="#" class="searchModal"
+							id="searchPeriodo" 
+							data-title="Selección de Periodo" 
+							data-url="@controllers.contabilidad.routes.PeriodosController.modalBuscar()" 
+							data-height="650" 
+							data-width="700" 
+							data-listen="modal.seleccion.periodo.simple" 
+							data-label="#periodo" 
+							data-field="#periodo_id">
+					<i class="glyphicon glyphicon-search"></i>
+				</a>
+				</span>
+			</div>
+			@certificacionForm("periodo_id").error.map{ error =>
+				<div class="text-error">@error.message</div>
+			}
+		</div>
+	</div>
+	
+	<div class="row">
+		<div class="col-sm-2">
+			<label class="control-label">Orden de Compras</label> 
+			<div class="input-group @if(certificacionForm.error("orden_id") != null) {has-error}">
+				@inputText(certificacionForm("orden.nombre"),'class -> "form-control", 'id -> "orden")
+				@inputText(certificacionForm("orden_id"),'hidden -> "hidden", 'id -> "orden_id")
+				
+				<span class="input-group-addon"><a href="#" 
+				id="searchOrden" 
+				data-title="Selección de orden" 
+				data-url="@controllers.compras.routes.OrdenesController.modalBuscar()" 
+				data-height="650" data-width="700" 
+				data-listen="modal.seleccion.orden.simple" 
+				data-label="#orden" 
+				data-field="#orden_id"><i class="glyphicon glyphicon-search"></i></a></span>
+				
+			</div>
+		</div>
+		
+		<div class="col-sm-2">
+			<label class="control-label">Fecha certificacion</label> 
+			<div class="form-group @if(certificacionForm.error("fecha_certificacion")  != null) {has-error}">
+				@inputText(certificacionForm("fecha_certificacion"),'class -> "form-control date", 'autocomplete -> "off")
+			</div>
+			@certificacionForm("fecha_certificacion").error.map{ error =>
+				<div class="text-error">@error.message</div>
+			}
+		</div>
+		
+		<!--<div class="col-sm-1">
+			<div class="checkbox">
+				<label class="control-label"> 
+					Profe
+					@checkbox(certificacionForm("profe"))
+				</label>
+			</div>
+		</div>-->
+		<div class="col-sm-2">
+			<div class="form-group @if(certificacionForm.error("tipo_cuenta_id") != null) {has-error}">
+				<label class="control-label">Tipo Cuenta</label>
+				@select(certificacionForm("tipo_cuenta_id"),TipoCuenta.find.all().map { p => p.id.toString -> p.nombre}, 'class -> "form-control select", '_default -> "Seleccionar")
+				@certificacionForm("tipo_cuenta_id").error.map{ error =>
+					<div class="text-error">@error.message</div>
+				}
+			</div>
+		</div>	
+		<div class="col-sm-2">
+			<div class="checkbox">
+				<label class="control-label">Creacion Automatica
+				@checkbox(certificacionForm("creacion_automatica"))</label> 
+			</div>
+		</div>
+				
+	</div>
+	
+	
+	<div class="row">
+		 
+		
+		
+	 
+		 
+	</div>
+	

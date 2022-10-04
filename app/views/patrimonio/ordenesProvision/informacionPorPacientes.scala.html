@@ -1,0 +1,166 @@
+@(buscador: utils.pagination.Pagination[OrdenLineaCliente],formBuscador: DynamicForm)
+@import helper._
+@import models.auth._
+@import utils._
+@implicitFieldConstructor = @{ FieldConstructor(simpleInput.render) } 
+@scripts = {
+	<script src="@routes.Assets.at("javascripts/patrimonio/ordenesProvision.js")" type="text/javascript"></script>
+}
+@views.html.patrimonio.mainPatrimonio("Información de pacientes", scripts) {
+<div class="page-header">
+	<div class="row">
+		<div class="col-sm-7">
+			<h1>Información por Paciente</h1>
+		</div>
+		
+		<div class="col-sm-5">
+			<div class="dropdown pull-right">
+				<button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown">
+			 		<i class="glyphicon glyphicon-list-alt"></i> Reportes<span class="caret"></span>
+				</button>
+				<ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
+					 <li role="presentation"><a role="menuitem" id="generarArchivo" 
+				    data-url="" tabindex="-1" href="@controllers.patrimonio.routes.OrdenesProvisionController.informacionPorPacientesExcel()">
+				    Informe Excel</a></li>
+				</ul>
+			</div>
+			
+			 
+		</div>
+	</div>
+</div>	
+@views.html.tags.successError()
+<form action="" method="GET">
+	<div class="row seccion">
+		<div class="col-sm-2">
+			<label class="control-label">Paciente
+				<div class="input-group">
+					@inputText(formBuscador("paciente_id"), 'hidden -> "hidden", 'id -> "paciente_id")
+					@inputText(formBuscador("paciente"), 'class -> "form-control", 'id -> "paciente")
+					<span class="input-group-addon"><a href="#" id="searchPaciente" data-title="Selección de pacientes" data-url="@controllers.compras.routes.ClientesController.modalBuscar()" data-height="650" data-width="700" data-listen="modal.seleccion.cliente.simple" data-label="#paciente" data-field="#paciente_id"><i class="glyphicon glyphicon-search"></i></a></span>
+				</div> 
+			</label>
+		</div>	
+		<div class="col-sm-2">
+			<label class="control-label">Proveedor
+				<div class="input-group">
+					@inputText(formBuscador("proveedor_id"), 'hidden -> "hidden", 'id -> "proveedor_id")
+					@inputText(formBuscador("proveedor_nombre"), 'name -> "", 'class -> "form-control", 'id -> "proveedor")
+					<span class="input-group-addon">
+						<a href="#" class="searchModal"
+									id="searchProveedor" 
+									data-title="Selección de Proveedores" 
+									data-url="@controllers.compras.routes.ProveedoresController.modalBuscar()" 
+									data-height="650" 
+									data-width="700" 
+									data-listen="modal.seleccion.proveedor.simple" 
+									data-label="#proveedor" 
+									data-field="#proveedor_id">
+							<i class="glyphicon glyphicon-search"></i>
+						</a>
+					</span>
+				</div>
+			</label>
+		</div>
+		<div class="col-sm-2">
+			<label class="control-label">Expediente
+				<div class="input-group">
+					@inputText(formBuscador("expediente_id"), 'hidden -> "hidden", 'id -> "expediente_id")
+					@inputText(formBuscador("expediente.nombre"), 'name -> "", 'class -> "form-control", 'id -> "expediente")
+					<span class="input-group-addon">
+						<a href="#" class="searchModal"
+									id="searchExpediente" 
+									data-title="Selección de expediente" 
+									data-url="@controllers.expediente.routes.ExpedientesController.modalBuscar()" 
+									data-height="650" 
+									data-width="700" 
+									data-listen="modal.seleccion.expediente.simple" 
+									data-label="#expediente" 
+									data-field="#expediente_id">
+							<i class="glyphicon glyphicon-search"></i>
+						</a>
+					</span>
+				</div>
+			</label>
+		</div>
+		<div class="col-sm-2">
+				<label class="control-label">Ejercicio
+					@select(formBuscador("ejercicio"), Ejercicio.getEjercicios().map { p => p.id.toString -> p.nombre}, 'class -> "form-control select", '_default -> "Seleccionar")
+				</label>
+			</div>
+		<div class="col-sm-2">
+			<div class="form-group">
+			<label for="nombre" class="control-label">&nbsp;</label>
+			<button type="submit" class="form-control btn btn-primary"><i class="glyphicon glyphicon-search"></i> Buscar</button>
+			</div>
+		</div>
+		<div class="col-sm-2">
+			<div class="form-group">
+			<label for="nombre" class="control-label">&nbsp;</label>
+			<a href="@controllers.patrimonio.routes.OrdenesProvisionController.informacionPorPacientes()"  class="form-control btn btn-default">Limpiar</a>
+			</div>
+		</div>
+	</div>
+</form>	
+
+	@if(buscador.getTotalRowCount == 0) {
+        
+        <div class="well">
+            <em>No se encuentran Informacion</em>
+        </div>
+        
+    } else {
+    	Mostrando @buscador.getDisplayXtoYofZ(" a "," de ") resultado(s).   
+    	<table id="listaOrdenProvision" class="table table-striped table-bordered table-hover">
+			<thead>
+				<tr>
+					<th width="30">
+						<input type="checkbox" name="checkAll" id="checkAll"/>
+					</th>
+					<th>Nombre</th>
+					<th>Proveedor</th>
+					<th>Exp.</th>
+					<th>OP</th>
+					<th>Producto</th>
+					<th>Q</th>
+					<th>RX</th>
+					<th>A</th>
+					<th>P</th>
+					<th>Precio</th>
+					<th>Total</th>
+					 
+				</tr>
+			</thead>
+			<tbody>
+			@for(olc <- buscador.getList) {
+				<tr>
+					<td><input type="checkbox" name="check_listado[]" value="@olc.id" class="notSeleccion" id="check-@olc.id"/></td>
+					<td>@(olc.cliente.nombre)</td>	
+					<td>@(olc.ordenLinea.orden.proveedor.nombre)</td>
+					<td>@(olc.ordenLinea.orden.expediente.getExpedienteEjercicio())</td>
+					<td>@if(olc.ordenLinea.orden.numero_orden_provision != null){@olc.ordenLinea.orden.numero_orden_provision}</td>
+					<td>@(olc.ordenLinea.producto.nombre)</td>
+					<td>@(olc.cantidad)</td>	
+					<td>@(olc.getTotalRecibido())</td>
+					<td>@(olc.getTotalAnulado())</td>	
+					<td>@(olc.cantidad.subtract(olc.getTotalRecibido()).subtract( olc.getTotalAnulado()))</td>	
+					<td>@utils.NumberUtils.moneda(olc.ordenLinea.precio)</td>
+					<td>@(utils.NumberUtils.moneda(olc.ordenLinea.precio.multiply(olc.cantidad), 2))</td>
+					 
+				</tr>
+			}		
+			</tbody>
+			</table>
+			<div class="pagination pull-right">
+		    	@views.html.helpers.paginador(buscador, controllers.patrimonio.routes.OrdenesProvisionController.informacionPorPacientes())
+			</div>
+    }
+}
+
+<script>
+$( function() {
+	$('#searchPaciente').modalSearch();
+	var baseUrl = $('#generarArchivo').attr('href')
+	$('#generarArchivo').attr('href', baseUrl + '?descarga=&' + window.location.href.slice(window.location.href.indexOf('?') + 1))
+})
+</script>

@@ -1,0 +1,25 @@
+@( cForm: Form[CertificacionServicio],cs:CertificacionServicio)
+@import helper._
+@import utils._
+@implicitFieldConstructor = @{ FieldConstructor(simpleInput.render) } 
+    
+@views.html.patrimonio.mainPatrimonio("Crear certificación") {
+
+	<div class="page-header">
+		<div class="row">
+			<div class="col-sm-10">
+				<h1>Crear certificación</h1>
+			</div>
+			
+			 
+		</div>
+	</div> 
+    
+    @views.html.tags.successError()
+    
+	@helper.form(action = controllers.patrimonio.routes.CertificacionesServiciosController.guardar()) {
+		@views.html.patrimonio.certificaciones.formCertificacionServicio(cForm,cs) 
+		@views.html.patrimonio.certificaciones.tabsCertificacion(true, cForm)	
+	}
+
+}

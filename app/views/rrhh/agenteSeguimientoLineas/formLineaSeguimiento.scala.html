@@ -1,0 +1,52 @@
+@(lineaForm: Form[AgenteSeguimientoLinea])
+@import helper._
+@implicitFieldConstructor = @{ FieldConstructor(simpleInput.render) } 
+
+
+@if(flash.containsKey("error")) {
+	<div class="alert alert-danger">
+		<i class="glyphicon glyphicon-remove-sign"></i> @flash.get("error")
+	</div>
+}
+ 
+
+ <div class="row">
+	@inputText(lineaForm("agente_seguimiento_id"), 'type -> "hidden")
+	
+	<div class="col-sm-8">
+			<label class="control-label">Observacion</label> 
+			<div class="form-group @if(lineaForm.error("observacion") != null) {has-error}">
+				@inputText(lineaForm("observacion"), 'class -> "form-control")
+				
+				@lineaForm("observacion").error.map{ error =>
+					<div class="text-error">@error.message</div>
+				}
+			</div>
+		</div>
+	<div class="col-sm-2">
+		<label class="control-label">Fecha</label> 
+		<div class="form-group">
+			@inputText(lineaForm("fecha"),'class -> "form-control date", 'autocomplete -> "off", 'id -> "fecha")
+		</div>
+	</div>
+	 
+	 
+</div>
+
+ 
+ 
+<div class="row form-actions">
+    <div class="col-lg-offset-4 col-lg-8">
+      <a href="" class="btn btn-default cancelar" title="Cancelar"><i class="glyphicon glyphicon-floppy-remove"></i> Cancelar</a>
+      <button type="submit" class="btn btn-default" title="Guardar Linea"><i class="glyphicon glyphicon-floppy-disk"></i> Guardar</button>
+    </div>
+</div>
+
+<script>
+	$( function() {
+		 
+		$("#fecha").mask("99/99/9999");
+		 
+	
+	});
+</script>

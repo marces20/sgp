@@ -1,0 +1,145 @@
+@(paginador:  utils.pagination.Pagination[RemitoLineaBaul], formBuscador: DynamicForm, editable: Boolean)
+@import models.auth._
+
+
+@if(formBuscador.field("remito_id").value == null || formBuscador.field("remito_id").value == ""){
+	<p>Para cargar productos primero debe dar de alta el remito</p>
+} else {
+
+<div id="listaremito" class="contenedorPaginador ajaxPaginador">
+		
+	@if(editable && Permiso.check("remitosCrear")){
+		<a class="btn btn-default btn-xs" href="#" id="nuevoProducto"><i class="glyphicon glyphicon-plus"></i> Agregar producto</a>	 	
+	}	
+		
+		
+	@if(paginador.getTotalRowCount == 0) {
+        <p id="mensajeSinResultados" class="well"><i class="glyphicon glyphicon-info-sign"></i> No hay productos cargados.</p>
+    } 
+
+	<table id="listaDeremito" class="table table-striped table-bordered  @if(paginador.getTotalRowCount() <= 0){hide}">
+		<thead>
+			<tr>
+				@if(editable && Permiso.check("remitosEliminar")){
+					<th width="50" class="accion-editar">#</th>
+				}
+					<th>Producto</th>
+					<th  width="40">Cantidad</th>
+					
+				@if(editable && Permiso.check("remitosEliminar")){
+					<th></th>
+				}
+			<tr>	
+		</thead>
+		<tbody>
+		@for(linea <- paginador.getList) {
+			@views.html.patrimonio.baul.lineas.lineasProductoBaul(linea, editable)
+		}
+		</tbody>
+	</table>
+
+
+		
+			<div class="pagination pull-right">
+			    @views.html.helpers.paginador(paginador, controllers.patrimonio.routes.RemitosLineasBaulController.index())
+			</div>
+		</div>
+
+<script>
+$( function(){
+	 
+	 
+	var contenedor = $("#listaremito");
+						     
+	contenedor.on('click', '#nuevoProducto', function(){
+		
+		urlContenidoModal =  '@controllers.patrimonio.routes.RemitosLineasBaulController.crear(formBuscador.field("remito_id").value.toLong)';
+		mostrarModal(urlContenidoModal);
+		return false;
+	});
+	
+	contenedor.on('click', '.modificarProducto', function(){
+		lineaParaEditar = $(this).closest('tr');
+		var modal = mostrarModal($(this).attr('href'));
+		modal.dialog('option', 'title', 'Editar producto');	
+		return false;
+	});
+	
+	contenedor.on('click', '.eliminarProducto', function(){
+		var mensaje = "¿Confirma que desea eliminar el registro?";
+		if(confirm(mensaje)){
+			var url = $(this).attr('href');
+			$this = $(this);
+			$.get(url, function(data){
+				if(data.success){
+					$this.closest("tr").remove();
+				} else {
+					alert("No se puedo eliminar el registro.");
+				}
+			});
+		}
+		return false;
+	});
+	
+	function mostrarModal(url){
+		modalCargaremito = $('<div></div>').dialog({
+			resizable: false,
+		    title: "Cargar productos",
+		    height: 600,
+		    minHeight:600,
+		    width: 800,
+		    modal: true,
+		    open: function( event, ui ) {
+				$.get(url, function(data){
+					modalCargaremito.html(data);
+				});
+		    },
+		    close: function(event, ui ){
+		    	modalCargaremito.dialog('destroy');
+			}
+		  });
+		
+		modalCargaremito.on('click', '.cancelar', function(){
+			modalCargaremito.dialog('destroy');
+			return false;
+		});
+		
+		modalCargaremito.on('submit', function(e){
+			var href = $(e.target).attr('action');
+			var data = $(e.target).serialize();
+			$.post(href, data, function(resultado){
+				if(resultado.success && resultado.nuevo){
+					$('#listaDeremito tbody').prepend(resultado.html);
+					$('#mensajeSinResultados').remove();
+					$('#listaDeremito').removeClass('hide');
+					modalCargaremito.dialog( "destroy" );
+					/*aca va funcion Actualizar cuadrito*/				
+				} else if(resultado.success && resultado.modificar){
+					lineaParaEditar.replaceWith(resultado.html);
+					modalCargaremito.dialog( "destroy" );
+					/*aca va funcion Actualizar cuadrito*/
+					
+				} else {
+					modalCargaremito.html(resultado);
+				}
+			});
+			return false;
+		});
+		
+		
+		return modalCargaremito;
+	}
+	
+	
+	contenedor.find('form').on('submit', function(){
+		var url = $(this).attr("action");
+		var query = $(this).serialize();
+		$.get(url+"?"+query, function(data){
+			contenedor.parent().html(data);
+		});
+		return false;
+	});
+});
+</script>
+
+}

@@ -1,0 +1,117 @@
+@(listaFinal:List[LineaCreditoPresupuestario], formBuscador: DynamicForm)
+@import helper._
+@import utils._
+@import models.auth._
+@implicitFieldConstructor = @{ FieldConstructor(simpleInput.render) } 
+@import java.math.BigDecimal;var total=new java.math.BigDecimal(0);var totalr=new java.math.BigDecimal(0);
+
+@views.html.presupuesto.mainPresupuesto("Lista de Saldos Presupuestarios Cargado") {
+<div class="page-header">
+		<div class="row">
+			<div class="col-sm-7">
+				<h1>Lista de créditos presupuestarios cargados</h1>
+			</div>
+			<div class="col-sm-5">
+				<div class="dropdown pull-right btn-header">
+				 <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown">
+				 	<i class="glyphicon glyphicon-list-alt"></i>
+				    Reportes
+				    <span class="caret"></span>
+				  </button>
+				  <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
+				  </ul>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div id="actions">
+		<div class="row">
+			<form action="" method="GET">
+				<div class="col-sm-4">
+					<label for="cuenta" class="control-label">Cuenta Presupuestaria</label>
+					<div class="input-group">
+						@inputText(formBuscador("cuenta"), 'class -> "form-control", 'id -> "cuentaAnalitica")
+						@inputText(formBuscador("cuenta_analitica_padre_id"), 'hidden -> "hidden", 'id -> "cuentaAnalitica_id")
+						<span class="input-group-addon">
+							<a href="#" 
+							   id="searchCuentaAnalitica" 
+							   class="searchModal"
+							   data-title="Selección de cuenta analítica" 
+							   data-url="@controllers.contabilidad.routes.CuentasAnaliticasController.modalBuscar()" 
+							   data-height="650" 
+							   data-width="700" 
+							   data-listen="modal.seleccion.cuentaAnalitica.simple" 
+							   data-label="#cuentaAnalitica" 
+							   data-field="#cuentaAnalitica_id">
+							   <i class="glyphicon glyphicon-search"></i>
+							 </a>
+						</span>
+					</div>
+				</div>
+				<div class="col-sm-2">
+				<label class="control-label">Ejercicio
+					@select(formBuscador("ejercicio"), Ejercicio.getEjercicios().map { p => p.id.toString -> p.nombre}, 'class -> "form-control select", '_default -> "Seleccionar")
+					</label>
+				</div>
+				<div class="col-sm-2">
+					<div class="form-group">
+					<label for="nombre" class="control-label">&nbsp;</label>
+					<button  class="form-control btn btn-primary">Buscar</button>
+					</div>
+				</div>
+				<div class="col-sm-2">
+					<div class="form-group">
+					<label for="nombre" class="control-label">&nbsp;</label>
+					<a href="@controllers.presupuesto.routes.CreditosPresupuestariosController.index()"  class="form-control btn btn-default">Limpiar</a>
+					</div>
+				</div>
+			</form>
+		</div>
+	</div>
+	@if(listaFinal == null || listaFinal.size() == 0) {
+        
+        <div class="well">
+            <em>No se encuentran créditos</em>
+        </div>
+        
+    } else {
+    	<table class="table table-striped table-bordered">
+			<thead>
+				<tr>
+					<th>Nombre</th>
+					<th>Fecha</th>
+					<th>Cuenta</th>
+					<th>Codigo</th>
+					<th>Total</th>
+				</tr>
+			</thead>
+			<tbody>
+				@for(z <- listaFinal) {
+					<tr>
+						<td>@z.creditoPresupuestario.nombre</td>
+						<td>@(utils.DateUtils.formatDate(z.creditoPresupuestario.fecha))</td>
+						<td>@z.cuentaAnalitica.nombre</td>
+						<td>@z.cuentaAnalitica.codigo</td>
+						<td>@utils.NumberUtils.moneda(z.monto)</td>
+					</tr>
+					@{total = total.add(z.monto)}
+				}
+			</tbody>
+			<tfoot>
+				<tr>
+					<td colspan="3"></td>
+					<td align="right">Total</td>
+					<td>@utils.NumberUtils.moneda(total)</td>
+				</tr>
+			</tfoot>
+        </table>
+    }
+}
+<script>
+$(function(){
+	$('#searchCuentaAnalitica').modalSearch();
+
+	
+});
+</script>
+	

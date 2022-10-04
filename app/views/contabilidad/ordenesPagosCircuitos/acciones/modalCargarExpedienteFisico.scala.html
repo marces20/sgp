@@ -1,0 +1,61 @@
+@(formBuscador: DynamicForm)
+@import helper._
+@implicitFieldConstructor = @{ FieldConstructor(simpleInput.render) } 
+	
+@helper.form(action = controllers.contabilidad.routes.OrdenesPagosCircuitosAccionesController.cargarExpedienteFisico(), 'id -> "formCargarExpedienteFisico") {	
+	
+	@views.html.tags.successError()
+	
+	<div class="row">
+		<div class="col-sm-4">
+			<div class="form-group @if(formBuscador.error("expediente_fisico_id") != null) {has-error}else{has-required}">
+				<label for="inputExpediente" class="control-label">Expediente Fisico</label>
+				<div class="input-group">
+					@inputText(formBuscador("expedienteFisico.expedienteEjercicio"),'class -> "form-control",'id -> "expedienteFisico")
+					@inputText(formBuscador("expediente_fisico_id"),'hidden -> "hidden", 'id -> "expediente_fisico_id")
+					<span class="input-group-addon">
+						<a href="#" class="searchModal"
+									id="searchExpediente2" 
+									data-title="Selección de expediente" 
+									data-url="@controllers.expediente.routes.ExpedientesController.modalBuscarCopia()" 
+									data-height="650" 
+									data-width="700" 
+									data-listen="modal.seleccion.expediente.simple" 
+									data-label="#expedienteFisico" 
+									data-field="#expediente_fisico_id">
+							<i class="glyphicon glyphicon-search"></i>
+						</a>
+					</span>
+				</div>
+				@formBuscador("expediente_id").error.map{ error =>
+					<div class="text-error">@error.message</div>
+				}
+			</div>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-sm-5"><br />
+			<button type="submit" class="btn btn-default" title="Agregar Expediente Fisico"><i class="glyphicon glyphicon-arrow-right"></i> Cargar Expediente</button>
+		</div>
+	</div>
+
+}
+<script>
+$( function(){
+	if($("#expedienteFisico").length){
+		var options = {
+				script:"/suggestExpedienteCopia/",
+				varname:"",
+				json:true,
+				shownoresults:true,
+				maxresults:6,
+				callback: function (obj) { 
+											$("#expediente_fisico_id").val(obj.id); 
+										 }
+			};
+		var as_json = new bsn.AutoSuggest('expedienteFisico', options);
+	}
+	$('#searchExpediente2').modalSearch();
+});
+</script>
+@flash().clear()

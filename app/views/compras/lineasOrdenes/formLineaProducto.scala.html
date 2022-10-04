@@ -1,0 +1,300 @@
+@(lineaForm: Form[OrdenLinea],linea:OrdenLinea)
+@import helper._
+@implicitFieldConstructor = @{ FieldConstructor(simpleInput.render) } 
+
+@if(flash.containsKey("error")) {
+	<div class="alert alert-danger">
+		<i class="glyphicon glyphicon-remove-sign"></i> @flash.get("error")
+	</div>
+}
+
+<script>
+$(function(){
+	$("#precio, #cantidad").numeric_input();
+	$('#searchProducto, #searchCliente, #searchDepartamento, #searchCuentaAnalitica').modalSearch();
+});
+</script>
+
+ <div class="row">
+	@inputText(lineaForm("orden_id"), 'type -> "hidden")
+	<div class="col-sm-8">
+		<label for="producto_nombre" class="control-label">Producto</label>
+		<div class="input-group @if(lineaForm.error("producto_id") != null) {has-error} else {has-required}">
+			
+			@inputText(lineaForm("producto.nombre"), 'class -> "form-control", 'autofocus -> "autofocus", 'id -> "producto")
+			@inputText(lineaForm("producto_id"), 'hidden -> "hidden", 'id -> "producto_id")
+			<span class="input-group-addon"><a href="#" id="searchProducto" data-title="Selección de producto" data-url="@controllers.compras.routes.ProductosController.modalBuscar()" data-height="650" data-width="700" data-listen="modal.seleccion.producto.simple" data-label="#producto" data-field="#producto_id"><i class="glyphicon glyphicon-search"></i></a></span>
+		</div>
+		@lineaForm("producto_id").error.map{ error =>
+			<div class="text-error">@error.message</div>
+		}
+	</div>
+	<div class="col-sm-4">
+		<label for="cliente" class="control-label">Servicio</label>
+		<div class="input-group">
+			@inputText(lineaForm("departamento.nombre"), 'class -> "form-control", 'id -> "departamento")
+			@inputText(lineaForm("departamento_id"), 'hidden -> "hidden", 'id -> "departamento_id")
+			<span class="input-group-addon">
+				<a href="#" 
+				   id="searchDepartamento" 
+				   class="searchModal"
+				   data-title="Selección de Servicio" 
+				   data-url="@controllers.rrhh.routes.DepartamentosController.modalBuscar()" 
+				   data-height="650" 
+				   data-width="700" 
+				   data-listen="modal.seleccion.departamento.simple" 
+				   data-label="#departamento" data-field="#departamento_id">
+				   <i class="glyphicon glyphicon-search"></i>
+				 </a>
+			</span>
+		</div>
+	</div>
+</div>
+
+<div class="row">
+	<div class="col-sm-3">
+		<label class="control-label">Precio</label>
+		<div class="form-group @if(lineaForm.error("precio") != null) {has-error} else {has-required}">
+			
+			@inputText(lineaForm("precio"), 'class -> "form-control", 'id -> "precio")
+			
+			@lineaForm("precio").error.map{ error => <div class="text-error">@error.message</div>}
+		</div>
+	</div>
+		
+	<div class="col-sm-2">
+		<label for="cantidad" class="control-label">Cantidad</label>
+		<div class="form-group @if(lineaForm.error("cantidad") != null) {has-error} else {has-required}">
+			@inputText(lineaForm("cantidad"), 'class -> "form-control", 'id -> "cantidad")
+			@lineaForm("cantidad").error.map{ error => <div class="text-error">@error.message</div>}
+		</div>
+	</div>
+
+	<div class="col-sm-3">
+		<label class="control-label">UDM</label>
+		<div class="form-group @if(lineaForm.error("udm_id") != null) {has-error} else {has-required}">
+			@select(lineaForm("udm_id"), Udm.find.all().map { p => p.id.toString -> p.nombre}, 'class -> "form-control select", '_default -> "Seleccionar")
+			@lineaForm("udm_id").error.map{ error => <div class="text-error">@error.message</div> }
+		</div>
+	</div>
+	<div class="col-sm-4">
+		<label for="cuenta" class="control-label">Cuenta Presupuestaria</label>
+		<div class="input-group @if(lineaForm.error("cuenta_analitica_id") != null) {has-error} else {has-required}">
+			@inputText(lineaForm("cuentaAnalitica.nombre"), 'class -> "form-control", 'id -> "cuentaAnalitica")
+			@inputText(lineaForm("cuenta_analitica_id"), 'hidden -> "hidden", 'id -> "cuentaAnalitica_id")
+			<span class="input-group-addon">
+				<a href="#" 
+				   id="searchCuentaAnalitica" 
+				   class="searchModal"
+				   data-title="Selección de Cuenta Analitica" 
+				   data-url="@controllers.contabilidad.routes.CuentasAnaliticasController.modalBuscar()" 
+				   data-height="650" 
+				   data-width="700" 
+				   data-listen="modal.seleccion.cuentaAnalitica.simple" 
+				   data-label="#cuentaAnalitica" data-field="#cuentaAnalitica_id">
+				   <i class="glyphicon glyphicon-search"></i>
+				 </a>
+			</span>
+		</div>
+		@lineaForm("cuenta_analitica_id").error.map{ error => <div class="text-error">@error.message</div> }
+	</div>
+</div>
+<div class="row">
+	<div class="col-sm-8">
+		<label for="nombre" class="control-label">Descripcion</label>
+		<div class="form-group @if(lineaForm.error("nombre") != null) {has-error}">
+			@inputText(lineaForm("nota"), 'class -> "form-control", 'id -> "nombre")
+			@lineaForm("nota").error.map{ error => <div class="text-error">@error.message</div>}
+		</div>
+	</div>	
+	<!-- <div class="col-sm-4">
+		<label for="cliente" class="control-label">Paciente</label>
+		<div class="input-group">
+			@inputText(lineaForm("cliente.nombre"), 'class -> "form-control", 'id -> "cliente")
+			@inputText(lineaForm("cliente_id"), 'hidden -> "hidden", 'id -> "cliente_id")
+			<span class="input-group-addon">
+				<a href="#" 
+				   id="searchCliente" 
+				   class="searchModal"
+				   data-title="Selección de paciente" 
+				   data-url="@controllers.compras.routes.ClientesController.modalBuscar()" 
+				   data-height="650" 
+				   data-width="700" 
+				   data-listen="modal.seleccion.cliente.simple" 
+				   data-label="#cliente" data-field="#cliente_id">
+				   <i class="glyphicon glyphicon-search"></i>
+				 </a>
+			</span>
+		</div>
+	</div> -->
+	<div class="col-sm-4">
+		<label for="cliente" class="control-label">&nbsp </label>
+		<div class="input-group">
+			@if(linea != null && linea.ordenLineaCliente != null && linea.id != null){
+				<button type="button" id="addClientes" class="btn btn-default" 
+				data-url="@controllers.compras.routes.LineasOrdenesController.modalAddClientes(linea.id)">
+				<i class="glyphicon glyphicon-user"></i> Agregar Pacientes
+				</button>
+			}
+		</div>
+	</div>
+</div>
+
+
+<div class="row">
+	<div class="col-sm-1"></div>
+	<div class="col-sm-10">
+		<table class="table table-striped table-bordered" id="tablaListadoPacientes">	
+			<thead>
+				<tr>
+					<th width="100" align="center">Paciente</th>
+					<th width="30" align="center">Cantidad</th>
+					<th width="30" align="center">#</th>
+				</tr>	
+			</thead>
+			<tbody>
+				@if(linea != null && linea.ordenLineaCliente != null && linea.ordenLineaCliente.size() > 0){
+					@for(olp <- linea.ordenLineaCliente) {
+						<tr>
+							<td>@(olp.cliente.nombre)</td>
+							<td class='cantidadLineaCliente'>@(olp.cantidad)</td>
+							<td>
+								<a data-url="@controllers.compras.routes.OrdenesLineasClientesController.eliminarAjax(olp.id)" class="btn btn-default btn-xs notSeleccion eliminarLineaPaciente" href="#">
+									<i class="glyphicon glyphicon-trash icono-eliminar"></i>
+								</a>
+							</td>
+						</tr>		
+					}
+				}else{
+					<tr>
+						<td colspan="3">No contiene Pacientes</td>
+					</tr>			
+				}
+			</tbody>
+		</table>
+	</div>	
+</div>
+
+<div class="row margin-top-20">
+	<div class="col-sm-4 col-sm-offset-4">
+		<button type="submit" class="btn btn-default"><i class="glyphicon glyphicon-floppy-disk"></i> Guardar</button>
+		<a href="" class="btn btn-default cancelar"><i class="glyphicon glyphicon-floppy-remove"></i>Cancelar</a>
+	</div>
+</div>
+<script>
+$( function(){
+	
+	$("#tablaListadoPacientes").on( "click",".eliminarLineaPaciente", function() {
+		var url = $(this).attr("data-url");
+		var tr = $(this).closest('tr');
+		$.post(url,function(data){
+			var respuesta = false;
+			if(data.results) {
+				$.each(data.results,function(idx,valor){
+					if(valor['respuesta'] == true){
+						respuesta = true;
+					}
+				})
+			}
+			
+			if(respuesta){
+				tr.remove();
+				if(!$('.eliminarLineaPaciente').length){
+					var trNo = '<tr><td colspan="3">No contiene Pacientes</td></tr>'
+					$('#tablaListadoPacientes tbody').append(trNo);
+				}
+			}else{
+				alert('No se puede eliminar el regristro.')
+			}
+		});	
+		
+		return false;
+	});
+	
+	$( "#addClientes" ).on( "click", function() {
+		 
+		var url = $(this).attr("data-url");
+		var dialogo = $('<div id="modalAddClientes"></div>');
+
+		dialogo.dialog({
+			title: "Agregar Paciente",
+	    	resizable: false,
+			autoOpen: true,
+			modal: true,
+			height: 250,
+			width:750,
+	        buttons: {
+		          Cerrar: function() {
+		            $( this ).dialog( "destroy" );
+		          }
+		    },
+	    	close: function(event, ui ){
+	    		$(this).dialog( "destroy" );
+	    	},
+		    open: function( event, ui ) {
+				$.get(url, function(data){
+					dialogo.html(data);
+				});	
+		    }
+	    });
+		return false;
+	});
+	
+	if($("#producto").length){
+		var options = {
+				script:"/suggestProducto/",
+				varname:"",
+				json:true,
+				shownoresults:true,
+				maxresults:6,
+				callback: function (obj) { 
+											$("#producto_id").val(obj.id); 
+										 }
+			};
+		var as_json = new bsn.AutoSuggest('producto', options);
+	}
+	
+	if($("#cliente").length){
+		var options = {
+				script:"/suggestCliente/",
+				varname:"",
+				json:true,
+				shownoresults:true,
+				maxresults:6,
+				callback: function (obj) { 
+											$("#cliente_id").val(obj.id); 
+										 }
+			};
+		var as_json = new bsn.AutoSuggest('cliente', options);
+	}
+	
+	if($("#departamento").length){
+		var options = {
+				script:"/suggestDepartamento/",
+				varname:"",
+				json:true,
+				shownoresults:true,
+				maxresults:26,
+				cache:false,
+				callback: function (obj) { 
+											$("#departamento_id").val(obj.id); 
+										 }
+			};
+		var as_json = new bsn.AutoSuggest('departamento', options);
+	}
+	
+	if($("#cuentaAnalitica").length){
+		var options = {
+				script:"/contabilidad/suggestCuentaAnalitica/",
+				varname:"",
+				json:true,
+				shownoresults:true,
+				maxresults:6,
+				callback: function (obj) { 
+											$("#cuentaAnalitica_id").val(obj.id); 
+										 }
+			};
+		var as_json = new bsn.AutoSuggest('cuentaAnalitica', options);
+	}
+});
+</script>

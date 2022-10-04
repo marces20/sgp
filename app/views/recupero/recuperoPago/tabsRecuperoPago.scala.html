@@ -1,0 +1,24 @@
+@(formularioCarga: Boolean, recuperoPagoForm: Form[models.recupero.RecuperoPago] = null,pago:models.recupero.RecuperoPago = null)
+<hr />
+<div class="row">
+	<ul id="recuperoChequeTab" class="nav nav-tabs">
+		<li class="active"><a class="tabCheque" href="#contenedorCheques" data-toggle="tab">Cheques</a></li>
+		<li><a class="tabNotas" href="#contenedorNotas" data-toggle="tab">Notas</a></li>
+	</ul>
+	
+	<div class="tab-content">
+	
+		<div class="tab-pane active" id="contenedorCheques">
+			@views.html.recupero.recuperoPago.contenidoTabCheque(formularioCarga,recuperoPagoForm)	
+		</div>
+		<div class="tab-pane" id="contenedorNotas">
+			@if(formularioCarga){
+				<textarea name="nota" class="form-control" rows="5">@recuperoPagoForm.field("nota").value</textarea>
+			} else {
+				<textarea name="nota" disabled="disabled" class="form-control" rows="5">@recuperoPagoForm.field("nota").value</textarea>
+			}
+		</div>
+	
+	</div>
+</div>
+

@@ -1,0 +1,30 @@
+@(presupuestoForm: Form[models.recupero.Presupuesto])
+@import helper._
+
+@scripts = {
+	<script src="@routes.Assets.at("javascripts/recupero/presupuesto.js")" type="text/javascript"></script>
+}
+
+@views.html.recupero.mainRecupero("Crear Presupuesto", scripts) {
+
+	<div class="page-header">
+		<div class="row">
+			<div class="col-sm-7">
+				<h1>Crear nuevo presupuesto</h1>
+			</div>
+		</div>
+	</div>
+	@if(flash.containsKey("error")) {
+		<div class="alert alert-danger">
+			@flash.get("error")
+		</div>
+    }
+    
+    @helper.form(action = controllers.recupero.routes.PresupuestosController.guardar()) {
+
+		@views.html.recupero.presupuesto.formPresupuesto(presupuestoForm) 
+		@views.html.recupero.presupuesto.tabsPresupuesto(true, presupuestoForm)	
+
+
+	}
+}

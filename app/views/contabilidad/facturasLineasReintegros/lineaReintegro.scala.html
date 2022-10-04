@@ -1,0 +1,16 @@
+@(linea: FacturaLineaReintegro, editable: Boolean,factura:Factura)
+@import models.auth._
+
+<tr data-id="@linea.id">
+	@if(factura.estado.id ==  models.Estado.FACTURA_ESTADO_APROBADO && Permiso.check("facturasEditarReintegros")){
+		<td class="accion-editar"><a class="btn btn-default btn-xs modificarReintegro" href="@controllers.contabilidad.routes.FacturasLineasReintegrosController.editar(linea.id)"><i class="glyphicon glyphicon-edit"></i></a></td>
+	}
+		<td>@linea.cuenta.nombre</td>
+		<td>@linea.cuentaAnalitica.codigo @linea.cuentaAnalitica.nombre</td>
+		<td>@if(linea.cuentaImpuesto != null){@linea.cuentaImpuesto.nombre}</td>
+		<td>@utils.NumberUtils.moneda(linea.monto)</td>
+		<td>@linea.descripcion</td>
+	@if(factura.estado.id ==  models.Estado.FACTURA_ESTADO_APROBADO && Permiso.check("facturasEliminarReintegros")){
+		<td><a class="btn btn-default btn-xs delete-confirm-link eliminarReintegro" href="@controllers.contabilidad.routes.FacturasLineasReintegrosController.eliminar(linea.id)"><i class="glyphicon glyphicon-trash icono-eliminar"></i></a></td>
+	}
+</tr>

@@ -1,0 +1,71 @@
+@(formBuscador: DynamicForm,cuentaMovimientoMonto:java.util.Map[String,java.util.Map[String,java.math.BigDecimal]])
+@import helper._
+@implicitFieldConstructor = @{ FieldConstructor(simpleInput.render) } 
+@import utils._
+@import java.math.BigDecimal;var totalGastos=new java.math.BigDecimal(0);
+@views.html.dashboard.mainDashboard("Conciliacion") {
+
+@views.html.dashboard.movimientosCuentas.navmovimientoscuentas()
+
+<div class="page-header">
+	<div class="row">
+		<div class="col-sm-7">
+			<h1>Conciliacion</h1>
+		</div>
+		
+		<div class="col-sm-5">
+			<div class="dropdown pull-right">
+			 <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown">
+			 	<i class="glyphicon glyphicon-list-alt"></i>
+			    Reportes
+			    <span class="caret"></span>
+			  </button>
+			  <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
+			  	<li role="presentation">
+				  <a id="" role="menuitem" tabindex="-1" 
+				  href="">Reporte Excel</a></li>
+			  </ul>
+			</div>
+		</div>
+	</div>
+</div>
+@views.html.tags.successError()
+
+
+<div class="row"  style="">
+	<div class="col-sm-12" style="">
+		@for((key,value) <- cuentaMovimientoMonto){
+			<table class="table table-striped table-bordered table-hover">
+				<thead>
+					<tr>
+						<th colspan="2" style="text-align: center;">@key</th>
+					</tr>
+				</thead>
+				<thead>
+					<tr>
+						<th>MOVIMIENTO</th>
+						<th>SALDO</th>
+					</tr>
+				</thead>
+				<tbody>	
+						<tr>
+							<td>SALDO</td>
+							<td>@utils.NumberUtils.moneda(value.get("SALDO"))</td>
+						</tr>
+						<tr>
+							<td>CHEQUES NO ENTREGADOS</td>
+							<td>@utils.NumberUtils.moneda(value.get("CHEQUE_NO_ENTREGADOS"))</td>
+						</tr>
+						<tr>
+							<td>CHEQUES SIN DEPOSITAR</td>
+							<td>@utils.NumberUtils.moneda(value.get("CHEQUE_SIN_DEPOSITAR"))</td>
+						</tr>
+					
+				</tbody>
+				
+			</table>
+		}
+	</div>
+</div>
+
+}

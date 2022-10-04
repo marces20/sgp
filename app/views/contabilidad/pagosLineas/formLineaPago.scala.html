@@ -1,0 +1,126 @@
+@(lineaForm: Form[PagoLinea])
+@import helper._
+@implicitFieldConstructor = @{ FieldConstructor(simpleInput.render) } 
+
+@if(flash.containsKey("error")) {
+	<div class="alert alert-danger">
+		<i class="glyphicon glyphicon-remove-sign"></i> @flash.get("error")
+	</div>
+}
+<script>
+$(function(){
+	$('#searchCuentaModal').modalSearch();
+	$('#searchCuentaAnalitica').modalSearch();
+	$("#monto_credito_modal,#monto_modal").numeric_input();
+});
+</script>
+
+ <div class="row">
+	@inputText(lineaForm("pago_id"), 'type -> "hidden")
+	<!-- <div class="col-sm-3">
+		<label class="control-label">Importe Original</label>
+		<div class="form-group @if(lineaForm.error("monto_original") != null) {has-error} else {has-required}">
+			@inputText(lineaForm("monto_original"), 'class -> "form-control",'id -> "monto_original")
+			@lineaForm("monto_original").error.map{ error => <div class="text-error">@error.message</div>}
+		</div>
+	</div> -->
+	<div class="col-sm-3">
+		<label class="control-label">Importe a Debitar</label>
+		<div class="form-group @if(lineaForm.error("monto") != null) {has-error} else {has-required}">
+			@inputText(lineaForm("monto"), 'class -> "form-control",'id -> "monto_modal")
+			@lineaForm("monto").error.map{ error => <div class="text-error">@error.message</div>}
+		</div>
+	</div>
+	<div class="col-sm-3">
+		<label class="control-label">Importe a Creditar</label>
+		<div class="form-group @if(lineaForm.error("monto_credito") != null) {has-error} else {has-required}">
+			@inputText(lineaForm("monto_credito"), 'class -> "form-control",'id -> "monto_credito_modal")
+			@lineaForm("monto_credito").error.map{ error => <div class="text-error">@error.message</div>}
+		</div>
+	</div>
+</div>
+<div class="row">
+	<div class="col-sm-6">
+		<label for="cuenta" class="control-label">Cuenta</label>
+		<div class="input-group @if(lineaForm.error("cuenta_id") != null) {has-error} else {has-required}">
+			@inputText(lineaForm("cuenta.nombre"), 'class -> "form-control", 'id -> "cuenta_modal")
+			@inputText(lineaForm("cuenta_id"),'hidden -> "hidden", 'id -> "cuenta_id_modal")
+			<span class="input-group-addon">
+				<a href="#" class="searchModal"
+							id="searchCuentaModal" 
+							data-title="Selección de Cuenta" 
+							data-url="@controllers.contabilidad.routes.CuentasController.modalBuscar()" 
+							data-height="650" 
+							data-width="700" 
+							data-listen="modal.seleccion.cuenta.simple" 
+							data-label="#cuenta_modal" 
+							data-field="#cuenta_id_modal">
+					<i class="glyphicon glyphicon-search"></i>
+				</a>
+			</span>
+		</div>
+		@lineaForm("cuenta_id").error.map{ error =>
+			<div class="text-error">@error.message</div>
+		}
+	</div>
+	<div class="col-sm-6">
+		<label for="cuenta" class="control-label">Cuenta Presupuestaria</label>
+		<div class="input-group @if(lineaForm.error("cuenta_analitica_id") != null) {has-error} else {has-required}">
+			@inputText(lineaForm("cuentaAnalitica.nombre"), 'class -> "form-control", 'autofocus -> "autofocus", 'id -> "cuentaAnalitica")
+			@inputText(lineaForm("cuenta_analitica_id"), 'hidden -> "hidden", 'id -> "cuentaAnalitica_id")
+			<span class="input-group-addon">
+				<a href="#" 
+				   id="searchCuentaAnalitica" 
+				   class="searchModal"
+				   data-title="Selección de Cuenta Analitica" 
+				   data-url="@controllers.contabilidad.routes.CuentasAnaliticasController.modalBuscar()" 
+				   data-height="650" 
+				   data-width="700" 
+				   data-listen="modal.seleccion.cuentaAnalitica.simple" 
+				   data-label="#cuentaAnalitica" data-field="#cuentaAnalitica_id">
+				   <i class="glyphicon glyphicon-search"></i>
+				 </a>
+			</span>
+		</div>
+		@lineaForm("cuenta_analitica_id").error.map{ error =>
+			<div class="text-error">@error.message</div>
+		}
+	</div>
+</div>
+<div class="row margin-top-20">
+	<div class="col-sm-4 col-sm-offset-4">
+		<button type="submit" class="btn btn-default"><i class="glyphicon glyphicon-floppy-disk"></i> Guardar</button>
+		<a href="" class="btn btn-default cancelar"><i class="glyphicon glyphicon-floppy-remove"></i>Cancelar</a>
+	</div>
+</div>
+<script>
+$( function(){
+if($("#cuenta_modal").length){
+	var options = {
+			script:"/contabilidad/suggestCuenta/",
+			varname:"",
+			json:true,
+			shownoresults:true,
+			maxresults:6,
+			callback: function (obj) { 
+										$("#cuenta_id_modal").val(obj.id); 
+									 }
+		};
+	var as_json = new bsn.AutoSuggest('cuenta_modal', options);
+}	
+if($("#cuentaAnalitica").length){
+	var options = {
+			script:"/contabilidad/suggestCuentaAnalitica/",
+			varname:"",
+			json:true,
+			shownoresults:true,
+			maxresults:6,
+			callback: function (obj) { 
+										$("#cuentaAnalitica_id").val(obj.id); 
+									 }
+		};
+	var as_json = new bsn.AutoSuggest('cuentaAnalitica', options);
+}	
+});
+</script>
+@flash().clear()

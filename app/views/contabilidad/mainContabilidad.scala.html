@@ -1,0 +1,77 @@
+@(title: String, scripts: Html = Html(""))(content: Html)
+@import models.auth._
+@main(title: String, scripts){
+	<div class="row">
+		<div class="col-sm-2">
+			<div class="menu-contenido">
+				<ul class="nav nav-pills nav-stacked">
+					<li class="titulo">Provedores</li>
+					@if(Componente.check("facturas")) {
+						<li><a href="@controllers.contabilidad.routes.FacturasController.index()">Facturas</a></li>
+					}
+					@if(Componente.check("pagos")) {
+						<li><a href="@controllers.contabilidad.routes.PagosController.index()">Pagos</a></li>
+					}	
+					
+					@if(Componente.check("ordenesPagos")) {
+						<li><a href="@controllers.contabilidad.routes.OrdenesPagosController.index()">Ordenes de pago</a></li>
+					}
+					@if(Componente.check("misPagos")) {
+						<li><a href="@controllers.contabilidad.routes.MisPagosController.index()">Mis Pagos</a></li>
+					}	
+					@if(Componente.check("ordenesPagos")) {
+					<li><a href="@controllers.contabilidad.routes.OrdenesPagosCircuitosController.index()">Ordenes de pago Circuito</a></li>
+					}
+					
+					@if(Componente.check("pagos")) {
+						<li><a href="@controllers.contabilidad.routes.ConciliacionPagosController.index()">Conciliación de cheques</a></li>
+					}	
+					
+					@if(Componente.check("facturas")) {
+						<li><a href="@controllers.contabilidad.routes.FacturasController.vistaFacturasCargadas()">Vista Facturas Cargadas</a></li>
+					}
+					
+					@if(Componente.check("cuentasPropias")) {
+					<li class="titulo">Cuentas Propias</li>
+						
+							<li><a href="@controllers.contabilidad.routes.BalanceCuentaPropiaController.index()?cuenta_propia_id=2">Balance Cuentas Propias</a></li>
+						}	
+						
+					@if(Componente.check("balance")) {
+					<li class="titulo">Balance General</li>
+						<li><a href="@controllers.contabilidad.routes.BalanceController.index()?cuenta_propia_id=2">Balance</a></li>
+						<li><a href="@controllers.contabilidad.routes.BalanceController.general()">Balance general</a></li>
+					}
+					
+						
+					
+					<li class="titulo">Cuentas bancarias</li>
+
+					@if(Componente.check("cuentasBancarias")) {
+						<li><a href="@controllers.contabilidad.routes.CuentaBancariasController.indexCuentaBancaria()">Cuentas bancarias</a></li>	
+					}	
+					<li class="titulo">Configuración</li>
+					@if(Componente.check("bancos")) {
+						<li><a href="@controllers.contabilidad.routes.BancosController.indexBanco()">Bancos</a></li>
+					}	
+					@if(Componente.check("bancosSucursales")) {
+						<li><a href="@controllers.contabilidad.routes.SucursalBancosController.indexSucursalBanco()">Sucursal bancos</a></li>
+					}	
+					@if(Componente.check("ejercicio")) {	
+						<li><a href="@controllers.contabilidad.routes.EjerciciosController.indexEjercicio()">Ejercicios</a></li>
+					}	
+					@if(Componente.check("periodos")) {
+						<li><a href="@controllers.contabilidad.routes.PeriodosController.indexPeriodo()">Periodos</a></li>
+					}	
+					@if(Componente.check("cuentas")) {
+						<li><a href="@controllers.contabilidad.routes.CuentasController.index()">Cuentas</a></li>
+					}	
+					@if(Componente.check("cuentasPresupuestarias")) {
+						<li><a href="@controllers.contabilidad.routes.CuentasAnaliticasController.index()">Cuentas presupuestarias</a></li>
+					}
+				</ul>
+			</div>
+		</div>
+		<div class="col-sm-10">@content</div>
+	</div>
+}

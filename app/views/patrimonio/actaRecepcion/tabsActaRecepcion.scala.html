@@ -1,0 +1,76 @@
+@(editar:Boolean,acta:ActaRecepcion)
+
+<ul id="actaTab" class="nav nav-tabs">
+	<li class="active">
+		<a id="listaProductosActa" 
+		   data-href="@controllers.patrimonio.routes.ActasRecepcionLineasController.index()?acta_id=@acta.id" 
+		   href="#contenedorProductosActa" data-toggle="tab">Lista de productos</a></li>
+	<li><a id="listaAjuste" data-href="" href="#contenedorAjuste" data-toggle="tab">Lista de ajustes</a></li>
+	
+	<li><a id="listaAjusteAutomatico" data-href="@controllers.patrimonio.routes.ActaRecepcionLineaAjusteController.index()?acta_id=@acta.id&editable=@editar"  href="#contenedorAjusteAutomatico" data-toggle="tab">
+		Lista de ajustes Automaticos</a></li>
+	<li><a id="listaPacientes" data-href="@controllers.patrimonio.routes.ActasRecepcionController.getPacientes(acta.id)" href="#contenedorPacientes" data-toggle="tab">Lista de Pacientes</a></li>	
+	<li><a id="listaMovimientos" data-href="" href="#contenedorMovimientos" data-toggle="tab">Movimientos</a></li>	
+</ul>	
+	
+<div class="tab-content">
+	<div id="contenedorProductosActa" class="tab-pane active">
+	
+	</div>
+	<div id="contenedorAjuste" class="tab-pane">
+		@for(ajuste <- acta.getAjustes()) {
+		
+		<table class="table table-striped table-bordered">
+			<thead>
+				<tr>
+					<th>Concepto</th>
+					<th>Importe</th>
+				</tr>
+			</thead>
+			<tbody>
+			
+				<tr>
+					<td>@ajuste.producto.nombre</td>
+					<td>@utils.NumberUtils.moneda(ajuste.cantidad.multiply(ajuste.precio))</td>
+				</tr>
+			
+			</tbody>
+			</table>
+			
+			
+		}
+	</div>
+	<div id="contenedorAjusteAutomatico" class="tab-pane">
+	
+	</div>
+	<div id="contenedorPacientes" class="tab-pane">
+	
+	</div>
+	<div id="contenedorMovimientos" class="tab-pane">
+		@views.html.patrimonio.actaRecepcion.contenidoTabActaMovimiento(acta.id)	
+	</div>
+</div>
+
+<script>
+	$( function(){
+		var urlProductos= $('#listaProductosActa').attr("data-href");
+
+		$.get(urlProductos, function(data){
+			$('#contenedorProductosActa').html(data);
+		});
+		
+		var urlAjusteAutomatico = $('#listaAjusteAutomatico').attr("data-href");
+		$.get(urlAjusteAutomatico, function(data){
+			$('#contenedorAjusteAutomatico').html(data);
+		});
+		
+		$('#listaPacientes').on("click", function() { 
+			var urlPacientes = $('#listaPacientes').attr("data-href");
+			$.get(urlPacientes, function(data){
+				$('#contenedorPacientes').html(data);
+			});
+		});
+		
+		 
+	});
+	</script>

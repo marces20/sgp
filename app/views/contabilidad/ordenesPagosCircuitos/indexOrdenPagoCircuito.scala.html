@@ -1,0 +1,339 @@
+@(buscador: utils.pagination.Pagination[OrdenPagoCircuito], formBuscador: DynamicForm)
+@import helper._
+@import utils._
+@import models.auth._
+@implicitFieldConstructor = @{ FieldConstructor(simpleInput.render) }
+@scripts = {
+	<script src="@routes.Assets.at("javascripts/contabilidad/ordenPagoCircuitos.js")" type="text/javascript"></script>
+} 
+@getClassEstado(i:OrdenPagoCircuito) = @{
+	var classEstado:String = new String()
+
+	if(i.estado != null && (i.estado.id == 73) ){
+		classEstado = "borrador"
+	}else if(i.estado != null && i.estado.id == 77){
+		classEstado = "cancelada"
+	}else if(i.estado != null && (i.estado.id == 74 || i.estado.id == 75 || i.estado.id == 76)){
+		classEstado = "autorizado"
+	}
+	
+	classEstado
+}
+
+@views.html.contabilidad.mainContabilidad("Lista de Circuito Ordenes de Pago",scripts) {
+
+<div class="page-header">
+	<div class="row">
+		<div class="col-sm-7">
+			<h1>Lista de Circuito Ordenes de Pagos</h1>
+		</div>
+		<div class="col-sm-5">
+			<div class="dropdown pull-right">
+				<button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown"> <i class="glyphicon glyphicon-list-alt"></i> Reportes <span class="caret"></span></button>
+			</div>
+			<div class="dropdown pull-right btn-header">
+				<button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown"> <i class="glyphicon glyphicon-cog"></i> Acciones <span class="caret"></span> </button>
+				<ul class="dropdown-menu">
+					@if(Permiso.check("ordenesPagosCircuitoPasarBorrador")) {    
+				    <li role="presentation"><a role="menuitem" id="accionPasarBorrador" tabindex="-1" href="#" data-url="@controllers.contabilidad.routes.OrdenesPagosCircuitosAccionesController.modalPasarBorrador()">Pasar a Borrador</a></li>
+					}  
+					@if(Permiso.check("ordenesPagosCircuitoPasarContabilidad")) {    
+				    <li role="presentation"><a role="menuitem" id="accionPasarContabilidad" tabindex="-1" href="#" data-url="@controllers.contabilidad.routes.OrdenesPagosCircuitosAccionesController.modalPasarContabilidad()">Pasar a Contabilidad</a></li>
+					} 
+					@if(Permiso.check("ordenesPagosCircuitoPasarRendiciones")) {    
+				    <li role="presentation"><a role="menuitem" id="accionPasarRendiciones" tabindex="-1" href="#" data-url="@controllers.contabilidad.routes.OrdenesPagosCircuitosAccionesController.modalPasarRendiciones()">Pasar a Rendiciones</a></li>
+					} 
+					@if(Permiso.check("ordenesPagosCircuitoPasarRendido")) {    
+				    <li role="presentation"><a role="menuitem" id="accionPasarRendido" tabindex="-1" href="#" data-url="@controllers.contabilidad.routes.OrdenesPagosCircuitosAccionesController.modalPasarRendido()">Pasar a Rendido</a></li>
+					} 
+					@if(Permiso.check("ordenesPagosCircuitoPasarCancelado")) {    
+				    <li role="presentation"><a role="menuitem" id="accionPasarCancelado" tabindex="-1" href="#" data-url="@controllers.contabilidad.routes.OrdenesPagosCircuitosAccionesController.modalPasarCancelado()">Pasar a Cancelado</a></li>
+					} 
+					@if(Permiso.check("ordenesPagosCircuitoEditar")) {
+			    		<li role="presentation"><a role="menuitem" id="accionCargarExpedienteFisico" tabindex="-1" href="#" data-url="@controllers.contabilidad.routes.OrdenesPagosCircuitosAccionesController.modalCargarExpedienteFisico()">Cargar Expediente Fisico</a></li>
+			    	}  
+				</ul>
+			</div>	
+				
+			<div class="pull-right btn-header">
+				
+			</div>
+		</div>
+	</div>
+</div>
+<div id="actions">
+	<form action="" id="formSearchPagos" method="GET">
+		<div class="row">
+			<div class="col-sm-10 filtrosEstados" id="filtrosEstados">
+				<div class="btn-group">
+				  <button type="button" rel="borrador" class="btn btn-default btn-filtros">
+				  	<i class="glyphicon glyphicon-pencil"></i><br>Borrador
+				  	@checkbox(formBuscador("btnFiltro[0]"), 'hidden -> "hidden")
+				  </button>
+				  <button type="button" rel="contabilidad" class="btn btn-default btn-filtros">
+				  	<i class="glyphicon glyphicon-arrow-right"></i><br>Contabilidad
+				  	@checkbox(formBuscador("btnFiltro[1]"), 'hidden -> "hidden")
+				  </button>
+				  <button type="button" rel="rendiciones" class="btn btn-default btn-filtros">
+				  	<i class="glyphicon glyphicon-arrow-right"></i><br>Rendiciones
+				  	@checkbox(formBuscador("btnFiltro[2]"), 'hidden -> "hidden")
+				  </button>
+				   <button type="button" rel="rendido" class="btn btn-default btn-filtros">
+				  	<i class="glyphicon glyphicon-arrow-right"></i><br>Rendido
+				  	@checkbox(formBuscador("btnFiltro[3]"), 'hidden -> "hidden")
+				  </button>
+				  <button type="button" rel="cancelada" class="btn btn-default btn-filtros">
+				  	<i class="glyphicon glyphicon-minus-sign"></i><br>Cancelado
+				  	@checkbox(formBuscador("btnFiltro[4]"), 'hidden -> "hidden")
+				  </button>
+				</div>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-sm-2">
+				<label class="control-label">Proveedor
+					<div class="input-group">
+						@inputText(formBuscador("proveedor.nombre"), 'name -> "", 'class -> "form-control", 'id -> "proveedor")
+						@inputText(formBuscador("proveedor.id"), 'hidden -> "hidden", 'id -> "proveedor_id")
+						<span class="input-group-addon">
+							<a href="#" class="searchModal"
+										id="searchProveedor" 
+										data-title="Selección de Proveedores" 
+										data-url="@controllers.compras.routes.ProveedoresController.modalBuscar()" 
+										data-height="650" 
+										data-width="700" 
+										data-listen="modal.seleccion.proveedor.simple" 
+										data-label="#proveedor" 
+										data-field="#proveedor_id">
+								<i class="glyphicon glyphicon-search"></i>
+							</a>
+						</span>
+					</div>
+				</label>
+			</div>
+			<div class="col-sm-2">
+				<label class="control-label">Expediente
+					<div class="input-group">
+						@inputText(formBuscador("expediente.nombre"), 'name -> "", 'class -> "form-control", 'id -> "expediente")
+						@inputText(formBuscador("expediente.id"), 'hidden -> "hidden", 'id -> "expediente_id")
+						<span class="input-group-addon">
+							<a href="#" class="searchModal"
+										id="searchExpediente" 
+										data-title="Selección de expediente" 
+										data-url="@controllers.expediente.routes.ExpedientesController.modalBuscar()" 
+										data-height="650" 
+										data-width="700" 
+										data-listen="modal.seleccion.expediente.simple" 
+										data-label="#expediente" 
+										data-field="#expediente_id">
+								<i class="glyphicon glyphicon-search"></i>
+							</a>
+						</span>
+					</div>
+				</label>
+			</div>
+			<!-- <div class="col-sm-2 input-group">
+				<label class="control-label">Orden de Pago N°
+				<div>
+				@inputText(formBuscador("numero_orden_pago_desde"), 
+						  'class -> "form-control", 
+						  'id -> "numero_orden_pago_desde", 
+						  'style -> "width: 71px;font-size:11px;", 
+						  'placeholder -> "Desde")
+				@inputText(formBuscador("numero_orden_pago_hasta"), 
+						  'class -> "form-control", 
+						  'id -> "numero_orden_pago_hasta", 
+						  'style -> "width: 71px;font-size:11px;", 'placeholder -> "Hasta")
+				</div>
+				</label>
+			</div> -->
+			<div class="col-sm-2">
+				<label for="orden_pago_id" class="control-label">Orden de pago N° 
+					<div class="input-group">
+						@inputText(formBuscador("ordenPago.numero"), 'class -> "form-control", 'id -> "orden_pago")
+						@inputText(formBuscador("ordenPago.id"),'hidden -> "hidden", 'id -> "orden_pago_id")
+						<span class="input-group-addon">
+							<a href="#" class="searchModal"
+										id="searchOp" 
+										data-title="Selección de órdenes de pago" 
+										data-url="@controllers.contabilidad.routes.OrdenesPagosController.modalBuscar()" 
+										data-height="650" 
+										data-width="700" 
+										data-listen="modal.seleccion.orden-pago.simple" 
+										data-label="#orden_pago" 
+										data-field="#orden_pago_id">
+								<i class="glyphicon glyphicon-search"></i>
+							</a>
+						</span>
+					</div>
+				</label>
+				</div>
+		</div>	
+		<div class="row">	
+			<div class="col-sm-2">
+				<label class="control-label">Cuenta
+				@select(formBuscador("cuenta_propia"),CuentaPropia.find.all().map { p => p.id.toString -> p.nombre},'class -> "form-control select", '_default -> "Seleccionar") 	
+				</label>
+			</div>
+			<div class="col-sm-2 input-group">
+				<label class="control-label">Fecha Pago</label>
+				<div>
+					@inputText(formBuscador("fecha_pago_desde"), 'class -> "form-control inputDateMascara", 'id -> "fecha_pago_desde", 'placeholder -> "Desde")
+					@inputText(formBuscador("fecha_pago_hasta"), 'class -> "form-control inputDateMascara", 'id -> "fecha_pago_hasta", 'placeholder -> "Hasta")
+				</div>
+			</div>
+		
+			<div class="col-sm-2 input-group">
+				<label class="control-label">Fecha Ultima</label>
+				<div>
+					@inputText(formBuscador("fecha_ultima_desde"), 'class -> "form-control inputDateMascara", 'id -> "fecha_ultima_desde", 'placeholder -> "Desde")
+					@inputText(formBuscador("fecha_ultima_hasta"), 'class -> "form-control inputDateMascara", 'id -> "fecha_ultima_hasta", 'placeholder -> "Hasta")
+				</div>
+			</div>
+			<div class="col-sm-2 input-group">
+				<label class="control-label">Fecha Contabilidad</label>
+				<div>
+					@inputText(formBuscador("fecha_conta_desde"), 'class -> "form-control inputDateMascara", 'id -> "fecha_conta_desde", 'placeholder -> "Desde")
+					@inputText(formBuscador("fecha_conta_hasta"), 'class -> "form-control inputDateMascara", 'id -> "fecha_conta_hasta", 'placeholder -> "Hasta")
+				</div>
+			</div>
+			<div class="col-sm-2 input-group">
+				<label class="control-label">Fecha Rendiciones</label>
+				<div>
+					@inputText(formBuscador("fecha_rendi_desde"), 'class -> "form-control inputDateMascara", 'id -> "fecha_rendi_desde", 'placeholder -> "Desde")
+					@inputText(formBuscador("fecha_rendi_hasta"), 'class -> "form-control inputDateMascara", 'id -> "fecha_rendi_hasta", 'placeholder -> "Hasta")
+				</div>
+			</div>
+		</div>		
+		<div class="row">
+			<div class="col-sm-2">
+				<div class="form-group">
+				<label for="nombre" class="control-label">&nbsp;</label>
+				<button  class="form-control btn btn-primary">Buscar</button>
+				</div>
+			</div>
+			<div class="col-sm-2">
+				<div class="form-group">
+				<label for="nombre" class="control-label">&nbsp;</label>
+				<a href="@controllers.contabilidad.routes.OrdenesPagosCircuitosController.index()"  class="form-control btn btn-default">Limpiar</a>
+				</div>
+			</div>
+				
+		</div>
+	</form>
+</div>
+@views.html.tags.successError()
+@if(buscador.getTotalRowCount == 0) {
+        
+        <div class="well">
+            <em>No se encuentran órdenes de pago completadas para el circuito</em>
+        </div>
+        
+    } else {
+		
+		Mostrando @buscador.getDisplayXtoYofZ(" a "," de ") resultado(s). 
+		
+		<table id="listaOpc" class="table table-striped table-bordered">
+			<thead>
+				<tr>
+					<th width="30">
+						<input type="checkbox" name="checkAll" id="checkAll"/>
+					</th>
+					<th width="40">Proveedor</th>
+					<th width="40">OP</th>
+					<th width="40">Expediente</th>
+					<th width="40">Exp. Fisico</th>
+					<th width="40">Cuenta</th>
+					<th width="40">Fecha Pago</th>
+					<th width="40">Fecha Ultima</th>
+					<th width="40">Fecha Creacion</th>
+					<th width="40">Fecha Contabilidad</th>
+					<th width="40">Fecha Rendiciones</th>
+					<th width="40">Fecha Rendido</th>
+					<th width="40">Total</th>
+					<th width="30">Estado</th>
+				</tr>
+			</thead>
+			<tbody>
+			@for(orden <- buscador.getList) {	
+				<tr class="pointer @getClassEstado(orden)" data-estado="@orden.estado_id" data-href="@controllers.contabilidad.routes.OrdenesPagosCircuitosController.ver(orden.id)&@UriTrack.encode()">
+					<td>
+						<input type="checkbox" name="id_pago[]" value="@orden.id" class="notSeleccion" id="check-@orden.id"/>
+					</td>
+					<td>@orden.proveedor.nombre</td>
+					<td>@orden.ordenPago.getNombreCompleto()</td>
+					<td>@if(orden.expediente != null){@(orden.expediente.getExpedienteEjercicio())}</td>
+					<td class="expFisico">@if(orden.expedienteFisico != null){@(orden.expedienteFisico.getExpedienteEjercicio())}</td>
+					<td>@if(orden.cuentaPropia != null){@(orden.cuentaPropia.numero)}</td>
+					<td>@if(orden.fecha_pago != null){@(utils.DateUtils.formatDate(orden.fecha_pago))}</td>
+					<td>@if(orden.fecha_mayor != null){@(utils.DateUtils.formatDate(orden.fecha_mayor))}</td>
+					<td>@if(orden.fecha_creacion != null){@(utils.DateUtils.formatDate(orden.fecha_creacion))}</td>
+					<td>@if(orden.fecha_contabilidad != null){@(utils.DateUtils.formatDate(orden.fecha_contabilidad))}</td>
+					<td>@if(orden.fecha_rendiciones != null){@(utils.DateUtils.formatDate(orden.fecha_rendiciones))}</td>
+					<td>@if(orden.fecha_rendicion != null){@(utils.DateUtils.formatDate(orden.fecha_rendicion))}</td>
+					<td class="total" rel="@orden.total">@(utils.NumberUtils.moneda(orden.total))</td>
+					<td class="estado" align="center">
+						@if(orden.estado != null){@(orden.estado.nombre)}
+					</td>
+				</tr>	
+				
+			}
+	        </tbody>
+	        <tfoot>
+	        	<tr>	
+	        		<td colspan="10">Mostrando @buscador.getDisplayXtoYofZ(" a "," de ") resultado(s).</td>
+	        		<td><b>Total:</b> <span class="totalFooter"></span></td>
+	        		<td>&nbsp</td>
+	        	</tr>
+	        </tfoot>
+        </table>
+		
+		<div class="pagination pull-right">
+		    @views.html.helpers.paginador(buscador, controllers.contabilidad.routes.OrdenesPagosCircuitosController.index())
+		</div>
+<script>
+$( function (){
+	var a = 0;var b = 0;var c = 0;var d = 0;
+	$(".total").each(function (index) {
+		a = Number($(this).attr("rel"))+a 
+	})
+	
+	$(".totalFooter").append(formatNumberPesos(parseFloat(a).toFixed(2)));
+	
+	$( "#checkAll" ).click(function() {
+		selectAll();
+	});
+	$( "input[name='id_pago[]']" ).click(function() {
+		selectTrList();
+	});
+});
+function selectTrList(){
+	var a = 0;var b = 0;var c = 0;var d = 0;
+	$(".total").each(function (index) {
+		if($(this).parent().find("input[name='id_pago[]']").prop("checked")){
+			a = Number($(this).attr("rel"))+a
+		}
+	})
+	$(".totalFooter").empty();
+	$(".totalFooter").append(formatNumberPesos(parseFloat(a).toFixed(2)));
+}
+
+function selectAll(){
+	var a = 0;var b = 0;var c = 0;var d = 0;
+	if($("#checkAll").prop("checked")){
+		$("input[name='id_pago[]']").prop( "checked", true );
+		
+	}else{
+		$( "input[name='id_pago[]']").prop( "checked", false );
+	}
+	
+	$(".total").each(function (index) {
+		a = Number($(this).attr("rel"))+a 
+	})
+	$(".totalFooter").empty();
+	$(".totalFooter").append(formatNumberPesos(parseFloat(a).toFixed(2)));
+}
+</script>
+	}
+}	
+

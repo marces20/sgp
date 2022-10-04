@@ -1,0 +1,96 @@
+@(escalaMontoForm: Form[models.haberes.EscalaLaboralMonto])
+@import helper._
+@import utils._
+@import models.auth._
+@import models.haberes._
+@implicitFieldConstructor = @{ FieldConstructor(simpleInput.render) } 
+<script>
+$( function(){ $('.searchModal').modalSearch();})
+</script>		
+	<div class="row menu-acciones">
+		<div class="col-sm-10">
+			<button type="submit" class="btn btn-default" title="Guardar escala"><i class="glyphicon glyphicon-floppy-disk"></i> Guardar</button>
+			<a href="@if(request().getHeader("referer")){ @request().getHeader("referer") } else {@controllers.haberes.routes.EscalasLaboralesMontosController.index()@UriTrack.decode()}" title="Cancelar editar" class="btn btn-default"><i class="glyphicon glyphicon-floppy-remove"></i> Cancelar</a>
+		</div>
+		<div class="col-sm-2">
+			<a href="@UriTrack.decode()" title="Volver al listado" class="btn btn-default"><i class="glyphicon glyphicon-list"></i></a> 
+		</div>	
+	</div>
+	<div class="row">
+		 <div class="col-sm-6">
+			<label for="concepto_nombre" class="control-label">Concepto</label>
+			<div class="input-group @if(escalaMontoForm.error("liquidacion_concepto_id") != null) {has-error} else {has-required}">
+				@inputText(escalaMontoForm("liquidacionConcepto.denominacion"), 'class -> "form-control", 'autofocus -> "autofocus", 'id -> "concepto")
+				@inputText(escalaMontoForm("liquidacion_concepto_id"), 'hidden -> "hidden", 'id -> "liquidacion_concepto_id")
+				<span class="input-group-addon">
+					<a href="#" class="searchModal" id="searchProductoModal" 
+								data-title="Selección de Concepto" 
+								data-url="@controllers.haberes.routes.LiquidacionConceptosController.modalBuscar()"
+								data-height="650" 
+								data-width="700" 
+								data-listen="modal.seleccion.concepto.simple" 
+								data-label="#concepto" 
+								data-field="#liquidacion_concepto_id">
+								<i class="glyphicon glyphicon-search"></i>
+					</a>
+				</span>
+			</div>
+			@escalaMontoForm("liquidacion_concepto_id").error.map{ error =>
+				<div class="text-error">@error.message</div>
+			}
+		</div>
+		<div class="col-sm-6">
+			<label class="control-label">Escala</label>
+				<div class="input-group @if(escalaMontoForm.error("escala_laboral_id") != null) {has-error}">
+					@inputText(escalaMontoForm("escalaLaboral.nombre"), 'name -> "", 'class -> "form-control", 'id -> "escala_laboral")
+					@inputText(escalaMontoForm("escala_laboral_id"), 'hidden -> "hidden", 'id -> "escala_laboral_id")
+					<span class="input-group-addon">
+					<a href="#" class="searchModal" id="searchEscalaLaboral" 
+							 	data-title="Selección de escala" 
+							 	data-url="@controllers.haberes.routes.EscalasLaboralesController.modalBuscar()" 
+							 	data-height="650" data-width="700" 
+							 	data-listen="modal.seleccion.escalaLaboral.simple" 
+							 	data-label="#escala_laboral" data-field="#escala_laboral_id">
+					<i class="glyphicon glyphicon-search"></i></a></span>
+				</div>
+				@escalaMontoForm("escala_laboral_id").error.map{ error =>
+					<div class="text-error">@error.message</div>
+				}
+		</div>
+		
+	</div>
+	<div class="row">
+		<div class="col-sm-2">
+			<label class="control-label">Importe</label>
+			<div class="form-group @if(escalaMontoForm.error("importe_referencia") != null) {has-error}">	
+				@inputText(escalaMontoForm("importe_referencia"), 'class -> "form-control", 'id -> "importe_referencia")
+				@escalaMontoForm("importe_referencia").error.map{ error => <div class="text-error">@error.message</div>}
+			</div>
+		</div>
+		<div class="col-sm-2">
+			<label class="control-label">Importe tope</label>
+			<div class="form-group @if(escalaMontoForm.error("importe_compensador") != null) {has-error}">	
+				@inputText(escalaMontoForm("importe_compensador"), 'class -> "form-control", 'id -> "importe_compensador")
+				@escalaMontoForm("importe_compensador").error.map{ error => <div class="text-error">@error.message</div>}
+			</div>
+		</div>	
+	</div>
+	<div class="row">
+		<div class="col-sm-2">
+			<div class="form-group">
+				<label for="nombre" class="control-label">Estado
+				@select(escalaMontoForm("activo"), options("true"->"Activo", "false"->"Inactivo"), 'class -> "form-control")
+				</label>
+			</div>
+		</div>
+		<div class="col-sm-2">
+			<div class="form-group @if(escalaMontoForm.error("fecha_baja") != null) {has-error}">
+				<label for="fechaBaja" class="control-label">Fecha Baja</label> 
+				@inputText(escalaMontoForm("fecha_baja"),'class -> "form-control date")
+			</div>
+			@escalaMontoForm("fecha_baja").error.map{ error =>
+				<div class="text-error">@error.message</div>
+			}
+		</div>
+	</div>
+	

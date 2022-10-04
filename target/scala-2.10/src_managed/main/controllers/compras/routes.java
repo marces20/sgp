@@ -1,0 +1,127 @@
+// @SOURCE:/home/marce/hspwork/play/sgpgit/sgp/conf/routes
+// @HASH:1f124834843d709feba2747cf62a07cc4c597ae1
+// @DATE:Tue Oct 04 11:43:29 ART 2022
+
+package controllers.compras;
+
+public class routes {
+public static final controllers.compras.ReverseCertificacionesComprasLineasController CertificacionesComprasLineasController = new controllers.compras.ReverseCertificacionesComprasLineasController();
+public static final controllers.compras.ReverseOrdenesReportesController OrdenesReportesController = new controllers.compras.ReverseOrdenesReportesController();
+public static final controllers.compras.ReverseSolicitudesReportesController SolicitudesReportesController = new controllers.compras.ReverseSolicitudesReportesController();
+public static final controllers.compras.ReverseCertificacionesController CertificacionesController = new controllers.compras.ReverseCertificacionesController();
+public static final controllers.compras.ReverseOrdenesLineasAjustesController OrdenesLineasAjustesController = new controllers.compras.ReverseOrdenesLineasAjustesController();
+public static final controllers.compras.ReverseProveedoresController ProveedoresController = new controllers.compras.ReverseProveedoresController();
+public static final controllers.compras.ReverseCertificacionesComprasController CertificacionesComprasController = new controllers.compras.ReverseCertificacionesComprasController();
+public static final controllers.compras.ReverseLineasSolicitudesController LineasSolicitudesController = new controllers.compras.ReverseLineasSolicitudesController();
+public static final controllers.compras.ReverseTipoProductosController TipoProductosController = new controllers.compras.ReverseTipoProductosController();
+public static final controllers.compras.ReverseOrdenesAccionesController OrdenesAccionesController = new controllers.compras.ReverseOrdenesAccionesController();
+public static final controllers.compras.ReverseArticulosController ArticulosController = new controllers.compras.ReverseArticulosController();
+public static final controllers.compras.ReverseCertificacionesComprasLineaAjustesController CertificacionesComprasLineaAjustesController = new controllers.compras.ReverseCertificacionesComprasLineaAjustesController();
+public static final controllers.compras.ReverseAjustesSolicitudesController AjustesSolicitudesController = new controllers.compras.ReverseAjustesSolicitudesController();
+public static final controllers.compras.ReverseProveedorAtributosController ProveedorAtributosController = new controllers.compras.ReverseProveedorAtributosController();
+public static final controllers.compras.ReverseLineasCertificacionesController LineasCertificacionesController = new controllers.compras.ReverseLineasCertificacionesController();
+public static final controllers.compras.ReverseOrdenSubrubroController OrdenSubrubroController = new controllers.compras.ReverseOrdenSubrubroController();
+public static final controllers.compras.ReverseCajaChicaController CajaChicaController = new controllers.compras.ReverseCajaChicaController();
+public static final controllers.compras.ReverseClientesController ClientesController = new controllers.compras.ReverseClientesController();
+public static final controllers.compras.ReversePedidosFondosController PedidosFondosController = new controllers.compras.ReversePedidosFondosController();
+public static final controllers.compras.ReverseCertificacionesAccionesController CertificacionesAccionesController = new controllers.compras.ReverseCertificacionesAccionesController();
+public static final controllers.compras.ReverseOrdenesLineasClientesController OrdenesLineasClientesController = new controllers.compras.ReverseOrdenesLineasClientesController();
+public static final controllers.compras.ReverseObrasSocialesController ObrasSocialesController = new controllers.compras.ReverseObrasSocialesController();
+public static final controllers.compras.ReverseCajaChicaPresupuestoLineasController CajaChicaPresupuestoLineasController = new controllers.compras.ReverseCajaChicaPresupuestoLineasController();
+public static final controllers.compras.ReverseProveedorDatosDgrController ProveedorDatosDgrController = new controllers.compras.ReverseProveedorDatosDgrController();
+public static final controllers.compras.ReverseLineasOrdenesController LineasOrdenesController = new controllers.compras.ReverseLineasOrdenesController();
+public static final controllers.compras.ReverseCajaChicaMovimientosController CajaChicaMovimientosController = new controllers.compras.ReverseCajaChicaMovimientosController();
+public static final controllers.compras.ReverseCertificacionesObrasController CertificacionesObrasController = new controllers.compras.ReverseCertificacionesObrasController();
+public static final controllers.compras.ReverseCategoriasController CategoriasController = new controllers.compras.ReverseCategoriasController();
+public static final controllers.compras.ReverseLineasPedidosFondosController LineasPedidosFondosController = new controllers.compras.ReverseLineasPedidosFondosController();
+public static final controllers.compras.ReverseIndexController IndexController = new controllers.compras.ReverseIndexController();
+public static final controllers.compras.ReverseOrdenesController OrdenesController = new controllers.compras.ReverseOrdenesController();
+public static final controllers.compras.ReverseSolicitudAccionesController SolicitudAccionesController = new controllers.compras.ReverseSolicitudAccionesController();
+public static final controllers.compras.ReverseProveedoresAccionesController ProveedoresAccionesController = new controllers.compras.ReverseProveedoresAccionesController();
+public static final controllers.compras.ReverseCertificacionesComprasReportesController CertificacionesComprasReportesController = new controllers.compras.ReverseCertificacionesComprasReportesController();
+public static final controllers.compras.ReverseSolicitudesController SolicitudesController = new controllers.compras.ReverseSolicitudesController();
+public static final controllers.compras.ReverseCertificacionesReportesController CertificacionesReportesController = new controllers.compras.ReverseCertificacionesReportesController();
+public static final controllers.compras.ReverseProductosController ProductosController = new controllers.compras.ReverseProductosController();
+public static final controllers.compras.ReverseCertificacionesComprasAccionesController CertificacionesComprasAccionesController = new controllers.compras.ReverseCertificacionesComprasAccionesController();
+public static class javascript {
+public static final controllers.compras.javascript.ReverseCertificacionesComprasLineasController CertificacionesComprasLineasController = new controllers.compras.javascript.ReverseCertificacionesComprasLineasController();
+public static final controllers.compras.javascript.ReverseOrdenesReportesController OrdenesReportesController = new controllers.compras.javascript.ReverseOrdenesReportesController();
+public static final controllers.compras.javascript.ReverseSolicitudesReportesController SolicitudesReportesController = new controllers.compras.javascript.ReverseSolicitudesReportesController();
+public static final controllers.compras.javascript.ReverseCertificacionesController CertificacionesController = new controllers.compras.javascript.ReverseCertificacionesController();
+public static final controllers.compras.javascript.ReverseOrdenesLineasAjustesController OrdenesLineasAjustesController = new controllers.compras.javascript.ReverseOrdenesLineasAjustesController();
+public static final controllers.compras.javascript.ReverseProveedoresController ProveedoresController = new controllers.compras.javascript.ReverseProveedoresController();
+public static final controllers.compras.javascript.ReverseCertificacionesComprasController CertificacionesComprasController = new controllers.compras.javascript.ReverseCertificacionesComprasController();
+public static final controllers.compras.javascript.ReverseLineasSolicitudesController LineasSolicitudesController = new controllers.compras.javascript.ReverseLineasSolicitudesController();
+public static final controllers.compras.javascript.ReverseTipoProductosController TipoProductosController = new controllers.compras.javascript.ReverseTipoProductosController();
+public static final controllers.compras.javascript.ReverseOrdenesAccionesController OrdenesAccionesController = new controllers.compras.javascript.ReverseOrdenesAccionesController();
+public static final controllers.compras.javascript.ReverseArticulosController ArticulosController = new controllers.compras.javascript.ReverseArticulosController();
+public static final controllers.compras.javascript.ReverseCertificacionesComprasLineaAjustesController CertificacionesComprasLineaAjustesController = new controllers.compras.javascript.ReverseCertificacionesComprasLineaAjustesController();
+public static final controllers.compras.javascript.ReverseAjustesSolicitudesController AjustesSolicitudesController = new controllers.compras.javascript.ReverseAjustesSolicitudesController();
+public static final controllers.compras.javascript.ReverseProveedorAtributosController ProveedorAtributosController = new controllers.compras.javascript.ReverseProveedorAtributosController();
+public static final controllers.compras.javascript.ReverseLineasCertificacionesController LineasCertificacionesController = new controllers.compras.javascript.ReverseLineasCertificacionesController();
+public static final controllers.compras.javascript.ReverseOrdenSubrubroController OrdenSubrubroController = new controllers.compras.javascript.ReverseOrdenSubrubroController();
+public static final controllers.compras.javascript.ReverseCajaChicaController CajaChicaController = new controllers.compras.javascript.ReverseCajaChicaController();
+public static final controllers.compras.javascript.ReverseClientesController ClientesController = new controllers.compras.javascript.ReverseClientesController();
+public static final controllers.compras.javascript.ReversePedidosFondosController PedidosFondosController = new controllers.compras.javascript.ReversePedidosFondosController();
+public static final controllers.compras.javascript.ReverseCertificacionesAccionesController CertificacionesAccionesController = new controllers.compras.javascript.ReverseCertificacionesAccionesController();
+public static final controllers.compras.javascript.ReverseOrdenesLineasClientesController OrdenesLineasClientesController = new controllers.compras.javascript.ReverseOrdenesLineasClientesController();
+public static final controllers.compras.javascript.ReverseObrasSocialesController ObrasSocialesController = new controllers.compras.javascript.ReverseObrasSocialesController();
+public static final controllers.compras.javascript.ReverseCajaChicaPresupuestoLineasController CajaChicaPresupuestoLineasController = new controllers.compras.javascript.ReverseCajaChicaPresupuestoLineasController();
+public static final controllers.compras.javascript.ReverseProveedorDatosDgrController ProveedorDatosDgrController = new controllers.compras.javascript.ReverseProveedorDatosDgrController();
+public static final controllers.compras.javascript.ReverseLineasOrdenesController LineasOrdenesController = new controllers.compras.javascript.ReverseLineasOrdenesController();
+public static final controllers.compras.javascript.ReverseCajaChicaMovimientosController CajaChicaMovimientosController = new controllers.compras.javascript.ReverseCajaChicaMovimientosController();
+public static final controllers.compras.javascript.ReverseCertificacionesObrasController CertificacionesObrasController = new controllers.compras.javascript.ReverseCertificacionesObrasController();
+public static final controllers.compras.javascript.ReverseCategoriasController CategoriasController = new controllers.compras.javascript.ReverseCategoriasController();
+public static final controllers.compras.javascript.ReverseLineasPedidosFondosController LineasPedidosFondosController = new controllers.compras.javascript.ReverseLineasPedidosFondosController();
+public static final controllers.compras.javascript.ReverseIndexController IndexController = new controllers.compras.javascript.ReverseIndexController();
+public static final controllers.compras.javascript.ReverseOrdenesController OrdenesController = new controllers.compras.javascript.ReverseOrdenesController();
+public static final controllers.compras.javascript.ReverseSolicitudAccionesController SolicitudAccionesController = new controllers.compras.javascript.ReverseSolicitudAccionesController();
+public static final controllers.compras.javascript.ReverseProveedoresAccionesController ProveedoresAccionesController = new controllers.compras.javascript.ReverseProveedoresAccionesController();
+public static final controllers.compras.javascript.ReverseCertificacionesComprasReportesController CertificacionesComprasReportesController = new controllers.compras.javascript.ReverseCertificacionesComprasReportesController();
+public static final controllers.compras.javascript.ReverseSolicitudesController SolicitudesController = new controllers.compras.javascript.ReverseSolicitudesController();
+public static final controllers.compras.javascript.ReverseCertificacionesReportesController CertificacionesReportesController = new controllers.compras.javascript.ReverseCertificacionesReportesController();
+public static final controllers.compras.javascript.ReverseProductosController ProductosController = new controllers.compras.javascript.ReverseProductosController();
+public static final controllers.compras.javascript.ReverseCertificacionesComprasAccionesController CertificacionesComprasAccionesController = new controllers.compras.javascript.ReverseCertificacionesComprasAccionesController();
+}
+public static class ref {
+public static final controllers.compras.ref.ReverseCertificacionesComprasLineasController CertificacionesComprasLineasController = new controllers.compras.ref.ReverseCertificacionesComprasLineasController();
+public static final controllers.compras.ref.ReverseOrdenesReportesController OrdenesReportesController = new controllers.compras.ref.ReverseOrdenesReportesController();
+public static final controllers.compras.ref.ReverseSolicitudesReportesController SolicitudesReportesController = new controllers.compras.ref.ReverseSolicitudesReportesController();
+public static final controllers.compras.ref.ReverseCertificacionesController CertificacionesController = new controllers.compras.ref.ReverseCertificacionesController();
+public static final controllers.compras.ref.ReverseOrdenesLineasAjustesController OrdenesLineasAjustesController = new controllers.compras.ref.ReverseOrdenesLineasAjustesController();
+public static final controllers.compras.ref.ReverseProveedoresController ProveedoresController = new controllers.compras.ref.ReverseProveedoresController();
+public static final controllers.compras.ref.ReverseCertificacionesComprasController CertificacionesComprasController = new controllers.compras.ref.ReverseCertificacionesComprasController();
+public static final controllers.compras.ref.ReverseLineasSolicitudesController LineasSolicitudesController = new controllers.compras.ref.ReverseLineasSolicitudesController();
+public static final controllers.compras.ref.ReverseTipoProductosController TipoProductosController = new controllers.compras.ref.ReverseTipoProductosController();
+public static final controllers.compras.ref.ReverseOrdenesAccionesController OrdenesAccionesController = new controllers.compras.ref.ReverseOrdenesAccionesController();
+public static final controllers.compras.ref.ReverseArticulosController ArticulosController = new controllers.compras.ref.ReverseArticulosController();
+public static final controllers.compras.ref.ReverseCertificacionesComprasLineaAjustesController CertificacionesComprasLineaAjustesController = new controllers.compras.ref.ReverseCertificacionesComprasLineaAjustesController();
+public static final controllers.compras.ref.ReverseAjustesSolicitudesController AjustesSolicitudesController = new controllers.compras.ref.ReverseAjustesSolicitudesController();
+public static final controllers.compras.ref.ReverseProveedorAtributosController ProveedorAtributosController = new controllers.compras.ref.ReverseProveedorAtributosController();
+public static final controllers.compras.ref.ReverseLineasCertificacionesController LineasCertificacionesController = new controllers.compras.ref.ReverseLineasCertificacionesController();
+public static final controllers.compras.ref.ReverseOrdenSubrubroController OrdenSubrubroController = new controllers.compras.ref.ReverseOrdenSubrubroController();
+public static final controllers.compras.ref.ReverseCajaChicaController CajaChicaController = new controllers.compras.ref.ReverseCajaChicaController();
+public static final controllers.compras.ref.ReverseClientesController ClientesController = new controllers.compras.ref.ReverseClientesController();
+public static final controllers.compras.ref.ReversePedidosFondosController PedidosFondosController = new controllers.compras.ref.ReversePedidosFondosController();
+public static final controllers.compras.ref.ReverseCertificacionesAccionesController CertificacionesAccionesController = new controllers.compras.ref.ReverseCertificacionesAccionesController();
+public static final controllers.compras.ref.ReverseOrdenesLineasClientesController OrdenesLineasClientesController = new controllers.compras.ref.ReverseOrdenesLineasClientesController();
+public static final controllers.compras.ref.ReverseObrasSocialesController ObrasSocialesController = new controllers.compras.ref.ReverseObrasSocialesController();
+public static final controllers.compras.ref.ReverseCajaChicaPresupuestoLineasController CajaChicaPresupuestoLineasController = new controllers.compras.ref.ReverseCajaChicaPresupuestoLineasController();
+public static final controllers.compras.ref.ReverseProveedorDatosDgrController ProveedorDatosDgrController = new controllers.compras.ref.ReverseProveedorDatosDgrController();
+public static final controllers.compras.ref.ReverseLineasOrdenesController LineasOrdenesController = new controllers.compras.ref.ReverseLineasOrdenesController();
+public static final controllers.compras.ref.ReverseCajaChicaMovimientosController CajaChicaMovimientosController = new controllers.compras.ref.ReverseCajaChicaMovimientosController();
+public static final controllers.compras.ref.ReverseCertificacionesObrasController CertificacionesObrasController = new controllers.compras.ref.ReverseCertificacionesObrasController();
+public static final controllers.compras.ref.ReverseCategoriasController CategoriasController = new controllers.compras.ref.ReverseCategoriasController();
+public static final controllers.compras.ref.ReverseLineasPedidosFondosController LineasPedidosFondosController = new controllers.compras.ref.ReverseLineasPedidosFondosController();
+public static final controllers.compras.ref.ReverseIndexController IndexController = new controllers.compras.ref.ReverseIndexController();
+public static final controllers.compras.ref.ReverseOrdenesController OrdenesController = new controllers.compras.ref.ReverseOrdenesController();
+public static final controllers.compras.ref.ReverseSolicitudAccionesController SolicitudAccionesController = new controllers.compras.ref.ReverseSolicitudAccionesController();
+public static final controllers.compras.ref.ReverseProveedoresAccionesController ProveedoresAccionesController = new controllers.compras.ref.ReverseProveedoresAccionesController();
+public static final controllers.compras.ref.ReverseCertificacionesComprasReportesController CertificacionesComprasReportesController = new controllers.compras.ref.ReverseCertificacionesComprasReportesController();
+public static final controllers.compras.ref.ReverseSolicitudesController SolicitudesController = new controllers.compras.ref.ReverseSolicitudesController();
+public static final controllers.compras.ref.ReverseCertificacionesReportesController CertificacionesReportesController = new controllers.compras.ref.ReverseCertificacionesReportesController();
+public static final controllers.compras.ref.ReverseProductosController ProductosController = new controllers.compras.ref.ReverseProductosController();
+public static final controllers.compras.ref.ReverseCertificacionesComprasAccionesController CertificacionesComprasAccionesController = new controllers.compras.ref.ReverseCertificacionesComprasAccionesController();
+}
+}
+          

@@ -1,0 +1,14 @@
+@(linea:  RemitoLineaBaul, editable: Boolean)
+@import models.auth._
+<tr>
+@if(editable){
+	<td class="accion-editar"><a class="btn btn-default btn-xs modificarProducto" href="@controllers.patrimonio.routes.RemitosLineasBaulController.editar(linea.id)"><i class="glyphicon glyphicon-edit"></i></a></td>
+}
+<td>@linea.producto.nombre</td>
+<td>@linea.cantidad</td>
+@if(editable){
+	<td>
+		<a class="btn btn-default btn-xs eliminarProducto" href="@controllers.patrimonio.routes.RemitosLineasBaulController.eliminar(linea.id)"><i class="glyphicon glyphicon-trash icono-eliminar"></i></a>
+	</td>
+}
+</tr>

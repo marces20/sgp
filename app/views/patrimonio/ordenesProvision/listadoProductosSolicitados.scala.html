@@ -1,0 +1,84 @@
+@(orden: OrdenProvision, buscador: utils.pagination.Pagination[OrdenProvisionLineas])
+@import helper._
+@import models.auth._
+@import utils._
+@implicitFieldConstructor = @{ FieldConstructor(simpleInput.render) }
+
+@getPacientes(linea: OrdenLinea) = @{
+	var pacientes:String = new String()
+	if(linea != null && linea.ordenLineaCliente != null && linea.ordenLineaCliente.size() > 0){
+		for(olp <- linea.ordenLineaCliente) {
+			pacientes += olp.cliente.nombre.toUpperCase()+" - ID:"+olp.cliente.id_paciente_rismi+"\n" 
+		}
+	}
+	pacientes
+}
+
+<div class="contenedorPaginador ajaxPaginador">
+@if(buscador.getTotalRowCount == 0) {
+    <div class="well">
+    	<em>No se encuentran resultados</em>
+    </div>  
+} else {
+   	Mostrando @buscador.getDisplayXtoYofZ(" a "," de ") resultado(s). 
+   
+	<table class="table table-striped table-bordered table-hover" style="margin-top: 20px">
+		<thead>
+			<tr>
+				<th width="30">
+					<input type="checkbox" name="checkAllLineaSolicitados"  data-check=".data-check-linea-solicitados"  id="checkAllLineaSolicitados"/>
+				</th>
+				<th>Producto</th>
+				<th>Udm</th>
+				<th>Servicio</th>
+				<th>Solicitado</th>
+				<th>Recepcionado</th>
+				<th>Pendiente</th>
+				<th>Precio</th>
+				<th width="80">Total</th>
+				<th>Pacientes</th>
+			</tr>
+		</thead>
+		<tbody>
+		@for(o <- buscador.getList) {
+			<tr>
+				<td><input type="checkbox" name="check_linea_solicitados[]" value="@o.orden_linea_id" class="data-check-linea-solicitados notSeleccion" id="check-@o.orden_linea_id"/></td>
+				<td>@o.producto.nombre</td>
+				<td>@o.udm</td>
+				<td>@if(o.departamento != null){@o.departamento}</td>
+				<td align="center">@o.cantidad</td>
+				<td align="center">@o.getRecepcionado()</td>
+				<td align="center">@o.getPendiente()</td>
+				<td>@utils.NumberUtils.moneda(o.precio)</td>
+				<td>@utils.NumberUtils.moneda(o.getTotal())</td>
+				@if(o.orden_linea_id != null && o.getOrdenLinea().ordenLineaCliente != null && o.getOrdenLinea().ordenLineaCliente.size() > 0){
+					@if(o.getOrdenLinea().ordenLineaCliente != null && o.getOrdenLinea().ordenLineaCliente.size() > 0){
+					
+					}
+					<td><div class='tip-top pointer' title='@getPacientes(o.getOrdenLinea())'><i class="glyphicon glyphicon-user"></i></div></td>
+				}else{
+					<td></td>
+				}
+			</tr>
+		}
+		</tbody>
+	</table>
+	<div class="pagination pull-right">
+	    @views.html.helpers.paginador(buscador, controllers.patrimonio.routes.OrdenesProvisionController.verProductosSolicitados())
+	</div>
+		}
+		
+</div>
+<script>
+	$( function(){
+		
+		 
+		
+		$('#checkAllLineaSolicitados').on('change', function(){
+			var c = $(this).prop("checked");
+			var target = $(this).attr('data-check');
+			if(c) $(target).prop( "checked", true );
+			else $(target).prop( "checked", false );
+		});
+	});
+</script>

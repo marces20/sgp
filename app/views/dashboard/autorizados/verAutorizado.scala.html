@@ -1,0 +1,150 @@
+@(autorizadoForm: Form[Autorizado], autorizado: Autorizado, paginadorFicha: utils.pagination.PaginadorFicha)
+@import utils._
+@import helper._
+@implicitFieldConstructor = @{ FieldConstructor(simpleInput.render) } 
+
+@paginadorFicha.setActual(autorizado.id.toString)
+@scripts = {
+	<script src="@routes.Assets.at("javascripts/dashboard/autorizado.js")" type="text/javascript"></script>
+}
+@views.html.dashboard.mainDashboard("Vista de Autorizados",scripts) {
+	<div class="page-header">
+		<div class="row">
+			<div class="col-sm-7">
+				<h1>Vista de Autorizado</h1>
+			</div>
+			<div class="col-sm-5">
+				<div class="dropdown pull-right">
+				 <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown">
+				 	<i class="glyphicon glyphicon-list-alt"></i>
+				    Reportes
+				    <span class="caret"></span>
+				  </button>
+				  <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
+				    <li role="presentation">
+					  	<a role="menuitem" id="reporteAutorizado" href="#" tabindex="-1"					  													     
+			    		data-url="@controllers.dashboard.routes.AutorizadosController.reporteAutorizado(autorizado.id)">
+			    		Reporte Autorizado</a>
+			    		
+			    	</li>
+			    	 <li role="presentation">
+					  	<a role="menuitem" id="reporteAutorizadoExcel" href="#" tabindex="-1"					  													     
+			    		data-url="@controllers.dashboard.routes.AutorizadosController.reporteAutorizadoExcel(autorizado.id)">
+			    		Reporte Autorizado Excel</a>
+			    		
+			    	</li>
+			    	 <li role="presentation">
+					  	<a role="menuitem" id="reporteAutorizadoExcel" href="#" tabindex="-1"					  													     
+			    		data-url="@controllers.dashboard.routes.AutorizadosController.reporteAutorizadoRemitos(autorizado.id)">
+			    		Reporte Autorizado Remito</a>
+			    		
+			    	</li>
+				  </ul>
+				</div>
+				
+				<div class="dropdown pull-right btn-header">
+				 <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown">
+				 	<i class="glyphicon glyphicon-cog"></i>
+				    Acciones
+				    <span class="caret"></span>
+				  </button>
+				  <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
+				  	
+				  </ul>
+				</div>
+
+			</div>
+		</div>
+	</div>
+	
+@views.html.tags.successError()
+
+<div class="row menu-acciones">
+	<div class="col-sm-9">
+		<a href="@controllers.dashboard.routes.AutorizadosController.crear()@UriTrack.get("?")"  class="btn btn-default"><i class="glyphicon glyphicon-plus-sign"></i> Nuevo</a>
+		<a href="@controllers.dashboard.routes.AutorizadosController.editar(autorizado.id)@UriTrack.get("&")"  class="btn btn-default"><i class="glyphicon glyphicon-edit"></i> Editar</a>
+		<a href="@controllers.dashboard.routes.AutorizadosController.eliminar(autorizado.id)@UriTrack.get("&")"  class="btn btn-default delete-confirm-link"><i class="glyphicon glyphicon-trash icono-eliminar"></i> Eliminar</a>
+	</div>
+	<div class="col-sm-3">
+		<a href="@UriTrack.getOnNull(controllers.dashboard.routes.AutorizadosController.index().absoluteURL())" class="btn btn-default"><i class="glyphicon glyphicon-list"></i></a>
+		
+		@if(paginadorFicha.getLista().size() > 1){
+
+		<div class="btn-group">
+			@if(paginadorFicha.hasPrev()) {
+				<a  role="group" href="@controllers.dashboard.routes.AutorizadosController.ver(paginadorFicha.prev().toLong)@UriTrack.get("&")" class="btn btn-default"><i class="glyphicon glyphicon-chevron-left"></i></a>
+			}
+			<p style="padding-top: 3px" href=""  role="group" class="btn btn-default">@paginadorFicha.posicionActual() de @paginadorFicha.getLista().size()</p>
+			@if(paginadorFicha.hasNext()) {
+				<a  role="group" href="@controllers.dashboard.routes.AutorizadosController.ver(paginadorFicha.next().toLong)@UriTrack.get("&")" class="btn btn-default"><i class="glyphicon glyphicon-chevron-right"></i></a>
+			}  
+		</div>
+		}
+		
+	</div>
+</div>
+	@inputText(autorizadoForm("id"), 'type -> "hidden", 'id -> "idAutorizado")
+	<div class="row">
+		<div class="col-sm-2">
+			<label class="control-label">Referencia</label>
+			<p class="form-control-static form-control">@autorizado.nombre</p>
+		</div>
+		<div class="col-sm-4">
+			<label class="control-label">Descripcion</label>
+			<p class="form-control-static form-control">@autorizado.descripcion</p>
+		</div>
+		<div class="col-sm-2">
+			<label class="control-label">Fecha</label>
+			<p class="form-control-static form-control">@autorizadoForm("fecha").value</p>
+		</div>
+		<div class="col-sm-2">
+			<label class="control-label">Tipo Cuenta</label>
+			<p class="form-control-static form-control">@if(autorizado.tipoCuenta != null){@autorizado.tipoCuenta.nombre}</p> 
+		</div>
+	</div>	
+	<div class="row">	
+		<div class="col-sm-2">
+			<label class="control-label">Cotizacion</label>
+			<p class="form-control-static form-control">@autorizadoForm("cot_dolar").value</p>
+		</div>
+		<div class="col-sm-2">
+			<label class="control-label">Tipo Moneda</label>
+			<p class="form-control-static form-control">@if(autorizado.tipoMoneda != null){@autorizado.tipoMoneda.nombre}</p> 
+		</div>
+	 
+		
+	</div>
+	 
+	@views.html.dashboard.autorizados.tabsAutorizados(false, autorizadoForm,autorizado)
+	
+	
+	<h4>Total: 	   <b>@utils.NumberUtils.moneda(autorizado.getTotal())</b></h4>	
+	<h4>Estado actual: 	<b>@autorizado.estado.nombre</b></h4>
+	<div class="row margin-bottom-25">	
+		@for(estado <- models.Estado.getSiguienteEstadoPorAprobar(autorizado.estado.orden,models.Estado.TIPO_AUTORIZADO)) {	
+			@if(estado.orden <= 3) {
+				<div class="col-sm-3">
+					<a href="@controllers.dashboard.routes.AutorizadosController.cambiarEstado(autorizadoForm.field("id").value.toInt, estado.id.toLong)@UriTrack.get("&")" class="btn btn-default">
+						<i class="glyphicon glyphicon-arrow-right"></i> @estado.nombre
+					</a>
+				</div>
+				
+			}
+		}
+		@if(autorizado.estado.id == models.Estado.AUTORIZADO_ESTADO_CANCELADO) {
+			<div class="col-sm-3">
+				<a href="@controllers.dashboard.routes.AutorizadosController.cambiarEstado(autorizadoForm.field("id").value.toInt, models.Estado.AUTORIZADO_ESTADO_BORRADOR)@UriTrack.get("&")" class="btn btn-default">
+					<i class="glyphicon glyphicon-arrow-right"></i> Volver a Borrador
+				</a>
+			</div>
+		}else{
+			<div class="col-sm-3">
+				<a href="@controllers.dashboard.routes.AutorizadosController.cambiarEstado(autorizadoForm.field("id").value.toInt, models.Estado.AUTORIZADO_ESTADO_CANCELADO)@UriTrack.get("&")" class="btn btn-default">
+					<i class="glyphicon glyphicon-minus-sign"></i> Cancelar Autorizado
+				</a>
+			</div>
+		}
+	</div>
+}
+
+

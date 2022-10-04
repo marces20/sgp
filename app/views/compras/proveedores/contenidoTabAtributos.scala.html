@@ -1,0 +1,18 @@
+@(formularioCarga: Boolean, provForm: Form[Proveedor] = null)
+@import java.util.List
+
+@if(provForm.field("id").value == null || provForm.field("id").value == ""){
+	<p><i class="glyphicon glyphicon-info-sign"></i> Para cargar atributos primero debe guardar el proveedor</p>
+} else {
+	<script>
+		$( function (){
+			$.get('@controllers.compras.routes.ProveedorAtributosController.index(provForm.field("id").value.toLong, formularioCarga)', function(data){
+				$('#listaAtributos').parent().html(data);
+			})
+		});
+	</script>
+}
+
+<div id="listaAtributos">
+
+</div>

@@ -1,0 +1,93 @@
+@(cForm: Form[CertificacionServicio],cs:CertificacionServicio)
+@import helper._
+@import utils._
+@implicitFieldConstructor = @{ FieldConstructor(simpleInput.render) } 
+
+
+<div class="row menu-acciones">
+	<div class="col-sm-10">
+		<button type="submit" class="btn btn-default" title="Guardar certificación"><i class="glyphicon glyphicon-floppy-disk"></i> Guardar</button>	
+    	<a href="@controllers.patrimonio.routes.CertificacionesServiciosController.index()" title="Cancelar" class="btn btn-default"><i class="glyphicon glyphicon-floppy-remove"></i> Cancelar</a>
+    </div>
+</div>
+
+@inputText(cForm("id"), 'type -> "hidden", 'id->"certificacionId")
+@inputText(cForm("orden_provision_id"), 'type -> "hidden", 'id->"orden_provision_id")
+<input type="hidden" name=@UriTrack.getKey() value="@UriTrack.code()" />
+<div class="row">
+	<div class="col-sm-2">
+		<div class="form-group">
+			<label for="nombre" class="control-label">Orden provisión</label>
+			<p class="form-control-static form-control">@cs.ordenProvision.numero</p>
+		</div>
+	</div>
+
+	<div class="col-sm-2">
+		<div class="form-group">
+			<label for="nombre" class="control-label">Expediente</label>
+			<p class="form-control-static form-control">@cs.ordenProvision.ordenCompra.expediente.getExpedienteEjercicio()</p>
+		</div>
+	</div>
+	
+	
+	<div class="col-sm-4">
+		<div class="form-group">
+			<label for="nombre" class="control-label">Proveedor</label>
+			<p class="form-control-static form-control">@cs.ordenProvision.ordenCompra.proveedor.nombre</p>
+		</div>
+	</div>
+
+	<div class="col-sm-2">
+		<label for="inputPeriodo" class="control-label">Periodo</label> 
+		<div class="input-group @if(cForm.error("periodo_id") != null) {has-error}else{has-required}">
+			
+			@inputText(cForm("periodo.nombre"),'class -> "form-control",'id -> "periodo")
+			@inputText(cForm("periodo_id"),'hidden -> "hidden",'id -> "periodo_id")
+			<span class="input-group-addon">
+			<a href="#" class="searchModal"
+						id="searchPeriodo" 
+						data-title="Selección de Periodo" 
+						data-url="@controllers.contabilidad.routes.PeriodosController.modalBuscar()" 
+						data-height="650" 
+						data-width="700" 
+						data-listen="modal.seleccion.periodo.simple" 
+						data-label="#periodo" 
+						data-field="#periodo_id">
+				<i class="glyphicon glyphicon-search"></i>
+			</a>
+			</span>
+		</div>
+		@cForm("periodo_id").error.map{ error =>
+			<div class="text-error">@error.message</div>
+		}
+	</div>
+	<div class="col-sm-2">
+		<div class="form-group @if(cForm.error("date_start") != null) {has-error}">
+			<label for="fechaCertificacion" class="control-label">Fecha Certificacion</label> 
+			@inputText(cForm("fecha_certificacion"),'class -> "form-control date")
+		</div>
+		 
+	</div>
+
+	 
+</div>
+<div class="row">
+	<div class="col-sm-2">
+		<div class="form-group">
+			<label for="fechaCertificacion" class="control-label">N° Remito</label> 
+			@inputText(cForm("numero_remito"),'class -> "form-control")
+		</div>
+		@cForm("numero_remito").error.map{ error =>
+			<div class="text-error">@error.message</div>
+		}
+	</div>
+</div>	
+
+
+<script>
+$( function(){
+	$('#searchPeriodo').modalSearch();
+	$("#numero_remito").mask("9999-99999999");
+	$("#precio, #cantidad, #descuento").numeric_input({allowNegative: true});
+})
+</script>	

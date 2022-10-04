@@ -1,0 +1,69 @@
+@(buscador: utils.pagination.Pagination[ActaRecepcionLineaAjuste], formBuscador: DynamicForm)
+@import helper._
+ 
+@implicitFieldConstructor = @{ FieldConstructor(simpleInput.render) }
+
+
+
+<div id="" class="">
+
+	<div id="" class="contenedorPaginador ajaxPaginador">
+	   @if(buscador.getTotalRowCount == 0) {
+	        
+	       <div class="well">
+	           <em>No se encuentran lineas en esta acta.</em>
+	       </div>
+	        
+	    } else {
+			
+			Mostrando @buscador.getDisplayXtoYofZ(" a "," de ") resultado(s).   
+			<table id="listaProdutosActas" class="table table-striped table-bordered table-hover">
+				<thead>
+					<tr>
+						<th>Producto</th>
+						<th>Cuenta</th>
+						<th>UDM</th>
+						<th>Cantidad</th>	
+						<th>Precio</th>	
+						<th>Total</th>			
+					</tr>
+				</thead>
+				<tbody>
+			        @for(linea <- buscador.getList) {
+					<tr class="pointer">
+						<td>@linea.producto.nombre</td>
+						<td>@if(linea.cuentaAnalitica == null){No asociada} else {@linea.cuentaAnalitica.codigo @linea.cuentaAnalitica.nombre}</td>
+						<td>@linea.udm.nombre</td>
+						<td>@linea.cantidad</td>
+						<td>@utils.NumberUtils.moneda(linea.precio)</td>
+						<td>@utils.NumberUtils.moneda(linea.getTotal())</td>
+					</tr>
+	              	}
+				</tbody>
+			</table>
+			
+			<div class="pagination pull-right">
+			    @views.html.helpers.paginador(buscador, controllers.patrimonio.routes.ActasRecepcionLineasController.index())
+			</div>
+	        
+	    }
+	</div>     
+</div> 
+
+
+<script>
+$( function() {
+	$('#searchProductoLinea').modalSearch();
+	var resultados = $('#resultadoProdutosActas');
+	
+	$('#buscadorLineasActa').submit( function() {
+		var url = $(this).attr('action');
+		
+		$.get(url, $(this).serialize(), function(data){
+			resultados.replaceWith(data);
+		});
+		
+		return false;
+	});
+});
+</script>

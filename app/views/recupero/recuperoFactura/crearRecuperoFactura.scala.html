@@ -1,0 +1,29 @@
+@(recuperoFacturaForm: Form[models.recupero.RecuperoFactura])
+@import helper._
+
+@scripts = {
+	<script src="@routes.Assets.at("javascripts/recupero/recuperoFactura.js")" type="text/javascript"></script>
+}
+
+@views.html.recupero.mainRecupero("Crear Factura", scripts) {
+
+	<div class="page-header">
+		<div class="row">
+			<div class="col-sm-7">
+				<h1>Crear nueva factura</h1>
+			</div>
+		</div>
+	</div>
+	@if(flash.containsKey("error")) {
+		<div class="alert alert-danger">
+			@flash.get("error")
+		</div>
+    }
+    
+    @helper.form(action = controllers.recupero.routes.RecuperoFacturasController.guardar()) {
+
+		@views.html.recupero.recuperoFactura.formRecuperoFactura(recuperoFacturaForm) 
+		@views.html.recupero.recuperoFactura.tabsRecuperoFactura(true, recuperoFacturaForm)	
+
+	}
+}

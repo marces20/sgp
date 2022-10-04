@@ -1,0 +1,43 @@
+@(paginador:  utils.pagination.Pagination[AgenteAsistenciaLicencia], editable: Boolean)
+@import helper._
+@import utils._
+@import models.auth._
+<div id="listaLineaAgenteAsistenciaLicencias" class="contenedorPaginador ajaxPaginador">
+
+<p>
+	<b>Licencias</b>
+	@if(editable &&  Permiso.check("agentesLicenciasCrear")){
+	<a class="btn btn-default btn-xs" href="#" id="nuevoAgenteAsistenciaLicencia"><i class="glyphicon glyphicon-plus"></i> Nuevo</a>	 	
+	}
+</p>
+
+<table id="listaDeAgenteAsistenciaLicencias" class="table table-striped table-bordered">
+	<thead>
+		<tr>
+			<th width="30"></th>
+			<th class="accion-editar" width="50">#</th>
+			<th>Tipo Licencia</th>
+			<th>Presentacion</th>
+			<th>Inicio</th>
+			<th>Fin</th>
+			<th>Dias</th>
+			<th>Año</th>
+			<th>Nota</th>
+			<th>Usuario</th>
+			<th>Estado</th>
+			<th class="50">#</th>
+		<tr>	
+	</thead>
+	<tbody>
+	@for(linea <- paginador.getList) {
+		@views.html.rrhh.agenteAsistenciaLicencia.lineaAgenteAsistenciaLicencia(linea, editable)
+	}
+	</tbody>
+</table>
+
+<div class="pagination pull-right">		
+    @views.html.helpers.paginador(paginador, controllers.rrhh.routes.AgentesAsistenciasLicenciasController.index())
+</div>
+</div>
+
+

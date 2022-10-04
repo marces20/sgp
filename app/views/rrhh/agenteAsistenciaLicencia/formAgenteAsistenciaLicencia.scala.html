@@ -1,0 +1,135 @@
+@(lineaForm: Form[AgenteAsistenciaLicencia])
+@import helper._
+@implicitFieldConstructor = @{ FieldConstructor(simpleInput.render) } 
+
+
+
+@if(flash.containsKey("error")) {
+	<div class="alert alert-danger">
+		<i class="glyphicon glyphicon-remove-sign"></i> @flash.get("error")
+	</div>
+}
+
+
+ <div class="row">
+	@inputText(lineaForm("agente_id"), 'type -> "hidden")
+	
+	<div class="col-sm-3">
+		<div class="form-group @if(lineaForm.error("finicio") != null) {has-error}">
+			<label for="inputFechaImputacion" class="control-label">Fecha Inicio</label> 
+			@inputText(lineaForm("finicio"),'class -> "form-control date", 'id -> "finicio")
+		</div>
+		@lineaForm("finicio").error.map{ error =>
+			<div class="text-error">@error.message</div>
+		}
+	</div>
+	<div class="col-sm-3">
+		<div class="form-group @if(lineaForm.error("ffin") != null) {has-error}">
+			<label for="inputFechaImputacion" class="control-label">Fecha Fin</label> 
+			@inputText(lineaForm("ffin"),'class -> "form-control date", 'id -> "ffin")
+		</div>
+		@lineaForm("ffin").error.map{ error =>
+			<div class="text-error">@error.message</div>
+		}
+	</div>
+	
+	<div class="col-sm-6">
+	
+		<div class="col-sm-8">
+			<div class="form-group @if(lineaForm.error("fpresentacion") != null) {has-error}">
+				<label for="inputFechaImputacion" class="control-label">Fecha Presentacion</label> 
+				@inputText(lineaForm("fpresentacion"),'class -> "form-control date", 'id -> "ffin")
+			</div>
+			@lineaForm("fpresentacion").error.map{ error =>
+				<div class="text-error">@error.message</div>
+			}
+		</div>
+		<div class="col-sm-4">
+			<div class="form-group @if(lineaForm.error("ejercicio_id") != null) {has-error}else{has-required}">
+			<label class="control-label">Año</label>
+			@select(lineaForm("ejercicio_id"), Ejercicio.getEjercicios().map { p => p.id.toString -> p.nombre}, 
+			'class -> "form-control select")
+			@lineaForm("ejercicio_id").error.map{ error =>
+				<div class="text-error">@error.message</div>
+			}
+			</div>
+		</div>
+	</div>
+</div>
+
+<div class="row">
+	<div class="col-sm-6">
+		<div class="form-group @if(lineaForm.error("tipo_licencia_id") != null) {has-error}else{has-required}">
+			<label for="@lineaForm("tipo_licencia_id")" class="control-label">Tipo Licencia</label>
+			@select(lineaForm("tipo_licencia_id"), 
+						TipoLicencia.find.all().map { p => p.id.toString -> p.nombre},
+						'class -> "form-control select", 
+						'_default -> "Seleccionar") 
+			
+			@lineaForm("tipo_licencia_id").error.map{ error =>
+				<div class="text-error">@error.message</div>
+			}
+		</div>
+	</div>
+	<div class="col-sm-6">
+		<label for="inputCie" class="control-label">CIE 10</label> 
+		<div class="input-group">
+			@inputText(lineaForm("cie.nombre"),'class -> "form-control",'id -> "cie")
+			@inputText(lineaForm("cie_id"),'hidden -> "hidden",'id -> "cie_id")
+			<span class="input-group-addon">
+               	<a href="#" id="searchCie" data-title="Seleccion de CIE 10" 
+               				data-url="@controllers.rrhh.routes.CiesController.modalBuscar()" 
+               				data-height="650" data-width="700" 
+               				data-listen="modal.seleccion.cie.simple" 
+               				data-label="#cie" data-field="#cie_id" > <i class="glyphicon glyphicon-search"></i></a>
+            </span>
+		</div>
+	</div>
+	
+	
+	
+	
+</div>
+
+<div class="row">
+	<div class="col-sm-8">
+		<label for="nombre" class="control-label">Observaciones</label>
+		<div class="form-group @if(lineaForm.error("nota") != null) {has-error}">
+			@inputText(lineaForm("nota"), 'class -> "form-control", 'id -> "nota")
+			@lineaForm("nota").error.map{ error => <div class="text-error">@error.message</div>}
+		</div>
+	</div>	
+</div>
+
+<div class="row form-actions">
+    <div class="col-lg-offset-4 col-lg-8">
+      <a href="" class="btn btn-default cancelar" title="Cancelar"><i class="glyphicon glyphicon-floppy-remove"></i> Cancelar</a>
+      <button type="submit" class="btn btn-default" id="btn-guardar-asistencia" title="Guardar Linea"><i class="glyphicon glyphicon-floppy-disk"></i> Guardar</button>
+    </div>
+</div>
+	
+<script>
+$( function(){
+
+
+		$("#ffin,#finicio").mask("99/99/9999");
+
+
+	 $('#searchCie').modalSearch();
+	
+	if($("#cie").length){
+		var options = {
+				script:"/suggestCie/",
+				varname:"",
+				json:true,
+				shownoresults:true,
+				maxresults:6,
+				callback: function (obj) { 		
+											$("#cie_id").val(obj.id); 
+										 }
+			};
+		var as_json = new bsn.AutoSuggest('cie', options);
+	}
+})
+</script>	
+	

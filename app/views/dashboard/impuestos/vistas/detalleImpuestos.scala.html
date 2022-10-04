@@ -1,0 +1,46 @@
+@(listPago: java.util.Map[Long,java.util.List[Pago]],
+mapPeriodo: java.util.Map[Long,String],nombreCuenta:String,totalPeriodo: java.util.Map[Long,java.math.BigDecimal],total:java.math.BigDecimal)
+<hr>
+<table class="table table-bordered">
+		<tr>
+			<td colspan="7" align="center"><b style="font-size: 18px;">@nombreCuenta</b></td>
+		</tr>
+	@for((key,value) <- listPago) {
+		
+		<tr>
+			<td colspan="7" align="center"><b>@mapPeriodo.get(key)</b></td>
+		</tr>
+		<tr>
+			<td>#</td>
+			<td><b>Proveedor</b></td>
+			<td align="center"><b>Fecha Pago</b></td>
+			<td align="center"><b>Expediente</b></td>
+			<td align="center"><b>OP</b></td>
+			<td align="center"><b>Cuenta</b></td>
+			<td align="center"><b>Total</b></td>
+			
+		</tr>
+		@for(pago <- value) {
+			<tr>
+				<td>
+					<a class="btn btn-default btn-xs" target="_blank" href="@controllers.contabilidad.routes.PagosController.ver(pago.id)">
+						<i class="glyphicon glyphicon-list"></i>
+					</a>
+				</td>
+				<td>@pago.factura.proveedor.nombre</td>
+				<td align="center">@if(pago.fecha_pago != null){@(utils.DateUtils.formatDate(pago.fecha_pago))}</td>
+				<td align="center">@pago.expediente.getExpedienteEjercicio()</td>
+				<td align="center">@pago.ordenPago.numero</td>
+				<td align="center">@if(pago.tipoCuenta != null){@pago.tipoCuenta.nombre}</td>
+				<td align="center">@utils.NumberUtils.moneda(pago.total)</td>
+			</tr>	
+		}
+		<tr>
+			<td colspan="6" align="right"><b>SUB-TOTAL</b></td>
+			<td>@utils.NumberUtils.moneda(totalPeriodo.get(key))</td>
+		</tr>
+	}
+	<tr>
+		<td colspan="7" align="center"><b style="font-size: 20px;">TOTAL @utils.NumberUtils.moneda(total)</b></td>
+	</tr>		
+</table>

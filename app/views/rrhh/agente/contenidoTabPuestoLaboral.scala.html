@@ -1,0 +1,32 @@
+@(formularioCarga: Boolean, agenteForm: Form[Agente] = null,agente:Agente,pl:List[models.haberes.PuestoLaboral])
+@import java.util.List
+
+
+<div id="listaAgentePuesto" class="contenedorPaginador ajaxPaginador">
+		<div class="panel panel-default">
+			<div class="panel-heading"><b>Datos Puesto Laboral</b></div>
+			<div class="panel-body">
+			
+				<table id="listaDeAgentePuesto" class="table table-striped table-bordered">
+					<thead>
+						<tr>
+							<th>Escala</th>	
+							<th>Fecha Posesion</th>
+							<th>Fecha Baja</th>
+						</tr>
+					</thead>
+					<tbody>
+						@for(lc <- pl){
+							<tr>
+								<td>@(lc.escalaLaboral.nombre)</td>
+								<td>@(utils.DateUtils.formatDate(lc.fecha_posesion))</td>
+								<td>@(utils.DateUtils.formatDate(lc.fecha_baja))</td>
+							</tr>
+						}
+ 						
+					</tbody>
+				</table>		
+			</div>
+		</div>	
+		
+</div>		

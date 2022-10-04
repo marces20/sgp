@@ -1,0 +1,56 @@
+@(lcForm: Form[models.haberes.LiquidacionTipo],lc:models.haberes.LiquidacionTipo)
+@import helper._
+@import utils._
+@scripts = {
+	<script src="@routes.Assets.at("javascripts/haberes/liquidacionTipo.js")" type="text/javascript"></script>
+}
+@implicitFieldConstructor = @{ FieldConstructor(simpleInput.render) } 
+
+@views.html.haberes.mainHaberes("Vista Tipo de Liquidación",scripts) {
+	<div class="page-header">
+		<div class="row">
+			<div class="col-sm-7">
+				<h1>Vista Tipo de Liquidación</h1>
+			</div>
+			<div class="col-sm-5">
+				
+			</div>
+		</div>
+	</div>		
+	<div class="row menu-acciones">
+		<div class="col-sm-10">
+			<a href="@controllers.haberes.routes.LiquidacionTiposController.crear()"  class="btn btn-default"><i class="glyphicon glyphicon-plus-sign"></i> Nuevo Tipo Liquidacion</a>
+			<a href="@controllers.haberes.routes.LiquidacionTiposController.editar(lc.id)@UriTrack.get("&")"  class="btn btn-default"><i class="glyphicon glyphicon-edit"></i> Editar</a>
+			<a href="@controllers.haberes.routes.LiquidacionTiposController.eliminar(lc.id)@UriTrack.get("&")"  class="btn btn-default delete-confirm-link"><i class="glyphicon glyphicon-trash icono-eliminar"></i> Eliminar</a>
+		</div>
+		<div class="col-sm-2">
+			<a href="@UriTrack.getOnNull(controllers.haberes.routes.LiquidacionTiposController.index().absoluteURL())" class="btn btn-default"><i class="glyphicon glyphicon-list"></i></a> 
+		</div> 
+	</div>	
+	
+	<input type="hidden" id="tipoId" name="tipoId" value="@lc.id"/>
+	<div class="row">
+		<div class="col-sm-5">
+		<div class="form-group">
+			<label class="control-label">Denominacion</label>
+			<p class="form-control-static form-control">@lcForm.field("nombre").value</p>
+		</div>
+		</div>
+		 
+		 <div class="col-sm-3">
+			<div class="checkbox">
+				<label class="control-label">
+					Excluido Ganancias
+					@checkbox(lcForm("excluido_ganancias"), 'disabled -> "disabled")
+				</label>
+			</div>
+		</div>	
+	</div>
+	 
+	 
+	 
+	 
+	 
+	
+	 
+}

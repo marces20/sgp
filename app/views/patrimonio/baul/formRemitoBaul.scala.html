@@ -1,0 +1,76 @@
+@(rForm: Form[RemitoBaul])
+@import helper._
+@import utils._
+@implicitFieldConstructor = @{ FieldConstructor(simpleInput.render) } 
+
+
+<div class="row menu-acciones">
+	<div class="col-sm-10">
+		<button type="submit" class="btn btn-default" title="Guardar certificación"><i class="glyphicon glyphicon-floppy-disk"></i> Guardar</button>	
+    	<a href="@controllers.patrimonio.routes.RemitosBaulController.index()" title="Cancelar" class="btn btn-default"><i class="glyphicon glyphicon-floppy-remove"></i> Cancelar</a>
+    </div>
+</div>
+
+@inputText(rForm("id"), 'type -> "hidden", 'id->"remitoId")
+
+<div class="row">
+
+	<div class="col-sm-2">
+		<div class="form-group @if(rForm.error("numero") != null) {has-error} else {has-required}">
+			<label for="numero" class="control-label">Número</label>
+			@inputText(rForm("numero"), 'class -> "form-control")
+			@rForm("numero").error.map{ error =>
+				<div class="text-error">@error.message</div>
+			}
+		</div>
+	</div>
+	
+	<div class="col-sm-2">
+		<div class="form-group @if(rForm.error("fecha") != null) {has-error}">
+			<label for="fechaRemito" class="control-label">Fecha de remito</label> 
+			@inputText(rForm("fecha"),'class -> "form-control date")
+		</div>
+	</div>
+
+	<div class="col-sm-3">
+		<label class="control-label">Proveedor
+			<div class="input-group">
+				@inputText(rForm("proveedor_id"), 'hidden -> "hidden", 'id -> "proveedor_id")
+				@inputText(rForm("proveedor.nombre"), 'name -> "", 'class -> "form-control", 'id -> "proveedor")
+				<span class="input-group-addon">
+					<a href="#" class="searchModal"
+								id="searchProveedor" 
+								data-title="Selección de Proveedores" 
+								data-url="@controllers.compras.routes.ProveedoresController.modalBuscar()" 
+								data-height="650" 
+								data-width="700" 
+								data-listen="modal.seleccion.proveedor.simple" 
+								data-label="#proveedor" 
+								data-field="#proveedor_id">
+						<i class="glyphicon glyphicon-search"></i>
+					</a>
+				</span>
+			</div>
+		</label>
+	</div>
+
+</div>
+
+
+<div class="row">
+
+	<div class="col-sm-12">
+		<label for="fechaRemito" class="control-label">Observaciones</label> 
+		@textarea(rForm("observaciones"), 'class -> "form-control", 'rows -> "4")
+	</div>
+</div>
+
+
+<script>
+$( function(){
+	$('#searchProveedor').modalSearch();
+	$("#precio, #cantidad, #descuento").numeric_input({allowNegative: true});
+})
+</script>	
+
+<hr />

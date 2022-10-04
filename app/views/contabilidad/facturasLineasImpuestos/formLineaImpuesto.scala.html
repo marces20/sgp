@@ -1,0 +1,181 @@
+@(lineaForm: Form[FacturaLineaImpuesto])
+@import helper._
+@implicitFieldConstructor = @{ FieldConstructor(simpleInput.render) } 
+
+<script>
+$(function(){
+	$("#monto, #base").numeric_input();
+});
+</script>
+
+@if(flash.containsKey("error")) {
+	<div class="alert alert-danger">
+		<i class="glyphicon glyphicon-remove-sign"></i> @flash.get("error")
+	</div>
+}
+<script>
+$(function(){
+	$('#searchCuentaModalRete').modalSearch();
+	$('#nombre_impuesto').focus( function() {
+		if($('#cuenta_id_modal_rete').val() != '' && $('#cuenta_id_modal_rete').val() == 263){
+			url = $('#nombre_impuesto').attr("dataUrl");
+			url= "/contabilidad/factura-linea-impuesto/getSecuenciaRetencionSellos"
+			var data = "";
+			$.post(url, data, function(data){
+				if(data.success) {
+					$('#nombre_impuesto').val(data.sec);
+				}
+			});	
+		}
+		 
+		if($('#cuenta_id_modal_rete').val() != '' && $('#cuenta_id_modal_rete').val() == 284){
+			url = $('#nombre_impuesto').attr("dataUrl");
+			url= "/contabilidad/factura-linea-impuesto/getSecuenciaGanancias"
+			var data = "";
+			$.post(url, data, function(data){
+				if(data.success) {
+					$('#nombre_impuesto').val(data.sec);
+				}
+			});	
+		}
+		
+		if($('#cuenta_id_modal_rete').val() != ''){
+			if($('#cuenta_id_modal_rete').val() == 284 || $('#cuenta_id_modal_rete').val() == 544){
+				url = $('#nombre_impuesto').attr("dataUrl");
+				url= "/contabilidad/factura-linea-impuesto/getSecuenciaGanancias"
+				var data = "";
+				$.post(url, data, function(data){
+					if(data.success) {
+						$('#nombre_impuesto').val(data.sec);
+					}
+				});	
+			}	
+		}
+		
+		if($('#cuenta_id_modal_rete').val() != ''){
+			if($('#cuenta_id_modal_rete').val() == 110 || $('#cuenta_id_modal_rete').val() == 276){
+				url = $('#nombre_impuesto').attr("dataUrl");
+				url= "/contabilidad/factura-linea-impuesto/getSecuenciaIIBB"
+				var data = "";
+				$.post(url, data, function(data){
+					if(data.success) {
+						$('#nombre_impuesto').val(data.sec);
+					}
+				});	
+			}	
+		}
+		
+		
+		
+		if($('#cuenta_id_modal_rete').val() != '' && $('#cuenta_id_modal_rete').val() == 258){
+			url = $('#nombre_impuesto').attr("dataUrl");
+			url= "/contabilidad/factura-linea-impuesto/getSecuenciaIva"
+			var data = "";
+			$.post(url, data, function(data){
+				if(data.success) {
+					$('#nombre_impuesto').val(data.sec);
+				}
+			});	
+		}
+		
+		if($('#cuenta_id_modal_rete').val() != '' && $('#cuenta_id_modal_rete').val() == 283){
+			url = $('#nombre_impuesto').attr("dataUrl");
+			url= "/contabilidad/factura-linea-impuesto/getSecuenciaRetencionMunicipal"
+			var data = "";
+			$.post(url, data, function(data){
+				if(data.success) {
+					$('#nombre_impuesto').val(data.sec);
+				}
+			});	
+		}
+	});
+	
+});
+</script>
+
+<div class="row">
+	@inputText(lineaForm("factura_id"), 'type -> "hidden")
+	<div class="col-sm-6">
+		<label for="cuenta" class="control-label">Cuenta</label>
+		<div class="input-group @if(lineaForm.error("cuenta_id") != null) {has-error} else {has-required}">
+			
+			@inputText(lineaForm("cuenta.nombre"), 'class -> "form-control", 'id -> "cuenta_modal_rete")
+			@inputText(lineaForm("cuenta_id"),'hidden -> "hidden", 'id -> "cuenta_id_modal_rete")
+			<span class="input-group-addon">
+				<a href="#" class="searchModal"
+							id="searchCuentaModalRete" 
+							data-title="Selección de cuenta" 
+							data-url="@controllers.contabilidad.routes.CuentasController.modalBuscar()" 
+							data-height="650" 
+							data-width="700" 
+							data-listen="modal.seleccion.cuenta.simple" 
+							data-label="#cuenta_modal_rete" 
+							data-field="#cuenta_id_modal_rete">
+					<i class="glyphicon glyphicon-search"></i>
+				</a>
+			</span>
+		</div>
+		@lineaForm("cuenta_id").error.map{ error =>
+			<div class="text-error">@error.message</div>
+		}
+	</div>
+	<div class="col-sm-2">
+		<label class="control-label">Descripción</label>
+		<div class="form-group @if(lineaForm.error("nombre") != null) {has-error} else {has-required}">
+			@inputText(lineaForm("nombre"), 'class -> "form-control", 'id -> "nombre_impuesto",'dataUrl -> "/contabilidad/factura-linea-impuesto/getSecuenciaRetencionSellos")
+			@lineaForm("nombre").error.map{ error => <div class="text-error">@error.message</div>}
+		</div>
+	</div>
+</div>	
+<div class="row">	
+	<div class="col-sm-3">
+		<label class="control-label">Base</label>
+		<div class="form-group @if(lineaForm.error("base") != null) {has-error}else {has-required}">
+			@inputText(lineaForm("base"), 'class -> "form-control", 'id -> "base")
+			@lineaForm("base").error.map{ error => <div class="text-error">@error.message</div>}
+		</div>
+	</div>
+	<div class="col-sm-3">
+		<label class="control-label">Importe</label>
+		<div class="form-group @if(lineaForm.error("monto") != null) {has-error} else {has-required}">
+			@inputText(lineaForm("monto"), 'class -> "form-control", 'id -> "monto")
+			@lineaForm("monto").error.map{ error => <div class="text-error">@error.message</div>}
+		</div>
+	</div>
+	
+	<div class="col-sm-3">
+			<label class="control-label"> 
+				Tipo
+				@select(lineaForm("tipo"),options("1"->"SERVICIOS","2"->"BIENES","3"->"SERVICIOS AGENTES"), 'class -> "form-control select")
+			</label>
+		</div>
+	
+</div>
+ 
+<div class="row form-actions">
+    <div class="col-lg-offset-4 col-lg-8">
+      <button type="submit" class="btn btn-default"><i class="glyphicon glyphicon-floppy-disk"></i>Guardar</button>	
+      <a href="" class="btn btn-default cancelar"><i class="glyphicon glyphicon-floppy-remove"></i>Cancelar</a>
+    </div>
+</div>
+<script>
+$( function(){
+
+if($("#cuenta_modal_rete").length){
+		var options = {
+				script:"/contabilidad/suggestCuenta/",
+				varname:"",
+				json:true,
+				shownoresults:true,
+				maxresults:6,
+				callback: function (obj) { 
+											$("#cuenta_id_modal_rete").val(obj.id); 
+										 }
+			};
+		var as_json = new bsn.AutoSuggest('cuenta_modal_rete', options);
+	}
+});
+</script>	
+
+
+@flash().clear()

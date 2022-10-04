@@ -1,0 +1,327 @@
+@(factura: Form[Factura],facturaObj:Factura, paginadorFicha: utils.pagination.PaginadorFicha)
+@import helper._
+@import utils._
+@implicitFieldConstructor = @{ FieldConstructor(simpleInput.render) } 
+@scripts = {
+	<script src="@routes.Assets.at("javascripts/contabilidad/facturas.js")" type="text/javascript"></script>
+}
+@import models.auth._
+@import java.util.HashMap; var oo = new HashMap[String,Date] ;
+@import java.math.BigDecimal; var vencimiento349 = new Date(); 
+@import java.lang.String;var nui ="";
+@paginadorFicha.setActual(facturaObj.id.toString)
+
+@views.html.contabilidad.mainContabilidad("Vista Factura",scripts) {
+
+<div class="page-header">
+	<div class="row">
+		<div class="col-sm-4">
+			<h1>Vista de factura @if(facturaObj.expediente != null){@if(facturaObj.expediente.emergencia){<span style="color:red;font-weight: bold;font-size:14px; ">(Emergencia Sanitaria)</span>}}</h1>
+		</div>
+		<div class="col-sm-3">
+			
+			@{oo = Orden349.getLastOrden349(facturaObj.orden_id)}
+			@if(oo != null){
+				
+				@for((key,value) <- oo){
+				
+					@{vencimiento349 = value}
+					@{nui = key}
+				}
+				@if(vencimiento349 != null && utils.DateUtils.compareDate(vencimiento349,new Date()) < 0){
+					<span style="color:red;font-size: 15px;font-weight: bold;">Vto 349: @utils.DateUtils.formatDate(vencimiento349) - NUI:@nui </span>
+				}else{
+					@if(vencimiento349 != null && utils.DateUtils.compareDate(vencimiento349,new Date()) >= 0){
+					<span style="color:green;font-size: 15px;font-weight: bold;">Vto 349: @utils.DateUtils.formatDate(vencimiento349)- NUI:@nui</span>
+					}
+				}
+			}
+		</div>
+		<div class="col-sm-5">
+			<div class="dropdown pull-right">
+			 <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown">
+			 	<i class="glyphicon glyphicon-list-alt"></i>
+			    Reportes
+			    <span class="caret"></span>
+			  </button>
+			  <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
+			  </ul>
+			</div>
+			<div class="dropdown pull-right">
+				<div class="btn-group pull-right  btn-header">
+					<button class="btn btn-default dropdown-toggle" type="button" id="dropdownReportes" data-toggle="dropdown">
+						<i class="glyphicon glyphicon-list-alt"></i> Acciones <span class="caret"></span>
+					</button>
+					<ul class="dropdown-menu">
+						@if(Permiso.check("pagosModificarNumeroFactura")) {
+						<li><a id="accionModificarNumeroFactura" data-url="@controllers.contabilidad.routes.FacturasAccionesController.modalModificarNumeroFactura(facturaObj.id)">Modificar N° Factura</a></li>
+						}
+						@if(Permiso.check("importarListaComisiones")) {
+							<li><a id="importarListaComisiones" href="#" data-url="@controllers.contabilidad.routes.FacturasAccionesController.modalImportarListaComisiones()">Importar Comisiones</a></li>
+						}
+						@if(Permiso.check("cargar349")) {
+							<li><a id="cargar349" href="#" data-url="@controllers.contabilidad.routes.FacturasAccionesController.modalCargar349(facturaObj.id)">Cargar 349</a></li>
+						}
+					</ul>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+@views.html.tags.successError()
+
+<div class="row menu-acciones">
+	<div class="col-sm-5">
+		<a href="@controllers.contabilidad.routes.FacturasController.crear()@UriTrack.get("?")"  class="btn btn-default"><i class="glyphicon glyphicon-plus-sign"></i> Nuevo</a>
+		<a href="@controllers.contabilidad.routes.FacturasController.editar(factura.field("id").value.toLong)@UriTrack.get("&")"  class="btn btn-default"><i class="glyphicon glyphicon-edit"></i> Editar</a>
+		<!-- <a href="@controllers.contabilidad.routes.FacturasController.duplicar(factura.field("id").value.toLong)@UriTrack.get("&")"  class="btn btn-default"><i class="glyphicon glyphicon-subtitles"></i> Duplicar</a> -->
+		@if(facturaObj.estado_id == models.Estado.FACTURA_ESTADO_BORRADOR && (facturaObj.parcial == null || facturaObj.parcial) ){
+			<a href="@controllers.contabilidad.routes.FacturasController.crearFacturaParcial(factura.field("id").value.toLong)@UriTrack.get("&")"  class="btn btn-default"><i class="glyphicon glyphicon-copyright-mark"></i> Crear Parcial</a>
+		}
+		<a href="@controllers.contabilidad.routes.FacturasController.eliminar(factura.field("id").value.toLong)@UriTrack.get("&")"  class="btn btn-default delete-confirm-link"><i class="glyphicon glyphicon-trash icono-eliminar"></i> Eliminar</a>
+	</div>
+	<div class="col-sm-4">
+		@if(factura("tipoCuenta").value != null){
+			<span style="color:red;font-size: 25px;font-weight: bold;">@factura("tipoCuenta.nombre").value</span>
+		}
+	</div>
+	<div class="col-sm-3">
+		<a href="@UriTrack.getOnNull(controllers.contabilidad.routes.FacturasController.index().absoluteURL())" class="btn btn-default"><i class="glyphicon glyphicon-list"></i></a>
+		
+		@if(paginadorFicha.getLista().size() > 1){
+
+		<div class="btn-group">
+			@if(paginadorFicha.hasPrev()) {
+				<a  role="group" href="@controllers.contabilidad.routes.FacturasController.ver(paginadorFicha.prev().toLong)@UriTrack.get("&")" class="btn btn-default"><i class="glyphicon glyphicon-chevron-left"></i></a>
+			}
+			<p style="padding-top: 3px" href=""  role="group" class="btn btn-default">@paginadorFicha.posicionActual() de @paginadorFicha.getLista().size()</p>
+			@if(paginadorFicha.hasNext()) {
+				<a  role="group" href="@controllers.contabilidad.routes.FacturasController.ver(paginadorFicha.next().toLong)@UriTrack.get("&")" class="btn btn-default"><i class="glyphicon glyphicon-chevron-right"></i></a>
+			}  
+		</div>
+		}
+		
+	</div>
+</div>
+@inputText(factura("id"), 'hidden -> "hidden",'id -> "facturaId")
+<input type="hidden" name="idFactura" id="idFactura" value='@factura.field("id").value' />
+<div class="row">
+	<div class="col-sm-2">
+		<div class="form-group">
+			<label class="control-label">Nombre</label>
+			<p class="form-control-static form-control">@factura.field("nombre").value</p>
+		</div>
+	</div>
+	<div class="col-sm-2">
+		<div class="form-group">
+			<label class="control-label">Referencia</label>
+			<p class="form-control-static form-control">@factura.field("referencia").value</p>
+		</div>
+	</div>
+	<div class="col-sm-4">
+		<div class="form-group">
+			<label class="control-label">Contraparte</label>
+			<p class="form-control-static form-control">
+				<a href="#" class="infoProveedor" data-url="@controllers.compras.routes.ProveedoresAccionesController.modalInformacionProveedor(facturaObj.proveedor.id)">
+					@factura.field("proveedor.nombre").value
+				</a>
+			</p>
+		</div>
+	</div>
+	<div class="col-sm-2">
+		<div class="form-group">
+			<label class="control-label">Expediente</label>
+			<p class="form-control-static form-control">@factura.field("expediente.expedienteEjercicio").value</p>
+		</div>
+	</div>
+	<div class="col-sm-2">
+		<div class="form-group">
+			<label class="control-label">Periodo</label>
+			<p class="form-control-static form-control">@factura.field("periodo.nombre").value</p>
+		</div>
+	</div>
+</div>
+
+<div class="row">
+	<div class="col-sm-2">
+		<div class="form-group">
+			<label class="control-label">N° de factura</label>
+			<p class="form-control-static form-control">@factura.field("numero_factura").value</p>
+		</div>
+	</div>
+	<div class="col-sm-2">
+		<div class="form-group">
+			<label class="control-label">Fecha factura</label>
+			<p class="form-control-static form-control">@factura.field("fecha_factura").value</p>
+		</div>
+	</div>
+	<div class="col-sm-2">
+		<div class="form-group">
+			<label class="control-label">Fecha recepción</label>
+			<p class="form-control-static form-control">@factura.field("fecha_recepcion").value</p>
+		</div>
+	</div>
+	
+	<div class="col-sm-2">
+		<div class="form-group">
+			<label class="control-label">Fecha aprobación</label>
+			<p class="form-control-static form-control">@factura.field("fecha_aprobacion").value</p>
+		</div>
+	</div>
+	<div class="col-sm-2">
+		<div class="form-group">
+			<label class="control-label">Fecha vencimiento 322</label>
+			<p class="form-control-static form-control">@factura.field("fecha_vencimiento_322").value</p>
+		</div>
+	</div>
+	<div class="col-sm-2">
+		<!-- <div class="checkbox">
+			PROFE @checkbox(factura("profe"), 'disabled -> "disabled")
+		</div> -->
+		<label class="control-label">Tipo Cuenta</label>
+		<p class="form-control-static form-control">@if(facturaObj.tipoCuenta != null){@facturaObj.tipoCuenta.nombre}</p> 
+	</div>
+</div>
+
+<div class="row">
+	
+	<div class="col-sm-4">
+		<div class="form-group">
+			<label class="control-label">Cuenta</label>
+			<p class="form-control-static form-control">@factura.field("cuenta.nombre").value</p>
+		</div>
+	</div>
+	<div class="col-sm-2">
+		<div class="form-group">
+			<label class="control-label">Orden de pago N°</label>
+			<p class="form-control-static form-control">
+				@if(facturaObj.ordenPago != null){ 
+					@factura.field("ordenPago.nombreCompleto").value
+				}
+			</p>
+		</div>
+	</div>
+	<div class="col-sm-2">
+		<div class="form-group">
+			<label class="control-label">Fecha orden de pago</label>
+			<p class="form-control-static form-control">@factura.field("fecha_orden_pago").value</p>
+		</div>
+	</div>
+	
+	<div class="col-sm-2">
+		<div class="form-group">
+			<label class="control-label">Cot. dólar</label>
+			<p class="form-control-static form-control">@utils.NumberUtils.moneda(facturaObj.cot_dolar, 2)</p>
+		</div>
+	</div>
+	
+</div>
+<div class="row">
+	<div class="col-sm-3">
+		<div class="checkbox">
+			Debe libre deuda DGR @checkbox(factura("debe_dgr"), 'disabled -> "disabled")
+		</div> 
+	</div>
+	<div class="col-sm-3">
+		<div class="checkbox">
+			Debe libre deuda DGR Aguinaldo @checkbox(factura("debe_dgr_aguinaldo"), 'disabled -> "disabled")
+		</div> 
+	</div>
+	<div class="col-sm-3">
+		<div class="checkbox">
+			Debe constancia AFIP @checkbox(factura("debe_afip"), 'disabled -> "disabled")
+		</div> 
+	</div>
+	<div class="col-sm-2">
+		<div class="checkbox">
+			Debe Judicial @checkbox(factura("debe_judicial"), 'disabled -> "disabled")
+		</div> 
+	</div>
+	
+</div>
+<div class="row">
+	<div class="col-sm-3">
+		<div class="checkbox">
+			<label class="control-label">Creacion Automatica
+			@checkbox(factura("creacion_automatica"), 'disabled -> "disabled")</label> 
+		</div>
+	</div>
+	<div class="col-sm-3">
+		<div class="checkbox">
+			<label class="control-label">Agente Pago Externo
+			@checkbox(factura("agente_pago_externo"), 'disabled -> "disabled")</label> 
+		</div>
+	</div>
+	<div class="col-sm-3">
+		<div class="checkbox">
+			<label class="control-label">Produccion
+			@checkbox(factura("produccion"), 'disabled -> "disabled")</label> 
+		</div>
+	</div>
+	<div class="col-sm-3">
+		<div class="checkbox">
+			Debito Automatico @checkbox(factura("debito_automatico"), 'disabled -> "disabled")
+		</div> 
+	</div>
+</div>
+@views.html.contabilidad.facturas.tabsFactura(false,false,factura,facturaObj, true)
+
+
+<div class="row margin-bottom-25">
+	@if(facturaObj.facturaParciales != null && facturaObj.facturaParciales.size() > 0){
+		<div class="col-sm-3"><h4><b>FACTURA PARCIALIZADA</b></h4></div>
+	}else{	
+		@for(estado <- models.Estado.getSiguienteEstadoPorAprobar(facturaObj.estado.orden,models.Estado.TIPO_FACTURA)) {	
+			@if(estado.orden <= 5) {
+				@if(facturaObj.debito_automatico != null && facturaObj.debito_automatico) {
+					<div class="col-sm-3">
+						<a href="@controllers.contabilidad.routes.FacturasController.cambiarEstadoAprobado(factura.field("id").value.toInt)@UriTrack.get("&")" class="btn btn-default btn-disable-onclick">
+							<i class="glyphicon glyphicon-arrow-right"></i> @models.Estado.getEstado(models.Estado.FACTURA_ESTADO_APROBADO,Estado.TIPO_FACTURA).nombre
+						</a>
+					</div>
+				}else{
+					<div class="col-sm-3">
+						<a href="@controllers.contabilidad.routes.FacturasController.cambiarEstado(factura.field("id").value.toInt, estado.id.toLong)@UriTrack.get("&")" class="btn btn-default btn-disable-onclick">
+							<i class="glyphicon glyphicon-arrow-right"></i> @estado.nombre
+						</a>
+					</div>
+					@if(facturaObj.estado.id ==  models.Estado.FACTURA_ESTADO_BORRADOR){
+						<div class="col-sm-3">
+							<a href="@controllers.contabilidad.routes.FacturasController.cambiarEstadoPrecargado(factura.field("id").value.toInt, estado.id.toLong,true)@UriTrack.get("&")" class="btn btn-default btn-disable-onclick">
+								<i class="glyphicon glyphicon-arrow-right"></i> @estado.nombre Precargado
+							</a>
+						</div>
+					}
+					
+				}
+				@if(facturaObj.estado.id ==  models.Estado.FACTURA_ESTADO_PREAPROBADO){
+					<div class="col-sm-3">
+						<a data-url="@controllers.contabilidad.routes.FacturasAccionesController.modalRechazarFactura()" href="#" id="rechazarFactura" class="btn btn-default btn-disable-onclick">
+							<i class="glyphicon glyphicon-arrow-left glyphicon-arrow-left-green"></i> Rechazar
+						</a>
+					</div>
+				}
+			}
+		}
+		@if(facturaObj.estado.id == models.Estado.FACTURA_ESTADO_CANCELADO) {
+			<div class="col-sm-3">
+				<a href="@controllers.contabilidad.routes.FacturasController.cambiarEstado(factura.field("id").value.toInt, models.Estado.FACTURA_ESTADO_BORRADOR)@UriTrack.get("&")" class="btn btn-default btn-disable-onclick">
+					<i class="glyphicon glyphicon-arrow-right"></i> Volver a Borrador
+				</a>
+			</div>
+		}else{
+			<div class="col-sm-3">
+				<a href="@controllers.contabilidad.routes.FacturasController.cambiarEstado(factura.field("id").value.toInt, models.Estado.FACTURA_ESTADO_CANCELADO)@UriTrack.get("&")" class="btn btn-default btn-disable-onclick">
+					<i class="glyphicon glyphicon-minus-sign"></i> Cancelar Factura
+				</a>
+			</div>
+		}
+	}
+</div>
+
+
+
+
+
+}
