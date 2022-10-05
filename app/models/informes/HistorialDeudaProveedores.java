@@ -7,6 +7,9 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Date;
 import java.util.List;
+import java.util.Calendar; 
+
+
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -25,6 +28,8 @@ import com.avaje.ebean.SqlRow;
 import play.Logger;
 import play.db.ebean.Model;
 import play.db.ebean.Model.Finder;
+import server.Configuracion2;
+import server.Configuration;
 
 @Entity 
 @Table(name = "historial_deuda_proveedores")
@@ -106,6 +111,207 @@ public class HistorialDeudaProveedores extends Model{
         	if (rs != null) try { rs.close(); } catch (Exception e) { }
             if (conn != null) try { conn.close(); } catch (Exception e) { }
         }
+		return true;
+	}
+	
+	public static boolean insertHistorialDeudaUpdate(String fecha) throws EmailException {
+		Connection conn = null;
+		Connection conn2 = null;
+		PreparedStatement stmt0 = null;
+		PreparedStatement stmt = null;
+		PreparedStatement stmt2 = null;
+		ResultSet rs0 = null;
+		ResultSet rs = null;
+		PreparedStatement stmt3 = null;
+		PreparedStatement stmt4 = null;
+		ResultSet rs3 = null;
+		
+		
+		try {
+			conn = Configuracion2.get2().getConnection2();
+			conn2 = Configuration.get().getConnection(); 
+			
+			
+			stmt0= conn2.prepareStatement("SELECT "
+					+ "tp.total_autorizado_divisa,"
+					+ "v.orden_id, "
+					+ "v.monto_adelanto, "
+					+ "v.total_orden, "
+					+ "v.total_pagado, "
+					
+					+ "v.total_autorizado, "
+					+ "v.total_recepcionado, "
+					+ "v.total_actas_sin_adelanto, "
+					+ "v.total_deuda_en_tramite, "
+					+ "v.total_actas, "
+					
+					+ "v.total_deuda, "
+					+ "v.total_compromiso, "
+					+ "tipo_moneda,"
+					+ "cotizacion, "
+					+ "CASE " + 
+					" WHEN cotizacion IS NOT NULL " + 
+					" THEN  " + 
+					"	(SELECT ultimas_cotizaciones.cotizacion " + 
+					"        FROM ultimas_cotizaciones " + 
+					"        WHERE ultimas_cotizaciones.tipo_moneda = v.tipo_moneda " + 
+					"        ORDER BY ultimas_cotizaciones.fecha DESC " + 
+					"        LIMIT 1) " + 
+					" ELSE  " + 
+					"	null " + 
+					" END AS cotizacion_dia,"
+					
+					+ "tp.total_orden_divisa,"
+					+ "tp.total_pago_divisa	"
+					+ "FROM informe_estadistico_deuda_proveedores_matrializada v "
+					+ "INNER JOIN totales_por_orden tp on tp.orden_id = v.orden_id ");
+			
+			rs0 = stmt0.executeQuery();
+			int a = 1;
+			while (rs0.next()) {
+				 //play.db.DB.getConnection();
+				
+				stmt = conn.prepareStatement("INSERT INTO historial_deuda_proveedores("
+						+ "total_autorizado_divisa, "
+						+ "orden_id, "
+						+ "monto_adelanto, "
+						+ "total_orden, "
+						+ "total_pagado, "
+						
+						+ "total_autorizado, "
+						+ "total_recepcionado, "
+						+ "total_actas_sin_adelanto,"
+						+ " total_deuda_en_tramite,"
+						+ "total_actas, "
+						
+						+ "total_deuda, "
+						+ "total_compromiso, "
+						+ "tipo_moneda,"
+						+ "cotizacion,"
+						+ "cotizacion_dia,"
+						
+						+ "total_orden_divisa,"
+						+ "total_pago_divisa,"
+						+ "fecha) "  
+						// total_deuda, total_compromiso, tipo_moneda, cotizacion, cotizacion_dia, total_orden_divisa, total_pago_divisa, total_autorizado_divisa)
+						+ "VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, '"+fecha+"')");
+				
+				Calendar myCal = Calendar.getInstance();
+				myCal.set(Calendar.YEAR, 2022);
+				myCal.set(Calendar.MONTH, 6);
+				myCal.set(Calendar.DAY_OF_MONTH, 1);
+				Date theDate = myCal.getTime();
+				
+				
+				
+				stmt.setBigDecimal(1, rs0.getBigDecimal(1));//total_autorizado_divisa
+				stmt.setInt(2, rs0.getInt(2));//orden_id
+				stmt.setBigDecimal(3, rs0.getBigDecimal(3));//monto_adelanto
+				stmt.setBigDecimal(4, rs0.getBigDecimal(4));//total_orden
+				stmt.setBigDecimal(5, rs0.getBigDecimal(5));//total_pagado
+				
+				stmt.setBigDecimal(6, rs0.getBigDecimal(6));//total_autorizado
+				stmt.setBigDecimal(7, rs0.getBigDecimal(7));//total_recepcionado
+				stmt.setBigDecimal(8, rs0.getBigDecimal(8));//total_actas_sin_adelanto
+				stmt.setBigDecimal(9, rs0.getBigDecimal(9));//total_deuda_en_tramite
+				stmt.setBigDecimal(10, rs0.getBigDecimal(10));//total_actas
+				
+				stmt.setBigDecimal(11, rs0.getBigDecimal(11));//total_deuda
+				stmt.setBigDecimal(12, rs0.getBigDecimal(12));//total_compromiso
+				stmt.setInt(13, rs0.getInt(13));//tipo_moneda
+				stmt.setBigDecimal(14, rs0.getBigDecimal(14));//cotizacion
+				stmt.setBigDecimal(15, rs0.getBigDecimal(15));//cotizacion_dia
+				
+				stmt.setBigDecimal(16, rs0.getBigDecimal(16));//total_orden_divisa
+				stmt.setBigDecimal(17, rs0.getBigDecimal(17));//total_pago_divisa
+								
+				
+				stmt.executeUpdate();
+				System.out.println("zzzzzzzzzzzzzzz "+a);
+				a++;
+				 
+			}
+			
+			System.out.println("fiiiiiiiiiin");
+			
+			
+			
+			
+			
+			 
+			
+			
+			
+			
+		}catch (SQLException e) {
+			Logger.error("Error duplicar: "+e);
+        } finally {
+        	if (stmt != null) try { stmt.close(); } catch (Exception e) { }
+        	if (stmt2 != null) try { stmt2.close(); } catch (Exception e) { }
+        	if (rs != null) try { rs.close(); } catch (Exception e) { }
+            if (conn != null) try { conn.close(); } catch (Exception e) { }
+            if (conn2 != null) try { conn2.close(); } catch (Exception e) { }
+        }
+		
+		 
+		return true;
+	}
+	
+	public static boolean insertHistorialDeudaUpdateActa(String fecha) throws EmailException {
+		Connection conn = null;
+		Connection conn2 = null;
+		
+		PreparedStatement stmt3 = null;
+		PreparedStatement stmt4 = null;
+		ResultSet rs3 = null;
+		
+		try {
+			conn2 = Configuracion2.get2().getConnection2();
+			conn = Configuration.get().getConnection(); 
+			
+			stmt3 = conn2.prepareStatement("SELECT orden_id,id_fake,id,certificacion_id,total_acta,"
+											+ "total_pagado,total_deuda,total_deuda_limite,total_autorizado,acta_numero "
+							+ "FROM  informe_deuda_actas_materializada ");
+			
+			
+			rs3 = stmt3.executeQuery();
+			int a = 1;
+			while (rs3.next()) {
+				stmt4 = conn.prepareStatement("INSERT INTO historial_deuda_actas(fecha,orden_id, id_fake, id_acta, certificacion_id, "
+						+ "total_acta, total_pagado,total_deuda, total_deuda_limite, total_autorizado,acta_numero) " 
+						+ "VALUES ('2022-06-01', ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+				
+				stmt4.setInt(1, rs3.getInt(1));//orden_id
+				stmt4.setString(2, rs3.getString(2));//id_fake
+				stmt4.setInt(3, rs3.getInt(3));//id_acta
+				stmt4.setInt(4, rs3.getInt(4));//certificacion_id
+				stmt4.setBigDecimal(5, rs3.getBigDecimal(5));//total_acta
+				
+				stmt4.setBigDecimal(6, rs3.getBigDecimal(6));//total_pagado
+				stmt4.setBigDecimal(7, rs3.getBigDecimal(7));//total_deuda
+				stmt4.setBigDecimal(8, rs3.getBigDecimal(8));//total_deuda_limite
+				stmt4.setBigDecimal(9, rs3.getBigDecimal(9));//total_autorizado
+				stmt4.setString(10, rs3.getString(10));//acta_numero
+				
+				System.out.println("zzFFFFFFFFFFFFFF "+a);
+				stmt4.executeUpdate();
+				a++;
+			
+			}
+			System.out.println("fiiiiiiiiiin2222222");
+			
+		}catch (SQLException e) {
+			Logger.error("Error duplicar: "+e);
+        } finally {
+        	 
+        	if (stmt3 != null) try { stmt3.close(); } catch (Exception e) { }
+        	if (stmt4 != null) try { stmt4.close(); } catch (Exception e) { }
+        	if (rs3 != null) try { rs3.close(); } catch (Exception e) { }
+            if (conn != null) try { conn.close(); } catch (Exception e) { }
+            if (conn2 != null) try { conn2.close(); } catch (Exception e) { }
+            
+        }
+		
 		return true;
 	}
 	
