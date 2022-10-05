@@ -59,9 +59,9 @@ public class Configuration {
 			*/
 			
 			this.dbDriver = "org.postgresql.Driver";
-			this.dbConnectionString = Play.application().configuration().getString("db.dev.url");
-			this.dbUser = Play.application().configuration().getString("db.dev.user");
-			this.dbPass = Play.application().configuration().getString("db.dev.pass");
+			this.dbConnectionString = Play.application().configuration().getString("base.dev.url");
+			this.dbUser = Play.application().configuration().getString("base.dev.user");
+			this.dbPass = Play.application().configuration().getString("base.dev.pass");
 					
 			 
 			Class.forName(this.dbDriver);

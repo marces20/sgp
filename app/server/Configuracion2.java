@@ -61,16 +61,16 @@ public class Configuracion2 {
 			int x =2;
 			if(x == 1){		
 				this.dbDriver = "org.postgresql.Driver";
-				this.dbConnectionString = Play.application().configuration().getString("db.dev.url");
-				this.dbUser = Play.application().configuration().getString("db.dev.user");
-				this.dbPass = Play.application().configuration().getString("db.dev.pass");
+				this.dbConnectionString = Play.application().configuration().getString("base.dev.url");
+				this.dbUser = Play.application().configuration().getString("base.dev.user");
+				this.dbPass = Play.application().configuration().getString("base.dev.pass");
 			}
 			
 			if(x == 2){
 				this.dbDriver = "org.postgresql.Driver";
-				this.dbConnectionString = Play.application().configuration().getString("db.prod.url");
-				this.dbUser = Play.application().configuration().getString("db.prod.user");
-				this.dbPass = Play.application().configuration().getString("db.prod.pass");
+				this.dbConnectionString = Play.application().configuration().getString("base.prod.url");
+				this.dbUser = Play.application().configuration().getString("base.prod.user");
+				this.dbPass = Play.application().configuration().getString("base.prod.pass");
 			}
 			
 	 
