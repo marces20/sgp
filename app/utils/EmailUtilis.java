@@ -31,7 +31,7 @@ public class EmailUtilis {
 
   private EmailAttachment attach;
 
-
+  
   /**
    * @return the from
    */
@@ -112,12 +112,11 @@ public class EmailUtilis {
 
 
   public void enviar() throws EmailException {
-    HtmlEmail mail = new HtmlEmail();
+	  
+	HtmlEmail mail = new HtmlEmail();
     mail.setHostName("smtp-relay.sendinblue.com");
     mail.setSmtpPort(587);
-    mail.setSSLOnConnect(true);
-    mail.setAuthenticator(new DefaultAuthenticator(Play.application().configuration().getString("email.authenticator.user"),
-        Play.application().configuration().getString("email.authenticator.pass")));
+    mail.setAuthenticator(new DefaultAuthenticator(Play.application().configuration().getString("email.authenticator.user"), Play.application().configuration().getString("email.authenticator.pass")));
     mail.setFrom(getFrom());
 
     if (getAttach() != null) {
