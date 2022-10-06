@@ -229,7 +229,7 @@ public class FacturasLineasImpuestosController extends Controller {
 			}
 			
 			BigDecimal suss = new BigDecimal(0);
-			if(pa.fecha_extento_afip_suss != null && pa.fecha_extento_afip_suss.compareTo(hoy) >= 0) {
+			if((pa.fecha_extento_afip_suss != null && pa.fecha_extento_afip_suss.compareTo(hoy) >= 0) || (tipoAlicuota.compareToIgnoreCase("3") == 0)) {
 				Logger.debug("ESTA EXENTO DE SUSS");
 			}else {
 				if(pa.suss_tipo != null && pa.suss_tipo.equals(ProveedorAtributo.SUSS_TIPO_COMUN)){
