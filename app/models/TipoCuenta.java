@@ -21,7 +21,9 @@ public class TipoCuenta extends Model{
 	public static final Long PLAN_SUMAR_LACMI = new Long(4);
 	public static final Long PLAN_SUMAR_FATIMA = new Long(5);
 	public static final Long PLAN_SUMAR_MATERNO = new Long(6);
-			
+	public static final Long FONDO_PERMANENTE_MATERNO = new Long(7);
+	public static final Long FONDO_PERMANENTE_OBERA = new Long(8);
+	
 	@Id  														 
 	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="tipo_cuenta_id_seq")
 	public Long id;
