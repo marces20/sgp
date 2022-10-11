@@ -268,6 +268,10 @@ public class Pago extends Model {
     			.fetch("factura.proveedor", "nombre, agente_id")
     			.where();
     	
+    	if(Usuario.getUsurioSesion().plansumarmaterno) {
+			e = e.eq("tipo_cuenta_id",TipoCuenta.FONDO_PERMANENTE_MATERNO);
+    	}	
+    	
     	if(!tipo_cuenta_id.isEmpty()){
     		e.eq("tipo_cuenta_id", Integer.parseInt(tipo_cuenta_id));
     	}

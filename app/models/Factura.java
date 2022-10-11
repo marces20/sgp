@@ -345,6 +345,11 @@ public class Factura extends Model {
     			.fetch("ordenPago.ejercicio", "nombre")
     			.where();
     	
+    	
+    	if(Usuario.getUsurioSesion().plansumarmaterno) {
+			e = e.eq("tipo_cuenta_id",TipoCuenta.FONDO_PERMANENTE_MATERNO);
+    	}	
+    	
     	if(!desc_ret.isEmpty()){
     		e.ilike("facturaLineaImpuesto.nombre", "%" + desc_ret + "%");
     	}
