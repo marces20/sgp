@@ -214,7 +214,7 @@ public class FacturasLineasImpuestosController extends Controller {
 						Logger.debug("ESTA EXENTO DE SELLOS");
 					}else {
 						fl = new FacturaLineaImpuesto();
-						fl.base = (f.orden != null && f.orden.tipo_moneda == null && (f.tipo_cuenta_id.compareTo(TipoCuenta.FONDO_PERMANENTE_MATERNO) != 0))?f.orden.total:f.getBase();
+						fl.base = (f.orden != null && f.orden.tipo_moneda == null  && (f.tipo_cuenta_id.compareTo(TipoCuenta.FONDO_PERMANENTE_OBERA) != 0) && (f.tipo_cuenta_id.compareTo(TipoCuenta.FONDO_PERMANENTE_MATERNO) != 0))?f.orden.total:f.getBase();
 						fl.monto = sellos;
 						fl.cuenta_id = Cuenta.RET_DGR_SELLOS;
 						fl.nombre = FacturaLineaImpuesto.getSecuenciaSellos().toString();
