@@ -796,7 +796,7 @@ public class FacturasController extends Controller {
 				if(precarga) {
 					Periodo p = Periodo.getPeriodoByDate(new Date());
 					
-					if(factura.orden_pago_id != null) {
+					if(factura.orden_pago_id == null) {
 						Ejercicio ej = Ejercicio.getEjercicioByFecha(new Date());
 						
 						String sql = "SELECT (max(numero)+1) as numero FROM ordenes_pagos WHERE ejercicio_id = :ejercicio_id ";
