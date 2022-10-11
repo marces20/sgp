@@ -89,10 +89,24 @@ final static Form<ActaMovimiento> lineaForm = form(ActaMovimiento.class);
 		
 		PaginadorFicha pf = new PaginadorFicha(UriTrack.encodeUri());
 		
-		organigrama_id = Usuario.getUsurioSesion().organigrama_id.toString();
+		if(RequestVar.getValueOrNull("organigrama_id") == null){
+			
+			 p.put("organigrama_id", Usuario.getUsurioSesion().organigrama_id.toString());
+			 d = form().bind(p);
+			 organigrama_id = Usuario.getUsurioSesion().organigrama_id.toString();
+		}
+		
+		 
 		
 		Logger.debug("swssssssssssssssssss "+ organigrama_id);
-		Pagination<ActaMovimiento> lineas = ActaMovimiento.pageGeneral(organigrama_id);
+		Pagination<ActaMovimiento> lineas = ActaMovimiento.pageGeneral(organigrama_id,
+																		RequestVar.get("numero"),
+																		RequestVar.get("expediente_id"),
+																		RequestVar.get("state_id"),
+																		RequestVar.get("cierre"),
+																		RequestVar.get("btnFiltro[0]"),
+																		RequestVar.get("btnFiltro[1]"),
+																		RequestVar.get("btnFiltro[2]"));
 
 		return ok(indexGeneralActaMovimiento.render(lineas,d,pf));
 	}
