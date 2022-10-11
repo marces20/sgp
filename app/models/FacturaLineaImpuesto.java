@@ -413,10 +413,10 @@ public class FacturaLineaImpuesto extends Model{
 	public static BigDecimal preCalcularSellos(Factura f){
 		BigDecimal r = new BigDecimal(0);
 		
-		if(Factura.facturasConSellosMismaOrden(f).size() == 0 && f.orden != null && f.orden.tipo_moneda == null){
+		if(Factura.facturasConSellosMismaOrden(f).size() == 0 && f.orden != null && f.orden.tipo_moneda == null && f.tipo_cuenta_id.compareTo(TipoCuenta.FONDO_PERMANENTE_OBERA) != 0 && f.tipo_cuenta_id.compareTo(TipoCuenta.FONDO_PERMANENTE_MATERNO) != 0){
 			r = f.orden.getTotal().multiply(MONTO_SELLOS).setScale(2, BigDecimal.ROUND_HALF_UP);
 		//}else if(Factura.facturasConSellosMismaOrden(f).size() == 0 && f.produccion != null && f.produccion){
-		}else if((f.produccion != null && f.produccion) || (f.orden.tipo_moneda != null) ){
+		}else if((f.produccion != null && f.produccion) || (f.orden.tipo_moneda != null) || ( f.tipo_cuenta_id.compareTo(TipoCuenta.FONDO_PERMANENTE_OBERA) == 0) || (f.tipo_cuenta_id.compareTo(TipoCuenta.FONDO_PERMANENTE_MATERNO) == 0)){
 			r = f.getBase().multiply(MONTO_SELLOS).setScale(2, BigDecimal.ROUND_HALF_UP);
 		}
 		
