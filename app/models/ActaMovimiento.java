@@ -141,16 +141,70 @@ public class ActaMovimiento extends Model{
 	}
 	
 	
-	public static Pagination<ActaMovimiento> pageGeneral(String organigrama_id) {    	
+	public static Pagination<ActaMovimiento> pageGeneral(String organigrama_id,
+			String numero,
+			String expediente_id,
+			String estado_id,
+			String cierre,
+			String filtroEnviado,
+			String filtroCancelado,
+			String filtroRecepcionado) {    	
     	Pagination<ActaMovimiento> p = new Pagination<ActaMovimiento>();
     	p.setOrderDefault("DESC");
     	p.setSortByDefault("id");
-    	p.setPageSize(1000);
+    	p.setPageSize(100);
     	
-    	ExpressionList<ActaMovimiento> e = find.fetch("acta").where();
+    	ExpressionList<ActaMovimiento> e = find.fetch("acta")
+    											.fetch("organigrama")
+												.fetch("usuario")
+												.fetch("acta.ordenProvision", "numero")
+												.fetch("acta.ordenProvision.ordenCompra.expediente", "nombre, emergencia")
+												.fetch("acta.ordenProvision.ordenCompra.expediente.ejercicio", "nombre")
+												.fetch("acta.ordenProvision.ordenCompra.expediente.parent.ejercicio", "nombre")
+												.where();
+    	
+    	if(!expediente_id.isEmpty()) {
+    		e.eq("acta.ordenProvision.ordenCompra.expediente_id", Integer.valueOf(expediente_id));
+    	}
+    	
+    	if(!numero.isEmpty()) {
+    		e.eq("acta.numero", numero);
+    	} 
+    	
+    	
+    	
+    	
+    	 
+    	if(!cierre.isEmpty()){
+    		if(cierre.compareToIgnoreCase("SI") == 0){
+    			e.eq("cierre", true);
+    		}else{
+    			e.eq("cierre", false);
+    		}
+    	}
+    	
+    	
+    	if(!filtroEnviado.isEmpty() || !filtroCancelado.isEmpty() || !filtroRecepcionado.isEmpty()) {
+			e = e.disjunction();
+			if(!filtroEnviado.isEmpty()){
+	    		e = e.eq("estado_id", Estado.ACTA_MOVIMIENTO_ENVIADO);
+	    	}
+			if(!filtroCancelado.isEmpty()){
+	    		e = e.eq("cancelado",true);
+	    	}
+			if(!filtroRecepcionado.isEmpty()){
+	    		e = e.eq("estado_id", Estado.ACTA_MOVIMIENTO_RECEPCIONADO);
+	    		e = e.eq("estado_id", Estado.ACTA_MOVIMIENTO_RECEPCIONADO_AUTOMATICO);
+	    	}
+			 
+			e = e.endJunction();
+		}else {
+			e.eq("estado_id",Estado.ACTA_MOVIMIENTO_ENVIADO);
+		}
     	
     	e.eq("cancelado",false);
-    	e.eq("estado_id",Estado.ACTA_MOVIMIENTO_ENVIADO);
+    	
+    	 
     	
     	
     	if(!organigrama_id.isEmpty()  && organigrama_id != null) {
