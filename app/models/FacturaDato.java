@@ -88,6 +88,10 @@ public class FacturaDato extends Model{
     			.fetch("factura.ordenPago.ejercicio", "nombre")
     			.where();
     	
+    	if(Usuario.getUsurioSesion().plansumarmaterno) {
+			e.eq("factura.tipo_cuenta_id",TipoCuenta.FONDO_PERMANENTE_MATERNO);
+    	}	
+    	
     	if(!proveedor.isEmpty()){
     		e.eq("factura.proveedor_id", Integer.parseInt(proveedor));
     	}
