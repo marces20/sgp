@@ -48,8 +48,8 @@
 @views.html.tags.successError()
 <form action="" id="buscadorActasRecepcion" method="GET">
 	<div class="row" >
-		<div class="row" >
-			<div class="col-sm-6 filtrosEstados" id="filtrosEstados">
+		 
+			<div class="col-sm-4 filtrosEstados" id="filtrosEstados">
 				<div class="btn-group">
 				  <button type="button" class="btn btn-default btn-filtros">
 				  	<i class="glyphicon glyphicon-arrow-right"></i><br>Enviado
@@ -67,23 +67,19 @@
 				</div>
 			</div>
 			<div class="col-sm-2 input-group">
-			<label class="control-label"> 
-				Servicio/depto
-				@select(formBuscador("organigrama_id"), 
-				Organigrama.find.where().eq("circuito_expediente", true).orderBy("nombre asc").findList().map{ p => p.id.toString -> p.nombre}, 'class -> 
-				"form-control select", '_default -> "Seleccionar")
-			</label>
+				<label class="control-label"> 
+					Servicio/depto
+					@select(formBuscador("organigrama_id"), 
+					Organigrama.find.where().eq("circuito_expediente", true).orderBy("nombre asc").findList().map{ p => p.id.toString -> p.nombre}, 'class -> 
+					"form-control select", '_default -> "Seleccionar")
+				</label>
 			</div>
-		</div>	
-	</div>	
-	<div class="row" >	
-		<div class="form-group col-sm-2">
+			<div class="form-group col-sm-2">
 			<label for="nombre" class="control-label">Número Acta
 			@inputText(formBuscador("numero"), 'class -> "form-control")
 			</label>
-		</div>
-			
-		<div class="col-sm-2">
+			</div>
+			<div class="col-sm-2">
 			<label class="control-label">Expediente
 				<div class="input-group">
 					@inputText(formBuscador("expediente_id"), 'hidden -> "hidden", 'id -> "expediente_id")
@@ -103,13 +99,24 @@
 					</span>
 				</div>
 			</label>	
-		</div>
-		 <div class="col-sm-2">
-			<label class="control-label"> 
-				Cierre
-				@select(formBuscador("cierre"),options(""->"","SI"->"SI","NO"->"NO"), 'class -> "form-control select")
+			</div>
+			 <div class="col-sm-2">
+				<label class="control-label"> 
+					Cierre
+					@select(formBuscador("cierre"),options(""->"","SI"->"SI","NO"->"NO"), 'class -> "form-control select")
+				</label>
+			</div>
+		</div>	
+	 
+	<div class="row" >	
+		<div class="col-sm-2">
+			<label class="control-label">Ejercicio
+			@select(formBuscador("ejercicio"), Ejercicio.getEjercicios().map { p => p.id.toString -> p.nombre}, 
+			'class -> "form-control select", '_default -> "Seleccionar")
 			</label>
 		</div>
+			
+		
 		<div class="col-sm-2">
 			<div class="form-group">
 			<label for="nombre" class="control-label">&nbsp;</label>
