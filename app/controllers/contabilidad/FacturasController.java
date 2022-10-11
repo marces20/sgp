@@ -31,6 +31,7 @@ import models.OrdenProvision;
 import models.Pago;
 import models.Periodo;
 import models.Proveedor;
+import models.TipoCuenta;
 import models.Usuario;
 import models.auth.Permiso;
 import models.informes.InformeDeudaProveedoresMaterializada;
@@ -1012,7 +1013,7 @@ public class FacturasController extends Controller {
 		}
 		
 		
-		if(factura.orden_id != null && factura.orden.tipo_orden.compareTo("personal") != 0) {
+		if(factura.orden_id != null && factura.orden.tipo_orden.compareTo("personal") != 0 && factura.tipo_cuenta_id.compareTo(TipoCuenta.FONDO_PERMANENTE_OBERA) != 0 && factura.tipo_cuenta_id.compareTo(TipoCuenta.FONDO_PERMANENTE_MATERNO) != 0 ) {
 			System.out.println("--------------------111");
 			Integer autorizado = AutorizadoLinea.find.where().eq("orden_id", factura.orden_id).findRowCount();
 			if(autorizado <= 0) {
