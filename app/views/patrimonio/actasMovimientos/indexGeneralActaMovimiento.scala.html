@@ -46,15 +46,68 @@
 	</div>
 </div>
 @views.html.tags.successError()
-<!--  
 <form action="" id="buscadorActasRecepcion" method="GET">
 	<div class="row" >
-		<div class="col-sm-2 input-group">
+		<div class="row" >
+			<div class="col-sm-6 filtrosEstados" id="filtrosEstados">
+				<div class="btn-group">
+				  <button type="button" class="btn btn-default btn-filtros">
+				  	<i class="glyphicon glyphicon-pencil size-14"></i><br>Enviado
+				  	@checkbox(formBuscador("btnFiltro[0]"), 'hidden -> "hidden")
+				  </button>
+				  <button type="button" rel="imputado" class="btn btn-default btn-filtros">
+				  	<i class="glyphicon glyphicon-arrow-right"></i><br>Cancelado
+				  	@checkbox(formBuscador("btnFiltro[1]"), 'hidden -> "hidden")
+				  </button>
+				  <button type="button" rel="abierta" class="btn btn-default btn-filtros">
+				  	<i class="glyphicon glyphicon-arrow-right"></i><br>Recepcionado
+				  	@checkbox(formBuscador("btnFiltro[2]"), 'hidden -> "hidden")
+				  </button> 
+				  </button>
+				</div>
+			</div>
+			<div class="col-sm-2 input-group">
 			<label class="control-label"> 
 				Servicio/depto
 				@select(formBuscador("organigrama_id"), 
 				Organigrama.find.where().eq("circuito_expediente", true).orderBy("nombre asc").findList().map{ p => p.id.toString -> p.nombre}, 'class -> 
 				"form-control select", '_default -> "Seleccionar")
+			</label>
+			</div>
+		</div>	
+	</div>	
+	<div class="row" >	
+		<div class="form-group col-sm-2">
+			<label for="nombre" class="control-label">Número Acta
+			@inputText(formBuscador("numero"), 'class -> "form-control")
+			</label>
+		</div>
+			
+		<div class="col-sm-2">
+			<label class="control-label">Expediente
+				<div class="input-group">
+					@inputText(formBuscador("expediente_id"), 'hidden -> "hidden", 'id -> "expediente_id")
+					@inputText(formBuscador("expediente.nombre"), 'name -> "", 'class -> "form-control", 'id -> "expediente")
+					<span class="input-group-addon">
+						<a href="#" class="searchModal"
+									id="searchExpedienteActa" 
+									data-title="Selección de expediente" 
+									data-url="@controllers.expediente.routes.ExpedientesController.modalBuscar()" 
+									data-height="650" 
+									data-width="700" 
+									data-listen="modal.seleccion.expediente.simple" 
+									data-label="#expediente" 
+									data-field="#expediente_id">
+							<i class="glyphicon glyphicon-search"></i>
+						</a>
+					</span>
+				</div>
+			</label>	
+		</div>
+		 <div class="col-sm-2">
+			<label class="control-label"> 
+				Cierre
+				@select(formBuscador("cierre"),options(""->"","SI"->"SI","NO"->"NO"), 'class -> "form-control select")
 			</label>
 		</div>
 		<div class="col-sm-2">
@@ -66,11 +119,11 @@
 		<div class="col-sm-2">
 			<div class="form-group">
 			<label for="nombre" class="control-label">&nbsp;</label>
-			<a href="@controllers.patrimonio.routes.ActasMovimientosController.indexGeneral()"  class="form-control btn btn-default">Limpiar</a>
+			<a href="@controllers.patrimonio.routes.ActasMovimientosController.indexPasesPorUsuario()"  class="form-control btn btn-default">Limpiar</a>
 			</div>
 		</div>
 	</div>
-</form> -->
+</form>
 
 	@if(buscador.getTotalRowCount == 0) {
         
