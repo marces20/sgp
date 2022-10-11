@@ -106,7 +106,8 @@ final static Form<ActaMovimiento> lineaForm = form(ActaMovimiento.class);
 																		RequestVar.get("cierre"),
 																		RequestVar.get("btnFiltro[0]"),
 																		RequestVar.get("btnFiltro[1]"),
-																		RequestVar.get("btnFiltro[2]"));
+																		RequestVar.get("btnFiltro[2]"),
+																		RequestVar.get("ejercicio"));
 
 		return ok(indexGeneralActaMovimiento.render(lineas,d,pf));
 	}

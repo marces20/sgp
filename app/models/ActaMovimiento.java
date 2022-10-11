@@ -148,7 +148,8 @@ public class ActaMovimiento extends Model{
 			String cierre,
 			String filtroEnviado,
 			String filtroCancelado,
-			String filtroRecepcionado) {    	
+			String filtroRecepcionado,
+			String ejercicio) {    	
     	Pagination<ActaMovimiento> p = new Pagination<ActaMovimiento>();
     	p.setOrderDefault("DESC");
     	p.setSortByDefault("id");
@@ -171,7 +172,9 @@ public class ActaMovimiento extends Model{
     		e.eq("acta.numero", numero);
     	} 
     	
-    	
+    	if(!ejercicio.isEmpty()) {
+    		e.eq("acta.ejercicio_id", Integer.valueOf(ejercicio));
+    	}
     	
     	
     	 
