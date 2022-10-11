@@ -795,23 +795,26 @@ public class FacturasController extends Controller {
 				
 				if(precarga) {
 					Periodo p = Periodo.getPeriodoByDate(new Date());
-					Ejercicio ej = Ejercicio.getEjercicioByFecha(new Date());
 					
-					String sql = "SELECT (max(numero)+1) as numero FROM ordenes_pagos WHERE ejercicio_id = :ejercicio_id ";
-					SqlRow s = Ebean.createSqlQuery(sql).setParameter("ejercicio_id", ej.id).findUnique();
+					if(factura.orden_pago_id != null) {
+						Ejercicio ej = Ejercicio.getEjercicioByFecha(new Date());
+						
+						String sql = "SELECT (max(numero)+1) as numero FROM ordenes_pagos WHERE ejercicio_id = :ejercicio_id ";
+						SqlRow s = Ebean.createSqlQuery(sql).setParameter("ejercicio_id", ej.id).findUnique();
+						
+						OrdenPago orden = new OrdenPago();
+						orden.ejercicio_id = ej.id;
+						orden.fecha = new Date();
+						orden.monto = factura.getTotal();
+						orden.numero = s.getInteger("numero");
+						orden.observacion = "Automatico desde Factura";
+						orden.create_usuario_id = new Long(Usuario.getUsuarioSesion());
+						orden.create_date = new Date();
+						orden.save();
 					
-					OrdenPago orden = new OrdenPago();
-					orden.ejercicio_id = ej.id;
-					orden.fecha = new Date();
-					orden.monto = factura.getTotal();
-					orden.numero = s.getInteger("numero");
-					orden.observacion = "Automatico desde Factura";
-					orden.create_usuario_id = new Long(Usuario.getUsuarioSesion());
-					orden.create_date = new Date();
-					orden.save();
-					
-					factura.fecha_orden_pago = new Date();
-					factura.orden_pago_id = orden.id;
+						factura.fecha_orden_pago = new Date();
+						factura.orden_pago_id = orden.id;
+					}
 					if(factura.periodo_id == null) {
 						factura.periodo_id = p.id.intValue();
 					}
