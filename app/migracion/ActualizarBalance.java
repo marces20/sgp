@@ -116,8 +116,8 @@ public class ActualizarBalance extends Controller {
 		
 		try {
 			
-			Date fd = DateUtils.formatDate("01/04/2021", "dd/MM/yyyy");
-			Date fh = DateUtils.formatDate("30/06/2021", "dd/MM/yyyy");
+			Date fd = DateUtils.formatDate("01/10/2021", "dd/MM/yyyy");
+			Date fh = DateUtils.formatDate("31/12/2021", "dd/MM/yyyy");
 			
 			
 			conn2 = Configuracion2.get2().getConnection2();
@@ -235,8 +235,8 @@ public class ActualizarBalance extends Controller {
 		
 		try {
 			
-			Date fd = DateUtils.formatDate("01/04/2021", "dd/MM/yyyy");
-			Date fh = DateUtils.formatDate("30/06/2021", "dd/MM/yyyy");
+			Date fd = DateUtils.formatDate("01/10/2021", "dd/MM/yyyy");
+			Date fh = DateUtils.formatDate("31/12/2021", "dd/MM/yyyy");
 			
 			
 			conn2 = Configuracion2.get2().getConnection2();
@@ -468,8 +468,8 @@ public class ActualizarBalance extends Controller {
 		
 		try {
 			
-			Date fd = DateUtils.formatDate("01/05/2021", "dd/MM/yyyy");
-			Date fh = DateUtils.formatDate("31/05/2021", "dd/MM/yyyy");
+			Date fd = DateUtils.formatDate("01/01/2022", "dd/MM/yyyy");
+			Date fh = DateUtils.formatDate("28/02/2022", "dd/MM/yyyy");
 			
 			
 			conn2 = Configuracion2.get2().getConnection2();
@@ -510,7 +510,7 @@ public class ActualizarBalance extends Controller {
 												   .eq("state_id", Estado.FACTURA_ESTADO_APROBADO)
 												   //.not(Expr.in("expediente_id",idsExpLiq))
 												   //.eq("id", 59721)
-												   //.eq("expediente_id",27435)
+												   //.eq("orden_pago_id",29783)
 												   .findList();
 			
 			System.out.println("-------------- "+lf.size());

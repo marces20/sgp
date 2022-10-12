@@ -17,6 +17,7 @@ import models.Estado;
 import models.FacturaLinea;
 import models.Pago;
 import models.TipoCuenta;
+import models.Usuario;
 import models.haberes.LiquidacionMes;
 import server.Configuracion2;
 import utils.DateUtils;
@@ -28,13 +29,13 @@ public class ActualizarBalancePagos {
 		Connection conn2 = null;
 		try {
 			
-			Date fd = DateUtils.formatDate("01/11/2020", "dd/MM/yyyy");
-			Date fh = DateUtils.formatDate("31/12/2020", "dd/MM/yyyy");
+			Date fd = DateUtils.formatDate("01/01/2022", "dd/MM/yyyy");
+			Date fh = DateUtils.formatDate("28/02/2022", "dd/MM/yyyy");
     		 
 			List<Pago> lf = Pago.find.where()	   .ge("fecha_pago", fd)
 												   .le("fecha_pago", fh)
 												   .eq("tipo", "payment")
-												   //.eq("orden_pago_id",17819)
+												   //.eq("expediente_id",27473)
 												   //.eq("tipo_cuenta_id", TipoCuenta.PLAN_SUMAR_LACMI)
 												   .disjunction()
 												   .eq("state_id", Estado.PAGO_ESTADO_PAGADO)
@@ -150,6 +151,8 @@ public class ActualizarBalancePagos {
 					b.asiento = asiento;
 					b.tipo = "pagos";
 					b.orden_id = f.factura.orden_id;
+					b.create_date = new Date();
+					b.create_usuario_id = new Long(Usuario.getUsuarioSesion());
 					b.save();
 					
 					BalanceExpediente be = new BalanceExpediente();
@@ -185,6 +188,8 @@ public class ActualizarBalancePagos {
 						bx.asiento = asiento;
 						bx.tipo = "pagos";
 						bx.orden_id = f.factura.orden_id;
+						bx.create_date = new Date();
+						bx.create_usuario_id = new Long(Usuario.getUsuarioSesion());
 						bx.save();
 						
 						BalanceExpediente bex = new BalanceExpediente();
@@ -307,6 +312,8 @@ public class ActualizarBalancePagos {
 						bx.asiento = asiento;
 						bx.tipo = "pagos";
 						bx.orden_id = f.factura.orden_id;
+						bx.create_date = new Date();
+						bx.create_usuario_id = new Long(Usuario.getUsuarioSesion());
 						bx.save();
 						
 						BalanceExpediente bex = new BalanceExpediente();
@@ -424,6 +431,8 @@ public class ActualizarBalancePagos {
 						bxx.asiento = asiento;
 						bxx.tipo = "pagos";
 						bxx.orden_id = f.factura.orden_id;
+						bxx.create_date = new Date();
+						bxx.create_usuario_id = new Long(Usuario.getUsuarioSesion());
 						bxx.save();
 						
 						BalanceExpediente bexx = new BalanceExpediente();
@@ -449,6 +458,8 @@ public class ActualizarBalancePagos {
 						bxxx.asiento = asiento;
 						bxxx.tipo = "pagos";
 						bxxx.orden_id = f.factura.orden_id;
+						bxxx.create_date = new Date();
+						bxxx.create_usuario_id = new Long(Usuario.getUsuarioSesion());
 						bxxx.save();
 						
 						BalanceExpediente bexxx = new BalanceExpediente();
