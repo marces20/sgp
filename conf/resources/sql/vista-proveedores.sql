@@ -1,135 +1,126 @@
 -- View: informe_estadistico_deuda_proveedores
+-- DROP VIEW public.informe_estadistico_deuda_proveedores;
 
-DROP VIEW informe_estadistico_deuda_proveedores;
-
-CREATE OR REPLACE VIEW informe_estadistico_deuda_proveedores AS 
- SELECT  o.id,
-	 o.id AS orden_id,
-	o.cot_dolar AS cotizacion,
-	CASE
-	    WHEN o.tipo_moneda = 1 THEN 'Dólar'::text
-	    WHEN o.tipo_moneda = 2 THEN 'Euro'::text
-	    ELSE 'Peso'::text
-	END AS moneda,
-	op.id AS orden_provision_id,
-	o.deposito_id,
-	o.numero_orden_provision,
-	ej.nombre AS ano,
-	o.nombre,
-	(e.nombre::text || '/'::text) || ej.nombre::text AS expediente,
-	o.expediente_id,
-	o.profe,
-	e.ejercicio_id,
-	pr.id AS proveedor_id,
-	pr.nombre AS nombre_proveedor,
-	o.orden_rubro_id AS rubro_id,
-	r.nombre AS rubro,
-	o.tipo_cuenta_id,
- 		COALESCE(sum(ord.total), 0::numeric) AS total_orden, 
- 		COALESCE(sum(p.total), 0::numeric) AS total_pagado, 
- 		COALESCE(sum(p.totalautorizado), 0::numeric) AS total_autorizado, 
- 		COALESCE(sum(actas_sin_adelanto.total::double precision * COALESCE(o.cot_dolar, 1::numeric)::double precision), 0::numeric::double precision) AS total_actas_sin_adelanto,
-		COALESCE(sum(a.total * COALESCE(o.cot_dolar, 1)), 0::numeric) AS total_actas, 
- 		
-		CASE WHEN o.cot_dolar IS NOT NULL THEN 
-			((COALESCE(sum( a.total_dolar ), 0) - COALESCE(sum(p.total_dolar), 0)) * (select cotizacion from ultimas_cotizaciones where tipo_moneda = o.tipo_moneda order by fecha desc limit 1))::numeric
-		ELSE 
-			(COALESCE(sum(a.total), 0) - COALESCE(sum(p.total), 0))::numeric
-		END total_deuda,
-
+CREATE OR REPLACE VIEW public.informe_estadistico_deuda_proveedores
+ AS
+ SELECT o.id,
+    o.id AS orden_id,
+    o.cot_dolar AS cotizacion,
         CASE
-            WHEN o.cot_dolar IS NOT NULL THEN ((COALESCE(sum(ord.total_dolar), 0::numeric) - COALESCE(sum(p.total_dolar), 0::numeric) - (COALESCE(sum(a.total_dolar), 0::numeric) - COALESCE(sum(p.total_dolar), 0::numeric))) * (( SELECT ultimas_cotizaciones.cotizacion
-               FROM ultimas_cotizaciones
-              WHERE ultimas_cotizaciones.tipo_moneda = o.tipo_moneda
-              ORDER BY ultimas_cotizaciones.fecha DESC
-             LIMIT 1)))::double precision
-            ELSE (COALESCE(sum(ord.total), 0::numeric::double precision) - COALESCE(sum(p.total), 0::numeric::double precision)) - (COALESCE(sum(a.total), 0::numeric::double precision) - COALESCE(sum(p.total), 0::numeric)::double precision)
-        END AS total_compromiso, 
-        
-        o.tipo_moneda
+            WHEN o.tipo_moneda = 1 THEN 'Dólar'::text
+            WHEN o.tipo_moneda = 2 THEN 'Euro'::text
+            ELSE 'Peso'::text
+        END AS moneda,
+    op.id AS orden_provision_id,
+    o.deposito_id,
+    o.numero_orden_provision,
+    ej.nombre AS ano,
+    o.nombre,
+    (e.nombre::text || '/'::text) || ej.nombre::text AS expediente,
+    o.expediente_id,
+    o.profe,
+    e.ejercicio_id,
+    pr.id AS proveedor_id,
+    pr.nombre AS nombre_proveedor,
+    o.orden_rubro_id AS rubro_id,
+    r.nombre AS rubro,
+    o.tipo_cuenta_id,
+    o.perimido,
+        CASE
+            WHEN o.fecha_provision IS NOT NULL THEN o.monto_adelanto
+            ELSE 0::numeric
+        END AS monto_adelanto,
+    ord.total_orden,
+    ord.total_pago AS total_pagado,
+    ord.total_autorizado,
+    ord.total_recepcionado,
+    COALESCE(sum(actas_sin_adelanto.total::double precision * COALESCE(o.cot_dolar, 1::numeric)::double precision), 0::numeric::double precision) AS total_actas_sin_adelanto,
+    0 AS total_deuda_en_tramite,
+    COALESCE(sum(a.total * COALESCE(o.cot_dolar, 1::numeric)::double precision), 0::numeric::double precision) AS total_actas,
+        CASE
+            WHEN oec.orden_id IS NOT NULL THEN 0::numeric
+            WHEN o.cot_dolar IS NOT NULL THEN (COALESCE(sum(a.total_dolar), 0::numeric) - COALESCE(oec.total, 0::numeric) - COALESCE(sum(GREATEST(ord.total_pago_divisa, ord.total_autorizado_divisa)), 0::numeric)) * cotizacion.valor
+            ELSE round((COALESCE(sum(a.total), 0::double precision) - COALESCE(sum(GREATEST(ord.total_pago, ord.total_autorizado))::double precision, 0::double precision) - COALESCE(oec.total::double precision, 0::double precision))::numeric, 2)
+        END AS total_deuda,
+        CASE
+            WHEN o.cot_dolar IS NOT NULL THEN ((ord.total_orden_divisa - COALESCE(sum(ord.total_pago_divisa), 0::numeric) - (COALESCE(sum(a.total_dolar), 0::numeric) - COALESCE(sum(ord.total_pago_divisa), 0::numeric))) * cotizacion.valor)::double precision
+            ELSE round((ord.total_orden::double precision - COALESCE(sum(ord.total_pago)::double precision, 0::double precision) - (COALESCE(sum(a.total), 0::double precision) - COALESCE(sum(ord.total_pago)::double precision, 0::double precision)))::numeric, 2)::double precision
+        END AS total_compromiso,
+    o.tipo_moneda
    FROM ordenes o
-   LEFT JOIN vista_pagos_totales p ON p.orden_id = o.id
-   LEFT JOIN ( SELECT asd_2.orden_compra_id AS id,
+     LEFT JOIN ( SELECT ultimas_cotizaciones.cotizacion AS valor,
+            ultimas_cotizaciones.tipo_moneda
+           FROM ultimas_cotizaciones
+          WHERE (ultimas_cotizaciones.id IN ( SELECT max(uc.id) AS id
+                   FROM ultimas_cotizaciones uc
+                  GROUP BY uc.tipo_moneda
+                  ORDER BY (max(uc.fecha)), (max(uc.id)) DESC))) cotizacion ON cotizacion.tipo_moneda = o.tipo_moneda
+     LEFT JOIN ( SELECT ordenes_ejercicio_concluido.orden_id,
+            sum(round(ordenes_ejercicio_concluido.total / ordenes_ejercicio_concluido.cotizacion, 2)) AS total
+           FROM ordenes_ejercicio_concluido
+          GROUP BY ordenes_ejercicio_concluido.orden_id) oec ON oec.orden_id = o.id
+     LEFT JOIN ( SELECT asd_2.orden_compra_id AS id,
             sum(asd_2.total) AS total,
             sum(asd_2.total_dolar) AS total_dolar
            FROM vista_actas_totales asd_2
           WHERE asd_2.state_id = 40
           GROUP BY asd_2.orden_compra_id) actas_sin_adelanto ON actas_sin_adelanto.id = o.id
-   LEFT JOIN ( 
-				SELECT o.id, 
-					(sum(round(ol.precio * ol.cantidad::numeric,2)) + COALESCE(ajustes.total, 0) + COALESCE(ajustes_dolar.total, 0) ) AS total,
-					round((sum(round(ol.precio * ol.cantidad::numeric,2)) + COALESCE(ajustes.total, 0)) / COALESCE(o.cot_dolar,1),2) AS total_dolar
-			        FROM ordenes o
-				JOIN orden_lineas ol ON ol.orden_id = o.id
-				LEFT JOIN ( 
-						SELECT orden_id, COALESCE(sum(round(a.precio * a.cantidad, 2)), 0) AS total
-						FROM orden_lineas_ajustes a
-						WHERE a.producto_id not in (40277, 40276, 30653)
-						GROUP BY a.orden_id
-					) as ajustes on ajustes.orden_id = o.id
-				LEFT JOIN ( 
-						SELECT orden_id, COALESCE(sum(round(a.precio * a.cantidad, 2)), 0) AS total
-						FROM orden_lineas_ajustes a
-						WHERE a.producto_id in (40277, 40276, 30653)
-						GROUP BY a.orden_id
-					) as ajustes_dolar on ajustes_dolar.orden_id = o.id
-				WHERE (o.state_id = 11 OR o.state_id = 14)
-				GROUP BY o.id  , o.cot_dolar, ajustes.total, ajustes_dolar.total
-  			) ord ON ord.id = o.id
-   LEFT JOIN (        
-   				( 
+     LEFT JOIN totales_por_orden ord ON ord.orden_id = o.id
+     LEFT JOIN ( SELECT DISTINCT a_1.orden_id,
+            max(a_1.total) AS total,
+            max(a_1.total_dolar) AS total_dolar
+           FROM ( SELECT a_2.orden_compra_id AS orden_id,
+                    sum(a_2.total) AS total,
+                    sum(a_2.total_dolar) AS total_dolar
+                   FROM vista_actas_totales a_2
+                  WHERE a_2.state_id = 40
+                  GROUP BY a_2.orden_compra_id
+                UNION
+                 SELECT ordenes.id AS orden_id,
+                    COALESCE(ordenes.monto_adelanto, 0::numeric) AS total,
+                    round(COALESCE(ordenes.monto_adelanto, 0::numeric) / COALESCE(ordenes.cot_dolar, 1::numeric), 2) AS total_dolar
+                   FROM ordenes
+                  WHERE ordenes.monto_adelanto > 0::numeric AND ordenes.fecha_provision IS NOT NULL AND (ordenes.tipo_orden::text <> 'haberesrelacion'::text OR ordenes.tipo_orden::text <> 'certificacioncompra'::text OR ordenes.tipo_orden::text <> 'certificacionobra'::text)) a_1
+          GROUP BY a_1.orden_id
+        UNION
+         SELECT o_1.id,
+            sum(round(ol.precio * ol.cantidad, 2)) + sum(round(COALESCE(ola.precio, 0::numeric) * COALESCE(ola.cantidad, 0::numeric), 2)) AS total,
+            0 AS total_dolar
+           FROM ordenes o_1
+             JOIN orden_lineas ol ON ol.orden_id = o_1.id
+             LEFT JOIN orden_lineas_ajustes ola ON ola.orden_id = o_1.id
+          WHERE (o_1.state_id = 11 OR o_1.state_id = 14) AND o_1.tipo_orden::text = 'haberesrelacion'::text
+          GROUP BY o_1.id
+        UNION
+         SELECT cc.orden_id,
+            sum(cl.total) AS total,
+            round((sum(cl.total) / COALESCE(o_1.cot_dolar, 1::numeric)::double precision)::numeric, 2) AS total_dolar
+           FROM ( SELECT certificaciones_compras_lineas.certificacion_compra_id,
+                    sum(certificaciones_compras_lineas.cantidad * round(certificaciones_compras_lineas.precio, 2)::double precision - certificaciones_compras_lineas.cantidad * round(certificaciones_compras_lineas.precio, 2)::double precision * round(COALESCE(certificaciones_compras_lineas.descuento, 0::numeric), 2)::double precision / 100::double precision) AS total
+                   FROM certificaciones_compras_lineas
+                  WHERE certificaciones_compras_lineas.producto_id <> ALL (ARRAY[40277, 40276, 30653])
+                  GROUP BY certificaciones_compras_lineas.certificacion_compra_id
+                UNION ALL
+                 SELECT certificaciones_compras_linea_ajustes.certificacion_compra_id,
+                    sum(COALESCE(certificaciones_compras_linea_ajustes.precio, 0::numeric)::double precision * COALESCE(certificaciones_compras_linea_ajustes.cantidad, 0::double precision)) AS total
+                   FROM certificaciones_compras_linea_ajustes
+                  WHERE certificaciones_compras_linea_ajustes.producto_id <> ALL (ARRAY[40277, 40276, 30653])
+                  GROUP BY certificaciones_compras_linea_ajustes.certificacion_compra_id) cl
+             JOIN certificaciones_compras cc ON cc.id = cl.certificacion_compra_id
+             JOIN ordenes o_1 ON o_1.id = cc.orden_id
+          WHERE cc.state_id = 81 AND o_1.perimido = false
+          GROUP BY cc.orden_id, cc.state_id, o_1.cot_dolar) a ON a.orden_id = o.id
+     LEFT JOIN proveedores pr ON pr.id = o.proveedor_id
+     LEFT JOIN expedientes e ON e.id = o.expediente_id
+     LEFT JOIN ejercicios ej ON ej.id = e.ejercicio_id
+     LEFT JOIN ordenes_provision op ON op.orden_compra_id = o.id
+     LEFT JOIN ordenes_rubros r ON r.id = o.orden_rubro_id
+  WHERE o.state_id <> 13 AND (op.id IS NOT NULL OR (o.id IN ( SELECT certificaciones_compras.orden_id
+           FROM certificaciones_compras
+          GROUP BY certificaciones_compras.orden_id)) OR o.tipo_orden::text = 'haberesrelacion'::text)
+  GROUP BY o.id, op.id, ord.total_orden, ord.total_pago, ord.total_autorizado, ord.total_recepcionado, ord.total_orden_divisa, oec.total, oec.orden_id, o.nombre, o.expediente_id, e.ejercicio_id, o.numero_orden_provision, o.profe, e.nombre, ej.nombre, o.orden_rubro_id, r.nombre, pr.id, pr.nombre, o.deposito_id, cotizacion.valor;
 
-		  		  -- Suma todos los totales de actas de una orden y si la orden tiene un monto de adelnto mayor entonces toma el total del adelanto como monto de acta --
-				  select distinct orden_id, max(total) total, max(total_dolar) total_dolar from (
-				  select  orden_compra_id orden_id, SUM(a.total) total, sum(total_dolar) total_dolar from vista_actas_totales a WHERE a.state_id = 40 group by orden_compra_id
-				  union
-				  select  id orden_id, 
-				  		  COALESCE(monto_adelanto,0) total , 
-				  		  round(COALESCE(monto_adelanto,0) / COALESCE(cot_dolar, 1),2) total_dolar 
-				  		  from ordenes 
-				  		  where monto_adelanto > 0 
-				  		  and ( tipo_orden::text != 'haberesrelacion'::text or tipo_orden::text != 'certificacioncompra'::text or tipo_orden::text != 'certificacionobra'::text)
-				  ) as a
-				  group by orden_id
-   				
-   				
-        		  UNION 
-                  SELECT o.id, sum(round(ol.precio * ol.cantidad::numeric, 2))+sum(round(COALESCE(ola.precio, 0::numeric) * COALESCE(ola.cantidad, 0::numeric), 2)) AS total, 0 total_dolar
-                  FROM ordenes o
-              	  JOIN orden_lineas ol ON ol.orden_id = o.id
-              	  LEFT JOIN orden_lineas_ajustes ola ON ola.orden_id = o.id
-             	  WHERE (o.state_id = 11 OR o.state_id = 14) AND o.tipo_orden::text = 'haberesrelacion'::text
-             	  GROUP BY o.id
-             	  
-					UNION 
-	         		SELECT cc.orden_id, 
-	         		--SUM(cl.total) total,   0 total_dolar
-	           		round((sum(cl.total) / COALESCE(o_1.cot_dolar, 1::numeric)::double precision)::numeric,2) AS total_dolar
-	         		
-	         		FROM (
-							select certificacion_compra_id, 
-									sum(cantidad * round(precio, 2) - cantidad * round(precio, 2) *  round(COALESCE(descuento, 0), 2) / 100) AS total 
-							from certificaciones_compras_lineas group by certificacion_compra_id
-							union all
-							select certificacion_compra_id, (SUM(COALESCE(precio,0) * COALESCE(cantidad,0))) total 
-							from certificaciones_compras_linea_ajustes group by certificacion_compra_id
-							) cl
-	      			JOIN certificaciones_compras cc ON cc.id = cl.certificacion_compra_id
-	      			JOIN ordenes o ON o.id = cc.orden_id
-	      			WHERE cc.state_id = 81
-	    	 		GROUP BY cc.orden_id, cc.state_id, o.cot_dolar
-	    	 		
-	    	 		
-             	  )
+ALTER TABLE public.informe_estadistico_deuda_proveedores
+    OWNER TO root;
 
-    	 	) a ON a.orden_id = o.id
-   LEFT JOIN proveedores pr ON pr.id = o.proveedor_id
-   LEFT JOIN expedientes e ON e.id = o.expediente_id
-   LEFT JOIN ejercicios ej ON ej.id = e.ejercicio_id
-   LEFT JOIN ordenes_provision op ON op.orden_compra_id = o.id
-   LEFT JOIN ordenes_rubros r ON r.id = o.orden_rubro_id
-   WHERE o.state_id <> 13 AND (op.id IS NOT NULL OR (o.id IN ( SELECT certificaciones_compras.orden_id
-   															   FROM certificaciones_compras group by orden_id
-   															   )
-   													  ) OR o.tipo_orden::text = 'haberesrelacion'::text)
-  GROUP BY o.id, op.id, o.nombre, o.expediente_id, e.ejercicio_id, o.numero_orden_provision, o.profe, e.nombre, ej.nombre, o.orden_rubro_id, r.nombre, pr.id, pr.nombre, o.deposito_id;
+
