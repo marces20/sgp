@@ -741,22 +741,9 @@ public class FacturasReportesController extends Controller  {
             String cuenta = "";
             String denominacion = "";
             if(facturaDatosSimples.tipo_cuenta_id != null) {
-	            if( facturaDatosSimples.tipo_cuenta_id.equals(TipoCuenta.OPERATIVA)){
-	            	cuenta = "300109408769227";
-	            	denominacion = "Parque de la Salud de la Pcia. de Mnes. Dr. Ramón Madariaga";
-	            }else if( facturaDatosSimples.tipo_cuenta_id.equals(TipoCuenta.PROFE)){
-	            	cuenta = "300109408729322";
-	            	denominacion = "Parque de la Salud Programa PROFE";
-	            }else if( facturaDatosSimples.tipo_cuenta_id.equals(TipoCuenta.PLAN_SUMAR_HEARM)){
-	            	cuenta = "300109414236139";
-	            	denominacion = "Programa Sumar";
-	            }else if(facturaDatosSimples.tipo_cuenta_id.equals(TipoCuenta.PLAN_SUMAR_FATIMA)){
-	            	cuenta = "300109416612791";
-	            	denominacion = "Programa Sumar hospital nivel II Nuestra señora de Fatima";
-	            }else if(facturaDatosSimples.tipo_cuenta_id.equals(TipoCuenta.PLAN_SUMAR_LACMI)){
-	            	cuenta = "300109416469177";
-	            	denominacion = "Programa Sumar Lacmi";
-	            } 
+	            cuenta = facturaDatosSimples.tipoCuenta.numero;
+	            denominacion = facturaDatosSimples.tipoCuenta.denominacion;
+	            
             }else {
             	 cuenta = (facturaDatosSimples.profe)?"300109408729322":"300109408769227";
                  denominacion = (facturaDatosSimples.profe)?"Parque de la Salud Programa PROFE":"Parque de la Salud de la Pcia. de Mnes. Dr. Ramón Madariaga";
@@ -830,22 +817,8 @@ public class FacturasReportesController extends Controller  {
 			String cuenta = "";
             String denominacion = "";
             if(facturaDatosSimples.tipo_cuenta_id != null) {
-	            if( facturaDatosSimples.tipo_cuenta_id.equals(TipoCuenta.OPERATIVA)){
-	            	cuenta = "300109408769227";
-	            	denominacion = "Parque de la Salud de la Pcia. de Mnes. Dr. Ramón Madariaga";
-	            }else if( facturaDatosSimples.tipo_cuenta_id.equals(TipoCuenta.PROFE)){
-	            	cuenta = "300109408729322";
-	            	denominacion = "Parque de la Salud Programa PROFE";
-	            }else if( facturaDatosSimples.tipo_cuenta_id.equals(TipoCuenta.PLAN_SUMAR_HEARM)){
-	            	cuenta = "300109414236139";
-	            	denominacion = "Programa Sumar";
-	            }else if(facturaDatosSimples.tipo_cuenta_id.equals(TipoCuenta.PLAN_SUMAR_FATIMA)){
-	            	cuenta = "300109416612791";
-	            	denominacion = "Programa Sumar hospital nivel II Nuestra señora de Fatima";
-	            }else if(facturaDatosSimples.tipo_cuenta_id.equals(TipoCuenta.PLAN_SUMAR_LACMI)){
-	            	cuenta = "300109416469177";
-	            	denominacion = "Programa Sumar Lacmi";
-	            } 
+	            cuenta = facturaDatosSimples.tipoCuenta.numero;
+	            denominacion = facturaDatosSimples.tipoCuenta.denominacion;
 	        }else {
             	 cuenta = (facturaDatosSimples.profe)?"300109408729322":"300109408769227";
                  denominacion = (facturaDatosSimples.profe)?"Parque de la Salud Programa PROFE":"Parque de la Salud de la Pcia. de Mnes. Dr. Ramón Madariaga";
@@ -1025,25 +998,9 @@ public class FacturasReportesController extends Controller  {
             String cuenta = "";
             String denominacion = "";
             if(facturaDatosSimples.tipo_cuenta_id != null) {
-	            if( facturaDatosSimples.tipo_cuenta_id.equals(TipoCuenta.OPERATIVA)){
-	            	cuenta = "300109408769227";
-	            	denominacion = "Parque de la Salud de la Pcia. de Mnes. Dr. Ramón Madariaga";
-	            }else if( facturaDatosSimples.tipo_cuenta_id.equals(TipoCuenta.PROFE)){
-	            	cuenta = "300109408729322";
-	            	denominacion = "Parque de la Salud Programa PROFE";
-	            }else if( facturaDatosSimples.tipo_cuenta_id.equals(TipoCuenta.PLAN_SUMAR_HEARM)){
-	            	cuenta = "300109414236139";
-	            	denominacion = "Programa Sumar";
-	            }else if( facturaDatosSimples.tipo_cuenta_id.equals(TipoCuenta.PLAN_SUMAR_MATERNO)){
-	            	cuenta = "00000000000000";
-	            	denominacion = "Programa Sumar Materno";
-	            }else if(facturaDatosSimples.tipo_cuenta_id.equals(TipoCuenta.PLAN_SUMAR_FATIMA)){
-	            	cuenta = "300109416612791";
-	            	denominacion = "Programa Sumar hospital nivel II Nuestra señora de Fatima";
-	            }else if(facturaDatosSimples.tipo_cuenta_id.equals(TipoCuenta.PLAN_SUMAR_LACMI)){
-	            	cuenta = "300109416469177";
-	            	denominacion = "Programa Sumar Lacmi";
-	            } 
+            	cuenta = facturaDatosSimples.tipoCuenta.numero;
+	            denominacion = facturaDatosSimples.tipoCuenta.denominacion;
+	            
 	        }else {
             	 cuenta = (facturaDatosSimples.profe)?"300109408729322":"300109408769227";
                  denominacion = (facturaDatosSimples.profe)?"Parque de la Salud Programa PROFE":"Parque de la Salud de la Pcia. de Mnes. Dr. Ramón Madariaga";
