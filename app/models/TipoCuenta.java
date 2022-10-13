@@ -32,5 +32,7 @@ public class TipoCuenta extends Model{
 	
 	public String numero;
 	
+	public String denominacion;
+	
 	public static Model.Finder<Long,TipoCuenta> find = new Model.Finder<Long,TipoCuenta>(Long.class, TipoCuenta.class);
 }
