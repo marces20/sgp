@@ -415,11 +415,18 @@ public class Orden extends Model {
 			e = e.endJunction();
 		}	
 		
-		if(Usuario.getUsurioSesion().plansumarmaterno) {
-			e = e.eq("tipo_cuenta_id",TipoCuenta.PLAN_SUMAR_MATERNO);
-    	}	
+		 
 		
 		if(!Permiso.check("verTodoOrden")){
+			
+			if(Usuario.getUsurioSesion().plansumarmaterno) {
+        		e = e.disjunction();
+    			e = e.eq("tipo_cuenta_id",TipoCuenta.PLAN_SUMAR_MATERNO);
+    			e = e.in("create_usuario_id", Usuario.getUsersPlanSumarMaterno());
+    			e = e.endJunction();
+        	}
+			
+			
     		if(Usuario.getUsurioSesion().organigrama != null && Usuario.getUsurioSesion().organigrama.deposito != null){
     			e = e.disjunction();
     			e = e.eq("deposito_id", Usuario.getUsurioSesion().organigrama.deposito_id.intValue());

@@ -271,13 +271,16 @@ public class Solicitud extends Model {
 			.fetch("cliente.obrasocial")
 			.where();
     	
-    	if(Usuario.getUsurioSesion().plansumarmaterno) {
-			e = e.eq("tipo_cuenta_id",TipoCuenta.PLAN_SUMAR_MATERNO);
-    	}	
+    	
     	
     	if(!Permiso.check("verTodasLasSolicitudes")){
     		
-    		 
+    		if(Usuario.getUsurioSesion().plansumarmaterno) {
+        		e = e.disjunction();
+    			e = e.eq("tipo_cuenta_id",TipoCuenta.PLAN_SUMAR_MATERNO);
+    			e = e.in("create_usuario_id", Usuario.getUsersPlanSumarMaterno());
+    			e = e.endJunction();
+        	}	
     		
     		Integer deptoId = 0;
     		List<Integer> l = null;
