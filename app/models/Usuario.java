@@ -122,6 +122,10 @@ public class Usuario extends Model {
 		return find.where().ilike("nombre", "%" + nombre + "%").setMaxRows(limit).orderBy("nombre").findList();
 	}
 	
+	public static List<Object> getUsersPlanSumarMaterno(){
+		 return Usuario.find.where().eq("plansumarmaterno",true).findIds();
+	}
+	
 	public static List<Integer> getUsersDepartamentosHijos(Integer deptoId){
 		
 		List<Integer>  luAux = new ArrayList<Integer>(); 
