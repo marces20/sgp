@@ -72,7 +72,7 @@ public class HistorialDeudaProveedores extends Model{
 			conn = play.db.DB.getConnection();
 			stmt = conn.prepareStatement("INSERT INTO historial_deuda_proveedores(fecha, orden_id, monto_adelanto, total_orden, total_pagado, "
 					+ "total_autorizado, total_recepcionado, total_actas_sin_adelanto, total_deuda_en_tramite,total_actas, total_deuda, total_compromiso, "
-					+ "tipo_moneda,cotizacion,cotizacion_dia,total_orden_divisa,total_pago_divisa,total_autorizado_divisa) "  
+					+ "tipo_moneda,cotizacion,cotizacion_dia,total_orden_divisa,total_pago_divisa,total_autorizado_divisa,perimido) "  
 					
 					+ "SELECT now(),v.orden_id, v.monto_adelanto, v.total_orden, v.total_pagado, v.total_autorizado, v.total_recepcionado, v.total_actas_sin_adelanto, "
 					+ "v.total_deuda_en_tramite, v.total_actas, v.total_deuda, v.total_compromiso, tipo_moneda,cotizacion, "
@@ -86,15 +86,15 @@ public class HistorialDeudaProveedores extends Model{
 					"        LIMIT 1) " + 
 					" ELSE  " + 
 					"	null " + 
-					" END AS cotizacion_dia,tp.total_orden_divisa,tp.total_pago_divisa,tp.total_autorizado_divisa	"
+					" END AS cotizacion_dia,tp.total_orden_divisa,tp.total_pago_divisa,tp.total_autorizado_divisa,v.perimido	"
 					+ "FROM informe_estadistico_deuda_proveedores_matrializada v "
 					+ "INNER JOIN totales_por_orden tp on tp.orden_id = v.orden_id ");
 			stmt.executeUpdate();
 			
 			
 			stmt2 = conn.prepareStatement("INSERT INTO historial_deuda_actas(fecha,orden_id, id_fake, id_acta, certificacion_id, total_acta, "
-					+ "total_pagado,total_deuda, total_deuda_limite, total_autorizado,acta_numero)" + 
-					"SELECT now (),orden_id,id_fake,id,certificacion_id,total_acta,total_pagado,total_deuda,total_deuda_limite,total_autorizado,acta_numero "
+					+ "total_pagado,total_deuda, total_deuda_limite, total_autorizado,acta_numero,perimido)" + 
+					"SELECT now (),orden_id,id_fake,id,certificacion_id,total_acta,total_pagado,total_deuda,total_deuda_limite,total_autorizado,acta_numero,perimido "
 					+ "FROM  informe_deuda_actas_materializada ");
 			stmt2.executeUpdate();
 			
@@ -345,7 +345,7 @@ public class HistorialDeudaProveedores extends Model{
 				"from historial_deuda_proveedores hd " + 
 				"inner join informe_estadistico_deuda_proveedores_matrializada vd on hd.orden_id = vd.orden_id " + 
 				"inner join proveedores p on p.id = vd.proveedor_id " + 
-				"where hd.total_deuda > 1 and hd.fecha = :fecha ";
+				"where hd.perimido <> true and hd.total_deuda > 1 and hd.fecha = :fecha ";
 		
 			if(equipamiento) {
 				sql += "AND vd.rubro_id = 1 ";
