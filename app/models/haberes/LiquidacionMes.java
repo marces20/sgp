@@ -5,6 +5,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -484,8 +485,11 @@ public class LiquidacionMes extends Model {
 
     // Long ret = new Long(0);
     String r = "";
+    
+    actualizarVistaMaterializadaPuestosLaborales();
+    
     try {
-
+    	
       conn = play.db.DB.getConnection();
 
       List<LiquidacionMes> lm =
@@ -1327,4 +1331,25 @@ public class LiquidacionMes extends Model {
     return row;
 
   }
+  
+  public static void actualizarVistaMaterializadaPuestosLaborales () {
+		
+		Connection conn = play.db.DB.getConnection();
+		Statement stmt = null;
+		try {
+		    stmt = conn.createStatement();
+		    stmt.execute("REFRESH MATERIALIZED VIEW puesto_laboral_acum_haberes_parque_mv;");
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {
+		    try {
+		    	stmt.close();
+				conn.close();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+	}
 }
