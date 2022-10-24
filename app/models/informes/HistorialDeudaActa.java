@@ -31,6 +31,7 @@ public class HistorialDeudaActa extends Model{
 	public BigDecimal total_deuda_limite;
 	public BigDecimal total_autorizado;
 	String id_fake;
+	public Boolean perimido ;
 	
 	public static Model.Finder<Long,HistorialDeudaActa> find = new Finder<Long,HistorialDeudaActa>(Long.class, HistorialDeudaActa.class);
 	
