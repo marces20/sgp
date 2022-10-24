@@ -56,6 +56,7 @@ public class HistorialDeudaProveedores extends Model{
 	public BigDecimal total_deuda;
 	public BigDecimal total_compromiso;
 	public Long tipo_moneda ;
+	public Boolean perimido ;
 	
 	public static Model.Finder<Long,HistorialDeudaProveedores> find = new Finder<Long,HistorialDeudaProveedores>(Long.class, HistorialDeudaProveedores.class);
 	
@@ -331,7 +332,7 @@ public class HistorialDeudaProveedores extends Model{
 		 		"coalesce(SUM(CASE WHEN hd.total_deuda > 0 THEN hd.total_deuda ELSE 0 END),0) > 0  " + 
 		 		"THEN coalesce(SUM(CASE WHEN hd.total_deuda > 0 THEN hd.total_deuda ELSE 0 END),0) ELSE 0 END " + 
 		 		"-  " + 
-		 		"( " + 
+		 		"( coalesce(SUM(oec.total),0) +  " + 
 		 		"CASE WHEN  " + 
 		 		"coalesce(SUM(CASE WHEN vd.total_pagado > 0 THEN vd.total_pagado ELSE 0 END),0) > 0 " + 
 		 		"THEN coalesce(SUM(CASE WHEN vd.total_pagado > 0 THEN vd.total_pagado ELSE 0 END),0) ELSE 0 END  " + 
@@ -345,7 +346,11 @@ public class HistorialDeudaProveedores extends Model{
 				"from historial_deuda_proveedores hd " + 
 				"inner join informe_estadistico_deuda_proveedores_matrializada vd on hd.orden_id = vd.orden_id " + 
 				"inner join proveedores p on p.id = vd.proveedor_id " + 
-				"where hd.perimido <> true and hd.total_deuda > 1 and hd.fecha = :fecha ";
+				"LEFT JOIN ( SELECT ordenes_ejercicio_concluido.orden_id, " + 
+			    "       sum(round(ordenes_ejercicio_concluido.total , 2)) AS total " + 
+			    "       FROM ordenes_ejercicio_concluido " + 
+			    "       GROUP BY ordenes_ejercicio_concluido.orden_id) oec ON oec.orden_id = hd.orden_id " + 
+				"where hd.perimido <> true and vd.perimido <> true and hd.total_deuda > 1 and hd.fecha = :fecha ";
 		
 			if(equipamiento) {
 				sql += "AND vd.rubro_id = 1 ";
@@ -366,7 +371,7 @@ public class HistorialDeudaProveedores extends Model{
 				   " coalesce(SUM(CASE WHEN hd.total_deuda > 0 THEN hd.total_deuda ELSE 0 END),0) > 0 " +
 				   " THEN coalesce(SUM(CASE WHEN hd.total_deuda > 0 THEN hd.total_deuda ELSE 0 END),0) ELSE 0 END " +
 				   " - " +
-				   " (  " +
+				   " (  + " +
 				   " CASE WHEN " + 
 				   " coalesce(SUM(CASE WHEN vd.total_pagado > 0 THEN vd.total_pagado ELSE 0 END),0) > 0 " +  
 				   " THEN coalesce(SUM(CASE WHEN vd.total_pagado > 0 THEN vd.total_pagado ELSE 0 END),0) ELSE 0 END " +
@@ -378,6 +383,64 @@ public class HistorialDeudaProveedores extends Model{
 			
 			if(!totales) {
 				sql += "ORDER BY total_deuda DESC ,vd.nombre_proveedor  ASC";
+			} 
+					
+		
+		
+		SqlQuery sqlQuery = Ebean.createSqlQuery(sql).setParameter("fecha", fecha);
+		List<SqlRow>  row = sqlQuery.findList();
+		
+		return row;
+	}
+	
+	public static List<SqlRow> getTotalesPorCorteFechaNuevo(boolean totales,Date fecha,boolean equipamiento,boolean hoy){
+		
+		String sql = "select  ";
+				//if(!totales) {
+		//	sql += "vd.proveedor_id proveedorId,vd.nombre_proveedor nombre_proveedor, ";
+		//		} 
+		
+				 
+		 sql += "CASE WHEN  " + 
+		 		"coalesce(SUM(CASE WHEN hd.total_deuda > 0 THEN hd.total_deuda ELSE 0 END),0) > 0  " + 
+		 		"THEN coalesce(SUM(CASE WHEN hd.total_deuda > 0 THEN hd.total_deuda ELSE 0 END),0) ELSE 0 END total_deuda  ";
+		 if(!hoy) {
+			 sql +=  "from historial_deuda_proveedores hd ";
+		 }else {
+			 sql +=  "from informe_estadistico_deuda_proveedores_matrializada hd ";
+		 }
+		 
+		sql +=  "inner join ordenes o on o.id = hd.orden_id " + 
+		 		"inner join proveedores p on p.id = o.proveedor_id " + 
+				"where hd.perimido <> true and hd.total_deuda > 1 ";
+			
+		   	if(!hoy) {
+				sql +=  "and hd.fecha = :fecha ";
+			}
+		 	  
+		
+			if(equipamiento) {
+				sql += "AND o.orden_rubro_id = 1 ";
+			}else {
+				sql +="AND o.orden_rubro_id <> 1 ";
+			}
+			
+			sql +=	"AND o.orden_rubro_id <> 7 AND o.orden_rubro_id <> 8 AND o.tipo_cuenta_id = 1 " + 
+					"AND p.id NOT IN (select proveedor_id from proveedores_destacados) ";
+			
+			//if(!totales) {
+			//	sql += " GROUP BY vd.proveedor_id,vd.nombre_proveedor ";
+			//} 	
+			
+			sql += " HAVING " + 
+				   " ( " +
+				   " CASE WHEN " +
+				   " coalesce(SUM(CASE WHEN hd.total_deuda > 0 THEN hd.total_deuda ELSE 0 END),0) > 0 " +
+				   " THEN coalesce(SUM(CASE WHEN hd.total_deuda > 0 THEN hd.total_deuda ELSE 0 END),0) ELSE 0 END " +
+				   " ) > 0 ";
+			
+			if(!totales) {
+			//	sql += "ORDER BY total_deuda DESC ,vd.nombre_proveedor  ASC";
 			} 
 					
 		
