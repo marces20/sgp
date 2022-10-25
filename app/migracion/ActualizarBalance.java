@@ -116,8 +116,8 @@ public class ActualizarBalance extends Controller {
 		
 		try {
 			
-			Date fd = DateUtils.formatDate("01/10/2021", "dd/MM/yyyy");
-			Date fh = DateUtils.formatDate("31/12/2021", "dd/MM/yyyy");
+			Date fd = DateUtils.formatDate("01/01/2022", "dd/MM/yyyy");
+			Date fh = DateUtils.formatDate("31/03/2022", "dd/MM/yyyy");
 			
 			
 			conn2 = Configuracion2.get2().getConnection2();
@@ -235,8 +235,8 @@ public class ActualizarBalance extends Controller {
 		
 		try {
 			
-			Date fd = DateUtils.formatDate("01/10/2021", "dd/MM/yyyy");
-			Date fh = DateUtils.formatDate("31/12/2021", "dd/MM/yyyy");
+			Date fd = DateUtils.formatDate("01/01/2022", "dd/MM/yyyy");
+			Date fh = DateUtils.formatDate("31/03/2022", "dd/MM/yyyy");
 			
 			
 			conn2 = Configuracion2.get2().getConnection2();
@@ -355,8 +355,8 @@ public class ActualizarBalance extends Controller {
 		
 		try {
 			
-			Date fd = DateUtils.formatDate("01/01/2020", "dd/MM/yyyy");
-			Date fh = DateUtils.formatDate("30/12/2020", "dd/MM/yyyy");
+			Date fd = DateUtils.formatDate("01/01/2022", "dd/MM/yyyy");
+			Date fh = DateUtils.formatDate("31/03/2022", "dd/MM/yyyy");
 			
 			
 			conn2 = Configuracion2.get2().getConnection2();
@@ -468,8 +468,8 @@ public class ActualizarBalance extends Controller {
 		
 		try {
 			
-			Date fd = DateUtils.formatDate("01/01/2022", "dd/MM/yyyy");
-			Date fh = DateUtils.formatDate("28/02/2022", "dd/MM/yyyy");
+			Date fd = DateUtils.formatDate("01/02/2022", "dd/MM/yyyy");
+			Date fh = DateUtils.formatDate("31/03/2022", "dd/MM/yyyy");
 			
 			
 			conn2 = Configuracion2.get2().getConnection2();
@@ -1266,14 +1266,25 @@ public class ActualizarBalance extends Controller {
 	public static Integer getCuentaPropiaId(Integer tipo_cuenta_id) {
 		int r = 2;
 		/*
-		<option value="1" selected="">OPERATIVA</option>
-		<option value="2">PROFE</option>
-		<option value="3">PLAN SUMAR HEARM</option>
-		<option value="4">PLAN SUMAR LACMI</option>
-		<option value="5">PLAN SUMAR FATIMA</option>*/
+		<select id="cuenta_propia_id" name="cuenta_propia_id" class="form-control select">
+                <option value="1">PROFE</option>
+                <option value="2" selected="">OPERATIVA</option>
+                <option value="7">CTA. CTE. PROGRAMA SUMAR HEARM</option>
+                <option value="3">FONDOS PROVINCIALES</option>
+                <option value="4">FONDOS VARIOS</option>
+                <option value="5">FONDOS PROFE</option>
+                <option value="6">FONDOS SOLIDARIO DE SALUD</option>
+                <option value="9">PROGRAMA SUMAR FATIMA</option>
+                <option value="8">PROGRAMA SUMAR LACMI </option>
+                <option value="11">FONDO PERMANENTE MATERNO</option>
+                <option value="12">FONDO PERMANENTE OBERA</option>
+                <option value="10">PROGRAMA PLAN SUMAR MATERNO</option>
+            	<option value="13">PROGRAMA SUMAR OBERA</option>
+            
+        </select>*/
 		
 		/*
-		 "1";"PROFE"
+"1";"PROFE"
 "2";"OPERATIVA"
 "3";"FONDOS PROVINCIALES"
 "4";"FONDOS VARIOS"
@@ -1282,6 +1293,21 @@ public class ActualizarBalance extends Controller {
 "7";"CTA. CTE. PROGRAMA SUMAR HEARM"
 "8";"PROGRAMA SUMAR LACMI "
 "9";"PROGRAMA SUMAR FATIMA"
+"10";"PROGRAMA PLAN SUMAR MATERNO"
+"11";"FONDO PERMANENTE MATERNO"
+"12";"FONDO PERMANENTE OBERA"
+"13";"PROGRAMA SUMAR OBERA"
+
+TIPOS DE CUENTAS
+1	"OPERATIVA"
+2	"PROFE"
+3	"PLAN SUMAR HEARM"
+4	"PLAN SUMAR LACMI"
+5	"PLAN SUMAR FATIMA"
+6	"PLAN SUMAR MATERNO"
+7	"FONDO PERMANENTE MATERNO"
+8	"FONDO PERMANENTE OBERA"
+9	"PLAN SUMAR OBERA"
  
 		*/
 		switch (tipo_cuenta_id) {
@@ -1300,6 +1326,17 @@ public class ActualizarBalance extends Controller {
 			case 5:
 				r = 9;
 				break;	
+			case 6:
+				r = 10;
+				break;
+			case 7:
+				r = 11;
+				break;	
+			case 8:
+				r = 12;
+				break;	
+			case 9:
+				r = 13;
 			default:
 				break;
 		}

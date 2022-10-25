@@ -29,8 +29,8 @@ public class ActualizarBalancePagos {
 		Connection conn2 = null;
 		try {
 			
-			Date fd = DateUtils.formatDate("01/01/2022", "dd/MM/yyyy");
-			Date fh = DateUtils.formatDate("28/02/2022", "dd/MM/yyyy");
+			Date fd = DateUtils.formatDate("01/02/2022", "dd/MM/yyyy");
+			Date fh = DateUtils.formatDate("31/03/2022", "dd/MM/yyyy");
     		 
 			List<Pago> lf = Pago.find.where()	   .ge("fecha_pago", fd)
 												   .le("fecha_pago", fh)
@@ -511,7 +511,18 @@ public class ActualizarBalancePagos {
 				break;
 			case 5:
 				r = 9;
+				break;
+			case 6:
+				r = 10;
+				break;
+			case 7:
+				r = 11;
 				break;	
+			case 8:
+				r = 12;
+				break;	
+			case 9:
+				r = 13;
 			default:
 				break;
 		}

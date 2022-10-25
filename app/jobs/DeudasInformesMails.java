@@ -708,7 +708,7 @@ public class DeudasInformesMails {
 
         List<String> adds = new ArrayList<>();
 
-        List<TareaAutomatica> ta = TareaAutomatica.find.where().eq("tipo_tarea_id", TipoTarea.MAIL_DEUDA_RA).findList();
+        List<TareaAutomatica> ta = TareaAutomatica.find.where().eq("tipo_tarea_id", TipoTarea.MAIL_DEUDA_DESTACADOS).findList();
         for (TareaAutomatica tx : ta) {
           if (tx.usuario.email != null) {
             adds.add(tx.usuario.email);
@@ -779,7 +779,7 @@ public class DeudasInformesMails {
 
         List<String> adds = new ArrayList<>();
 
-        List<TareaAutomatica> ta = TareaAutomatica.find.where().eq("tipo_tarea_id", TipoTarea.MAIL_DEUDA_RA).findList();
+        List<TareaAutomatica> ta = TareaAutomatica.find.where().eq("tipo_tarea_id", TipoTarea.MAIL_DEUDA_OTROS).findList();
         for (TareaAutomatica tx : ta) {
           if (tx.usuario.email != null) {
             adds.add(tx.usuario.email);
@@ -840,7 +840,7 @@ public class DeudasInformesMails {
 
         List<String> adds = new ArrayList<>();
 
-        List<TareaAutomatica> ta = TareaAutomatica.find.where().eq("tipo_tarea_id", TipoTarea.MAIL_DEUDA_RA).findList();
+        List<TareaAutomatica> ta = TareaAutomatica.find.where().eq("tipo_tarea_id", TipoTarea.MAIL_PAGADO_NOENTREGADOS).findList();
         for (TareaAutomatica tx : ta) {
           if (tx.usuario.email != null) {
             adds.add(tx.usuario.email);
