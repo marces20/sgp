@@ -225,7 +225,7 @@ public class ClientesController extends Controller {
 							}
 						}
 						
-					}else if(p.cliente_tipo_id.compareTo(ClienteTipo.PACIENTES) == 0 || p.cliente_tipo_id.compareTo(ClienteTipo.PARTICULARES_ROBOTICA) == 0){
+					}else if(p.cliente_tipo_id.compareTo(ClienteTipo.OTROS) == 0 || p.cliente_tipo_id.compareTo(ClienteTipo.PACIENTES) == 0 || p.cliente_tipo_id.compareTo(ClienteTipo.PARTICULARES_ROBOTICA) == 0){
 						if(p.obrasocial_id == null){
 							flash("error", "Debe ingresar una OBRA SOCIAL.");
 							return badRequest(editarCliente.render(clienteForm));
