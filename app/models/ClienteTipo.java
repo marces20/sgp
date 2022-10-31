@@ -28,6 +28,7 @@ public class ClienteTipo extends Model {
 	public static Long PACIENTES = (long)7;
 	public static Long PARTICULARES_ROBOTICA = (long)8;
 	public static Long ART = (long)9;
+	public static Long OTROS = (long)10;
 	
 	
 	
