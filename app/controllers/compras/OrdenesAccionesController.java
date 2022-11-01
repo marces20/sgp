@@ -145,19 +145,21 @@ public class OrdenesAccionesController extends Controller {
       String textoMail = "<html><p>SERVICIO COMPRAS PARQUE DE LA SALUD DE LA PROVINCIA DE MISIONES.</p>";
       textoMail = "<p>ORDEN DE PROVISION:" + o.numero_orden_provision + "</p></html>";
       archivo = OrdenProvision.getArchivoReporteOrdenProvision(archivo, false, o, dp, pr);
-
+      
+      
       EmailAttachment attachment = new EmailAttachment();
       attachment.setPath(archivo.getPath());
       attachment.setDisposition(EmailAttachment.ATTACHMENT);
       attachment.setDescription("Orden Provision");
       attachment.setName(archivo.getName());
-
-
+      List<EmailAttachment> attachmentList = new ArrayList<>();
+      attachmentList.add(attachment);
+      
       EmailUtilis eu = new EmailUtilis();
       eu.setFrom("compras@hospitalmadariaga.org");
       eu.setSubject("ORDEN DE PROVISION:" + o.numero_orden_provision);
       eu.setHtmlMsg(textoMail);
-      eu.setAttach(attachment);
+      eu.setAttach(attachmentList);
 
       List<String> adds = new ArrayList<>();
       adds.add(dp.email);
