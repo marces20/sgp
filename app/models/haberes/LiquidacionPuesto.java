@@ -417,13 +417,14 @@ public class LiquidacionPuesto extends Model {
         attachment.setDisposition(EmailAttachment.ATTACHMENT);
         attachment.setDescription("Recibo");
         attachment.setName(archivoPdf.getName());
-
+        List<EmailAttachment> attachmentList = new ArrayList<>();
+        attachmentList.add(attachment);
 
         EmailUtilis eu = new EmailUtilis();
         eu.setSubject("LIQUIDACION:" + lp.liquidacionMes.nro_liquidacion_parque + "-" + lp.liquidacionMes.periodo.nombre);
         eu.setHtmlMsg(textoMail);
         eu.setFrom("liquidacionesparque@gmail.com");
-        eu.setAttach(attachment);
+        eu.setAttach(attachmentList);
 
         List<String> adds = new ArrayList<>();
         adds.add(email);
