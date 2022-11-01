@@ -626,6 +626,8 @@ public class DeudasInformesMails {
         attachment.setDisposition(EmailAttachment.ATTACHMENT);
         attachment.setDescription("Recibo");
         attachment.setName(xx.getName());
+        List<EmailAttachment> attachmentList = new ArrayList<>();
+        attachmentList.add(attachment);
 
 
         Object c = deudasMail
@@ -646,7 +648,7 @@ public class DeudasInformesMails {
           }
         }
 
-        eu.setAttach(attachment);
+        eu.setAttach(attachmentList);
         eu.setAdds(adds);
         eu.enviar();
 
@@ -692,7 +694,8 @@ public class DeudasInformesMails {
         attachment.setDisposition(EmailAttachment.ATTACHMENT);
         attachment.setDescription("Recibo");
         attachment.setName(xx.getName());
-
+        List<EmailAttachment> attachmentList = new ArrayList<>();
+        attachmentList.add(attachment);
 
         Object c = deudasMail.render(proveedoresDestacados,
             proveedoresDestacadosServicios,
@@ -715,7 +718,7 @@ public class DeudasInformesMails {
           }
         }
 
-        eu.setAttach(attachment);
+        eu.setAttach(attachmentList);
         eu.setAdds(adds);
         eu.enviar();
 
@@ -762,7 +765,8 @@ public class DeudasInformesMails {
         attachment.setDisposition(EmailAttachment.ATTACHMENT);
         attachment.setDescription("Recibo");
         attachment.setName(xx.getName());
-
+        List<EmailAttachment> attachmentList = new ArrayList<>();
+        attachmentList.add(attachment);
 
         Object c = deudasMail.render(proveedoresDestacados,
             proveedoresDestacadosServicios,
@@ -786,7 +790,7 @@ public class DeudasInformesMails {
           }
         }
 
-        eu.setAttach(attachment);
+        eu.setAttach(attachmentList);
         eu.setAdds(adds);
         eu.enviar();
       }
@@ -827,7 +831,8 @@ public class DeudasInformesMails {
         attachment.setDisposition(EmailAttachment.ATTACHMENT);
         attachment.setDescription("Recibo");
         attachment.setName(xx.getName());
-
+        List<EmailAttachment> attachmentList = new ArrayList<>();
+        attachmentList.add(attachment);
 
         Object c = pagadoNoEntregados.render(idpm, "PAGADOS NO ENTREGADOS");
 
@@ -847,7 +852,7 @@ public class DeudasInformesMails {
           }
         }
 
-        eu.setAttach(attachment);
+        eu.setAttach(attachmentList);
         eu.setAdds(adds);
         eu.enviar();
 
