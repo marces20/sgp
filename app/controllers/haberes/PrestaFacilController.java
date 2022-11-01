@@ -39,7 +39,7 @@ public class PrestaFacilController extends Controller {
     ResultSet rs;
     PreparedStatement stmt;
 
-
+    System.out.println("111111111111111111111111");
     try {
 
       if (periodo_id == null) {
@@ -58,8 +58,8 @@ public class PrestaFacilController extends Controller {
       String nombreArchivoEmpleados = "archivo_empleados_" + periodo + ".txt";
       String nombreArchivoDescuentos = "archivo_descuentos_" + periodo + ".txt";
 
-      String pathArchivoEmpleados = System.getProperty("java.io.tmpdir") + nombreArchivoEmpleados.replace("/", "-");
-      String pathArchivoDescuentos = System.getProperty("java.io.tmpdir") + nombreArchivoDescuentos.replace("/", "-");
+      String pathArchivoEmpleados = System.getProperty("java.io.tmpdir") +"/"+ nombreArchivoEmpleados.replace("/", "-");
+      String pathArchivoDescuentos = System.getProperty("java.io.tmpdir") +"/"+ nombreArchivoDescuentos.replace("/", "-");
 
       conn = play.db.DB.getConnection();
       stmt = conn.prepareStatement("select * from view_datos_empleados_presta_facil where periodo_id = ?");
@@ -99,50 +99,66 @@ public class PrestaFacilController extends Controller {
 
 
       HtmlEmail mail = new HtmlEmail();
+      
+      
+      List<EmailAttachment> attachmentList = new ArrayList<>();
       EmailAttachment attachment = null;
       attachment = new EmailAttachment();
       attachment.setPath(pathArchivoEmpleados);
       attachment.setDisposition(EmailAttachment.ATTACHMENT);
       attachment.setDescription("Archivo empleados");
       attachment.setName(nombreArchivoEmpleados);
-      mail.attach(attachment);
+      //mail.attach(attachment);
+      attachmentList.add(attachment);
 
-      attachment = new EmailAttachment();
-      attachment.setPath(pathArchivoDescuentos);
-      attachment.setDisposition(EmailAttachment.ATTACHMENT);
-      attachment.setDescription("Archivo descuentos");
-      attachment.setName(nombreArchivoDescuentos);
-      mail.attach(attachment);
+      EmailAttachment attachment2 = new EmailAttachment();
+      attachment2.setPath(pathArchivoDescuentos);
+      attachment2.setDisposition(EmailAttachment.ATTACHMENT);
+      attachment2.setDescription("Archivo descuentos");
+      attachment2.setName(nombreArchivoDescuentos);
+      attachmentList.add(attachment2);
+      //mail.attach(attachment2);
+      
+      
 
 
       EmailUtilis eu = new EmailUtilis();
       eu.setSubject("Bases de " + periodo);
       eu.setHtmlMsg("Archivos correspondientes al periodo " + periodo);
       eu.setFrom("liquidacionesparque@gmail.com");
-      eu.setAttach(attachment);
-
+      eu.setAttach(attachmentList);
+      
+      
+      
+      
       List<String> adds = new ArrayList<>();
-      adds.add("sdmsoporte@improntasolutions.com");
-      adds.add("pgarcia@improntasolutions.com");
-      adds.add("klug.alejandro@gmail.com");
+      //adds.add("sdmsoporte@improntasolutions.com");
+      //adds.add("pgarcia@improntasolutions.com");
+      //adds.add("klug.alejandro@gmail.com");
       adds.add("palaciosmatias@gmail.com");
-      adds.add("dnl1802@gmail.com");
+      //adds.add("marces2000@gmail.com");
+      //adds.add("dnl1802@gmail.com");
       eu.setAdds(adds);
       eu.enviar();
 
       return ok("ok");
     } catch (SQLException e) {
       // TODO Auto-generated catch block
+    	System.out.println("11111111111111122222 "+e);
       e.printStackTrace();
     } catch (EmailException e) {
       // TODO Auto-generated catch block
+    	System.out.println("111111111111111333333 "+e);
       e.printStackTrace();
     } catch (IOException e) {
+    	System.out.println("11111111111111144444443 "+e);
       // TODO Auto-generated catch block
       e.printStackTrace();
     } finally {
 
     }
+    
+    System.out.println("5555555 ");
 
     return ok("okk");
   }
