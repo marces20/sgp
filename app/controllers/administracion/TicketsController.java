@@ -65,7 +65,6 @@ public class TicketsController extends Controller {
 
         List<String> adds = new ArrayList<>();
         adds.add("marces2000@gmail.com");
-        adds.add("dnl1802@gmail.com");
         eu.setAdds(adds);
         eu.enviar();
 
