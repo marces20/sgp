@@ -448,6 +448,10 @@ public class BalanceController extends Controller {
 										 dfxc = b.haber;
 									}
 									
+									DecimalFormatSymbols simbolos = new DecimalFormatSymbols();
+									simbolos.setDecimalSeparator('.');
+									DecimalFormat myFormatter = new DecimalFormat("########0.00",simbolos);
+									String dfxcSTR = myFormatter.format(dfxc.doubleValue());
 									
 									linea2= "";
 									linea2 += StringUtils.alfanumericoPadStart(b.asiento.toString(),6);//Número de asiento (6 posiciones).
@@ -455,7 +459,8 @@ public class BalanceController extends Controller {
 									linea2 += StringUtils.alfanumericoPadStart("",8);//Fecha alternativa (8 posiciones: aaaammdd), si no tiene se graba la fecha del asiento.
 									linea2 += StringUtils.alfanumericoPadStart(b.expediente.getExpedienteEjercicio(),30);//Leyenda (30 posiciones).
 									linea2 += StringUtils.alfanumerico(dh,1);//Columna (1; <D> = Debe, <H> = Haber).
-									linea2 += StringUtils.alfanumericoPadStart(dfxc.toString().replace(",", "."),15);//Importe (15 posiciones; 12 enteros, punto decimal, 2 decimales).
+									//linea2 += StringUtils.alfanumericoPadStart(dfxc.toString().replace(",", "."),15);//Importe (15 posiciones; 12 enteros, punto decimal, 2 decimales).
+									linea2 += StringUtils.alfanumericoPadStart(dfxcSTR,15);//Importe (15 posiciones; 12 enteros, punto decimal, 2 decimales).
 									linea2 += StringUtils.alfanumericoPadStart("",17);//Cantidad en unidad alternativa (17 posiciones; 12 enteros, punto decimal, 4 decimales).
 									linea2 += StringUtils.alfanumericoPadStart("",15);//Importe en moneda del asiento (15 posiciones; 12 enteros, punto decimal, 2 decimales).
 									linea2 += StringUtils.alfanumericoPadStart(fechac,8);//Fecha de origen (8 posiciones: aaaammdd), si no tiene se asume la fecha del asiento.
@@ -561,15 +566,23 @@ public class BalanceController extends Controller {
 										 dh = "H";
 										 dfxc = b.haber;
 									}
+									 
 									
-									
+									DecimalFormatSymbols simbolos = new DecimalFormatSymbols();
+									simbolos.setDecimalSeparator('.');
+									DecimalFormat myFormatter = new DecimalFormat("########0.00",simbolos);
+									String dfxcSTR = myFormatter.format(dfxc.doubleValue());
+									 
+
 									linea2= "";
 									linea2 += StringUtils.alfanumericoPadStart(b.asiento.toString(),6);//Número de asiento (6 posiciones).
 									linea2 += StringUtils.alfanumerico(b.cuenta.code.replace(".", "").replace(" ",""),15);//Código de cuenta (15 posiciones).
 									linea2 += StringUtils.alfanumericoPadStart("",8);//Fecha alternativa (8 posiciones: aaaammdd), si no tiene se graba la fecha del asiento.
 									linea2 += StringUtils.alfanumericoPadStart(b.expediente.getExpedienteEjercicio(),30);//Leyenda (30 posiciones).
 									linea2 += StringUtils.alfanumerico(dh,1);//Columna (1; <D> = Debe, <H> = Haber).
-									linea2 += StringUtils.alfanumericoPadStart(dfxc.toString().replace(",", "."),15);//Importe (15 posiciones; 12 enteros, punto decimal, 2 decimales).
+									//linea2 += StringUtils.alfanumericoPadStart(dfxc.toString().replace(",", "."),15);//Importe (15 posiciones; 12 enteros, punto decimal, 2 decimales).
+									linea2 += StringUtils.alfanumericoPadStart(dfxcSTR,15);//Importe (15 posiciones; 12 enteros, punto decimal, 2 decimales).
+
 									linea2 += StringUtils.alfanumericoPadStart("",17);//Cantidad en unidad alternativa (17 posiciones; 12 enteros, punto decimal, 4 decimales).
 									linea2 += StringUtils.alfanumericoPadStart("",15);//Importe en moneda del asiento (15 posiciones; 12 enteros, punto decimal, 2 decimales).
 									linea2 += StringUtils.alfanumericoPadStart(fechac,8);//Fecha de origen (8 posiciones: aaaammdd), si no tiene se asume la fecha del asiento.
