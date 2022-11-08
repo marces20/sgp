@@ -111,34 +111,37 @@ GET     /deudasRecuperoPorTipoDeCliente			controllers.dashboard.InformesRecupero
 
 GET     /deudasRecuperoPorTipoDeClienteReporte	controllers.dashboard.InformesRecuperoReportesController.deudasPorTipoDeCliente(idTipoCliente:Long)
 
-GET     /deudas									controllers.dashboard.DeudasGlobalizadasController.index()
-GET     /deudasResumidas						controllers.dashboard.DeudasGlobalizadasController.deudasResumidas(deposito:Int ?= 0, ra:Boolean ?= false)
-GET     /deudasPorProveedorHEARM				controllers.dashboard.DeudasGlobalizadasController.deudasDetalles(idProveedor:Int ?= 0, ra:Boolean ?= false)
-GET     /deudasDetallesOtros					controllers.dashboard.DeudasGlobalizadasController.deudasDetallesOtros(profe:Boolean ?= false,equipamientos:Boolean ?= false)
-GET     /deudasDetallesCuentas					controllers.dashboard.DeudasGlobalizadasController.deudasDetallesCuentas(idCuenta:Int ?= 0)
-GET		/deudasDetallesPorProveedor				controllers.dashboard.DeudasGlobalizadasController.deudasDetallesPorProveedor()
+GET     /deudas									controllers.dashboard.DeudasGlobalizadasController.index(soloDeuda:Boolean ?= false)
+GET     /deudasResumidas						controllers.dashboard.DeudasGlobalizadasController.deudasResumidas(deposito:Int ?= 0, ra:Boolean ?= false,soloDeuda:Boolean ?= false)
+GET     /deudasPorProveedorHEARM				controllers.dashboard.DeudasGlobalizadasController.deudasDetalles(idProveedor:Int ?= 0, ra:Boolean ?= false,soloDeuda:Boolean ?= false)
+GET     /deudasDetallesOtros					controllers.dashboard.DeudasGlobalizadasController.deudasDetallesOtros(profe:Boolean ?= false,equipamientos:Boolean ?= false,soloDeuda:Boolean ?= false)
+GET     /deudasDetallesCuentas					controllers.dashboard.DeudasGlobalizadasController.deudasDetallesCuentas(idCuenta:Int ?= 0,soloDeuda:Boolean ?= false)
+GET		/deudasDetallesPorProveedor				controllers.dashboard.DeudasGlobalizadasController.deudasDetallesPorProveedor(soloDeuda:Boolean ?= false)
 
-GET		/deudasDetallesOtrosProveedoresResumen 	controllers.dashboard.DeudasGlobalizadasController.deudasDetallesOtrosProveedoresResumen(profe:Boolean ?= false,equipamientos:Boolean ?= false)
+GET		/deudasDetallesOtrosProveedoresResumen 	controllers.dashboard.DeudasGlobalizadasController.deudasDetallesOtrosProveedoresResumen(profe:Boolean ?= false,equipamientos:Boolean ?= false,soloDeuda:Boolean ?= false)
 
 
-GET     /deudasDetallesServicios				controllers.dashboard.DeudasGlobalizadasController.deudasDetallesServicios()
-GET     /deudasDetallesServiciosResumen			controllers.dashboard.DeudasGlobalizadasController.deudasDetallesServiciosResumen()
-GET     /deudasDetallesHonorarios				controllers.dashboard.DeudasGlobalizadasController.deudasDetallesHonorarios()
-GET		/deudasDetallesHonorariosResumen		controllers.dashboard.DeudasGlobalizadasController.deudasDetallesHonorariosResumen()
+GET     /deudasDetallesServicios				controllers.dashboard.DeudasGlobalizadasController.deudasDetallesServicios(soloDeuda:Boolean ?= false)
+GET     /deudasDetallesServiciosResumen			controllers.dashboard.DeudasGlobalizadasController.deudasDetallesServiciosResumen(soloDeuda:Boolean ?= false)
+GET     /deudasDetallesHonorarios				controllers.dashboard.DeudasGlobalizadasController.deudasDetallesHonorarios(soloDeuda:Boolean ?= false)
+GET		/deudasDetallesHonorariosResumen		controllers.dashboard.DeudasGlobalizadasController.deudasDetallesHonorariosResumen(soloDeuda:Boolean ?= false)
 
-GET     /deudasResumidasReporte					controllers.dashboard.DeudasGlobalizadasReportesController.deudasResumidasReporte(deposito:Int ?= 0, ra:Boolean ?= false)
-GET     /deudasDetallesReporte					controllers.dashboard.DeudasGlobalizadasReportesController.deudasDetallesReporte(idProveedor:Int ?= 0, ra:Boolean ?= false)
-GET     /deudasDetallesOtrosReportes			controllers.dashboard.DeudasGlobalizadasReportesController.deudasDetallesOtrosReportes(profe:Boolean ?= false, equipamientos:Boolean ?= false)
-GET 	/deudasInformeGeneral					controllers.dashboard.DeudasGlobalizadasReportesController.deudasInformeGeneral()
-GET 	/deudasInformeGeneralResumen			controllers.dashboard.DeudasGlobalizadasReportesController.deudasInformeGeneralResumen()
-GET 	/deudasDetallesServiciosReportes		controllers.dashboard.DeudasGlobalizadasReportesController.deudasDetallesServiciosReportes()
-GET 	/deudasDetallesHonorariosReportes		controllers.dashboard.DeudasGlobalizadasReportesController.deudasDetallesHonorariosReportes()
-GET     /deudasServiciosProveedoresResumenReportes controllers.dashboard.DeudasGlobalizadasReportesController.deudasServiciosProveedoresResumenReportes()
-GET 	/deudasHonorariosProveedoresResumenReportes controllers.dashboard.DeudasGlobalizadasReportesController.deudasHonorariosProveedoresResumenReportes()
+GET     /deudasResumidasReporte					controllers.dashboard.DeudasGlobalizadasReportesController.deudasResumidasReporte(deposito:Int ?= 0, ra:Boolean ?= false,soloDeuda:Boolean ?= false)
+GET     /deudasDetallesReporte					controllers.dashboard.DeudasGlobalizadasReportesController.deudasDetallesReporte(idProveedor:Int ?= 0, ra:Boolean ?= false,soloDeuda:Boolean ?= false)
+GET     /deudasDetallesOtrosReportes			controllers.dashboard.DeudasGlobalizadasReportesController.deudasDetallesOtrosReportes(profe:Boolean ?= false, equipamientos:Boolean ?= false,soloDeuda:Boolean ?= false)
+
+GET 	/deudasInformeGeneral					controllers.dashboard.DeudasGlobalizadasReportesController.deudasInformeGeneral(soloDeuda:Boolean ?= false)
+GET 	/deudasInformeGeneralResumen			controllers.dashboard.DeudasGlobalizadasReportesController.deudasInformeGeneralResumen(soloDeuda:Boolean ?= false)
+
+GET 	/deudasDetallesServiciosReportes		controllers.dashboard.DeudasGlobalizadasReportesController.deudasDetallesServiciosReportes(soloDeuda:Boolean ?= false)
+GET 	/deudasDetallesHonorariosReportes		controllers.dashboard.DeudasGlobalizadasReportesController.deudasDetallesHonorariosReportes(soloDeuda:Boolean ?= false)
+
+GET     /deudasServiciosProveedoresResumenReportes controllers.dashboard.DeudasGlobalizadasReportesController.deudasServiciosProveedoresResumenReportes(soloDeuda:Boolean ?= false)
+GET 	/deudasHonorariosProveedoresResumenReportes controllers.dashboard.DeudasGlobalizadasReportesController.deudasHonorariosProveedoresResumenReportes(soloDeuda:Boolean ?= false)
 
 GET 	/deudasCuentasReportes					controllers.dashboard.DeudasGlobalizadasReportesController.deudasCuentasReportes(idCuenta:Int ?= 0,soloDeuda:Boolean ?= false)
 	
-GET     /deudasOtrosProveedoresResumenReporte	controllers.dashboard.DeudasGlobalizadasReportesController.deudasDetallesOtrosProveedoresResumen(profe:Boolean ?= false, equipamientos:Boolean ?= false)
+GET     /deudasOtrosProveedoresResumenReporte	controllers.dashboard.DeudasGlobalizadasReportesController.deudasDetallesOtrosProveedoresResumen(profe:Boolean ?= false, equipamientos:Boolean ?= false,soloDeuda:Boolean ?= false)
 
 
 GET     /cotizacion        						controllers.dashboard.UltimasCotizacionesController.indexUltimaCotizaciones()
