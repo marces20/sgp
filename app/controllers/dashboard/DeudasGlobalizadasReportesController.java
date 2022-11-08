@@ -52,7 +52,7 @@ import views.html.dashboard.deudasGlobalizadas.*;
 @Security.Authenticated(Secured.class)
 public class DeudasGlobalizadasReportesController extends Controller {
 	
-	public static Result deudasInformeGeneralResumen() {
+	public static Result deudasInformeGeneralResumen(boolean soloDeuda) {
 		
 		InformeDeudaProveedoresMaterializada.actualizarVistaMaterializada();
 		String dirTemp = System.getProperty("java.io.tmpdir");
@@ -68,7 +68,7 @@ public class DeudasGlobalizadasReportesController extends Controller {
 			FileOutputStream archivoTmp = new FileOutputStream(archivo);
 			Workbook libro = new HSSFWorkbook();
 			
-			Sheet hoja = getDeudasResumidasSheet(libro,0,false,false);
+			Sheet hoja = getDeudasResumidasSheet(libro,0,false,false,soloDeuda);
 			
 			//---------------------------------------------------
 			hoja = getDeudasDetallesOtrosProveedoresResumenSheet(libro,false,false);
@@ -81,16 +81,16 @@ public class DeudasGlobalizadasReportesController extends Controller {
 		} catch (IOException e) {
 			e.printStackTrace();
 			flash("error", "No se pudo generar el reporte");
-			return ok(index.render(d));
+			return ok(index.render(d,soloDeuda));
 		} catch (Exception e) {
 			e.printStackTrace();
 			flash("error", "No se pudo generar el reporte");
-			return ok(index.render(d));
+			return ok(index.render(d,soloDeuda));
 		}	
 	}
 	
 	
-	public static Result deudasInformeGeneral() {
+	public static Result deudasInformeGeneral(boolean soloDeuda) {
 		
 		InformeDeudaProveedoresMaterializada.actualizarVistaMaterializada();
 		String dirTemp = System.getProperty("java.io.tmpdir");
@@ -106,25 +106,25 @@ public class DeudasGlobalizadasReportesController extends Controller {
 			FileOutputStream archivoTmp = new FileOutputStream(archivo);
 			Workbook libro = new HSSFWorkbook();
 			
-			Sheet hoja = getDeudasResumidasSheet(libro,0,false,true);
-			hoja = getDeudasResumidasSheet(libro,Deposito.HEARM,false,true);
-			hoja = getDeudasResumidasSheet(libro,-1,false,true);
-			hoja = getDeudasResumidasSheet(libro,0,true,true);
+			Sheet hoja = getDeudasResumidasSheet(libro,0,false,true,soloDeuda);
+			hoja = getDeudasResumidasSheet(libro,Deposito.HEARM,false,true,soloDeuda);
+			hoja = getDeudasResumidasSheet(libro,-1,false,true,soloDeuda);
+			hoja = getDeudasResumidasSheet(libro,0,true,true,soloDeuda);
 			
 			//---------------------------------------------------
-			hoja = getDeudasDetallesSheet(libro,0,true);
-			hoja = getDeudasDetallesSheet(libro,1530,false);
-			hoja = getDeudasDetallesSheet(libro,4359,false);
-			hoja = getDeudasDetallesSheet(libro,2749,false);
-			hoja = getDeudasDetallesSheet(libro,15156,false);
+			hoja = getDeudasDetallesSheet(libro,0,true,soloDeuda);
+			hoja = getDeudasDetallesSheet(libro,1530,false,soloDeuda);
+			hoja = getDeudasDetallesSheet(libro,4359,false,soloDeuda);
+			hoja = getDeudasDetallesSheet(libro,2749,false,soloDeuda);
+			hoja = getDeudasDetallesSheet(libro,15156,false,soloDeuda);
 			//hoja = getDeudasDetallesSheet(libro,1498,false);
-			hoja = getDeudasDetallesSheet(libro,1589,false);
-			hoja = getDeudasDetallesSheet(libro,14733,false);
+			hoja = getDeudasDetallesSheet(libro,1589,false,soloDeuda);
+			hoja = getDeudasDetallesSheet(libro,14733,false,soloDeuda);
 			//---------------------------------------------------
-			hoja = getDeudasDetallesOtrosSheet(libro,false,false);
-			hoja = getDeudasDetallesOtrosSheet(libro,false,true);
-			hoja = getDeudasDetallesOtrosSheet(libro,true,false);
-			hoja = getDeudasDetallesOtrosSheet(libro,true,true);
+			hoja = getDeudasDetallesOtrosSheet(libro,false,false,soloDeuda);
+			hoja = getDeudasDetallesOtrosSheet(libro,false,true,soloDeuda);
+			hoja = getDeudasDetallesOtrosSheet(libro,true,false,soloDeuda);
+			hoja = getDeudasDetallesOtrosSheet(libro,true,true,soloDeuda);
 			//----------------------------------------------------
 			hoja = getDeudasDetallesServiciosSheet(libro);
 			hoja = getDeudasDetallesHonorariosSheet(libro);
@@ -134,11 +134,11 @@ public class DeudasGlobalizadasReportesController extends Controller {
 		} catch (IOException e) {
 			e.printStackTrace();
 			flash("error", "No se pudo generar el reporte");
-			return ok(index.render(d));
+			return ok(index.render(d,soloDeuda));
 		} catch (Exception e) {
 			e.printStackTrace();
 			flash("error", "No se pudo generar el reporte");
-			return ok(index.render(d));
+			return ok(index.render(d,soloDeuda));
 		}	
 	}
 	
@@ -163,11 +163,11 @@ public class DeudasGlobalizadasReportesController extends Controller {
 		} catch (IOException e) {
 			e.printStackTrace();
 			flash("error", "No se pudo generar el reporte");
-			return ok(index.render(d));
+			return ok(index.render(d,soloDeuda));
 		} catch (Exception e) {
 			e.printStackTrace();
 			flash("error", "No se pudo generar el reporte");
-			return ok(index.render(d));
+			return ok(index.render(d,soloDeuda));
 		}	
 	}
 	
@@ -416,7 +416,7 @@ public class DeudasGlobalizadasReportesController extends Controller {
 		return x;
 	}
 	
-	public static Result deudasDetallesServiciosReportes() {
+	public static Result deudasDetallesServiciosReportes(Boolean soloDeuda) {
 		
 		InformeDeudaProveedoresMaterializada.actualizarVistaMaterializada();
 		String dirTemp = System.getProperty("java.io.tmpdir");
@@ -436,15 +436,15 @@ public class DeudasGlobalizadasReportesController extends Controller {
 		} catch (IOException e) {
 			e.printStackTrace();
 			flash("error", "No se pudo generar el reporte");
-			return ok(index.render(d));
+			return ok(index.render(d,soloDeuda));
 		} catch (Exception e) {
 			e.printStackTrace();
 			flash("error", "No se pudo generar el reporte");
-			return ok(index.render(d));
+			return ok(index.render(d,soloDeuda));
 		}	
 	}	
 	
-	public static Result deudasDetallesHonorariosReportes() {
+	public static Result deudasDetallesHonorariosReportes(boolean soloDeuda) {
 		
 		InformeDeudaProveedoresMaterializada.actualizarVistaMaterializada();
 		String dirTemp = System.getProperty("java.io.tmpdir");
@@ -464,15 +464,15 @@ public class DeudasGlobalizadasReportesController extends Controller {
 		} catch (IOException e) {
 			e.printStackTrace();
 			flash("error", "No se pudo generar el reporte");
-			return ok(index.render(d));
+			return ok(index.render(d,soloDeuda));
 		} catch (Exception e) {
 			e.printStackTrace();
 			flash("error", "No se pudo generar el reporte");
-			return ok(index.render(d));
+			return ok(index.render(d,soloDeuda));
 		}	
 	}	
 	
-	public static Result deudasDetallesOtrosReportes(boolean profe,boolean equipamientos) {
+	public static Result deudasDetallesOtrosReportes(boolean profe,boolean equipamientos,boolean soloDeuda) {
 		
 		InformeDeudaProveedoresMaterializada.actualizarVistaMaterializada();
 		String dirTemp = System.getProperty("java.io.tmpdir");
@@ -485,43 +485,54 @@ public class DeudasGlobalizadasReportesController extends Controller {
 			
 			FileOutputStream archivoTmp = new FileOutputStream(archivo);
 			Workbook libro = new HSSFWorkbook();
-			getDeudasDetallesOtrosSheet(libro,equipamientos,profe);
+			getDeudasDetallesOtrosSheet(libro,equipamientos,profe,soloDeuda);
 				
 			libro.write(archivoTmp); 
 			return ok(archivo);
 		} catch (IOException e) {
 			e.printStackTrace();
 			flash("error", "No se pudo generar el reporte");
-			return ok(index.render(d));
+			return ok(index.render(d,soloDeuda));
 		} catch (Exception e) {
 			e.printStackTrace();
 			flash("error", "No se pudo generar el reporte");
-			return ok(index.render(d));
+			return ok(index.render(d,soloDeuda));
 		}	
 	}	
 	
-	public static Sheet getDeudasDetallesOtrosSheet(Workbook libro,boolean equipamientos,boolean profe){
+	public static Sheet getDeudasDetallesOtrosSheet(Workbook libro,boolean equipamientos,boolean profe,boolean soloDeuda){
+		
 		String cuenta = (profe)?"PROFE":"OPERATIVA"; 
 		String p = (profe)?"-PROFE":"";
 		String e = (equipamientos)?"-EQUIPAMIENTOS":"";
 		
-		List<SqlRow> proveedorHEARM = InformeDeudaProveedoresMaterializada.getDeudaPorProveedorDetallesOtros(profe,(long)Deposito.HEARM,equipamientos);
+		List<SqlRow> proveedorHEARM = InformeDeudaProveedoresMaterializada.getDeudaPorProveedorDetallesOtros(profe,(long)Deposito.HEARM,equipamientos,soloDeuda);
 		
-		List<SqlRow> proveedorOtros = InformeDeudaProveedoresMaterializada.getDeudaPorProveedorDetallesOtros(profe,null,equipamientos);
+		List<SqlRow> proveedorOtros = InformeDeudaProveedoresMaterializada.getDeudaPorProveedorDetallesOtros(profe,null,equipamientos,soloDeuda);
 		
 		Sheet hoja = libro.createSheet(cuenta+p+e);
 		hoja.setColumnWidth(1, 3000);
 		hoja.setColumnWidth(2, 3000);
 		hoja.setColumnWidth(3, 15000);
 		hoja.setColumnWidth(4, 4000);
-		hoja.setColumnWidth(5, 4000);
-		hoja.setColumnWidth(6, 6000);
-		hoja.setColumnWidth(7, 20000);
-		hoja.setDefaultRowHeight( (short) 400);
+		
+		if(soloDeuda) {
+			
+			hoja.setColumnWidth(5, 6000);
+			hoja.setColumnWidth(6, 20000);
+			hoja.setDefaultRowHeight( (short) 400);
+		}else {
+			hoja.setColumnWidth(5, 4000);
+			hoja.setColumnWidth(6, 6000);
+			hoja.setColumnWidth(7, 20000);
+			hoja.setDefaultRowHeight( (short) 400);
+		}
+		
+		
 		
 		int x = 0;
-		x = getListadoDeudasDetallesOtros(proveedorHEARM,"HEARM",x,libro,hoja,cuenta,equipamientos);
-		x = getListadoDeudasDetallesOtros(proveedorOtros,"OTROS",x,libro,hoja,cuenta,equipamientos);
+		x = getListadoDeudasDetallesOtros(proveedorHEARM,"HEARM",x,libro,hoja,cuenta,equipamientos,soloDeuda);
+		x = getListadoDeudasDetallesOtros(proveedorOtros,"OTROS",x,libro,hoja,cuenta,equipamientos,soloDeuda);
 				
 		return hoja;
 	}
@@ -1076,8 +1087,174 @@ public class DeudasGlobalizadasReportesController extends Controller {
 		return x;
 	}
 	
+	public static int getListadoDeudasDetallesOtros(List<SqlRow> proveedorLista,String deposito,int x,Workbook libro,Sheet hoja,String cuenta,boolean equipamientos,boolean soloDeuda){
+		if(soloDeuda) {
+			return getListadoDeudasDetallesOtrosDeuda(proveedorLista,deposito,x,libro,hoja,cuenta,equipamientos);
+		}else {
+			return getListadoDeudasDetallesOtrosDeudaCompromiso(proveedorLista,deposito,x,libro,hoja,cuenta,equipamientos);
+		}
+	}
 	
-	public static int getListadoDeudasDetallesOtros(List<SqlRow> proveedorLista,String deposito,int x,Workbook libro,Sheet hoja,String cuenta,boolean equipamientos){
+	public static int getListadoDeudasDetallesOtrosDeuda(List<SqlRow> proveedorLista,String deposito,int x,Workbook libro,Sheet hoja,String cuenta,boolean equipamientos){
+		ReportesExcelsUtils reu = new ReportesExcelsUtils();
+		CellStyle estiloMoneda = reu.getEstiloMoneda(libro);
+		CellStyle comun = reu.getEstiloComun(libro);
+		CellStyle cabeceraPrincipal = reu.getCabecera(libro,14);
+		CellStyle cabecera = reu.getCabecera(libro,10);
+		String nombreProv = "";
+		String e = (equipamientos)?"EQUIPAMIENTOS":"";
+		
+		Row fila = hoja.createRow(x);
+		Cell celda0 = fila.createCell(0);
+		celda0.setCellValue(cuenta+" - "+deposito+" - "+e+" - "+utils.DateUtils.getNow());
+		celda0.setCellStyle(cabeceraPrincipal);
+		hoja.addMergedRegion(new  CellRangeAddress(x,x,0,7));
+		x++;
+		
+		
+		
+		fila = hoja.createRow(x);
+		celda0 = fila.createCell(0);
+		celda0.setCellValue("N° OP");
+		celda0.setCellStyle(cabecera);
+		 
+		celda0 = fila.createCell(1);
+		celda0.setCellValue("FECHA EXP.");
+		celda0.setCellStyle(cabecera);
+		 
+		celda0 = fila.createCell(2);
+		celda0.setCellValue("N° EXP.");
+		celda0.setCellStyle(cabecera);
+		 
+		celda0 = fila.createCell(3);
+		celda0.setCellValue("PROVEEDOR");
+		celda0.setCellStyle(cabecera);
+		 
+		celda0 = fila.createCell(4);
+		celda0.setCellValue("DEUDA");
+		celda0.setCellStyle(cabecera);
+		
+		
+		celda0 = fila.createCell(5);
+		celda0.setCellValue("RUBRO");
+		celda0.setCellStyle(cabecera);
+		
+		celda0 = fila.createCell(6);
+		celda0.setCellValue("DETALLE");
+		celda0.setCellStyle(cabecera);
+		x++;
+		
+		BigDecimal ptmpdeuda = new java.math.BigDecimal(0);
+		BigDecimal totaldeuda = new java.math.BigDecimal(0);
+		BigDecimal totalcompromiso = new java.math.BigDecimal(0);
+		Integer idProv = 0 ;
+		
+		for(SqlRow s : proveedorLista){
+			
+			if(idProv != 0 && idProv.compareTo(s.getInteger("proveedorId")) != 0){
+				ReportesExcelsUtils reux = new ReportesExcelsUtils();
+				CellStyle estiloMonedaSubtotal = reu.getEstiloMoneda(libro);
+				 
+				estiloMonedaSubtotal.setFillForegroundColor(HSSFColor.GREY_25_PERCENT.index);
+				estiloMonedaSubtotal.setFillPattern(HSSFCellStyle.SOLID_FOREGROUND);
+				estiloMonedaSubtotal.setAlignment(HSSFCellStyle.ALIGN_RIGHT);
+				
+				fila = hoja.createRow(x);
+		    	celda0 = fila.createCell(0);
+				celda0.setCellValue("TOTAL - "+nombreProv);
+				celda0.setCellStyle(estiloMonedaSubtotal);
+				
+				hoja.addMergedRegion(new  CellRangeAddress(x,x,0,3));
+				celda0 = fila.createCell(4);
+				celda0.setCellValue(ptmpdeuda.doubleValue());
+				celda0.setCellStyle(estiloMonedaSubtotal);
+				
+				hoja.addMergedRegion(new  CellRangeAddress(x,x,5,6));
+				celda0 = fila.createCell(5);
+				celda0.setCellValue("");
+				celda0.setCellStyle(estiloMonedaSubtotal);
+				
+				ptmpdeuda = new java.math.BigDecimal(0);
+				x++;
+			}
+			
+			fila = hoja.createRow(x);
+	    	celda0 = fila.createCell(0);
+			celda0.setCellValue((s.getInteger("numeroProvision") != null)?s.getInteger("numeroProvision"):0);
+			celda0.setCellStyle(comun);
+			celda0 = fila.createCell(1);
+			celda0.setCellValue(utils.DateUtils.formatDate(s.getDate("fechaExpediente")));
+			celda0.setCellStyle(comun);
+			celda0 = fila.createCell(2);
+			celda0.setCellValue(s.getString("expediente"));
+			celda0.setCellStyle(comun);
+			celda0 = fila.createCell(3);
+			celda0.setCellValue(s.getString("nombre_proveedor"));
+			celda0.setCellStyle(comun);
+			celda0 = fila.createCell(4);
+			celda0.setCellValue(s.getBigDecimal("total_deuda").doubleValue());
+			celda0.setCellStyle(estiloMoneda);
+			celda0 = fila.createCell(5);
+			celda0.setCellValue(s.getString("rubro"));
+			celda0.setCellStyle(comun);
+			celda0 = fila.createCell(6);
+			celda0.setCellValue(s.getString("descripcion"));
+			celda0.setCellStyle(comun);
+			x++;
+			
+			idProv = s.getInteger("proveedorId");
+			nombreProv =s.getString("nombre_proveedor");
+			ptmpdeuda = ptmpdeuda.add(s.getBigDecimal("total_deuda"));
+			totaldeuda = totaldeuda.add(s.getBigDecimal("total_deuda"));
+			
+		}
+		
+		if(proveedorLista.size() > 0){
+			
+			if(idProv != 0){
+				ReportesExcelsUtils reux = new ReportesExcelsUtils();
+				CellStyle estiloMonedaSubtotal = reu.getEstiloMoneda(libro);
+				 
+				estiloMonedaSubtotal.setFillForegroundColor(HSSFColor.GREY_25_PERCENT.index);
+				estiloMonedaSubtotal.setFillPattern(HSSFCellStyle.SOLID_FOREGROUND);
+				estiloMonedaSubtotal.setAlignment(HSSFCellStyle.ALIGN_RIGHT);
+				
+				fila = hoja.createRow(x);
+		    	celda0 = fila.createCell(0);
+				celda0.setCellValue("TOTAL - "+nombreProv);
+				celda0.setCellStyle(estiloMonedaSubtotal);
+				
+				hoja.addMergedRegion(new  CellRangeAddress(x,x,0,3));
+				celda0 = fila.createCell(4);
+				celda0.setCellValue(ptmpdeuda.doubleValue());
+				celda0.setCellStyle(estiloMonedaSubtotal); 
+				
+				hoja.addMergedRegion(new  CellRangeAddress(x,x,5,6));
+				celda0 = fila.createCell(5);
+				celda0.setCellValue("");
+				celda0.setCellStyle(estiloMonedaSubtotal);
+				
+				ptmpdeuda = new java.math.BigDecimal(0);
+				x++;
+			}
+			
+			
+			fila = hoja.createRow(x);
+	    	celda0 = fila.createCell(0);
+			celda0.setCellValue("SUBTOTAL - "+deposito);
+			celda0.setCellStyle(comun);
+			hoja.addMergedRegion(new  CellRangeAddress(x,x,0,3));
+			celda0 = fila.createCell(4);
+			celda0.setCellValue(totaldeuda.doubleValue());
+			celda0.setCellStyle(estiloMoneda);  
+		} 
+		x++;
+		x++;
+		
+		return x;
+	}
+	
+	public static int getListadoDeudasDetallesOtrosDeudaCompromiso(List<SqlRow> proveedorLista,String deposito,int x,Workbook libro,Sheet hoja,String cuenta,boolean equipamientos){
 		ReportesExcelsUtils reu = new ReportesExcelsUtils();
 		CellStyle estiloMoneda = reu.getEstiloMoneda(libro);
 		CellStyle comun = reu.getEstiloComun(libro);
@@ -1257,7 +1434,7 @@ public class DeudasGlobalizadasReportesController extends Controller {
 	
 	
 	
-	public static Result deudasDetallesReporte(Integer idProveedor,boolean ra) {
+	public static Result deudasDetallesReporte(Integer idProveedor,boolean ra,boolean soloDeuda) {
 		DynamicForm d = form().bindFromRequest();
 		InformeDeudaProveedoresMaterializada.actualizarVistaMaterializada();
 		String proveedor = "R.A.";
@@ -1276,7 +1453,7 @@ public class DeudasGlobalizadasReportesController extends Controller {
 			
 			Workbook libro = new HSSFWorkbook();
 			FileOutputStream archivoTmp = new FileOutputStream(archivo);
-			Sheet hoja = getDeudasDetallesSheet(libro,idProveedor,ra);
+			Sheet hoja = getDeudasDetallesSheet(libro,idProveedor,ra,soloDeuda);
 			
 			
 			libro.write(archivoTmp); 
@@ -1284,24 +1461,24 @@ public class DeudasGlobalizadasReportesController extends Controller {
 		} catch (IOException e) {
 			e.printStackTrace();
 			flash("error", "No se pudo generar el reporte");
-			return ok(index.render(d));
+			return ok(index.render(d,soloDeuda));
 		} catch (Exception e) {
 			e.printStackTrace();
 			flash("error", "No se pudo generar el reporte");
-			return ok(index.render(d));
+			return ok(index.render(d,soloDeuda));
 		}	
 	}
 	
 	
-	public static Sheet getDeudasDetallesSheet(Workbook libro,Integer idProveedor,boolean ra){
-		
+	public static Sheet getDeudasDetallesSheet(Workbook libro,Integer idProveedor,boolean ra,boolean soloDeuda){
+		 
 		String proveedor = "R.A.";
 		if(!ra){
 			Proveedor p = Proveedor.find.byId(idProveedor.longValue());
 			proveedor = p.nombre;
 		}
 		
-		Map<String,Map<String,Map<Integer,List<SqlRow>>>> listaFinal = InformeDeudaProveedoresMaterializada.getListaFinalDeudasDetallesReporte(idProveedor,ra);
+		Map<String,Map<String,Map<Integer,List<SqlRow>>>> listaFinal = InformeDeudaProveedoresMaterializada.getListaFinalDeudasDetallesReporte(idProveedor,ra,soloDeuda);
 		
 		Sheet hoja = libro.createSheet("RESUMEN -"+proveedor);
 		hoja.setColumnWidth(0, 3100);
@@ -1314,23 +1491,166 @@ public class DeudasGlobalizadasReportesController extends Controller {
 		hoja.setDefaultRowHeight( (short) 400);
 		
 		int x = 0;
-		x = getListadoDeudasDetalles(x,"HEARM","OPERATIVA",false,proveedor,libro,hoja,listaFinal);
-		x = getListadoDeudasDetalles(x,"OTRAS INSTITUCIONES","OPERATIVA",false,proveedor,libro,hoja,listaFinal);
-		x = getListadoDeudasDetalles(x,"HEARM","OPERATIVA",true,proveedor,libro,hoja,listaFinal);//servicios
-		x = getListadoDeudasDetalles(x,"OTRAS INSTITUCIONES","OPERATIVA",true,proveedor,libro,hoja,listaFinal);//servicios
+		x = getListadoDeudasDetalles(x,"HEARM","OPERATIVA",false,proveedor,libro,hoja,listaFinal,soloDeuda);
+		x = getListadoDeudasDetalles(x,"OTRAS INSTITUCIONES","OPERATIVA",false,proveedor,libro,hoja,listaFinal,soloDeuda);
+		x = getListadoDeudasDetalles(x,"HEARM","OPERATIVA",true,proveedor,libro,hoja,listaFinal,soloDeuda);//servicios
+		x = getListadoDeudasDetalles(x,"OTRAS INSTITUCIONES","OPERATIVA",true,proveedor,libro,hoja,listaFinal,soloDeuda);//servicios
 		
 		
-		x = getListadoDeudasDetalles(x,"HEARM","PROFE",false,proveedor,libro,hoja,listaFinal);
-		x = getListadoDeudasDetalles(x,"OTRAS INSTITUCIONES","PROFE",false,proveedor,libro,hoja,listaFinal);
-		x = getListadoDeudasDetalles(x,"HEARM","PROFE",true,proveedor,libro,hoja,listaFinal);
-		x = getListadoDeudasDetalles(x,"OTRAS INSTITUCIONES","PROFE",true,proveedor,libro,hoja,listaFinal);
+		x = getListadoDeudasDetalles(x,"HEARM","PROFE",false,proveedor,libro,hoja,listaFinal,soloDeuda);
+		x = getListadoDeudasDetalles(x,"OTRAS INSTITUCIONES","PROFE",false,proveedor,libro,hoja,listaFinal,soloDeuda);
+		x = getListadoDeudasDetalles(x,"HEARM","PROFE",true,proveedor,libro,hoja,listaFinal,soloDeuda);
+		x = getListadoDeudasDetalles(x,"OTRAS INSTITUCIONES","PROFE",true,proveedor,libro,hoja,listaFinal,soloDeuda);
 		x= 0;
 		
 		return hoja;
 
 	}		
 	
-	public static int getListadoDeudasDetalles(int x,String deposito,String cuenta,boolean servicio,String proveedor,Workbook libro,Sheet hoja,Map<String,Map<String,Map<Integer,List<SqlRow>>>> listaFinal){
+	public static int getListadoDeudasDetalles(int x,String deposito,String cuenta,boolean servicio,String proveedor,Workbook libro,Sheet hoja,Map<String,Map<String,Map<Integer,List<SqlRow>>>> listaFinal,boolean soloDeuda){
+		if(soloDeuda) {
+			return getListadoDeudasDetallesDeuda(x,deposito,cuenta,servicio,proveedor,libro,hoja,listaFinal);
+		}else {
+			return getListadoDeudasDetallesDeudaCompromiso(x,deposito,cuenta,servicio,proveedor,libro,hoja,listaFinal);
+		}
+	}
+	
+	public static int getListadoDeudasDetallesDeuda(int x,String deposito,String cuenta,boolean servicio,String proveedor,Workbook libro,Sheet hoja,Map<String,Map<String,Map<Integer,List<SqlRow>>>> listaFinal){
+		ReportesExcelsUtils reu = new ReportesExcelsUtils();
+		CellStyle estiloMoneda = reu.getEstiloMoneda(libro);
+		CellStyle comun = reu.getEstiloComun(libro);
+		CellStyle cabeceraPrincipal = reu.getCabecera(libro,14);
+		CellStyle cabecera = reu.getCabecera(libro,10);
+		
+		String nombreProveedor = ""; 
+		if(listaFinal.get(cuenta) != null){
+			if(listaFinal.get(cuenta).get(deposito) != null){
+				if(listaFinal.get(cuenta).get(deposito).size() > 0){
+					
+					Row fila = hoja.createRow(x);
+					
+					String s2 =(servicio)?"SERVICIOS -":"";
+					Cell celda0 = fila.createCell(0);
+					celda0.setCellValue(s2+cuenta+" - "+deposito+" - "+proveedor+" - "+utils.DateUtils.getNow());
+					celda0.setCellStyle(cabeceraPrincipal);
+					hoja.addMergedRegion(new  CellRangeAddress(x,x,0,4));
+					x++;
+					
+					fila = hoja.createRow(x);
+					
+					/*celda0 = fila.createCell(0);
+					celda0.setCellValue("N° OP");
+					celda0.setCellStyle(cabecera);
+					celda0 = fila.createCell(1);
+					celda0.setCellValue("FECHA EXP");
+					celda0.setCellStyle(cabecera);*/
+					
+					celda0 = fila.createCell(0);
+					celda0.setCellValue("N° EXP");
+					celda0.setCellStyle(cabecera);
+					celda0 = fila.createCell(1);
+					celda0.setCellValue("PROVEEDOR");
+					celda0.setCellStyle(cabecera);
+					celda0 = fila.createCell(2);
+					celda0.setCellValue("DEUDA");
+					celda0.setCellStyle(cabecera);
+					celda0 = fila.createCell(3);
+					celda0.setCellValue("RUBRO");
+					celda0.setCellStyle(cabecera);
+					celda0 = fila.createCell(4);
+					celda0.setCellValue("DETALLE");
+					celda0.setCellStyle(cabecera);
+					x++;
+					
+					
+					for (Map.Entry<Integer,List<SqlRow>> entry : listaFinal.get(cuenta).get(deposito).entrySet()) {
+						BigDecimal mtdoh = new BigDecimal(0);
+						BigDecimal mtcoh = new BigDecimal(0);
+						boolean cargar = false;
+						boolean xx = false;
+						boolean ss = true;
+						
+						
+					    for(SqlRow s : entry.getValue()){
+					    	
+					    	cargar = false;
+					    	if(servicio && s.getString("rubro").compareTo("SERVICIOS") == 0){
+					    		cargar = true;
+					    	}else if(!servicio && s.getString("rubro").compareTo("SERVICIOS") != 0){
+					    		cargar = true;
+					    	}	
+					    	
+					    	
+					    	if(cargar){
+					    		if(ss){
+								    fila = hoja.createRow(x);
+								    celda0 = fila.createCell(0);
+									celda0.setCellValue(s.getString("nombre_proveedor"));
+									 
+									celda0.setCellStyle(cabecera);
+									hoja.addMergedRegion(new  CellRangeAddress(x,x,0,4));
+									ss = false;
+									x++;
+					    		}		
+					    		xx = true;
+					    		fila = hoja.createRow(x);
+						    	/*celda0 = fila.createCell(0);
+								celda0.setCellValue((s.getInteger("numeroProvision") != null)?s.getInteger("numeroProvision"):0);
+								celda0.setCellStyle(comun);
+								celda0 = fila.createCell(1);
+								celda0.setCellValue(utils.DateUtils.formatDate(s.getDate("fechaExpediente")));
+								celda0.setCellStyle(comun);*/
+								
+					    		celda0 = fila.createCell(0);
+								celda0.setCellValue(s.getString("expediente"));
+								celda0.setCellStyle(comun);
+								celda0 = fila.createCell(1);
+								celda0.setCellValue(s.getString("nombre_proveedor"));
+								celda0.setCellStyle(comun);
+								celda0 = fila.createCell(2);
+								celda0.setCellValue(s.getBigDecimal("total_deuda").doubleValue());
+								celda0.setCellStyle(estiloMoneda);
+								celda0 = fila.createCell(3);
+								celda0.setCellValue(s.getString("rubro"));
+								celda0.setCellStyle(comun);
+								celda0 = fila.createCell(4);
+								celda0.setCellValue(s.getString("descripcion"));
+								celda0.setCellStyle(comun);
+								x++;
+								mtdoh= mtdoh.add(s.getBigDecimal("total_deuda"));
+								nombreProveedor = s.getString("nombre_proveedor");
+					    	}
+					    }
+					    
+					    if(xx){
+						    fila = hoja.createRow(x);
+						    celda0 = fila.createCell(0);
+							celda0.setCellValue("SUB-TOTAL-"+nombreProveedor);
+							celda0.setCellStyle(comun);
+							hoja.addMergedRegion(new  CellRangeAddress(x,x,0,1));
+							
+							celda0 = fila.createCell(2);
+							celda0.setCellValue(mtdoh.doubleValue());
+							celda0.setCellStyle(estiloMoneda);
+							
+							
+							celda0 = fila.createCell(3);
+							celda0.setCellValue("");
+							celda0.setCellStyle(comun);
+							hoja.addMergedRegion(new  CellRangeAddress(x,x,3,4));
+							x++;
+							x++;
+					    }
+						
+					}	
+				}
+			}	
+		}
+		
+		return x;
+	}
+	
+	public static int getListadoDeudasDetallesDeudaCompromiso(int x,String deposito,String cuenta,boolean servicio,String proveedor,Workbook libro,Sheet hoja,Map<String,Map<String,Map<Integer,List<SqlRow>>>> listaFinal){
 		ReportesExcelsUtils reu = new ReportesExcelsUtils();
 		CellStyle estiloMoneda = reu.getEstiloMoneda(libro);
 		CellStyle comun = reu.getEstiloComun(libro);
@@ -1474,7 +1794,7 @@ public class DeudasGlobalizadasReportesController extends Controller {
 		return x;
 	}
 	
-	public static Result deudasResumidasReporte(Integer deposito,boolean ra) {
+	public static Result deudasResumidasReporte(Integer deposito,boolean ra,boolean soloDeuda) {
 		DynamicForm d = form().bindFromRequest();
 		InformeDeudaProveedoresMaterializada.actualizarVistaMaterializada();
 		String dirTemp = System.getProperty("java.io.tmpdir");
@@ -1499,22 +1819,33 @@ public class DeudasGlobalizadasReportesController extends Controller {
 			FileOutputStream archivoTmp = new FileOutputStream(archivo);
 			
 			
-			Sheet hoja = getDeudasResumidasSheet(libro,deposito,ra,true);
+			Sheet hoja = getDeudasResumidasSheet(libro,deposito,ra,true,soloDeuda);
 			
 			libro.write(archivoTmp); 
 			return ok(archivo);
 		} catch (IOException e) {
 			e.printStackTrace();
 			flash("error", "No se pudo generar el reporte");
-			return ok(index.render(d));
+			return ok(index.render(d,soloDeuda));
 		} catch (Exception e) {
 			e.printStackTrace();
 			flash("error", "No se pudo generar el reporte");
-			return ok(index.render(d));
+			return ok(index.render(d,soloDeuda));
 		}
 	}	
 	
-	public  static Sheet getDeudasResumidasSheet(Workbook libro,Integer deposito,boolean ra,boolean profe ){
+	public  static Sheet getDeudasResumidasSheet(Workbook libro,Integer deposito,boolean ra,boolean profe,boolean soloDeuda ){
+		if(soloDeuda) {
+			return getDeudasResumidasSheetDeuda(libro,deposito,ra,profe,soloDeuda);
+		}else {
+			return getDeudasResumidasSheetDeudaCompromiso(libro,deposito,ra,profe,soloDeuda);
+		}
+	}
+	
+	
+	public  static Sheet getDeudasResumidasSheetDeudaCompromiso(Workbook libro,Integer deposito,boolean ra,boolean profe,boolean soloDeuda ){
+		
+		
 		
 		String depositonNombre = (ra)?"GENERAL R.A.":"GENERAL";
 		
@@ -1524,31 +1855,31 @@ public class DeudasGlobalizadasReportesController extends Controller {
 			depositonNombre = depositonNombre+" OTRAS INSTITUCIONES";
 		}
 		
-		List<SqlRow> proveedoresDestacados = InformeDeudaProveedoresMaterializada.getDeudaPorProveedorAgrupados(true,false,deposito,ra,false,false,false);
-		List<SqlRow> proveedoresDestacadosServicios = InformeDeudaProveedoresMaterializada.getDeudaPorProveedorAgrupados(true,false,deposito,ra,true,false,false);
-		List<SqlRow> proveedoresDestacadosHonorarios = InformeDeudaProveedoresMaterializada.getDeudaPorProveedorAgrupados(true,false,deposito,ra,false,false,true);
+		List<SqlRow> proveedoresDestacados = InformeDeudaProveedoresMaterializada.getDeudaPorProveedorAgrupados(true,false,deposito,ra,false,false,false,soloDeuda);
+		List<SqlRow> proveedoresDestacadosServicios = InformeDeudaProveedoresMaterializada.getDeudaPorProveedorAgrupados(true,false,deposito,ra,true,false,false,soloDeuda);
+		List<SqlRow> proveedoresDestacadosHonorarios = InformeDeudaProveedoresMaterializada.getDeudaPorProveedorAgrupados(true,false,deposito,ra,false,false,true,soloDeuda);
 		List<SqlRow> proveedoresNoDestacados = new ArrayList<SqlRow>();
 		List<SqlRow> proveedoresNoDestacadosEquipos = new ArrayList<SqlRow>();
 		List<SqlRow> proveedoresNoDestacadosServicios = new ArrayList<SqlRow>();
 		List<SqlRow> proveedoresNoDestacadosHonorarios = new ArrayList<SqlRow>();
 		if(!ra){
-			proveedoresNoDestacados = InformeDeudaProveedoresMaterializada.getDeudaPorProveedorAgrupados(false,false,deposito,ra,false,false,false);
-			proveedoresNoDestacadosEquipos = InformeDeudaProveedoresMaterializada.getDeudaPorProveedorAgrupados(false,false,deposito,ra,false,true,false);
-			proveedoresNoDestacadosServicios = InformeDeudaProveedoresMaterializada.getDeudaPorProveedorAgrupados(false,false,deposito,ra,true,false,false);
-			proveedoresNoDestacadosHonorarios = InformeDeudaProveedoresMaterializada.getDeudaPorProveedorAgrupados(false,false,deposito,ra,false,false,true);
+			proveedoresNoDestacados = InformeDeudaProveedoresMaterializada.getDeudaPorProveedorAgrupados(false,false,deposito,ra,false,false,false,soloDeuda);
+			proveedoresNoDestacadosEquipos = InformeDeudaProveedoresMaterializada.getDeudaPorProveedorAgrupados(false,false,deposito,ra,false,true,false,soloDeuda);
+			proveedoresNoDestacadosServicios = InformeDeudaProveedoresMaterializada.getDeudaPorProveedorAgrupados(false,false,deposito,ra,true,false,false,soloDeuda);
+			proveedoresNoDestacadosHonorarios = InformeDeudaProveedoresMaterializada.getDeudaPorProveedorAgrupados(false,false,deposito,ra,false,false,true,soloDeuda);
 		}
 		
-		List<SqlRow> proveedoresDestacadosProfe = InformeDeudaProveedoresMaterializada.getDeudaPorProveedorAgrupados(true,true,deposito,ra,false,false,false);
-		List<SqlRow> proveedoresDestacadosProfeServicios = InformeDeudaProveedoresMaterializada.getDeudaPorProveedorAgrupados(true,true,deposito,ra,true,false,false);
+		List<SqlRow> proveedoresDestacadosProfe = InformeDeudaProveedoresMaterializada.getDeudaPorProveedorAgrupados(true,true,deposito,ra,false,false,false,soloDeuda);
+		List<SqlRow> proveedoresDestacadosProfeServicios = InformeDeudaProveedoresMaterializada.getDeudaPorProveedorAgrupados(true,true,deposito,ra,true,false,false,soloDeuda);
 		//List<SqlRow> proveedoresDestacadosProfeHonorarios = InformeDeudaProveedoresMaterializada.getDeudaPorProveedorAgrupados(true,true,deposito,ra,false,false,true);
 		List<SqlRow> proveedoresNoDestacadosProfe = new ArrayList<SqlRow>();
 		List<SqlRow> proveedoresNoDestacadosProfeEquipos = new ArrayList<SqlRow>();
 		List<SqlRow> proveedoresNoDestacadosProfeServicios = new ArrayList<SqlRow>();
 		//List<SqlRow> proveedoresNoDestacadosProfeHonorarios = new ArrayList<SqlRow>();
 		if(!ra){
-			proveedoresNoDestacadosProfe = InformeDeudaProveedoresMaterializada.getDeudaPorProveedorAgrupados(false,true,deposito,ra,false,false,false);
-			proveedoresNoDestacadosProfeEquipos = InformeDeudaProveedoresMaterializada.getDeudaPorProveedorAgrupados(false,true,deposito,ra,false,true,false);
-			proveedoresNoDestacadosProfeServicios = InformeDeudaProveedoresMaterializada.getDeudaPorProveedorAgrupados(false,true,deposito,ra,true,false,false);
+			proveedoresNoDestacadosProfe = InformeDeudaProveedoresMaterializada.getDeudaPorProveedorAgrupados(false,true,deposito,ra,false,false,false,soloDeuda);
+			proveedoresNoDestacadosProfeEquipos = InformeDeudaProveedoresMaterializada.getDeudaPorProveedorAgrupados(false,true,deposito,ra,false,true,false,soloDeuda);
+			proveedoresNoDestacadosProfeServicios = InformeDeudaProveedoresMaterializada.getDeudaPorProveedorAgrupados(false,true,deposito,ra,true,false,false,soloDeuda);
 			//proveedoresNoDestacadosProfeHonorarios = InformeDeudaProveedoresMaterializada.getDeudaPorProveedorAgrupados(false,true,deposito,ra,false,false,true);
 		}
 		
@@ -2186,7 +2517,533 @@ public class DeudasGlobalizadasReportesController extends Controller {
 		return hoja;
 	}
 	
-	public static Result deudasDetallesOtrosProveedoresResumen(boolean profe,boolean equipamientos) {
+	public  static Sheet getDeudasResumidasSheetDeuda(Workbook libro,Integer deposito,boolean ra,boolean profe,boolean soloDeuda ){
+		
+		
+		
+		String depositonNombre = (ra)?"GENERAL R.A.":"GENERAL";
+		
+		if(deposito == Deposito.HEARM){
+			depositonNombre = depositonNombre+" HEARM";
+		}else if(deposito == -1){
+			depositonNombre = depositonNombre+" OTRAS INSTITUCIONES";
+		}
+		
+		List<SqlRow> proveedoresDestacados = InformeDeudaProveedoresMaterializada.getDeudaPorProveedorAgrupados(true,false,deposito,ra,false,false,false,soloDeuda);
+		List<SqlRow> proveedoresDestacadosServicios = InformeDeudaProveedoresMaterializada.getDeudaPorProveedorAgrupados(true,false,deposito,ra,true,false,false,soloDeuda);
+		List<SqlRow> proveedoresDestacadosHonorarios = InformeDeudaProveedoresMaterializada.getDeudaPorProveedorAgrupados(true,false,deposito,ra,false,false,true,soloDeuda);
+		List<SqlRow> proveedoresNoDestacados = new ArrayList<SqlRow>();
+		List<SqlRow> proveedoresNoDestacadosEquipos = new ArrayList<SqlRow>();
+		List<SqlRow> proveedoresNoDestacadosServicios = new ArrayList<SqlRow>();
+		List<SqlRow> proveedoresNoDestacadosHonorarios = new ArrayList<SqlRow>();
+		if(!ra){
+			proveedoresNoDestacados = InformeDeudaProveedoresMaterializada.getDeudaPorProveedorAgrupados(false,false,deposito,ra,false,false,false,soloDeuda);
+			proveedoresNoDestacadosEquipos = InformeDeudaProveedoresMaterializada.getDeudaPorProveedorAgrupados(false,false,deposito,ra,false,true,false,soloDeuda);
+			proveedoresNoDestacadosServicios = InformeDeudaProveedoresMaterializada.getDeudaPorProveedorAgrupados(false,false,deposito,ra,true,false,false,soloDeuda);
+			proveedoresNoDestacadosHonorarios = InformeDeudaProveedoresMaterializada.getDeudaPorProveedorAgrupados(false,false,deposito,ra,false,false,true,soloDeuda);
+		}
+		
+		List<SqlRow> proveedoresDestacadosProfe = InformeDeudaProveedoresMaterializada.getDeudaPorProveedorAgrupados(true,true,deposito,ra,false,false,false,soloDeuda);
+		List<SqlRow> proveedoresDestacadosProfeServicios = InformeDeudaProveedoresMaterializada.getDeudaPorProveedorAgrupados(true,true,deposito,ra,true,false,false,soloDeuda);
+		//List<SqlRow> proveedoresDestacadosProfeHonorarios = InformeDeudaProveedoresMaterializada.getDeudaPorProveedorAgrupados(true,true,deposito,ra,false,false,true);
+		List<SqlRow> proveedoresNoDestacadosProfe = new ArrayList<SqlRow>();
+		List<SqlRow> proveedoresNoDestacadosProfeEquipos = new ArrayList<SqlRow>();
+		List<SqlRow> proveedoresNoDestacadosProfeServicios = new ArrayList<SqlRow>();
+		//List<SqlRow> proveedoresNoDestacadosProfeHonorarios = new ArrayList<SqlRow>();
+		if(!ra){
+			proveedoresNoDestacadosProfe = InformeDeudaProveedoresMaterializada.getDeudaPorProveedorAgrupados(false,true,deposito,ra,false,false,false,soloDeuda);
+			proveedoresNoDestacadosProfeEquipos = InformeDeudaProveedoresMaterializada.getDeudaPorProveedorAgrupados(false,true,deposito,ra,false,true,false,soloDeuda);
+			proveedoresNoDestacadosProfeServicios = InformeDeudaProveedoresMaterializada.getDeudaPorProveedorAgrupados(false,true,deposito,ra,true,false,false,soloDeuda);
+			//proveedoresNoDestacadosProfeHonorarios = InformeDeudaProveedoresMaterializada.getDeudaPorProveedorAgrupados(false,true,deposito,ra,false,false,true);
+		}
+		
+		ReportesExcelsUtils reu = new ReportesExcelsUtils();
+		CellStyle estiloMoneda = reu.getEstiloMoneda(libro);
+		CellStyle comun = reu.getEstiloComun(libro);
+		CellStyle cabeceraPrincipal = reu.getCabecera(libro,14);
+		CellStyle cabecera = reu.getCabecera(libro,10);
+		
+		Sheet hoja = libro.createSheet("RESUMEN - "+depositonNombre);
+		hoja.setColumnWidth(0, 15000);
+		hoja.setColumnWidth(1, 5000);
+		hoja.setColumnWidth(2, 5000);
+		hoja.setDefaultRowHeight( (short) 400);
+		
+		int x = 0;
+		
+		Row fila = hoja.createRow(x);
+		Cell celda0 = fila.createCell(0);
+		celda0.setCellValue("RESUMEN - "+depositonNombre+" - "+utils.DateUtils.getNow());
+		celda0.setCellStyle(cabeceraPrincipal);
+		hoja.addMergedRegion(new  CellRangeAddress(x,x,0,1));
+		x++;
+		
+		fila = hoja.createRow(x);
+		celda0 = fila.createCell(0);
+		celda0.setCellValue("OPERATIVA");
+		celda0.setCellStyle(cabeceraPrincipal);
+		hoja.addMergedRegion(new  CellRangeAddress(x,x,0,1));
+		x++;
+		
+		fila = hoja.createRow(x);
+		celda0 = fila.createCell(0);
+		celda0.setCellValue("PROVEDORES");
+		celda0.setCellStyle(cabecera);
+		celda0 = fila.createCell(1);
+		celda0.setCellValue("MONTO DEUDA");
+		celda0.setCellStyle(cabecera);
+		x++;
+		
+		//DESCADOS
+		BigDecimal sub_monto_total_deuda_nd = new BigDecimal(0);
+		BigDecimal sub_monto_total_compromiso_nd = new BigDecimal(0);
+		boolean hayra = false;
+		if(proveedoresDestacados.size() > 0){
+			
+			BigDecimal monto_total_ra_tmp = new BigDecimal(0);
+			
+			if(!ra){
+				for(SqlRow pd : proveedoresDestacados){
+					if(Proveedor.getProveedoresDestacadosRA().contains(pd.getLong("proveedor_id"))){
+						monto_total_ra_tmp = monto_total_ra_tmp.add(pd.getBigDecimal("total_deuda"));
+						hayra = true;
+					}
+				}
+				
+				if(hayra){
+					fila = hoja.createRow(x);
+					celda0 = fila.createCell(0);
+					celda0.setCellValue("RA");
+					celda0.setCellStyle(comun);
+					celda0 = fila.createCell(1);
+					celda0.setCellValue(monto_total_ra_tmp.doubleValue());
+					celda0.setCellStyle(estiloMoneda);
+					x++;
+				}
+			}
+			
+			for(SqlRow pd : proveedoresDestacados){
+				if(!ra && !Proveedor.getProveedoresDestacadosRA().contains(pd.getLong("proveedor_id"))){
+					fila = hoja.createRow(x);
+					celda0 = fila.createCell(0);
+					celda0.setCellValue(pd.getString("nombre_proveedor"));
+					celda0.setCellStyle(comun);
+					celda0 = fila.createCell(1);
+					celda0.setCellValue(pd.getBigDecimal("total_deuda").doubleValue());
+					celda0.setCellStyle(estiloMoneda);
+					x++;
+				}else if(ra){
+					fila = hoja.createRow(x);
+					celda0 = fila.createCell(0);
+					celda0.setCellValue(pd.getString("nombre_proveedor"));
+					celda0.setCellStyle(comun);
+					celda0 = fila.createCell(1);
+					celda0.setCellValue(pd.getBigDecimal("total_deuda").doubleValue());
+					celda0.setCellStyle(estiloMoneda);
+					x++;
+				}
+				sub_monto_total_deuda_nd= sub_monto_total_deuda_nd.add(pd.getBigDecimal("total_deuda"));
+			}
+		}
+		
+		
+		//NO DESCADOS
+		BigDecimal monto_total_deuda_nd = new BigDecimal(0);
+		
+		if(proveedoresNoDestacados.size() > 0){
+			for(SqlRow pd : proveedoresNoDestacados) {
+				monto_total_deuda_nd= monto_total_deuda_nd.add(pd.getBigDecimal("total_deuda"));
+				sub_monto_total_deuda_nd= sub_monto_total_deuda_nd.add(pd.getBigDecimal("total_deuda"));
+			}
+		
+			
+			fila = hoja.createRow(x);
+			celda0 = fila.createCell(0);
+			celda0.setCellValue("OTROS PROVEEDORES");
+			celda0.setCellStyle(comun);
+			celda0 = fila.createCell(1);
+			celda0.setCellValue(monto_total_deuda_nd.doubleValue());
+			celda0.setCellStyle(estiloMoneda);
+			x++;
+		}
+		
+		//NO DESCADOS
+		BigDecimal monto_total_deuda_nde = new BigDecimal(0);
+		BigDecimal monto_total_compromiso_nde = new BigDecimal(0);
+		
+		if(proveedoresNoDestacadosEquipos.size() > 0){
+			for(SqlRow pd : proveedoresNoDestacadosEquipos) {
+				monto_total_deuda_nde= monto_total_deuda_nde.add(pd.getBigDecimal("total_deuda"));
+				sub_monto_total_deuda_nd= sub_monto_total_deuda_nd.add(pd.getBigDecimal("total_deuda"));
+			}
+		
+			fila = hoja.createRow(x);
+			celda0 = fila.createCell(0);
+			celda0.setCellValue("OTROS PROVEEDORES EQUIPOS");
+			celda0.setCellStyle(comun);
+			celda0 = fila.createCell(1);
+			celda0.setCellValue(monto_total_deuda_nde.doubleValue());
+			celda0.setCellStyle(estiloMoneda);
+			x++;
+		}
+		
+		fila = hoja.createRow(x);
+		celda0 = fila.createCell(0);
+		celda0.setCellValue("SUB-TOTAL");
+		celda0.setCellStyle(comun);
+		celda0 = fila.createCell(1);
+		celda0.setCellValue(sub_monto_total_deuda_nd.doubleValue());
+		celda0.setCellStyle(estiloMoneda);
+		x++;
+		
+		if(proveedoresDestacadosServicios.size() > 0 || proveedoresNoDestacadosServicios.size() > 0){
+			BigDecimal sub_monto_total_deuda_nd_servicio = new BigDecimal(0);
+			
+			//DESCADOS SERVICIOS
+			if(proveedoresDestacadosServicios.size() > 0){
+				fila = hoja.createRow(x);
+				celda0 = fila.createCell(0);
+				celda0.setCellValue("SERVICIOS");
+				celda0.setCellStyle(cabeceraPrincipal);
+				hoja.addMergedRegion(new  CellRangeAddress(x,x,0,1));
+				x++;
+				
+				for(SqlRow pd : proveedoresDestacadosServicios){
+					fila = hoja.createRow(x);
+					celda0 = fila.createCell(0);
+					celda0.setCellValue(pd.getString("nombre_proveedor"));
+					celda0.setCellStyle(comun);
+					celda0 = fila.createCell(1);
+					celda0.setCellValue(pd.getBigDecimal("total_deuda").doubleValue());
+					celda0.setCellStyle(estiloMoneda);
+					x++;
+					sub_monto_total_deuda_nd= sub_monto_total_deuda_nd.add(pd.getBigDecimal("total_deuda"));
+					sub_monto_total_deuda_nd_servicio= sub_monto_total_deuda_nd_servicio.add(pd.getBigDecimal("total_deuda"));
+				}
+			}	
+		
+			//NO DESCADOS SERVICIOS
+			monto_total_deuda_nd = new BigDecimal(0);
+			
+			if(proveedoresNoDestacadosServicios.size() > 0){
+				for(SqlRow pd : proveedoresNoDestacadosServicios) {
+					monto_total_deuda_nd= monto_total_deuda_nd.add(pd.getBigDecimal("total_deuda"));
+					sub_monto_total_deuda_nd= sub_monto_total_deuda_nd.add(pd.getBigDecimal("total_deuda"));
+					sub_monto_total_compromiso_nd= sub_monto_total_compromiso_nd.add(pd.getBigDecimal("total_compromiso"));
+					sub_monto_total_deuda_nd_servicio= sub_monto_total_deuda_nd_servicio.add(pd.getBigDecimal("total_deuda"));
+				}
+			
+				fila = hoja.createRow(x);
+				celda0 = fila.createCell(0);
+				celda0.setCellValue("OTROS PROVEEDORES SERVICIOS");
+				celda0.setCellStyle(comun);
+				celda0 = fila.createCell(1);
+				celda0.setCellValue(monto_total_deuda_nd.doubleValue());
+				celda0.setCellStyle(estiloMoneda);
+				x++;
+			}
+		
+		
+			//SUB-TOTAL
+			fila = hoja.createRow(x);
+			celda0 = fila.createCell(0);
+			celda0.setCellValue("SUB-TOTAL-SERVICIOS");
+			celda0.setCellStyle(comun);
+			celda0 = fila.createCell(1);
+			celda0.setCellValue(sub_monto_total_deuda_nd_servicio.doubleValue());
+			celda0.setCellStyle(estiloMoneda);
+			x++;
+		}
+		//FIN SERVICIOS-----------------------------------------------------------------------
+		
+		
+		//DESCADOS HONORARIOS
+		if(proveedoresNoDestacadosHonorarios.size() > 0 || proveedoresDestacadosHonorarios.size() > 0){
+			BigDecimal sub_monto_total_deuda_nd_honorarios = new BigDecimal(0);
+			if(proveedoresDestacadosHonorarios.size() > 0){
+				fila = hoja.createRow(x);
+				celda0 = fila.createCell(0);
+				celda0.setCellValue("HONORARIOS");
+				celda0.setCellStyle(cabeceraPrincipal);
+				hoja.addMergedRegion(new  CellRangeAddress(x,x,0,1));
+				x++;
+				
+				for(SqlRow pd : proveedoresDestacadosHonorarios){
+					fila = hoja.createRow(x);
+					celda0 = fila.createCell(0);
+					celda0.setCellValue(pd.getString("nombre_proveedor"));
+					celda0.setCellStyle(comun);
+					celda0 = fila.createCell(1);
+					celda0.setCellValue(pd.getBigDecimal("total_deuda").doubleValue());
+					celda0.setCellStyle(estiloMoneda);
+					x++;
+					sub_monto_total_deuda_nd= sub_monto_total_deuda_nd.add(pd.getBigDecimal("total_deuda"));
+					sub_monto_total_deuda_nd_honorarios= sub_monto_total_deuda_nd_honorarios.add(pd.getBigDecimal("total_deuda"));
+				}
+			}	
+			
+			//NO DESCADOS HONORARIOS
+			monto_total_deuda_nd = new BigDecimal(0);
+			
+			if(proveedoresNoDestacadosHonorarios.size() > 0){
+				for(SqlRow pd : proveedoresNoDestacadosHonorarios) {
+					monto_total_deuda_nd= monto_total_deuda_nd.add(pd.getBigDecimal("total_deuda"));
+					sub_monto_total_deuda_nd= sub_monto_total_deuda_nd.add(pd.getBigDecimal("total_deuda"));
+					sub_monto_total_deuda_nd_honorarios= sub_monto_total_deuda_nd_honorarios.add(pd.getBigDecimal("total_deuda"));
+				}
+			
+				fila = hoja.createRow(x);
+				celda0 = fila.createCell(0);
+				celda0.setCellValue("OTROS PROVEEDORES HONORARIOS");
+				celda0.setCellStyle(comun);
+				celda0 = fila.createCell(1);
+				celda0.setCellValue(monto_total_deuda_nd.doubleValue());
+				celda0.setCellStyle(estiloMoneda);
+				x++;
+			}
+			
+			
+			//SUB-TOTAL
+			fila = hoja.createRow(x);
+			celda0 = fila.createCell(0);
+			celda0.setCellValue("SUB-TOTAL-HONORARIOS");
+			celda0.setCellStyle(comun);
+			celda0 = fila.createCell(1);
+			celda0.setCellValue(sub_monto_total_deuda_nd_honorarios.doubleValue());
+			celda0.setCellStyle(estiloMoneda);
+			x++;
+		}
+		//FIN HONORARIOS-----------------------------------------------------------------------
+		
+		
+		
+		//TOTAL
+		x++;
+		fila = hoja.createRow(x);
+		celda0 = fila.createCell(0);
+		celda0.setCellValue("TOTAL OPERATIVA");
+		celda0.setCellStyle(comun);
+		celda0 = fila.createCell(1);
+		celda0.setCellValue(sub_monto_total_deuda_nd.doubleValue());
+		celda0.setCellStyle(estiloMoneda);
+		x++;
+		
+		
+		
+		x++;x++;
+		//FIN OPERATIVAAAAAAAAAA
+		
+		//PROFE---------------------------------------------------------------------
+		
+		BigDecimal sub_monto_total_deuda_profe = new BigDecimal(0);
+		if(profe) {
+			if(proveedoresDestacadosProfe.size() > 0 || proveedoresNoDestacadosProfe.size() > 0 || proveedoresDestacadosProfeServicios.size() > 0 || proveedoresNoDestacadosProfeServicios.size() > 0){
+				fila = hoja.createRow(x);
+				
+				celda0 = fila.createCell(0);
+				celda0.setCellValue("PROFE");
+				celda0.setCellStyle(cabeceraPrincipal);
+				hoja.addMergedRegion(new  CellRangeAddress(x,x,0,1));
+				x++;
+				
+				fila = hoja.createRow(x);
+				celda0 = fila.createCell(0);
+				celda0.setCellValue("PROVEDORES");
+				celda0.setCellStyle(cabecera);
+				celda0 = fila.createCell(1);
+				celda0.setCellValue("MONTO DEUDA");
+				celda0.setCellStyle(cabecera);
+				x++;
+				
+				//DESCTACADOS
+				
+				if(proveedoresDestacadosProfe.size() > 0 || proveedoresNoDestacadosProfe.size() > 0){
+					if(proveedoresDestacadosProfe.size() > 0){
+						hayra = false;
+						
+						BigDecimal monto_total_ra_tmp = new BigDecimal(0);
+						BigDecimal monto_total_compromiso_ra_tmp = new BigDecimal(0);
+						if(!ra){
+							for(SqlRow pd : proveedoresDestacadosProfe){
+								if(Proveedor.getProveedoresDestacadosRA().contains(pd.getLong("proveedor_id"))){
+									monto_total_ra_tmp = monto_total_ra_tmp.add(pd.getBigDecimal("total_deuda"));
+									hayra = true;
+								}
+							}
+							 
+							if(hayra){
+								fila = hoja.createRow(x);
+								celda0 = fila.createCell(0);
+								celda0.setCellValue("RA");
+								celda0.setCellStyle(comun);
+								celda0 = fila.createCell(1);
+								celda0.setCellValue(monto_total_ra_tmp.doubleValue());
+								celda0.setCellStyle(estiloMoneda);
+								x++;
+							}
+						}
+						
+						for(SqlRow pd : proveedoresDestacadosProfe){
+							if(!ra && !Proveedor.getProveedoresDestacadosRA().contains(pd.getLong("proveedor_id"))){
+								fila = hoja.createRow(x);
+								celda0 = fila.createCell(0);
+								celda0.setCellValue(pd.getString("nombre_proveedor"));
+								celda0.setCellStyle(comun);
+								celda0 = fila.createCell(1);
+								celda0.setCellValue(pd.getBigDecimal("total_deuda").doubleValue());
+								celda0.setCellStyle(estiloMoneda);
+								x++;
+							}else if(ra){
+								fila = hoja.createRow(x);
+								celda0 = fila.createCell(0);
+								celda0.setCellValue(pd.getString("nombre_proveedor"));
+								celda0.setCellStyle(comun);
+								celda0 = fila.createCell(1);
+								celda0.setCellValue(pd.getBigDecimal("total_deuda").doubleValue());
+								celda0.setCellStyle(estiloMoneda);
+								x++;
+							}
+							sub_monto_total_deuda_profe= sub_monto_total_deuda_profe.add(pd.getBigDecimal("total_deuda"));
+						}
+					}
+				
+					//NO DESTACADOS
+					monto_total_deuda_nd = new BigDecimal(0);
+					if(proveedoresNoDestacadosProfe.size() > 0){
+						for(SqlRow pd : proveedoresNoDestacadosProfe) {
+							monto_total_deuda_nd= monto_total_deuda_nd.add(pd.getBigDecimal("total_deuda"));
+							sub_monto_total_deuda_profe= sub_monto_total_deuda_profe.add(pd.getBigDecimal("total_deuda"));
+						}
+					
+					
+						fila = hoja.createRow(x);
+						celda0 = fila.createCell(0);
+						celda0.setCellValue("OTROS PROVEEDORES");
+						celda0.setCellStyle(comun);
+						celda0 = fila.createCell(1);
+						celda0.setCellValue(monto_total_deuda_nd.doubleValue());
+						celda0.setCellStyle(estiloMoneda);
+						x++;	
+					}
+					
+					//NO DESTACADOS
+					monto_total_deuda_nde = new BigDecimal(0);
+					monto_total_compromiso_nde = new BigDecimal(0);
+					if(proveedoresNoDestacadosProfeEquipos.size() > 0){
+						for(SqlRow pd : proveedoresNoDestacadosProfeEquipos) {
+							monto_total_deuda_nde= monto_total_deuda_nde.add(pd.getBigDecimal("total_deuda"));
+							sub_monto_total_deuda_profe= sub_monto_total_deuda_profe.add(pd.getBigDecimal("total_deuda"));
+						}
+					
+					
+						fila = hoja.createRow(x);
+						celda0 = fila.createCell(0);
+						celda0.setCellValue("OTROS PROVEEDORES EQUIPOS");
+						celda0.setCellStyle(comun);
+						celda0 = fila.createCell(1);
+						celda0.setCellValue(monto_total_deuda_nde.doubleValue());
+						celda0.setCellStyle(estiloMoneda);
+						x++;	
+					}
+					
+					
+					fila = hoja.createRow(x);
+					celda0 = fila.createCell(0);
+					celda0.setCellValue("SUB-TOTAL");
+					celda0.setCellStyle(comun);
+					celda0 = fila.createCell(1);
+					celda0.setCellValue(sub_monto_total_deuda_profe.doubleValue());
+					celda0.setCellStyle(estiloMoneda);
+					x++;
+				}
+				//SERVICIOS
+				if(proveedoresDestacadosProfeServicios.size() > 0 || proveedoresNoDestacadosProfeServicios.size() > 0){
+					BigDecimal sub_monto_total_deuda_profe_servicio = new BigDecimal(0);
+					if(proveedoresDestacadosProfeServicios.size() > 0){
+						fila = hoja.createRow(x);
+						
+						celda0 = fila.createCell(0);
+						celda0.setCellValue("SERVICIOS");
+						celda0.setCellStyle(cabeceraPrincipal);
+						hoja.addMergedRegion(new  CellRangeAddress(x,x,0,1));
+						x++;
+						
+						for(SqlRow pd : proveedoresDestacadosProfeServicios){
+							fila = hoja.createRow(x);
+							
+							celda0 = fila.createCell(0);
+							celda0.setCellValue(pd.getString("nombre_proveedor"));
+							celda0.setCellStyle(comun);
+							celda0 = fila.createCell(1);
+							celda0.setCellValue(pd.getBigDecimal("total_deuda").doubleValue());
+							celda0.setCellStyle(estiloMoneda);
+							x++;
+							sub_monto_total_deuda_profe= sub_monto_total_deuda_profe.add(pd.getBigDecimal("total_deuda"));
+							sub_monto_total_deuda_profe_servicio= sub_monto_total_deuda_profe_servicio.add(pd.getBigDecimal("total_deuda"));
+						}
+					}
+				
+					//NO DESTACADOS SERVICIOS
+					monto_total_deuda_nd = new BigDecimal(0);
+					if(proveedoresNoDestacadosProfeServicios.size() > 0){
+						for(SqlRow pd : proveedoresNoDestacadosProfeServicios) {
+							monto_total_deuda_nd= monto_total_deuda_nd.add(pd.getBigDecimal("total_deuda"));
+							sub_monto_total_deuda_profe= sub_monto_total_deuda_profe.add(pd.getBigDecimal("total_deuda"));
+							sub_monto_total_deuda_profe_servicio= sub_monto_total_deuda_profe_servicio.add(pd.getBigDecimal("total_deuda"));
+						}
+					
+					
+						fila = hoja.createRow(x);
+						celda0 = fila.createCell(0);
+						celda0.setCellValue("OTROS PROVEEDORES SERVICIOS");
+						celda0.setCellStyle(comun);
+						celda0 = fila.createCell(1);
+						celda0.setCellValue(monto_total_deuda_nd.doubleValue());
+						celda0.setCellStyle(estiloMoneda);
+						x++;	
+					}
+				
+				
+					fila = hoja.createRow(x);
+					celda0 = fila.createCell(0);
+					celda0.setCellValue("SUB-TOTAL-SERVICIO");
+					celda0.setCellStyle(comun);
+					celda0 = fila.createCell(1);
+					celda0.setCellValue(sub_monto_total_deuda_profe_servicio.doubleValue());
+					celda0.setCellStyle(estiloMoneda);
+					x++;
+				}
+				x++;
+				fila = hoja.createRow(x);
+				celda0 = fila.createCell(0);
+				celda0.setCellValue("TOTAL PROFE");
+				celda0.setCellStyle(comun);
+				celda0 = fila.createCell(1);
+				celda0.setCellValue(sub_monto_total_deuda_profe.doubleValue());
+				celda0.setCellStyle(estiloMoneda);
+				x++;
+				
+			
+				x++;
+				 
+				x++;
+				fila = hoja.createRow(x);
+				celda0 = fila.createCell(0);
+				celda0.setCellValue("TOTAL OPERATIVA/PROFE");
+				celda0.setCellStyle(comun);
+				celda0 = fila.createCell(1);
+				celda0.setCellValue(sub_monto_total_deuda_nd.add(sub_monto_total_deuda_profe).doubleValue());
+				celda0.setCellStyle(estiloMoneda);
+				x++;		
+				//FIN PROFEEEEEEEEEEEEEE
+			
+			}
+		}
+		return hoja;
+	}
+	
+	
+	public static Result deudasDetallesOtrosProveedoresResumen(boolean profe,boolean equipamientos,boolean soloDeuda) {
 		
 		InformeDeudaProveedoresMaterializada.actualizarVistaMaterializada();
 		String dirTemp = System.getProperty("java.io.tmpdir");
@@ -2206,11 +3063,11 @@ public class DeudasGlobalizadasReportesController extends Controller {
 		} catch (IOException e) {
 			e.printStackTrace();
 			flash("error", "No se pudo generar el reporte");
-			return ok(index.render(d));
+			return ok(index.render(d,soloDeuda));
 		} catch (Exception e) {
 			e.printStackTrace();
 			flash("error", "No se pudo generar el reporte");
-			return ok(index.render(d));
+			return ok(index.render(d,soloDeuda));
 		}	
 	}	
 	
@@ -2319,7 +3176,7 @@ public class DeudasGlobalizadasReportesController extends Controller {
 		return x;
 	}
 	
-	public static Result deudasServiciosProveedoresResumenReportes() {
+	public static Result deudasServiciosProveedoresResumenReportes(Boolean soloDeuda) {
 		
 		InformeDeudaProveedoresMaterializada.actualizarVistaMaterializada();
 		String dirTemp = System.getProperty("java.io.tmpdir");
@@ -2339,11 +3196,11 @@ public class DeudasGlobalizadasReportesController extends Controller {
 		} catch (IOException e) {
 			e.printStackTrace();
 			flash("error", "No se pudo generar el reporte");
-			return ok(index.render(d));
+			return ok(index.render(d,soloDeuda));
 		} catch (Exception e) {
 			e.printStackTrace();
 			flash("error", "No se pudo generar el reporte");
-			return ok(index.render(d));
+			return ok(index.render(d,soloDeuda));
 		}	
 	}	
 	
@@ -2451,7 +3308,7 @@ public class DeudasGlobalizadasReportesController extends Controller {
 		return x;
 	}
 	
-	public static Result deudasHonorariosProveedoresResumenReportes() {
+	public static Result deudasHonorariosProveedoresResumenReportes(Boolean soloDeuda) {
 		
 		InformeDeudaProveedoresMaterializada.actualizarVistaMaterializada();
 		String dirTemp = System.getProperty("java.io.tmpdir");
@@ -2471,11 +3328,11 @@ public class DeudasGlobalizadasReportesController extends Controller {
 		} catch (IOException e) {
 			e.printStackTrace();
 			flash("error", "No se pudo generar el reporte");
-			return ok(index.render(d));
+			return ok(index.render(d,soloDeuda));
 		} catch (Exception e) {
 			e.printStackTrace();
 			flash("error", "No se pudo generar el reporte");
-			return ok(index.render(d));
+			return ok(index.render(d,soloDeuda));
 		}	
 	}	
 	

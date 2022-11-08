@@ -38,41 +38,48 @@ import views.html.dashboard.deudasGlobalizadas.*;
 @Security.Authenticated(Secured.class)
 public class DeudasGlobalizadasController extends Controller {
 	
-	public static Result index() {
+	public static Result index(boolean soloDeuda) {
 		DynamicForm d = form().bindFromRequest();
-		return ok(index.render(d));
+		return ok(index.render(d,soloDeuda));
 	}
 	
-	public static Result deudasDetallesCuentas(Integer idCuenta) {
+	public static Result deudasDetallesCuentas(Integer idCuenta,boolean soloDeuda) {
 		
 		InformeDeudaProveedoresMaterializada.actualizarVistaMaterializada();
 		DynamicForm d = form().bindFromRequest();
 		TipoCuenta tc = TipoCuenta.find.byId(idCuenta.longValue());
 		
-		List<SqlRow> listadoPorCuentaHEARM= InformeDeudaProveedoresMaterializada.getDeudaPorCuenta(idCuenta,(long)Deposito.HEARM,false);
-		List<SqlRow> listadoPorCuentaOtros= InformeDeudaProveedoresMaterializada.getDeudaPorCuenta(idCuenta,null,false);
+		List<SqlRow> listadoPorCuentaHEARM= InformeDeudaProveedoresMaterializada.getDeudaPorCuenta(idCuenta,(long)Deposito.HEARM,soloDeuda);
+		List<SqlRow> listadoPorCuentaOtros= InformeDeudaProveedoresMaterializada.getDeudaPorCuenta(idCuenta,null,soloDeuda);
 		
-		 
+		if(soloDeuda) {
+			return ok(deudasCuentasSoloDeuda.render(listadoPorCuentaHEARM,listadoPorCuentaOtros,idCuenta,tc.nombre,d,soloDeuda));
+		}else {
+			return ok(deudasCuentas.render(listadoPorCuentaHEARM,listadoPorCuentaOtros,idCuenta,tc.nombre,d,soloDeuda));
+		}
 		
-		return ok(deudasCuentas.render(listadoPorCuentaHEARM,listadoPorCuentaOtros,idCuenta,tc.nombre,d));
+		
 		
 	}
 	
-	public static Result deudasDetallesOtros(boolean profe,boolean equipamientos) {
+	public static Result deudasDetallesOtros(boolean profe,boolean equipamientos,boolean soloDeuda) {
 		
 		InformeDeudaProveedoresMaterializada.actualizarVistaMaterializada();
 		DynamicForm d = form().bindFromRequest();
-		List<SqlRow> proveedorHEARM = InformeDeudaProveedoresMaterializada.getDeudaPorProveedorDetallesOtros(profe,(long)Deposito.HEARM,equipamientos);
+		List<SqlRow> proveedorHEARM = InformeDeudaProveedoresMaterializada.getDeudaPorProveedorDetallesOtros(profe,(long)Deposito.HEARM,equipamientos,soloDeuda);
 		
-		List<SqlRow> proveedorOtros = InformeDeudaProveedoresMaterializada.getDeudaPorProveedorDetallesOtros(profe,null,equipamientos);
+		List<SqlRow> proveedorOtros = InformeDeudaProveedoresMaterializada.getDeudaPorProveedorDetallesOtros(profe,null,equipamientos,soloDeuda);
 		
 		String cuenta = (profe)?"PROFE":"OPERATIVA"; 
 		
-		return ok(deudasDetallesOtros.render(proveedorHEARM,proveedorOtros,cuenta,profe,equipamientos,d));
-		
+		if(soloDeuda) {
+			return ok(deudasDetallesOtrosSoloDeuda.render(proveedorHEARM,proveedorOtros,cuenta,profe,equipamientos,d,soloDeuda));
+		}else {
+			return ok(deudasDetallesOtros.render(proveedorHEARM,proveedorOtros,cuenta,profe,equipamientos,d,soloDeuda));
+		}
 	}
 	
-	public static Result deudasDetallesServicios() {
+	public static Result deudasDetallesServicios(boolean soloDeuda) {
 		
 		InformeDeudaProveedoresMaterializada.actualizarVistaMaterializada();
 		DynamicForm d = form().bindFromRequest();
@@ -147,21 +154,21 @@ public class DeudasGlobalizadasController extends Controller {
 		
 		Collections.sort(peridoIds); 
 		
-		return ok(deudasDetallesServicios.render(proveedorHEARM,proveedorOtros,peridoIds,pret,deudaSinPeriodos,d));
+		return ok(deudasDetallesServicios.render(proveedorHEARM,proveedorOtros,peridoIds,pret,deudaSinPeriodos,d,soloDeuda));
 	}
 	
-	public static Result deudasDetallesHonorarios() {
+	public static Result deudasDetallesHonorarios(boolean soloDeuda) {
 		
 		InformeDeudaProveedoresMaterializada.actualizarVistaMaterializada();
 		DynamicForm d = form().bindFromRequest();
 		List<SqlRow> proveedorHEARM = InformeDeudaProveedoresMaterializada.getDeudaPorProveedorDetallesHonorarios((long)Deposito.HEARM);
 		List<SqlRow> proveedorOtros = InformeDeudaProveedoresMaterializada.getDeudaPorProveedorDetallesHonorarios(null);
 		
-		return ok(deudasDetallesHonorarios.render(proveedorHEARM,proveedorOtros,d));
+		return ok(deudasDetallesHonorarios.render(proveedorHEARM,proveedorOtros,d,soloDeuda));
 		
 	}
 	
-	public static Result deudasDetallesPorProveedor() {
+	public static Result deudasDetallesPorProveedor(boolean soloDeuda) {
 		DynamicForm d = form().bindFromRequest();
 		
 		if(RequestVar.get("proveedor.id") != null && !RequestVar.get("proveedor.id").isEmpty()) {
@@ -171,7 +178,7 @@ public class DeudasGlobalizadasController extends Controller {
 			Integer idProveedor = new Integer(RequestVar.get("proveedor.id"));
 			boolean ra = (idProveedor.compareTo(new Integer(14947)) == 0)?true:false; 
 			
-			Map<String,Map<String,Map<Integer,List<SqlRow>>>> listaFinal = InformeDeudaProveedoresMaterializada.getListaFinalDeudasDetallesReporte(idProveedor,ra);
+			Map<String,Map<String,Map<Integer,List<SqlRow>>>> listaFinal = InformeDeudaProveedoresMaterializada.getListaFinalDeudasDetallesReporte(idProveedor,ra,soloDeuda);
 			
 			String proveedor = "R.A.";
 			if(!ra){
@@ -179,64 +186,68 @@ public class DeudasGlobalizadasController extends Controller {
 				proveedor = p.nombre;
 			}
 			
-			return ok(deudasDetallas.render(ra,idProveedor,listaFinal,proveedor,d));
+			return ok(deudasDetallas.render(ra,idProveedor,listaFinal,proveedor,d,soloDeuda));
 		}else {
 			flash("error", "Debe Seleccionar un proveedor.");
-			return ok(index.render(d));
+			return ok(index.render(d,soloDeuda));
 		}
 		
 		
 	}
 	
-	public static Result deudasDetalles(Integer idProveedor,boolean ra) {
+	public static Result deudasDetalles(Integer idProveedor,boolean ra,boolean soloDeuda) {
 		
 		InformeDeudaProveedoresMaterializada.actualizarVistaMaterializada();
 		DynamicForm d = form().bindFromRequest();
-		Map<String,Map<String,Map<Integer,List<SqlRow>>>> listaFinal = InformeDeudaProveedoresMaterializada.getListaFinalDeudasDetallesReporte(idProveedor,ra);
+		Map<String,Map<String,Map<Integer,List<SqlRow>>>> listaFinal = InformeDeudaProveedoresMaterializada.getListaFinalDeudasDetallesReporte(idProveedor,ra,soloDeuda);
 		
 		String proveedor = "R.A.";
 		if(!ra){
 			Proveedor p = Proveedor.find.byId(idProveedor.longValue());
 			proveedor = p.nombre;
 		}
-		
-		return ok(deudasDetallas.render(ra,idProveedor,listaFinal,proveedor,d));
+		if(soloDeuda) {
+			return ok(deudasDetallasSoloDeuda.render(ra,idProveedor,listaFinal,proveedor,d,soloDeuda));
+		}else {
+			return ok(deudasDetallas.render(ra,idProveedor,listaFinal,proveedor,d,soloDeuda));
+		}
 	}
 	
 	
 	
-	public static Result deudasResumidas(Integer deposito,boolean ra) {
+	public static Result deudasResumidas(Integer deposito,boolean ra,boolean soloDeuda) {
 		
 		InformeDeudaProveedoresMaterializada.actualizarVistaMaterializada();
 		DynamicForm d = form().bindFromRequest();
 		
-		List<SqlRow> proveedoresDestacados = InformeDeudaProveedoresMaterializada.getDeudaPorProveedorAgrupados(true,false,deposito,ra,false,false,false);
-		List<SqlRow> proveedoresDestacadosServicios = InformeDeudaProveedoresMaterializada.getDeudaPorProveedorAgrupados(true,false,deposito,ra,true,false,false);
-		List<SqlRow> proveedoresDestacadosHonorarios = InformeDeudaProveedoresMaterializada.getDeudaPorProveedorAgrupados(true,false,deposito,ra,false,false,true);
+		List<SqlRow> proveedoresDestacados = InformeDeudaProveedoresMaterializada.getDeudaPorProveedorAgrupados(true,false,deposito,ra,false,false,false,soloDeuda);
+		List<SqlRow> proveedoresDestacadosServicios = InformeDeudaProveedoresMaterializada.getDeudaPorProveedorAgrupados(true,false,deposito,ra,true,false,false,soloDeuda);
+		List<SqlRow> proveedoresDestacadosHonorarios = InformeDeudaProveedoresMaterializada.getDeudaPorProveedorAgrupados(true,false,deposito,ra,false,false,true,soloDeuda);
 		List<SqlRow> proveedoresNoDestacados = new ArrayList<SqlRow>();
 		List<SqlRow> proveedoresNoDestacadosEquipos = new ArrayList<SqlRow>();
 		List<SqlRow> proveedoresNoDestacadosServicios = new ArrayList<SqlRow>();
 		List<SqlRow> proveedoresNoDestacadosHonorarios = new ArrayList<SqlRow>();
 		if(!ra){
 			Logger.debug("xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx");
-			proveedoresNoDestacados = InformeDeudaProveedoresMaterializada.getDeudaPorProveedorAgrupados(false,false,deposito,ra,false,false,false);
-			proveedoresNoDestacadosServicios = InformeDeudaProveedoresMaterializada.getDeudaPorProveedorAgrupados(false,false,deposito,ra,true,false,false);
-			proveedoresNoDestacadosHonorarios = InformeDeudaProveedoresMaterializada.getDeudaPorProveedorAgrupados(false,false,deposito,ra,false,false,true);
-			proveedoresNoDestacadosEquipos = InformeDeudaProveedoresMaterializada.getDeudaPorProveedorAgrupados(false,false,deposito,ra,false,true,false);
+			proveedoresNoDestacados = InformeDeudaProveedoresMaterializada.getDeudaPorProveedorAgrupados(false,false,deposito,ra,false,false,false,soloDeuda);
+
+			proveedoresNoDestacadosServicios = InformeDeudaProveedoresMaterializada.getDeudaPorProveedorAgrupados(false,false,deposito,ra,true,false,false,soloDeuda);
+			proveedoresNoDestacadosHonorarios = InformeDeudaProveedoresMaterializada.getDeudaPorProveedorAgrupados(false,false,deposito,ra,false,false,true,soloDeuda);
+			proveedoresNoDestacadosEquipos = InformeDeudaProveedoresMaterializada.getDeudaPorProveedorAgrupados(false,false,deposito,ra,false,true,false,soloDeuda);
 		}
 		
-		List<SqlRow> proveedoresDestacadosProfe = InformeDeudaProveedoresMaterializada.getDeudaPorProveedorAgrupados(true,true,deposito,ra,false,false,false);
-		List<SqlRow> proveedoresDestacadosProfeServicios = InformeDeudaProveedoresMaterializada.getDeudaPorProveedorAgrupados(true,true,deposito,ra,true,false,false);
-		List<SqlRow> proveedoresDestacadosProfeHonorarios = InformeDeudaProveedoresMaterializada.getDeudaPorProveedorAgrupados(true,true,deposito,ra,false,false,true);
+		List<SqlRow> proveedoresDestacadosProfe = InformeDeudaProveedoresMaterializada.getDeudaPorProveedorAgrupados(true,true,deposito,ra,false,false,false,soloDeuda);
+		List<SqlRow> proveedoresDestacadosProfeServicios = InformeDeudaProveedoresMaterializada.getDeudaPorProveedorAgrupados(true,true,deposito,ra,true,false,false,soloDeuda);
+		List<SqlRow> proveedoresDestacadosProfeHonorarios = InformeDeudaProveedoresMaterializada.getDeudaPorProveedorAgrupados(true,true,deposito,ra,false,false,true,soloDeuda);
 		List<SqlRow> proveedoresNoDestacadosProfe = new ArrayList<SqlRow>();
 		List<SqlRow> proveedoresNoDestacadosProfeEquipos = new ArrayList<SqlRow>();
 		List<SqlRow> proveedoresNoDestacadosProfeServicios = new ArrayList<SqlRow>();
 		List<SqlRow> proveedoresNoDestacadosProfeHonorarios = new ArrayList<SqlRow>();
 		if(!ra){
-			proveedoresNoDestacadosProfe = InformeDeudaProveedoresMaterializada.getDeudaPorProveedorAgrupados(false,true,deposito,ra,false,false,false);
-			proveedoresNoDestacadosProfeServicios = InformeDeudaProveedoresMaterializada.getDeudaPorProveedorAgrupados(false,true,deposito,ra,true,false,false);
-			proveedoresNoDestacadosProfeEquipos = InformeDeudaProveedoresMaterializada.getDeudaPorProveedorAgrupados(false,true,deposito,ra,false,true,false);
-			proveedoresNoDestacadosProfeHonorarios = InformeDeudaProveedoresMaterializada.getDeudaPorProveedorAgrupados(false,true,deposito,ra,false,false,true);
+			proveedoresNoDestacadosProfe = InformeDeudaProveedoresMaterializada.getDeudaPorProveedorAgrupados(false,true,deposito,ra,false,false,false,soloDeuda);
+			proveedoresNoDestacadosProfeServicios = InformeDeudaProveedoresMaterializada.getDeudaPorProveedorAgrupados(false,true,deposito,ra,true,false,false,soloDeuda);
+			proveedoresNoDestacadosProfeEquipos = InformeDeudaProveedoresMaterializada.getDeudaPorProveedorAgrupados(false,true,deposito,ra,false,true,false,soloDeuda);
+			proveedoresNoDestacadosProfeHonorarios = InformeDeudaProveedoresMaterializada.getDeudaPorProveedorAgrupados(false,true,deposito,ra,false,false,true,soloDeuda);
 		}
 		
 		
@@ -254,28 +265,47 @@ public class DeudasGlobalizadasController extends Controller {
 		         break;
 		}
 			  
-		 
+		if(soloDeuda) {
+			return ok(deudasResumidasSoloDeuda.render(depositonNombre,
+					proveedoresDestacados,
+					proveedoresDestacadosServicios,
+					proveedoresNoDestacados,
+					proveedoresNoDestacadosServicios,
+					proveedoresNoDestacadosEquipos,										
+					proveedoresDestacadosProfe,
+					proveedoresDestacadosProfeServicios,
+					proveedoresNoDestacadosProfe,
+					proveedoresNoDestacadosProfeServicios,
+					proveedoresNoDestacadosProfeEquipos,
+					proveedoresDestacadosHonorarios,
+					proveedoresNoDestacadosHonorarios,
+					proveedoresDestacadosProfeHonorarios,
+					proveedoresNoDestacadosProfeHonorarios,
+					deposito,ra,d,soloDeuda));
+		}else {
+			return ok(deudasResumidas.render(depositonNombre,
+					proveedoresDestacados,
+					proveedoresDestacadosServicios,
+					proveedoresNoDestacados,
+					proveedoresNoDestacadosServicios,
+					proveedoresNoDestacadosEquipos,										
+					proveedoresDestacadosProfe,
+					proveedoresDestacadosProfeServicios,
+					proveedoresNoDestacadosProfe,
+					proveedoresNoDestacadosProfeServicios,
+					proveedoresNoDestacadosProfeEquipos,
+					proveedoresDestacadosHonorarios,
+					proveedoresNoDestacadosHonorarios,
+					proveedoresDestacadosProfeHonorarios,
+					proveedoresNoDestacadosProfeHonorarios,
+					deposito,ra,d,soloDeuda));
+		}
 		
-		return ok(deudasResumidas.render(depositonNombre,
-										proveedoresDestacados,
-										proveedoresDestacadosServicios,
-										proveedoresNoDestacados,
-										proveedoresNoDestacadosServicios,
-										proveedoresNoDestacadosEquipos,										
-										proveedoresDestacadosProfe,
-										proveedoresDestacadosProfeServicios,
-										proveedoresNoDestacadosProfe,
-										proveedoresNoDestacadosProfeServicios,
-										proveedoresNoDestacadosProfeEquipos,
-										proveedoresDestacadosHonorarios,
-										proveedoresNoDestacadosHonorarios,
-										proveedoresDestacadosProfeHonorarios,
-										proveedoresNoDestacadosProfeHonorarios,
-										deposito,ra,d));
+		
 	}	
 	
 	
-	public static Result deudasDetallesOtrosProveedoresResumen(boolean profe,boolean equipamientos) {
+	public static Result deudasDetallesOtrosProveedoresResumen(boolean profe,boolean equipamientos,boolean soloDeuda) {
 		
 		InformeDeudaProveedoresMaterializada.actualizarVistaMaterializada();
 		DynamicForm d = form().bindFromRequest();
@@ -285,11 +315,11 @@ public class DeudasGlobalizadasController extends Controller {
 		
 		String cuenta = (profe)?"PROFE":"OPERATIVA"; 
 		
-		return ok(deudasOtrosProveedoresResumen.render(proveedorHEARM,proveedorOtros,cuenta,profe,equipamientos,d));
+		return ok(deudasOtrosProveedoresResumen.render(proveedorHEARM,proveedorOtros,cuenta,profe,equipamientos,d,soloDeuda));
 		
 	}
 	
-	public static Result deudasDetallesServiciosResumen() {
+	public static Result deudasDetallesServiciosResumen(boolean soloDeuda) {
 		
 		InformeDeudaProveedoresMaterializada.actualizarVistaMaterializada();
 		DynamicForm d = form().bindFromRequest();
@@ -299,17 +329,17 @@ public class DeudasGlobalizadasController extends Controller {
 		
 		
 		
-		return ok(deudasDetallesServiciosResumen.render(proveedorTodos,d));
+		return ok(deudasDetallesServiciosResumen.render(proveedorTodos,d,soloDeuda));
 	}
 	
-	public static Result deudasDetallesHonorariosResumen() {
+	public static Result deudasDetallesHonorariosResumen(boolean soloDeuda) {
 		
 		InformeDeudaProveedoresMaterializada.actualizarVistaMaterializada();
 		DynamicForm d = form().bindFromRequest();
 		//List<SqlRow> proveedorHEARM = InformeDeudaProveedoresMaterializada.getDeudaPorProveedorDetallesHonorarios((long)Deposito.HEARM);
 		List<SqlRow> proveedorTodos = InformeDeudaProveedoresMaterializada.getDeudaPorProveedorHonorariosResumen(null);
 		
-		return ok(deudasDetallesHonorariosResumen.render(proveedorTodos,d));
+		return ok(deudasDetallesHonorariosResumen.render(proveedorTodos,d,soloDeuda));
 		
 	}
 	
