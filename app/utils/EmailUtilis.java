@@ -29,7 +29,7 @@ public class EmailUtilis {
 
   private List<String> adds;
 
-  private EmailAttachment attach;
+  private List<EmailAttachment> attach;
 
   
   /**
@@ -98,7 +98,7 @@ public class EmailUtilis {
   /**
    * @return the attach
    */
-  public EmailAttachment getAttach() {
+  public List<EmailAttachment> getAttach() {
     return attach;
   }
 
@@ -106,7 +106,7 @@ public class EmailUtilis {
   /**
    * @param attach the attach to set
    */
-  public void setAttach(EmailAttachment attach) {
+  public void setAttach(List<EmailAttachment> attach) {
     this.attach = attach;
   }
 
@@ -118,9 +118,13 @@ public class EmailUtilis {
     mail.setSmtpPort(587);
     mail.setAuthenticator(new DefaultAuthenticator(Play.application().configuration().getString("email.authenticator.user"), Play.application().configuration().getString("email.authenticator.pass")));
     mail.setFrom(getFrom());
-
-    if (getAttach() != null) {
-      mail.attach(getAttach());
+    
+    
+    if (getAttach() != null && getAttach().size() > 0) {
+    	for(EmailAttachment ea : getAttach()) {
+    		mail.attach(ea);
+    	}
+      
     }
 
     mail.setSubject(getSubject());
