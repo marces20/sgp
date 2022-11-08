@@ -333,19 +333,39 @@ public class InformeDeudaProveedoresMaterializada extends Model{
 		
 	}
 	
-	public static List<SqlRow> getDeudaPorProveedorAgrupados(boolean proveedoresDestacados,boolean profe,Integer deposito,boolean ra,boolean servicios,boolean equipamiento,boolean honorarios){
-		return getDeudaPorProveedorAgrupados( proveedoresDestacados, profe, deposito, ra, servicios, equipamiento, honorarios, null);
+	public static List<SqlRow> getDeudaPorProveedorAgrupados(boolean proveedoresDestacados,
+															 boolean profe,
+															 Integer deposito,
+															 boolean ra,
+															 boolean servicios,
+															 boolean equipamiento,
+															 boolean honorarios,
+															 boolean soloDeuda){
+		return getDeudaPorProveedorAgrupados( proveedoresDestacados, profe, deposito, ra, servicios, equipamiento, honorarios, null,soloDeuda);
 	}
 	
-	public static List<SqlRow> getDeudaPorProveedorAgrupados(boolean proveedoresDestacados,boolean profe,Integer deposito,boolean ra,boolean servicios,boolean equipamiento,boolean honorarios,Boolean soloDestacados){
+	public static List<SqlRow> getDeudaPorProveedorAgrupados(boolean proveedoresDestacados,
+															 boolean profe,
+															 Integer deposito,
+															 boolean ra,
+															 boolean servicios,
+															 boolean equipamiento,
+															 boolean honorarios,
+															 Boolean soloDestacados,
+															 boolean soloDeuda){
 		
 		String sql = "SELECT i.proveedor_id proveedor_id,i.nombre_proveedor nombre_proveedor," +
 				" CASE WHEN coalesce(SUM(CASE WHEN total_deuda > 0 THEN total_deuda ELSE 0 END),0) > 0 THEN coalesce(SUM(CASE WHEN total_deuda > 0 THEN total_deuda ELSE 0 END),0) ELSE 0 END total_deuda," +
 				" CASE WHEN coalesce(SUM(CASE WHEN total_compromiso > 0 THEN total_compromiso ELSE 0 END),0) > 0 THEN coalesce(SUM(CASE WHEN total_compromiso > 0 THEN total_compromiso ELSE 0 END),0) ELSE 0 END total_compromiso " +
 				" FROM informe_estadistico_deuda_proveedores_matrializada i 	" +
 				" INNER JOIN proveedores p ON p.id = i.proveedor_id " +
-				" WHERE i.perimido = false AND (i.total_deuda > 0.01 OR i.total_compromiso > 0)  ";
+				" WHERE i.perimido = false ";
 		
+		if(soloDeuda){
+			sql += "AND (i.total_deuda > 0.01) ";
+		}else{
+			sql += "AND (i.total_deuda > 0.01 OR i.total_compromiso > 0) ";
+		}
 		 
 		
 		if(profe){
@@ -400,7 +420,7 @@ public class InformeDeudaProveedoresMaterializada extends Model{
 		
 	}
 	
-	public static List<SqlRow> getDeudaPorProveedorDetallesOtros(boolean profe,Long deposito,boolean equipamiento){
+	public static List<SqlRow> getDeudaPorProveedorDetallesOtros(boolean profe,Long deposito,boolean equipamiento,boolean soloDeuda){
 		
 		String sql = "SELECT i.numero_orden_provision numeroProvision, i.expediente expediente,e.fecha fechaExpediente," +
 				" e.descripcion descripcion, i.proveedor_id proveedorId,i.nombre_proveedor nombre_proveedor,i.rubro_id rubroId,i.rubro rubro," +
@@ -409,7 +429,13 @@ public class InformeDeudaProveedoresMaterializada extends Model{
 				" FROM informe_estadistico_deuda_proveedores_matrializada i 	" +
 				" INNER JOIN proveedores p ON p.id = i.proveedor_id " +
 				" INNER JOIN expedientes e ON e.id = i.expediente_id " +
-				" WHERE i.perimido = false AND (i.total_deuda > 0.01 OR i.total_compromiso > 0)  ";
+				" WHERE i.perimido = false ";
+		
+		if(soloDeuda){
+			sql += "AND (i.total_deuda > 0.01) ";
+		}else{
+			sql += "AND (i.total_deuda > 0.01 OR i.total_compromiso > 0) ";
+		}
 		
 		if(profe){
 			sql += " AND (i.profe = true OR i.tipo_cuenta_id = 2) ";
@@ -444,7 +470,7 @@ public class InformeDeudaProveedoresMaterializada extends Model{
 		
 	}
 	
-	public static List<SqlRow> getDeudaPorProveedorDetalles(Integer idProoveedor,boolean profe,Long deposito){
+	public static List<SqlRow> getDeudaPorProveedorDetalles(Integer idProoveedor,boolean profe,Long deposito,boolean soloDeudas){
 		
 		String sql = "SELECT i.numero_orden_provision numeroProvision, i.expediente expediente,e.fecha fechaExpediente," +
 				" e.descripcion descripcion, i.proveedor_id proveedorId,i.nombre_proveedor nombre_proveedor,i.rubro rubro," +
@@ -453,7 +479,14 @@ public class InformeDeudaProveedoresMaterializada extends Model{
 				" FROM informe_estadistico_deuda_proveedores_matrializada i 	" +
 				" INNER JOIN proveedores p ON p.id = i.proveedor_id " +
 				" INNER JOIN expedientes e ON e.id = i.expediente_id " +
-				" WHERE i.perimido = false AND (i.total_deuda > 0.01 OR i.total_compromiso > 0)  ";
+				" WHERE i.perimido = false ";
+		
+		if(soloDeudas){
+			sql += "AND (i.total_deuda > 0.01) ";
+		}else{
+			sql += "AND (i.total_deuda > 0.01 OR i.total_compromiso > 0) ";
+		}
+		 
 		
 		if(profe){
 			sql += " AND (i.profe = true OR i.tipo_cuenta_id = 2) ";
@@ -653,7 +686,7 @@ public class InformeDeudaProveedoresMaterializada extends Model{
 	}	
 	
 	
-	public static Map<String,Map<String,Map<Integer,List<SqlRow>>>> getListaFinalDeudasDetallesReporte(Integer idProveedor,boolean ra){
+	public static Map<String,Map<String,Map<Integer,List<SqlRow>>>> getListaFinalDeudasDetallesReporte(Integer idProveedor,boolean ra,boolean soloDeudas){
 		
 		List<Integer> listaProveedores = new ArrayList<Integer>();
 		if(ra){
@@ -678,7 +711,7 @@ public class InformeDeudaProveedoresMaterializada extends Model{
 		
 		Map<Integer,List<SqlRow>> listadoSqlRow = new HashMap<Integer, List<SqlRow>>();
 		for(Integer idPro : listaProveedores){
-			List<SqlRow> proveedorOperativa = InformeDeudaProveedoresMaterializada.getDeudaPorProveedorDetalles(idPro,false,(long)Deposito.HEARM);
+			List<SqlRow> proveedorOperativa = InformeDeudaProveedoresMaterializada.getDeudaPorProveedorDetalles(idPro,false,(long)Deposito.HEARM,soloDeudas);
 			listadoSqlRow.put(idPro, proveedorOperativa);
 		}
 		 
@@ -688,7 +721,7 @@ public class InformeDeudaProveedoresMaterializada extends Model{
 		
 		listadoSqlRow = new HashMap<Integer, List<SqlRow>>();
 		for(Integer idPro : listaProveedores){
-			List<SqlRow> proveedorOperativaOtraInstitucion = InformeDeudaProveedoresMaterializada.getDeudaPorProveedorDetalles(idPro,false,null);
+			List<SqlRow> proveedorOperativaOtraInstitucion = InformeDeudaProveedoresMaterializada.getDeudaPorProveedorDetalles(idPro,false,null,soloDeudas);
 			listadoSqlRow.put(idPro, proveedorOperativaOtraInstitucion);
 		}
 		
@@ -698,7 +731,7 @@ public class InformeDeudaProveedoresMaterializada extends Model{
 		
 		listadoSqlRow = new HashMap<Integer, List<SqlRow>>();
 		for(Integer idPro : listaProveedores){
-			List<SqlRow> proveedorProfe = InformeDeudaProveedoresMaterializada.getDeudaPorProveedorDetalles(idPro,true,(long)Deposito.HEARM);
+			List<SqlRow> proveedorProfe = InformeDeudaProveedoresMaterializada.getDeudaPorProveedorDetalles(idPro,true,(long)Deposito.HEARM,soloDeudas);
 			listadoSqlRow.put(idPro, proveedorProfe);
 		}
 		
@@ -706,7 +739,7 @@ public class InformeDeudaProveedoresMaterializada extends Model{
 		
 		listadoSqlRow = new HashMap<Integer, List<SqlRow>>();
 		for(Integer idPro : listaProveedores){
-			List<SqlRow> proveedorProfeOtraInstitucion = InformeDeudaProveedoresMaterializada.getDeudaPorProveedorDetalles(idPro,true,null);
+			List<SqlRow> proveedorProfeOtraInstitucion = InformeDeudaProveedoresMaterializada.getDeudaPorProveedorDetalles(idPro,true,null,soloDeudas);
 			listadoSqlRow.put(idPro, proveedorProfeOtraInstitucion);
 		}
 		
