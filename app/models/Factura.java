@@ -141,6 +141,7 @@ public class Factura extends Model {
 	public Boolean creacion_automatica = false;
 	public Boolean produccion = false;
 	public Boolean debito_automatico = false;
+	public Boolean fondo_cerrado = false;
 	
 	@Formats .DateTime(pattern="dd/MM/yyyy")
 	public Date fecha_recepcion;//Fecha Recepcion X de Factura
