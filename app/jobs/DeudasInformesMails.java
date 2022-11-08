@@ -602,16 +602,16 @@ public class DeudasInformesMails {
 
       if (weekday != Calendar.SUNDAY && weekday != Calendar.SATURDAY) {
         List<SqlRow> proveedoresDestacados =
-            InformeDeudaProveedoresMaterializada.getDeudaPorProveedorAgrupados(true, false, 0, true, false, false, false);
+            InformeDeudaProveedoresMaterializada.getDeudaPorProveedorAgrupados(true, false, 0, true, false, false, false,false);
         Logger.debug("----------------- OPERATIVA");
         List<SqlRow> proveedoresDestacadosServicios =
-            InformeDeudaProveedoresMaterializada.getDeudaPorProveedorAgrupados(true, false, 0, true, true, false, false);
+            InformeDeudaProveedoresMaterializada.getDeudaPorProveedorAgrupados(true, false, 0, true, true, false, false,false);
         Logger.debug("----------------- SERVICIOS OPERATIVA");
         List<SqlRow> proveedoresDestacadosProfe =
-            InformeDeudaProveedoresMaterializada.getDeudaPorProveedorAgrupados(true, true, 0, true, false, false, false);
+            InformeDeudaProveedoresMaterializada.getDeudaPorProveedorAgrupados(true, true, 0, true, false, false, false,false);
         Logger.debug("----------------- PROFE");
         List<SqlRow> proveedoresDestacadosServiciosProfe =
-            InformeDeudaProveedoresMaterializada.getDeudaPorProveedorAgrupados(true, true, 0, true, true, false, false);
+            InformeDeudaProveedoresMaterializada.getDeudaPorProveedorAgrupados(true, true, 0, true, true, false, false,false);
         Logger.debug("----------------- SERVICIOS PROFE");
         Map<String, List<SqlRow>> listaSql = new HashMap<>();
         listaSql.put("proveedoresDestacadosOPERATIVA", proveedoresDestacados);
