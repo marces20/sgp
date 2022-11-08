@@ -28,7 +28,9 @@
 					}	
 					
 					@if(Componente.check("facturas")) {
-						<li><a href="@controllers.contabilidad.routes.FacturasController.vistaFacturasCargadas()">Vista Facturas Cargadas</a></li>
+						@if(Permiso.check("vistaFacturasCargadas")) {
+							<li><a href="@controllers.contabilidad.routes.FacturasController.vistaFacturasCargadas()">Vista Facturas Cargadas</a></li>
+						}
 					}
 					
 					@if(Componente.check("cuentasPropias")) {
