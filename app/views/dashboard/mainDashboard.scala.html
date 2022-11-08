@@ -76,10 +76,9 @@
 					}
 
 				}
-				
-				
 				@if(Componente.check("dashboardInforme")) {
-					<li class="titulo">Informes Deudas</li>
+					<li class="titulo">Informes Deudas/Compromiso</li>
+					 
 					@if(Permiso.check("dashboardInformeDeudaProveedores")) {
 					<li><a href="@controllers.dashboard.routes.InformeEstadisticoDeudaProveedoresController.index()">Informe Deuda por proveedor</a></li>
 					}
@@ -87,14 +86,33 @@
 					<li><a href="@controllers.dashboard.routes.InformeDeudaPorActasController.index()">Deuda por actas</a></li>
 					}
 					@if(Permiso.check("dashboardInformeDeudaProveedores")) {
-					<li><a href="@controllers.dashboard.routes.DeudasGlobalizadasController.index()">Deudas reportes</a></li>
+					<li><a href="@controllers.dashboard.routes.DeudasGlobalizadasController.index()">Deudas/comprom. reportes</a></li>
 					}
 					@if(Permiso.check("dashboardInformeDeudaProveedores")) {
-						<li><a href="@controllers.dashboard.routes.DeudasPorAntiguedadController.index()">Deudas reportes por Antiguedad</a></li>
+						<li><a href="@controllers.dashboard.routes.DeudasPorAntiguedadController.index()">Deudas/comprom. reportes por Antiguedad</a></li>
 					}
 					@if(Permiso.check("dashboardInformeDeudaProveedores")) {
 						<li><a href="@controllers.dashboard.routes.ControlDeudaController.index()">Control Deudas</a></li>
 					}
+					
+			 
+					
+					@if(Permiso.check("dashboardInformeDeudaProveedores")) {
+						<li><a href="@controllers.dashboard.routes.ControlDeudaController.index()">Control Deudas</a></li>
+					}
+				}	
+				
+				
+				@if(Componente.check("dashboardInforme")) {
+					<li class="titulo">Informes Deudas</li>
+					
+					@if(Permiso.check("dashboardInformeDeudaProveedores")) {
+					<li><a href="@controllers.dashboard.routes.DeudasGlobalizadasController.index(true)">Deudas reportes</a></li>
+					}
+					@if(Permiso.check("dashboardInformeDeudaProveedores")) {
+						<li><a href="@controllers.dashboard.routes.DeudasPorAntiguedadController.index()">Deudas reportes por Antiguedad</a></li>
+					}
+					
 				}
 				
 				@if(Componente.check("dashboardInforme")) {
