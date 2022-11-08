@@ -1,11 +1,11 @@
-@(formBuscador: DynamicForm)
+@(formBuscador: DynamicForm,soloDeuda: Boolean = false)
 @import helper._
 @import utils._
 @import models.auth._
 @implicitFieldConstructor = @{ FieldConstructor(simpleInput.render) }
 
 @views.html.dashboard.mainDashboard("Deudas por Proveedor") {
-@views.html.dashboard.deudasGlobalizadas.navdeudas(formBuscador)
+@views.html.dashboard.deudasGlobalizadas.navdeudas(formBuscador,soloDeuda)
 
 <div class="page-header">
 	<div class="row">

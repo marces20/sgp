@@ -1,4 +1,4 @@
-@(formBuscador: DynamicForm)
+@(formBuscador: DynamicForm,soloDeuda: Boolean = false)
 @import helper._
 @import utils._
 @import models.auth._
@@ -14,7 +14,7 @@
 	</div>
 </div>
 
-@views.html.dashboard.deudasGlobalizadas.navdeudas(formBuscador)
+@views.html.dashboard.deudasGlobalizadas.navdeudas(formBuscador,soloDeuda)
 @views.html.tags.successError()
 <div class="row"  style="">
 	<div class="col-sm-6" style="">
@@ -24,11 +24,11 @@
 			<div class="panel-body">
 				<div class="row margin-bottom-25">
 					<div class="col-sm-6">
-						<a href="@controllers.dashboard.routes.DeudasGlobalizadasReportesController.deudasInformeGeneral()"  class="btn btn-default">
+						<a href="@controllers.dashboard.routes.DeudasGlobalizadasReportesController.deudasInformeGeneral(soloDeuda)"  class="btn btn-default">
 						<i class="glyphicon glyphicon glyphicon-signal"></i> Informe General</a>
 					</div>
 					<div class="col-sm-6">
-						<a href="@controllers.dashboard.routes.DeudasGlobalizadasReportesController.deudasInformeGeneralResumen()"  class="btn btn-default">
+						<a href="@controllers.dashboard.routes.DeudasGlobalizadasReportesController.deudasInformeGeneralResumen(soloDeuda)"  class="btn btn-default">
 						<i class="glyphicon glyphicon glyphicon-signal"></i> Informe General RESUMEN</a>
 					</div>
 				</div>

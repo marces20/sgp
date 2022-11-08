@@ -2,7 +2,7 @@
 proveedorOtros:List[com.avaje.ebean.SqlRow],
 cuenta:String,profe:Boolean,
 equipamientos:Boolean,
-formBuscador: DynamicForm)
+formBuscador: DynamicForm,soloDeuda: Boolean = false)
 @import helper._
 @import utils._
 @import models.auth._
@@ -11,7 +11,7 @@ formBuscador: DynamicForm)
 @import java.lang.Integer;var proveedorId =0;var bandera =0
 @import java.lang.String;var proveedorNombre =""
 @views.html.dashboard.mainDashboard("Deudas Otros RESUMEN") {
-@views.html.dashboard.deudasGlobalizadas.navdeudas(formBuscador)
+@views.html.dashboard.deudasGlobalizadas.navdeudas(formBuscador,soloDeuda)
 
 <div class="page-header">
 	<div class="row">

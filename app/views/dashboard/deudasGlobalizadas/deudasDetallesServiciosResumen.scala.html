@@ -1,5 +1,5 @@
 @(proveedorTodos:List[com.avaje.ebean.SqlRow],
-formBuscador: DynamicForm)
+formBuscador: DynamicForm,soloDeuda: Boolean = false)
 
 @import helper._
 @import utils._
@@ -9,7 +9,7 @@ formBuscador: DynamicForm)
 @import java.lang.Integer;var proveedorId =0;var bandera =0;var columnas =6
 @import java.lang.String;var proveedorNombre =""
 @views.html.dashboard.mainDashboard("Deudas Servicios") {
-@views.html.dashboard.deudasGlobalizadas.navdeudas(formBuscador)
+@views.html.dashboard.deudasGlobalizadas.navdeudas(formBuscador,soloDeuda)
 
 <div class="page-header">
 	<div class="row">

@@ -1,6 +1,6 @@
 @(listadoPorCuentaHEARM:List[com.avaje.ebean.SqlRow],listadoPorCuentaOtros:List[com.avaje.ebean.SqlRow],idCuenta:Integer,
 nombre:String,
-formBuscador: DynamicForm)
+formBuscador: DynamicForm,soloDeuda: Boolean = false)
 @import helper._
 @import utils._
 @import models.auth._
@@ -9,7 +9,7 @@ formBuscador: DynamicForm)
 @import java.lang.Integer;var proveedorId =0;var bandera =0
 @import java.lang.String;var proveedorNombre =""
 @views.html.dashboard.mainDashboard("Deudas Cuenta") {
-@views.html.dashboard.deudasGlobalizadas.navdeudas(formBuscador)
+@views.html.dashboard.deudasGlobalizadas.navdeudas(formBuscador,soloDeuda)
 <div class="page-header">
 	<div class="row">
 		<div class="col-sm-7">
