@@ -551,7 +551,11 @@
 					<td>@if(factura.tipoCuenta != null){@factura.tipoCuenta.nombre}</td>
 					<td class="estado" align="center">
 						@if(factura.parcial != null && factura.parcial){
-							Parcializada
+							
+							Parcializada 
+							@if(factura.fondo_cerrado != null && factura.fondo_cerrado){
+							- Fondo Cerrado	
+							}
 						}else{
 							@if(factura.getSaldoPendiente() != null && !factura.getSaldoPendiente().equals(factura.base) && (factura.estado != null && factura.estado.id == 19)){
 								Pagado @getClassPorcentajePagado(factura)%

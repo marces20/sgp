@@ -28,6 +28,7 @@ import com.avaje.ebean.Ebean;
 import com.avaje.ebean.Expr;
 import com.avaje.ebean.ExpressionList;
 import com.avaje.ebean.SqlRow;
+import com.avaje.ebean.SqlUpdate;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
@@ -46,6 +47,7 @@ import models.FacturaMotivoRechazo;
 import models.FacturaRechazo;
 import models.Orden;
 import models.Orden349;
+import models.OrdenLinea;
 import models.OrdenPago;
 import models.Pago;
 import models.Periodo;
@@ -1201,6 +1203,49 @@ public class FacturasAccionesController  extends Controller {
 			return ok(modalModificarNumeroFactura.render(d,id,f));
 		}
 		
+	}
+	
+	@CheckPermiso(key = "cerrarFondo")
+	public static Result modalCerrarFondoPermanente(Long id) {
+		return ok(modalCerrarFondoPermanente.render(form().bindFromRequest(),id));
+	}
+	
+	@CheckPermiso(key = "cerrarFondo")
+	public static Result cerrarFondoPermanente() {
+		DynamicForm d = form().bindFromRequest();
+		d.discardErrors();
+		
+		
+		Long id = new Long(request().body().asFormUrlEncoded().get("id")[0]);
+		Factura f = Factura.find.byId(id);
+		
+		if(f == null) {
+			flash("error", "No se encuentra la factura.");
+			return ok(modalCerrarFondoPermanente.render(form().bindFromRequest(),id));
+		}
+		
+		ObjectNode result = Json.newObject();
+		try {			
+			 
+			List<FacturaLinea> facl = FacturaLinea.find.where()
+										.eq("factura.orden_id", f.orden_id)
+										.eq("factura.estado_id", Estado.FACTURA_ESTADO_APROBADO).findList();
+			
+			 
+			f.fondo_cerrado = true;
+			f.save();
+			
+			result.put("success", true);
+			flash("success", "Se cerro correctamente el fondo.");
+			result.put("html",modalCerrarFondoPermanente.render(form().bindFromRequest(),id).toString());
+			return ok(result);
+		} catch (Exception e){
+			flash("error", "No se puede modificar los registros."+e);
+			return ok(modalCerrarFondoPermanente.render(form().bindFromRequest(),id));
+		}finally {
+			SqlUpdate update1 = Ebean.createSqlUpdate("alter table orden_lineas enable trigger all");
+			update1.execute();
+		}
 	}
 	
 	@CheckPermiso(key = "facturasRechazar")

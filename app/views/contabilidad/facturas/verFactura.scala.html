@@ -62,6 +62,10 @@
 						@if(Permiso.check("cargar349")) {
 							<li><a id="cargar349" href="#" data-url="@controllers.contabilidad.routes.FacturasAccionesController.modalCargar349(facturaObj.id)">Cargar 349</a></li>
 						}
+						
+						@if(Permiso.check("cerrarFondo") && facturaObj.fondo_cerrado != true) {
+						<li><a id="accionCerrarFondoPermanente" data-url="@controllers.contabilidad.routes.FacturasAccionesController.modalCerrarFondoPermanente(facturaObj.id)">Cerrar Fondo Permanente</a></li>
+						}
 					</ul>
 				</div>
 			</div>
@@ -76,7 +80,7 @@
 		<a href="@controllers.contabilidad.routes.FacturasController.crear()@UriTrack.get("?")"  class="btn btn-default"><i class="glyphicon glyphicon-plus-sign"></i> Nuevo</a>
 		<a href="@controllers.contabilidad.routes.FacturasController.editar(factura.field("id").value.toLong)@UriTrack.get("&")"  class="btn btn-default"><i class="glyphicon glyphicon-edit"></i> Editar</a>
 		<!-- <a href="@controllers.contabilidad.routes.FacturasController.duplicar(factura.field("id").value.toLong)@UriTrack.get("&")"  class="btn btn-default"><i class="glyphicon glyphicon-subtitles"></i> Duplicar</a> -->
-		@if(facturaObj.estado_id == models.Estado.FACTURA_ESTADO_BORRADOR && (facturaObj.parcial == null || facturaObj.parcial) ){
+		@if(facturaObj.estado_id == models.Estado.FACTURA_ESTADO_BORRADOR && (facturaObj.parcial == null || facturaObj.parcial) && facturaObj.fondo_cerrado != true){
 			<a href="@controllers.contabilidad.routes.FacturasController.crearFacturaParcial(factura.field("id").value.toLong)@UriTrack.get("&")"  class="btn btn-default"><i class="glyphicon glyphicon-copyright-mark"></i> Crear Parcial</a>
 		}
 		<a href="@controllers.contabilidad.routes.FacturasController.eliminar(factura.field("id").value.toLong)@UriTrack.get("&")"  class="btn btn-default delete-confirm-link"><i class="glyphicon glyphicon-trash icono-eliminar"></i> Eliminar</a>

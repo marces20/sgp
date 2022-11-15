@@ -1,0 +1,22 @@
+@(formBuscador: DynamicForm,idFactura:Long)
+@import helper._
+@implicitFieldConstructor = @{ FieldConstructor(simpleInput.render) } 
+																			
+@helper.form(action = controllers.contabilidad.routes.FacturasAccionesController.cerrarFondoPermanente(), 'id -> "formCerrarFondoPermanente") {	
+	
+	@views.html.tags.successError()
+	<input type="hidden" name="id" value="@idFactura" />
+	
+	<div class="row">
+		<div class="col-sm-5"><br />
+			<button type="submit" class="btn btn-default" title="Cerrar Fondo"><i class="glyphicon glyphicon-arrow-right"></i> Cerrar Fondo</button>
+		</div>
+	</div>
+
+}
+<script>
+$( function(){
+	$("#fecha_349").mask("99/99/9999");
+});
+</script>
+@flash().clear()
