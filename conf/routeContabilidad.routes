@@ -44,6 +44,9 @@ POST    /facturaProveedor/acciones/importarListaComisiones 		controllers.contabi
 GET     /facturaProveedor/acciones/modalCargar349 				controllers.contabilidad.FacturasAccionesController.modalCargar349(id:Long)
 POST    /facturaProveedor/acciones/cargar349 		controllers.contabilidad.FacturasAccionesController.cargar349()
 
+GET     /facturaProveedor/acciones/modalCerrarFondoPermanente 				controllers.contabilidad.FacturasAccionesController.modalCerrarFondoPermanente(id:Long)
+POST    /facturaProveedor/acciones/cerrarFondoPermanente 		controllers.contabilidad.FacturasAccionesController.cerrarFondoPermanente()
+
 POST    /facturaProveedor/reportes/reporteRendicionSellos        controllers.contabilidad.FacturasReportesController.reporteRendicionSellos()
 POST    /facturaProveedor/reportes/reporteComprobanteRetencionIibb    controllers.contabilidad.FacturasReportesController.reporteComprobanteRetencioniibb()
 POST    /facturaProveedor/reportes/reporteComprobanteRetencionIibb370    controllers.contabilidad.FacturasReportesController.reporteComprobanteRetencioniibb370()
