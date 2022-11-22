@@ -65,6 +65,55 @@ import fr.opensagres.xdocreport.template.formatter.FieldsMetadata;
 @Security.Authenticated(Secured.class)
 public class FacturasReportesController extends Controller  {
 	
+	public static Result reporteFondoPermanente(Long id) {
+		
+		/*List<Integer> facturasSeleccionados = getSeleccionados();
+		if(facturasSeleccionados.isEmpty()) {
+			flash("error", "Debe seleccionar facturas para generar el reporte.");
+			return ok(modalReporteControlFacturas.render(null));
+		}*/
+		
+		List<FacturaLinea> listaFacturasLineas = FacturaLinea.find.where().in("factura_id", id).orderBy("factura.fecha_factura,id asc").findList();
+		
+		String dirTemp = System.getProperty("java.io.tmpdir");
+		File archivo = new File(dirTemp+"/reporteFondoPermanente.odt");
+		
+		try{
+			BigDecimal n = new BigDecimal(0);
+			for(FacturaLinea lx :listaFacturasLineas) {
+				n = n.add(lx.getTotal());
+			}
+			
+			String totalMoneda = utils.NumberUtils.moneda(n);
+			String titulo = (listaFacturasLineas.size() > 0)?"ORDEN DE PAGO N°"+listaFacturasLineas.get(0).factura.ordenPago.getNombreCompleto() +" - EXP:"+listaFacturasLineas.get(0).factura.expediente.getInstitucionExpedienteEjercicio():"";
+			String proveedor = (listaFacturasLineas.size() > 0)?listaFacturasLineas.get(0).factura.proveedor.nombre:"";
+        	
+			InputStream in = Play.application().resourceAsStream("resources/reportes/contabilidad/facturas/reporteFondoPermanente.odt");
+			IXDocReport report = XDocReportRegistry.getRegistry().loadReport( in, TemplateEngineKind.Velocity );
+			
+			FieldsMetadata metadata = report.createFieldsMetadata();
+			metadata.addFieldAsTextStyling("saltoLinea", SyntaxKind.Html);
+			IContext context = report.createContext();
+			
+			context.put("listaFacturasLineas", listaFacturasLineas);
+			context.put("date", new DateUtils());
+			context.put("totalMoneda",totalMoneda);
+			context.put("titulo",titulo);
+			context.put("proveedor",proveedor);
+			
+			OutputStream out = new FileOutputStream(archivo);
+            report.process(context, out);
+		
+		}catch (Exception e) {
+			Logger.error(e.toString());
+			flash("error", "No se pudo generar el reporte.");
+			return ok(modalReporteControlFacturas.render(null));
+		}
+		
+		
+		return ok(modalReporteControlFacturas.render(archivo.getPath()));
+	}
+	
 	public static Result reporteComisiones() {
 		
 		List<Integer> facturasSeleccionados = getSeleccionados();
