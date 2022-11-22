@@ -38,6 +38,8 @@ POST    /facturaProveedor/reportes/reporteComprobanteRetencionGcia    controller
 POST    /facturaProveedor/reportes/reporteComprobanteRetencionIva    controllers.contabilidad.FacturasReportesController.reporteComprobanteRetencionIva()
 POST    /facturaProveedor/reportes/reporteComisiones    controllers.contabilidad.FacturasReportesController.reporteComisiones()
 
+POST    /facturaProveedor/reportes/reporteFondoPermanente    controllers.contabilidad.FacturasReportesController.reporteFondoPermanente(id:Long)
+
 POST    /facturaProveedor/acciones/modalImportarListaComisiones controllers.contabilidad.FacturasAccionesController.modalImportarListaComisiones()
 POST    /facturaProveedor/acciones/importarListaComisiones 		controllers.contabilidad.FacturasAccionesController.importarListaComisiones()
 
