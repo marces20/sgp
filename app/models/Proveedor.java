@@ -38,6 +38,8 @@ public class Proveedor extends Model {
 	public static final long PROVEEDOR_AFIP = 1366;
 	public static final long RA = 14947;
 	
+	public static final long FONDO_PERMANENTE = 72019;
+	
 	public static final Long[] PROVEEDOR_SIN_FACTURAS = { new Long(1366),new Long(1366),new Long(11081),new Long(15631),new Long(12770),new Long(15669),new Long(3172)};
 	
 	
