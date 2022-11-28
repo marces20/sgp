@@ -65,9 +65,10 @@
 						
 						@if(Permiso.check("cerrarFondo") && facturaObj.fondo_cerrado != true) {
 						<li><a id="accionCerrarFondoPermanente" data-url="@controllers.contabilidad.routes.FacturasAccionesController.modalCerrarFondoPermanente(facturaObj.id)">Cerrar Fondo Permanente</a></li>
+						}
 						
-						
-						<li><a id="reporteFondoPermanente" href="#" data-url="@controllers.contabilidad.routes.FacturasReportesController.reporteFondoPermanente(facturaObj.id)">Reporte Fondo Permanente</a></li>
+						@if(Permiso.check("cerrarFondo") && facturaObj.estado_id == models.Estado.FACTURA_ESTADO_APROBADO){
+						<li><a id="reporteFondo" href="#" data-url="@controllers.contabilidad.routes.FacturasReportesController.reporteFondoPermanente(facturaObj.id)">Reporte Fondo Permanente</a></li>
 						
 						}
 					</ul>
