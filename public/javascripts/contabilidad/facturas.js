@@ -89,6 +89,30 @@ $( function(){
 		
 	});
 	
+	$('#accionCerrarFondoPermanente').click( function() { //abrir modal CerrarFondoPermanente
+		var url = $(this).attr("data-url");
+		dialogoCerrarFondoPermanente = crearDialogoGeneral(url);
+		dialogoCerrarFondoPermanente.dialog({title: "Cerrar Fondo Permanente"});
+	});
+	
+	$(document).on("submit", '#formCerrarFondoPermanente', function(){
+		var form = $(this);
+		var url = form.attr('action');
+		var data = form.serialize();
+		var submit = form.find("button[type='submit']");
+		submit.replaceWith(getLoading());
+		$.post(url, data, function(data){
+			if(data.success) {
+				/*form.replaceWith(data.html);*/
+				location.reload();
+			} else {
+				form.replaceWith(data);
+			}
+		});
+		
+		return false;
+	});
+	
 	$('#cargar349').click( function() { //abrir modal para pasar en PreCurso
 		var url = $(this).attr("data-url");
 		dialogoCargar349 = crearDialogoGeneral(url);
@@ -650,6 +674,33 @@ $( function(){
 
 		dialogo.dialog({
 			title: "Comprobante Comisiones",
+	    	resizable: false,
+			autoOpen: true,
+			modal: true,
+			height: 250,
+			width:750,
+	        buttons: {
+		          Cerrar: function() {
+		            $( this ).dialog( "destroy" );
+		          }
+		    },
+	    	close: function(event, ui ){
+	    		$(this).dialog( "destroy" );
+	    	},
+		    open: function( event, ui ) {
+				$.post(url, getCheckSeleccionados(), function(data){
+					dialogo.html(data);
+				});	
+		    }
+	    });
+	});
+	
+	$('#reporteFondoPermanente').click( function() { //abrir modal para mostrar mensaje informe rentas
+		var url = $(this).attr("data-url");
+		var dialogo = $('<div></div>');
+
+		dialogo.dialog({
+			title: "Comprobante Fondo Permanente",
 	    	resizable: false,
 			autoOpen: true,
 			modal: true,
