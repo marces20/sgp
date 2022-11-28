@@ -58,12 +58,12 @@
 						}
 						@if(Permiso.check("importarListaComisiones")) {
 							<li><a id="importarListaComisiones" href="#" data-url="@controllers.contabilidad.routes.FacturasAccionesController.modalImportarListaComisiones()">Importar Comisiones</a></li>
-						}
+					 	}
 						@if(Permiso.check("cargar349")) {
 							<li><a id="cargar349" href="#" data-url="@controllers.contabilidad.routes.FacturasAccionesController.modalCargar349(facturaObj.id)">Cargar 349</a></li>
 						}
 						
-						@if(Permiso.check("cerrarFondo") && facturaObj.fondo_cerrado != true) {
+						@if(Permiso.check("cerrarFondo") && facturaObj.fondo_cerrado != true && (facturaObj.proveedor_id.compareTo(models.Proveedor.FONDO_PERMANENTE) == 0)) {
 						<li><a id="accionCerrarFondoPermanente" href="#" data-url="@controllers.contabilidad.routes.FacturasAccionesController.modalCerrarFondoPermanente(facturaObj.id)">Cerrar Fondo Permanente</a></li>
 						}
 						
