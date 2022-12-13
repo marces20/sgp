@@ -733,7 +733,8 @@ public class SolicitudesController extends Controller {
 		for (String idSolicitud : solicitudes) {
 			Solicitud solicitud = Ebean.find(Solicitud.class).select("id, estado_id").setId(Integer.parseInt(idSolicitud)).findUnique();
 			
-			if(solicitud.estado_id != Estado.SOLICITUD_ESTADO_AUTORIZADO){
+			//if(solicitud.estado_id != Estado.SOLICITUD_ESTADO_AUTORIZADO ){
+			if(solicitud.estado_id != Estado.SOLICITUD_ESTADO_CANCELADO && solicitud.estado_id != Estado.SOLICITUD_ESTADO_APRESUPUESTO && solicitud.estado_id != Estado.SOLICITUD_ESTADO_AUTORIZADO) {	
 				Integer cuentaId = Integer.parseInt(request().body().asFormUrlEncoded().get("cuentaAnalitica_id")[0]);
 				
 				Ebean.createUpdate(SolicitudLinea.class, "UPDATE solicitud_lineas " +
@@ -747,7 +748,7 @@ public class SolicitudesController extends Controller {
 				ret += "<p class='responseOk'>- Se actualiz&oacute; la solicitud "+solicitud.referencia+".</p>";
 			
 			} else {
-				Error += "<p class='responseError'>- No se puede actualizar la solicitud "+solicitud.referencia+" porque se encuentra en estado AUTORIZADO.</p>";
+				Error += "<p class='responseError'>- No se puede actualizar la solicitud "+solicitud.referencia+" porque no se encuentra en estado BORRADOR.</p>";
 			}
 			
 		}
