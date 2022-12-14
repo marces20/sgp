@@ -55,6 +55,9 @@ public class Usuario extends Model {
 	@Required(message="Debe setear plan sumar materno")
 	public boolean plansumarmaterno = false;
 	
+	@Required(message="Debe setear obera")
+	public boolean obera = false;
+	
 	
 	@ManyToOne
 	@JoinColumn(name="create_usuario_id", referencedColumnName="id", insertable=false, updatable=false)
