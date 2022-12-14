@@ -351,6 +351,19 @@ public class Factura extends Model {
 			e = e.eq("tipo_cuenta_id",TipoCuenta.FONDO_PERMANENTE_MATERNO);
     	}	
     	
+    	if(Usuario.getUsurioSesion().obera) {
+			Date fdesde = DateUtils.formatDate("01/08/2022", "dd/MM/yyyy");
+			e = e.ge("create_date", fdesde);
+    	}	
+		
+    	if(Usuario.getUsurioSesion().plansumarmaterno || Usuario.getUsurioSesion().obera) {
+			e = e.disjunction();
+			e = e.in("orden.deposito_id",Usuario.getUsurioSesion().organigrama.deposito_id.intValue());
+			e = e.endJunction();
+    		 
+    	}
+    	
+    	
     	if(!desc_ret.isEmpty()){
     		e.ilike("facturaLineaImpuesto.nombre", "%" + desc_ret + "%");
     	}
@@ -831,20 +844,39 @@ public class Factura extends Model {
 	}
 	
 	public static BigDecimal getTotalMontoFacturasCargadas(Long idFactura){
+		return getTotalMontoFacturasCargadas(idFactura,null);
+	}
+	
+	public static BigDecimal getTotalMontoFacturasCargadas(Long idFactura,Long ordenId){
 		
 		BigDecimal r = new BigDecimal(0); 
 		
 		String sql = "SELECT sum(fd.monto) as monto " + 
-				"FROM factura_datos fd " + 
-				"WHERE fd.orden_id =(select orden_id from facturas where id =:f_id) " + 
-				"GROUP BY orden_id";
-				
-		SqlRow s = Ebean.createSqlQuery(sql)
-				   .setParameter("f_id", idFactura)
-				   .findUnique();
+				"FROM factura_datos fd ";
 		
-		if(s != null){
-			r = s.getBigDecimal("monto");
+		if(idFactura != null) {
+			sql += "WHERE fd.orden_id =(select orden_id from facturas where id =:f_id) ";
+			sql += "GROUP BY orden_id";
+					
+			SqlRow s = Ebean.createSqlQuery(sql)
+					   .setParameter("f_id", idFactura)
+					   .findUnique();
+			
+			if(s != null){
+				r = s.getBigDecimal("monto");
+			}
+		}else {
+			
+			sql += "WHERE fd.orden_id = :ordenId ";
+			sql += "GROUP BY orden_id";
+					
+			SqlRow s = Ebean.createSqlQuery(sql)
+					   .setParameter("ordenId", ordenId)
+					   .findUnique();
+			
+			if(s != null){
+				r = s.getBigDecimal("monto");
+			}
 		}
 		
 		return r;
@@ -872,16 +904,30 @@ public class Factura extends Model {
 	}
 	
 	public static List<SqlRow> getFacturasDatosCargadas(Long idFactura){
+		return getFacturasDatosCargadas(idFactura,null);
+	}
+	
+	public static List<SqlRow> getFacturasDatosCargadas(Long idFactura,Long ordenId){
 		
 		String sql = "SELECT fd.id as id,'FAC'||fd.factura_id as nombre,fd.numero_factura,fd.monto as monto " + 
-				"FROM factura_datos fd " + 
-				"WHERE fd.orden_id =(select orden_id from facturas where id =:f_id) ";
-				
-		List<SqlRow> s = Ebean.createSqlQuery(sql)
-				   .setParameter("f_id", idFactura)
-				   .findList();
+				"FROM factura_datos fd ";
 		
-		return s;
+		if(idFactura != null) {
+			sql += "WHERE fd.orden_id =(select orden_id from facturas where id =:f_id) ";
+			List<SqlRow> s = Ebean.createSqlQuery(sql)
+					   .setParameter("f_id", idFactura)
+					   .findList();
+			
+			return s;
+		}else {
+			sql += "WHERE fd.orden_id =:ordenId ";
+			List<SqlRow> s = Ebean.createSqlQuery(sql)
+					   .setParameter("ordenId", ordenId)
+					   .findList();
+			
+			return s;
+		}
+		
 	}
 	
 	
