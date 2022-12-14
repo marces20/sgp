@@ -86,6 +86,15 @@
 					<div class="text-error">@error.message</div>
 					}
 				</div>
+				<div class="col-sm-2  @if(usuarioForm.error("plansumarmaterno") != null) {has-error}else{has-required}">
+					<label class="control-label"> 
+						OBERA 
+						@select(usuarioForm("obera"),options(""->"","true"->"SI","false"->"NO"), 'class -> "form-control select")
+					</label>
+					@usuarioForm("obera").error.map{ error =>
+					<div class="text-error">@error.message</div>
+					}
+				</div>
 				
 	</div>		
 <script>
