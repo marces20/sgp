@@ -282,6 +282,12 @@ public class Solicitud extends Model {
     			e = e.endJunction();
         	}	
     		
+    		if(Usuario.getUsurioSesion().obera) {
+    			Date fdesde = DateUtils.formatDate("01/08/2022", "dd/MM/yyyy");
+    			e = e.ge("create_date", fdesde);
+        		 
+        	}
+    		
     		Integer deptoId = 0;
     		List<Integer> l = null;
     		if( Usuario.getUsurioSesion().organigrama_id != null){
