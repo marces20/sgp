@@ -272,6 +272,19 @@ public class Pago extends Model {
 			e = e.eq("tipo_cuenta_id",TipoCuenta.FONDO_PERMANENTE_MATERNO);
     	}	
     	
+    	if(Usuario.getUsurioSesion().obera) {
+			Date fdesde = DateUtils.formatDate("01/08/2022", "dd/MM/yyyy");
+			e = e.ge("factura.create_date", fdesde);
+    	}	
+		
+    	if(Usuario.getUsurioSesion().plansumarmaterno || Usuario.getUsurioSesion().obera) {
+			e = e.disjunction();
+			e = e.in("factura.orden.deposito_id",Usuario.getUsurioSesion().organigrama.deposito_id.intValue());
+			e = e.endJunction();
+    		 
+    	}
+    	
+    	
     	if(!tipo_cuenta_id.isEmpty()){
     		e.eq("tipo_cuenta_id", Integer.parseInt(tipo_cuenta_id));
     	}
