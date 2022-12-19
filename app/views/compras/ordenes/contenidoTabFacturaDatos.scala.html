@@ -1,0 +1,62 @@
+@(formularioCarga: Boolean,orden:Orden)
+@import helper._
+@import utils._
+@implicitFieldConstructor = @{ FieldConstructor(simpleInput.render) } 
+
+@if(orden != null){
+<div class="row">
+	<div class="col-sm-6">
+		<div class="panel panel-default">
+			<div class="panel-heading"><b>Facturacion</b></div>
+			<div class="panel-body">
+				<table class="table table-striped table-bordered">
+					<thead>
+						<tr>
+							<td>Monto Orden</td>
+							<td>Monto Cargado</td>
+							<td>Restante</td>
+							
+						</tr>
+					<thead>
+					<tbody>
+					<tr>
+						<td><b>@if(orden != null){@utils.NumberUtils.moneda(orden.getTotalTotal())}</b></td>
+						<td><b>@if(orden != null){@utils.NumberUtils.moneda(Factura.getTotalMontoFacturasCargadas(null,orden.id))}</b></td>
+						<td><b>@if(orden != null){@utils.NumberUtils.moneda(orden.getTotalTotal().subtract(Factura.getTotalMontoFacturasCargadas(null,orden.id)))}</b></td>
+					</tr>
+					</tbody>
+				</table>
+			</div>
+		</div>	
+	</div>
+	<div class="col-sm-6">
+		<div class="panel panel-default">
+			<div class="panel-heading"><b>Facturas cargadas</b></div>
+			<div class="panel-body">
+				<table class="table table-striped table-bordered">
+					<thead>
+					<tr>
+						<td>Factura</td>
+						<td>Numero</td>
+						<td>Monto</td>
+						<td>#</td>
+					</tr>
+					</thead>
+					<tbody>
+					
+					@for(s <- Factura.getFacturasDatosCargadas(null,orden.id) ){
+					
+					<tr>
+						<td><b>@s.getString("nombre")</b></td>
+						<td><b>@s.getString("numero_factura")</b></td>
+						<td><b>@utils.NumberUtils.moneda(s.getBigDecimal("monto"))</b></td>
+						<td><a class="btn btn-default btn-xs delete-confirm-link" href="@controllers.contabilidad.routes.FacturasController.eliminarFacturaDato(s.getLong("""id"""))@UriTrack.get("&")"><i class="glyphicon glyphicon-trash icono-eliminar"></i></a></td>
+					</tr>
+					}
+					</tbody>
+				</table>
+			</div>
+		</div>	
+	</div>
+</div>
+}
