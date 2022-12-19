@@ -404,7 +404,8 @@ public class AgenteAsistenciaLicencia extends Model{
 													   String tipoRelacion,
 													   String tipoLicencia,
 													   String idEstado,
-													   String descripcion
+													   String descripcion,
+													   String ejercicio
 													   ){
 		Date fdesde = DateUtils.formatDate(desde, "dd/MM/yyyy");					
 		Date fhasta = DateUtils.formatDate(hasta, "dd/MM/yyyy");
@@ -426,6 +427,11 @@ public class AgenteAsistenciaLicencia extends Model{
 		if(!descripcion.isEmpty()){
 			where += " and al.nota ilike '%"+descripcion+"%'";
     	}
+		if(!ejercicio.isEmpty()){
+			where += " and al.ejercicio_id ="+ejercicio;
+    	}else {
+    		where += " and al.ejercicio_id = 14 ";
+    	}
 		
 		String sql = "select a.dni as dni,a.cuit as cuit,a.apellido as apellido,al.finicio as finicio,al.ffin as ffin,tl.nombre as tipoLicencia, "+
 					 "o.nombre as organigrama,p.nombre as profesion,a.tipo_relacion_laboral as tipo_relacion_laboral,pu.nombre as puesto, "+
@@ -440,8 +446,9 @@ public class AgenteAsistenciaLicencia extends Model{
 					 //"where :fecha between (al.finicio) and (al.ffin) order by a.apellido ";
 					 //"where ((al.finicio between (:fechadesde) and (:fechahasta) and al.ffin between (:fechadesde) and (:fechahasta)) "+
 					 //" 		OR (al.finicio <= :fechadesde AND al.ffin >= :fechahasta)) "+where+
-					 "where (((al.finicio between (:fechadesde) and (:fechahasta)) OR (al.ffin between (:fechadesde) and (:fechahasta))) "+
-					 " OR (al.finicio <= :fechadesde AND al.ffin >= :fechahasta)) "+
+					// "where (((al.finicio between (:fechadesde) and (:fechahasta)) OR (al.ffin between (:fechadesde) and (:fechahasta))) "+
+					 //" OR (al.finicio <= :fechadesde AND al.ffin >= :fechahasta)) "+
+					 "where 1=1 "+ 
 					 where+
 					 " order by a.apellido ";
 		
