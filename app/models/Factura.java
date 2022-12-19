@@ -889,7 +889,7 @@ public class Factura extends Model {
 		String sql = "SELECT * "+ 
 				"FROM factura_datos fd "+ 
 				"WHERE fd.orden_id =(select orden_id from facturas where id =:f_id) "+ 
-				"and REPLACE(numero_factura,'-','') =  REPLACE(:nfactura,'-','')";
+				"and upper(REPLACE(numero_factura,'-','')) =  upper(REPLACE(:nfactura,'-',''))";
 				
 		List<SqlRow> s = Ebean.createSqlQuery(sql)
 				   .setParameter("f_id", idFactura)
@@ -902,6 +902,29 @@ public class Factura extends Model {
 		
 		return r;
 	}
+	
+	
+	public static boolean existeNumeroFacturaCargadoDesdeOrden(Long idOrden,String nfactura){
+		
+		boolean r = false;
+		
+		String sql = "SELECT * "+ 
+				"FROM factura_datos fd "+ 
+				"WHERE fd.orden_id =:f_id "+ 
+				"and upper(REPLACE(numero_factura,'-','')) =  upper(REPLACE(:nfactura,'-',''))";
+				
+		List<SqlRow> s = Ebean.createSqlQuery(sql)
+				   .setParameter("f_id", idOrden)
+				   .setParameter("nfactura", nfactura)
+				   .findList();
+		
+		if(s.size() > 0){
+			r = true;
+		}
+		
+		return r;
+	}
+	
 	
 	public static List<SqlRow> getFacturasDatosCargadas(Long idFactura){
 		return getFacturasDatosCargadas(idFactura,null);
