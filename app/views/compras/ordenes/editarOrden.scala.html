@@ -59,7 +59,7 @@
 	
 		@inputText(ordenForm("id"), 'hidden -> "hidden")
 		@views.html.compras.ordenes.formOrden(ordenForm)
-		@views.html.compras.ordenes.tabsOrden(true, ordenForm)	
+		@views.html.compras.ordenes.tabsOrden(true, ordenForm,orden)	
 
 		<!-- <h4>Base: 	<b>@utils.NumberUtils.moneda(orden.getTotal())</b></h4>	
 		<h4>Ajuste: <b>@utils.NumberUtils.moneda(orden.getTotalAjuste())</b></h4>	

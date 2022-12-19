@@ -1,4 +1,4 @@
-@(formularioCarga: Boolean, ordenForm: Form[Orden] = null)
+@(formularioCarga: Boolean, ordenForm: Form[Orden] = null, orden: Orden)
 <hr />
 <ul id="ordenTab" class="nav nav-tabs">
 	<li class="active"><a class="tabProducto" href="#contenedorProductos" data-toggle="tab">Productos</a></li>
@@ -11,6 +11,7 @@
 	}
 	<li><a class="tabNotas" href="#contenedorNotas" data-toggle="tab">Notas</a></li>
 	<li><a class="tabDispos" href="#contenedorDispos" data-toggle="tab">Disposiciones</a></li>
+	<li><a id="tabFacturaDatos" href="#contenedorFacturaDatos" data-toggle="tab">Numeros Facturas</a></li>
 </ul>
 
 
@@ -46,5 +47,11 @@
 		@views.html.expediente.expediente.contenidoTabDispos(ordenForm.field("expediente_id").value.toLong)
 	</div>
 	}
+	
+	<div class="tab-pane" id="contenedorFacturaDatos">
+		@if(orden != null){
+			@views.html.compras.ordenes.contenidoTabFacturaDatos(formularioCarga,orden)
+		}
+	</div>
 	
 </div>

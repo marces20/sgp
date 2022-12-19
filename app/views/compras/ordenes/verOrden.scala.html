@@ -75,6 +75,11 @@
 		    			@if(Permiso.check("dispoCrear")) {
 		    				<li role="presentation"><a role="menuitem" id="accionCrearDispo" tabindex="-1" href="#" data-url="@controllers.compras.routes.OrdenesAccionesController.modalCrearDispo(orden.id)">Crear Dispo</a></li>
 					 	}
+					 	
+					 	@if(Permiso.check("ordenesModificarNumeroFactura")) {
+						<li><a id="accionModificarNumeroFactura"  href="#" data-url="@controllers.compras.routes.OrdenesAccionesController.modalModificarNumeroFactura(orden.id)">Modificar N° Factura</a></li>
+						}
+					 	
 					 </ul>
 				</div>
 				<div class="pull-right btn-header">
@@ -335,7 +340,7 @@
 			</div>
 		</div>
 	}
-	@views.html.compras.ordenes.tabsOrden(false, ordenForm)
+	@views.html.compras.ordenes.tabsOrden(false, ordenForm,orden)
 	
 	@if(orden.cot_dolar != null && orden.cot_dolar.compareTo(java.math.BigDecimal.ZERO) > 0){
 	

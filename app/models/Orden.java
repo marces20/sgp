@@ -599,4 +599,57 @@ public class Orden extends Model {
 		
 		return r;
 	}
+	
+	public static int guardarNumeroFactura(Long factura_id, BigDecimal monto,String numero_factura,Long orden_id) {
+	    ResultSet rssi = null;
+	    PreparedStatement stmtsi = null;
+	    Connection conn2 = null;
+	    PreparedStatement stmt2 = null;
+	    ResultSet rs2 = null;
+	    int idcl = 0;
+
+	    try {
+	      conn2 = play.db.DB.getConnection();
+
+
+	       
+	      
+	      
+
+	      stmt2 = conn2.prepareStatement(
+	          "INSERT INTO factura_datos(factura_id, monto, numero_factura, create_usuario_id, create_date,orden_id) VALUES (?, ?, ?, ?, now(), ?)");
+	      stmt2.setLong(1, factura_id);
+	      stmt2.setBigDecimal(2, monto);
+	      stmt2.setString(3, numero_factura);
+	      stmt2.setInt(4, Usuario.getUsuarioSesion());
+	      stmt2.setLong(5, orden_id); 
+	      stmt2.executeUpdate();
+
+	    } catch (SQLException e) {
+	      Logger.error("Error duplicar: " + e);
+	    } finally {
+	      if (stmt2 != null)
+	        try {
+	          stmt2.close();
+	        } catch (Exception e) {
+	        }
+	      if (stmtsi != null)
+	        try {
+	          stmtsi.close();
+	        } catch (Exception e) {
+	        }
+	      if (rssi != null)
+	        try {
+	          rssi.close();
+	        } catch (Exception e) {
+	        }
+	      if (conn2 != null)
+	        try {
+	          conn2.close();
+	        } catch (Exception e) {
+	        }
+	    }
+
+	    return idcl;
+	  }
 }

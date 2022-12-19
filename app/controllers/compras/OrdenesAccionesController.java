@@ -31,6 +31,8 @@ import models.DireccionProveedor;
 import models.Dispo;
 import models.EnvioMail;
 import models.Estado;
+import models.Factura;
+import models.FacturaDato;
 import models.Orden;
 import models.OrdenLinea;
 import models.OrdenLineaCliente;
@@ -54,18 +56,12 @@ import utils.RequestVar;
 import utils.StringUtils;
 import views.html.compras.ordenes.acciones.combinarOrdenes;
 import views.html.compras.ordenes.acciones.resultadoOrdenSegunCuadroSugerenia;
-import views.html.compras.ordenes.modales.modalCrearDispo;
-import views.html.compras.ordenes.modales.modalEditarCotDolar;
-import views.html.compras.ordenes.modales.modalEditarFechaProvision;
-import views.html.compras.ordenes.modales.modalEditarMontoAdelanto;
-import views.html.compras.ordenes.modales.modalEditarRubro;
-import views.html.compras.ordenes.modales.modalImportarListaProductosCantidades;
-import views.html.compras.ordenes.modales.modalOrdenProvisionMail;
+import views.html.compras.ordenes.modales.*;
 
 
 @Security.Authenticated(Secured.class)
 public class OrdenesAccionesController extends Controller {
-
+	
   @CheckPermiso(key = "ordenesEditarRubro")
   public static Result modalEditarRubro(Long id) {
     return ok(modalEditarRubro.render(form().bindFromRequest(), id));
@@ -354,10 +350,15 @@ public class OrdenesAccionesController extends Controller {
     }
 
     Orden o = Orden.find.byId(idOrden);
-
-
+    
     if (monto.compareTo(o.getTotalTotalSinDiferenciaCotizacion().setScale(2, RoundingMode.HALF_UP)) > 0) {
-      flash("error", "El monto adelanto no puede ser mayor al total de la orden.");
+        flash("error", "El monto adelanto no puede ser mayor al total de la orden.");
+        return ok(modalEditarMontoAdelanto.render(d, idOrden));
+      }
+    
+
+    if (o.tipo_orden.compareTo("comun") != 0 && o.tipo_orden.compareTo("servicio") != 0) {
+      flash("error", "El monto adelanto solo se puede agregar en Recepcion de productos y Certificacion de Servicios patrimonio");
       return ok(modalEditarMontoAdelanto.render(d, idOrden));
     }
 
@@ -1206,4 +1207,94 @@ public class OrdenesAccionesController extends Controller {
   public static Result modalImportarListaProductos() {
     return ok(modalImportarListaProductosCantidades.render(form().bindFromRequest()));
   }
+  
+  @CheckPermiso(key = "ordenesModificarNumeroFactura")
+  public static Result modalModificarNumeroFactura(Long id) {
+		
+	Orden p = Orden.find.byId(id);
+	
+	return ok(modalModificarNumeroFactura.render(form().bindFromRequest(),id,p));
+  }
+	
+  @CheckPermiso(key = "ordenesModificarNumeroFactura")
+  public static Result modificarNumeroFactura() {
+	DynamicForm d = form().bindFromRequest();
+	d.discardErrors();
+	
+	String numero_factura =request().body().asFormUrlEncoded().get("numero_factura")[0];
+	String monto =request().body().asFormUrlEncoded().get("monto")[0];
+	Long id = new Long(request().body().asFormUrlEncoded().get("id")[0]);
+	Orden f = Orden.find.byId(id);
+	
+	if(f.estado_id.compareTo((long) Estado.ORDEN_ESTADO_APROBADO) != 0) {
+		flash("error", "La orden debe estar en Estado Aprobado.");
+		return ok(modalModificarNumeroFactura.render(d,id,f));
+	}
+	
+	if(f == null) {
+		flash("error", "Esta orden no existe. Ver con el Administrador del sistema.");
+		return ok(modalModificarNumeroFactura.render(d,id,f));
+	}
+		
+	if(numero_factura.isEmpty()) {
+		flash("error", "Ingrese un N° de Factura");
+		return ok(modalModificarNumeroFactura.render(d,id,f));
+	}
+	
+	if(monto.isEmpty()) {
+		flash("error", "Ingrese un monto");
+		return ok(modalModificarNumeroFactura.render(d,id,f));
+	}
+	
+	
+	 
+	
+	if(Factura.existeNumeroFacturaCargadoDesdeOrden(f.id, numero_factura)) {
+		flash("error", "Ya existe este numero de factura cargado.");
+		return ok(modalModificarNumeroFactura.render(d,id,f));
+	}
+	
+	
+	BigDecimal montoACargar = new BigDecimal(monto.replace(",","."));
+	BigDecimal montoCargado = Factura.getTotalMontoFacturasCargadas(f.id);
+	BigDecimal montoTotal = montoCargado.add(montoACargar);
+	
+	if(montoTotal.compareTo(f.getTotalTotal()) > 0) {
+		flash("error", "Los montos de facturas excede el monto de la orden.");
+		return ok(modalModificarNumeroFactura.render(d,id,f));
+	}
+		
+		
+	ObjectNode result = Json.newObject();
+	try {			
+		//Integer count = Pago.modificarNumeroFactura(numero_factura, id);
+		List<Factura> ff = Factura.find.where().isNotNull("factura_principal_id").eq("orden_id", id).findList();
+		Long idFact = null;
+		
+		if(ff.size() > 0) {
+			
+			idFact = ff.get(0).factura_principal_id;
+			
+		}else {
+			ff = Factura.find.where().eq("orden_id", id).findList();
+			if(ff.size() > 0) {
+				idFact = ff.get(0).id;
+			}
+			
+		}
+		
+		
+		Orden.guardarNumeroFactura(ff.get(0).id,new BigDecimal(monto.replace(",",".")),numero_factura,id);
+		
+		result.put("success", true);
+		flash("success", "Se actualizado el Numero de factura");
+		result.put("html", modalModificarNumeroFactura.render(d,id,f).toString());
+		return ok(result);
+	} catch (Exception e){
+		flash("error", "No se puede modificar los registros.");
+		return ok(modalModificarNumeroFactura.render(d,id,f));
+	}
+		
+  }
+  
 }
