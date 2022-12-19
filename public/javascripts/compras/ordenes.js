@@ -98,6 +98,31 @@ $( function(){
 	    });
 	});
 	
+	$('#accionModificarNumeroFactura').on('click', function() {
+		var url = $(this).attr("data-url");
+		var dialogo = crearDialogoGeneral(url);
+		dialogo.dialog({title: "Modificar Numero de Factura",height: 400,width:850});
+	});
+	
+	$(document).on("submit", '#formModificarNumeroFactura', function(){
+		var form = $(this);
+		var url = form.attr('action');
+		var data = form.serialize();
+		
+		var submit = form.find("button[type='submit']");
+		submit.replaceWith(getLoading());
+		$.post(url, data, function(data){
+			if(data.success) {
+				$("#inputNumeroFactura").html($("#numero_factura").val());
+				form.replaceWith(data.html);
+			} else {
+				form.replaceWith(data);
+			}
+		});
+		
+		return false;
+	});
+	
 	$('#accionEditarMontoAdelanto').click( function() { //abrir modal para cargar Orden de pago
 		var url = $(this).attr("data-url");
 		dialogoEditarMontoAdelanto = crearDialogoGeneral(url);
