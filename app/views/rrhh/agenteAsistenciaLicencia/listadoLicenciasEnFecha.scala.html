@@ -1,6 +1,7 @@
 @(lista:List[com.avaje.ebean.SqlRow], formBuscador: DynamicForm)
 @import helper._
 @import utils._
+@import models._
 @getClassEstado(i:Integer) = @{
 	var classEstado:String = new String()
 	
@@ -150,6 +151,7 @@
 					<th>Relacion</th>
 					<th>Fecha Inicio</th>
 					<th>Fecha Fin</th>
+					<th>Dias</th>
 					<th>Tipo Licencia</th>
 					<th>Estado</th>
 				</tr>
@@ -175,6 +177,7 @@
 					</td>
 					<td>@(utils.DateUtils.formatDate(sql.getDate("finicio")))</td>
 					<td>@(utils.DateUtils.formatDate(sql.getDate("ffin")))</td>
+					<td>@sql.getInteger("dias")</td>
 					<td>@sql.getString("tipoLicencia")</td>
 					<td align="center">
 						@sql.getString("estado")
