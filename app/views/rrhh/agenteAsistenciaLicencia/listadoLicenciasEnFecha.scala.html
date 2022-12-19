@@ -75,7 +75,15 @@
 							</label>
 						</div>
 					</div>
-				<div class="col-sm-3 input-group">
+				
+			</div>
+			<div class="row">	  
+				<div class="col-sm-2">
+				<label class="control-label">Ejercicio
+					@select(formBuscador("ejercicio"), Ejercicio.getEjercicios().map { p => p.id.toString -> p.nombre}, 'class -> "form-control select", '_default -> "2023")
+				</label>
+				</div>	
+				<!-- <div class="col-sm-2 input-group">
 					<label for="desde" class="control-label">Fecha </label>
 					<div>
 					@inputText(formBuscador("desde"), 
@@ -87,9 +95,7 @@
 					 		   'id -> "hasta", 
 					 		   'placeholder -> "Hasta")
 					</div>
-				</div>
-			</div>
-			<div class="row">	  	
+				</div> -->
 			 	<div class="col-sm-2">
 					<div class="form-group">
 						<label for="nombre" class="control-label">Descripcion
@@ -97,7 +103,7 @@
 						</label>
 					</div>
 				</div>
-				<div class="col-sm-6">
+				<div class="col-sm-3">
 					<div class="form-group">
 						<label for="" class="control-label">Tipo Licencia</label>
 						@select(formBuscador("tipo_licencia_id"), 
@@ -106,6 +112,8 @@
 									'_default -> "Seleccionar") 
 					</div>
 				</div>
+			</div>	
+			<div class="row">			
 				<div class="col-sm-2">
 					<div class="form-group">
 					<label for="nombre" class="control-label">&nbsp;</label>
