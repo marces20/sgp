@@ -1,5 +1,9 @@
 package utils;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -109,4 +113,47 @@ public class DateUtils {
     public static java.sql.Date convertJavaDateToSqlDate(java.util.Date date) {
         return new java.sql.Date(date.getTime());
     }
+    
+    public static java.util.Date convertJavaSqlDateToDate(java.sql.Date date) {
+        return new java.util.Date(date.getTime());
+    }
+    
+    public static int getDiasEntreFechas(Date finicior,Date ffinr,Boolean tipoLicencia){
+		
+		Connection conn = null;
+		PreparedStatement stmt = null;
+		ResultSet rs = null;
+		int ret = 0;
+		try {
+			
+			conn = play.db.DB.getConnection();
+			
+			boolean habiles = false;
+			
+			if(tipoLicencia != null && tipoLicencia == true){
+				habiles = true; 
+			}
+			
+			stmt = conn.prepareStatement("SELECT get_dias_entre_fechas(?,?,?,?)");
+			stmt.setDate(1, DateUtils.convertJavaDateToSqlDate(finicior));
+			stmt.setDate(2, DateUtils.convertJavaDateToSqlDate(ffinr));
+			stmt.setBoolean(3, habiles);
+			stmt.setBoolean(4, habiles);
+			
+			rs = stmt.executeQuery();
+			
+			if (rs.next()) {
+				ret = rs.getInt(1);
+			}
+			
+		}catch (SQLException e) {
+			Logger.error("Error duplicar: "+e);
+        } finally {
+        	if (stmt != null) try { stmt.close(); } catch (Exception e) { }
+        	if (rs != null) try { rs.close(); } catch (Exception e) { }
+            if (conn != null) try { conn.close(); } catch (Exception e) { }
+        }
+		 
+		return ret;
+	}
 }
