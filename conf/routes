@@ -161,6 +161,9 @@ GET   /compras/ordenSubrubro/listOptions		controllers.compras.OrdenSubrubroContr
 GET   /compras/orden/modalCrearDispo   			controllers.compras.OrdenesAccionesController.modalCrearDispo(id:Long)
 GET   /compras/orden/crearDispo   				controllers.compras.OrdenesAccionesController.crearDispo()
 
+GET    /compras/orden/modalModificarNumeroFactura       controllers.compras.OrdenesAccionesController.modalModificarNumeroFactura(id:Long)
+POST   /compras/orden/modificarNumeroFactura        	controllers.compras.OrdenesAccionesController.modificarNumeroFactura()
+
 GET     /compras/certificacion        		controllers.compras.CertificacionesController.index()
 GET     /compras/certificacion/crear        	controllers.compras.CertificacionesController.crear()
 POST    /compras/certificacion/guardar      	controllers.compras.CertificacionesController.guardar()
