@@ -430,7 +430,7 @@
 				
 				<div class="col-sm-4">
 				
-					<div class="col-sm-4">
+					<div class="col-sm-3">
 						<label class="control-label"> 
 							Impuesto
 							@select(formBuscador("tipo"),options(""->"","SI"->"SI","NO"->"NO"), 'class -> "form-control select")
@@ -444,7 +444,7 @@
 							'class -> "form-control select", '_default -> "Seleccionar"), 
 						</div>
 					</div>  -->
-					<div class="col-sm-4">
+					<div class="col-sm-3">
 						<label class="control-label"> 
 							RP
 							@select(formBuscador("rp"),options(""->"","SI"->"SI","NO"->"NO"), 'class -> "form-control select")
@@ -458,10 +458,16 @@
 							</label><br>
 						</div> 
 					</div>-->
-					<div class="col-sm-4">
+					<div class="col-sm-3">
 						<label class="control-label"> 
 							Emergencia
 							@select(formBuscador("emergencia"),options(""->"","SI"->"SI","NO"->"NO"), 'class -> "form-control select")
+						</label>
+					</div>
+					<div class="col-sm-3">
+						<label class="control-label"> 
+							Revisar
+							@select(formBuscador("arevisar"),options(""->"","SI"->"SI","NO"->"NO"), 'class -> "form-control select")
 						</label>
 					</div>
 				</div>	
@@ -540,6 +546,12 @@
 							@if(pago.expediente.emergencia){
 								<span style="color:red;font-weight: bold;font-size:11px; ">Emergencia</span>
 							}
+						}
+						
+						@if(pago.arevisar){
+							 
+								<span style="color:red;font-weight: bold;font-size:11px; ">Revisar</span>
+							 
 						}
 					</td>
 					<td class="fecha">@if(pago.fecha_pago != null){@(utils.DateUtils.formatDate(pago.fecha_pago))}</td>
