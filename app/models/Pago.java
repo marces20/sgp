@@ -249,7 +249,8 @@ public class Pago extends Model {
 										String tipo,
 										String rp,
 										String tipo_cuenta_id,
-										String emergencia
+										String emergencia,
+										String arevisar
 										){
 		Pagination<Pago> p = new Pagination<Pago>();
     	p.setOrderDefault("ASC");
@@ -397,6 +398,14 @@ public class Pago extends Model {
     			e.eq("expediente.emergencia", true);
     		}else{
     			e.eq("expediente.emergencia", false);
+    		}
+    	}
+		
+		if(!arevisar.isEmpty()){
+    		if(arevisar.compareToIgnoreCase("SI") == 0){
+    			e.eq("arevisar", true);
+    		}else{
+    			e.eq("arevisar", false);
     		}
     	}
 		

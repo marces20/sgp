@@ -96,7 +96,8 @@ public class PagosController extends Controller {
 								RequestVar.get("tipo"),
 								RequestVar.get("rp"),
 								RequestVar.get("tipo_cuenta_id"),
-								RequestVar.get("emergencia")),
+								RequestVar.get("emergencia"),
+								RequestVar.get("arevisar")),
 						d));
 	}
 
