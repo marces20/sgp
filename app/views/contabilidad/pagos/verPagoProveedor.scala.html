@@ -122,7 +122,14 @@
 			<label class="control-label">N° orden de pago</label>
 			<p class="form-control-static form-control">@pagoForm.field("ordenPago.nombreCompleto").value</p>
 		</div>
-		
+		<div class="col-sm-2">
+			<div class="checkbox">
+				<label for="inputAPE class="control-label"> 
+					Revisar
+					@checkbox(pagoForm("arevisar"), 'disabled -> "disabled")
+				</label>
+			</div> 
+		</div>
 	</div>
 	
 	<div class="row">
