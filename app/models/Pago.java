@@ -176,6 +176,8 @@ public class Pago extends Model {
 	public MiPago miPago;
 	public Long mis_pagos_id;
 	
+	public boolean arevisar = false;
+	
 	public static Integer contabilizarPagos(String referencia, Long miPagoId) {
 		String s = "UPDATE pagos " +
 				"SET state_id = :estado, mis_pagos_id = :mi_pago, " +
