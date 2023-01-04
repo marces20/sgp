@@ -132,12 +132,11 @@ public class PrestaFacilController extends Controller {
       
       
       List<String> adds = new ArrayList<>();
-      //adds.add("sdmsoporte@improntasolutions.com");
-      //adds.add("pgarcia@improntasolutions.com");
-      //adds.add("klug.alejandro@gmail.com");
+      adds.add("sdmsoporte@improntasolutions.com");
+      adds.add("pgarcia@improntasolutions.com");
+      adds.add("klug.alejandro@gmail.com");
       adds.add("palaciosmatias@gmail.com");
-      //adds.add("marces2000@gmail.com");
-      //adds.add("dnl1802@gmail.com");
+      adds.add("marces2000@gmail.com");
       eu.setAdds(adds);
       eu.enviar();
 
