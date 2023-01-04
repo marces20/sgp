@@ -672,10 +672,10 @@ public class LiquidacionMesesReportesController extends Controller  {
 				data += Strings.padEnd("01", 2, ' '); // sit revista 1
 				data += Strings.padEnd("01", 2, ' '); // dia inicio sit
 														// revista 1
-				data += Strings.padEnd("00", 2, ' '); // sit revista 2
+				data += Strings.padEnd("01", 2, ' '); // sit revista 2
 				data += Strings.padEnd("00", 2, ' '); // dia inicio sit
 														// revista 2
-				data += Strings.padEnd("00", 2, ' '); // sit revista 3
+				data += Strings.padEnd("01", 2, ' '); // sit revista 3
 				data += Strings.padEnd("00", 2, ' '); // dia inicio sit
 														// revista 3
 				data += Strings.padStart(remuns.replace('.', ','), 12, ' '); // sueldo +
@@ -685,8 +685,9 @@ public class LiquidacionMesesReportesController extends Controller  {
 				data += Strings.padStart("0,00", 12, ' '); // zona
 															// desfavorable
 				data += Strings.padStart("0,00", 12, ' '); // vacaciones
-				data += Strings.padEnd("30", 9, ' '); // cant dias
-														// trabajados
+				
+				data += Strings.padStart("30,00", 9, ' '); // cant dias trabajados
+														// 
 				data += Strings.padStart(remuns.replace('.', ','), 12, ' '); // remun imponible 5
 				data += Strings.padEnd("1", 1, ' '); // trabajador
 														// convencionado
@@ -713,6 +714,10 @@ public class LiquidacionMesesReportesController extends Controller  {
 				// diferencial
 				data += Strings.padEnd("0", 3, '0'); // horas trabajadas
 				data += Strings.padEnd("F", 1, ' '); // seguro vida oblig
+				
+				data += Strings.padStart("0,00", 12, ' '); // importe a de traer ley 27430
+				data += Strings.padStart("0,00", 12, ' '); // incremento salarial 
+				data += Strings.padStart("0,00", 12, ' '); // remuneracion imponible 11
 	
 				// agrego la linea al archivo
 				out.append(data).append("\r\n");
