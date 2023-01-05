@@ -61,6 +61,7 @@ public class Global extends GlobalSettings {
                 public void run() {
                   System.out.println("Cron Job");
                   try {
+                	LiquidacionMes.actualizarVistaMaterializadaPuestosLaborales();  
                     InventarioRismi.actualizarInventarioRismi();
                   } catch (EmailException e) {
                     e.printStackTrace();
