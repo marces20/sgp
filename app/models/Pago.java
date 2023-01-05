@@ -256,7 +256,7 @@ public class Pago extends Model {
     	p.setOrderDefault("ASC");
     	p.setSortByDefault("proveedor.nombre,factura.proveedor.nombre,periodo_id DESC, id");
     	
-    	ExpressionList<Pago> e = find.select("id, nombre, fecha_pago, fecha_conciliacion, tipo, referencia, tipo_pago, profe, total, total_credito, estado_id")
+    	ExpressionList<Pago> e = find.select("id, nombre, fecha_pago, fecha_conciliacion, tipo, referencia, tipo_pago, profe, total, total_credito, estado_id,arevisar")
     			.fetch("proveedor", "nombre")
     			.fetch("periodo", "nombre")
     			.fetch("cuentaPropia", "nombre")
