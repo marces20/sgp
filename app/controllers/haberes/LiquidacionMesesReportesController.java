@@ -636,7 +636,9 @@ public class LiquidacionMesesReportesController extends Controller  {
 				NumberFormat numberFormat = NumberFormat.getInstance();
 				numberFormat.setMaximumFractionDigits(2);
 				//String remuns = numberFormat.format(remuns2);
-				String remuns = new DecimalFormat("###.##").format(remuns2);
+				
+				//String remuns = NumberUtils.formatNumber(remuns2.doubleValue(),2);
+				String remuns = new DecimalFormat("###############.00").format(remuns2);
 				
 				data += Strings.padStart(remuns.replace('.', ','), 12, ' '); // remuneracion total
 	
