@@ -693,15 +693,12 @@ public class LiquidacionMesesReportesController extends Controller  {
 				data += Strings.padStart(remuns.replace('.', ','), 12, ' '); // remun imponible 5
 				data += Strings.padEnd("1", 1, ' '); // trabajador
 														// convencionado
-				data += Strings.padStart(remuns.replace('.', ','), 12, ' '); // remun
-																		// imponible
-																		// 6
+				data += Strings.padStart("0,00", 12, ' '); // remun imponible  6
 				data += Strings.padEnd("0", 1, ' '); // tipo de operacion
 				data += Strings.padStart("0,00", 12, ' '); // adicionales
 				data += Strings.padStart("0,00", 12, ' '); // premios
 				data += Strings.padStart(remuns.replace('.', ','), 12, ' '); // 788/05 rem impon 8
-				data += Strings.padStart("0,00", 12, ' '); // remun
-															// imponible 7
+				data += Strings.padStart("0,00", 12, ' '); // remun imponible 7
 				data += Strings.padEnd("000", 3, ' '); // cant horas extras
 				data += Strings.padStart("0,00", 12, ' '); // conc no
 															// remunerativos
@@ -709,8 +706,8 @@ public class LiquidacionMesesReportesController extends Controller  {
 				data += Strings.padStart("0,00", 9, ' '); // rectificacion
 															// de
 				// remuneracion
-				//data += Strings.padStart("0,00", 12, ' '); // remun  imponible 9
-				data += Strings.padStart(remuns.replace('.', ','), 12, ' ');// remun  imponible 9
+				data += Strings.padStart("0,00", 12, ' '); // remun  imponible 9
+				//data += Strings.padStart(remuns.replace('.', ','), 12, ' ');// remun  imponible 9
 				
 				data += Strings.padStart("0,00", 9, ' '); // contrib tarea
 				// diferencial
