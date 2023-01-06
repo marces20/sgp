@@ -54,6 +54,7 @@ import play.mvc.Controller;
 import play.mvc.Result;
 import play.mvc.Security;
 import utils.DateUtils;
+import utils.NumberUtils;
 import utils.RequestVar;
 import utils.UriTrack;
 import utils.pagination.Pagination;
@@ -173,6 +174,45 @@ public class ExpedientesController extends Controller {
 			flash("error", "No se ha podido almacenar el expediente");
 			return badRequest(crearExpediente.render(expedienteForm));
 		}
+	}
+	
+	@CheckPermiso(key = "expedientesCrear")
+	public static Result crearSiguiente() {
+		Ejercicio e = Ejercicio.find.byId(ID_EJERCICIO_PREDETERMINADO);
+		Map<String,String> b = new HashMap<String, String>();
+		b.put("ejercicio.nombre", e.nombre);
+		b.put("ejercicio_id", e.id.toString());
+		b.put("fecha", DateUtils.formatDate(new Date()));
+		
+		
+		String str ="";
+        try{
+        	List<Expediente> ee = Expediente.find.where()
+					  .eq("ejercicio_id", ID_EJERCICIO_PREDETERMINADO)
+					  .eq("residuo_pasivo",false)
+					  .isNull("padre_copia_id").orderBy("nombre DESC")
+					  .findList();
+
+
+        	str = ee.get(0).nombre;
+            int number = Integer.parseInt(str)+1;
+            
+            str = NumberUtils.agregarCerosAlaIzquierda(number,4);
+        }
+        catch (NumberFormatException ex){
+        	flash("error", "No se ha podido determinar el numero siguiente de expediente.");
+			return badRequest(crearExpediente.render(expedienteForm));
+        }
+		
+		
+		
+		
+		b.put("nombre",str);
+
+
+		Form<Expediente> expedienteForm = form(Expediente.class).bind(b);
+		expedienteForm.discardErrors();
+		return ok(crearExpediente.render(expedienteForm));
 	}
 	
 	@CheckPermiso(key = "expedientesEditar")

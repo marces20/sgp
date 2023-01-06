@@ -443,6 +443,7 @@ GET     /expediente/reportes/reporteMovimiento          	controllers.expediente.
 
 GET     /expediente/expediente      		 		controllers.expediente.ExpedientesController.indexExpediente()
 GET     /expediente/expediente/crear         		controllers.expediente.ExpedientesController.crearExpediente()
+GET     /expediente/expediente/crearSiguiente       controllers.expediente.ExpedientesController.crearSiguiente()
 POST    /expediente/expediente/guardar       		controllers.expediente.ExpedientesController.guardarExpediente()
 GET     /expediente/expediente/editar        		controllers.expediente.ExpedientesController.editarExpediente(id:Long)
 GET     /expediente/expediente/eliminar      		controllers.expediente.ExpedientesController.eliminarExpediente(id:Long)
