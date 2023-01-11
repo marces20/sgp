@@ -405,7 +405,9 @@ public class AgenteAsistenciaLicencia extends Model{
 													   String tipoLicencia,
 													   String idEstado,
 													   String descripcion,
-													   String ejercicio
+													   String ejercicio,
+													   String nombre,
+													   String dni
 													   ){
 		Date fdesde = DateUtils.formatDate(desde, "dd/MM/yyyy");					
 		Date fhasta = DateUtils.formatDate(hasta, "dd/MM/yyyy");
@@ -435,6 +437,14 @@ public class AgenteAsistenciaLicencia extends Model{
 		
 		if(!desde.isEmpty() &&!hasta.isEmpty()){
 			where += "and al.finicio >='"+fdesde+"'  and al.ffin <= '"+fhasta+"' ";
+    	}
+		
+		if(!dni.isEmpty()){
+			where += "and a.dni ilike '%"+dni+"%' ";
+    	}
+    	
+    	if(!nombre.isEmpty()){
+    		where += "and a.apellido ilike '%"+nombre+"%' ";
     	}
 		
 		String sql = "select a.dni as dni,a.cuit as cuit,a.apellido as apellido,al.finicio as finicio,al.ffin as ffin,tl.nombre as tipoLicencia, "+

@@ -48,6 +48,20 @@
 						</label>
 					</div>
 				</div>
+				<div class="col-sm-2">
+						<div class="form-group">
+							<label for="nombre" class="control-label">Nombre
+							@inputText(formBuscador("nombre"), 'class -> "form-control")
+							</label>
+						</div>
+					</div>
+					<div class="col-sm-2">
+						<div class="form-group">
+							<label for="cuit" class="control-label">DNI
+							@inputText(formBuscador("dni"), 'class -> "form-control")
+							</label>
+						</div>
+					</div>
 			 	  
 					 
 				
@@ -67,15 +81,7 @@
 				</div>
 				
 				
-				<div class="col-sm-3">
-						<div class="form-group">
-							<label for="cuit" class="control-label">Tipo Relacion
-							@select(formBuscador("tipo_relacion_laboral"), 
-							TipoRelacionLaboral.find.all().map { p => p.id.toString -> p.nombre}, 
-							'class -> "form-control select", '_default -> "Seleccionar")
-							</label>
-						</div>
-					</div>
+				
 				
 			</div>
 			<div class="row">	  
@@ -111,6 +117,15 @@
 									TipoLicencia.find.all().map { p => p.id.toString -> p.nombre},
 									'class -> "form-control select", 
 									'_default -> "Seleccionar") 
+					</div>
+				</div>
+				<div class="col-sm-3">
+					<div class="form-group">
+						<label for="cuit" class="control-label">Tipo Relacion
+						@select(formBuscador("tipo_relacion_laboral"), 
+						TipoRelacionLaboral.find.all().map { p => p.id.toString -> p.nombre}, 
+						'class -> "form-control select", '_default -> "Seleccionar")
+						</label>
 					</div>
 				</div>
 			</div>	
