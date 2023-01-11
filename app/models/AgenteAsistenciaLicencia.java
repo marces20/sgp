@@ -432,7 +432,7 @@ public class AgenteAsistenciaLicencia extends Model{
 		if(!ejercicio.isEmpty()){
 			where += " and al.ejercicio_id ="+ejercicio;
     	}else {
-    		where += " and al.ejercicio_id = 14 ";
+    		//where += " and al.ejercicio_id = 14 ";
     	}
 		
 		if(!desde.isEmpty() &&!hasta.isEmpty()){

@@ -87,7 +87,7 @@
 			<div class="row">	  
 				<div class="col-sm-2">
 				<label class="control-label">Ejercicio
-					@select(formBuscador("ejercicio"), Ejercicio.getEjercicios().map { p => p.id.toString -> p.nombre}, 'class -> "form-control select", '_default -> "2023")
+					@select(formBuscador("ejercicio"), Ejercicio.getEjercicios().map { p => p.id.toString -> p.nombre}, 'class -> "form-control select", '_default -> "Seleccionar")
 				</label>
 				</div>	
 				<div class="col-sm-2 input-group">
@@ -139,73 +139,75 @@
 				<div class="col-sm-2">
 					<div class="form-group">
 					<label for="nombre" class="control-label">&nbsp;</label>
-					<a href="@controllers.rrhh.routes.AgentesAsistenciasLicenciasController.getListaLicenciasPendientes()"  class="form-control btn btn-default">Limpiar</a>
+					<a href="@controllers.rrhh.routes.AgentesAsistenciasLicenciasController.getListaLicenciasEnFecha()"  class="form-control btn btn-default">Limpiar</a>
 					</div>
 				</div>
 				
 			</div>
 		</form>
 	</div>
-	@if(lista.size() == 0) {
-        
-        <div class="well">
-            <em>No se encuentran Agentes</em>
-        </div>
-        
-    } else {
-    	
-		
-		<table class="table table-striped table-bordered">
-			<thead>
-				<tr>
-					<th>Apellido y Nombre</th>
-					<th>DNI</th>
-					<th>Organigrama</th>
-					<th>Profesion</th>
-					<th>Puesto</th>
-					<th>Relacion</th>
-					<th>Fecha Inicio</th>
-					<th>Fecha Fin</th>
-					<th>Dias</th>
-					<th>Tipo Licencia</th>
-					<th>Estado</th>
-				</tr>
-			</thead>
-			<tbody>
-			@for(sql <- lista) {
-				<tr class='@getClassEstado(sql.getInteger("idestado"))'>
-					<td>@sql.getString("apellido")</td>
-					<td>@sql.getString("dni")</td>
-					<td>@sql.getString("organigrama")</td>
-					<td>@sql.getString("profesion")</td>
-					<td>@sql.getString("puesto")</td>
-					<td>
-						@sql.getString("tipo_relacion_laboral") match {
-				    	case "1" => {Contrato Relacion Parque de la salud}
-						case "2" => {Monotributo Parque de la salud}
-						case "3" => {Contrato Relacion Convenio Ministerio Salud}
-						case "4" => {Planta Ministerio Salud}
-						case "5" => {Contrato Relacion Ministerio Salud}
-						case "6" => {Adscripto Otras Entidades}
-				    	case _ => {}
-						}		
-					</td>
-					<td>@(utils.DateUtils.formatDate(sql.getDate("finicio")))</td>
-					<td>@(utils.DateUtils.formatDate(sql.getDate("ffin")))</td>
-					<td>@sql.getInteger("dias")</td>
-					<td>@sql.getString("tipoLicencia")</td>
-					<td align="center">
-						@sql.getString("estado")
-						@if(sql.getString("nota") != null && !sql.getString("nota").isEmpty()){
-							<div class='tip-top pointer' style="display: inline;" title='@sql.getString("nota")'>
-								<i class="glyphicon glyphicon-list-alt"></i></div>
-						}
-					</td>
-				</tr>	
-			}		 
-			</tbody>
-        </table>
-		
+	@if(lista != null){
+		@if(lista.size() == 0) {
+	        
+	        <div class="well">
+	            <em>No se encuentran Agentes</em>
+	        </div>
+	        
+	    } else {
+	    	
+			
+			<table class="table table-striped table-bordered">
+				<thead>
+					<tr>
+						<th>Apellido y Nombre</th>
+						<th>DNI</th>
+						<th>Organigrama</th>
+						<th>Profesion</th>
+						<th>Puesto</th>
+						<th>Relacion</th>
+						<th>Fecha Inicio</th>
+						<th>Fecha Fin</th>
+						<th>Dias</th>
+						<th>Tipo Licencia</th>
+						<th>Estado</th>
+					</tr>
+				</thead>
+				<tbody>
+				@for(sql <- lista) {
+					<tr class='@getClassEstado(sql.getInteger("idestado"))'>
+						<td>@sql.getString("apellido")</td>
+						<td>@sql.getString("dni")</td>
+						<td>@sql.getString("organigrama")</td>
+						<td>@sql.getString("profesion")</td>
+						<td>@sql.getString("puesto")</td>
+						<td>
+							@sql.getString("tipo_relacion_laboral") match {
+					    	case "1" => {Contrato Relacion Parque de la salud}
+							case "2" => {Monotributo Parque de la salud}
+							case "3" => {Contrato Relacion Convenio Ministerio Salud}
+							case "4" => {Planta Ministerio Salud}
+							case "5" => {Contrato Relacion Ministerio Salud}
+							case "6" => {Adscripto Otras Entidades}
+					    	case _ => {}
+							}		
+						</td>
+						<td>@(utils.DateUtils.formatDate(sql.getDate("finicio")))</td>
+						<td>@(utils.DateUtils.formatDate(sql.getDate("ffin")))</td>
+						<td>@sql.getInteger("dias")</td>
+						<td>@sql.getString("tipoLicencia")</td>
+						<td align="center">
+							@sql.getString("estado")
+							@if(sql.getString("nota") != null && !sql.getString("nota").isEmpty()){
+								<div class='tip-top pointer' style="display: inline;" title='@sql.getString("nota")'>
+									<i class="glyphicon glyphicon-list-alt"></i></div>
+							}
+						</td>
+					</tr>	
+				}		 
+				</tbody>
+	        </table>
+			
+	    }
     }
 
 

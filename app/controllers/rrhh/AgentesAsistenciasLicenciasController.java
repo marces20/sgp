@@ -420,6 +420,11 @@ public class AgentesAsistenciasLicenciasController extends Controller {
 		DynamicForm d = form().bindFromRequest();
 		AgenteAsistenciaLicencia aal = new AgenteAsistenciaLicencia();
 		
+		if(RequestVar.get("desde").isEmpty() ||  RequestVar.get("desde").isEmpty()){
+			flash("error", "Seleccione un fecha correcta.");
+			return ok(listadoLicenciasEnFecha.render(null,d));
+    	}
+		
 		return ok(listadoLicenciasEnFecha.render(aal.getDiasLicenciasEnFecha(RequestVar.get("desde"),
 																			 RequestVar.get("hasta"),
 																			 RequestVar.get("organigrama_id"),
