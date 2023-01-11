@@ -84,7 +84,7 @@
 					@select(formBuscador("ejercicio"), Ejercicio.getEjercicios().map { p => p.id.toString -> p.nombre}, 'class -> "form-control select", '_default -> "2023")
 				</label>
 				</div>	
-				<!-- <div class="col-sm-2 input-group">
+				<div class="col-sm-2 input-group">
 					<label for="desde" class="control-label">Fecha </label>
 					<div>
 					@inputText(formBuscador("desde"), 
@@ -96,7 +96,7 @@
 					 		   'id -> "hasta", 
 					 		   'placeholder -> "Hasta")
 					</div>
-				</div> -->
+				</div> 
 			 	<div class="col-sm-2">
 					<div class="form-group">
 						<label for="nombre" class="control-label">Descripcion

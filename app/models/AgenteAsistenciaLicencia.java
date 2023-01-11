@@ -433,6 +433,10 @@ public class AgenteAsistenciaLicencia extends Model{
     		where += " and al.ejercicio_id = 14 ";
     	}
 		
+		if(!desde.isEmpty() &&!hasta.isEmpty()){
+			where += "and al.finicio >='"+fdesde+"'  and al.ffin <= '"+fhasta+"' ";
+    	}
+		
 		String sql = "select a.dni as dni,a.cuit as cuit,a.apellido as apellido,al.finicio as finicio,al.ffin as ffin,tl.nombre as tipoLicencia, "+
 					 "o.nombre as organigrama,p.nombre as profesion,a.tipo_relacion_laboral as tipo_relacion_laboral,pu.nombre as puesto, "+
 					 "e.nombre as estado,e.id as idestado,al.nota as nota,tl.habiles as tipotipoLicencia, get_dias_entre_fechas(al.finicio,al.ffin,tl.habiles,tl.habiles) as dias "+
@@ -453,8 +457,8 @@ public class AgenteAsistenciaLicencia extends Model{
 					 " order by a.apellido ";
 		
 		List<SqlRow> s = Ebean.createSqlQuery(sql)
-		.setParameter("fechadesde", fdesde)
-		.setParameter("fechahasta", fhasta)
+		//.setParameter("fechadesde", fdesde)
+		//.setParameter("fechahasta", fhasta)
 		.findList();
 		
 		return s;
