@@ -112,8 +112,8 @@ public class InventarioRismi extends Model {
 
 
     EmailUtilis eu = new EmailUtilis();
-    eu.setSubject("SE ACTUALIZO EL INVENTARI");
-    eu.setHtmlMsg("SE ACTUALIZO EL INVENTARIO");
+    eu.setSubject("SE ACTUALIZO EL INVENTARIO Y VISTA HABERES");
+    eu.setHtmlMsg("SE ACTUALIZO EL INVENTARIO Y VISTA HABERES");
     eu.setFrom("marces2000@gmail.com");
 
     List<String> adds = new ArrayList<>();
