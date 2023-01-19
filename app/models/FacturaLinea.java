@@ -160,6 +160,8 @@ public class FacturaLinea extends Model{
 						idCuenta = new Long(833);
 					}if(f.expediente.ejercicio_id.compareTo(new Long(13))== 0){
 						idCuenta = new Long(1047);
+					}if(f.expediente.ejercicio_id.compareTo(new Long(14))== 0){
+						idCuenta = new Long(1752);
 					}
 					
 					
