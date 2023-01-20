@@ -19,6 +19,7 @@ import java.security.cert.X509Certificate;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.List;
 import java.util.Properties;
 
 import javax.xml.datatype.DatatypeConfigurationException;
@@ -74,10 +75,6 @@ import org.xml.sax.SAXException;
 import play.Logger;
 import play.Play;
 import utils.afip.wsfe.wsdl.*;
-import utils.afip.wsfe.wsdl.ArrayOfErr;
-import utils.afip.wsfe.wsdl.ArrayOfEvt;
-import utils.afip.wsfe.wsdl.Err;
-import utils.afip.wsfe.wsdl.Evt;
 
 import org.dom4j.Document;
 import org.dom4j.io.SAXReader;
@@ -332,8 +329,8 @@ public class AfipController {
 		//Create request and params, including Auth
 		FEAuthRequest auth = new FEAuthRequest();
 		auth.setCuit(Long.parseLong("20301766700"));
-		auth.setToken("PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiIHN0YW5kYWxvbmU9InllcyI/Pgo8c3NvIHZlcnNpb249IjIuMCI+CiAgICA8aWQgc3JjPSJDTj13c2FhaG9tbywgTz1BRklQLCBDPUFSLCBTRVJJQUxOVU1CRVI9Q1VJVCAzMzY5MzQ1MDIzOSIgZHN0PSJDTj13c2ZlLCBPPUFGSVAsIEM9QVIiIHVuaXF1ZV9pZD0iMjE1ODA4MDQyNCIgZ2VuX3RpbWU9IjE2NTkwOTg1NDIiIGV4cF90aW1lPSIxNjU5MTQxODAyIi8+CiAgICA8b3BlcmF0aW9uIHR5cGU9ImxvZ2luIiB2YWx1ZT0iZ3JhbnRlZCI+CiAgICAgICAgPGxvZ2luIGVudGl0eT0iMzM2OTM0NTAyMzkiIHNlcnZpY2U9IndzZmUiIHVpZD0iU0VSSUFMTlVNQkVSPUNVSVQgMjAyNDc3ODEwMzAsIENOPXBhcnF1ZXNhbHVkIiBhdXRobWV0aG9kPSJjbXMiIHJlZ21ldGhvZD0iMjIiPgogICAgICAgICAgICA8cmVsYXRpb25zPgogICAgICAgICAgICAgICAgPHJlbGF0aW9uIGtleT0iMjAzMDE3NjY3MDAiIHJlbHR5cGU9IjQiLz4KICAgICAgICAgICAgPC9yZWxhdGlvbnM+CiAgICAgICAgPC9sb2dpbj4KICAgIDwvb3BlcmF0aW9uPgo8L3Nzbz4K");
-		auth.setSign("OhZBnjwwABL+OkePFlFev0jICjYnqasoB3m5GEw1XXbpBh96rF8QcP52foo2bH1kPUnP72Z56rlYB3js/KD23bzcSWWraLcThWF8thU2NtMVyc77/qe71D51FartY8oPIjOb3jt/mdQnnCSPYuqNcLcqViyICJxWdMeIqXQqMWo=");
+		auth.setToken("PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiIHN0YW5kYWxvbmU9InllcyI/Pgo8c3NvIHZlcnNpb249IjIuMCI+CiAgICA8aWQgc3JjPSJDTj13c2FhaG9tbywgTz1BRklQLCBDPUFSLCBTRVJJQUxOVU1CRVI9Q1VJVCAzMzY5MzQ1MDIzOSIgZHN0PSJDTj13c2ZlLCBPPUFGSVAsIEM9QVIiIHVuaXF1ZV9pZD0iNDcwODc3NzIxIiBnZW5fdGltZT0iMTY3NDIxODgwNCIgZXhwX3RpbWU9IjE2NzQyNjIwNjQiLz4KICAgIDxvcGVyYXRpb24gdHlwZT0ibG9naW4iIHZhbHVlPSJncmFudGVkIj4KICAgICAgICA8bG9naW4gZW50aXR5PSIzMzY5MzQ1MDIzOSIgc2VydmljZT0id3NmZSIgdWlkPSJTRVJJQUxOVU1CRVI9Q1VJVCAyMDI0Nzc4MTAzMCwgQ049cGFycXVlc2FsdWQiIGF1dGhtZXRob2Q9ImNtcyIgcmVnbWV0aG9kPSIyMiI+CiAgICAgICAgICAgIDxyZWxhdGlvbnM+CiAgICAgICAgICAgICAgICA8cmVsYXRpb24ga2V5PSIyMDMwMTc2NjcwMCIgcmVsdHlwZT0iNCIvPgogICAgICAgICAgICA8L3JlbGF0aW9ucz4KICAgICAgICA8L2xvZ2luPgogICAgPC9vcGVyYXRpb24+Cjwvc3NvPgo=");
+		auth.setSign("qSGR2ipP1zEeGZqOlKLmoqieAUniDaa5VDwFNHVft7Mu/4h4JZNRXzDvQeMWzdvVr8YQ6ztxtGe5w6hoySbaENB2cMPsb8M5y1Hq+aqJ8IMhtVXi0pa8vQz1uUomwMt7Q1bMdVuED+jNj7EHnKwYYTHVk2ZvrPN+ZQQ7yOdjbRo=");
 		//auth.setCuit(Long.parseLong(tra.getCuit()));
 		//auth.setToken(tra.getToken());
 		//auth.setSign(tra.getSign());
@@ -374,7 +371,7 @@ public class AfipController {
 		//CI+CiAgICAgICAgPGxvZ2luIGVudGl0eT0iMzM2OTM0NTAyMzkiIHNlcnZpY2U9IndzZmUiIHVpZD0iU0VSSUFMTlVNQkVSPUNVSVQgMjAyNDc3ODEwMzAsIENOPXBhcnF1ZXNhbHVkIiBhdXRobWV0aG9kPSJjbXMiIHJlZ21ldGhvZD0iMjIiPgogICAgICAgIC
 		//AgICA8cmVsYXRpb25zPgogICAgICAgICAgICAgICAgPHJlbGF0aW9uIGtleT0iMjAzMDE3NjY3MDAiIHJlbHR5cGU9IjQiLz4KICAgICAgICAgICAgPC9yZWxhdGlvbnM+CiAgICAgICAgPC9sb2dpbj4KICAgIDwvb3BlcmF0aW9uPgo8L3Nzbz4K</Token>
 		//<Sign></Sign><Cuit>20301766700</Cuit></Auth><PtoVta>1</PtoVta><CbteTipo>1</CbteTipo></FECompUltimoAutorizado>";
-		 Logger.debug("xxxxxxxxxxx");
+		Logger.debug("xxxxxxxxxxx");
 			Logger.debug("xxxxxxxxx "+sw.toString().replace("<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>", ""));
 			Logger.debug("xxxxxxx");
 		String sw1 = sw.toString().replace("<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>", "");	
@@ -388,9 +385,10 @@ public class AfipController {
 		//FECompUltimoAutorizadoResponse response = (FECompUltimoAutorizadoResponse) webServiceTemplate.marshalSendAndReceive(request);
 		Logger.debug("vvvvvvvvvvvvvvvvvv22");
 		
-		XMLInputFactory xif = XMLInputFactory.newInstance();
+		//XMLInputFactory xif = XMLInputFactory.newInstance();
 		InputStream targetStream = new ByteArrayInputStream(result2.get().getBody().getBytes());
-        XMLStreamReader reader = xif.createXMLStreamReader(targetStream);
+        //XMLStreamReader reader = xif.createXMLStreamReader(targetStream);
+        
         //reader.nextTag(); // Advance to Envelope tag
         //reader.nextTag();
         //reader.next(); // Advance to Body tag
@@ -489,9 +487,9 @@ public class AfipController {
         
 		JAXBContext jaxbContext = JAXBContext.newInstance(FECompUltimoAutorizadoResponse.class);
         Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
-        StringReader reader2 = new StringReader("<FECompUltimoAutorizadoResponse xmlns=\"http://ar.gov.afip.dif.FEV1/\"><FECompUltimoAutorizadoResult><PtoVta>0</PtoVta><CbteTipo>0</CbteTipo><CbteNro>0</CbteNro><Errors><Err><Code>600</Code><Msg>ValidacionDeToken: No validaron las fechas del token GenTime, ExpTime, NowUTC: 1652102088 (5/9/2022 1:14:18 PM), 1652145348 (5/10/2022 1:15:48 AM), 6/29/2022 1:22:25 PM</Msg></Err></Errors></FECompUltimoAutorizadoResult></FECompUltimoAutorizadoResponse>");
+        //StringReader reader2 = new StringReader("<FECompUltimoAutorizadoResponse xmlns=\"http://ar.gov.afip.dif.FEV1/\"><FECompUltimoAutorizadoResult><PtoVta>0</PtoVta><CbteTipo>0</CbteTipo><CbteNro>0</CbteNro><Errors><Err><Code>600</Code><Msg>ValidacionDeToken: No validaron las fechas del token GenTime, ExpTime, NowUTC: 1652102088 (5/9/2022 1:14:18 PM), 1652145348 (5/10/2022 1:15:48 AM), 6/29/2022 1:22:25 PM</Msg></Err></Errors></FECompUltimoAutorizadoResult></FECompUltimoAutorizadoResponse>");
         
-        String xml = "<A><B><id>0</id></B><B><id>1</id></B></A>";
+        //String xml = "<A><B><id>0</id></B><B><id>1</id></B></A>";
         DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
         org.w3c.dom.Document doc = dbf.newDocumentBuilder().parse(targetStream);
 
@@ -511,15 +509,217 @@ public class AfipController {
         
         StringReader finalreader = new StringReader(nodeToString(result3));
         FECompUltimoAutorizadoResponse datos = (FECompUltimoAutorizadoResponse) jaxbUnmarshaller.unmarshal(finalreader);
-        //    System.out.println(datos);
+        System.out.println("-----------------------------------");
+        System.out.println(datos.getFECompUltimoAutorizadoResult().getCbteTipo());
+        System.out.println("getCbteNro: "+datos.getFECompUltimoAutorizadoResult().getCbteNro());
+        System.out.println(datos.getFECompUltimoAutorizadoResult().getPtoVta());
+        System.out.println("-----------------------------------");
         System.out.println("Valor: "+datos.getFECompUltimoAutorizadoResult().getErrors());
-        
-        for(Err a : datos.getFECompUltimoAutorizadoResult().getErrors().getErr()) {
-        	
-        	System.out.println("a.getMsg();: "+a.getMsg());
+        if(datos.getFECompUltimoAutorizadoResult().getErrors() != null) {
+	        for(Err a : datos.getFECompUltimoAutorizadoResult().getErrors().getErr()) {
+	        	
+	        	System.out.println("a.getMsg();: "+a.getMsg());
+	        }
         }
-		
         Logger.debug("vvvvvvvvvvvvvvvvvv333");
+        
+        /************SET AUTH***********************/
+        FECAESolicitar fECAESolicitar = new FECAESolicitar();
+        fECAESolicitar.setAuth(auth);
+        /************FIN SET AUTH***********************/
+        
+        
+        FECAERequest fcaer = new FECAERequest();
+        
+        
+        /************SET CAB REQ***********************/
+        /* 
+         * 	<ar:FeCabReq>
+			 <ar:CantReg>int</ar:CantReg>
+			 <ar:PtoVta>int</ar:PtoVta>
+			 <ar:CbteTipo>int</ar:CbteTipo>
+			</ar:FeCabReq>
+         */
+        FECAECabRequest fECAECabRequest = new FECAECabRequest();
+        fECAECabRequest.setCantReg(1);
+        fECAECabRequest.setCbteTipo(1);
+        fECAECabRequest.setPtoVta(1);
+        
+        fcaer.setFeCabReq(fECAECabRequest);
+        /************FIN SET CAB REQ***********************/
+        
+        /************SET DETALLE CAE***********************/
+        /*
+         <ar:FeDetReq>
+			 <ar:FECAEDetRequest>
+				 <ar:Concepto>int</ar:Concepto>
+				 <ar:DocTipo>int</ar:DocTipo>
+				 <ar:DocNro>long</ar:DocNro>
+				 <ar:CbteDesde>long</ar:CbteDesde>
+				 <ar:CbteHasta>long</ar:CbteHasta>
+				 <ar:CbteFch>string</ar:CbteFch>
+				 <ar:ImpTotal>double</ar:ImpTotal>
+				 <ar:ImpTotConc>double</ar:ImpTotConc>
+				 <ar:ImpNeto>double</ar:ImpNeto>
+				 <ar:ImpOpEx>double</ar:ImpOpEx>
+				 <ar:ImpTrib>double</ar:ImpTrib>
+				 <ar:ImpIVA>double</ar:ImpIVA>
+				 <ar:FchServDesde>string</ar:FchServDesde>
+				 <ar:FchServHasta>string</ar:FchServHasta>
+				 <ar:FchVtoPago>string</ar:FchVtoPago>
+				 <ar:MonId>string</ar:MonId>
+				 <ar:MonCotiz>double</ar:MonCotiz>
+				 <ar:CbtesAsoc>
+					 <ar:CbteAsoc>
+						 <ar:Tipo>short</ar:Tipo>
+						 <ar:PtoVta>int</ar:PtoVta>
+						 <ar:Nro>long</ar:Nro>
+					 </ar:CbteAsoc>
+				 </ar:CbtesAsoc>
+				 <ar:Tributos>
+					 <ar:Tributo>
+						 <ar:Id>short</ar:Id>
+						 <ar:Desc>string</ar:Desc>
+						 <ar:BaseImp>double</ar:BaseImp>
+						 <ar:Alic>double</ar:Alic>
+						 <ar:Importe>double</ar:Importe>
+					 </ar:Tributo>
+				 </ar:Tributos>
+				 <ar:Iva>
+					 <ar:AlicIva>
+					 <ar:Id>short</ar:Id>
+					 <ar:BaseImp>double</ar:BaseImp>
+					 <ar:Importe>double</ar:Importe>
+					 </ar:AlicIva>
+				 </ar:Iva>
+				 <ar:Opcionales>
+					 <ar:Opcional>
+						 <ar:Id>string</ar:Id>
+						 <ar:Valor>string</ar:Valor>
+					 </ar:Opcional>
+				 </ar:Opcionales>
+			</ar:FECAEDetRequest>
+		</ar:FeDetReq>
+         */
+        ArrayOfFECAEDetRequest arrayOfFECAEDetRequest = new ArrayOfFECAEDetRequest();
+        List<FECAEDetRequest> fecaeDetRequests = arrayOfFECAEDetRequest.getFECAEDetRequest();
+        
+        FECAEDetRequest fECAEDetRequest = new FECAEDetRequest();
+         
+        fECAEDetRequest.setConcepto(1);//<ar:Concepto>int</ar:Concepto>
+        fECAEDetRequest.setDocTipo(80);//<ar:DocTipo>int</ar:DocTipo>
+        fECAEDetRequest.setDocNro(Long.parseLong("20002307554"));//<ar:DocNro>long</ar:DocNro>
+        
+        
+        Long CbteNro = new Long(datos.getFECompUltimoAutorizadoResult().getCbteNro())+1;
+        
+        System.out.println("---------CbteNroCbteNroCbteNroCbteNroCbteNro----------"+CbteNro);
+        
+        fECAEDetRequest.setCbteDesde(CbteNro);//<ar:CbteDesde>long</ar:CbteDesde>
+        fECAEDetRequest.setCbteHasta(CbteNro);//<ar:CbteHasta>long</ar:CbteHasta>
+        fECAEDetRequest.setCbteFch("20230120");//<ar:CbteFch>string</ar:CbteFch>
+        
+        fECAEDetRequest.setImpTotal(5000);//<ar:ImpTotal>double</ar:ImpTotal>
+        fECAEDetRequest.setImpTotConc(5000);//<ar:ImpTotConc>double</ar:ImpTotConc>
+        fECAEDetRequest.setImpNeto(0);//<ar:ImpNeto>double</ar:ImpNeto>
+        fECAEDetRequest.setImpOpEx(0);//<ar:ImpOpEx>double</ar:ImpOpEx>
+        fECAEDetRequest.setImpTrib(0);//<ar:ImpTrib>double</ar:ImpTrib>
+        fECAEDetRequest.setImpIVA(0);//<ar:ImpIVA>double</ar:ImpIVA>
+        //fECAEDetRequest.setFchServDesde(value);//<ar:FchServDesde>string</ar:FchServDesde>
+        //fECAEDetRequest.setFchServHasta(value);//<ar:FchServHasta>string</ar:FchServHasta>
+        //fECAEDetRequest.setFchVtoPago(value);//<ar:FchVtoPago>string</ar:FchVtoPago>
+        fECAEDetRequest.setMonId("PES");//<ar:MonId>string</ar:MonId>
+        fECAEDetRequest.setMonCotiz(1);//<ar:MonCotiz>double</ar:MonCotiz>
+        
+        
+        //.getMsg();: El campo  'Importe Total' ImpTotal, debe ser igual  a la  suma de ImpTotConc + ImpNeto + ImpOpEx + ImpTrib + ImpIVA.
+        //a.getMsg();: Si ImpNeto es mayor a 0 el objeto IVA es obligatorio.
+        //a.getMsg();: Si el comprobante es Debito o Credito, enviar estructura CbteAsoc o PeriodoAsoc.
+
+        
+        
+        fecaeDetRequests.add(fECAEDetRequest);
+        
+        fcaer.setFeDetReq(arrayOfFECAEDetRequest);
+        
+        
+        /************FIN SET DETALLE CAE***********************/
+        
+        
+        
+        fECAESolicitar.setFeCAEReq(fcaer);
+      	
+        JAXBContext contexto2 = JAXBContext.newInstance(fECAESolicitar.getClass());
+        Marshaller marshaller2 = contexto2.createMarshaller();
+        marshaller2.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
+        
+        StringWriter sw2 = new StringWriter();
+        marshaller2.marshal(fECAESolicitar, sw2);
+        
+        String sw12 = sw2.toString().replace("<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>", "");	
+        String sopa2 = soapHeader+sw12+soapFooter;
+        Promise<WS.Response> result222 = WS.url("https://wswhomo.afip.gov.ar/wsfev1/service.asmx").setContentType("text/xml").post(sopa2);
+		InputStream targetStream2 = new ByteArrayInputStream(result222.get().getBody().getBytes());
+        
+		JAXBContext jaxbContext2 = JAXBContext.newInstance(FECAESolicitarResponse.class);
+        Unmarshaller jaxbUnmarshaller2 = jaxbContext2.createUnmarshaller();
+        
+        DocumentBuilderFactory dbf2 = DocumentBuilderFactory.newInstance();
+        org.w3c.dom.Document doc2 = dbf2.newDocumentBuilder().parse(targetStream2);
+
+        XPath xPath2 = XPathFactory.newInstance().newXPath();
+        Node result32 = (Node)xPath2.evaluate("//FECAESolicitarResponse", doc2, XPathConstants.NODE);
+       
+        StringReader finalreader2 = new StringReader(nodeToString(result32));
+        System.out.println(finalreader2);
+        
+        FECAESolicitarResponse datos2 = (FECAESolicitarResponse) jaxbUnmarshaller2.unmarshal(finalreader2);
+        System.out.println("-----------------------------------");
+        //System.out.println("-----------------------------------"+
+        //datos2.getFECAESolicitarResult().getFeDetResp().getFECAEDetResponse().get(0));
+        
+        System.out.println(datos2.getFECAESolicitarResult().getFeCabResp().getCbteTipo());
+        System.out.println(datos2.getFECAESolicitarResult().getFeCabResp().getCuit());
+        System.out.println(datos2.getFECAESolicitarResult().getFeCabResp().getFchProceso());
+        System.out.println(datos2.getFECAESolicitarResult().getFeCabResp().getPtoVta());
+        System.out.println(datos2.getFECAESolicitarResult().getFeCabResp().getReproceso());
+        System.out.println(datos2.getFECAESolicitarResult().getFeCabResp().getResultado()); 
+        System.out.println(datos2.getFECAESolicitarResult().getFeDetResp().getFECAEDetResponse().get(0).getCAE());
+        
+        
+        if(datos2.getFECAESolicitarResult().getErrors() != null) {
+	        for(Err a : datos2.getFECAESolicitarResult().getErrors().getErr()) {
+	        	
+	        	System.out.println("a.getMsg();: "+a.getMsg());
+	        }
+        }
+        System.out.println("---------CAAAAAAAAEEE----------");
+        System.out.println("getCAE: "+datos2.getFECAESolicitarResult().getFeDetResp().getFECAEDetResponse().get(0).getCAE());
+        System.out.println("getCAEFchVto: "+datos2.getFECAESolicitarResult().getFeDetResp().getFECAEDetResponse().get(0).getCAEFchVto());
+        System.out.println("getCbteDesde: "+datos2.getFECAESolicitarResult().getFeDetResp().getFECAEDetResponse().get(0).getCbteDesde());
+        System.out.println("getCbteHasta: "+datos2.getFECAESolicitarResult().getFeDetResp().getFECAEDetResponse().get(0).getCbteHasta());
+        System.out.println("getConcepto: "+datos2.getFECAESolicitarResult().getFeDetResp().getFECAEDetResponse().get(0).getConcepto());
+        System.out.println("getDocNro: "+datos2.getFECAESolicitarResult().getFeDetResp().getFECAEDetResponse().get(0).getDocNro());
+        System.out.println("getDocTipo: "+datos2.getFECAESolicitarResult().getFeDetResp().getFECAEDetResponse().get(0).getDocTipo());
+        System.out.println("getResultado: "+datos2.getFECAESolicitarResult().getFeDetResp().getFECAEDetResponse().get(0).getResultado());
+        System.out.println("getObservaciones: "+datos2.getFECAESolicitarResult().getFeDetResp().getFECAEDetResponse().get(0).getObservaciones());
+        
+        
+        if(datos2.getFECAESolicitarResult().getFeDetResp().getFECAEDetResponse().get(0).getObservaciones() != null) {
+	        for(Obs a : datos2.getFECAESolicitarResult().getFeDetResp().getFECAEDetResponse().get(0).getObservaciones().getObs()) {
+	        	
+	        	System.out.println("a.getMsg();: "+ a.getMsg());
+	        }
+        }
+        
+        
+        System.out.println("---------CAAAAAAAAEEE----------");
+        
+        System.out.println("---------FINNNNNNNNNNNNNNNNNN----------");
+		
+		
+        
+        
 		//FECompUltimoAutorizadoResponse response = (FECompUltimoAutorizadoResponse) webServiceTemplate.marshalSendAndReceive(request);
 		//FERecuperaLastCbteResponse ultimoComprobante = response.getFECompUltimoAutorizadoResult();
 		
