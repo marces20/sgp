@@ -56,6 +56,7 @@ import views.html.recupero.recuperoFactura.editarRecuperoFactura;
 
 import com.avaje.ebean.Ebean;
 import com.avaje.ebean.SqlRow;
+import com.avaje.ebean.SqlUpdate;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
@@ -345,7 +346,7 @@ public class OrdenesController extends Controller {
 		
 		try {
 			Orden o = ordenForm.get();
-			 
+			Integer nop = o.numero_orden_provision; 
 			 
 			if(o.numero_orden_provision != null && o.expediente_id != null){
 				Expediente ex = Expediente.find.byId(o.expediente_id);
@@ -378,11 +379,23 @@ public class OrdenesController extends Controller {
 				return badRequest(editarOrden.render(ordenForm,orden));
 			}
 			
+			 
 			Orden s = Orden.find.byId(id);
 			o.estado_id = s.estado_id;
 			o.write_usuario_id = new Long(Usuario.getUsuarioSesion());
 			o.write_date = new Date();
 			o.update();
+			
+			
+			if(nop == null) {
+				Logger.debug("ttttttttttttttttttn "+o.numero_orden_provision);
+				SqlUpdate update1 = Ebean.createSqlUpdate("alter table ordenes disable trigger all");
+				update1.execute();
+				SqlUpdate update = Ebean.createSqlUpdate("update ordenes set numero_orden_provision = null where id = :id").setParameter("id", id);
+				update.execute();
+				SqlUpdate update2 = Ebean.createSqlUpdate("alter table ordenes enable trigger all");
+				update2.execute();
+			}
 			
 			flash("success", "La orden se ha actualizado");
 			return redirect( controllers.compras.routes.OrdenesController.ver(ordenForm.get().id)+ UriTrack.get("&"));
