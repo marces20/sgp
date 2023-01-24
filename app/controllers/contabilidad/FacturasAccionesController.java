@@ -1243,8 +1243,8 @@ public class FacturasAccionesController  extends Controller {
 			flash("error", "No se puede modificar los registros."+e);
 			return ok(modalCerrarFondoPermanente.render(form().bindFromRequest(),id));
 		}finally {
-			SqlUpdate update1 = Ebean.createSqlUpdate("alter table orden_lineas enable trigger all");
-			update1.execute();
+			//SqlUpdate update1 = Ebean.createSqlUpdate("alter table orden_lineas enable trigger all");
+			//update1.execute();
 		}
 	}
 	
