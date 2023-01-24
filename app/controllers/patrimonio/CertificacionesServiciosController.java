@@ -692,6 +692,11 @@ public class CertificacionesServiciosController extends Controller {
 			flash("error", "La certificación debe estar en estado borrador.");
 			return redirect(request().getHeader("referer"));
 		}
+		
+		if(cs.acta_id != null) {
+			flash("error", "La certificación tiene un acta asociada. Debe eliminar la asociacion.");
+			return redirect(request().getHeader("referer"));
+		}
 
 		try {
 			cs.delete();
