@@ -26,6 +26,8 @@ public class EnvioMail extends Model{
 	
 	public Long ids;
 	
+	public Long agente_id;
+	
 	@Required(message="requiere email")
 	public String email;
 	
