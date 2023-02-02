@@ -48,6 +48,33 @@ $( function(){
 		
 		return false;
 	});
+	
+	$('#reporteLineasCircuitoOp').click( function() { //abrir modal para mostrar mensaje informe rentas
+		var url = $(this).attr("data-url");
+		var dialogo = $('<div></div>');
+
+		dialogo.dialog({
+			title: "Lineas ops",
+	    	resizable: false,
+			autoOpen: true,
+			modal: true,
+			height: 250,
+			width:750,
+	        buttons: {
+		          Cerrar: function() {
+		            $( this ).dialog( "destroy" );
+		          }
+		    },
+	    	close: function(event, ui ){
+	    		$(this).dialog( "destroy" );
+	    	},
+		    open: function( event, ui ) {
+				$.post(url, getCheckSeleccionados(), function(data){
+					dialogo.html(data);
+				});	
+		    }
+	    });
+	});
 		
 	$('#accionPasarContabilidad').click( function() { //abrir modal para pasar a borrador
 		var url = $(this).attr("data-url");

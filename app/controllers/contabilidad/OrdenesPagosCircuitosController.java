@@ -2,7 +2,12 @@ package controllers.contabilidad;
 
 import static play.data.Form.form;
 
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OutputStreamWriter;
+import java.io.Writer;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -10,13 +15,22 @@ import java.util.List;
 import javax.persistence.PersistenceException;
 import javax.validation.ConstraintViolationException;
 
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.CellStyle;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
+
 import com.avaje.ebean.Ebean;
+import com.avaje.ebean.ExpressionList;
 
 import controllers.Secured;
 import controllers.auth.CheckPermiso;
 import models.Estado;
 import models.ExpedienteMovimiento;
 import models.Factura;
+import models.FacturaLinea;
 import models.OrdenPago;
 import models.OrdenPagoCircuito;
 import models.Organigrama;
@@ -31,6 +45,7 @@ import utils.NoRecordModelException;
 import utils.RequestVar;
 import utils.UriTrack;
 import views.html.sinPermiso;
+import views.html.contabilidad.facturas.reportes.modalReporteControlFacturas;
 import views.html.contabilidad.ordenesPagosCircuitos.*;
 import views.html.expediente.expediente.acciones.modalPasarOtroServicio;
 
@@ -337,6 +352,213 @@ public class OrdenesPagosCircuitosController extends Controller {
 			return false;
 		}
 		
+	}
+	
+	public static Result reporteLineas(){
+		
+		List<Integer> oSeleccionados = getSeleccionados();
+		
+		if(oSeleccionados.isEmpty()) {
+			flash("error", "No se han seleccionado op.");
+			return ok(modalReporteControlFacturas.render(null));
+		}
+		
+		String dirTemp = System.getProperty("java.io.tmpdir");
+		
+		 
+		try {
+			File archivo = new File(dirTemp+"/lineas_op.xls");
+			if(archivo.exists()) archivo.delete();
+			archivo.createNewFile();
+			Workbook libro = new HSSFWorkbook();
+			FileOutputStream archivoTmp = new FileOutputStream(archivo);
+			
+			CellStyle comun = libro.createCellStyle();
+			comun.setBorderRight(CellStyle.BORDER_THIN);
+			comun.setBorderLeft(CellStyle.BORDER_THIN);
+			comun.setBorderTop(CellStyle.BORDER_THIN);
+			comun.setBorderBottom(CellStyle.BORDER_THIN);
+			
+			CellStyle estiloMoneda = libro.createCellStyle();
+			estiloMoneda.setDataFormat((short) 7);
+			estiloMoneda.setBorderRight(CellStyle.BORDER_THIN);
+			estiloMoneda.setBorderLeft(CellStyle.BORDER_THIN);
+			estiloMoneda.setBorderTop(CellStyle.BORDER_THIN);
+			estiloMoneda.setBorderBottom(CellStyle.BORDER_THIN);
+			
+			Sheet hoja = libro.createSheet("Lineas op");
+			
+			
+			int f = 0;
+			Row fila = hoja.createRow(f);
+			Cell celda0 = fila.createCell(0);
+			
+			fila = hoja.createRow(f);
+			celda0 = fila.createCell(0);
+			celda0.setCellValue("Proveedor");
+			celda0.setCellStyle(comun);
+			celda0 = fila.createCell(1);
+			celda0.setCellValue("OP");
+			celda0.setCellStyle(comun);
+			celda0 = fila.createCell(2);
+			celda0.setCellValue("Expediente");
+			celda0.setCellStyle(comun);
+			celda0 = fila.createCell(3);
+			celda0.setCellValue("Exp. Fisico");
+			celda0.setCellStyle(comun);
+			celda0 = fila.createCell(4);
+			celda0.setCellValue("Cuenta");
+			celda0.setCellStyle(comun);
+			celda0 = fila.createCell(5);
+			celda0.setCellValue("Fecha Pago");
+			celda0.setCellStyle(comun);
+			celda0 = fila.createCell(6);
+			celda0.setCellValue("Fecha Ultima");
+			celda0.setCellStyle(comun);
+			celda0 = fila.createCell(7);
+			celda0.setCellValue("Fecha Creacion");
+			celda0.setCellStyle(comun);
+			celda0 = fila.createCell(8);
+			celda0.setCellValue("Fecha Contabilidad");
+			celda0.setCellStyle(comun);
+			celda0 = fila.createCell(9);
+			celda0.setCellValue("Fecha Rendiciones");
+			celda0.setCellStyle(comun);
+			celda0 = fila.createCell(10);
+			celda0.setCellValue("Fecha Rendido");
+			celda0.setCellStyle(comun);
+			
+			celda0 = fila.createCell(11);
+			celda0.setCellValue("Total");
+			celda0.setCellStyle(comun);
+			
+			celda0 = fila.createCell(12);
+			celda0.setCellValue("Estado");
+			celda0.setCellStyle(comun);
+			
+			celda0 = fila.createCell(13);
+			celda0.setCellValue("Servicio Exp Fisico");
+			celda0.setCellStyle(comun);
+			
+			
+			 
+	    	
+	    	 
+	    			
+			
+			List<OrdenPagoCircuito> ordenPagoCircuitos = OrdenPagoCircuito.find.fetch("proveedor")
+	    			.fetch("expediente")
+	    			.fetch("ordenPago")
+	    			.fetch("cuentaPropia")
+	    			.where().in("id", oSeleccionados).orderBy("id desc").findList();
+	    	
+			for (OrdenPagoCircuito orden : ordenPagoCircuitos) {
+				
+				f++;
+				 
+				fila = hoja.createRow(f);
+				
+				for(int c=0;c<14;c++){
+					Cell celda = fila.createCell(c);
+					switch (c) {
+					case 0:
+						celda.setCellValue(orden.proveedor.nombre);
+						celda.setCellStyle(comun);
+						break;
+					case 1:
+						celda.setCellValue(orden.ordenPago.getNombreCompleto());
+						celda.setCellStyle(comun);
+						break;
+					case 2:
+						celda.setCellValue(orden.expediente.getExpedienteEjercicio());
+						celda.setCellStyle(comun);
+						break;	
+					case 3:
+						celda.setCellValue((orden.expedienteFisico != null)?orden.expedienteFisico.getExpedienteEjercicio():"");
+						celda.setCellStyle(comun);
+						break;	
+					case 4:
+						celda.setCellValue((orden.cuentaPropia != null)?orden.cuentaPropia.numero:"");
+						celda.setCellStyle(comun);
+						break;
+					case 5:
+						celda.setCellValue((orden.fecha_pago != null)?utils.DateUtils.formatDate(orden.fecha_pago):"");
+						celda.setCellStyle(comun);
+						break;	
+					case 6:
+						celda.setCellValue((orden.fecha_mayor != null)?utils.DateUtils.formatDate(orden.fecha_mayor):"");
+						celda.setCellStyle(comun);
+						break;	
+					case 7:
+						celda.setCellValue((orden.fecha_creacion != null)?utils.DateUtils.formatDate(orden.fecha_creacion):"");
+						celda.setCellStyle(comun);
+						break;	
+					case 8:
+						celda.setCellValue((orden.fecha_contabilidad != null)?utils.DateUtils.formatDate(orden.fecha_contabilidad):"");
+						celda.setCellStyle(comun);
+						break;	
+					case 9:
+						celda.setCellValue((orden.fecha_rendiciones != null)?utils.DateUtils.formatDate(orden.fecha_rendiciones):"");
+						celda.setCellStyle(comun);
+						break;	
+					case 10:
+						celda.setCellValue((orden.fecha_rendicion != null)?utils.DateUtils.formatDate(orden.fecha_rendicion):"");
+						celda.setCellStyle(comun);
+						break;	
+					
+					case 11:
+						celda.setCellType(Cell.CELL_TYPE_NUMERIC);
+						celda.setCellValue(orden.total.doubleValue());
+						celda.setCellStyle(estiloMoneda);
+						break;		
+					case 12:
+						celda.setCellValue(orden.estado.nombre);
+						celda.setCellStyle(comun);
+						break;	
+					case 13:
+						celda.setCellValue(orden.expediente.servicio);
+						celda.setCellStyle(comun);
+						break;		
+					default:
+						break;
+					}
+				}
+				 
+			}
+			
+			
+			
+			libro.write(archivoTmp);   
+			Writer out = new BufferedWriter(new OutputStreamWriter(archivoTmp, "UTF8"));
+			out.flush();
+			out.close();
+			 
+			flash("success", "El archivo fue creado correctamente.");
+			return ok(modalReporteControlFacturas.render(archivo.getPath()));
+		} catch (IOException e) {
+			e.printStackTrace();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return ok();
+			
+	}
+	
+	public static List<Integer> getSeleccionados(){
+		String[] checks = null;
+		try {
+			checks = request().body().asFormUrlEncoded().get("id_pago[]");
+		} catch (NullPointerException e) {
+		}
+		
+		List<Integer> ids = new ArrayList<Integer>();
+		if(checks != null) {
+			for (String id : checks) {
+				ids.add(Integer.valueOf(id));
+			}
+		}
+		return ids;
 	}
 	
 }

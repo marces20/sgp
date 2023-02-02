@@ -340,6 +340,8 @@ POST   /OrdenPagoCircuito/cargarExpedienteFisico   	controllers.contabilidad.Ord
 
 GET    /OrdenPagoCircuitoLinea         		controllers.contabilidad.OrdenesPagosCircuitosLineasController.index(orden_pago_circuito_id:Long ?= 0)
 
+POST   /OrdenPagoCircuito/reporteLineas		controllers.contabilidad.OrdenesPagosCircuitosController.reporteLineas()
+
 GET    /BalanceCuentaPropia         			controllers.contabilidad.BalanceCuentaPropiaController.index()
 GET    /BalanceCuentaPropia/archivoIndex        controllers.contabilidad.BalanceCuentaPropiaController.archivoIndex()
 GET    /BalanceCuentaPropia/modalAgregarMovimientoBalanceCuentaPropia   controllers.contabilidad.BalanceCuentaPropiaController.modalAgregarMovimientoBalanceCuentaPropia()
