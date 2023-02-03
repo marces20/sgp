@@ -36,6 +36,7 @@ POST    /facturaProveedor/reportes/reporteComprobanteRetencionSellos    controll
 POST    /facturaProveedor/reportes/reporteComprobanteRetencionMunicipal    controllers.contabilidad.FacturasReportesController.reporteComprobanteRetencionMunicipal()
 POST    /facturaProveedor/reportes/reporteComprobanteRetencionGcia    controllers.contabilidad.FacturasReportesController.reporteComprobanteRetencionGcia()
 POST    /facturaProveedor/reportes/reporteComprobanteRetencionIva    controllers.contabilidad.FacturasReportesController.reporteComprobanteRetencionIva()
+POST    /facturaProveedor/reportes/reporteComprobanteRetencionIvaMasivo    controllers.contabilidad.FacturasReportesController.reporteComprobanteRetencionIvaMasivo()
 POST    /facturaProveedor/reportes/reporteComisiones    controllers.contabilidad.FacturasReportesController.reporteComisiones()
 
 POST    /facturaProveedor/reportes/reporteFondoPermanente    controllers.contabilidad.FacturasReportesController.reporteFondoPermanente(id:Long)
