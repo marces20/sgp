@@ -323,6 +323,74 @@ public class FacturasReportesController extends Controller  {
 		return ok(reporteComprobanteRetencioniibb.render(archivo.getPath()));
 	}
 	
+	public static Result reporteComprobanteRetencionIvaMasivo() {
+		
+		List<Integer> facturasSeleccionados = getSeleccionados();
+		if(facturasSeleccionados.isEmpty()) {
+			flash("error", "Debe seleccionar facturas para generar el reporte.");
+			return ok(reporteComprobanteRetencioniibb.render(null));
+		}
+		
+		 
+		
+		
+		
+		
+		
+		
+		List<FacturaLineaImpuesto> listaFacturasImpuestos = FacturaLineaImpuesto.find.where()
+															.in("factura_id", facturasSeleccionados)
+															.eq("cuenta_id",Cuenta.RET_IVA).findList();
+		
+		Map<Long,String> fechasPagos = new HashMap<>();
+		
+		for(FacturaLineaImpuesto lfi : listaFacturasImpuestos) {
+			
+			List<Pago> lp = Pago.find.where()
+					.eq("factura_id", lfi.factura.id)
+					.ne("estado_id", Estado.PAGO_ESTADO_BORRADOR)
+					.ne("estado_id",Estado.PAGO_ESTADO_CANCELADO)
+					.eq("tipo","payment")
+					.findList();
+			
+			if(lp.size() == 0) {
+				flash("error", "Debe seleccionar facturas pagada para generar el reporte");
+				return ok(reporteComprobanteRetencioniibb.render(null));
+			}
+			
+			fechasPagos.put(lfi.factura.id,  DateUtils.formatDate(lp.get(0).fecha_pago,"dd/MM/yyyy"));
+		}
+	
+		String dirTemp = System.getProperty("java.io.tmpdir");
+		File archivo = new File(dirTemp+"/comprobante_retencion_iva.odt");
+		
+		try{
+        	
+			InputStream in = Play.application().resourceAsStream("resources/reportes/contabilidad/facturas/comprobante_retencion_iva_masivo.odt");
+			IXDocReport report = XDocReportRegistry.getRegistry().loadReport( in, TemplateEngineKind.Velocity );
+			
+			FieldsMetadata metadata = report.createFieldsMetadata();
+			metadata.addFieldAsTextStyling("saltoLinea", SyntaxKind.Html);
+			IContext context = report.createContext();
+			
+			context.put("listaFacturasImpuestos", listaFacturasImpuestos);
+			context.put("date", new DateUtils());
+			context.put("fechasPagos", fechasPagos);
+			
+			//context.put("fechaPago", DateUtils.formatDate(lp.get(0).fecha_pago,"dd/MM/yyyy"));
+			
+			OutputStream out = new FileOutputStream(archivo);
+            report.process(context, out);
+		
+		}catch (Exception e) {
+			Logger.error(e.toString());
+			flash("error", "No se pudo generar el reporte.");
+			return ok(reporteComprobanteRetencioniibb.render(null));
+		}
+		
+		return ok(reporteComprobanteRetencioniibb.render(archivo.getPath()));
+	}
+	
 	
 	public static Result reporteRendicionSellos() {
 		

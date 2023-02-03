@@ -82,23 +82,28 @@
 				<button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown"> <i class="glyphicon glyphicon-list-alt"></i> Reportes <span class="caret"></span></button>
 
 				<ul class="dropdown-menu">
+					<li role="presentation" class="dropdown-header">Ordenes de Pago</li>
 					<li><a id="reporteOrdenDePago"  href="#" data-url="@controllers.contabilidad.routes.FacturasReportesController.ordenDePago()">Orden de Pago</a></li>
 					<li><a id="OPCservicios"  href="#" data-url="@controllers.contabilidad.routes.FacturasReportesController.OPCservicios()">OPC servicios</a></li>
-					<li><a id="reporteControlFacturas" href="#" data-url="@controllers.contabilidad.routes.FacturasReportesController.reporteControlFacturas()">Control Facturas</a></li>
-					<li><a id="reporteLineasFacturas" href="#" data-url="@controllers.contabilidad.routes.FacturasReportesController.reporteLineasFacturas()">Lineas Facturas</a></li>
-					<li><a id="reporteRendicionSellos" href="#" data-url="@controllers.contabilidad.routes.FacturasReportesController.reporteRendicionSellos()">Rendicion Sellos</a></li>
+					
+					<li role="presentation" class="dropdown-header">Retenciones</li>
 					<li><a id="reporteComprobanteRetencionSellos" href="#" data-url="@controllers.contabilidad.routes.FacturasReportesController.reporteComprobanteRetencionSellos()">Comprobante Retencion Sellos</a></li>
 					<li><a id="reporteRendicioniibb" href="#" data-url="@controllers.contabilidad.routes.FacturasReportesController.reporteComprobanteRetencioniibb()">Comprobante Retencion IIBB</a></li>
 					<li><a id="reporteRendicioniibb370" href="#" data-url="@controllers.contabilidad.routes.FacturasReportesController.reporteComprobanteRetencioniibb370()">Comprobante Retencion IIBB 3,70</a></li>
 					<li><a id="reporteRendicionSeguridad" href="#" data-url="@controllers.contabilidad.routes.FacturasReportesController.reporteComprobanteRetencionSeguridad()">Comprobante Retencion Investigacion y Seguridad</a></li>
 					<li><a id="reporteRendicionLimpieza" href="#" data-url="@controllers.contabilidad.routes.FacturasReportesController.reporteComprobanteRetencionLimpieza()">Comprobante Retencion Servicio Limpieza</a></li>
 					<li><a id="reporteRendicionReggral" href="#" data-url="@controllers.contabilidad.routes.FacturasReportesController.reporteComprobanteRetencionReggral()">Comprobante Retencion Regimen Gral de Contribuciones</a></li>				
-					<li><a id="reporteInformeSellos" href="#" data-url="@controllers.contabilidad.routes.FacturasReportesController.modalInformeSellos()">Informe Mensual Sellos</a></li>
 					<li><a id="reporteComprobanteRetencionMunicipal" href="#" data-url="@controllers.contabilidad.routes.FacturasReportesController.reporteComprobanteRetencionMunicipal()">Comprobante Retencion Municipal</a></li>
 					<li><a id="reporteComprobanteRetencionGcia" href="#" data-url="@controllers.contabilidad.routes.FacturasReportesController.reporteComprobanteRetencionGcia()">Comprobante Retencion Ganancias 4245</a></li>
 					<li><a id="reporteComprobanteRetencionIva" href="#" data-url="@controllers.contabilidad.routes.FacturasReportesController.reporteComprobanteRetencionIva()">Comprobante Retencion IVA</a></li>
-					<li><a id="reporteControlFacturasAFIP" href="#" data-url="@controllers.contabilidad.routes.FacturasReportesController.reporteControlFacturasAFIP()">Control Facturas AFIP</a></li>
+					<li><a id="reporteComprobanteRetencionIvaMasivo" href="#" data-url="@controllers.contabilidad.routes.FacturasReportesController.reporteComprobanteRetencionIvaMasivo()">Comprobante Retencion IVA-Masivo</a></li>
 					
+					<li role="presentation" class="dropdown-header">Otros</li>
+					<li><a id="reporteRendicionSellos" href="#" data-url="@controllers.contabilidad.routes.FacturasReportesController.reporteRendicionSellos()">Rendicion Sellos</a></li>
+					<li><a id="reporteInformeSellos" href="#" data-url="@controllers.contabilidad.routes.FacturasReportesController.modalInformeSellos()">Informe Mensual Sellos</a></li>
+					<li><a id="reporteLineasFacturas" href="#" data-url="@controllers.contabilidad.routes.FacturasReportesController.reporteLineasFacturas()">Lineas Facturas</a></li>
+					<li><a id="reporteControlFacturasAFIP" href="#" data-url="@controllers.contabilidad.routes.FacturasReportesController.reporteControlFacturasAFIP()">Control Facturas AFIP</a></li>
+					<li><a id="reporteControlFacturas" href="#" data-url="@controllers.contabilidad.routes.FacturasReportesController.reporteControlFacturas()">Control Facturas</a></li>
 					<li><a id="reporteComisiones" href="#" data-url="@controllers.contabilidad.routes.FacturasReportesController.reporteComisiones()">Reporte Comisiones</a></li>
 					<li><a id="reporteViatico"  href="#" data-url="@controllers.contabilidad.routes.FacturasReportesController.viatico()">Viaticos</a></li>
 				
@@ -109,6 +114,8 @@
 			<div class="dropdown pull-right btn-header">
 				<button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown"> <i class="glyphicon glyphicon-cog"></i> Acciones <span class="caret"></span> </button>
 				<ul class="dropdown-menu">
+				
+				
 				@if(Permiso.check("facturasSolicitud322")) {
 			  		<li><a id="accionSolicitud322" href="#" data-url="@controllers.contabilidad.routes.FacturasAccionesController.solicitud322()"> Solicitud 322</a></li>
 			  	}
