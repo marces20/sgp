@@ -116,8 +116,8 @@ public class ActualizarBalance extends Controller {
 		
 		try {
 			
-			Date fd = DateUtils.formatDate("01/01/2022", "dd/MM/yyyy");
-			Date fh = DateUtils.formatDate("31/03/2022", "dd/MM/yyyy");
+			Date fd = DateUtils.formatDate("01/11/2022", "dd/MM/yyyy");
+			Date fh = DateUtils.formatDate("31/12/2022", "dd/MM/yyyy");
 			
 			
 			conn2 = Configuracion2.get2().getConnection2();
@@ -235,8 +235,8 @@ public class ActualizarBalance extends Controller {
 		
 		try {
 			
-			Date fd = DateUtils.formatDate("01/01/2022", "dd/MM/yyyy");
-			Date fh = DateUtils.formatDate("31/03/2022", "dd/MM/yyyy");
+			Date fd = DateUtils.formatDate("01/11/2022", "dd/MM/yyyy");
+			Date fh = DateUtils.formatDate("31/12/2022", "dd/MM/yyyy");
 			
 			
 			conn2 = Configuracion2.get2().getConnection2();
@@ -355,8 +355,8 @@ public class ActualizarBalance extends Controller {
 		
 		try {
 			
-			Date fd = DateUtils.formatDate("01/01/2022", "dd/MM/yyyy");
-			Date fh = DateUtils.formatDate("31/03/2022", "dd/MM/yyyy");
+			Date fd = DateUtils.formatDate("01/04/2022", "dd/MM/yyyy");
+			Date fh = DateUtils.formatDate("31/12/2022", "dd/MM/yyyy");
 			
 			
 			conn2 = Configuracion2.get2().getConnection2();
@@ -468,8 +468,8 @@ public class ActualizarBalance extends Controller {
 		
 		try {
 			
-			Date fd = DateUtils.formatDate("01/02/2022", "dd/MM/yyyy");
-			Date fh = DateUtils.formatDate("31/03/2022", "dd/MM/yyyy");
+			Date fd = DateUtils.formatDate("01/12/2022", "dd/MM/yyyy");
+			Date fh = DateUtils.formatDate("31/12/2022", "dd/MM/yyyy");
 			
 			
 			conn2 = Configuracion2.get2().getConnection2();
@@ -502,25 +502,42 @@ public class ActualizarBalance extends Controller {
 				if(!idsExpLiq.contains(lmx.expediente_contribuciones_id)) {
 					idsExpLiq.add(lmx.expediente_contribuciones_id);
 				}
-			}*/
-			
-    		 
+			}
+			*/
+			List<Integer> idsExpLiq = new ArrayList<Integer>();
+			//idsExpLiq.add(34720);
+			//idsExpLiq.add(35055);
+			//idsExpLiq.add(36129);
+			//idsExpLiq.add(36130);
+			//idsExpLiq.add(36611); 
+    		idsExpLiq.add(31492);
+    		
 			List<Factura> lf = Factura.find.where().ge("fecha_orden_pago", fd)
-												   .le("fecha_orden_pago", fh)
-												   .eq("state_id", Estado.FACTURA_ESTADO_APROBADO)
+													.le("fecha_orden_pago", fh)
+													.eq("state_id", Estado.FACTURA_ESTADO_APROBADO)
+													//.in("expediente_id", idsExpLiq)
 												   //.not(Expr.in("expediente_id",idsExpLiq))
-												   //.eq("id", 59721)
+													//.eq("id", 66556)
 												   //.eq("orden_pago_id",29783)
-												   .findList();
+													.findList();
 			
 			System.out.println("-------------- "+lf.size());
+			
+			/*for(Factura f:lf) {
+				System.out.println("-------------- "+f.id);
+				if(f.id.compareTo(new Long(74518)) == 0) {
+					System.out.println("aaaaaaaayyyyyyyyyyyyy");
+					return true;
+				}
+			}*/
 			
 			List<Long> listaOpSueldo = new ArrayList<Long>(); 
 			List<Long> listaOpSueldoConvenio = new ArrayList<Long>(); 
 			
+			if(true) {
 			for(Factura f:lf) {
 				
-				
+				 
 				
 				
 				boolean ISHONORARIO = false;
@@ -537,7 +554,7 @@ public class ActualizarBalance extends Controller {
 					
 					Logger.debug("00000000000 "+fl.cuenta_analitica_id);
 					
-					Long cuenta_analitica_original_id= fl.cuenta_analitica_original_id;
+					Long cuenta_analitica_original_id= (fl.cuenta_analitica_original_id != null)?fl.cuenta_analitica_original_id:fl.cuenta_analitica_id;
 					
 					if(cuenta_analitica_original_id.equals((long)590) || cuenta_analitica_original_id.equals((long)794)) {
 						 Logger.debug("1111111111111111111");
@@ -1183,8 +1200,15 @@ public class ActualizarBalance extends Controller {
 					box.save();
 				}
 				asiento = asiento+1;
+				
+				
+				if(f.id.compareTo(new Long(74518)) == 0) {
+					System.out.println("aaaaaaaayyyyyyyyyyyyy");
+					return true;
+				}
+				
 			}
-			
+			}
 			
 			/*List<LiquidacionMes> lim = LiquidacionMes.find.where()
 					    .ge("fecha_orden_pago", fd)
@@ -1343,4 +1367,108 @@ TIPOS DE CUENTAS
 		return r;
 
 	}
+	
+	
+	public static boolean arregloFacturas(){
+		
+		System.out.println("Empezo a ActualizarBalance");
+		Connection conn2 = null;
+		
+		try {
+			
+			Date fd = DateUtils.formatDate("01/01/2022", "dd/MM/yyyy");
+			Date fh = DateUtils.formatDate("31/12/2022", "dd/MM/yyyy");
+			
+			
+			 
+    		
+			List<Factura> lf = Factura.find.where().ge("fecha_orden_pago", fd)
+													.le("fecha_orden_pago", fh)
+													.eq("state_id", Estado.FACTURA_ESTADO_APROBADO)
+													//.eq("expediente_id", 31492)
+													//.in("expediente_id", idsExpLiq)
+												   //.not(Expr.in("expediente_id",idsExpLiq))
+													//.eq("id", 66556)
+												   //.eq("orden_pago_id",29783)
+													.findList();
+			
+			System.out.println("-------------- "+lf.size());
+			
+			String xx= "";
+			String xx2= "";
+			
+			for(Factura f:lf) {
+				
+				List<Balance> bb = Balance.find.where().eq("fecha", f.fecha_orden_pago)
+				 					.eq("haber", f.base)
+				 					.eq("expediente_id", f.expediente_id)
+				 					.eq("orden_pago_id", f.orden_pago_id)
+				 					.eq("debe", BigDecimal.ZERO)
+				 					.eq("tipo", "facturas")
+				 					.eq("orden_id", f.orden_id).findList();
+				
+				
+				 if(bb.size() == 0) {
+					 xx+= " - "+f.id;
+					 
+				 }else  if(bb.size() > 1) {
+					 xx2+= " - "+f.orden_pago_id;
+				 }
+				
+				
+				/*Balance b = new Balance();
+				b.fecha = f.fecha_orden_pago;
+				b.fecha_debito = f.fecha_orden_pago;
+				b.haber= f.base;
+				b.expediente_id = f.expediente_id;
+				b.orden_pago_id = f.orden_pago_id;
+				b.debe = BigDecimal.ZERO;
+				b.cuenta_propia_id = getCuentaPropiaId(f.tipo_cuenta_id.intValue());
+				//HABERRRRRRR 
+				Integer ci = null;
+				b.estado_id = (long) Estado.BALANCE_BORRADOR;
+				b.cuenta_id = ci;
+				b.tipo = "facturas";
+				b.create_date = new Date();
+				b.create_usuario_id = new Long(Usuario.getUsuarioSesion());
+				b.asiento = 1;
+				b.orden_id = f.orden_id;
+				b.save();
+				
+				BalanceExpediente be = new BalanceExpediente();
+				be.balance_id = b.id;
+				be.expediente_id= f.expediente_id.longValue();
+				be.save();
+				
+				BalanceOrdenPago bo = new BalanceOrdenPago();
+				bo.balance_id = b.id;
+				bo.orden_pago_id = f.orden_pago_id;
+				bo.save();
+				*/
+				
+				
+				
+				
+				
+			}
+			System.out.println("facturas: "+ xx);
+			System.out.println("op mas de 2: "+ xx2);
+			System.out.println("22222222222");
+			
+			
+		}catch (Exception e) {
+	        //log.error("Error ResUserMigracion ", e);
+	    	play.Logger.error("errror", e);
+	    }finally {
+            
+         
+            
+        }
+		
+		System.out.println("Termino a ActualizarBalance");
+		
+		return true;
+	}
+	
+	
 }
