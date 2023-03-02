@@ -90,8 +90,8 @@ public class PagosAccionesController extends Controller {
 			return ok(modalCrearRefenciaEmbargos.render(d));
 		}
 		
-		String refExterna = "EMBARGOS-EXTERNOS-"+utils.DateUtils.formatDate(new Date(),"dd-MM-yyyy HH:mm");
-		String refMacro = "EMBARGOS-MACRO-"+utils.DateUtils.formatDate(new Date(),"dd-MM-yyyy HH:mm");
+		String refExterna = "EMBARGOS-EXTERNOS-"+utils.DateUtils.formatDate(new Date(),"dd-MM-yyyy HHmm");
+		String refMacro = "EMBARGOS-MACRO-"+utils.DateUtils.formatDate(new Date(),"dd-MM-yyyy HHmm");
 			
 		List<Pago> controlReferenciaNueva = Pago.find.where()
 											.disjunction()
