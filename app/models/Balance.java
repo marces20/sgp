@@ -228,7 +228,11 @@ public class Balance extends Model {
     		if(marca.compareToIgnoreCase("SI") == 0){
     			f.eq("marca", true);
     		}else{
-    			f.eq("marca", false);
+    			
+    			f = f.disjunction();	
+        		f = f.eq("marca", false);
+        		f = f.isNull("marca");
+        		f = f.endJunction();
     		}
     	} 
 		
