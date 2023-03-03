@@ -127,6 +127,18 @@ public class Balance extends Model {
 	public Orden orden;
 	public Integer orden_id;
 	
+	public Boolean marca = false;
+	
+	@ManyToOne
+	@JoinColumn(name="factura_id", referencedColumnName="id", insertable=false, updatable=false)
+	public Factura factura;
+	public Integer factura_id;
+	
+	@ManyToOne
+	@JoinColumn(name="pago_id", referencedColumnName="id", insertable=false, updatable=false)
+	public Pago pago;
+	public Integer pago_id;
+	
 	public static Finder<Long,Balance> find = new Finder<Long,Balance>(Long.class, Balance.class);
 	
 	public static Pagination<Balance> page(String cuentaPropiaId,
@@ -140,7 +152,8 @@ public class Balance extends Model {
 										   String cuenta_id,
 										   String tipo,
 										   String expediente_id,
-										   String ordenPagoId) { 
+										   String ordenPagoId,
+										   String marca) { 
 		
 		Pagination<Balance> p = new Pagination<Balance>();
 		p.setOrderDefault("ASC");
@@ -210,6 +223,14 @@ public class Balance extends Model {
     			f.eq("tipo","nt_recupero");
     		}
     	}
+		
+		if(!marca.isEmpty()){
+    		if(marca.compareToIgnoreCase("SI") == 0){
+    			f.eq("marca", true);
+    		}else{
+    			f.eq("marca", false);
+    		}
+    	} 
 		
 		if(!expediente_id.equals("")){
     		f = f.disjunction();	

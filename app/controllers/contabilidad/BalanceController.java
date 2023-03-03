@@ -78,7 +78,8 @@ public class BalanceController extends Controller {
 								RequestVar.get("cuenta.id"),
 								RequestVar.get("tipo"),
 								RequestVar.get("expediente.id"),
-								RequestVar.get("ordenPago.id")
+								RequestVar.get("ordenPago.id"),
+								RequestVar.get("marca")
 								 ),
 								 d));
 	}
