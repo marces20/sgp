@@ -15,6 +15,7 @@ import javax.persistence.PrePersist;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
+import com.avaje.ebean.Expr;
 import com.avaje.ebean.ExpressionList;
 import com.avaje.ebean.annotation.Formula;
 
@@ -143,8 +144,11 @@ public class OrdenPago extends Model {
 			
 		}
 		
+		Integer[] aa = {new Integer(1),new Integer(2),new Integer(3),new Integer(4),new Integer(5),new Integer(6),new Integer(7)};
+		
 		List<OrdenPago> l = find.where()
 				.eq("numero", m)
+				.not(Expr.in("ejercicio_id",aa))
 				.setMaxRows(limit).orderBy("numero")
 			    .findList();  
 		return l;
