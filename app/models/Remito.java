@@ -254,4 +254,14 @@ public class Remito extends Model {
 		return r;
 	}
 	
+	public static String getExpedienteMas7Dias(Integer idRecepcion) {
+		Recepcion rec = Recepcion.find.byId(idRecepcion.longValue());
+		
+		Date dt =  rec.ordenProvision.ordenCompra.expediente.fecha;
+        System.out.println("Today:    " + dt);
+        Date fechaExpedienteMas7Dias = new Date(dt.getTime() + (7000 * 60 * 60 * 24));
+        
+		return DateUtils.formatDate(fechaExpedienteMas7Dias);		
+	}
+	
 }
