@@ -161,7 +161,15 @@ public class RemitosController extends Controller {
 			flash("error", "El acta de esta recepción debe estar en estado borrador para agregar remitos.");
 			return ok(crearRemito.render(rForm));
 		}
-		 
+		
+		Date dt =  rec.ordenProvision.ordenCompra.expediente.fecha;
+        Date fechaExpedienteMas7Dias = new Date(dt.getTime() + (7000 * 60 * 60 * 24));
+		
+        if(r.fecha_remito.before(fechaExpedienteMas7Dias)) {
+        	flash("error", "La Fecha no puede ser menor a la fecha de Expediente mas 7 dias.");
+			return ok(crearRemito.render(rForm));
+        }
+        
 		try {
 			
 			if(!r.controlPermisoDeposito()) {
@@ -223,6 +231,16 @@ public class RemitosController extends Controller {
 			flash("error", "Error en formulario");
 			return badRequest(editarRemito.render(rForm,r));
 		}
+		
+		Date dt =  r.recepcion.ordenProvision.ordenCompra.expediente.fecha;
+        Date fechaExpedienteMas7Dias = new Date(dt.getTime() + (7000 * 60 * 60 * 24));
+        
+        
+		
+        if(rf.fecha_remito.before(fechaExpedienteMas7Dias)) {
+        	flash("error", "La Fecha no puede ser menor a la fecha de Expediente mas 7 dias.");
+        	return badRequest(editarRemito.render(rForm,r));
+        }
 		
 		try {
 			
