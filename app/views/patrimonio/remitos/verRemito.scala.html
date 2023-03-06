@@ -10,7 +10,7 @@
 	<div class="page-header">
 		<div class="row" class="page-header">
 			<div class="col-sm-7">
-				<h1>Vista de remito - @if(remitoForm("recepcion_id") != null){<span style="color:red;font-weight: bold;font-size:14px; ">Fecha Limite: @Remito.getExpedienteMas7Dias(new Integer(remitoForm("recepcion_id").value)) </span>}</h1>
+				<h1>Vista de remito - @if(remito.recepcion_id != null){<span style="color:red;font-weight: bold;font-size:14px; ">Fecha Limite: @Remito.getExpedienteMas7Dias(remito.recepcion_id.toInt) </span>}</h1>
 			</div>
 		</div>
 	</div>
