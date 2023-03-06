@@ -424,10 +424,10 @@ public class Orden extends Model {
         		e = e.disjunction();
     			e = e.eq("tipo_cuenta_id",TipoCuenta.PLAN_SUMAR_MATERNO);
     			e = e.in("create_usuario_id", Usuario.getUsersPlanSumarMaterno());
-    			
-    			e = e.endJunction();
     			Integer[] aa = {new Integer(1),new Integer(2),new Integer(3),new Integer(4),new Integer(5),new Integer(6),new Integer(7),new Integer(8),new Integer(9),new Integer(12),new Integer(13)};
     			e = e.not(Expr.in("expediente.ejercicio_id", aa));
+    			e = e.endJunction();
+    			
     		}
 			
 			if(Usuario.getUsurioSesion().obera) {
