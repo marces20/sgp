@@ -1,4 +1,4 @@
-@(expedienteForm: Form[Expediente])
+@(expedienteForm: Form[Expediente],create: Boolean)
 @import helper._
 @implicitFieldConstructor = @{ FieldConstructor(simpleInput.render) } 
 
@@ -48,7 +48,15 @@
 		<div class="col-sm-2">
 			<div class="form-group @if(expedienteForm.error("fecha") != null) {has-error}">
 				<label for="fecha_factura" class="control-label">Fecha</label> 
-				@inputText(expedienteForm("fecha"),'class -> "form-control date", 'id -> "fecha")
+				 
+				
+				@if(create != true){
+					@inputText(expedienteForm("fecha"), 'class -> "form-control",'readOnly -> "readOnly")
+				
+				}else{
+					@inputText(expedienteForm("fecha"),'class -> "form-control date", 'id -> "fecha")
+				}
+				
 			</div>
 		</div>
 		<div class="col-sm-5">

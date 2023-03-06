@@ -19,7 +19,7 @@
 	
 	@helper.form(action = controllers.expediente.routes.ExpedientesController.actualizarExpediente()) {
 		@inputText(expedienteForm("id"), 'hidden -> "hidden")
-		@views.html.expediente.expediente.formExpediente(expedienteForm)
+		@views.html.expediente.expediente.formExpediente(expedienteForm,false)
 		@views.html.expediente.expediente.tabsExpediente(true, expedienteForm)	
 	}
 

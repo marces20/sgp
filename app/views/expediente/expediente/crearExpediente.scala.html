@@ -14,6 +14,6 @@
     @views.html.tags.successError()
     
     @helper.form(action = controllers.expediente.routes.ExpedientesController.guardarExpediente()) {
-		@views.html.expediente.expediente.formExpediente(expedienteForm)
+		@views.html.expediente.expediente.formExpediente(expedienteForm,true)
 	}
 }	
