@@ -29,6 +29,7 @@ import utils.formatters.DecimalComa;
 import utils.pagination.Pagination;
 
 import com.avaje.ebean.Ebean;
+import com.avaje.ebean.Expr;
 import com.avaje.ebean.ExpressionList;
 import com.avaje.ebean.SqlRow;
 import com.avaje.ebean.SqlUpdate;
@@ -423,8 +424,11 @@ public class Orden extends Model {
         		e = e.disjunction();
     			e = e.eq("tipo_cuenta_id",TipoCuenta.PLAN_SUMAR_MATERNO);
     			e = e.in("create_usuario_id", Usuario.getUsersPlanSumarMaterno());
+    			
     			e = e.endJunction();
-        	}
+    			Integer[] aa = {new Integer(1),new Integer(2),new Integer(3),new Integer(4),new Integer(5),new Integer(6),new Integer(7),new Integer(8),new Integer(9),new Integer(12),new Integer(13)};
+    			e = e.not(Expr.in("expediente.ejercicio_id", aa));
+    		}
 			
 			if(Usuario.getUsurioSesion().obera) {
     			Date fdesde = DateUtils.formatDate("01/08/2022", "dd/MM/yyyy");
@@ -652,4 +656,18 @@ public class Orden extends Model {
 
 	    return idcl;
 	  }
+	
+	
+	/*
+	
+select sum(round(ol.precio, 2)), sum(oec.total),round(sum(round(ol.precio, 2))+sum(oec.total), 2) as sumatoria,
+ol.producto_id,ol.orden_id
+from orden_lineas ol 
+LEFT JOIN ( SELECT sum(round(precio, 2)) as total,orden_id,producto_id
+           FROM orden_lineas_ajustes
+          group by orden_id,producto_id) oec ON oec.orden_id = ol.orden_id and   oec.producto_id = ol.producto_id
+where ol.orden_id = 95448
+group by ol.producto_id,ol.orden_id
+	 * 
+	 */
 }
