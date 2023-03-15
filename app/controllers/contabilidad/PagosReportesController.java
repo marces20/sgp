@@ -1139,7 +1139,7 @@ public class PagosReportesController extends Controller  {
 			
 			Long cuentaId = new Long(cuenta_id[0]);
 			
-			if(cuentaId.equals(Cuenta.RET_GCIAS_4245_19) || cuentaId.equals(Cuenta.RET_GCIAS_4245) || cuentaId.equals(Cuenta.RET_DGR_SELLOS) || cuentaId.equals(Cuenta.RET_IIBB) || cuentaId.equals(Cuenta.RET_IIBB_331)){
+			if(cuentaId.equals(Cuenta.RET_GCIAS_4245_ANEXO) || cuentaId.equals(Cuenta.RET_GCIAS_4245_19) || cuentaId.equals(Cuenta.RET_GCIAS_4245) || cuentaId.equals(Cuenta.RET_DGR_SELLOS) || cuentaId.equals(Cuenta.RET_IIBB) || cuentaId.equals(Cuenta.RET_IIBB_331)){
 				List<Integer> facturasSeleccionados = new ArrayList<Integer>();
 				
 				for (Pago pago : pagos) {
@@ -1314,7 +1314,7 @@ public class PagosReportesController extends Controller  {
 								outSellos.append("\r\n");
 							}
 						}
-					}else if(cuentaId.equals(Cuenta.RET_GCIAS_4245) || cuentaId.equals(Cuenta.RET_GCIAS_4245_19)) {
+					}else if(cuentaId.equals(Cuenta.RET_GCIAS_4245) || cuentaId.equals(Cuenta.RET_GCIAS_4245_19) || cuentaId.equals(Cuenta.RET_GCIAS_4245_ANEXO)) {
 						String data = "";
 						for (FacturaLineaImpuesto l : listaFacturasImpuestos) {
 							
@@ -1410,6 +1410,7 @@ public class PagosReportesController extends Controller  {
 					.disjunction()
 					.eq("cuenta_id",Cuenta.RET_GCIAS_4245)
 					.eq("cuenta_id",Cuenta.RET_GCIAS_4245_19)
+					.eq("cuenta_id",Cuenta.RET_GCIAS_4245_ANEXO)
 					.endJunction()
 					.orderBy("factura.proveedor.nombre").findList();
 			
