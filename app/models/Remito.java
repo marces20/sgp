@@ -82,6 +82,8 @@ public class Remito extends Model {
 		return total;
 	}
 	
+	public Boolean sin_control_fecha = false;; 
+	
 	public static Finder<Long,Remito> find = new Finder<Long,Remito>(Long.class, Remito.class);
 	
 	public static Pagination<Remito> page(String recepcion_id, 

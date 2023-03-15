@@ -165,7 +165,8 @@ public class RemitosController extends Controller {
 		Date dt =  rec.ordenProvision.ordenCompra.expediente.fecha;
         Date fechaExpedienteMas7Dias = new Date(dt.getTime() + (7000 * 60 * 60 * 24));
 		
-        if(r.fecha_remito.before(fechaExpedienteMas7Dias)) {
+        
+        if(!r.sin_control_fecha && r.fecha_remito.before(fechaExpedienteMas7Dias)) {
         	flash("error", "La Fecha no puede ser menor a la fecha de Expediente mas 7 dias.");
 			return ok(crearRemito.render(rForm));
         }
@@ -237,7 +238,7 @@ public class RemitosController extends Controller {
         
         
 		
-        if(rf.fecha_remito.before(fechaExpedienteMas7Dias)) {
+        if(!rf.sin_control_fecha && rf.fecha_remito.before(fechaExpedienteMas7Dias)) {
         	flash("error", "La Fecha no puede ser menor a la fecha de Expediente mas 7 dias.");
         	return badRequest(editarRemito.render(rForm,r));
         }
