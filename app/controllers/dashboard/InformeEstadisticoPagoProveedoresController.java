@@ -122,6 +122,7 @@ public class InformeEstadisticoPagoProveedoresController extends Controller {
 		Integer imp6 	 = 12;
 		Integer imp7 	 = 13;
 		Integer imp8 	 = 14;
+		Integer imp9 	 = 14;
 		
 		
 		
@@ -181,6 +182,11 @@ public class InformeEstadisticoPagoProveedoresController extends Controller {
 			//RET. MUNICIP. DERECHO INSPECCION. 0.7% RES. DGR 008/15
 			celda = f.createCell(imp8);
 			celda.setCellValue("RET. MUNICIP. DERECHO INSPECCION. 0.7% RES. DGR 008/15");
+			celda.setCellStyle(style);
+			
+			//RET.AFIP-DGI-GCIAS. 25% RES. AFIP 4245/19 S/ANEXO RG 830
+			celda = f.createCell(imp9);
+			celda.setCellValue("RET.AFIP-DGI-GCIAS. 25% RES. AFIP 4245/19 S/ANEXO RG 830");
 			celda.setCellStyle(style);
 			
 			
@@ -271,6 +277,12 @@ public class InformeEstadisticoPagoProveedoresController extends Controller {
 
 					}else if(pp.cuenta_impuesto_id.compareTo(283) ==0) {//283;"RET. MUNICIP. DERECHO INSPECCION. 0.7% RES. DGR 008/15"
 						celda = f.createCell(imp8);
+						celda.setCellValue(pp.total.subtract(pp.total_credito).doubleValue());
+						celda.setCellStyle(style);
+						Logger.debug("d"); 
+
+					}else if(pp.cuenta_impuesto_id.compareTo(565) ==0) {//RET.AFIP-DGI-GCIAS. 25% RES. AFIP 4245/19 S/ANEXO RG 830
+						celda = f.createCell(imp9);
 						celda.setCellValue(pp.total.subtract(pp.total_credito).doubleValue());
 						celda.setCellStyle(style);
 						Logger.debug("d"); 
