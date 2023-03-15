@@ -391,7 +391,7 @@ public class FacturasLineasImpuestosController extends Controller {
 					return ok(crearLineaImpuesto.render(lineaForm));
 				}
 				
-				if(f.cuenta_id.compareTo(Cuenta.RET_GCIAS_4245) == 0 || f.cuenta_id.compareTo(Cuenta.RET_GCIAS_4245_19) == 0) {
+				if(f.cuenta_id.compareTo(Cuenta.RET_GCIAS_4245) == 0 || f.cuenta_id.compareTo(Cuenta.RET_GCIAS_4245_19) == 0 || f.cuenta_id.compareTo(Cuenta.RET_GCIAS_4245_ANEXO) == 0) {
 					
 					if(!NumberUtils.isInteger(f.nombre)) {
 						flash("error", "Debe ingresar una numero para esta cuenta en el numero de comprobante.");
@@ -402,6 +402,7 @@ public class FacturasLineasImpuestosController extends Controller {
 												  .disjunction()
 												  .eq("cuenta_id", Cuenta.RET_GCIAS_4245)
 												  .eq("cuenta_id", Cuenta.RET_GCIAS_4245_19)
+												  .eq("cuenta_id", Cuenta.RET_GCIAS_4245_ANEXO)
 												  .endJunction()
 												  .eq("nombre",f.nombre)
 												  .findList();
@@ -459,7 +460,7 @@ public class FacturasLineasImpuestosController extends Controller {
 					return ok(crearLineaImpuesto.render(lineaForm));
 				}
 				
-				if(f.cuenta_id.compareTo(Cuenta.RET_GCIAS_4245) == 0 || f.cuenta_id.compareTo(Cuenta.RET_GCIAS_4245_19)  == 0) {
+				if(f.cuenta_id.compareTo(Cuenta.RET_GCIAS_4245) == 0 || f.cuenta_id.compareTo(Cuenta.RET_GCIAS_4245_19)  == 0 || f.cuenta_id.compareTo(Cuenta.RET_GCIAS_4245_ANEXO)  == 0) {
 					
 					if(!NumberUtils.isInteger(f.nombre)) {
 						flash("error", "Debe ingresar una numero para esta cuenta en el numero de comprobante.");
@@ -470,6 +471,7 @@ public class FacturasLineasImpuestosController extends Controller {
 												   .disjunction()
 												   .eq("cuenta_id", Cuenta.RET_GCIAS_4245)
 												   .eq("cuenta_id", Cuenta.RET_GCIAS_4245_19)
+												   .eq("cuenta_id", Cuenta.RET_GCIAS_4245_ANEXO)
 												   .endJunction()
 												   .eq("nombre",f.nombre)
 												   .findList();
