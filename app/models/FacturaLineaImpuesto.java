@@ -251,9 +251,10 @@ public class FacturaLineaImpuesto extends Model{
 			//stmt = conn.prepareStatement("SELECT nextval('retencion_ganacias_id_seq')");
 			 
 			stmt = conn.prepareStatement("select (max( cast(REPLACE(REPLACE(REPLACE(nombre, 'ganancias', '0' ), 'GCIAS', '0' ), 'GANANCIAS', '0' )as integer)) +1) as n  "
-					+ "from factura_linea_impuestos where cuenta_id = ? or cuenta_id = ?");
+					+ "from factura_linea_impuestos where cuenta_id = ? or cuenta_id = ?  or cuenta_id = ?");
 			stmt.setLong(1, Cuenta.RET_GCIAS_4245);
 			stmt.setLong(2, Cuenta.RET_GCIAS_4245_19);
+			stmt.setLong(3, Cuenta.RET_GCIAS_4245_ANEXO);
 			
 			rs = stmt.executeQuery();
 			

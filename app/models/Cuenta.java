@@ -37,6 +37,7 @@ public class Cuenta extends Model{
 	public static long RET_GCIAS = 108;
 	public static long RET_GCIAS_3884 = 281;
 	public static long RET_GCIAS_4245 = 284;
+	public static long RET_GCIAS_4245_ANEXO = 565;
 	public static long RET_GCIAS_4245_19 = 544;
 	public static long RET_SUSS_2682_09 = 545;//SUSS 2.5% Res AFIP 2682/09
 	public static long RET_SUSS_3883 = 282;
