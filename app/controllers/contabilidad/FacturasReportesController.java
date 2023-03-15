@@ -747,6 +747,7 @@ public class FacturasReportesController extends Controller  {
 				" sum(get_impuesto(f.id,261)) as dgr370, " +
 				" sum(get_impuesto(f.id,110)) as dgr196, " +
 				" sum(get_impuesto(f.id,285)) as gcias3726, " +
+				" sum(get_impuesto(f.id,565)) as gcias4245anexo, " +
 				" tipo_cuenta_id,profe " +
 				" from facturas f, proveedores p "+
 				" where f.proveedor_id=p.id "+
@@ -776,12 +777,13 @@ public class FacturasReportesController extends Controller  {
 		Double monto_dgr370= Math.round(impuestos.getDouble("dgr370") *100.0)/100.0;
 		Double monto_dgr196= Math.round(impuestos.getDouble("dgr196") *100.0)/100.0;
 		Double gcias3726 = Math.round(impuestos.getDouble("gcias3726") *100.0)/100.0;
+		Double monto_gcias4245anexo = Math.round(impuestos.getDouble("gcias4245anexo") *100.0)/100.0;
 		
 		System.out.println("------------ "+monto_afip);
 		String sqlFacturas = "select p.nombre nombre, p.cuit cuit, f.id facturaId, tipo_cuenta_id,profe, " +
 							 "(select round(cast(sum((fl.precio*fl.cantidad)+((fl.precio*fl.cantidad*COALESCE(fl.descuento,0))/100)) as numeric),2) "+
 							 " 	from factura_lineas fl where fl.factura_id = f.id) as base, " +
-							 "sum(get_impuesto(f.id,108)+get_impuesto(f.id,285)+get_impuesto(f.id,544)+get_impuesto(f.id,281)+get_impuesto(f.id,284)) as gcias, " +//GANANCIAS
+							 "sum(get_impuesto(f.id,108)+get_impuesto(f.id,285)+get_impuesto(f.id,544)+get_impuesto(f.id,565)+get_impuesto(f.id,281)+get_impuesto(f.id,284)) as gcias, " +//GANANCIAS
 							 "sum(get_impuesto(f.id,263)) as sellos, " +
 							 "sum(get_impuesto(f.id,540)) as sellosart21, " +
 							 "sum(get_impuesto(f.id,541)) as sellosart22, " +
@@ -830,7 +832,7 @@ public class FacturasReportesController extends Controller  {
             context.put("monto_orden", utils.NumberUtils.moneda(new BigDecimal(monto_orden)));
             context.put("monto_neto",  utils.NumberUtils.moneda(new BigDecimal(((monto_orden - sellosart21 - sellosart22 -  sello - monto_afip - monto_prov - 
             		monto_suss - monto_suss1 - monto_dgr331-gcias3884-gcias4245-gcias424519-gcias3726-suss3883-muni-monto_dgr429-
-            		monto_dgr370-monto_dgr196) *100.0)/100.0 )));
+            		monto_dgr370-monto_dgr196-monto_gcias4245anexo) *100.0)/100.0 )));
             
             context.put("monto_ret",utils.NumberUtils.moneda(new BigDecimal(sello)));
             context.put("monto_sellosart21",utils.NumberUtils.moneda(new BigDecimal(sellosart21)));
@@ -854,6 +856,8 @@ public class FacturasReportesController extends Controller  {
             context.put("gcias3726", utils.NumberUtils.moneda(new BigDecimal(gcias3726)));
             context.put("suss3883", utils.NumberUtils.moneda(new BigDecimal(suss3883)));
             context.put("muni", utils.NumberUtils.moneda(new BigDecimal(muni)));
+            context.put("monto_gcias4245anexo", utils.NumberUtils.moneda(new BigDecimal(monto_gcias4245anexo)));
+            
             
             String cuenta = "";
             String denominacion = "";
@@ -1029,7 +1033,7 @@ public class FacturasReportesController extends Controller  {
 				" sum(get_impuesto(f.id,544)) as gcias424519, " +
 				" sum(get_impuesto(f.id,282)) as suss3883, " +
 				" sum(get_impuesto(f.id,283)) as muni, " +
-				
+				" sum(get_impuesto(f.id,565)) as gcias4245anexo, " +
 				" tipo_cuenta_id " +
 				" from facturas f, proveedores p "+
 				" where f.proveedor_id=p.id "+
@@ -1059,6 +1063,7 @@ public class FacturasReportesController extends Controller  {
 		Double gcias3726 = Math.round(impuestos.getDouble("gcias3726") *100.0)/100.0;	
 		Double suss3883 = Math.round(impuestos.getDouble("suss3883") *100.0)/100.0;
 		Double muni = Math.round(impuestos.getDouble("muni") *100.0)/100.0;
+		Double monto_gcias4245anexo = Math.round(impuestos.getDouble("gcias4245anexo") *100.0)/100.0;
 		
 		try {
         	String dirTemp = System.getProperty("java.io.tmpdir");
@@ -1086,7 +1091,7 @@ public class FacturasReportesController extends Controller  {
             
             context.put("monto_orden", utils.NumberUtils.moneda(new BigDecimal(monto_orden)));
             context.put("monto_neto",  utils.NumberUtils.moneda(new BigDecimal(((monto_orden-sellosart21-sellosart22 - sello - monto_afip - monto_prov - monto_suss -  
-            		monto_suss2682 -monto_suss1 - ret_dgr - iva3164_11 - suss1556_04 - suss1769_04 - ret331 - gtiactto6-gcias3884-gcias4245-gcias424519-
+            		monto_suss2682 -monto_suss1 - ret_dgr - iva3164_11 - suss1556_04 - suss1769_04 - ret331 - gtiactto6-gcias3884-gcias4245-gcias424519-monto_gcias4245anexo-
             		gcias3726-suss3883-muni) *100.0)/100.0 )));
             
             context.put("monto_ret",utils.NumberUtils.moneda(new BigDecimal(sello)));
@@ -1109,6 +1114,7 @@ public class FacturasReportesController extends Controller  {
             context.put("suss3883", utils.NumberUtils.moneda(new BigDecimal(suss3883)));
             context.put("muni", utils.NumberUtils.moneda(new BigDecimal(muni)));
             context.put("monto_suss2682", utils.NumberUtils.moneda(new BigDecimal(monto_suss2682)));
+            context.put("monto_gcias4245anexo", utils.NumberUtils.moneda(new BigDecimal(monto_gcias4245anexo)));
             //context.put("profe", facturaDatosSimples.profe);
             //context.put("tipoCuenta", facturaDatosSimples.tipoCuenta.nombre);
             
