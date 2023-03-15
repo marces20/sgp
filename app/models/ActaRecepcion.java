@@ -254,7 +254,7 @@ public class ActaRecepcion extends Model {
     		
     	
     	
-    	e.add(Expr.raw("( (movimiento.fecha_llegada, movimiento.acta_id) in (SELECT MAX(em2.fecha_llegada), acta_id FROM actas_movimientos em2 WHERE em2.cancelado <> true GROUP BY acta_id) " + or +")"));
+    	e.add(Expr.raw("( (movimiento.fecha_llegada, movimiento.acta_id, movimiento.copia) in (SELECT MAX(em2.fecha_llegada),acta_id,copia FROM actas_movimientos em2 WHERE em2.cancelado <> true and em2.copia=false GROUP BY acta_id,copia) " + or +")"));
     	
     	
     	if(!tipo_moneda.isEmpty()){
