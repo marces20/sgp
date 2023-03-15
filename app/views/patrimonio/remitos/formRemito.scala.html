@@ -2,7 +2,7 @@
 @import helper._
 @import utils._
 @implicitFieldConstructor = @{ FieldConstructor(simpleInput.render) } 
-
+@import models.auth._
 @views.html.tags.successError()
 <script>
 	$( function() {
@@ -46,7 +46,13 @@
 	<div class="col-sm-4">
 		<div class="checkbox">
 			<label>
-				Sin Control Fecha @checkbox(remitoForm("sin_control_fecha"))
+				@if(Permiso.check("sinControlFechaRemito")) {
+					Sin Control Fecha @checkbox(remitoForm("sin_control_fecha"))
+				}else{
+					Sin Control Fecha @checkbox(remitoForm("sin_control_fecha"), 'disabled -> "disabled")
+					
+				}
+				
 			</label>
 		</div> 
 	</div>
