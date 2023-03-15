@@ -29,12 +29,20 @@ public class ActualizarBalancePagos {
 		Connection conn2 = null;
 		try {
 			
-			Date fd = DateUtils.formatDate("01/02/2022", "dd/MM/yyyy");
-			Date fh = DateUtils.formatDate("31/03/2022", "dd/MM/yyyy");
-    		 
+			Date fd = DateUtils.formatDate("01/01/2022", "dd/MM/yyyy");
+			Date fh = DateUtils.formatDate("31/12/2022", "dd/MM/yyyy");
+    		
+			List<Integer> idsExpLiq = new ArrayList<Integer>();
+			idsExpLiq.add(34720);
+			idsExpLiq.add(35055);
+			idsExpLiq.add(36129);
+			idsExpLiq.add(36130);
+			idsExpLiq.add(36611);
+			
 			List<Pago> lf = Pago.find.where()	   .ge("fecha_pago", fd)
 												   .le("fecha_pago", fh)
 												   .eq("tipo", "payment")
+												   .in("expediente_id", idsExpLiq)
 												   //.eq("expediente_id",27473)
 												   //.eq("tipo_cuenta_id", TipoCuenta.PLAN_SUMAR_LACMI)
 												   .disjunction()
@@ -255,6 +263,8 @@ public class ActualizarBalancePagos {
 								cuentaImpuesto = 425;
 							}else if(imp.cuenta_impuesto_id.compareTo(544) == 0) {
 								cuentaImpuesto = 425;
+							}else if(imp.cuenta_impuesto_id.compareTo(565) == 0) {
+								cuentaImpuesto = 425;
 							}
 				
 						}else {
@@ -289,6 +299,8 @@ public class ActualizarBalancePagos {
 							}else if(imp.cuenta_impuesto_id.compareTo(284) == 0) {
 								cuentaImpuesto = 424;
 							}else if(imp.cuenta_impuesto_id.compareTo(544) == 0) {
+								cuentaImpuesto = 424;
+							}else if(imp.cuenta_impuesto_id.compareTo(565) == 0) {
 								cuentaImpuesto = 424;
 							}
 						}
@@ -371,6 +383,8 @@ public class ActualizarBalancePagos {
 								cuentaImpuesto = 425;
 							}else if(imp.cuenta_impuesto_id.compareTo(544) == 0) {
 								cuentaImpuesto = 425;
+							}else if(imp.cuenta_impuesto_id.compareTo(565) == 0) {
+								cuentaImpuesto = 425;
 							}
 				
 						}else {
@@ -405,6 +419,8 @@ public class ActualizarBalancePagos {
 							}else if(imp.cuenta_impuesto_id.compareTo(284) == 0) {
 								cuentaImpuesto = 424;
 							}else if(imp.cuenta_impuesto_id.compareTo(544) == 0) {
+								cuentaImpuesto = 424;
+							}else if(imp.cuenta_impuesto_id.compareTo(565) == 0) {
 								cuentaImpuesto = 424;
 							}
 						}
