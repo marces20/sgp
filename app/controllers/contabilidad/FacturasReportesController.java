@@ -232,6 +232,7 @@ public class FacturasReportesController extends Controller  {
 															.disjunction()
 															.eq("cuenta_id",Cuenta.RET_GCIAS_4245)
 															.eq("cuenta_id",Cuenta.RET_GCIAS_4245_19)
+															.eq("cuenta_id",Cuenta.RET_GCIAS_4245_ANEXO)
 															.endJunction()
 															.findList();
 		
