@@ -33,6 +33,7 @@ import org.apache.poi.ss.usermodel.Workbook;
 import org.postgresql.util.PSQLException;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
+import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
@@ -440,11 +441,31 @@ public class GananciasAccionesController extends Controller {
 		}
 
 		// Cargo deducciones
+		
+		/*NodeList listaEmpleados = doc.getElementsByTagName("deduccion");
+		for (int temp = 0; temp < listaEmpleados.getLength(); temp++) {
+            Node nodo = listaEmpleados.item(temp);
+            
+            System.out.println("Elemento:" + nodo.getNodeName());
+            
+            if (nodo.getNodeType() == Node.ELEMENT_NODE) {
+                Element element = (Element) nodo;
+                System.out.println("tipo: " + element.getAttribute("tipo"));
+                System.out.println("tipoDoc: " + element.getElementsByTagName("tipoDoc").item(0).getTextContent());
+                
+                System.out.println("detalles: " + element.getElementsByTagName("detalles").item(0).getChildNodes().item(0).getTextContent().toString());
+                
+                 
+            }
+        }*/
+		
+		
+		
 		NodeList deducciones = XPath.selectNodes("//deducciones/deduccion", doc);
 		for (int i = 0; i < deducciones.getLength(); i++) {
 			Element d = (Element) deducciones.item(i);
 
-			Boolean procesoDeducciones = cargarDeduccion(
+			Integer idDeducciones = cargarDeduccion(
 					idPresentacion,
 					Integer.parseInt(XPath.selectText("@tipo", d).toString()),
 					Integer.parseInt(XPath.selectText("tipoDoc", d).toString()),
@@ -454,10 +475,36 @@ public class GananciasAccionesController extends Controller {
 					XPath.selectText("descAdicional", d).toString(),
 					new BigDecimal(XPath.selectText("montoTotal", d).toString()),
 					1);
-			if (!procesoDeducciones) {
+			if (idDeducciones == null) {
 				flash("error", "La carga de deducciones de " + a.apellido + " no se puedo insertar");
 				return false;
 			} else {
+				
+				 
+				
+				NodeList detallesDeducciones = XPath.selectNodes("detalles", d);
+				
+				for (int dd = 0; dd < detallesDeducciones.getLength(); dd++) {
+					Element edd = (Element) detallesDeducciones.item(dd);
+					NodeList detalles = XPath.selectNodes("detalle", edd);
+					for (int ddh = 0; ddh < detalles.getLength(); ddh++) {
+						Element eddh = (Element) detalles.item(ddh);
+						System.out.println("---------- ---------- ---------- ----------");
+						
+						System.out.println("---------- "+eddh.getNodeName());
+						System.out.println("---------- "+XPath.selectText("@nombre", eddh).toString());
+						System.out.println("---------- "+XPath.selectText("@valor", eddh).toString());
+						
+						System.out.println("---------- ---------- ---------- ----------");
+						
+						cargarDeduccionDetalle(idDeducciones, XPath.selectText("@nombre", eddh).toString(),XPath.selectText("@valor", eddh).toString());
+					}
+					
+					
+					
+					
+				}
+				
 				System.out.print("---------- Se cargó cargarDeduccion");
 			}
 
@@ -674,7 +721,7 @@ public class GananciasAccionesController extends Controller {
 		return (insert.execute() > 0);
 	}
 
-	private static Boolean cargarDeduccion(Integer idPresentacion, Integer tipo, Integer tipoDoc, Long nroDoc,
+	private static Integer cargarDeduccion(Integer idPresentacion, Integer tipo, Integer tipoDoc, Long nroDoc,
 			String denominacion, String descBasica, String descr_adicional, BigDecimal montoTotal, Integer motivo)
 			throws PSQLException {
 
@@ -691,7 +738,39 @@ public class GananciasAccionesController extends Controller {
 		insert.setParameter("monto", montoTotal);
 		insert.setParameter("motivo", motivo);
 
-		return (insert.execute() > 0);
+		//return (insert.execute() > 0);
+		
+		if (insert.execute() == 0) {
+			return null;
+		}
+
+		return Ebean.createSqlQuery("SELECT currval('ganancias_deducciones_572_id_seq') id;").findUnique()
+				.getInteger("id");
+		
+		
+	}
+	
+	private static Integer cargarDeduccionDetalle(Integer idDeduccion, String nombre, String valor)
+			throws PSQLException {
+
+		SqlUpdate insert = Ebean.createSqlUpdate(
+				"INSERT INTO ganancias_deducciones_572_detalles (ganancias_deducciones_572_id, nombre, valor) VALUES "
+				+ "(:ganancias_deducciones_572_id, :nombre, :valor)");
+
+		insert.setParameter("ganancias_deducciones_572_id", idDeduccion);
+		insert.setParameter("nombre", nombre);
+		insert.setParameter("valor", valor); 
+
+		//return (insert.execute() > 0);
+		
+		if (insert.execute() == 0) {
+			return null;
+		}
+
+		return Ebean.createSqlQuery("SELECT currval('ganancias_deducciones_572_id_seq') id;").findUnique()
+				.getInteger("id");
+		
+		
 	}
 
 	private static Boolean cargarOtrosEmpleadores(Integer idPresentacion, String cuit, String denominacion)
