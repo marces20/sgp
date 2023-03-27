@@ -389,6 +389,11 @@ public class InformeEstadisticoPagoProveedoresController extends Controller {
 			}
 		}
 		
+		
+		if(!RequestVar.get("orden_rubro_id").isEmpty()){
+			l =  l.eq("rubro_id", Integer.parseInt(RequestVar.get("orden_rubro_id")));
+		}
+		
 		List<InformeEstadisticoPagoProveedores> ll = l.orderBy("fecha_pago desc").findList();
 		
 		Map<String,List<InformeEstadisticoPagoProveedores>> hp = new HashMap<String,List<InformeEstadisticoPagoProveedores>>();
