@@ -158,6 +158,14 @@ $( function() {
 					@inputText(formBuscador("fecha_hasta"), 'class -> "form-control inputDateMascara", 'id -> "fecha_hasta", 'placeholder -> "Hasta")
 				</div>
 			</div>
+			<div class="col-sm-2">
+				<label class="control-label">Rubro
+				@select(formBuscador("orden_rubro_id"), 
+				OrdenRubro.find.all().map { p => p.id.toString -> p.nombre}, 'class -> "form-control select", '_default -> "Seleccionar")
+				 </label>
+			</div>
+		</div>	
+		<div class="row seccion">	
 			
 			<div class="col-sm-2">
 				<div class="form-group">
