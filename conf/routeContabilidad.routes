@@ -369,8 +369,9 @@ GET    /Balance/modalCambiarCuenta   		controllers.contabilidad.BalanceControlle
 POST   /Balance/cambiarCuentaMasivo   		controllers.contabilidad.BalanceController.cambiarCuentaMasivo()
 
 POST   /Balance/archivoBejerman   		controllers.contabilidad.BalanceController.archivoBejerman()
-POST   /Balance/archivoBejermanPagos   		controllers.contabilidad.BalanceController.archivoBejermanPagos()
+POST   /Balance/archivoBejermanPagos   	controllers.contabilidad.BalanceController.archivoBejermanPagos()
 POST   /Balance/archivoExcel   			controllers.contabilidad.BalanceController.archivoExcel()
+GET    /Balance/controlBalanceFactura   controllers.contabilidad.BalanceController.controlBalanceFactura()
 
 GET    /suggestBanco/:input	  		controllers.contabilidad.BancosController.suggestBanco(input: String)
 GET    /suggestCuentaBancaria/:input	  		controllers.contabilidad.CuentaBancariasController.suggestCuentaBancaria(input: String)
