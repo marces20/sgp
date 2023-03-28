@@ -27,18 +27,22 @@ import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 
 import com.avaje.ebean.Ebean;
+import com.avaje.ebean.SqlQuery;
 import com.avaje.ebean.SqlRow;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
 import controllers.Secured;
 import controllers.auth.CheckPermiso;
+import models.AutorizadoLinea;
 import models.Balance;
 import models.Estado;
 import models.Factura;
 import models.Orden;
+import models.Periodo;
 import models.UltimaCotizacion;
 import models.Cuenta;
 import models.Usuario;
+import models.informes.InformeDeudaProveedoresMaterializada;
 import play.Logger;
 import play.data.DynamicForm;
 import play.data.Form;
@@ -52,6 +56,7 @@ import utils.StringUtils;
 import utils.validation.DateValidation;
 import utils.validation.Validator;
 import views.html.contabilidad.facturas.acciones.reporte322;
+import views.html.dashboard.controlDeuda.controlDeudaMonedaExtranjera;
 import views.html.contabilidad.balance.*; 
 
 @Security.Authenticated(Secured.class)
@@ -618,4 +623,65 @@ public class BalanceController extends Controller {
 		
 		return ok(modalBejerman.render(null,null));
 	}
+	
+	
+	public static Result controlBalanceFactura() {
+		
+		List<SqlRow>  row = null;
+		List<Factura> lf =  null;
+		
+		if(!RequestVar.get("periodo.id").isEmpty()){
+			
+			Periodo p = Periodo.find.byId(new Long(RequestVar.get("periodo.id"))) ;
+			 
+		
+		String sql = "select b.id as id,b.fecha as fecha,b.orden_pago_id as orden_pago_id,b.haber as haber,b.expediente_id as expediente_id,cp.nombre as cuentaPropiaNombre,"
+				+ "c.nombre as cuenta,e.nombre || '/' || ej.nombre as nombreExp,op.numero || '/' || ejop.nombre as opNombre " + 
+				"from balances b " +
+				"inner join cuentas_propias cp on cp.id = b.cuenta_propia_id " +
+				"inner join cuentas c on c.id = b.cuenta_id " +
+				"inner join expedientes e on e.id = b.expediente_id " +
+				"inner join ejercicios ej on ej.id = e.ejercicio_id " +
+				"inner join ordenes_pagos op on op.id = b.orden_pago_id " +
+				"inner join ejercicios ejop on ejop.id = op.ejercicio_id " +
+				"where " + 
+				"b.tipo='facturas' and " + 
+				"b.fecha >= :fdesde and  " + 
+				"b.fecha <= :fhasta " + 
+				"and debe = 0 " + 
+				"order by b.fecha,haber asc ";
+				SqlQuery sqlQuery = Ebean.createSqlQuery(sql)
+									.setParameter("fdesde",  p.date_start)
+									.setParameter("fhasta", p.date_stop);
+				 row = sqlQuery.findList();
+				 
+				 
+				 
+				 lf = Factura.find
+						    .select("id,  base, fecha_orden_pago")
+			    			.fetch("proveedor", "nombre")
+			    			.fetch("expediente", "nombre, id, emergencia")
+			    			.fetch("expediente.ejercicio", "nombre")
+			    			.fetch("tipoCuenta", "nombre")
+			    			.fetch("expediente.parent.ejercicio", "nombre")
+			    			.fetch("periodo", "nombre")
+			    			.fetch("estado", "nombre")
+			    			.fetch("ordenPago", "nombreCompleto")
+			    			.fetch("ordenPago", "numero")
+			    			.fetch("ordenPago.ejercicio", "nombre")
+						    .where()
+						    .ge("fecha_orden_pago", p.date_start)
+							.le("fecha_orden_pago", p.date_stop)
+							.gt("base", BigDecimal.ZERO)
+							.eq("state_id", Estado.FACTURA_ESTADO_APROBADO).orderBy("fecha_orden_pago,base asc")
+							.findList();
+		}
+		
+		
+		 
+		
+		return ok(controlBalanceFactura.render(row,lf,form().bindFromRequest()));
+	}
+	
+	 
 }
