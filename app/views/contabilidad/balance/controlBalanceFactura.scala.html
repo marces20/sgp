@@ -1,0 +1,194 @@
+@(rows:List[com.avaje.ebean.SqlRow] = null,facturas:List[Factura] = null, formBuscador: DynamicForm)
+@import helper._
+@import models.auth._
+@import java.math.BigDecimal;var debe=new java.math.BigDecimal(0);var haber=new java.math.BigDecimal(0);
+@import java.lang.Integer;var totalBalance =0;var totalFactura =0
+@implicitFieldConstructor = @{ FieldConstructor(simpleInput.render) } 
+@scripts = {
+	<script src="@routes.Assets.at("javascripts/contabilidad/balance.js")" type="text/javascript"></script>
+}
+
+@views.html.contabilidad.mainContabilidad("Control Balance Facturas",scripts) {
+<div class="page-header">
+	<div class="row">
+		<div class="col-sm-7">
+			<h1>Control Balance Facturas</h1>
+		</div>
+
+		<div class="col-sm-5">
+			<div class="dropdown pull-right btn-header">
+			 <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown">
+			 	<i class="glyphicon glyphicon-list-alt"></i>
+			    Reportes
+			    <span class="caret"></span>
+			  </button>
+			  <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
+			  </ul>
+			</div>
+			
+			<div class="dropdown pull-right btn-header">
+			 <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown">
+			 	<i class="glyphicon glyphicon-list-alt"></i>
+			    Acciones
+			    <span class="caret"></span>
+			 </button>
+			  <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
+			 </ul>
+			</div>
+		</div>
+	</div>
+	<div id="actions">
+		<form action="" id="formSearchBalance" method="GET">
+			  
+			<div class="row" >
+				
+				
+			 	<div class="col-sm-2">
+				
+					<div class="form-group @if(formBuscador.error("periodo_id") != null) {has-error}">
+						<label for="periodo" class="control-label">Periodo</label> 
+						<div class="input-group">
+							@inputText(formBuscador("periodo.nombre"), 'class -> "form-control", 'id -> "periodo")
+							@inputText(formBuscador("periodo.id"),'hidden -> "hidden", 'id -> "periodo_id")
+							<span class="input-group-addon">
+								<a href="#" class="searchModal"
+											id="searchPeriodo" 
+											data-title="Selección de Periodo" 
+											data-url="@controllers.contabilidad.routes.PeriodosController.modalBuscar()" 
+											data-height="650" 
+											data-width="700" 
+											data-listen="modal.seleccion.periodo.simple" 
+											data-label="#periodo" 
+											data-field="#periodo_id">
+									<i class="glyphicon glyphicon-search"></i>
+								</a>
+							</span>
+						</div>
+					</div>
+				</div>
+				
+				 
+				<div class="col-sm-2">
+					<div class="form-group">
+					<label for="nombre" class="control-label">&nbsp;</label>
+					<button  class="form-control btn btn-primary"><i class="glyphicon glyphicon-search"></i> Buscar</button>
+					</div>
+				</div>
+				<div class="col-sm-2">
+					<div class="form-group">
+					<label for="nombre" class="control-label">&nbsp;</label>
+					<a href="@controllers.contabilidad.routes.BalanceController.index()?cuenta_propia_id=2"  class="form-control btn btn-default">Limpiar</a>
+					</div>
+				</div>
+			</div>
+		</form>
+	</div>
+</div>
+<div class="row">
+	<div class="col-sm-12">
+	@if(rows != null){
+		@if(rows.size() == 0) {
+	        
+	        <div class="well">
+	            <em>No se encuentran Lineas</em>
+	        </div>
+	        
+	    } else {
+			
+			<div class="row" > 
+				<div class="col-sm-7">
+				<table id="" class="table table-striped table-bordered">
+					<thead>
+						<tr >
+							<th colspan="6">Balance</th>
+						</tr>
+						<tr>
+							<th>Cuenta</th>
+							<th>Cuenta Balance</th>
+							<th>OP</th> 
+							<th>Exp</th>
+							<th>Fecha</th>
+							<th>MONTO</th>
+						</tr>
+					</thead>
+					<tbody>
+					@for(sx <- rows) {
+						<tr class="" data-estado="" data-href="">
+							
+							<td>@if(sx.getString("cuentaPropiaNombre") != null) {@sx.getString("cuentaPropiaNombre")} - @sx.getInteger("id")</td>
+							<td>@if(sx.getString("cuenta") != null) {@sx.getString("cuenta")} </td> 
+							
+							<td>
+								@if(sx.getInteger("orden_pago_id") != null){
+									@sx.getString("opNombre")
+								}	
+							</td>
+							<td>
+								@if(sx.getInteger("expediente_id") != null){
+									@sx.getString("nombreExp")
+								}
+							</td>		
+							<td class="fecha">@if(sx.getDate("fecha") != null){@(utils.DateUtils.formatDate(sx.getDate("fecha")))}</td>
+							<td class="">@(utils.NumberUtils.moneda(sx.getBigDecimal("haber")))</td>
+							
+							 
+						</tr>	
+						@{haber = haber.add(sx.getBigDecimal("haber"))}     
+						@{totalBalance = totalBalance + 1}   
+						 
+					}
+					</tbody>
+			        <tfoot>
+			        	<tr>	
+			        		<td colspan="5"><b>Total: @totalBalance</b></td>
+			        		<td><b>Total MONTO:</b> <span class="totalFooter">@(utils.NumberUtils.moneda(haber))</span></td>
+			        	</tr>
+			        </tfoot>
+		        </table>
+		        </div>
+		        
+		        <div class="col-sm-5">
+					<table id="" class="table table-striped table-bordered">
+						<thead>
+							<tr>
+							<th  colspan="5">Facturas</th>
+							</tr>
+							<tr>
+								<th>ID</th> 
+								<th>OP</th> 
+								<th>Exp</th>
+								<th>Fecha</th>
+								<th>MONTO</th>
+							</tr>
+						</thead>
+						<tbody>
+						@for(factura <- facturas) {
+							<tr class="" data-estado="" data-href="">
+								<td class=" ">@factura.id</td>
+								<td class="opg">@if(factura.ordenPago != null){@(factura.ordenPago.getNombreCompleto())}</td>
+								<td>@if(factura.expediente != null){@(factura.expediente.getExpedienteEjercicio())}</td>
+								<td class="fecha">@if(factura.fecha_orden_pago != null){@(utils.DateUtils.formatDate(factura.fecha_orden_pago))}</td>
+								<td class="totalBase">@if(factura.base != null){@(utils.NumberUtils.moneda(factura.base))}</td>
+							</tr>
+							@{debe = debe.add(factura.base)} 
+							@{totalFactura = totalFactura + 1} 
+						}
+						</tbody>
+				        <tfoot>
+				        	<tr>	
+				        		<td colspan="4"><b>Total: @totalFactura</b></td>
+				        		<td><b>Total MONTO:</b> <span class="totalFooter">@(utils.NumberUtils.moneda(debe))</span></td>
+				        	</tr>
+				        </tfoot>
+			        </table>
+		        </div>
+			</div>
+			
+			 
+		}
+	}
+	</div>	
+</div>
+
+
+}
