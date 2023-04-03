@@ -126,7 +126,7 @@ public class Orden extends Model {
 	@Formats .DateTime(pattern="dd/MM/yyyy")
 	public Date fecha_fin;
 
-	@Required(message="Debe escribir una fecha presupuesto.")
+
 	@Formats .DateTime(pattern="dd/MM/yyyy")
 	public Date fecha_presupueso;
 

@@ -2,7 +2,7 @@
 @import utils._
 @import helper._
 @import models.auth._
-@implicitFieldConstructor = @{ FieldConstructor(simpleInput.render) } 
+@implicitFieldConstructor = @{ FieldConstructor(simpleInput.render) }
 @paginadorFicha.setActual(orden.id.toString)
 
 @scripts = {
@@ -16,8 +16,8 @@
 				<h1>Vista de Orden de Compra @if(orden.expediente != null){@if(orden.expediente.emergencia){<span style="color:red;font-weight: bold;font-size:14px; ">(Emergencia Sanitaria)</span>}}</h1>
 			</div>
 			<div class="col-sm-6">
-			 	
-			 	<div class="dropdown pull-right">  	
+
+			 	<div class="dropdown pull-right">
 				 <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown">
 				 	<i class="glyphicon glyphicon-list-alt"></i>
 				    Reportes
@@ -29,35 +29,35 @@
 					}
 					@if(Permiso.check("reporteOrdenProvisionMail")) {
 					  <li>
-					  	<a role="menuitem" tabindex="-1" href="#" class="modalOrdenMail"  
+					  	<a role="menuitem" tabindex="-1" href="#" class="modalOrdenMail"
 					  	data-url="@controllers.compras.routes.OrdenesAccionesController.modalOrdenMail(orden.id)">Enviar Orden Provision por mail</a>
 					  </li>
-					}  
-					@if(Permiso.check("reporteOrdenProvision")) {    		
+					}
+					@if(Permiso.check("reporteOrdenProvision")) {
 					  <li>
-					  	<a role="menuitem" tabindex="-1" href="#" class="reporteOrdenProvision"  
+					  	<a role="menuitem" tabindex="-1" href="#" class="reporteOrdenProvision"
 					  	data-url="@controllers.patrimonio.routes.OrdenesProvisionReportesController.ordenDeProvision(orden.id,false)">Reporte Orden Provision</a>
 					  </li>
 					}
-					@if(Permiso.check("reporteOrdenProvisionSinMonto")) {  
+					@if(Permiso.check("reporteOrdenProvisionSinMonto")) {
 					  <li>
-					  	<a role="menuitem" tabindex="-1" href="#" class="reporteOrdenProvision"  
+					  	<a role="menuitem" tabindex="-1" href="#" class="reporteOrdenProvision"
 					  	data-url="@controllers.patrimonio.routes.OrdenesProvisionReportesController.ordenDeProvision(orden.id,true)">Reporte Orden Provision Sin Montos</a>
 					  </li>
 				  	}
 				  	@if(Permiso.check("reporteOrdenLineas")) {
 					  <li>
-					  	<a role="menuitem" tabindex="-1" 
+					  	<a role="menuitem" tabindex="-1"
 					  	href="@controllers.compras.routes.OrdenesReportesController.listadoLineas(orden.id)">Exportar Lineas</a>
 					  </li>
 				  	}
 				  	@if(orden.estado.id == models.Estado.ORDEN_ESTADO_APROBADO) {
 				  	<li>
-				  	<a role="menuitem" tabindex="-1" href="#" id="reporteCertificacionPaciente" 
+				  	<a role="menuitem" tabindex="-1" href="#" id="reporteCertificacionPaciente"
 				  	data-url="@controllers.compras.routes.OrdenesReportesController.reporteCertificacionPaciente(orden.id)">Certificacion Pacientes</a>
 				  	</li>
 				   	}
-					</ul>	  
+					</ul>
 				</div>
 				<div class="dropdown pull-right btn-header">
 					<button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown"> <i class="glyphicon glyphicon-cog"></i> Acciones <span class="caret"></span> </button>
@@ -69,46 +69,46 @@
 		    			@if(Permiso.check("ordenesEditarFechaProvision")) {
 		    				<li role="presentation"><a role="menuitem" id="accionEditarFechaProvision" tabindex="-1" href="#" data-url="@controllers.compras.routes.OrdenesAccionesController.modalEditarFechaProvision(orden.id)">Editar Fecha Provision</a></li>
 		    				<li role="presentation"><a role="menuitem" id="accionEditarRubro" tabindex="-1" href="#" data-url="@controllers.compras.routes.OrdenesAccionesController.modalEditarRubro(orden.id)">Editar Rubro</a></li>
-		    			}  
-		    			
-		    			
+		    			}
+
+
 		    			@if(Permiso.check("dispoCrear")) {
 		    				<li role="presentation"><a role="menuitem" id="accionCrearDispo" tabindex="-1" href="#" data-url="@controllers.compras.routes.OrdenesAccionesController.modalCrearDispo(orden.id)">Crear Dispo</a></li>
 					 	}
-					 	
+
 					 	@if(Permiso.check("ordenesModificarNumeroFactura")) {
 						<li><a id="accionModificarNumeroFactura"  href="#" data-url="@controllers.compras.routes.OrdenesAccionesController.modalModificarNumeroFactura(orden.id)">Modificar N° Factura</a></li>
 						}
-					 	
+
 					 </ul>
 				</div>
 				<div class="pull-right btn-header">
 					<a href="@controllers.compras.routes.OrdenesController.crear()@UriTrack.get("?")"  class="btn btn-default"><i class="glyphicon glyphicon-plus-sign"></i> Nueva Orden</a>
 				</div>
-				
+
 				@if(Permiso.check("dashboardInformeDeudaPorActas") && orden.tipo_moneda != null) {
 					<div class="pull-right btn-header">
-				 	 
+
 				 		<a target="_blank"  href="/dashboard/controlDeudaMonedaExtranjera?orden_id=@orden.id" class="btn btn-default">
 				 		<i class="glyphicon glyphicon glyphicon-signal"></i>
 				 		</a>
 				 	</div>
 			 	}
-			</div> 
+			</div>
 		</div>
 	</div>
-	
+
 @views.html.tags.successError()
 
 	<div class="alert alert-success successAddLineaAjuste" style="display: none;"><i class="glyphicon glyphicon-ok-sign"></i></div>
-	 
+
 	<div class="row menu-acciones">
 		<div class="col-sm-4">
 			<a href="@controllers.compras.routes.OrdenesController.crear()@UriTrack.get("?")"  class="btn btn-default"><i class="glyphicon glyphicon-plus-sign"></i> Nuevo</a>
 			<a href="@controllers.compras.routes.OrdenesController.editar(orden.id)@UriTrack.get("&")"  class="btn btn-default"><i class="glyphicon glyphicon-edit"></i> Editar</a>
 			<a href="@controllers.compras.routes.OrdenesController.duplicar(orden.id)@UriTrack.get("&")"  class="btn btn-default"><i class="glyphicon glyphicon-subtitles"></i> Duplicar</a>
 			<a href="@controllers.compras.routes.OrdenesController.eliminar(orden.id)@UriTrack.get("&")"  class="btn btn-default delete-confirm-link"><i class="glyphicon glyphicon-trash icono-eliminar"></i> Eliminar</a>
-			
+
 		</div>
 		<div class="col-sm-4">
 			@if(ordenForm("tipoCuenta").value != null){
@@ -120,7 +120,7 @@
 				<a href="@controllers.patrimonio.routes.OrdenesProvisionController.ver(op.id)&@UriTrack.encode()" class="btn btn-default"><i class="glyphicon glyphicon glyphicon-share"></i> Orden Provision</a>
 			}
 			<a href="@UriTrack.getOnNull(controllers.compras.routes.OrdenesController.index().absoluteURL())" class="btn btn-default"><i class="glyphicon glyphicon-list"></i></a>
-			
+
 		@if(paginadorFicha.getLista().size() > 1){
 
 		<div class="btn-group">
@@ -130,11 +130,11 @@
 			<p style="padding-top: 3px" href=""  role="group" class="btn btn-default">@paginadorFicha.posicionActual() de @paginadorFicha.getLista().size()</p>
 			@if(paginadorFicha.hasNext()) {
 				<a  role="group" href="@controllers.compras.routes.OrdenesController.ver(paginadorFicha.next().toLong)@UriTrack.get("&")" class="btn btn-default"><i class="glyphicon glyphicon-chevron-right"></i></a>
-			}  
+			}
 		</div>
 		}
-			
-			
+
+
 		</div>
 	</div>
 
@@ -146,7 +146,7 @@
 			<p class="form-control-static form-control">@orden.nombre</p>
 		</div>
 		<div class="col-sm-4">
-			<label class="control-label">Proveedor</label> 
+			<label class="control-label">Proveedor</label>
 			<p class="form-control-static form-control" style="height: 25px; overflow: hidden;">@ordenForm("proveedor.nombre").value</p>
 		</div>
 		<div class="col-sm-2">
@@ -154,14 +154,14 @@
 			<p class="form-control-static form-control">@ordenForm("fecha_orden").value</p>
 		</div>
 		<div class="col-sm-2">
-			<label>Expediente - <span style="color:red;font-weight: bold;">@(utils.DateUtils.formatDate(orden.expediente.fecha))</span></label> 
+			<label>Expediente - <span style="color:red;font-weight: bold;">@(utils.DateUtils.formatDate(orden.expediente.fecha))</span></label>
 			<p class="form-control-static form-control">@ordenForm("expediente.expedienteEjercicio").value</p>
 		</div>
 		<div class="col-sm-2">
 			<label class="control-label">Periodo</label>
 			<p class="form-control-static form-control">@ordenForm("periodo.nombre").value</p>
 		</div>
-		
+
 	</div>
 	<div class="row">
 		<div class="col-sm-2">
@@ -175,15 +175,15 @@
 		<div class="col-sm-2">
 			<label>Fecha provisión</label>
 			<p class="form-control-static form-control">@ordenForm("fecha_provision").value</p>
-		</div>	
+		</div>
 		<div class="col-sm-4">
-			<label for="deposito" class="control-label">Institucion</label> 
+			<label for="deposito" class="control-label">Institucion</label>
 			<p class="form-control-static form-control">@ordenForm("deposito.nombre").value</p>
 		</div>
 		<div class="col-sm-2">
 			<label class="control-label">Tipo contratación</label>
 			<p class="form-control-static form-control">
-			
+
 				@ordenForm("tipo_contratacion").value match {
 					case "compras" => {Compra Directa}
 					case "licitacion" => {Licitacion Pública}
@@ -195,7 +195,7 @@
 				}
 			</p>
 		</div>
-	</div>	 
+	</div>
 	<div class="row" id="">
 		<div class="col-sm-4">
 			<label class="control-label">Tipo Orden</label>
@@ -217,12 +217,12 @@
 			<!-- <div class="col-sm-6">
 				<div class="checkbox">
 					<label class="control-label">Creacion Automatica
-					@checkbox(ordenForm("creacion_automatica"), 'disabled -> "disabled")</label> 
+					@checkbox(ordenForm("creacion_automatica"), 'disabled -> "disabled")</label>
 				</div>
 			</div>
 			<div class="col-sm-6">
 				<div class="checkbox">
-					<label class="control-label"> 
+					<label class="control-label">
 						Profe
 						@checkbox(ordenForm("profe"), 'disabled -> "disabled")
 					</label>
@@ -233,16 +233,16 @@
 		</div>
 		<div class="col-sm-3">
 			<div class="col-sm-6">
-				<label class="control-label">Fecha inicio</label> 
+				<label class="control-label">Fecha inicio</label>
 				<p class="form-control-static form-control">@ordenForm("fecha_inicio").value</p>
 			</div>
 			<div class="col-sm-6">
-				<label class="control-label">Fecha fin</label> 
+				<label class="control-label">Fecha fin</label>
 				<p class="form-control-static form-control">@ordenForm("fecha_fin").value</p>
-			</div>	
-		</div>		
+			</div>
+		</div>
 		<div class="col-sm-2">
-			<label class="control-label">Fecha entrega</label> 
+			<label class="control-label">Fecha entrega</label>
 			<p class="form-control-static form-control">@ordenForm("fecha_entrega").value</p>
 		</div>
 	</div>
@@ -269,60 +269,64 @@
 		</div>
 		<div class="col-sm-3">
 			<div class="">
-				<label for="" class="control-label">Detalle Rubro</label>	
+				<label for="" class="control-label">Detalle Rubro</label>
 				<p class="form-control-static form-control">
 				@ordenForm("detalle_rubro").value
 				</p>
 			</div>
 		</div>
-		
-		
+
+
 		<div class="col-sm-3">
 			<div class="row">
-		
+
 				<div class="col-sm-6">
 					<div class="">
-						<label for="" class="control-label">Monto adelanto</label>	
+						<label for="" class="control-label">Monto adelanto</label>
 						<p class="form-control-static form-control">
 						@utils.NumberUtils.moneda(orden.monto_adelanto, 2)
 						</p>
 					</div>
 				</div>
-				
+
 				<div class="col-sm-6">
 					<div class="">
-						<label for="" class="control-label">Cotización</label>	
+						<label for="" class="control-label">Cotización</label>
 						<p class="form-control-static form-control">
 						@if(orden.tipo_moneda != null) {
-							@UltimaCotizacion.getMoneda(orden.tipo_moneda) 
+							@UltimaCotizacion.getMoneda(orden.tipo_moneda)
 							@utils.NumberUtils.moneda(orden.cot_dolar, 2)
 						}
 						</p>
 					</div>
 				</div>
-		
+
 			</div>
 		</div>
-		
+
 	</div>
 	<div class="row">
 		<div class="col-sm-2">
 			<div class="">
-				<label for="" class="control-label">N° Presupuesto</label>	
+				<label for="" class="control-label">N° Presupuesto</label>
 				<p class="form-control-static form-control">
 				@ordenForm("numero_presupuesto").value
 				</p>
 			</div>
 		</div>
-		<div class="col-sm-10">
+		<div class="col-sm-2">
+			<label class="control-label">Fecha Presupuesto</label>
+			<p class="form-control-static form-control">@ordenForm("fecha_presupueso").value</p>
+		</div>
+		<div class="col-sm-8">
 			<div class="">
-				<label for="" class="control-label">Plazo Entrega</label>	
+				<label for="" class="control-label">Plazo Entrega</label>
 				<p class="form-control-static form-control">
 				@ordenForm("plazo_entrega").value
 				</p>
 			</div>
 		</div>
-	</div>	
+	</div>
 	@if(Orden.getOrdenHija(orden.id) != null){
 		<div class="row">
 			<div class="col-sm-4"></div>
@@ -331,7 +335,7 @@
 			</div>
 		</div>
 	}
-	
+
 	@if(Orden.getOrdenPadre(orden.id) != null){
 		<div class="row">
 			<div class="col-sm-4"></div>
@@ -341,9 +345,9 @@
 		</div>
 	}
 	@views.html.compras.ordenes.tabsOrden(false, ordenForm,orden)
-	
+
 	@if(orden.cot_dolar != null && orden.cot_dolar.compareTo(java.math.BigDecimal.ZERO) > 0){
-	
+
 		<div class="row">
 			<div class="col-sm-12">
 				<table class="table table-striped table-bordered">
@@ -356,7 +360,7 @@
 					<tbody>
 						<tr style="background: #FFFFFF;">
 							<td>
-								<h4>Base: 	<b>@utils.NumberUtils.moneda(orden.getTotal())</b></h4>	
+								<h4>Base: 	<b>@utils.NumberUtils.moneda(orden.getTotal())</b></h4>
 							</td>
 							<td>
 								<h4>Base: 	<b>@utils.NumberUtils.moneda(orden.getTotalDolar(), orden.tipo_moneda)</b></h4>
@@ -364,7 +368,7 @@
 						</tr>
 						<tr style="background: #FFFFFF;">
 							<td>
-								<h4>Ajuste sin D/C: <b>@utils.NumberUtils.moneda(orden.getTotalAjusteSinDiferenciaCotizacion())</b></h4>	
+								<h4>Ajuste sin D/C: <b>@utils.NumberUtils.moneda(orden.getTotalAjusteSinDiferenciaCotizacion())</b></h4>
 							</td>
 							<td>
 								<h4>Ajuste sin D/C: <b>@utils.NumberUtils.moneda(orden.getTotalDolarAjusteSinDiferenciaCotizacion(), orden.tipo_moneda)</b></h4>
@@ -380,45 +384,45 @@
 						</tr>
 						<tr style="background: #FFFFFF;">
 							<td>
-								<h4>Ajuste D/C: <b>@utils.NumberUtils.moneda(orden.getTotalAjusteConDiferenciaCotizacion())</b></h4>	
+								<h4>Ajuste D/C: <b>@utils.NumberUtils.moneda(orden.getTotalAjusteConDiferenciaCotizacion())</b></h4>
 							</td>
 							<td>
-								
+
 							</td>
 						</tr>
-						 
+
 						<tr style="background: #FFFFFF;">
 							<td>
-								<h4>Total con D/C: <b>@utils.NumberUtils.moneda(orden.getTotalTotal())</b></h4>	
+								<h4>Total con D/C: <b>@utils.NumberUtils.moneda(orden.getTotalTotal())</b></h4>
 							</td>
 							<td>
-								
+
 							</td>
 						</tr>
-						
-							
+
+
 					</tbody>
 				</table>
-					
-				
+
+
 			</div>
 		</div>
-	
+
 	}else{
-		<h4>Base: 	<b>@utils.NumberUtils.moneda(orden.getTotal())</b></h4>	
-		<h4>Ajuste: <b>@utils.NumberUtils.moneda(orden.getTotalAjuste())</b></h4>	
-		<h4>Total: 	<b>@utils.NumberUtils.moneda(orden.getTotalTotal())</b></h4>	
+		<h4>Base: 	<b>@utils.NumberUtils.moneda(orden.getTotal())</b></h4>
+		<h4>Ajuste: <b>@utils.NumberUtils.moneda(orden.getTotalAjuste())</b></h4>
+		<h4>Total: 	<b>@utils.NumberUtils.moneda(orden.getTotalTotal())</b></h4>
 	}
 	<h4>Estado actual: 	<b>@orden.estado.nombre</b></h4>
-	<div class="row margin-bottom-25">	
-		@for(estado <- models.Estado.getSiguienteEstadoPorAprobar(orden.estado.orden,models.Estado.TIPO_ORDEN)) {	
+	<div class="row margin-bottom-25">
+		@for(estado <- models.Estado.getSiguienteEstadoPorAprobar(orden.estado.orden,models.Estado.TIPO_ORDEN)) {
 			@if(estado.orden <= 5) {
 				<div class="col-sm-3">
 					<a href="@controllers.compras.routes.OrdenesController.cambiarEstado(ordenForm.field("id").value.toInt, estado.id.toLong)@UriTrack.get("&")" class="btn btn-default btn-disable-onclick">
 						<i class="glyphicon glyphicon-arrow-right"></i> @estado.nombre
 					</a>
 				</div>
-				
+
 			}
 		}
 		@if(orden.estado.id == models.Estado.ORDEN_ESTADO_CANCELADO) {
@@ -437,10 +441,10 @@
 	</div>
 <script>
 $( function(){
-	$('.reporteOrdenProvision').click( function() { 
+	$('.reporteOrdenProvision').click( function() {
 		var url = $(this).attr("data-url");
 		var dialogo = $('<div></div>');
-		
+
 		dialogo.dialog({
 			title: "Report Orden de Provision",
 	    	resizable: false,
@@ -459,12 +463,12 @@ $( function(){
 		    open: function( event, ui ) {
 				$.post(url, function(data){
 					dialogo.html(data);
-				});	
+				});
 		    }
 	    });
 	});
 });
-</script>	
+</script>
 }
 
 
