@@ -112,14 +112,12 @@ public class RemitoBaul extends Model {
     		e.eq("create_usuario_id", Integer.parseInt(respondable_id));
     	}
 
-		if(!cargado.isEmpty()){
-			if(cargado.compareToIgnoreCase("SI") == 0){
-				e.eq("borrado", true);
-			}else if(cargado.compareToIgnoreCase("NO") == 0){
-				e.eq("borrado", false);
-			}
 
-    	}
+		if(cargado.compareToIgnoreCase("SI") == 0){
+			e.eq("borrado", true);
+		}else {
+			e.eq("borrado", false);
+		}
 
     	p.setExpressionList(e);
 
