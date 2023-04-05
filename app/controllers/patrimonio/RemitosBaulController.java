@@ -42,7 +42,11 @@ public class RemitosBaulController extends Controller {
 
 		DynamicForm d = form().bindFromRequest();
 		Pagination<RemitoBaul> remitos = RemitoBaul.page(RequestVar.get("numero"),
-														RequestVar.get("proveedor_id"), RequestVar.get("producto_id"), RequestVar.get("create_usuario_id"), RequestVar.get("fecha_desde"), RequestVar.get("fecha_hasta"));
+														RequestVar.get("proveedor_id"),
+														RequestVar.get("cargado"),
+														RequestVar.get("create_usuario_id"),
+														RequestVar.get("fecha_desde"),
+														RequestVar.get("fecha_hasta"));
 		return ok(indexRemitoBaul.render(remitos, d));
 	}
 
