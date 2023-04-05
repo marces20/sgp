@@ -193,6 +193,10 @@ public class RemitosController extends Controller {
 			r.create_usuario_id = (long) Usuario.getUsuarioSesion();
 			r.save();
 
+			r = Remito.find.byId(r.id);
+
+
+
 			List<RemitoBaul> reclistb = RemitoBaul.find.where()
 					   .eq("numero", r.numero)
 					   .eq("proveedor_id", r.recepcion.ordenProvision.ordenCompra.proveedor_id)
@@ -213,7 +217,7 @@ public class RemitosController extends Controller {
 
 			return redirect(controllers.patrimonio.routes.RemitosController.ver(r.id)+UriTrack.get("&"));
 		} catch (Exception e) {
-			flash("error", "Problemas al crear el remito ");
+			flash("error", "Problemas al crear el remito "+e);
 			return ok(crearRemito.render(rForm));
 		}
 	}
