@@ -36,6 +36,7 @@ import models.Estado;
 import models.Factura;
 import models.Recepcion;
 import models.Remito;
+import models.RemitoBaul;
 import models.RemitoLinea;
 import models.Usuario;
 import play.Logger;
@@ -51,6 +52,7 @@ import utils.UriTrack;
 import utils.pagination.PaginadorFicha;
 import utils.pagination.Pagination;
 import views.html.contabilidad.facturas.acciones.modalCargarOrdenPago;
+import views.html.patrimonio.baul.crearRemitoBaul;
 import views.html.patrimonio.remitos.*;
 
 @Security.Authenticated(Secured.class)
@@ -190,6 +192,23 @@ public class RemitosController extends Controller {
 			r.create_date = new Date();
 			r.create_usuario_id = (long) Usuario.getUsuarioSesion();
 			r.save();
+
+			List<RemitoBaul> reclistb = RemitoBaul.find.where()
+					   .eq("numero", r.numero)
+					   .eq("proveedor_id", r.recepcion.ordenProvision.ordenCompra.proveedor_id)
+					   .findList();
+
+			if(reclistb.size() > 0){
+				for(RemitoBaul rbx:reclistb) {
+					rbx.write_date = new Date();
+					rbx.write_usuario_id = (long) Usuario.getUsuarioSesion();
+					rbx.borrado = true;
+					rbx.update();
+				}
+			}
+
+
+
 			flash("success", "Se ha creado el remito número <b>"+r.numero+"</b>");
 
 			return redirect(controllers.patrimonio.routes.RemitosController.ver(r.id)+UriTrack.get("&"));

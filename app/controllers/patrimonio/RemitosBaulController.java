@@ -41,7 +41,8 @@ public class RemitosBaulController extends Controller {
 	public static Result index(){
 
 		DynamicForm d = form().bindFromRequest();
-		Pagination<RemitoBaul> remitos = RemitoBaul.page(RequestVar.get("numero"), RequestVar.get("proveedor_id"), RequestVar.get("producto_id"), RequestVar.get("create_usuario_id"), RequestVar.get("fecha_desde"), RequestVar.get("fecha_hasta"));
+		Pagination<RemitoBaul> remitos = RemitoBaul.page(RequestVar.get("numero"),
+														RequestVar.get("proveedor_id"), RequestVar.get("producto_id"), RequestVar.get("create_usuario_id"), RequestVar.get("fecha_desde"), RequestVar.get("fecha_hasta"));
 		return ok(indexRemitoBaul.render(remitos, d));
 	}
 
@@ -144,7 +145,8 @@ public class RemitosBaulController extends Controller {
 			}
 
 
-
+			rr.write_date = new Date();
+			rr.write_usuario_id = (long) Usuario.getUsuarioSesion();
 			rr.update();
 			flash("success", "Se ha modificado el remito en baúl.");
 			return redirect( controllers.patrimonio.routes.RemitosBaulController.ver(rr.id) );
