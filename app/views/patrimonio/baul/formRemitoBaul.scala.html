@@ -35,6 +35,9 @@
 		<div class="form-group @if(rForm.error("fecha") != null) {has-error}">
 			<label for="fechaRemito" class="control-label">Fecha de remito</label>
 			@inputText(rForm("fecha"),'class -> "form-control date")
+			@rForm("proveedor_id").error.map{ error =>
+				<div class="text-error">@error.message</div>
+			}
 		</div>
 	</div>
 
@@ -57,6 +60,9 @@
 					</a>
 				</span>
 			</div>
+			@rForm("proveedor_id").error.map{ error =>
+				<div class="text-error">@error.message</div>
+			}
 		</label>
 	</div>
 

@@ -3,6 +3,7 @@ package controllers.patrimonio;
 import static play.data.Form.form;
 
 import java.util.Date;
+import java.util.List;
 
 import javax.persistence.PersistenceException;
 
@@ -30,11 +31,12 @@ import utils.RequestVar;
 import utils.pagination.Pagination;
 import views.html.compras.ordenes.crearOrden;
 import views.html.patrimonio.baul.*;
+import views.html.patrimonio.remitos.crearRemito;
 
 @Security.Authenticated(Secured.class)
 public class RemitosBaulController extends Controller {
 	final static Form<Remito> oForm = form(Remito.class);
-	
+
 	@CheckPermiso(key = "remitosVer")
 	public static Result index(){
 
@@ -42,21 +44,43 @@ public class RemitosBaulController extends Controller {
 		Pagination<RemitoBaul> remitos = RemitoBaul.page(RequestVar.get("numero"), RequestVar.get("proveedor_id"), RequestVar.get("producto_id"), RequestVar.get("create_usuario_id"), RequestVar.get("fecha_desde"), RequestVar.get("fecha_hasta"));
 		return ok(indexRemitoBaul.render(remitos, d));
 	}
-	
+
 	@CheckPermiso(key = "remitosCrear")
 	public static Result crear(){
 		Form<RemitoBaul> rb = form(RemitoBaul.class).bindFromRequest();
 		return ok(crearRemitoBaul.render(rb));
-		
+
 	}
-	
+
 	@CheckPermiso(key = "remitosCrear")
 	public static Result guardar(){
 
 		Form<RemitoBaul> rb = form(RemitoBaul.class).bindFromRequest();
-		
+
 		if(rb.hasErrors()) {
 			flash("error", "Error en formulario");
+			return badRequest(crearRemitoBaul.render(rb));
+		}
+
+		RemitoBaul r = rb.get();
+
+		List<Remito> reclist = Remito.find.where()
+				   .eq("numero", r.numero)
+				   .eq("recepcion.ordenProvision.ordenCompra.proveedor.id", r.proveedor_id)
+				   .findList();
+
+		if(reclist.size() > 0){
+			flash("error", "Ya existe este numero de remito para este proveedor.");
+			return badRequest(crearRemitoBaul.render(rb));
+		}
+
+		List<RemitoBaul> reclistb = RemitoBaul.find.where()
+				   .eq("numero", r.numero)
+				   .eq("proveedor_id", r.proveedor_id)
+				   .findList();
+
+		if(reclistb.size() > 0){
+			flash("error", "Ya existe este numero de remito para este proveedor en remito BAUL.");
 			return badRequest(crearRemitoBaul.render(rb));
 		}
 
@@ -71,27 +95,51 @@ public class RemitosBaulController extends Controller {
 			flash("error", "No se ha podido almacenar el remito." + pe.getMessage());
 			return badRequest( crearRemitoBaul.render(rb) );
 		}
-		
+
 	}
-	
-	
+
+
 	@CheckPermiso(key = "remitosCrear")
 	public static Result editar(Long id){
 		RemitoBaul r = RemitoBaul.find.byId(id);
 		Form<RemitoBaul> rb = form(RemitoBaul.class).fill(r);
 		return ok(editarRemitoBaul.render(rb));
-		
+
 	}
-	
+
 	@CheckPermiso(key = "remitosCrear")
 	public static Result actualizar(){
-	
+
 		Form<RemitoBaul> rb = form(RemitoBaul.class).bindFromRequest();
-		
+
 		if(rb.hasErrors()) {
 			flash("error", "Error en formulario");
 			return badRequest(editarRemitoBaul.render(rb));
 		}
+
+		RemitoBaul r = rb.get();
+
+		List<Remito> reclist = Remito.find.where()
+				   .eq("numero", r.numero)
+				   .eq("recepcion.ordenProvision.ordenCompra.proveedor.id", r.proveedor_id)
+				   .findList();
+
+		if(reclist.size() > 0){
+			flash("error", "Ya existe este numero de remito para este proveedor.");
+			return badRequest(crearRemitoBaul.render(rb));
+		}
+
+		List<RemitoBaul> reclistb = RemitoBaul.find.where()
+				   .eq("numero", r.numero)
+				   .eq("proveedor_id", r.proveedor_id)
+				   .ne("id", r.id)
+				   .findList();
+
+		if(reclistb.size() > 0){
+			flash("error", "Ya existe este numero de remito para este proveedor en remito BAUL.");
+			return badRequest(crearRemitoBaul.render(rb));
+		}
+
 
 		try {
 			RemitoBaul r = rb.get();
@@ -103,18 +151,18 @@ public class RemitosBaulController extends Controller {
 			flash("error", "No se ha podido modificar el remito.");
 			return badRequest( editarRemitoBaul.render(rb) );
 		}
-		
+
 	}
-	
+
 	@CheckPermiso(key = "remitosVer")
 	public static Result ver(Long id){
 		RemitoBaul r = RemitoBaul.find.byId(id);
-	
+
 		return ok(verRemitoBaul.render(r));
-		
-	}	
-	
-	
+
+	}
+
+
 	@CheckPermiso(key = "remitosEliminar")
 	public static Result eliminar(Long id){
 		RemitoBaul r = RemitoBaul.find.byId(id);
@@ -127,7 +175,7 @@ public class RemitosBaulController extends Controller {
 			flash("error", "No se ha podido eliminar el remito.");
 			return redirect(request().getHeader("referer"));
 		}
-		
+
 	}
-	
+
 }
