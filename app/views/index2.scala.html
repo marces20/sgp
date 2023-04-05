@@ -1,56 +1,77 @@
-@(usuariosActivos:Boolean,ca:Integer,cax:Integer,eSize:Integer,usuariosActivos2:Boolean,s:List[com.avaje.ebean.SqlRow])
+@(usuariosActivos:Boolean,
+ca:Integer,
+cax:Integer,
+eSize:Integer,
+usuariosActivos2:Boolean,
+s:List[com.avaje.ebean.SqlRow],
+rem:Integer)
 @import helper._
 @import utils._
 @import models.auth._
 @implicitFieldConstructor = @{ FieldConstructor(simpleInput.render) }
 @main("SGP - v1.0") {
- 
- 
- 
- 
+
+
+
+
 
  <div class="page-header">
- 	 
+
 	<div class="row">
-		@if(usuariosActivos){	
-		@if(ca > 0){
+		@if(usuariosActivos){
+
  		<div class="col-sm-4">
- 			
+
 			<div class="panel panel-default">
 				<div class="panel-heading"><b>Estado Expedientes</b></div>
 				<div class="panel-body" id="div-datos-puestos">
-					<table class="table table-striped table-bordered">
-						<tbody>
-							 <tr align="center">
-								<td width="250"><b>Expedientes con recepciones sin firma</b></td>
-								<td width="50"><b>@ca</b></td> 
-								<td>
-									 <span id="getExpedientesRecepcionSinFirma" class="glyphicon glyphicon-list-alt pointer" data-url="@controllers.expediente.routes.ExpedientesController.getExpedientesRecepcionSinFirma()"></span>
-								</td>
-							</tr>
-						</tbody>
-					</table>
-					<table class="table table-striped table-bordered">
-						<tbody>
-							 <tr align="center">
-								<td  width="250"><b>Expedientes sin firma</b></td>
-								<td width="50"><b>@cax</b></td> 
-								<td>
-									 <span id="getExpedientesSinFirma" class="glyphicon glyphicon-list-alt pointer" 
-									 data-url="@controllers.expediente.routes.ExpedientesController.getExpedientesSinFirma()">
-									 </span>
-								</td>
-							</tr>
-						</tbody>
-					</table>				
+					@if(ca > 0){
+						<table class="table table-striped table-bordered">
+							<tbody>
+								 <tr align="center">
+									<td width="250"><b>Expedientes con recepciones sin firma</b></td>
+									<td width="50"><b>@ca</b></td>
+									<td>
+										 <span id="getExpedientesRecepcionSinFirma" class="glyphicon glyphicon-list-alt pointer" data-url="@controllers.expediente.routes.ExpedientesController.getExpedientesRecepcionSinFirma()"></span>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+						<table class="table table-striped table-bordered">
+							<tbody>
+								 <tr align="center">
+									<td  width="250"><b>Expedientes sin firma</b></td>
+									<td width="50"><b>@cax</b></td>
+									<td>
+										 <span id="getExpedientesSinFirma" class="glyphicon glyphicon-list-alt pointer"
+										 data-url="@controllers.expediente.routes.ExpedientesController.getExpedientesSinFirma()">
+										 </span>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+					}
+					@if(rem > 0){
+						<table class="table table-striped table-bordered">
+							<tbody>
+								 <tr align="center">
+									<td  width="250"><b>Remitos sin Expedientes</b></td>
+									<td width="50"><b>@rem</b></td>
+									<td>
+
+									</td>
+								</tr>
+							</tbody>
+						</table>
+					}
 				</div>
-			</div>	
+			</div>
 		</div>
+
 		}
-		}
-		 @if(usuariosActivos2){	
+		 @if(usuariosActivos2){
 		<div class="col-sm-4">
- 			
+
 			<div class="panel panel-default">
 				<div class="panel-heading"><b>Estado Autorizado Pagos</b></div>
 				<div class="panel-body" id="div-datos-puestos">
@@ -58,22 +79,22 @@
 						<tbody>
 							 <tr align="center">
 								<td width="250"><b>Diferencias Autorizados Pagados</b></td>
-								<td width="50"><b>@eSize</b></td> 
+								<td width="50"><b>@eSize</b></td>
 								<td>
-									 <span id="getDiferenciaAutorizadoPagos" class="glyphicon glyphicon-list-alt pointer" 
+									 <span id="getDiferenciaAutorizadoPagos" class="glyphicon glyphicon-list-alt pointer"
 									 data-url="@controllers.dashboard.routes.ControlDeudaController.getAutorizadoDistintoDePagado()"></span>
 								</td>
 							</tr>
 						</tbody>
-					</table>			
+					</table>
 				</div>
-			</div>	
+			</div>
 		</div>
 		}
-		
-		@if(s != null && s.size() > 0){	
+
+		@if(s != null && s.size() > 0){
 			<div class="col-sm-4">
-	 			
+
 				<div class="panel panel-default">
 					<div class="panel-heading"><b>Solicitudes Asignadas en Borrador</b></div>
 					<div class="panel-body" id="div-datos-puestos">
@@ -82,19 +103,18 @@
 								@for(sx <- s) {
 								 <tr align="center">
 									<td width="250"><b>@sx.getString("nombre")</b></td>
-									<td width="50"><b>@sx.getString("c")</b></td> 
-									 
+									<td width="50"><b>@sx.getString("c")</b></td>
+
 								</tr>
 								}
 							</tbody>
-						</table>			
+						</table>
 					</div>
-				</div>	
+				</div>
 			</div>
 		}
-		
-	</div>	
+
+	</div>
 </div>
- 
+
 }
- 
