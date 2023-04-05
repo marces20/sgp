@@ -48,6 +48,7 @@ public class RemitosBaulController extends Controller {
 	@CheckPermiso(key = "remitosCrear")
 	public static Result crear(){
 		Form<RemitoBaul> rb = form(RemitoBaul.class).bindFromRequest();
+		rb.discardErrors();
 		return ok(crearRemitoBaul.render(rb));
 
 	}
@@ -62,35 +63,36 @@ public class RemitosBaulController extends Controller {
 			return badRequest(crearRemitoBaul.render(rb));
 		}
 
-		RemitoBaul r = rb.get();
-
-		List<Remito> reclist = Remito.find.where()
-				   .eq("numero", r.numero)
-				   .eq("recepcion.ordenProvision.ordenCompra.proveedor.id", r.proveedor_id)
-				   .findList();
-
-		if(reclist.size() > 0){
-			flash("error", "Ya existe este numero de remito para este proveedor.");
-			return badRequest(crearRemitoBaul.render(rb));
-		}
-
-		List<RemitoBaul> reclistb = RemitoBaul.find.where()
-				   .eq("numero", r.numero)
-				   .eq("proveedor_id", r.proveedor_id)
-				   .findList();
-
-		if(reclistb.size() > 0){
-			flash("error", "Ya existe este numero de remito para este proveedor en remito BAUL.");
-			return badRequest(crearRemitoBaul.render(rb));
-		}
-
 		try {
-			RemitoBaul r = rb.get();
-			r.create_usuario_id = new Long(Usuario.getUsuarioSesion());
-			r.create_date = new Date();
-			r.save();
+			RemitoBaul rr = rb.get();
+
+			List<Remito> reclist = Remito.find.where()
+					   .eq("numero", rr.numero)
+					   .eq("recepcion.ordenProvision.ordenCompra.proveedor.id", rr.proveedor_id)
+					   .findList();
+
+			if(reclist.size() > 0){
+				flash("error", "Ya existe este numero de remito para este proveedor.");
+				return badRequest(crearRemitoBaul.render(rb));
+			}
+
+			List<RemitoBaul> reclistb = RemitoBaul.find.where()
+					   .eq("numero", rr.numero)
+					   .eq("proveedor_id", rr.proveedor_id)
+					   .findList();
+
+			if(reclistb.size() > 0){
+				flash("error", "Ya existe este numero de remito para este proveedor en remito BAUL.");
+				return badRequest(crearRemitoBaul.render(rb));
+			}
+
+
+			//RemitoBaul r = rb.get();
+			rr.create_usuario_id = new Long(Usuario.getUsuarioSesion());
+			rr.create_date = new Date();
+			rr.save();
 			flash("success", "Se ha cargado el remito en baúl.");
-			return redirect( controllers.patrimonio.routes.RemitosBaulController.ver(r.id) );
+			return redirect( controllers.patrimonio.routes.RemitosBaulController.ver(rr.id) );
 		} catch (PersistenceException pe) {
 			flash("error", "No se ha podido almacenar el remito." + pe.getMessage());
 			return badRequest( crearRemitoBaul.render(rb) );
@@ -117,35 +119,35 @@ public class RemitosBaulController extends Controller {
 			return badRequest(editarRemitoBaul.render(rb));
 		}
 
-		RemitoBaul r = rb.get();
-
-		List<Remito> reclist = Remito.find.where()
-				   .eq("numero", r.numero)
-				   .eq("recepcion.ordenProvision.ordenCompra.proveedor.id", r.proveedor_id)
-				   .findList();
-
-		if(reclist.size() > 0){
-			flash("error", "Ya existe este numero de remito para este proveedor.");
-			return badRequest(crearRemitoBaul.render(rb));
-		}
-
-		List<RemitoBaul> reclistb = RemitoBaul.find.where()
-				   .eq("numero", r.numero)
-				   .eq("proveedor_id", r.proveedor_id)
-				   .ne("id", r.id)
-				   .findList();
-
-		if(reclistb.size() > 0){
-			flash("error", "Ya existe este numero de remito para este proveedor en remito BAUL.");
-			return badRequest(crearRemitoBaul.render(rb));
-		}
-
-
 		try {
-			RemitoBaul r = rb.get();
-			r.update();
+			RemitoBaul rr = rb.get();
+
+			List<Remito> reclist = Remito.find.where()
+					   .eq("numero", rr.numero)
+					   .eq("recepcion.ordenProvision.ordenCompra.proveedor.id", rr.proveedor_id)
+					   .findList();
+
+			if(reclist.size() > 0){
+				flash("error", "Ya existe este numero de remito para este proveedor.");
+				return badRequest(crearRemitoBaul.render(rb));
+			}
+
+			List<RemitoBaul> reclistb = RemitoBaul.find.where()
+					   .eq("numero", rr.numero)
+					   .eq("proveedor_id", rr.proveedor_id)
+					   .ne("id", rr.id)
+					   .findList();
+
+			if(reclistb.size() > 0){
+				flash("error", "Ya existe este numero de remito para este proveedor en remito BAUL.");
+				return badRequest(crearRemitoBaul.render(rb));
+			}
+
+
+
+			rr.update();
 			flash("success", "Se ha modificado el remito en baúl.");
-			return redirect( controllers.patrimonio.routes.RemitosBaulController.ver(r.id) );
+			return redirect( controllers.patrimonio.routes.RemitosBaulController.ver(rr.id) );
 		} catch (PersistenceException pe) {
 			play.Logger.error("excepcion", pe);
 			flash("error", "No se ha podido modificar el remito.");
