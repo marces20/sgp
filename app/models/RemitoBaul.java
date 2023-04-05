@@ -78,7 +78,7 @@ public class RemitoBaul extends Model {
 	public static Pagination<RemitoBaul> page(
 										String numero,
 										String proveedor_id,
-										String producto_id,
+										String cargado,
 										String respondable_id,
 										String fecha_desde,
 										String fecha_hasta
@@ -89,7 +89,7 @@ public class RemitoBaul extends Model {
 
     	ExpressionList<RemitoBaul> e = find.where();
 
-    	e.eq("borrado", false);
+    	//e.eq("borrado", false);
 
 		if(!numero.isEmpty()){
     		e.eq("numero", numero);
@@ -112,8 +112,13 @@ public class RemitoBaul extends Model {
     		e.eq("create_usuario_id", Integer.parseInt(respondable_id));
     	}
 
-		if(!producto_id.isEmpty()){
-    		e.eq("lineas.producto_id", Integer.parseInt(producto_id));
+		if(!cargado.isEmpty()){
+			if(cargado.compareToIgnoreCase("SI") == 0){
+				e.eq("borrado", true);
+			}else if(cargado.compareToIgnoreCase("NO") == 0){
+				e.eq("borrado", false);
+			}
+
     	}
 
     	p.setExpressionList(e);
