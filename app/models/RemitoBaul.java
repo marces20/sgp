@@ -25,17 +25,20 @@ import utils.pagination.Pagination;
 import com.avaje.ebean.ExpressionList;
 
 
-@Entity 
+@Entity
 @Table(name = "remito_baul")
 public class RemitoBaul extends Model {
 
-	
+
 	private static final long serialVersionUID = 1L;
-	@Id  														 
+	@Id
 	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="remito_baul_id_seq")
 	public Long id;
-	public String numero;	
-	
+
+	@Required(message="Requiere numero")
+	public String numero;
+
+	@Required(message="Requiere fecha")
 	@Formats .DateTime(pattern="dd/MM/yyyy")
 	public Date fecha;
 
@@ -44,7 +47,7 @@ public class RemitoBaul extends Model {
 	public Proveedor proveedor;
 	@Required(message="Requiere proveedor")
 	public Integer proveedor_id;//Proveedor X
-	
+
 	@OneToMany
 	@JoinColumn(name="remito_baul_id")
 	public List<RemitoLineaBaul> lineas;
@@ -53,16 +56,25 @@ public class RemitoBaul extends Model {
 
 	@ManyToOne
 	@JoinColumn(name="create_usuario_id", referencedColumnName="id", insertable=false, updatable=false)
-	public Usuario create_usuario; 
+	public Usuario create_usuario;
 	@Column(name="create_usuario_id")
 	public Long create_usuario_id;
-	 
-	public Date create_date; 
-	
-	
+
+	public Date create_date;
+
+	@ManyToOne
+	@JoinColumn(name="write_usuario_id", referencedColumnName="id", insertable=false, updatable=false)
+	public Usuario write_usuario;
+	@Column(name="write_usuario_id")
+	public Long write_usuario_id;
+
+	public Date write_date;
+
+	public Boolean borrado = false;
+
 	public static Finder<Long,RemitoBaul> find = new Finder<Long,RemitoBaul>(Long.class, RemitoBaul.class);
-	
-	
+
+
 	public static Pagination<RemitoBaul> page(
 										String numero,
 										String proveedor_id,
@@ -74,13 +86,15 @@ public class RemitoBaul extends Model {
 		Pagination<RemitoBaul> p = new Pagination<RemitoBaul>();
     	p.setOrderDefault("ASC");
     	p.setSortByDefault("fecha");
-    	
+
     	ExpressionList<RemitoBaul> e = find.where();
-    	
+
+    	e.eq("borrado", false);
+
 		if(!numero.isEmpty()){
     		e.eq("numero", numero);
-    	}    	
-    	
+    	}
+
     	if(!fecha_desde.isEmpty()){
     		Date fpd = DateUtils.formatDate(fecha_desde, "dd/MM/yyyy");
     		e.ge("fecha", fpd);
@@ -89,21 +103,21 @@ public class RemitoBaul extends Model {
     		Date fph = DateUtils.formatDate(fecha_hasta, "dd/MM/yyyy");
     		e.le("fecha", fph);
     	}
-    	
+
 		if(!proveedor_id.isEmpty()){
     		e.eq("proveedor_id", Integer.parseInt(proveedor_id));
-    	}	
+    	}
 
 		if(!respondable_id.isEmpty()){
     		e.eq("create_usuario_id", Integer.parseInt(respondable_id));
     	}
-		
+
 		if(!producto_id.isEmpty()){
     		e.eq("lineas.producto_id", Integer.parseInt(producto_id));
     	}
 
     	p.setExpressionList(e);
-    	
+
     	return p;
 	}
 
