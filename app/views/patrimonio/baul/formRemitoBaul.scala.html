@@ -22,7 +22,7 @@
 <div class="row">
 
 	<div class="col-sm-2">
-		<div class="form-group @if(rForm.error("numero") != null) {has-error} else {has-required}">
+		<div class="form-group @if(rForm.error("numero") != null) {has-error}else{has-required} ">
 			<label for="numero" class="control-label">Número</label>
 			@inputText(rForm("numero"), 'class -> "form-control",'id->"numero")
 			@rForm("numero").error.map{ error =>
@@ -32,39 +32,30 @@
 	</div>
 
 	<div class="col-sm-2">
-		<div class="form-group @if(rForm.error("fecha") != null) {has-error}">
+		<div class="form-group  @if(rForm.error("fecha") != null) {has-error}else{has-required} ">
 			<label for="fechaRemito" class="control-label">Fecha de remito</label>
 			@inputText(rForm("fecha"),'class -> "form-control date")
-			@rForm("proveedor_id").error.map{ error =>
+			@rForm("fecha").error.map{ error =>
 				<div class="text-error">@error.message</div>
 			}
 		</div>
 	</div>
 
-	<div class="col-sm-3">
-		<label class="control-label">Proveedor
-			<div class="input-group">
+	<div class="col-sm-4">
+			<label class="control-label">Proveedor</label>
+			<div class="input-group @if(rForm.error("proveedor_id") != null) {has-error}else{has-required}">
+				@inputText(rForm("proveedor.nombre"), 'class -> "form-control", 'id -> "proveedor")
 				@inputText(rForm("proveedor_id"), 'hidden -> "hidden", 'id -> "proveedor_id")
-				@inputText(rForm("proveedor.nombre"), 'name -> "", 'class -> "form-control", 'id -> "proveedor")
 				<span class="input-group-addon">
-					<a href="#" class="searchModal"
-								id="searchProveedor"
-								data-title="Selección de Proveedores"
-								data-url="@controllers.compras.routes.ProveedoresController.modalBuscar()"
-								data-height="650"
-								data-width="700"
-								data-listen="modal.seleccion.proveedor.simple"
-								data-label="#proveedor"
-								data-field="#proveedor_id">
-						<i class="glyphicon glyphicon-search"></i>
-					</a>
-				</span>
+                	<a href="#" id="searchProveedor" data-title="Selección de proveedor" data-url="@controllers.compras.routes.ProveedoresController.modalBuscar()" data-height="650" data-width="700" data-listen="modal.seleccion.proveedor.simple" data-label="#proveedor" data-field="#proveedor_id" /> <i class="glyphicon glyphicon-search"></i></a>
+                </span>
 			</div>
 			@rForm("proveedor_id").error.map{ error =>
 				<div class="text-error">@error.message</div>
 			}
-		</label>
-	</div>
+		</div>
+
+
 
 </div>
 
