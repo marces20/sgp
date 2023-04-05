@@ -2,7 +2,7 @@
 @import helper._
 @import models.auth._
 @import utils._
-@implicitFieldConstructor = @{ FieldConstructor(simpleInput.render) } 
+@implicitFieldConstructor = @{ FieldConstructor(simpleInput.render) }
 
 @views.html.patrimonio.mainPatrimonio("Vista de remito en baúl") {
 	<div class="page-header">
@@ -15,10 +15,10 @@
 				<a href="@controllers.patrimonio.routes.RemitosBaulController.crear()" class="btn btn-default"><i class="glyphicon glyphicon-plus-sign"></i> Crear remito</a>
 			</div>
 			}
-		</div>	
+		</div>
 	</div>
 
-	
+
 	@views.html.tags.successError()
 
 <div class="row menu-acciones">
@@ -42,34 +42,34 @@
 			<label class="control-label">Número</label>
 			<p class="form-control-static form-control">@remito.numero</p>
 		</div>
-		
+
 		<div class="col-sm-2">
-			<label class="control-label">Fecha</label> 
+			<label class="control-label">Fecha</label>
 			<p class="form-control-static form-control" style="height: 25px; overflow: hidden;">@(DateUtils.formatDate(remito.create_date))</p>
 		</div>
-	
+
 		<div class="col-sm-3">
-			<label class="control-label">Proveedor</label> 
+			<label class="control-label">Proveedor</label>
 			<p class="form-control-static form-control" style="height: 25px; overflow: hidden;">@remito.proveedor.nombre</p>
 		</div>
-		
+
 		<div class="col-sm-3">
-			<label class="control-label">Responsable</label> 
+			<label class="control-label">Responsable</label>
 			<p class="form-control-static form-control" style="height: 25px; overflow: hidden;">@remito.create_usuario.nombre</p>
 		</div>
-		
+
 	</div>
-	
+
 	<div class="row">
 		<div class="col-sm-12">
-			<label class="control-label">Observaciones</label> 
+			<label class="control-label">Observaciones</label>
 			<p class="form-control-static form-control">@remito.observaciones</p>
 		</div>
 	</div>
 
 <hr />
 
-@views.html.patrimonio.baul.tabsProductoRemitoBaul(false, remito.id)	
-	
-	
+<!-- @views.html.patrimonio.baul.tabsProductoRemitoBaul(false, remito.id) -->
+
+
 }
