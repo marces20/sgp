@@ -599,6 +599,10 @@ public class ExpedientesController extends Controller {
 				celda0.setCellValue("RP");
 				celda0.setCellStyle(comun);
 				
+				celda0 = fila.createCell(4);
+				celda0.setCellValue("Institucion");
+				celda0.setCellStyle(comun);
+				
 				x++;
 				
 				for(Expediente e : el){
@@ -620,6 +624,16 @@ public class ExpedientesController extends Controller {
 					celda0 = fila.createCell(3);
 					celda0.setCellValue(rp);
 					celda0.setCellStyle(comun);
+					
+					List<Orden> lo = Orden.find.where().eq("expediente_id",e.id).eq("state_id", Estado.ORDEN_ESTADO_APROBADO).findList();
+					if(lo.size() >0) {
+						celda0 = fila.createCell(4);
+						celda0.setCellValue(lo.get(0).deposito.nombre);
+						celda0.setCellStyle(comun);
+					}
+					
+					
+					
 					
 					x++;
 				}
