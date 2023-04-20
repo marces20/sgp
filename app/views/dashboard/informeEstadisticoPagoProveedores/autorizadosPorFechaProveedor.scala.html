@@ -1,0 +1,54 @@
+@( formBuscador: DynamicForm)
+@import helper._
+@implicitFieldConstructor = @{ FieldConstructor(simpleInput.render) }
+
+@views.html.dashboard.mainDashboard(title = "Autorizados por Fecha por Proveedor") {
+
+<div class="page-header">
+	<div class="row">
+		<div class="col-sm-9">
+			<h1>Autorizados por Fecha por Proveedor</h1>
+		</div>
+
+		<div class="col-sm-3">
+		</div>
+
+	</div>
+</div>
+
+<form action="" method="GET" id="filtroInforme">
+	<div class="row seccion">
+		<div class="col-sm-4">
+			<label class="control-label">Proveedor
+				<div class="input-group">
+					@inputText(formBuscador("proveedor_nombre"), 'name -> "", 'autofocus -> "autofocus", 'class -> "form-control", 'id -> "proveedor")
+					@inputText(formBuscador("proveedor_id"), 'hidden -> "hidden", 'id -> "proveedor_id")
+					<span class="input-group-addon">
+						<a href="#" class="searchModal"
+									id="searchProveedor"
+									data-title="Selección de Proveedores"
+									data-url="@controllers.compras.routes.ProveedoresController.modalBuscar()"
+									data-height="650"
+									data-width="700"
+									data-listen="modal.seleccion.proveedor.simple"
+									data-label="#proveedor"
+									data-field="#proveedor_id">
+							<i class="glyphicon glyphicon-search"></i>
+						</a>
+					</span>
+				</div>
+			</label>
+		</div>
+		<div class="col-sm-2 input-group">
+			<label class="control-label">Fecha Pago</label>
+			<div>
+				@inputText(formBuscador("fecha_pago_desde"), 'class -> "form-control inputDateMascara", 'id -> "fecha_pago_desde", 'placeholder -> "Desde")
+				@inputText(formBuscador("fecha_pago_hasta"), 'class -> "form-control inputDateMascara", 'id -> "fecha_pago_hasta", 'placeholder -> "Hasta")
+			</div>
+		</div>
+	</div>
+</form>
+
+
+
+}

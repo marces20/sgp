@@ -31,7 +31,7 @@ GET  /listadoHonorariosReporte 			controllers.dashboard.HonorariosNewController.
 GET  /informeHonorarioPorPeriodo		controllers.dashboard.HonorariosNewReportesController.informeHonorarioPorPeriodo()
 
 GET /liquidacionesPorPuesto				controllers.dashboard.LiquidacionesController.liquidacionesPorPuesto()
-																					  	
+
 #GET /getCertificacionesPorPuesto		controllers.dashboard.LiquidacionesController.getCertificacionesPorPuesto()
 GET /getLiquidacionesPorPuesto			controllers.dashboard.LiquidacionesController.getLiquidacionesPorPuesto()
 GET /getLiquidacionesPorPuestoPorPeriodo		controllers.dashboard.LiquidacionesController.getLiquidacionesPorPuestoPorPeriodo()
@@ -42,12 +42,12 @@ GET /liquidacionesPorProfesion			controllers.dashboard.LiquidacionesController.l
 GET /liquidacionesPorProfesionReporte			controllers.dashboard.LiquidacionesReportesController.liquidacionesPorProfesion()
 
 GET /liquidacionesPorOrganigrama			controllers.dashboard.LiquidacionesController.liquidacionesPorOrganigrama()
-GET /liquidacionesPorOrganigramaReporte		controllers.dashboard.LiquidacionesReportesController.liquidacionesPorOrganigrama()				
-GET /liquidacionesPorEscalaReporte			controllers.dashboard.LiquidacionesReportesController.liquidacionesPorEscala()																		  
+GET /liquidacionesPorOrganigramaReporte		controllers.dashboard.LiquidacionesReportesController.liquidacionesPorOrganigrama()
+GET /liquidacionesPorEscalaReporte			controllers.dashboard.LiquidacionesReportesController.liquidacionesPorEscala()
 GET /liquidacionesTotalesPorEscala		controllers.dashboard.LiquidacionesController.liquidacionesTotalesPorEscala()
 
 GET /liquidacionesPorAgrupadoOrganigrama	controllers.dashboard.LiquidacionesController.liquidacionesPorAgrupadoOrganigrama()
-GET /liquidacionesPorAgrupadoOrganigramaReporte		controllers.dashboard.LiquidacionesReportesController.liquidacionesPorAgrupadoOrganigrama()	
+GET /liquidacionesPorAgrupadoOrganigramaReporte		controllers.dashboard.LiquidacionesReportesController.liquidacionesPorAgrupadoOrganigrama()
 
 GET /impuestosDeuda						controllers.dashboard.ImpuestosController.estadoDeuda()
 GET /detalleImpuestos					controllers.dashboard.ImpuestosController.detalleImpuestos(id:Long)
@@ -72,6 +72,7 @@ GET /informe-pago-periodo-proveedores-reportes		controllers.dashboard.InformeEst
 
 GET /informeProveedor							controllers.dashboard.InformeEstadisticoPagoProveedoresController.informeProveedor()
 
+GET /autorizadosPorFechaProveedor				controllers.dashboard.InformeEstadisticoPagoProveedoresController.autorizadosPorFechaProveedor()
 
 GET     /autorizado        						controllers.dashboard.AutorizadosController.index()
 GET     /autorizado/crear        				controllers.dashboard.AutorizadosController.crear()
@@ -140,7 +141,7 @@ GET     /deudasServiciosProveedoresResumenReportes controllers.dashboard.DeudasG
 GET 	/deudasHonorariosProveedoresResumenReportes controllers.dashboard.DeudasGlobalizadasReportesController.deudasHonorariosProveedoresResumenReportes(soloDeuda:Boolean ?= false)
 
 GET 	/deudasCuentasReportes					controllers.dashboard.DeudasGlobalizadasReportesController.deudasCuentasReportes(idCuenta:Int ?= 0,soloDeuda:Boolean ?= false)
-	
+
 GET     /deudasOtrosProveedoresResumenReporte	controllers.dashboard.DeudasGlobalizadasReportesController.deudasDetallesOtrosProveedoresResumen(profe:Boolean ?= false, equipamientos:Boolean ?= false,soloDeuda:Boolean ?= false)
 
 
@@ -164,9 +165,9 @@ GET 	/deudasResumenInstitucion				controllers.dashboard.DeudasPorAntiguedadContr
 GET 	/deudasDetallePorInstitucionReporte		controllers.dashboard.DeudasPorAntiguedadReportesController.deudasDetallePorInstitucionReporte()
 GET 	/deudasResumenPorInstitucionReporte		controllers.dashboard.DeudasPorAntiguedadReportesController.deudasResumenPorInstitucionReporte()
 GET 	/deudasDetallesAntiguedadServiciosReportes		controllers.dashboard.DeudasPorAntiguedadReportesController.deudasDetallesServiciosReportes()
- 
-GET     /deudasDetallesAntiguedadCuenta			controllers.dashboard.DeudasPorAntiguedadController.deudasDetallesCuenta(idCuenta:Int ?= 0) 
- 
+
+GET     /deudasDetallesAntiguedadCuenta			controllers.dashboard.DeudasPorAntiguedadController.deudasDetallesCuenta(idCuenta:Int ?= 0)
+
 
 GET 	/autorizadoDistintoDePagado				controllers.dashboard.ControlDeudaController.autorizadoDistintoDePagado()
 GET 	/getAutorizadoDistintoDePagado			controllers.dashboard.ControlDeudaController.getAutorizadoDistintoDePagado()
