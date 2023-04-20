@@ -26,7 +26,9 @@ import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.util.CellRangeAddress;
 
+import com.avaje.ebean.Ebean;
 import com.avaje.ebean.ExpressionList;
+import com.avaje.ebean.SqlRow;
 
 import models.ActaRecepcion;
 import models.Estado;
@@ -83,9 +85,59 @@ public class InformeEstadisticoPagoProveedoresController extends Controller {
 	@CheckPermiso(key = "dashboardInformeDeudaProveedores")
 	public static Result autorizadosPorFechaProveedor() {
 
+		String where = "1 = 1 " ;
+
+		if(!RequestVar.get("fecha_desde").isEmpty() && !RequestVar.get("fecha_hasta").isEmpty()){
+    		Date fi = DateUtils.formatDate(RequestVar.get("fecha_desde"), "dd/MM/yyyy");
+    		Date ff =  DateUtils.formatDate(RequestVar.get("fecha_hasta"), "dd/MM/yyyy");
+
+    		String fis = DateUtils.formatDate(fi, "dd/MM/yyyy");
+			String ffs =  DateUtils.formatDate(ff, "dd/MM/yyyy");
 
 
-		return ok(autorizadosPorFechaProveedor.render(form().bindFromRequest()));
+    		where += " AND a.fecha >= '"+fis+"' and a.fecha <= '"+ffs+"' ";
+
+    	}else {
+        		Periodo p = Periodo.getPeriodoByDate(new Date());
+    			String fi = DateUtils.formatDate(p.date_start, "dd/MM/yyyy");
+    			String ff =  DateUtils.formatDate(p.date_stop, "dd/MM/yyyy");
+
+    			where += " AND a.fecha >= '"+fi+"' and a.fecha <= '"+ff+"' ";
+
+    	}
+
+
+		if(!RequestVar.get("proveedor_id").isEmpty()){
+			Long z = new Long(RequestVar.get("proveedor_id"));
+			if(z.compareTo(Proveedor.RA) == 0) {
+				where += " AND proveedor_id in (";
+
+				List<Long> ll = Proveedor.getProveedoresDestacadosRA();
+
+				for(Long x : ll) {
+					where +=  x+",";
+				}
+				where = where.substring(0, where.length() - 1);
+				where += ") ";
+			}else {
+				where += " AND proveedor_id = "+Integer.parseInt(RequestVar.get("proveedor_id"));
+			}
+		}
+
+		List<SqlRow> s = null;
+
+		if(where != "1 = 1 ") {
+			String sql = "SELECT p.nombre as proveedor,SUM(monto) as total FROM autorizados a "+
+					"INNER JOIN autorizado_lineas al ON al.autorizado_id = a.id "+
+					"INNER JOIN proveedores p ON p.id = al.proveedor_id "+
+					"WHERE "+where+
+					"GROUP BY al.proveedor_id,p.nombre "+
+					"ORDER BY p.nombre";
+
+			s = Ebean.createSqlQuery(sql).findList();
+		}
+
+		return ok(autorizadosPorFechaProveedor.render(form().bindFromRequest(),s));
 	}
 
 	@CheckPermiso(key = "dashboardInformeDeudaProveedores")

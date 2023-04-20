@@ -1,6 +1,7 @@
-@( formBuscador: DynamicForm)
+@( formBuscador: DynamicForm,s:List[com.avaje.ebean.SqlRow])
 @import helper._
 @implicitFieldConstructor = @{ FieldConstructor(simpleInput.render) }
+@import java.math.BigDecimal;var total=new java.math.BigDecimal(0);
 
 @views.html.dashboard.mainDashboard(title = "Autorizados por Fecha por Proveedor") {
 
@@ -42,12 +43,53 @@
 		<div class="col-sm-2 input-group">
 			<label class="control-label">Fecha Pago</label>
 			<div>
-				@inputText(formBuscador("fecha_pago_desde"), 'class -> "form-control inputDateMascara", 'id -> "fecha_pago_desde", 'placeholder -> "Desde")
-				@inputText(formBuscador("fecha_pago_hasta"), 'class -> "form-control inputDateMascara", 'id -> "fecha_pago_hasta", 'placeholder -> "Hasta")
+				@inputText(formBuscador("fecha_desde"), 'class -> "form-control inputDateMascara", 'id -> "fecha_desde", 'placeholder -> "Desde")
+				@inputText(formBuscador("fecha_hasta"), 'class -> "form-control inputDateMascara", 'id -> "fecha_hasta", 'placeholder -> "Hasta")
+			</div>
+		</div>
+		<div class="col-sm-2">
+			<div class="form-group">
+				<label for="nombre" class="control-label">&nbsp;</label>
+				<button  class="form-control btn btn-primary" id="btn-buscar">Buscar</button>
+			</div>
+		</div>
+		<div class="col-sm-2">
+			<div class="form-group">
+				<label for="nombre" class="control-label">&nbsp;</label>
+				<a href="@controllers.dashboard.routes.InformeEstadisticoPagoProveedoresController.autorizadosPorFechaProveedor()"  class="form-control btn btn-default">Limpiar</a>
 			</div>
 		</div>
 	</div>
 </form>
+
+
+
+		<table class="table table-striped table-bordered">
+			<thead>
+				<tr style="background: #FFFFFF;  font-weight: bold;">
+					<td>Proveedor</td>
+					<td>Total</td>
+				</tr>
+			</thead>
+			<tbody>
+				@if(s != null){
+					@for(sx <- s) {
+						<tr style="background: #FFFFFF;">
+							<td>@sx.getString("proveedor")</td>
+							<td align="center">@utils.NumberUtils.moneda(sx.getBigDecimal("total"))</td>
+							@{total = total.add(sx.getBigDecimal("total"))}
+						</tr>
+					}
+				}
+			</tbody>
+			<tfoot>
+				<tr style="background: #FFFFFF;  font-weight: bold;">
+					<td align="right"><b>Total:</b></td>
+					<td align="center">@utils.NumberUtils.moneda(total)</td>
+
+				</tr>
+			</tfoot>
+		</table>
 
 
 
