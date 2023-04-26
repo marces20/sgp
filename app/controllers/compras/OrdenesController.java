@@ -866,6 +866,7 @@ public class OrdenesController extends Controller {
 		if(orden.estado_id.compareTo((long) Estado.ORDEN_ESTADO_APROBADO) == 0) {
 
 
+
 			if(Permiso.check("ordenesCompraPasarACanceladoForzado")) {
 
 
@@ -911,7 +912,8 @@ public class OrdenesController extends Controller {
 				}
 
 			}else {
-				flash("error", "Parámetros incorrectos. "+error);
+				ordenOk = false;
+				flash("error", "No tienes permisos para Eliminacion Forzada. "+error);
 			}
 
 
