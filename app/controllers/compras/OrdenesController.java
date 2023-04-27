@@ -15,6 +15,7 @@ import javax.persistence.PersistenceException;
 import models.ActaRecepcion;
 import models.BalancePresupuestario;
 import models.Certificacion;
+import models.CertificacionCompra;
 import models.CertificacionServicio;
 import models.Ejercicio;
 import models.Estado;
@@ -862,61 +863,67 @@ public class OrdenesController extends Controller {
 		String error = "";
 
 
+		Integer tieneCertificacion = Certificacion.find.where().eq("orden_id",orden.id).findRowCount();
+		if(tieneCertificacion > 0){
+			ordenOk = false;
+			error = "Nose puede cancelar la orden porque tiene certificaciones asociadas.";
+		}
 
-		if(orden.estado_id.compareTo((long) Estado.ORDEN_ESTADO_APROBADO) == 0) {
-
-
-
-			if(Permiso.check("ordenesCompraPasarACanceladoForzado")) {
-
-
-				Integer tieneCertificacion = Certificacion.find.where().eq("orden_id",orden.id).findRowCount();
-				if(tieneCertificacion > 0){
-					ordenOk = false;
-					error = "Nose puede cancelar la orden porque tiene certificaciones asociadas.";
-				}
-
-				Integer tieneOrdenProvision = OrdenProvision.find.where().eq("orden_compra_id",orden.id).findRowCount();
-
-				OrdenProvision ordenProvision = OrdenProvision.find.where().eq("orden_compra_id",orden.id).findUnique();
-				if(tieneOrdenProvision == 1){
-
-					Integer recepcion = Recepcion.find.where().eq("ordenProvision.orden_compra_id",orden.id).findRowCount();
-					Integer certificacionesPatrimonio = CertificacionServicio.find.where().eq("ordenProvision.orden_compra_id",orden.id).findRowCount();
+		Integer tieneCertificacionCompras = CertificacionCompra.find.where().eq("orden_id",orden.id).findRowCount();
+		if(tieneCertificacionCompras > 0){
+			ordenOk = false;
+			error = "Nose puede cancelar la orden porque tiene certificaciones compras asociadas.";
+		}
 
 
+		if(orden.tipo_orden.compareTo("comun") == 0 || orden.tipo_orden.compareTo("servicio") == 0) {
+			if(orden.estado_id.compareTo((long) Estado.ORDEN_ESTADO_APROBADO) == 0) {
 
-					if(recepcion > 0 || certificacionesPatrimonio > 0){
-						ordenOk = false;
-						error = "Nose puede cancelar la orden de provision tiene asociaciones.";
-					}else {
-						ordenProvision.delete();
-					}
+				if(Permiso.check("ordenesCompraPasarACanceladoForzado")) {
+
+					if(ordenOk){
+						Integer tieneOrdenProvision = OrdenProvision.find.where().eq("orden_compra_id",orden.id).findRowCount();
+
+						OrdenProvision ordenProvision = OrdenProvision.find.where().eq("orden_compra_id",orden.id).findUnique();
+						if(tieneOrdenProvision == 1){
+
+							Integer recepcion = Recepcion.find.where().eq("ordenProvision.orden_compra_id",orden.id).findRowCount();
+							Integer certificacionesPatrimonio = CertificacionServicio.find.where().eq("ordenProvision.orden_compra_id",orden.id).findRowCount();
+
+							if(recepcion > 0 || certificacionesPatrimonio > 0){
+								ordenOk = false;
+								error = "Nose puede cancelar la orden de provision tiene asociaciones de Recepciones o Certificaciones.";
+							}else {
+								ordenProvision.delete();
+							}
 
 
-				}
-
-				if(ordenOk){
-					List<Factura> tieneFacturas = Factura.find.where()
-											.ne("state_id",Estado.FACTURA_ESTADO_BORRADOR)
-											.eq("orden_id",orden.id).findList();
-
-					if(tieneFacturas.size() > 0){
-						ordenOk = false;
-						error = "Nose puede cancelar la orden porque tiene facturas asociadas.";
-					}else {
-						for(Factura ff : tieneFacturas) {
-							ff.delete();
 						}
 					}
+
+					if(ordenOk){
+						List<Factura> tieneFacturas = Factura.find.where()
+												.ne("state_id",Estado.FACTURA_ESTADO_BORRADOR)
+												.eq("orden_id",orden.id).findList();
+
+						if(tieneFacturas.size() > 0){
+							ordenOk = false;
+							error = "Nose puede cancelar la orden porque tiene facturas asociadas.";
+						}else {
+							List<Factura> facturas = Factura.find.where()
+									.eq("state_id",Estado.FACTURA_ESTADO_BORRADOR)
+									.eq("orden_id",orden.id).findList();
+							for(Factura ff : facturas) {
+								ff.delete();
+							}
+						}
+					}
+
+				}else {
+					ordenOk = false;
+					error = "Nose puede cancelar la orden de provision tiene asociaciones.";
 				}
-
-			}else {
-				ordenOk = false;
-				flash("error", "No tienes permisos para Eliminacion Forzada. "+error);
 			}
-
-
 		}
 
 
