@@ -87,22 +87,24 @@ public class InformeEstadisticoPagoProveedoresController extends Controller {
 
 		String where = "1 = 1 " ;
 
+		Periodo p = Periodo.getPeriodoByDate(new Date());
+		Date fi = p.date_start;
+		Date ff = p.date_stop;
+
 		if(!RequestVar.get("fecha_desde").isEmpty() && !RequestVar.get("fecha_hasta").isEmpty()){
-    		Date fi = DateUtils.formatDate(RequestVar.get("fecha_desde"), "dd/MM/yyyy");
-    		Date ff =  DateUtils.formatDate(RequestVar.get("fecha_hasta"), "dd/MM/yyyy");
+    		fi = DateUtils.formatDate(RequestVar.get("fecha_desde"), "dd/MM/yyyy");
+    		fi =  DateUtils.formatDate(RequestVar.get("fecha_hasta"), "dd/MM/yyyy");
 
-    		String fis = DateUtils.formatDate(fi, "dd/MM/yyyy");
-			String ffs =  DateUtils.formatDate(ff, "dd/MM/yyyy");
+    		//fi = DateUtils.formatDate(dfi, "dd/MM/yyyy");
+			//ff =  DateUtils.formatDate(dff, "dd/MM/yyyy");
 
 
-    		where += " AND a.fecha >= '"+fis+"' and a.fecha <= '"+ffs+"' ";
+    		where += " AND a.fecha >= :finicio and a.fecha <= :ffin ";
 
     	}else {
-        		Periodo p = Periodo.getPeriodoByDate(new Date());
-    			String fi = DateUtils.formatDate(p.date_start, "dd/MM/yyyy");
-    			String ff =  DateUtils.formatDate(p.date_stop, "dd/MM/yyyy");
 
-    			where += " AND a.fecha >= '"+fi+"' and a.fecha <= '"+ff+"' ";
+
+    			where += " AND a.fecha >= :finicio and a.fecha <= :ffin ";
 
     	}
 
@@ -134,7 +136,10 @@ public class InformeEstadisticoPagoProveedoresController extends Controller {
 					"GROUP BY al.proveedor_id,p.nombre "+
 					"ORDER BY p.nombre";
 
-			s = Ebean.createSqlQuery(sql).findList();
+			s = Ebean.createSqlQuery(sql)
+					.setParameter("finicio", fi)
+					.setParameter("ffin", ff)
+					.findList();
 		}
 
 		return ok(autorizadosPorFechaProveedor.render(form().bindFromRequest(),s));
