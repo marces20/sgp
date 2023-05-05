@@ -4,7 +4,7 @@
 @import models.auth._
 @getClassEstado(i:AgenteAsistenciaLicencia) = @{
 	var classEstado:String = new String()
-	
+
 	if(i.estado != null && (i.estado.id == 93) ){
 		classEstado = "borrador"
 	}else if(i.estado != null && i.estado.id == 95){
@@ -14,7 +14,7 @@
 	}else if(i.estado != null && i.estado.id == 96){
 		classEstado = "licenciaPreaprobado"
 	}
-	
+
 	classEstado
 }
 
@@ -23,7 +23,7 @@
 		<input type="checkbox" name="check_listado_inasistencia[]" value="@linea.id" class="notSeleccion" id="check-@linea.id"/>
 	</td>
 	@if(editable && (linea.estado_id.compareTo(Estado.AGENTE_LICENCIA_BORRADOR) == 0 || linea.estado_id.compareTo(Estado.AGENTE_LICENCIA_PREAPROBADO) == 0 || Permiso.check("agentesLicenciasModificarAprobadas")) && Permiso.check("agentesLicenciasModificar")){
-		
+
 		<td class="accion-editar">
 		<a class="btn btn-default btn-xs modificarAgenteAsistenciaLicencia" href="@controllers.rrhh.routes.AgentesAsistenciasLicenciasController.editar(linea.id)"><i class="glyphicon glyphicon-edit"></i></a>
 		</td>
@@ -31,13 +31,14 @@
 		<td></td>
 	}
 	<td>@linea.tipoLicencia.nombre</td>
-	<td>@if(linea.fpresentacion != null){@(utils.DateUtils.formatDate(linea.fpresentacion))}</td>
+	<td>@if(linea.fpresentacion != null){@(utils.DateUtils.formatDate(linea.create_date))}</td>
 	<td>@if(linea.finicio != null){@(utils.DateUtils.formatDate(linea.finicio))}</td>
 	<td>@if(linea.ffin != null){@(utils.DateUtils.formatDate(linea.ffin))}</td>
 	<td>@linea.getDiasEntreFechas()</td>
 	<td>@linea.ejercicio.nombre</td>
 	<td>@linea.nota</td>
 	<td>@linea.create_usuario.nombre</td>
+	<td>@if(linea.write_usuario != null){@linea.write_usuario.nombre - @(utils.DateUtils.formatDate(linea.write_date))}</td>
 	<td class="estado">@linea.estado.nombre</td>
 	@if(editable && Permiso.check("agentesLicenciasEliminar")){
 		<td><a class="btn btn-default btn-xs eliminarAgenteAsistenciaLicencia" href="@controllers.rrhh.routes.AgentesAsistenciasLicenciasController.eliminar(linea.id)"><i class="glyphicon glyphicon-trash icono-eliminar"></i></a></td>

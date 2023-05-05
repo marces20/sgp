@@ -7,7 +7,7 @@
 <p>
 	<b>Licencias</b>
 	@if(editable &&  Permiso.check("agentesLicenciasCrear")){
-	<a class="btn btn-default btn-xs" href="#" id="nuevoAgenteAsistenciaLicencia"><i class="glyphicon glyphicon-plus"></i> Nuevo</a>	 	
+	<a class="btn btn-default btn-xs" href="#" id="nuevoAgenteAsistenciaLicencia"><i class="glyphicon glyphicon-plus"></i> Nuevo</a>
 	}
 </p>
 
@@ -24,9 +24,10 @@
 			<th>Año</th>
 			<th>Nota</th>
 			<th>Usuario</th>
+			<th>Modificacion</th>
 			<th>Estado</th>
 			<th class="50">#</th>
-		<tr>	
+		<tr>
 	</thead>
 	<tbody>
 	@for(linea <- paginador.getList) {
@@ -35,7 +36,7 @@
 	</tbody>
 </table>
 
-<div class="pagination pull-right">		
+<div class="pagination pull-right">
     @views.html.helpers.paginador(paginador, controllers.rrhh.routes.AgentesAsistenciasLicenciasController.index())
 </div>
 </div>
