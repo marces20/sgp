@@ -53,7 +53,8 @@ public class Remito extends Model {
 	@JoinColumn(name = "remito_id")
 	public Set<RemitoLinea>  lineas;
 
-	@Formula(select = "_b${ta}.total", join = "left join (select round(SUM(rl.cantidad * ol.precio),2) as total, rl.remito_id from remitos_lineas rl inner join orden_lineas ol on ol.id = rl.linea_orden_id GROUP BY rl.remito_id) as _b${ta} on _b${ta}.remito_id = ${ta}.id")
+	//@Formula(select = "_b${ta}.total", join = "left join (select round(SUM(rl.cantidad * ol.precio),2) as total, rl.remito_id from remitos_lineas rl inner join orden_lineas ol on ol.id = rl.linea_orden_id GROUP BY rl.remito_id) as _b${ta} on _b${ta}.remito_id = ${ta}.id")
+	@Formula(select = "_b${ta}.total", join = "left outer join (select round(SUM(rl.cantidad * rl.precio),2) as total, rl.remito_id from remitos_lineas rl GROUP BY rl.remito_id) as _b${ta} on _b${ta}.remito_id = ${ta}.id")
 	public BigDecimal total;
 
 	@Formats .DateTime(pattern="dd/MM/yyyy")
@@ -103,17 +104,22 @@ public class Remito extends Model {
 										String numeroRecepcion
 										) {
     	Pagination<Remito> p = new Pagination<Remito>();
-    	p.setOrderDefault("DESC");
-    	p.setSortByDefault("fecha_remito");
+    	p.setOrderDefault(" ");
+    	p.setSortByDefault("fecha_remito desc, id asc");
 
-    	ExpressionList<Remito> e = find.select("numero, fecha_remito, total")
+    	ExpressionList<Remito> e = find.select("id,numero, fecha_remito, total")
     								.fetch("recepcion", "numero, cantidadRemitos")
     								.fetch("recepcion.acta", "numero")
     								.fetch("recepcion.ordenProvision", "numero")
     								.fetch("recepcion.ordenProvision.ordenCompra.deposito", "nombre")
     								.fetch("recepcion.ordenProvision.ordenCompra.proveedor", "nombre")
-    								.fetch("recepcion.ordenProvision.ordenCompra.expediente")
+    								//.fetch("recepcion.ordenProvision.ordenCompra.expediente")
     								//.fetch("recepcion.ordenProvision.ordenCompra.expediente.ejercicio", "nombre")
+    								.fetch("recepcion.ordenProvision.ordenCompra.expediente", "nombre, id, emergencia")
+    				    			.fetch("recepcion.ordenProvision.ordenCompra.expediente.ejercicio", "nombre")
+    				    			.fetch("recepcion.ordenProvision.ordenCompra.expediente.parent.ejercicio", "nombre")
+
+
     								.fetch("recepcion.ordenProvision.ordenCompra","tipo_moneda")
     								.where();
 
