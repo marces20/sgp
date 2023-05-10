@@ -90,19 +90,19 @@ public class InformeEstadisticoPagoProveedoresController extends Controller {
 		Periodo p = Periodo.getPeriodoByDate(new Date());
 		Date fi = p.date_start;
 		Date ff = p.date_stop;
-
+		Logger.debug("11111111111");
 		if(!RequestVar.get("fecha_desde").isEmpty() && !RequestVar.get("fecha_hasta").isEmpty()){
     		fi = DateUtils.formatDate(RequestVar.get("fecha_desde"), "dd/MM/yyyy");
-    		fi =  DateUtils.formatDate(RequestVar.get("fecha_hasta"), "dd/MM/yyyy");
+    		ff =  DateUtils.formatDate(RequestVar.get("fecha_hasta"), "dd/MM/yyyy");
 
     		//fi = DateUtils.formatDate(dfi, "dd/MM/yyyy");
 			//ff =  DateUtils.formatDate(dff, "dd/MM/yyyy");
 
 
     		where += " AND a.fecha >= :finicio and a.fecha <= :ffin ";
-
+    		Logger.debug("122222222222111111111");
     	}else {
-
+    		Logger.debug("333333333333");
 
     			where += " AND a.fecha >= :finicio and a.fecha <= :ffin ";
 
