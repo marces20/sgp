@@ -167,7 +167,7 @@ public class PuestosLaboralesReportesController extends Controller  {
 			f.getCell(1).setCellValue("SIN BENEFICIO Año 2022");//Transporte a larga distancia
 
 		    f = hoja.getRow(10);
-			f.getCell(1).setCellValue("NO0000000");//Transporte a larga distancia
+			f.getCell(1).setCellValue("NO");//Transporte a larga distancia
 			f = hoja.getRow(11);
 			f.getCell(1).setCellValue("NO");//Beneficio promocional 27424?
 
@@ -179,7 +179,7 @@ public class PuestosLaboralesReportesController extends Controller  {
 			f.getCell(1).setCellValue((s.getBigDecimal("transporte_larga_distancia_convenio_40_1989").compareTo(BigDecimal.ZERO)== 0)?"NO":"SI");//El trabajador desarrolla la actividad de transporte terrestre de larga distancia bajo el convenio 40/1989
 
 
-
+			boolean test = false;
 
 			Integer i = 18;
 			f = hoja.getRow(i++);
@@ -209,40 +209,42 @@ public class PuestosLaboralesReportesController extends Controller  {
 			f.getCell(1).setCellValue(s.getBigDecimal("pers_doc_exe").doubleValue());//30
 			f = hoja.getRow(i++);
 
-			//bonos productividad gravado
-			f.getCell(1).setCellValue(s.getBigDecimal("bono_productividad_gravado").doubleValue());//31
-			f = hoja.getRow(i++);
-			//fallos de caja gravado
-			f.getCell(1).setCellValue(s.getBigDecimal("fallo_caja_gravado").doubleValue());//32
-			f = hoja.getRow(i++);
-			//conceptos de similar
-			f.getCell(1).setCellValue(s.getBigDecimal("concepto_similar_naturaleza_gravado").doubleValue());//33
-			f = hoja.getRow(i++);
-			//bonos productividad exento
-			f.getCell(1).setCellValue(s.getBigDecimal("bono_productividad_exento").doubleValue());//34
-			f = hoja.getRow(i++);
-			//fallos de caja excento
-			f.getCell(1).setCellValue(s.getBigDecimal("fallo_caja_exento").doubleValue());//35
-			f = hoja.getRow(i++);
-			//Concepto de similar naturaleza
-			f.getCell(1).setCellValue(s.getBigDecimal("concepto_similar_naturaleza_exento").doubleValue());//36
-			f = hoja.getRow(i++);
-			//compensacion de gastos teletrabajo
-			f.getCell(1).setCellValue(s.getBigDecimal("compensacion_gastos_teletrabajo_exento").doubleValue());//37
-			f = hoja.getRow(i++);
-			//personal militar
-			f.getCell(1).setCellValue(s.getBigDecimal("personal_militar_complementos_art_57").doubleValue());//38
+			f.getCell(1).setCellValue(s.getBigDecimal("remuneracion_exenta_ley_27549").doubleValue());//31
 			f = hoja.getRow(i++);
 
-			f.getCell(1).setCellValue(s.getBigDecimal("sac_primera_cuota_no_alcanzado").doubleValue());//39
+			//bonos productividad gravado
+			f.getCell(1).setCellValue(s.getBigDecimal("bono_productividad_gravado").doubleValue());//32
 			f = hoja.getRow(i++);
-			f.getCell(1).setCellValue(s.getBigDecimal("sac_segunda_cuota_no_alcanzado").doubleValue());//40
+			//fallos de caja gravado
+			f.getCell(1).setCellValue(s.getBigDecimal("fallo_caja_gravado").doubleValue());//33
 			f = hoja.getRow(i++);
-			f.getCell(1).setCellValue(s.getBigDecimal("ajuste_periodos_anteriores_gravado").doubleValue());//41
+			//conceptos de similar
+			f.getCell(1).setCellValue(s.getBigDecimal("concepto_similar_naturaleza_gravado").doubleValue());//34
 			f = hoja.getRow(i++);
-			f.getCell(1).setCellValue(s.getBigDecimal("ajuste_periodos_anteriores_no_gravado").doubleValue());//42
+			//bonos productividad exento
+			f.getCell(1).setCellValue(s.getBigDecimal("bono_productividad_exento").doubleValue());//35
+			f = hoja.getRow(i++);
+			//fallos de caja excento
+			f.getCell(1).setCellValue(s.getBigDecimal("fallo_caja_exento").doubleValue());//36
+			f = hoja.getRow(i++);
+			//Concepto de similar naturaleza
+			f.getCell(1).setCellValue(s.getBigDecimal("concepto_similar_naturaleza_exento").doubleValue());//37
+			f = hoja.getRow(i++);
+			//compensacion de gastos teletrabajo
+			f.getCell(1).setCellValue(s.getBigDecimal("compensacion_gastos_teletrabajo_exento").doubleValue());//38
+			f = hoja.getRow(i++);
+			//personal militar
+			f.getCell(1).setCellValue(s.getBigDecimal("personal_militar_complementos_art_57").doubleValue());//39
+			f = hoja.getRow(i++);
+			f.getCell(1).setCellValue(s.getBigDecimal("sac_primera_cuota_no_alcanzado").doubleValue());//40
+			f = hoja.getRow(i++);
+			f.getCell(1).setCellValue(s.getBigDecimal("sac_segunda_cuota_no_alcanzado").doubleValue());//41
+			f = hoja.getRow(i++);
+			f.getCell(1).setCellValue(s.getBigDecimal("ajuste_periodos_anteriores_gravado").doubleValue());//42
 			f = hoja.getRow(i++);
 			f.getCell(1).setCellValue(s.getBigDecimal("ajuste_periodos_anteriores_no_gravado").doubleValue());//43
+			f = hoja.getRow(i++);
+			f.getCell(1).setCellValue(s.getBigDecimal("ajuste_periodos_anteriores_no_gravado").doubleValue());//44
 			//f.getCell(1).setCellValue("43333333333333333333333333");
 
 			//////////////////////////////////Otros Empleos/////////////////////////////////////////
