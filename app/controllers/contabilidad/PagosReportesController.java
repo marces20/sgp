@@ -848,16 +848,24 @@ public class PagosReportesController extends Controller  {
 						 .findList();
 				if(plx.size() <= 0){
 
-					outSellos.append(DateUtils.formatDate(p.fecha_pago,"dd-MM-yyyy")+",");
+					/*outSellos.append(DateUtils.formatDate(p.fecha_pago,"dd-MM-yyyy")+",");
 					outSellos.append(l.nombre+",");
 					outSellos.append(l.factura.proveedor.nombre.replace(",","")+",");
 					outSellos.append(l.factura.proveedor.getFirstDireccion()+",");
 					outSellos.append(l.factura.proveedor. getCuitConGuiones()+",");
-
 					String base = (l.base == null)?l.monto.divide(new BigDecimal(0.0196),2, RoundingMode.HALF_UP).toString():l.base.setScale(2, BigDecimal.ROUND_HALF_UP).toString();
 					outSellos.append(base+",");
 					outSellos.append("1.96"+",");
-					//outSellos.append(l.monto.setScale(2, BigDecimal.ROUND_HALF_UP)+",");
+					outSellos.append("\r\n");*/
+
+					outSellos.append(DateUtils.formatDate(p.fecha_pago,"dd-MM-yyyy")+",");
+					outSellos.append("CR,");
+					outSellos.append(l.nombre+",");
+					outSellos.append(l.factura.proveedor.nombre.replace(",","")+",");
+					outSellos.append(l.factura.proveedor. getCuitConGuiones()+",");
+					String base = (l.base == null)?l.monto.divide(new BigDecimal(0.0196),2, RoundingMode.HALF_UP).toString():l.base.setScale(2, BigDecimal.ROUND_HALF_UP).toString();
+					outSellos.append(base+",");
+					outSellos.append("1.96"+",");
 					outSellos.append("\r\n");
 				}
 			}
@@ -933,17 +941,26 @@ public class PagosReportesController extends Controller  {
 						 .findList();
 				if(plx.size() <= 0){
 
-					outSellos.append(DateUtils.formatDate(p.fecha_pago,"dd-MM-yyyy")+",");
+					/*outSellos.append(DateUtils.formatDate(p.fecha_pago,"dd-MM-yyyy")+",");
 					outSellos.append(l.nombre+",");
 					outSellos.append(l.factura.proveedor.nombre.replace(",","")+",");
 					outSellos.append(l.factura.proveedor.getFirstDireccion()+",");
 					outSellos.append(l.factura.proveedor. getCuitConGuiones()+",");
-
 					String base = (l.base == null)?l.monto.divide(new BigDecimal(0.0331),2, RoundingMode.HALF_UP).toString():l.base.setScale(2, BigDecimal.ROUND_HALF_UP).toString();
 					outSellos.append(base+",");
 					outSellos.append("3.31"+",");
-					//outSellos.append(l.monto.setScale(2, BigDecimal.ROUND_HALF_UP)+",");
+					outSellos.append("\r\n");*/
+
+					outSellos.append(DateUtils.formatDate(p.fecha_pago,"dd-MM-yyyy")+",");
+					outSellos.append("CR,");
+					outSellos.append(l.nombre+",");
+					outSellos.append(l.factura.proveedor.nombre.replace(",","")+",");
+					outSellos.append(l.factura.proveedor. getCuitConGuiones()+",");
+					String base = (l.base == null)?l.monto.divide(new BigDecimal(0.0331),2, RoundingMode.HALF_UP).toString():l.base.setScale(2, BigDecimal.ROUND_HALF_UP).toString();
+					outSellos.append(base+",");
+					outSellos.append("3.31"+",");
 					outSellos.append("\r\n");
+
 				}
 			}
 
@@ -1326,7 +1343,7 @@ public class PagosReportesController extends Controller  {
 								outSellos.append(l.nombre+",");
 								outSellos.append(l.factura.proveedor.nombre.replace(",","")+",");
 								outSellos.append(l.factura.proveedor. getCuitConGuiones()+",");
-								String base = (l.base == null)?l.monto.divide(new BigDecimal(0.0196),2, RoundingMode.HALF_UP).toString():l.base.setScale(2, BigDecimal.ROUND_HALF_UP).toString();
+								String base = (l.base == null)?l.monto.divide(new BigDecimal(0.0331),2, RoundingMode.HALF_UP).toString():l.base.setScale(2, BigDecimal.ROUND_HALF_UP).toString();
 								outSellos.append(base+",");
 								outSellos.append("3.31"+",");
 								outSellos.append("\r\n");
