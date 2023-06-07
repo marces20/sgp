@@ -865,7 +865,7 @@ public class PagosReportesController extends Controller  {
 					outSellos.append(l.factura.proveedor. getCuitConGuiones()+",");
 					String base = (l.base == null)?l.monto.divide(new BigDecimal(0.0196),2, RoundingMode.HALF_UP).toString():l.base.setScale(2, BigDecimal.ROUND_HALF_UP).toString();
 					outSellos.append(base+",");
-					outSellos.append("1.96"+",");
+					outSellos.append("1.96"+",,,,");
 					outSellos.append("\r\n");
 				}
 			}
@@ -958,7 +958,7 @@ public class PagosReportesController extends Controller  {
 					outSellos.append(l.factura.proveedor. getCuitConGuiones()+",");
 					String base = (l.base == null)?l.monto.divide(new BigDecimal(0.0331),2, RoundingMode.HALF_UP).toString():l.base.setScale(2, BigDecimal.ROUND_HALF_UP).toString();
 					outSellos.append(base+",");
-					outSellos.append("3.31"+",");
+					outSellos.append("3.31"+",,,,");
 					outSellos.append("\r\n");
 
 				}
@@ -1294,7 +1294,7 @@ public class PagosReportesController extends Controller  {
 								outSellos.append(l.factura.proveedor. getCuitConGuiones()+",");
 								String base = (l.base == null)?l.monto.divide(new BigDecimal(0.0196),2, RoundingMode.HALF_UP).toString():l.base.setScale(2, BigDecimal.ROUND_HALF_UP).toString();
 								outSellos.append(base+",");
-								outSellos.append("1.96"+",");
+								outSellos.append("1.96"+",,,,");
 								outSellos.append("\r\n");
 							}
 						}
@@ -1346,7 +1346,7 @@ public class PagosReportesController extends Controller  {
 								outSellos.append(l.factura.proveedor. getCuitConGuiones()+",");
 								String base = (l.base == null)?l.monto.divide(new BigDecimal(0.0331),2, RoundingMode.HALF_UP).toString():l.base.setScale(2, BigDecimal.ROUND_HALF_UP).toString();
 								outSellos.append(base+",");
-								outSellos.append("3.31"+",");
+								outSellos.append("3.31"+",,,,");
 								outSellos.append("\r\n");
 
 
