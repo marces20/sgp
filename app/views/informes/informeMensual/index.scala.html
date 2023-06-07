@@ -1,0 +1,383 @@
+@(total:java.math.BigDecimal,
+listaPorInstitucion:java.util.Map[String,java.math.BigDecimal],
+listaPorRubro:java.util.Map[String,java.math.BigDecimal],
+listaPorInstitucionRubro:java.util.Map[String,java.math.BigDecimal],
+listaPorProveedor:java.util.Map[String,java.math.BigDecimal],
+costoPorPeriodo:List[com.avaje.ebean.SqlRow],
+countPorEscalaParque:List[com.avaje.ebean.SqlRow],
+countPorEscalaCm:List[com.avaje.ebean.SqlRow],
+costoPorEscalaParque:List[com.avaje.ebean.SqlRow],
+costoPorEscalaCm:List[com.avaje.ebean.SqlRow],
+costoPorClasificacionParque:List[com.avaje.ebean.SqlRow],
+costoPorClasificacionCm:List[com.avaje.ebean.SqlRow],
+countProfesionParque:List[com.avaje.ebean.SqlRow],
+countProfesionCm:List[com.avaje.ebean.SqlRow]
+)
+@import helper._
+@import utils._
+@import models.auth._
+@implicitFieldConstructor = @{ FieldConstructor(simpleInput.render) }
+@import java.math.BigDecimal;var count=new java.math.BigDecimal(0);var countPorEscalaParqueSuma=new java.math.BigDecimal(0);var countPorEscalaCmSuma=new java.math.BigDecimal(0);
+@views.html.informes.mainInformes("Informe Mensual") {
+
+
+@views.html.informes.navInformes()
+<div class="page-header">
+	<div class="row">
+		<div class="col-sm-7">
+			<h1>Pagos</h1>
+		</div>
+	</div>
+</div>
+
+<div class="page-content" class="" style="padding-left: 10px;">
+
+
+ 		<div class="panel panel-default">
+			<div class="panel-heading">
+				<b class="nombre"></b>
+			</div>
+			<div class="panel-body">
+
+					<div class="row">
+					<div class="col-sm-6">
+						<div class="panel panel-default">
+							<div class="panel-heading">
+								<b>Pagos por Institucion</b>
+							</div>
+							<div class="panel-body">
+								<table class="table table-bordered table-hover" id="">
+									<tbody>
+										@for((key,value) <- listaPorInstitucion){
+											<tr>
+												<td><b>@key</b></td>
+												<td><b>@value</b></td>
+											</tr>
+										}
+									</tbody>
+								</table>
+							</div>
+						</div>
+					</div>
+					<div class="col-sm-6">
+						<div class="panel panel-default">
+							<div class="panel-heading">
+								<b>Pagos por Rubro</b>
+							</div>
+							<div class="panel-body">
+								<table class="table table-bordered table-hover" id="">
+									<tbody>
+										@for((key,value) <- listaPorRubro){
+											<tr>
+												<td><b>@key</b></td>
+												<td><b>@value</b></td>
+											</tr>
+										}
+									</tbody>
+								</table>
+							</div>
+						</div>
+					</div>
+					 <div class="col-sm-6">
+						<div class="panel panel-default">
+							<div class="panel-heading">
+								<b>Pagos Por Proveedor</b>
+							</div>
+							<div class="panel-body">
+								<table class="table table-bordered table-hover" id="">
+									<tbody>
+										@for((key,value) <- listaPorProveedor){
+											<tr>
+												<td><b>@key</b></td>
+												<td><b>@value</b></td>
+											</tr>
+										}
+									</tbody>
+								</table>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+</div>
+
+<div class="page-header">
+	<div class="row">
+		<div class="col-sm-7">
+			<h1>LIQUIDACIONES</h1>
+		</div>
+	</div>
+</div>
+
+<div class="page-content" class="" style="padding-left: 10px;">
+
+
+ 		<div class="panel panel-default">
+			<div class="panel-heading">
+				<b class="nombre"></b>
+			</div>
+			<div class="panel-body">
+
+				<div class="row">
+					<div class="col-sm-12">
+						<div class="panel panel-default">
+							<div class="panel-heading">
+								<b>Costo Liquidaciones</b>
+							</div>
+							<div class="panel-body">
+								<table class="table table-bordered table-hover" id="">
+									<tbody>
+										@for(c <- costoPorPeriodo){
+											<tr>
+
+												<td><b>@c.getBoolean("cm")</b></td>
+												<td><b>@c.getBigDecimal("monto")</b></td>
+											</tr>
+										}
+
+									</tbody>
+								</table>
+							</div>
+						</div>
+					</div>
+
+
+				</div>
+
+
+				<div class="row">
+					<div class="col-sm-6">
+						<div class="panel panel-default">
+							<div class="panel-heading">
+								<b>Count por Escala Parque</b>
+							</div>
+							<div class="panel-body">
+								<table class="table table-bordered table-hover" id="">
+									<tbody>
+										@for(c <- countPorEscalaParque){
+											<tr>
+
+												<td><b>@c.getString("nombre")</b></td>
+												<td><b>@c.getBigDecimal("count")</b></td>
+											</tr>
+
+											@{countPorEscalaParqueSuma =countPorEscalaParqueSuma.add(c.getBigDecimal("count"))}
+										}
+										<tr>
+											<td><b>TOTAL</b></td>
+											<td><b>@countPorEscalaParqueSuma</b></td>
+										</tr>
+									</tbody>
+								</table>
+							</div>
+						</div>
+					</div>
+					<div class="col-sm-6">
+						<div class="panel panel-default">
+							<div class="panel-heading">
+								<b>Count por Escala Cm</b>
+							</div>
+							<div class="panel-body">
+								<table class="table table-bordered table-hover" id="">
+									<tbody>
+										@for(cm <- countPorEscalaCm){
+											<tr>
+
+												<td><b>@cm.getString("nombre")</b></td>
+												<td><b>@cm.getBigDecimal("count")</b></td>
+											</tr>
+											@{countPorEscalaCmSuma =countPorEscalaCmSuma.add(cm.getBigDecimal("count"))}
+										}
+										<tr>
+											<td><b>TOTAL</b></td>
+											<td><b>@countPorEscalaCmSuma</b></td>
+										</tr>
+									</tbody>
+								</table>
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<div class="row">
+					<div class="col-sm-6">
+						<div class="panel panel-default">
+							<div class="panel-heading">
+								<b>costo por Escala Parque</b>
+							</div>
+							<div class="panel-body">
+								<table class="table table-bordered table-hover" id="">
+									<tbody>
+										@{count=new java.math.BigDecimal(0);}
+										@for(c <- costoPorEscalaParque){
+											<tr>
+
+												<td><b>@c.getString("nombre")</b></td>
+												<td><b>@c.getBigDecimal("monto")</b></td>
+											</tr>
+
+											@{count =count.add(c.getBigDecimal("monto"))}
+										}
+										<tr>
+											<td><b>TOTAL</b></td>
+											<td><b>@count</b></td>
+										</tr>
+									</tbody>
+								</table>
+							</div>
+						</div>
+					</div>
+					<div class="col-sm-6">
+						<div class="panel panel-default">
+							<div class="panel-heading">
+								<b>Costo por Escala Cm</b>
+							</div>
+							<div class="panel-body">
+								<table class="table table-bordered table-hover" id="">
+									<tbody>
+										@{count=new java.math.BigDecimal(0);}
+										@for(cm <- costoPorEscalaCm){
+											<tr>
+
+												<td><b>@cm.getString("nombre")</b></td>
+												<td><b>@cm.getBigDecimal("monto")</b></td>
+											</tr>
+											@{count =count.add(cm.getBigDecimal("monto"))}
+										}
+										<tr>
+											<td><b>TOTAL</b></td>
+											<td><b>@count</b></td>
+										</tr>
+									</tbody>
+								</table>
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<div class="row">
+					<div class="col-sm-6">
+						<div class="panel panel-default">
+							<div class="panel-heading">
+								<b>costo por Clasificacion Parque</b>
+							</div>
+							<div class="panel-body">
+								<table class="table table-bordered table-hover" id="">
+									<tbody>
+										@{count=new java.math.BigDecimal(0);}
+										@for(c <- costoPorClasificacionParque){
+											<tr>
+
+												<td><b>@c.getString("nombre")</b></td>
+												<td><b>@c.getBigDecimal("monto")</b></td>
+											</tr>
+
+											@{count =count.add(c.getBigDecimal("monto"))}
+										}
+										<tr>
+											<td><b>TOTAL</b></td>
+											<td><b>@count</b></td>
+										</tr>
+									</tbody>
+								</table>
+							</div>
+						</div>
+					</div>
+					<div class="col-sm-6">
+						<div class="panel panel-default">
+							<div class="panel-heading">
+								<b>Costo por Clasificacion Cm</b>
+							</div>
+							<div class="panel-body">
+								<table class="table table-bordered table-hover" id="">
+									<tbody>
+										@{count=new java.math.BigDecimal(0);}
+										@for(cm <- costoPorClasificacionCm){
+											<tr>
+
+												<td><b>@cm.getString("nombre")</b></td>
+												<td><b>@cm.getBigDecimal("monto")</b></td>
+											</tr>
+											@{count =count.add(cm.getBigDecimal("monto"))}
+										}
+										<tr>
+											<td><b>TOTAL</b></td>
+											<td><b>@count</b></td>
+										</tr>
+									</tbody>
+								</table>
+							</div>
+						</div>
+					</div>
+				</div>
+
+
+
+				<div class="row">
+					<div class="col-sm-6">
+						<div class="panel panel-default">
+							<div class="panel-heading">
+								<b>Count por Profesion Parque</b>
+							</div>
+							<div class="panel-body">
+								<table class="table table-bordered table-hover" id="">
+									<tbody>
+										@{count=new java.math.BigDecimal(0);}
+										@for(c <- countProfesionParque){
+											<tr>
+												<td><b>@c.getString("escala")</b></td>
+												<td><b>@c.getString("profesion")</b></td>
+												<td><b>@c.getBigDecimal("count")</b></td>
+											</tr>
+
+											@{count =count.add(c.getBigDecimal("count"))}
+										}
+										<tr>
+											<td></td>
+											<td><b>TOTAL</b></td>
+											<td><b>@count</b></td>
+										</tr>
+									</tbody>
+								</table>
+							</div>
+						</div>
+					</div>
+					<div class="col-sm-6">
+						<div class="panel panel-default">
+							<div class="panel-heading">
+								<b>Count por Escala Cm</b>
+							</div>
+							<div class="panel-body">
+								<table class="table table-bordered table-hover" id="">
+									<tbody>
+										@{count=new java.math.BigDecimal(0);}
+										@for(cm <- countProfesionCm){
+											<tr>
+												<td><b>@cm.getString("escala")</b></td>
+												<td><b>@cm.getString("profesion")</b></td>
+												<td><b>@cm.getBigDecimal("count")</b></td>
+											</tr>
+											@{count =count.add(cm.getBigDecimal("count"))}
+										}
+										<tr>
+											<td></td>
+											<td><b>TOTAL</b></td>
+											<td><b>@count</b></td>
+										</tr>
+									</tbody>
+								</table>
+							</div>
+						</div>
+					</div>
+
+				</div>
+
+
+
+			</div>
+		</div>
+</div>
+
+
+}
