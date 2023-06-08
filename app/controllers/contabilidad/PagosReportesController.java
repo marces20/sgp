@@ -618,7 +618,7 @@ public class PagosReportesController extends Controller  {
 			boolean error = false;
 
 
-			List<Pago> pagos = Pago.find.where().in("id", seleccionadas).gt("total", 0).findList();
+			List<Pago> pagos = Pago.find.where().in("id", seleccionadas).gt("total", BigDecimal.ZERO).findList();
 			String stringError = "";
 			for(Pago p : pagos){
 
