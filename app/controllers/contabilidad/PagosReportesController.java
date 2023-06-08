@@ -654,7 +654,7 @@ public class PagosReportesController extends Controller  {
 						 .eq("state_id", Estado.PAGO_ESTADO_CANCELADO)
 						 .findList();*/
 
-				Logger.debug("xxxxxxxxxxxxxx "+plx.size());
+				//Logger.debug("xxxxxxxxxxxxxx "+plx.size());
 				//if(plx.size() <= 0){
 					cadena.add(StringUtils.numerico("2004", 4));//Formulario
 					cadena.add(StringUtils.numerico("100", 4));//Version
