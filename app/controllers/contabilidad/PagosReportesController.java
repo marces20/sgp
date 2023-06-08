@@ -632,6 +632,8 @@ public class PagosReportesController extends Controller  {
 					}
 				}
 
+
+
 				/*List<Pago> pc = Pago.find.where()
 						.eq("factura_id", p.factura.id)
 						.eq("tipo", "impuestos")
@@ -644,14 +646,16 @@ public class PagosReportesController extends Controller  {
 					return ok(respuestaModal.render());
 				}*/
 
-				List<Pago> plx = Pago.find.where()
+				/*List<Pago> plx = Pago.find.where()
 						 .eq("factura_id", p.factura_id)
 						 .eq("cuenta_impuesto_id", ff.cuenta_id)
 						 .eq("total",ff.monto)
-						 .ne("state_id", Estado.PAGO_ESTADO_BORRADOR)
-						 .ne("state_id", Estado.PAGO_ESTADO_CANCELADO)
-						 .findList();
-				if(plx.size() <= 0){
+						 .eq("state_id", Estado.PAGO_ESTADO_BORRADOR)
+						 .eq("state_id", Estado.PAGO_ESTADO_CANCELADO)
+						 .findList();*/
+
+				Logger.debug("xxxxxxxxxxxxxx "+plx.size());
+				//if(plx.size() <= 0){
 					cadena.add(StringUtils.numerico("2004", 4));//Formulario
 					cadena.add(StringUtils.numerico("100", 4));//Version
 					cadena.add(StringUtils.alfanumerico("",10));//Cod Trazabilidad
@@ -673,7 +677,7 @@ public class PagosReportesController extends Controller  {
 					cadena.add(newLine);
 					out.append(StringUtils.implode(cadena, ""));
 					//out.append(newLine);
-				}
+				//}
 			}
 
 			out.flush();
