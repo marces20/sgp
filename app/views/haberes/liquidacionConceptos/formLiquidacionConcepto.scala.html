@@ -3,25 +3,25 @@
 @import utils._
 @import models.auth._
 @import models.haberes._
-@implicitFieldConstructor = @{ FieldConstructor(simpleInput.render) } 
+@implicitFieldConstructor = @{ FieldConstructor(simpleInput.render) }
 <script>
 $( function(){ $('.searchModal').modalSearch();})
-</script>	
+</script>
 	<div class="row menu-acciones">
 		<div class="col-sm-10">
 			<button type="submit" class="btn btn-default" title="Guardar concepto"><i class="glyphicon glyphicon-floppy-disk"></i> Guardar</button>
 			<a href="@if(request().getHeader("referer")){ @request().getHeader("referer") } else {@controllers.haberes.routes.LiquidacionConceptosController.index()@UriTrack.decode()}" title="Cancelar editar" class="btn btn-default"><i class="glyphicon glyphicon-floppy-remove"></i> Cancelar</a>
 		</div>
 		<div class="col-sm-2">
-			<a href="@UriTrack.decode()" title="Volver al listado" class="btn btn-default"><i class="glyphicon glyphicon-list"></i></a> 
+			<a href="@UriTrack.decode()" title="Volver al listado" class="btn btn-default"><i class="glyphicon glyphicon-list"></i></a>
 			@if(conceptoForm.field("id").value){<a href="@controllers.haberes.routes.LiquidacionConceptosController.ver(conceptoForm.field("id").value.toLong)@UriTrack.get("&")" title="Ver concepto" class="btn btn-default"><i class="glyphicon glyphicon-align-justify"></i></a>}
-		</div>	
+		</div>
 	</div>
 	<div class="row">
 		<div class="col-sm-2">
 			<div class="form-group @if(conceptoForm.error("codigo") != null) {has-error}else{has-required}">
-				<label for="inputCodigo" class="control-label">Codigo</label> 
-				
+				<label for="inputCodigo" class="control-label">Codigo</label>
+
 				@if(conceptoForm.field("id").value){
 					@inputText(conceptoForm("codigo"), 'class -> "form-control",'readOnly -> "readOnly")
 				}else{
@@ -30,13 +30,13 @@ $( function(){ $('.searchModal').modalSearch();})
 						<div class="text-error">@error.message</div>
 					}
 				}
-				
+
 			</div>
 		</div>
 		<div class="col-sm-5">
 			<div class="form-group @if(conceptoForm.error("denominacion") != null) {has-error}else{has-required}">
-				<label for="inputDenominacion" class="control-label">Denominacion</label> 
-				
+				<label for="inputDenominacion" class="control-label">Denominacion</label>
+
 				@if(conceptoForm.field("id").value){
 					@inputText(conceptoForm("denominacion"), 'class -> "form-control",'readOnly -> "readOnly")
 				}else{
@@ -45,12 +45,12 @@ $( function(){ $('.searchModal').modalSearch();})
 						<div class="text-error">@error.message</div>
 					}
 				}
-				
+
 			</div>
 		</div>
 		<div class="col-sm-5">
 			<div class="form-group @if(conceptoForm.error("abreviatura") != null) {has-error}">
-				<label for="inputDenominacion" class="control-label">Abreviatura</label> 
+				<label for="inputDenominacion" class="control-label">Abreviatura</label>
 				@inputText(conceptoForm("abreviatura"), 'class -> "form-control")
 				@conceptoForm("abreviatura").error.map{ error =>
 					<div class="text-error">@error.message</div>
@@ -61,35 +61,35 @@ $( function(){ $('.searchModal').modalSearch();})
 	<div class="row">
 		<div class="col-sm-2">
 			<div class="form-group @if(conceptoForm.error("fecha_baja") != null) {has-error}">
-				<label for="fecha_baja" class="control-label">Fecha baja</label> 
+				<label for="fecha_baja" class="control-label">Fecha baja</label>
 				@inputText(conceptoForm("fecha_baja"),'class -> "form-control date", 'id -> "fecha_baja")
 			</div>
 		</div>
 		<div class="col-sm-5">
 			<div class="form-group @if(conceptoForm.error("liquidacion_concepto_tipo_id") != null) {has-error}else{has-required}">
-				<label for="liquidacion_concepto_tipo_id" class="control-label">Tipo</label> 
-				
-					@select(conceptoForm("liquidacion_concepto_tipo_id"), 
-					LiquidacionConceptoTipo.find.all().map { p => p.id.toString -> p.nombre}, 
-					'class -> "form-control select", '_default -> "Seleccionar"), 
+				<label for="liquidacion_concepto_tipo_id" class="control-label">Tipo</label>
+
+					@select(conceptoForm("liquidacion_concepto_tipo_id"),
+					LiquidacionConceptoTipo.find.all().map { p => p.id.toString -> p.nombre},
+					'class -> "form-control select", '_default -> "Seleccionar"),
 			</div>
 			@conceptoForm("liquidacion_concepto_tipo_id").error.map{ error =><div class="text-error">@error.message</div>}
 		</div>
 		<div class="col-sm-5">
 			<div class="form-group @if(conceptoForm.error("liquidacion_base_calculo_id") != null) {has-error}else{has-required}">
-				<label for="liquidacion_base_calculo_id" class="control-label">Base Calculo</label> 
+				<label for="liquidacion_base_calculo_id" class="control-label">Base Calculo</label>
 				<div class="input-group">
 					@inputText(conceptoForm("liquidacionBaseCalculo.nombre"), 'class -> "form-control", 'id -> "liquidacion_base_calculo")
 					@inputText(conceptoForm("liquidacion_base_calculo_id"),'hidden -> "hidden", 'id -> "liquidacion_base_calculo_id")
 					<span class="input-group-addon">
 						<a href="#" class="searchModal"
-									id="searchBaseCalculo" 
-									data-title="Selección de base calculo" 
-									data-url="@controllers.haberes.routes.LiquidacionBaseCalculosController.modalBuscar()" 
-									data-height="650" 
-									data-width="700" 
-									data-listen="modal.seleccion.liquidacion-base-calculo.simple" 
-									data-label="#liquidacion_base_calculo" 
+									id="searchBaseCalculo"
+									data-title="Selección de base calculo"
+									data-url="@controllers.haberes.routes.LiquidacionBaseCalculosController.modalBuscar()"
+									data-height="650"
+									data-width="700"
+									data-listen="modal.seleccion.liquidacion-base-calculo.simple"
+									data-label="#liquidacion_base_calculo"
 									data-field="#liquidacion_base_calculo_id">
 							<i class="glyphicon glyphicon-search"></i>
 						</a>
@@ -102,25 +102,39 @@ $( function(){ $('.searchModal').modalSearch();})
 	<div class="row">
 		<div class="col-sm-5">
 			<div class="form-group @if(conceptoForm.error("liquidacion_concepto_clasificacion_id") != null) {has-error}else{has-required}">
-				<label for="liquidacion_concepto_clasificacion_id" class="control-label">Clasificacion</label> 
-				
-					@select(conceptoForm("liquidacion_concepto_clasificacion_id"), 
-					LiquidacionConceptoClasificacion.find.all().map { p => p.id.toString -> p.nombre}, 
+				<label for="liquidacion_concepto_clasificacion_id" class="control-label">Clasificacion</label>
+
+					@select(conceptoForm("liquidacion_concepto_clasificacion_id"),
+					LiquidacionConceptoClasificacion.find.all().map { p => p.id.toString -> p.nombre},
 					'class -> "form-control select", '_default -> "Seleccionar")
 			</div>
 			@conceptoForm("liquidacion_concepto_clasificacion_id").error.map{ error =><div class="text-error">@error.message</div>}
 		</div>
 		<div class="col-sm-2">
-			<label class="control-label"> 
+			<label class="control-label">
 				Deduce ganancias
 				@select(conceptoForm("deduce_ganancias"),options("false"->"NO","true"->"SI"), 'class -> "form-control select")
 			</label>
 		</div>
-		
+
 		<div class="col-sm-2">
-			<label class="control-label"> 
+			<label class="control-label">
 				Reporte ganancias
 				@select(conceptoForm("reporte_ganancias"),options("false"->"NO","true"->"SI"), 'class -> "form-control select")
 			</label>
+		</div>
+		<div class="col-sm-2">
+			<div class="form-group @if(conceptoForm.error("abreviatura") != null) {has-error}">
+				<label for="inputDispo" class="control-label">Dispo</label>
+				@inputText(conceptoForm("dispo"), 'class -> "form-control")
+			</div>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-sm-12">
+			<div class="form-group @if(conceptoForm.error("abreviatura") != null) {has-error}">
+				<label for="inputDescripcion" class="control-label">Descripcion</label>
+				@inputText(conceptoForm("descripcion"), 'class -> "form-control")
+			</div>
 		</div>
 	</div>
