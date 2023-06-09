@@ -44,6 +44,8 @@ public class LiquidacionConcepto extends Model{
 
 	public String descripcion;
 
+	public String dispo;
+
 	public Boolean deduce_ganancias = true;
 
 	public Boolean reporte_ganancias = false;
