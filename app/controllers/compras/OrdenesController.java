@@ -13,6 +13,7 @@ import java.util.Map;
 import javax.persistence.PersistenceException;
 
 import models.ActaRecepcion;
+import models.AutorizadoLinea;
 import models.BalancePresupuestario;
 import models.Certificacion;
 import models.CertificacionCompra;
@@ -875,16 +876,23 @@ public class OrdenesController extends Controller {
 			error = "Nose puede cancelar la orden porque tiene certificaciones compras asociadas.";
 		}
 
+		Integer tieneAutorizadoLineas = AutorizadoLinea.find.where().eq("orden_id",orden.id).findRowCount();
+		if(tieneAutorizadoLineas > 0){
+			ordenOk = false;
+			error = "Nose puede cancelar la orden porque tiene Autorizados asociados.";
+		}
+
 
 		if(orden.tipo_orden.compareTo("comun") == 0 || orden.tipo_orden.compareTo("servicio") == 0) {
 			if(orden.estado_id.compareTo((long) Estado.ORDEN_ESTADO_APROBADO) == 0) {
 
 				if(Permiso.check("ordenesCompraPasarACanceladoForzado")) {
 
-					if(ordenOk){
-						Integer tieneOrdenProvision = OrdenProvision.find.where().eq("orden_compra_id",orden.id).findRowCount();
+					Integer tieneOrdenProvision = OrdenProvision.find.where().eq("orden_compra_id",orden.id).findRowCount();
+					OrdenProvision ordenProvision = OrdenProvision.find.where().eq("orden_compra_id",orden.id).findUnique();
 
-						OrdenProvision ordenProvision = OrdenProvision.find.where().eq("orden_compra_id",orden.id).findUnique();
+					if(ordenOk){
+
 						if(tieneOrdenProvision == 1){
 
 							Integer recepcion = Recepcion.find.where().eq("ordenProvision.orden_compra_id",orden.id).findRowCount();
@@ -894,7 +902,8 @@ public class OrdenesController extends Controller {
 								ordenOk = false;
 								error = "Nose puede cancelar la orden de provision tiene asociaciones de Recepciones o Certificaciones.";
 							}else {
-								ordenProvision.delete();
+								ordenOk = true;
+								//ordenProvision.delete();
 							}
 
 
@@ -916,6 +925,7 @@ public class OrdenesController extends Controller {
 							for(Factura ff : facturas) {
 								ff.delete();
 							}
+							ordenProvision.delete();
 						}
 					}
 
