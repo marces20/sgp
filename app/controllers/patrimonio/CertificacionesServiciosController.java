@@ -169,7 +169,7 @@ public class CertificacionesServiciosController extends Controller {
 									 * Logger.info("cantidad -> " + dataPacientes.get("cantidad").asLong());
 									 * Logger.info("cantidadCargar -> " +
 									 * dataPacientes.get("cantidadCargar").asLong());
-									 * 
+									 *
 									 * Logger.info("getCantidadDisponibleConCertificacionPorLineaPorCliente -> " +
 									 * OrdenLinea.getCantidadDisponibleConCertificacionPorLineaPorCliente(cp.id,c.id
 									 * ));
@@ -260,9 +260,16 @@ public class CertificacionesServiciosController extends Controller {
 		Map<Integer, List<SqlRow>> lineas = new HashMap<Integer, List<SqlRow>>();
 		Map<Integer, String> lineaProducto = new HashMap<Integer, String>();
 		boolean tienePacientes = false;
+
+		Map<Long, BigDecimal> lineaProductoPrecioConAjustes = new HashMap<Long, BigDecimal>();
+
+
+
+
 		for (Integer i : serviciosSeleccionados) {
 
 			OrdenLinea c = OrdenLinea.find.where().eq("id", i).findUnique();
+
 			List<SqlRow> sl = OrdenLinea.getCantidadDisponibleConCertificacionPorClientesPorOrdenLinea(i, false);
 			if (sl.size() > 0) {
 				tienePacientes = true;
@@ -295,7 +302,17 @@ public class CertificacionesServiciosController extends Controller {
 			// OrdenLinea c = OrdenLinea.find.where().eq("id",
 			// serviciosSeleccionados.get(0)).findUnique();
 			Long idOrdenProvision = id;
+
+			OrdenProvision op = OrdenProvision.find.byId(idOrdenProvision);
+
 			CertificacionServicio cs = new CertificacionServicio();
+			Logger.debug("xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx " );
+
+			List<SqlRow> precioPorProductoConAjustes = OrdenLinea.getPrecioPorProductoConAjustes(op.orden_compra_id);
+
+			for (SqlRow ppa : precioPorProductoConAjustes) {
+				lineaProductoPrecioConAjustes.put(ppa.getLong("producto_id"), ppa.getBigDecimal("sumatoria"));
+			}
 
 			Ebean.beginTransaction();
 
@@ -317,7 +334,10 @@ public class CertificacionesServiciosController extends Controller {
 					csl.create_date = new Date();
 					csl.create_usuario_id = new Long(Usuario.getUsuarioSesion());
 					csl.cuenta_analitica_id = cp.cuenta_analitica_id;
-					csl.precio = cp.precio;
+					//csl.precio = cp.precio;
+
+					csl.precio = lineaProductoPrecioConAjustes.get(cp.producto_id);
+
 					csl.producto_id = cp.producto_id;
 					csl.udm_id = cp.udm_id;
 					csl.save();
@@ -692,7 +712,7 @@ public class CertificacionesServiciosController extends Controller {
 			flash("error", "La certificación debe estar en estado borrador.");
 			return redirect(request().getHeader("referer"));
 		}
-		
+
 		if(cs.acta_id != null) {
 			flash("error", "La certificación tiene un acta asociada. Debe eliminar la asociacion.");
 			return redirect(request().getHeader("referer"));
