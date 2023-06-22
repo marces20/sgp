@@ -16,7 +16,7 @@ public class VentaCondicion extends Model{
 
 	private static final long serialVersionUID = 1L;
 	@Id
-	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="tipo_licencias_id_seq")
+	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="venta_condiciones_id_seq")
 	public Long id;
 	@Required(message="Debe escribir un nombre")
 	public String nombre;
