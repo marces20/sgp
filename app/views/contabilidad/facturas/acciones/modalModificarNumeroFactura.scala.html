@@ -1,14 +1,59 @@
 @(formBuscador: DynamicForm,id:Long,p:Factura)
 @import helper._
-@implicitFieldConstructor = @{ FieldConstructor(simpleInput.render) } 
+@implicitFieldConstructor = @{ FieldConstructor(simpleInput.render) }
 
 @helper.form(action = controllers.contabilidad.routes.FacturasAccionesController.modificarNumeroFactura(), 'id -> "formModificarNumeroFactura") {
 	<input type="hidden" name="id" value="@id" />
-	
+
 	@views.html.tags.successError()
-	
 	<div class="row">
-		<div class="col-sm-6">
+		<div class="col-sm-3">
+			<div class="form-group @if(formBuscador.error("tipo_comprobante_id") != null) {has-error}">
+				<label for="tipo_comprobante" class="control-label">Tipo Comprobante</label>
+				@select(formBuscador("tipo_comprobante_id"),TipoComprobante.find.all().map { p => p.id.toString -> p.nombre}, 'class -> "form-control select", '_default -> "Seleccionar")
+			</div>
+		</div>
+		<div class="col-sm-3">
+			<div class="form-group @if(formBuscador.error("numero_factura") != null) {has-error}">
+				<label for="inputNumeroFactura" class="control-label">Comprobante</label>
+				@inputText(formBuscador("numero_factura"), 'class -> "form-control", 'id -> "numero_factura", 'autofocus -> "autofocus")
+			</div>
+
+			@formBuscador("numero_factura").error.map{ error =>
+				<div class="text-error">@error.message</div>
+			}
+		</div>
+
+		<div class="col-sm-3">
+			<div class="form-group @if(formBuscador.error("monto") != null) {has-error}">
+				<label for="inputNumeroFactura" class="control-label">Monto</label>
+				@inputText(formBuscador("monto"), 'class -> "form-control", 'id -> "monto")
+			</div>
+
+			@formBuscador("monto").error.map{ error =>
+				<div class="text-error">@error.message</div>
+			}
+		</div>
+
+	</div>
+	<div class="row">
+		<div class="col-sm-3">
+			<div class="form-group @if(formBuscador.error("fecha") != null) {has-error}">
+				<label for="inputNumeroFactura" class="control-label">Fecha</label>
+				@inputText(formBuscador("fecha"), 'class -> "form-control date", 'id -> "fecha")
+			</div>
+
+			@formBuscador("fecha").error.map{ error =>
+				<div class="text-error">@error.message</div>
+			}
+		</div>
+		<div class="col-sm-3"><br />
+			<button type="submit" class="btn btn-default" title="Guardar"><i class="glyphicon glyphicon-floppy-disk"></i> Guardar</button>
+		</div>
+
+	</div>
+	<div class="row">
+		<div class="col-sm-5">
 			<div class="panel panel-default">
 				<div class="panel-heading"><b>Facturacion</b></div>
 				<div class="panel-body">
@@ -18,6 +63,7 @@
 								<td>Monto Orden</td>
 								<td>Monto Cargado</td>
 								<td>Restante</td>
+
 							</tr>
 						<thead>
 						<tbody>
@@ -29,9 +75,9 @@
 						</tbody>
 					</table>
 				</div>
-			</div>	
+			</div>
 		</div>
-		<div class="col-sm-6">
+		<div class="col-sm-7">
 			<div class="panel panel-default">
 				<div class="panel-heading"><b>Facturas cargadas</b></div>
 				<div class="panel-body">
@@ -39,61 +85,37 @@
 						<thead>
 						<tr>
 							<td>Factura</td>
+							<td>Fecha</td>
 							<td>Numero</td>
 							<td>Monto</td>
 						</tr>
 						</thead>
 						<tbody>
-						
+
 						@for(s <- Factura.getFacturasDatosCargadas(p.id) ){
-						
+
 							<tr>
 								<td><b>@s.getString("nombre")</b></td>
-								<td><b>@s.getString("numero_factura")</b></td>
+								<td><b>@if(s.getDate("fecha") != null){@(utils.DateUtils.formatDate(s.getDate("fecha")))}</b></td>
+
+								<td><b>@if(s.getInteger("tipo_comprobante_id") ==1){F- }@if(s.getInteger("tipo_comprobante_id") ==2){NC- }@if(s.getInteger("tipo_comprobante_id") ==3){ND- }@s.getString("numero_factura")</b></td>
 								<td><b>@utils.NumberUtils.moneda(s.getBigDecimal("monto"))</b></td>
 							</tr>
 						}
 						</tbody>
 					</table>
 				</div>
-			</div>	
+			</div>
 		</div>
 	</div>
-	
-	<div class="row">
-		<div class="col-sm-3">
-			<div class="form-group @if(formBuscador.error("numero_factura") != null) {has-error}">
-				<label for="inputNumeroFactura" class="control-label">N° Factura</label> 
-				@inputText(formBuscador("numero_factura"), 'class -> "form-control", 'id -> "numero_factura", 'autofocus -> "autofocus")
-			</div>
-			
-			@formBuscador("numero_factura").error.map{ error =>
-				<div class="text-error">@error.message</div>
-			}
-		</div>
-		
-		<div class="col-sm-3">
-			<div class="form-group @if(formBuscador.error("monto") != null) {has-error}">
-				<label for="inputNumeroFactura" class="control-label">Monto</label> 
-				@inputText(formBuscador("monto"), 'class -> "form-control", 'id -> "monto")
-			</div>
-			
-			@formBuscador("monto").error.map{ error =>
-				<div class="text-error">@error.message</div>
-			}
-		</div>
-		
-		<div class="col-sm-5"><br />
-			<button type="submit" class="btn btn-default" title="Guardar"><i class="glyphicon glyphicon-floppy-disk"></i> Guardar</button>
-		</div>
-		
-	</div>
+
+
 }
 <script>
-$( function(){ 
+$( function(){
 	$('#numero_factura').mask("a-9999-99999999");
 	$("#monto").numeric_input({allowNegative: true});
-
+	$( "#fecha" ).mask("99/99/9999");
 })
 </script>
 @flash().clear()
