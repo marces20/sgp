@@ -1199,8 +1199,8 @@ public class FacturasAccionesController  extends Controller {
 		BigDecimal montoTotal = montoCargado.add(montoACargar);
 
 		if(montoTotal.compareTo(f.orden.getTotalTotal()) > 0) {
-			//flash("error", "Los montos de facturas excede el monto de la orden.");
-			//return ok(modalModificarNumeroFactura.render(d,id,f));
+			flash("error", "Los montos de facturas excede el monto de la orden.");
+			return ok(modalModificarNumeroFactura.render(d,id,f));
 		}
 
 
