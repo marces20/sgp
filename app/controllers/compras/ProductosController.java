@@ -17,6 +17,7 @@ import models.Categoria;
 import models.Cliente;
 import models.Cuenta;
 import models.Deposito;
+import models.Estado;
 import models.Producto;
 import models.ProductoDeposito;
 import models.Proveedor;
@@ -752,4 +753,132 @@ public class ProductosController extends Controller {
     	curl_close($handler);
     	*/
     }
+
+    public static Result cargaFacturaMaterno() {
+
+
+
+
+
+    	/*IdFactura
+    	CuitFactura
+    	Pv_Id
+    	NroFactura
+    	TipoDoc_Id
+    	NroDoc
+    	CondIva_Id
+    	CondVenta_Id
+    	RazonSocial
+    	Domicilio
+    	Total
+    	Cae
+    	FechaVto
+    	FechaEmiFact
+    	FechaDesde
+    	FechaHasta*/
+
+    	/*
+    	$url = "http://10.1.2.235:9000/cargaFacturaMaterno";
+
+
+    	$linea = array("productoId"=> productoId,
+    				   "productoNombre"=> productoNombre,
+    				   "cantidad"=> cantidad,
+    				   "monto"=> monto);
+
+
+
+    	$lineasData = array("lineas"=>lineas);
+
+    	$postData = array("idfactura" => idfactura,
+    					  "cuit" => cuit,
+    					  "pv_id" => pv_id,
+    					  "nrofactura" => nrofactura,
+    					  "doc" => doc,
+    					  "condiva_id" => condiva_id,
+    					  "condventa_id" => condventa_id,
+    					  "razonsocial" => razonsocial,
+    					  "domicilio" => domicilio,
+    					  "total" => total,
+    					  "cae" => cae,
+    					  "fecha_vencimiento" => fecha_vencimiento,
+    					  "fecha_emision" => fecha_emision,
+    					  "fecha_desde" => fecha_desde,
+    					  "fecha_hasta" => fecha_hasta,
+    					  "lineas" => lineasData
+    					  );
+
+    	$elements = array();
+    	foreach ($postData as $name=>$value) {
+    	   $elements[] = "{$name}=".urlencode($value);
+    	}
+
+    	$handler = curl_init();
+    	curl_setopt($handler, CURLOPT_URL, $url);
+    	curl_setopt($handler, CURLOPT_POST,true);
+    	curl_setopt($handler, CURLOPT_POSTFIELDS, $elements);
+    	$response = curl_exec ($handler);
+    	curl_close($handler);
+    	*/
+
+		Logger.debug("-------xxxxxxxxxxxx------------ "+Controller.request().toString());
+
+		Logger.debug("-------xxxxzzzzzzzz------------ "+request().body());
+
+
+
+		Logger.debug("------------------------------ "+RequestVar.get("idfactura"));
+
+    	Logger.debug("------------------------------ "+RequestVar.get("cuit"));
+    	Logger.debug("------------------------------ "+RequestVar.get("razonsocial"));
+    	Logger.debug("------------------------------ "+RequestVar.get("domicilio"));
+    	Logger.debug("------------------------------ "+RequestVar.get("doc"));
+
+    	Logger.debug("------------------------------ "+RequestVar.get("pv_id"));
+    	Logger.debug("------------------------------ "+RequestVar.get("nrofactura"));//
+    	Logger.debug("------------------------------ "+RequestVar.get("condiva_id"));//
+    	Logger.debug("------------------------------ "+RequestVar.get("condventa_id"));
+
+
+    	Logger.debug("------------------------------ "+RequestVar.get("total"));
+    	Logger.debug("------------------------------ "+RequestVar.get("cae"));//
+    	Logger.debug("------------------------------ "+RequestVar.get("fecha_vencimiento"));//
+    	Logger.debug("------------------------------ "+RequestVar.get("fecha_emision"));//
+    	Logger.debug("------------------------------ "+RequestVar.get("fecha_desde"));//
+    	Logger.debug("------------------------------ "+RequestVar.get("fecha_hasta"));//
+
+
+    	//Logger.debug("------------------------------ "+RequestVar.getArray("array_dominio[]")[0]);
+
+
+    	try{
+    		RecuperoFactura rf = new RecuperoFactura();
+    		rf.cliente_id = null;
+    		rf.fecha = null;
+    		rf.serie = null;
+    		rf.numero= RequestVar.get("nrofactura");
+    		rf.nombre = null;//?
+    		rf.nota = null;
+    		rf.estado_id = (long) Estado.RECUPERO_FACTURA_BORRADOR;
+    		rf.periodo_id = null;
+    		rf.expediente_id = null;
+    		rf.planilla_id = null;
+    		rf.presupuesto_id = null;
+    		rf.puntoventa_id = 7;
+    		//////////////////////////////
+    		rf.id_factura_materno = new Long(RequestVar.get("idfactura"));
+    		rf.condicionventa_id = new Integer(RequestVar.get("condventa_id"));
+    		rf.condicioniva_id = new Integer(RequestVar.get("condiva_id"));
+    		rf.cae = RequestVar.get("cae");
+    		rf.fecha_vencimiento = new Date(RequestVar.get("fecha_vencimiento"));
+    		rf.fecha_emision = new Date(RequestVar.get("fecha_emision"));
+    		rf.fecha_desde = new Date(RequestVar.get("fecha_desde"));
+    		rf.fecha_hasta = new Date(RequestVar.get("fecha_hasta"));
+
+    	}catch(Exception e){
+    		Logger.debug("------------------------------ "+e);
+    	}
+
+    	return ok();
+	}
 }
