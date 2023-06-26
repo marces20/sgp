@@ -925,7 +925,9 @@ public class OrdenesController extends Controller {
 							for(Factura ff : facturas) {
 								ff.delete();
 							}
-							ordenProvision.delete();
+							if(ordenProvision != null) {
+								ordenProvision.delete();
+							}
 						}
 					}
 
