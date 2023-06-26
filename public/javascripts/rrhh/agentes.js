@@ -1,5 +1,5 @@
 $( function(){
-	
+
 	$("#fechax").mask("99/99/9999");
 
 	$('#searchOrganigrama,#searchAgente,#searchProfesion,#searchTipoResidencia,#searchEscalaLaboral,#searchEspecialidad').modalSearch();
@@ -9,11 +9,38 @@ $( function(){
 		$(this).closest('form').submit();
 	});
 	$('#filtrosEstados button:has(:checkbox:checked)').addClass('activeFiltro');
-	
-	$('#modalDatosAgente').click( function() { 
+
+	$('#modalDatosRulAgente').click( function() {
 		var url = $(this).attr("data-url");
 		var dialogo = $('<div></div>');
-	
+
+		dialogo.dialog({
+			title: "Datos Agente RUL",
+	    	resizable: false,
+			autoOpen: true,
+			modal: true,
+			height: 250,
+			width:750,
+	        buttons: {
+		          Cerrar: function() {
+		            $( this ).dialog( "destroy" );
+		          }
+		    },
+	    	close: function(event, ui ){
+	    		$(this).dialog( "destroy" );
+	    	},
+		    open: function( event, ui ) {
+				$.post(url, getCheckSeleccionados(), function(data){
+					dialogo.html(data);
+				});
+		    }
+	    });
+	});
+
+	$('#modalDatosAgente').click( function() {
+		var url = $(this).attr("data-url");
+		var dialogo = $('<div></div>');
+
 		dialogo.dialog({
 			title: "Datos Agente",
 	    	resizable: false,
@@ -32,15 +59,15 @@ $( function(){
 		    open: function( event, ui ) {
 				$.post(url, getCheckSeleccionados(), function(data){
 					dialogo.html(data);
-				});	
+				});
 		    }
 	    });
 	});
-	
-	$('#modalCertificacionesAgente').click( function() { 
+
+	$('#modalCertificacionesAgente').click( function() {
 		var url = $(this).attr("data-url");
 		var dialogo = $('<div></div>');
-	
+
 		dialogo.dialog({
 			title: "Certificaciones Agente",
 	    	resizable: false,
@@ -59,11 +86,11 @@ $( function(){
 		    open: function( event, ui ) {
 				$.post(url, getCheckSeleccionados(), function(data){
 					dialogo.html(data);
-				});	
+				});
 		    }
-	    });	
+	    });
 	});
-	
+
 	function crearDialogo(url){
 		var dialogo = $('<div></div>');
 		return dialogo.dialog({
@@ -83,18 +110,18 @@ $( function(){
 		    open: function( event, ui ) {
 				$.get(url, function(data){
 					dialogo.html(data);
-				});	
+				});
 		    }
 	      });
 	}
-	
+
 	$('#replicarProveedor').on('click', function() {
-		
+
 		var url = $(this).attr("data-url");
 		var dialogo = crearDialogo(url);
 		dialogo.dialog({title: "Informacion Proveedor"});
 	});
-						
+
 	$(document).on("submit", '#formReplicarProveedor', function(){
 		var form = $(this);
 		var url = form.attr('action');
@@ -108,14 +135,14 @@ $( function(){
 				form.replaceWith(data);
 			}
 		});
-		
+
 		return false;
 	});
-	
-	$('#reporteLicencia').click( function() { 
+
+	$('#reporteLicencia').click( function() {
 		var url = $(this).attr("data-url");
 		var dialogo = $('<div></div>');
-		
+
 		dialogo.dialog({
 			title: "Ficha Licencias",
 	    	resizable: false,
@@ -134,15 +161,15 @@ $( function(){
 		    open: function( event, ui ) {
 				$.post(url, $("input[name='check_listado_inasistencia[]']").serialize(), function(data){
 					dialogo.html(data);
-				});	
+				});
 		    }
 	    });
 	});
-	
-	$('#reporteLicenciaMedica').click( function() { 
+
+	$('#reporteLicenciaMedica').click( function() {
 		var url = $(this).attr("data-url");
 		var dialogo = $('<div></div>');
-		
+
 		dialogo.dialog({
 			title: "Ficha Licencias",
 	    	resizable: false,
@@ -161,18 +188,18 @@ $( function(){
 		    open: function( event, ui ) {
 				$.post(url, $("input[name='check_listado_inasistencia[]']").serialize(), function(data){
 					dialogo.html(data);
-				});	
+				});
 		    }
 	    });
 	});
-	
-	
+
+
 	$('#accionLicenciaPasarBorrador').click( function() { //abrir modal para pasar a borrador
 		var url = $(this).attr("data-url");
 		dialogoPasarBorrador = crearDialogoGeneral(url);
 		dialogoPasarBorrador.dialog({title: "Pasar a Borrador"});
 	});
-	
+
 	$(document).on("submit", '#formPasarBorradorLicencia', function(){
 		var form = $(this);
 		var url = form.attr('action');
@@ -190,16 +217,16 @@ $( function(){
 				form.replaceWith(data);
 			}
 		});
-		
+
 		return false;
 	});
-	
+
 	$('#accionLicenciaPasarPreAprobado').click( function() { //abrir modal para pasar a borrador
 		var url = $(this).attr("data-url");
 		dialogoPasarBorrador = crearDialogoGeneral(url);
 		dialogoPasarBorrador.dialog({title: "Pasar a PreAprobado"});
 	});
-	
+
 	$(document).on("submit", '#formPasarPreAprobadoLicencia', function(){
 		var form = $(this);
 		var url = form.attr('action');
@@ -217,16 +244,16 @@ $( function(){
 				form.replaceWith(data);
 			}
 		});
-		
+
 		return false;
 	});
-	
+
 	$('#accionLicenciaPasarAprobado').click( function() { //abrir modal para pasar a borrador
 		var url = $(this).attr("data-url");
 		dialogoPasarBorrador = crearDialogoGeneral(url);
 		dialogoPasarBorrador.dialog({title: "Pasar a Aprobado"});
 	});
-	
+
 	$(document).on("submit", '#formPasarAprobadoLicencia', function(){
 		var form = $(this);
 		var url = form.attr('action');
@@ -245,16 +272,16 @@ $( function(){
 				form.replaceWith(data);
 			}
 		});
-		
+
 		return false;
 	});
-	
+
 	$('#accionLicenciaPasarCancelado').click( function() { //abrir modal para pasar a borrador
 		var url = $(this).attr("data-url");
 		dialogoPasarBorrador = crearDialogoGeneral(url);
 		dialogoPasarBorrador.dialog({title: "Pasar a Cancelado"});
 	});
-	
+
 	$(document).on("submit", '#formPasarCanceladoLicencia', function(){
 		var form = $(this);
 		var url = form.attr('action');
@@ -273,17 +300,17 @@ $( function(){
 				form.replaceWith(data);
 			}
 		});
-		
+
 		return false;
 	});
-	
+
 	/*************************************************************************/
 	$('#accionPasarCargado').click( function() { //abrir modal para pasar a cargado
 		var url = $(this).attr("data-url");
 		dialogoPasarCargado = crearDialogoGeneral(url);
 		dialogoPasarCargado.dialog({title: "Pasar a Cargado"});
 	});
-	
+
 	$(document).on("submit", '#formPasarCargado', function(){
 		var form = $(this);
 		var url = form.attr('action');
@@ -300,16 +327,16 @@ $( function(){
 				form.replaceWith(data);
 			}
 		});
-		
+
 		return false;
 	});
-	
+
 	$('#accionPasarPreaprobado').click( function() {
 		var url = $(this).attr("data-url");
 		dialogoPasarPreaprobado = crearDialogoGeneral(url);
 		dialogoPasarPreaprobado.dialog({title: "Pasar a Preaprobado"});
 	});
-	
+
 	$(document).on("submit", '#formPasarPreaprobado', function(){
 		var form = $(this);
 		var url = form.attr('action');
@@ -325,16 +352,16 @@ $( function(){
 				form.replaceWith(data);
 			}
 		});
-		
+
 		return false;
 	});
-	
+
 	$('#accionPasarAprobado').click( function() {
 		var url = $(this).attr("data-url");
 		dialogoPasarAprobado = crearDialogoGeneral(url);
 		dialogoPasarAprobado.dialog({title: "Pasar a Aprobado"});
 	});
-	
+
 	$(document).on("submit", '#formPasarAprobado', function(){
 		var form = $(this);
 		var url = form.attr('action');
@@ -351,16 +378,16 @@ $( function(){
 				form.replaceWith(data);
 			}
 		});
-		
+
 		return false;
 	});
-	
+
 	$('#accionPasarBorrador').click( function() {
 		var url = $(this).attr("data-url");
 		dialogoPasarBorrador = crearDialogoGeneral(url);
 		dialogoPasarBorrador.dialog({title: "Pasar a Borrador"});
 	});
-	
+
 	$(document).on("submit", '#formPasarBorrador', function(){
 		var form = $(this);
 		var url = form.attr('action');
@@ -378,16 +405,16 @@ $( function(){
 				form.replaceWith(data);
 			}
 		});
-		
+
 		return false;
 	});
-	
+
 	$('#accionPasarCancelado').click( function() {
 		var url = $(this).attr("data-url");
 		dialogoPasarCancelado = crearDialogoGeneral(url);
 		dialogoPasarCancelado.dialog({title: "Pasar a Cancelado"});
 	});
-	
+
 	$(document).on("submit", '#formPasarCancelado', function(){
 		var form = $(this);
 		var url = form.attr('action');
@@ -406,7 +433,7 @@ $( function(){
 				form.replaceWith(data);
 			}
 		});
-		
+
 		return false;
 	});
 });

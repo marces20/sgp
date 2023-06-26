@@ -98,7 +98,7 @@ POST    /compras/linea-orden/guardar         		controllers.compras.LineasOrdenes
 POST    /compras/linea-orden/actualizar         	controllers.compras.LineasOrdenesController.actualizar()
 GET     /compras/linea-orden/eliminar         		controllers.compras.LineasOrdenesController.eliminar(id:Long)
 GET     /compras/linea-orden/modalAddClientes 		controllers.compras.LineasOrdenesController.modalAddClientes(id:Long)
-POST     /compras/linea-orden/eliminar-masivo   		controllers.compras.LineasOrdenesController.eliminarMasivo() 
+POST     /compras/linea-orden/eliminar-masivo   		controllers.compras.LineasOrdenesController.eliminarMasivo()
 
 POST    /compras/linea-orden-cliente/guardarAjax    controllers.compras.OrdenesLineasClientesController.guardarAjax()
 POST    /compras/linea-orden-cliente/eliminarAjax   controllers.compras.OrdenesLineasClientesController.eliminarAjax(id:Long)
@@ -121,7 +121,7 @@ GET     /compras/linea-solicitud/crear         		controllers.compras.LineasSolic
 GET     /compras/linea-solicitud/editar         	controllers.compras.LineasSolicitudesController.editar(id:Long,idDeposito:Long ?= 0)
 POST    /compras/linea-solicitud/guardar         	controllers.compras.LineasSolicitudesController.guardar()
 POST    /compras/linea-solicitud/actualizar         controllers.compras.LineasSolicitudesController.actualizar()
-GET     /compras/linea-solicitud/eliminar         	controllers.compras.LineasSolicitudesController.eliminar(id:Long) 
+GET     /compras/linea-solicitud/eliminar         	controllers.compras.LineasSolicitudesController.eliminar(id:Long)
 POST    /compras/linea-solicitud/eliminarMasivo     controllers.compras.LineasSolicitudesController.eliminarMasivo()
 
 
@@ -209,7 +209,7 @@ GET     /compras/certificacion-linea-ajuste/index         		controllers.compras.
 GET     /compras/certificacion-linea-ajuste/crear         		controllers.compras.CertificacionesComprasLineaAjustesController.crear(certificacionId:String)
 GET     /compras/certificacion-linea-ajuste/editar         	controllers.compras.CertificacionesComprasLineaAjustesController.editar(id:Long)
 POST    /compras/certificacion-linea-ajuste/guardar         controllers.compras.CertificacionesComprasLineaAjustesController.guardar()
-															
+
 POST    /compras/certificacion-linea-ajuste/actualizar         controllers.compras.CertificacionesComprasLineaAjustesController.actualizar()
 GET     /compras/certificacion-linea-ajuste/eliminar         	controllers.compras.CertificacionesComprasLineaAjustesController.eliminar(id:Long)
 
@@ -230,7 +230,7 @@ POST 	/compras/solicitud/reporte/informeFarmacia controllers.compras.Solicitudes
 POST 	/compras/solicitud/reporte/modalInformeFarmaciaPorUsuario controllers.compras.SolicitudesReportesController.modalInformeFarmaciaPorUsuario()
 POST 	/compras/solicitud/reporte/informeFarmaciaPorUsuario controllers.compras.SolicitudesReportesController.informeFarmaciaPorUsuario()
 
- 
+
 POST 	/compras/solicitud/reporte/informeFarmaciaPaciente controllers.compras.SolicitudesReportesController.informeFarmaciaPaciente()
 
 GET     /compras/pedidoFondo        		controllers.compras.PedidosFondosController.index()
@@ -478,7 +478,7 @@ POST    /expediente/acciones/pasarOtroServicio   	controllers.expediente.Expedie
 POST    /expediente/reportes/reportePaseExpediente  controllers.expediente.ExpedientesReportesController.reportePaseExpediente(id:Long)
 POST    /expediente/reportes/reportePaseExpedienteLista  controllers.expediente.ExpedientesReportesController.reportePaseExpedienteListaCodigoCombinado()
 POST    /expediente/reportes/reportePaseExpedienteCodigo  controllers.expediente.ExpedientesReportesController.reportePaseExpedienteListaCodigo(codigo:Int)
-																											   
+
 POST    /expediente/reportes/reportePaseExpedienteLista  controllers.expediente.ExpedientesReportesController.reportePaseExpedienteLista()
 GET     /expediente/acciones/cancelarPase   			controllers.expediente.ExpedientesAccionesController.cancelarPase(id:Long)
 POST    /expediente/acciones/cancelarPaseLista   		controllers.expediente.ExpedientesAccionesController.cancelarPaseLista()
@@ -621,6 +621,7 @@ GET     /rrhh/novedades/feriados         			controllers.rrhh.NovedadesController
 GET     /rrhh/agente/reportes/ficha					controllers.rrhh.AgentesReportesController.ficha(id:Long)
 GET     /rrhh/agente/reportes/fichaAptitud			controllers.rrhh.AgentesReportesController.fichaAptitud(id:Long)
 POST    /rrhh/agente/reportes/reportesDatosAgente	controllers.rrhh.AgentesReportesController.reportesDatosAgente()
+POST    /rrhh/agente/reportes/reportesDatosRulAgente	controllers.rrhh.AgentesReportesController.reportesDatosRulAgente()
 POST    /rrhh/agente/reportes/reportesCertificacionesAgente	controllers.rrhh.AgentesReportesController.reportesCertificacionesAgente()
 
 GET     /rrhh/agenteAsistencia/index	 		controllers.rrhh.AgentesAsistenciasController.index()
@@ -949,7 +950,7 @@ POST    /haberes/legajo/actualizar   		controllers.haberes.LegajosController.act
 GET     /haberes/legajo/modalBuscar			controllers.haberes.LegajosController.modalBuscar()
 GET     /haberes/legajo/get               	controllers.haberes.LegajosController.get(id:Int ?= 0)
 GET     /haberes/legajo/ver        			controllers.haberes.LegajosController.ver(id:Long)
-																
+
 GET     /haberes/instrumento	         		controllers.haberes.InstrumentosLegalesController.index()
 GET     /haberes/instrumento/crear        		controllers.haberes.InstrumentosLegalesController.crear()
 POST    /haberes/instrumento/guardar      		controllers.haberes.InstrumentosLegalesController.guardar()
@@ -1022,7 +1023,7 @@ GET     /haberes/prestaFacil/enviarArchivo         			controllers.haberes.Presta
 #-----------------------------FIN MODULO HABERES ---------------------------------
 
 
-GET    /suggestLiquidacionMes/:input		controllers.haberes.LiquidacionMesesController.suggestLiquidacionMes(input: String)											
+GET    /suggestLiquidacionMes/:input		controllers.haberes.LiquidacionMesesController.suggestLiquidacionMes(input: String)
 GET    /suggestArticulo/:input		controllers.compras.ArticulosController.suggestArticulo(input: String)
 GET    /suggestCategoria/:input		controllers.compras.CategoriasController.suggestCategoria(input: String)
 GET    /suggestTipoProducto/:input	controllers.compras.TipoProductosController.suggestTipoProducto(input: String)
@@ -1056,8 +1057,8 @@ GET    /suggestPuestoLaboralTodos/:input		controllers.haberes.PuestosLaboralesCo
 
 GET    /suggestOrganigrama/:input		controllers.administracion.OrganigramasController.suggestOrganigrama(input: String)
 GET    /suggestOb/:input				controllers.compras.ObrasSocialesController.suggestObrasocial(input: String)
-GET    /suggestExpedienteCopia/:input	controllers.expediente.ExpedientesController.suggestExpedienteCopia(input: String)		
-GET    /suggestCie/:input				controllers.rrhh.CiesController.suggestCie(input: String)													
+GET    /suggestExpedienteCopia/:input	controllers.expediente.ExpedientesController.suggestExpedienteCopia(input: String)
+GET    /suggestCie/:input				controllers.rrhh.CiesController.suggestCie(input: String)
 GET     /assets/*file               controllers.Assets.at(path="/public", file)
 
 
