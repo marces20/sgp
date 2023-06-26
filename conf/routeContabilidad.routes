@@ -90,7 +90,7 @@ POST   /facturaProveedor/reporteControlFacturasAFIP		controllers.contabilidad.Fa
 GET    /facturaProveedor/modalDetalleFacturacion   controllers.contabilidad.FacturasAccionesController.modalDetalleFacturacion(id:Long)
 GET    /facturaProveedor/acciones/modalDetalleFacturacionPorEstadoPorPeriodo   controllers.contabilidad.FacturasAccionesController.modalDetalleFacturacionPorEstadoPorPeriodo(nombrePeriodo:String,estado:Integer,proveedorId:Integer)
 GET    /facturaProveedor/modalMarcadoresMasivos   	controllers.contabilidad.FacturasAccionesController.modalMarcadoresMasivos()
-POST   /facturaProveedor/marcadoresMasivos   		controllers.contabilidad.FacturasAccionesController.marcadoresMasivos()	    
+POST   /facturaProveedor/marcadoresMasivos   		controllers.contabilidad.FacturasAccionesController.marcadoresMasivos()
 POST   /facturaProveedor/reporteLineasFacturas		controllers.contabilidad.FacturasReportesController.reporteLineasFacturas()
 
 POST   /facturaProveedor/reporteFacturasCargadas		controllers.contabilidad.FacturasReportesController.reporteFacturasCargadas()
@@ -159,7 +159,7 @@ POST   /accionesPagoProveedor/pagarEmbargosExternos        		controllers.contabi
 GET    /accionesPagoProveedor/modalPagarInterbankingProveedores  controllers.contabilidad.PagosAccionesController.modalPagarInterbankingProveedores()
 POST   /accionesPagoProveedor/pagarInterbankingProveedores       controllers.contabilidad.PagosAccionesController.pagarInterbankingProveedores()
 GET    /accionesPagoProveedor/descargarArchivoInterbankingProveedores	controllers.contabilidad.PagosAccionesController.descargarArchivoInterbankingProveedores(id:Long)
- 
+
 GET    /accionesPagoProveedor/modalPagarProveedoresMacroMasivos  controllers.contabilidad.PagosAccionesController.modalPagarProveedoresMacroMasivos()
 POST   /accionesPagoProveedor/pagarProveedoresMacroMasivos       controllers.contabilidad.PagosAccionesController.pagarProveedoresMacroMasivos()
 GET    /accionesPagoProveedor/descargarArchivoProveedoresMacroMasivos	controllers.contabilidad.PagosAccionesController.descargarArchivoProveedoresMacroMasivos(id:Long)
@@ -248,7 +248,7 @@ GET 	/reporte/cheque 			   controllers.contabilidad.PagosReportesController.repo
 POST 	/reporteLote				   controllers.contabilidad.PagosReportesController.descargarLotes()
 POST 	/informeImpuestoMunicipal	   controllers.contabilidad.PagosReportesController.informeImpuestoMunicipal()
 POST 	/informeprofe	   			   controllers.contabilidad.PagosReportesController.informeProfe()
-																			
+
 GET    	/pagos/modalPasarCancelado   	controllers.contabilidad.PagosAccionesController.modalPasarCancelado()
 POST    /pagos/pasarCanceladoMasivo   	controllers.contabilidad.PagosAccionesController.pasarCanceladoMasivo()
 GET    	/pagos/modalPasarBorrador   	controllers.contabilidad.PagosAccionesController.modalPasarBorrador()
@@ -256,7 +256,7 @@ POST    /pagos/pasarBorradorMasivo   	controllers.contabilidad.PagosAccionesCont
 GET    	/pagos/modalInformeMensualImpuestos   	controllers.contabilidad.PagosReportesController.modalInformeMensualImpuestos()
 POST    /pagos/informeMensualImpuestos   	controllers.contabilidad.PagosReportesController.informeMensualImpuestos()
 GET 	/reporteLotePago			   		controllers.contabilidad.PagosReportesController.descargarLotesPago(id:Long)
-																									     
+
 POST    /pagos/informeRetencionSuss   		controllers.contabilidad.PagosReportesController.informeRetencionSuss(regimen:String)
 POST    /pagos/informeRetencionDgrSellos   	controllers.contabilidad.PagosReportesController.informeRetDgrSellos()
 POST    /pagos/informeRetDgrIibb   	  		controllers.contabilidad.PagosReportesController.informeRetDgrIibb()
@@ -326,7 +326,7 @@ GET    /OrdenPagoCircuito/editar          controllers.contabilidad.OrdenesPagosC
 POST   /OrdenPagoCircuito/actualizar      controllers.contabilidad.OrdenesPagosCircuitosController.actualizar()
 GET    /OrdenPagoCircuito/modalPasarBorrador   	controllers.contabilidad.OrdenesPagosCircuitosAccionesController.modalPasarBorrador()
 POST   /OrdenPagoCircuito/pasarBorradorMasivo   	controllers.contabilidad.OrdenesPagosCircuitosAccionesController.pasarBorradorMasivo()
-GET    /OrdenPagoCircuito/modalPasarContabilidad   controllers.contabilidad.OrdenesPagosCircuitosAccionesController.modalPasarContabilidad()
+GET    /OrdenPagoCircuito/modalPasarContabilidad   controllers.contabilidad.OrdenesPagosCircuitosAccionesController.modalPasarContabilidad(id:Long ?= 0)
 POST   /OrdenPagoCircuito/pasarContabilidadMasivo  controllers.contabilidad.OrdenesPagosCircuitosAccionesController.pasarContabilidadMasivo()
 GET    /OrdenPagoCircuito/modalPasarRendiciones   	controllers.contabilidad.OrdenesPagosCircuitosAccionesController.modalPasarRendiciones()
 POST   /OrdenPagoCircuito/pasarRendicionesMasivo   controllers.contabilidad.OrdenesPagosCircuitosAccionesController.pasarRendicionesMasivo()
