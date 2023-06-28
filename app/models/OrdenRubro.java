@@ -16,7 +16,7 @@ import play.db.ebean.Model;
 @Table(name = "ordenes_rubros")
 public class OrdenRubro extends Model {
 	private static final long serialVersionUID = 1L;
-	
+
 	public static final Integer EQUIPAMIENTOS = 1;
 	public static final Integer ESTUDIOS_MEDICOS = 2;
 	public static final Integer INSUMOS_VARIOS = 3;
@@ -26,20 +26,21 @@ public class OrdenRubro extends Model {
 	public static final Integer SERVICIOS = 7;
 	public static final Integer HONORARIOS = 8;
 	public static final Integer REFACCIONES = 9;
+	public static final Integer HABERES = 10;
 
 	@Id
 	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="ordenes_rubros_id_seq")
     public Integer id;
-	
+
 	@Required(message="Debe escribir el nombre")
 	public String nombre;
-	
+
 	@OneToMany
 	List<OrdenSubrubro> ordenSubrubro;
-	
+
 	public static Model.Finder<Long,OrdenRubro> find = new Model.Finder<Long,OrdenRubro>(Long.class, OrdenRubro.class);
-	
-}	
-	
-	
+
+}
+
+
 
