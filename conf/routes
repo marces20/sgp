@@ -302,7 +302,7 @@ GET     /compras/producto/cargaProductoRismi controllers.compras.ProductosContro
 GET     /compras/producto/modalCargar		 controllers.compras.ProductosController.modalCarga()
 POST 	/compras/producto/guardarProductoDesdeModal	 controllers.compras.ProductosController.guardarProductoDesdeModal()
 
-GET     /compras/factura/cargaFacturaMaterno	controllers.compras.ProductosController.cargaFacturaMaterno()
+POST     /compras/factura/cargaFacturaMaterno	controllers.compras.ProductosController.cargaFacturaMaterno()
 
 GET     /compras/categorias         		controllers.compras.CategoriasController.indexCategoria()
 GET     /compras/categorias/crear           controllers.compras.CategoriasController.crearCategoria()
