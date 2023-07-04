@@ -48,18 +48,18 @@ public class LiquidacionMes extends Model {
 
   /*
    * SELECT haber.agente_id, haber.periodo_id, certificacion.total certificacion, haber.total sueldo from (
-   * 
+   *
    * SELECT p.agente_id, c.periodo_id, round(sum(precio * cantidad)::numeric,2) - sum(round((((precio*descuento)/100) * cantidad)::numeric)) total
    * FROM certificaciones c
    * INNER JOIN certificaciones_lineas cl ON c.id = cl.certificacion_id
    * INNER JOIN proveedores p ON p.id = c.proveedor_id
    * WHERE periodo_id = (select MAX(periodo_id) periodo_id from certificaciones) AND state_id = 31 AND expediente_id != 5922
    * GROUP BY p.agente_id,c.periodo_id
-   * 
+   *
    * ) certificacion
-   * 
+   *
    * inner join (
-   * 
+   *
    * select l.agente_id, lm.periodo_id, sum(h.total - r.total) total from liquidacion_puestos lp
    * left join (select liquidacion_puesto_id, sum(importe*cantidad) as total from liquidacion_detalles ld inner join liquidacion_conceptos lc on
    * ld.liquidacion_concepto_id = lc.id where lc.liquidacion_concepto_tipo_id in(1,4,2) group by liquidacion_puesto_id) h on h.liquidacion_puesto_id =
@@ -72,10 +72,10 @@ public class LiquidacionMes extends Model {
    * inner join legajos l on l.id = pl.legajo_id
    * where lp.liquidacion_mes_id = 24
    * group by l.agente_id, lm.periodo_id
-   * 
+   *
    * ) haber
    * on certificacion.agente_id = haber.agente_id
-   * 
+   *
    */
 
 
@@ -339,7 +339,7 @@ public class LiquidacionMes extends Model {
 
   @Formula(
       select = "_ig${ta}.impuesto_ganancia",
-      join = "left outer join (select liquidacion_mes_id, sum(round(importe*cantidad,2)) as impuesto_ganancia from liquidacion_puestos lp inner join liquidacion_detalles ld on lp.id = ld.liquidacion_puesto_id inner join liquidacion_conceptos lc on ld.liquidacion_concepto_id = lc.id where ld.liquidacion_concepto_id in(562,548,584,591,642,648) group by liquidacion_mes_id) as _ig${ta} on _ig${ta}.liquidacion_mes_id = ${ta}.id")
+      join = "left outer join (select liquidacion_mes_id, sum(round(importe*cantidad,2)) as impuesto_ganancia from liquidacion_puestos lp inner join liquidacion_detalles ld on lp.id = ld.liquidacion_puesto_id inner join liquidacion_conceptos lc on ld.liquidacion_concepto_id = lc.id where ld.liquidacion_concepto_id in(562,548,584,591,642,648,827) group by liquidacion_mes_id) as _ig${ta} on _ig${ta}.liquidacion_mes_id = ${ta}.id")
   public BigDecimal total_impuesto_ganancia;
 
   public BigDecimal getTotalImpuestoGanancia() {
@@ -485,11 +485,11 @@ public class LiquidacionMes extends Model {
 
     // Long ret = new Long(0);
     String r = "";
-    
+
     actualizarVistaMaterializadaPuestosLaborales();
-    
+
     try {
-    	
+
       conn = play.db.DB.getConnection();
 
       List<LiquidacionMes> lm =
@@ -527,13 +527,13 @@ public class LiquidacionMes extends Model {
          * "				GROUP BY ln.puesto_laboral_id " +
          * "				) AS liq_nov ON liq_nov.puesto_laboral_id = pl.id " +
          * "			WHERE cb.estado_id IN (36) AND pl.convenio_ministerio = ?  AND (pl.activo IS TRUE) ");
-         * 
+         *
          * stmt.setInt(1, lmx.periodo_id);
          * stmt.setInt(2, lmx.liquidacion_tipo_id);
          * stmt.setBoolean(3, lmx.convenio_ministerio);
          * rs = stmt.executeQuery();
-         * 
-         * 
+         *
+         *
          * int liquidados = 0;
          * while (rs.next()) {
          * Logger.debug("RECORRIENDO PUESTOS");
@@ -542,8 +542,8 @@ public class LiquidacionMes extends Model {
          * stmt2.setInt(2, rs.getInt("id"));
          * rs2 = stmt2.executeQuery();
          * liquidados ++;
-         * 
-         * 
+         *
+         *
          * }
          */
         /*
@@ -551,7 +551,7 @@ public class LiquidacionMes extends Model {
          * stmt2 = conn.prepareStatement("SELECT pre_liquidacion(?)");
          * stmt2.setInt(1, lmx.id.intValue());
          * rs2 = stmt2.executeQuery();
-         * 
+         *
          * while (rs2.next()) {
          * liquidados = rs2.getString(1).split("xx")[0];
          * }
@@ -776,22 +776,22 @@ public class LiquidacionMes extends Model {
 
   /*
    * public Integer preliquidar2(Long id){
-   * 
+   *
    * String sql = "SELECT pl.id as puesto_id, a.organigrama_id " +
    * "FROM puestos_laborales pl JOIN legajos l on pl.legajo_id = l.id JOIN agentes a ON l.agente_id = a.id " +
    * "WHERE (pl.activo = TRUE) AND pl.convenio_ministerio = false order by pl.id LIMIT 100 OFFSET 700 ";
-   * 
+   *
    * SqlQuery sqlQuery = Ebean.createSqlQuery(sql);
-   * 
+   *
    * List<SqlRow> row = sqlQuery.findList();
    * int x = 0;
    * for(SqlRow sx :row) {
-   * 
+   *
    * preliquidar(sx.getLong("puesto_id"),id);
    * x++;
    * Logger.debug("xxxx "+x+" - "+sx.getLong("puesto_id"));
    * }
-   * 
+   *
    * Logger.debug("fiiiiiiinn "+x);
    * return x;
    * }
@@ -1331,9 +1331,9 @@ public class LiquidacionMes extends Model {
     return row;
 
   }
-  
+
   public static void actualizarVistaMaterializadaPuestosLaborales () {
-		
+
 		Connection conn = play.db.DB.getConnection();
 		Statement stmt = null;
 		try {
