@@ -182,6 +182,10 @@ GET    /accionesPagoProveedor/modalModificarNumeroRecibo        controllers.cont
 POST   /accionesPagoProveedor/modificarNumeroRecibo        		controllers.contabilidad.PagosAccionesController.modificarNumeroRecibo()
 GET    /accionesPagoProveedor/modalPagarCheques        			controllers.contabilidad.PagosAccionesController.modalPagarCheques()
 POST   /accionesPagoProveedor/pagarCheques        				controllers.contabilidad.PagosAccionesController.pagarCheques()
+
+GET    /accionesPagoProveedor/modalPagarDebitos        			controllers.contabilidad.PagosAccionesController.modalPagarDebitos()
+POST   /accionesPagoProveedor/pagarDebitos        				controllers.contabilidad.PagosAccionesController.pagarDebitos()
+
 GET    /accionesPagoProveedor/modalModificarNumeroCheque        controllers.contabilidad.PagosAccionesController.modalModificarNumeroCheque()
 POST   /accionesPagoProveedor/modificarNumeroCheque        		controllers.contabilidad.PagosAccionesController.modificarNumeroCheque()
 GET    /accionesPagoProveedor/modalModificarTipoPago        	controllers.contabilidad.PagosAccionesController.modalModificarTipoPago()
