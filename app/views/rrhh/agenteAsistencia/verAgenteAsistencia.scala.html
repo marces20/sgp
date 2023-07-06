@@ -5,7 +5,7 @@
 @scripts = {
 	<script src="@routes.Assets.at("javascripts/rrhh/agentes.js")" type="text/javascript"></script>
 }
-@implicitFieldConstructor = @{ FieldConstructor(simpleInput.render) } 
+@implicitFieldConstructor = @{ FieldConstructor(simpleInput.render) }
 
 @views.html.rrhh.mainRrhh("Asistencias Agentes",scripts) {
 <div class="page-header">
@@ -22,30 +22,40 @@
 				    <span class="caret"></span>
 				  </button>
 				  <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
-				  	<li><a id="reporteLicencia" href="#" data-url="@controllers.rrhh.routes.AgentesAsistenciasReportesController.reporteLicencia()">Ficha Licencia</a></li>
-				  	<li><a id="reporteLicenciaMedica" href="#" data-url="@controllers.rrhh.routes.AgentesAsistenciasReportesController.reporteLicenciaMedicinaLaboral()">Ficha Licencia Medicina Laboral</a></li>
+					@if(Permiso.check("agentesLicenciasReporteLicencia")) {
+				  		<li><a id="reporteLicencia" href="#" data-url="@controllers.rrhh.routes.AgentesAsistenciasReportesController.reporteLicencia()">Ficha Licencia</a></li>
+					}
+					@if(Permiso.check("agentesLicenciasReporteLicenciaMedica")) {
+				  		<li><a class="reporteLicenciaMedica" href="#" data-url="@controllers.rrhh.routes.AgentesAsistenciasReportesController.reporteLicenciaMedicinaLaboral(-1)">Ficha Licencia Medicina Laboral</a></li>
+				  	}
+				  	@if(Permiso.check("agentesLicenciasReporteLesik")) {
+				  		<li><a class="reporteLicenciaMedica" href="#" data-url="@controllers.rrhh.routes.AgentesAsistenciasReportesController.reporteLicenciaMedicinaLaboral(0)">Ficha Licencia Medicina Laboral Lesik</a></li>
+				  	}
+				  	@if(Permiso.check("agentesLicenciasReporteBritto")) {
+				  		<li><a class="reporteLicenciaMedica" href="#" data-url="@controllers.rrhh.routes.AgentesAsistenciasReportesController.reporteLicenciaMedicinaLaboral(437)">Ficha Licencia Medicina Laboral Britto</a></li>
+				  	}
 				  </ul>
 				</div>
 				<div class="dropdown pull-right btn-header">
 					<button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown"> <i class="glyphicon glyphicon-cog"></i> Acciones <span class="caret"></span> </button>
 					<ul class="dropdown-menu">
-						@if(Permiso.check("agentesLicenciasPasarBorrador")) {    
+						@if(Permiso.check("agentesLicenciasPasarBorrador")) {
 					    	<li role="presentation"><a role="menuitem" id="accionLicenciaPasarBorrador" tabindex="-1" href="#" data-url="@controllers.rrhh.routes.AgentesAsistenciasLicenciasController.modalPasarBorrador()">Pasar a Borrador</a></li>
-						}  
-						@if(Permiso.check("agentesLicenciasPasarPreAprobado")) {   
+						}
+						@if(Permiso.check("agentesLicenciasPasarPreAprobado")) {
 							<li role="presentation"><a role="menuitem" id="accionLicenciaPasarPreAprobado" tabindex="-1" href="#" data-url="@controllers.rrhh.routes.AgentesAsistenciasLicenciasController.modalPasarPreAprobado()">Pasar a PreAprobado</a></li>
 						}
-						@if(Permiso.check("agentesLicenciasPasarAprobado")) {   	
+						@if(Permiso.check("agentesLicenciasPasarAprobado")) {
 							<li role="presentation"><a role="menuitem" id="accionLicenciaPasarAprobado" tabindex="-1" href="#" data-url="@controllers.rrhh.routes.AgentesAsistenciasLicenciasController.modalPasarAprobado()">Pasar a Aprobado</a></li>
-						}  
-						@if(Permiso.check("agentesLicenciasPasarCancelado")) {    
+						}
+						@if(Permiso.check("agentesLicenciasPasarCancelado")) {
 					    	<li role="presentation"><a role="menuitem" id="accionLicenciaPasarCancelado" tabindex="-1" href="#" data-url="@controllers.rrhh.routes.AgentesAsistenciasLicenciasController.modalPasarCancelado()">Pasar a Cancelado</a></li>
-						}  												  									 																							
+						}
 					</ul>
-				</div>	
+				</div>
 			</div>
-			
-			
+
+
 		</div>
 	</div>
 </hr>
@@ -53,16 +63,16 @@
 <div class="row menu-acciones">
 	<div class="col-sm-3">
 		<a href="@controllers.rrhh.routes.AgentesAsistenciasController.editar(agente.id)@UriTrack.get("&")"  class="btn btn-default"><i class="glyphicon glyphicon-edit"></i> Editar</a>
-	</div>	
+	</div>
 	<div class="col-sm-6">
 		<div class="form-group">
 			<label for="" class="control-label">Tipo Licencia</label>
-			@select(lineaForm("tipoLicencia"), 
+			@select(lineaForm("tipoLicencia"),
 						TipoLicencia.find.all().map { p => p.id.toString -> p.nombre},
-						'class -> "form-control select", 
-						'_default -> "Seleccionar",'id -> "tipoLicencia") 
-			
-			 
+						'class -> "form-control select",
+						'_default -> "Seleccionar",'id -> "tipoLicencia")
+
+
 		</div>
 	</div>
 				<div class="col-sm-2">
@@ -72,7 +82,7 @@
 					</div>
 				</div>
 	<div class="col-sm-2">
-		<a href="@UriTrack.getOnNull(controllers.rrhh.routes.AgentesAsistenciasController.index().absoluteURL())" class="btn btn-default"><i class="glyphicon glyphicon-list"></i></a> 
+		<a href="@UriTrack.getOnNull(controllers.rrhh.routes.AgentesAsistenciasController.index().absoluteURL())" class="btn btn-default"><i class="glyphicon glyphicon-list"></i></a>
 	</div>
 	<input type="hidden" value="@agente.id" id="agenteId"/>
 	<input type="hidden" value="@agente.id" id="id" name="id"/>
@@ -92,6 +102,6 @@ $(document).on("change", '#tipoLicencia', function(){
 	return false;
 });
 
-</script>  
+</script>
 
 }

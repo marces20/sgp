@@ -5,7 +5,7 @@
 @scripts = {
 	<script src="@routes.Assets.at("javascripts/rrhh/agentes.js")" type="text/javascript"></script>
 }
-@implicitFieldConstructor = @{ FieldConstructor(simpleInput.render) } 
+@implicitFieldConstructor = @{ FieldConstructor(simpleInput.render) }
 
 @views.html.rrhh.mainRrhh("Editar Asistencias Agentes",scripts) {
 
@@ -23,35 +23,45 @@
 				    <span class="caret"></span>
 				  </button>
 				  <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
-				  	<li><a id="reporteLicencia" href="#" data-url="@controllers.rrhh.routes.AgentesAsistenciasReportesController.reporteLicencia()">Ficha Licencia</a></li>
-				  	<li><a id="reporteLicenciaMedica" href="#" data-url="@controllers.rrhh.routes.AgentesAsistenciasReportesController.reporteLicenciaMedicinaLaboral()">Ficha Licencia Medicina Laboral</a></li>
+				  	@if(Permiso.check("agentesLicenciasReporteLicencia")) {
+				  		<li><a id="reporteLicencia" href="#" data-url="@controllers.rrhh.routes.AgentesAsistenciasReportesController.reporteLicencia()">Ficha Licencia</a></li>
+					}
+					@if(Permiso.check("agentesLicenciasReporteLicenciaMedica")) {
+				  		<li><a class="reporteLicenciaMedica" href="#" data-url="@controllers.rrhh.routes.AgentesAsistenciasReportesController.reporteLicenciaMedicinaLaboral(-1)">Ficha Licencia Medicina Laboral</a></li>
+				  	}
+				  	@if(Permiso.check("agentesLicenciasReporteLesik")) {
+				  		<li><a class="reporteLicenciaMedica" href="#" data-url="@controllers.rrhh.routes.AgentesAsistenciasReportesController.reporteLicenciaMedicinaLaboral(0)">Ficha Licencia Medicina Laboral Lesik</a></li>
+				  	}
+				  	@if(Permiso.check("agentesLicenciasReporteBritto")) {
+				  		<li><a class="reporteLicenciaMedica" href="#" data-url="@controllers.rrhh.routes.AgentesAsistenciasReportesController.reporteLicenciaMedicinaLaboral(437)">Ficha Licencia Medicina Laboral Britto</a></li>
+				  	}
 				  </ul>
 				</div>
 				<div class="dropdown pull-right btn-header">
 					<button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown"> <i class="glyphicon glyphicon-cog"></i> Acciones <span class="caret"></span> </button>
 					<ul class="dropdown-menu">
-						@if(Permiso.check("agentesLicenciasPasarBorrador")) {    
+						@if(Permiso.check("agentesLicenciasPasarBorrador")) {
 					    	<li role="presentation"><a role="menuitem" id="accionLicenciaPasarBorrador" tabindex="-1" href="#" data-url="@controllers.rrhh.routes.AgentesAsistenciasLicenciasController.modalPasarBorrador()">Pasar a Borrador</a></li>
-						}  
-						@if(Permiso.check("agentesLicenciasPasarAprobado")) {    
+						}
+						@if(Permiso.check("agentesLicenciasPasarAprobado")) {
 							<li role="presentation"><a role="menuitem" id="accionLicenciaPasarPreAprobado" tabindex="-1" href="#" data-url="@controllers.rrhh.routes.AgentesAsistenciasLicenciasController.modalPasarPreAprobado()">Pasar a PreAprobado</a></li>
 							<li role="presentation"><a role="menuitem" id="accionLicenciaPasarAprobado" tabindex="-1" href="#" data-url="@controllers.rrhh.routes.AgentesAsistenciasLicenciasController.modalPasarAprobado()">Pasar a Aprobado</a></li>
-						}  
-						@if(Permiso.check("agentesLicenciasPasarCancelado")) {    
+						}
+						@if(Permiso.check("agentesLicenciasPasarCancelado")) {
 					    	<li role="presentation"><a role="menuitem" id="accionLicenciaPasarCancelado" tabindex="-1" href="#" data-url="@controllers.rrhh.routes.AgentesAsistenciasLicenciasController.modalPasarCancelado()">Pasar a Cancelado</a></li>
-						}  												  									 																							
+						}
 					</ul>
-				</div>	
+				</div>
 			</div>
-			
-			
+
+
 		</div>
 	</div>
 	<div class="row menu-acciones">
 		<div class="col-sm-9">
-		</div>	
+		</div>
 		<div class="col-sm-2">
-			<a href="@UriTrack.getOnNull(controllers.rrhh.routes.AgentesAsistenciasController.index().absoluteURL())" class="btn btn-default"><i class="glyphicon glyphicon-list"></i></a> 
+			<a href="@UriTrack.getOnNull(controllers.rrhh.routes.AgentesAsistenciasController.index().absoluteURL())" class="btn btn-default"><i class="glyphicon glyphicon-list"></i></a>
 		</div>
 	</div>
 </hr>
@@ -66,7 +76,7 @@ $( function(){
 	/**
 	 * Ventana de carga linea de productos en ordenes
 	 */
-	 
+
 	var contenedor = $("#contenedorInasistencia");
 
 	contenedor.on('click', '#nuevoAgenteAsistenciaLicencia', function(){
@@ -74,14 +84,14 @@ $( function(){
 		mostrarModal(urlContenidoModal);
 		return false;
 	});
-	
+
 	contenedor.on('click', '.modificarAgenteAsistenciaLicencia', function(){
 		lineaParaEditar = $(this).closest('tr');
 		var modal = mostrarModal($(this).attr('href'));
-		modal.dialog('option', 'title', 'Editar Licencia');	
+		modal.dialog('option', 'title', 'Editar Licencia');
 		return false;
 	});
-	
+
 	contenedor.on('click', '.eliminarAgenteAsistenciaLicencia', function(){
 		var mensaje = "¿Confirma que desea eliminar el registro?";
 		if(confirm(mensaje)){
@@ -97,7 +107,7 @@ $( function(){
 		}
 		return false;
 	});
-	
+
 	function mostrarModal(url){
 		modalCargaLicencias = $('<div></div>').dialog({
 			resizable: false,
@@ -114,13 +124,13 @@ $( function(){
 		    	modalCargaLicencias.dialog('destroy');
 			}
 		  });
-		
-		
+
+
 		modalCargaLicencias.on('click', '.cancelar', function(){
 			modalCargaLicencias.dialog('destroy');
 			return false;
 		});
-		
+
 		modalCargaLicencias.on('submit', function(e){
 			var href = $(e.target).attr('action');
 			var data = $(e.target).serialize();
@@ -139,12 +149,12 @@ $( function(){
 			});
 			return false;
 		});
-		
-		
+
+
 		return modalCargaLicencias;
 	}
-	
-	
+
+
 	contenedor.find('form').on('submit', function(){
 		var url = $(this).attr("action");
 		var query = $(this).serialize();
