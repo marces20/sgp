@@ -18,6 +18,7 @@ import models.BalancePresupuestario;
 import models.Certificacion;
 import models.CertificacionCompra;
 import models.CertificacionServicio;
+import models.CertificacionServicioLinea;
 import models.Ejercicio;
 import models.Estado;
 import models.Expediente;
@@ -55,7 +56,8 @@ import views.html.compras.ordenes.editarOrden;
 import views.html.compras.ordenes.indexOrden;
 import views.html.compras.ordenes.modalBusquedaOrdenes;
 import views.html.compras.ordenes.verOrden;
-import views.html.compras.ordenes.modales.modalEditarCuentaAnalitica;
+import views.html.compras.ordenes.modales.*;
+import views.html.patrimonio.anulacionRecepcion.verNoCertifcado;
 import views.html.recupero.recuperoFactura.crearRecuperoFactura;
 import views.html.recupero.recuperoFactura.editarRecuperoFactura;
 
@@ -1006,7 +1008,12 @@ public class OrdenesController extends Controller {
 		return r;
 	}
 
+	public static Result listarProductoAdenda(Long idOrdenCompra){
 
+		List<SqlRow> precioPorProductoConAjustes = OrdenLinea.getPrecioPorProductoConAjustes(idOrdenCompra);
+
+		return ok(listaProductoAdenda.render(idOrdenCompra, precioPorProductoConAjustes));
+	}
 
 }
 

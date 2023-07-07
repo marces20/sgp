@@ -657,7 +657,7 @@ $( function(){
 
 
 
-	$('#reporteInformeLotes').click( function() { //abrir modal para mostrar mensaje informe rentas
+	$('.reporteInformeLotes').click( function() { //abrir modal para mostrar mensaje informe rentas
 		var url = $(this).attr("data-url");
 		var dialogo = $('<div></div>');
 

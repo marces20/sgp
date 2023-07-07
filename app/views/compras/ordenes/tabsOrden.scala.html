@@ -12,6 +12,9 @@
 	<li><a class="tabNotas" href="#contenedorNotas" data-toggle="tab">Notas</a></li>
 	<li><a class="tabDispos" href="#contenedorDispos" data-toggle="tab">Disposiciones</a></li>
 	<li><a id="tabFacturaDatos" href="#contenedorFacturaDatos" data-toggle="tab">Numeros Facturas</a></li>
+	@if(ordenForm.field("tipo_orden").value != null && ordenForm.field("tipo_orden").value == "servicio"){
+	<li><a class="tabProductoAdenda" href="#contenedorProductoAdenda" data-toggle="tab">Producto Adenda</a></li>
+	}
 </ul>
 
 
@@ -19,11 +22,11 @@
 <div class="tab-content">
 
 	<div class="tab-pane active" id="contenedorProductos">
-		@views.html.compras.ordenes.contenidoTabProducto(formularioCarga, ordenForm)	
+		@views.html.compras.ordenes.contenidoTabProducto(formularioCarga, ordenForm)
 	</div>
-	
+
 	<div class="tab-pane" id="contenedorLineasAjuste">
-		@views.html.compras.ordenes.contenidoTabAjuste(true, ordenForm)	
+		@views.html.compras.ordenes.contenidoTabAjuste(true, ordenForm)
 	</div>
 	@if(ordenForm.field("tipo_orden").value != null && ordenForm.field("tipo_orden").value == "comun"){
 	<div class="tab-pane" id="contenedorProductosAnulados">
@@ -34,6 +37,10 @@
 	<div class="tab-pane" id="contenedorNoCertificados">
 		@views.html.compras.ordenes.contenidoTabNoCertificados(formularioCarga, ordenForm)
 	</div>
+	<div class="tab-pane" id="contenedorProductoAdenda">
+		@views.html.compras.ordenes.contenidoTabProductoAdenda(formularioCarga, ordenForm)
+	</div>
+
 	}
 	<div class="tab-pane" id="contenedorNotas">
 		@if(formularioCarga){
@@ -47,11 +54,11 @@
 		@views.html.expediente.expediente.contenidoTabDispos(ordenForm.field("expediente_id").value.toLong)
 	</div>
 	}
-	
+
 	<div class="tab-pane" id="contenedorFacturaDatos">
 		@if(orden != null){
 			@views.html.compras.ordenes.contenidoTabFacturaDatos(formularioCarga,orden)
 		}
 	</div>
-	
+
 </div>

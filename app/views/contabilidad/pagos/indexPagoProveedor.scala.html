@@ -42,7 +42,8 @@
 							@if(Permiso.check("pagosInformeMensualRentas")) {
 								<li><a id="reporteInformeMensualRentas" href="#" data-url="@controllers.contabilidad.routes.PagosReportesController.modalInformeMensualRentas()">Informe mensual de RENTAS</a></li>
 							}
-							<li><a id="reporteInformeLotes" href="#" data-url="@controllers.contabilidad.routes.PagosReportesController.descargarLotes()">Informe Lotes</a></li>
+							<li><a class="reporteInformeLotes" href="#" data-url="@controllers.contabilidad.routes.PagosReportesController.descargarLotes(1)">Informe Lotes</a></li>
+							<li><a class="reporteInformeLotes" href="#" data-url="@controllers.contabilidad.routes.PagosReportesController.descargarLotes(2)">Informe Lotes Nuevo</a></li>
 							<li><a id="reporteInformeMensualImpuestos" href="#" data-url="@controllers.contabilidad.routes.PagosReportesController.modalInformeMensualImpuestos()">Informe Impuestos</a></li>
 							<li><a id="reporteRetencionDgrSellos" href="#" data-url="@controllers.contabilidad.routes.PagosReportesController.informeRetDgrSellos()">Retencion DGR Sellos</a></li>
 							<li><a id="reporteInformeRetDgrIibb" href="#" data-url="@controllers.contabilidad.routes.PagosReportesController.informeRetDgrIibb()">Retencion DGR IIBB</a></li>

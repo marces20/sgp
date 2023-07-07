@@ -249,7 +249,7 @@ GET     /mis-pagos/actualizar      controllers.contabilidad.MisPagosController.a
 
 
 GET 	/reporte/cheque 			   controllers.contabilidad.PagosReportesController.reporteCheque(id:Long)
-POST 	/reporteLote				   controllers.contabilidad.PagosReportesController.descargarLotes()
+POST 	/reporteLote				   controllers.contabilidad.PagosReportesController.descargarLotes(opcion:Integer)
 POST 	/informeImpuestoMunicipal	   controllers.contabilidad.PagosReportesController.informeImpuestoMunicipal()
 POST 	/informeprofe	   			   controllers.contabilidad.PagosReportesController.informeProfe()
 

@@ -205,6 +205,55 @@ public class PagosReportesController extends Controller  {
 	    return ok(archivo);
 	}
 
+	public static FileOutputStream armarExcelLoteNuevo(List<Pago> pagos,File archivo) throws IOException{
+
+
+		Workbook libro = new HSSFWorkbook();
+		FileOutputStream archivoTmp = new FileOutputStream(archivo);
+
+		Sheet hoja = libro.createSheet("Lotes");
+
+		Row fila = hoja.createRow(0);
+		fila.createCell(0).setCellValue("OP");
+		fila.createCell(1).setCellValue("Expediente");
+		fila.createCell(2).setCellValue("Monto facturado");
+		fila.createCell(3).setCellValue("Proveedor");
+		fila.createCell(4).setCellValue("Monto");
+
+		int f = 1;
+		for (Pago pago : pagos) {
+				fila = hoja.createRow(f);
+				for(int c=0;c<10;c++){
+					Cell celda = fila.createCell(c);
+
+					switch (c) {
+					case 0:
+						celda.setCellValue(pago.ordenPago.getNombreCompleto());
+						break;
+					case 1:
+						celda.setCellValue(pago.expediente.getExpedienteEjercicio());
+						break;
+					case 2:
+						celda.setCellValue(pago.factura.getBase().doubleValue());
+						break;
+					case 3:
+						celda.setCellValue(pago.proveedor.nombre);
+						break;
+					case 4:
+						celda.setCellValue(pago.total.doubleValue());
+						break;
+					default:
+						break;
+					}
+				}
+				f++;
+		}
+
+		libro.write(archivoTmp);
+
+		return archivoTmp;
+	}
+
 	public static FileOutputStream armarExcelLote(List<Pago> pagos,File archivo) throws IOException{
 
 
@@ -322,7 +371,7 @@ public class PagosReportesController extends Controller  {
 		return ok();
 	}
 
-	public static Result descargarLotes(){
+	public static Result descargarLotes(Integer opcion){
 
 		List<Integer> pagosSeleccionados = getSeleccionados();
 
@@ -344,8 +393,11 @@ public class PagosReportesController extends Controller  {
 			archivo.createNewFile();
 
 			List<Pago> pagos = Pago.find.where().in("id", pagosSeleccionados).findList();
+			FileOutputStream archivoTmp = armarExcelLoteNuevo(pagos,archivo);
+			if(opcion == 1) {
+				archivoTmp = armarExcelLote(pagos,archivo);
+			}
 
-			FileOutputStream archivoTmp = armarExcelLote(pagos,archivo);
 
 			Writer out = new BufferedWriter(new OutputStreamWriter(archivoTmp, "UTF8"));
 			out.flush();
