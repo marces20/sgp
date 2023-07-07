@@ -166,7 +166,7 @@ $( function(){
 	    });
 	});
 
-	$('#reporteLicenciaMedica').click( function() {
+	$('.reporteLicenciaMedica').click( function() {
 		var url = $(this).attr("data-url");
 		var dialogo = $('<div></div>');
 
