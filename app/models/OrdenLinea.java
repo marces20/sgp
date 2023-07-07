@@ -357,9 +357,9 @@ public class OrdenLinea extends Model{
 
 	public static List<SqlRow> getPrecioPorProductoConAjustes(Long idOrden) {
 
-		String sql = "select sum(round(ol.precio, 2)), coalesce(sum(oec.total),0), "+
+		String sql = "select sum(round(ol.precio, 2)) as precio_inicial, coalesce(sum(oec.total),0), "+
 					 "round(sum(round(ol.precio, 2))+coalesce(sum(oec.total),0), 2) as sumatoria, "+
-					 "ol.producto_id,ol.orden_id,p.nombre  "+
+					 "ol.producto_id,ol.orden_id,p.nombre as producto "+
 					 "from orden_lineas ol "+
 					 "inner join productos p on p.id = ol.producto_id  "+
 					 "LEFT JOIN ( SELECT sum(round(precio, 2)) as total,orden_id,producto_id  "+
