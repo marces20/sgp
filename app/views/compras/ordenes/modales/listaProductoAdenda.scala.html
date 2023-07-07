@@ -1,0 +1,27 @@
+@(idOrdenCompra: Long, lineas: List[com.avaje.ebean.SqlRow])
+@import java.math.BigDecimal;var total=new java.math.BigDecimal(0);
+<div id="" class="contenedorPaginador ajaxPaginador">
+
+		@if(lineas.size() > 0){
+		<table id="" class="table table-striped table-bordered table-hover">
+			<thead>
+				<tr>
+					<th>Producto</th>
+					<th width="100">Precio Incial</th>
+					<th width="100">Precio Con Adendas</th>
+				</tr>
+			</thead>
+			<tbody>
+		        @for(linea <- lineas) {
+					<tr class="pointer">
+						<td>@linea.getString("producto")</td>
+						<td>@utils.NumberUtils.moneda(linea.getBigDecimal("precio_inicial"), 2)</td>
+						<td>@utils.NumberUtils.moneda(linea.getBigDecimal("sumatoria"), 2)</td>
+					</tr>
+				}
+			</tbody>
+
+		</table>
+		}
+
+</div>

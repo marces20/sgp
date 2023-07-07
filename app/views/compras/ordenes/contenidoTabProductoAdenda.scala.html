@@ -1,0 +1,20 @@
+@(formularioCarga: Boolean, ordenForm: Form[Orden] = null)
+@import java.util.List
+
+@if(ordenForm.field("id").value == null || ordenForm.field("id").value == ""){
+	<p>Para ver productos primero debe dar de alta la Orden</p>
+} else {
+
+	<script>
+		$( function (){
+			$.get('@controllers.compras.routes.OrdenesController.listarProductoAdenda(ordenForm.field("id").value.toLong)', function(data){
+				$('#listaProductoAdenda').parent().html(data);
+			})
+		});
+	</script>
+
+}
+
+<div id="listaProductoAdenda">
+
+</div>
