@@ -88,7 +88,7 @@ public class Ticket extends Model {
 	public static String getBase() {
 
 		String url =Play.application().configuration().getString("db.default.url");
-		if(url.contains("10.1.4.36")) {
+		if(url.contains("4.36")) {
 			return "-PRODUCCION";
 		}else {
 			return "-WORKING-"+ url.subSequence(43, url.length());
