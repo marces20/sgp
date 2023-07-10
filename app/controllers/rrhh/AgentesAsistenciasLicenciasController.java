@@ -434,7 +434,7 @@ public class AgentesAsistenciasLicenciasController extends Controller {
 																			 RequestVar.get("descripcion"),
 																			 RequestVar.get("ejercicio"),
 																			 RequestVar.get("nombre"),
-																			 RequestVar.get("dni"),
+																			 RequestVar.get("cuit"),
 																			 RequestVar.get("activo")
 																			 ),d));
 	}
