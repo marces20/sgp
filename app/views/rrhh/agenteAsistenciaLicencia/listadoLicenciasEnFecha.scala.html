@@ -49,23 +49,23 @@
 					</div>
 				</div>
 				<div class="col-sm-2">
-						<div class="form-group">
-							<label for="nombre" class="control-label">Nombre
-							@inputText(formBuscador("nombre"), 'class -> "form-control")
-							</label>
-						</div>
+					<div class="form-group">
+						<label for="nombre" class="control-label">Nombre
+						@inputText(formBuscador("nombre"), 'class -> "form-control")
+						</label>
 					</div>
-					<div class="col-sm-2">
-						<div class="form-group">
-							<label for="cuit" class="control-label">DNI
-							@inputText(formBuscador("dni"), 'class -> "form-control")
-							</label>
-						</div>
+				</div>
+				<div class="col-sm-2">
+					<div class="form-group">
+						<label for="cuit" class="control-label">CUIT
+						@inputText(formBuscador("cuit"), 'class -> "form-control")
+						</label>
 					</div>
+				</div>
 
 
 
-				<div class="col-sm-3">
+				<div class="col-sm-2">
 					<label for="inputOrgranigrama" class="control-label">Departamento/Servicio</label>
 					<div class="input-group">
 						@inputText(formBuscador("organigrama.nombre"),'class -> "form-control",'id -> "organigrama")
@@ -166,7 +166,7 @@
 				<thead>
 					<tr>
 						<th>Apellido y Nombre</th>
-						<th>DNI</th>
+						<th>CUIT</th>
 						<th>Organigrama</th>
 						<th>Profesion</th>
 						<th>Puesto</th>
@@ -182,7 +182,7 @@
 				@for(sql <- lista) {
 					<tr class='@getClassEstado(sql.getInteger("idestado"))'>
 						<td>@sql.getString("apellido")</td>
-						<td>@sql.getString("dni")</td>
+						<td>@sql.getString("cuit")</td>
 						<td>@sql.getString("organigrama")</td>
 						<td>@sql.getString("profesion")</td>
 						<td>@sql.getString("puesto")</td>
