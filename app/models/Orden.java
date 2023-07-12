@@ -80,7 +80,15 @@ public class Orden extends Model {
 
 	public Boolean recibido = false;
 
+	public Boolean auditado = false;
 
+	@ManyToOne
+	@JoinColumn(name="auditor_user_id", referencedColumnName="id", insertable=false, updatable=false)
+	public Usuario auditor_user;
+	@Column(name="auditor_user_id")
+	public Long auditor_user_id;
+
+	public Date auditor_date;
 
 
 	@ManyToOne
@@ -501,6 +509,30 @@ public class Orden extends Model {
 		return ret;
 	}
 
+	public static Integer editarRubroMasivo(List<Integer> ids,Long idRubro,Long idSubRubro,String detalle){
+		Integer ret;
+
+		SqlUpdate update1 = Ebean.createSqlUpdate("alter table ordenes disable trigger all");
+		update1.execute();
+
+		SqlUpdate update = Ebean.createSqlUpdate("UPDATE ordenes SET orden_rubro_id = :orden_rubro_id,orden_subrubro_id = :orden_subrubro_id,detalle_rubro = :detalle_rubro "+
+												 "WHERE id IN (:ids)");
+		update.setParameter("orden_rubro_id", idRubro);
+		update.setParameter("orden_subrubro_id",idSubRubro);
+		update.setParameter("detalle_rubro",detalle);
+		update.setParameter("ids",ids);
+		ret = update.execute();
+
+		SqlUpdate update2 = Ebean.createSqlUpdate("alter table ordenes enable trigger all");
+		update2.execute();
+
+		InformeDeudaProveedoresMaterializada.actualizarVistaMaterializada();
+		InformeDeudaPorActaMaterializada.actualizarVistaMaterializada();
+
+		return ret;
+	}
+
+
 	public static Integer editarMontoAdelanto(Long idOrden,BigDecimal monto){
 		Integer ret;
 
@@ -660,6 +692,219 @@ public class Orden extends Model {
 	    return idcl;
 	  }
 
+	public static Pagination<Orden> pageAuditoria(String nombre,
+										 String create_usuario,
+										 String proveedor,
+										 String cliente,
+										 String expediente,
+										 String ejercicio,
+										 String numero_orden_provision_desde,
+										 String numero_orden_provision_hasta,
+										 String fecha_fin_contrato_desde,
+										 String fecha_fin_contrato_hasta,
+										 String fecha_provision_desde,
+										 String fecha_provision_hasta,
+										 String btnFiltro0,//borrador
+										 String btnFiltro1,//en curso
+										 String btnFiltro2,//aprobado
+										 String btnFiltro3,//Cancelado
+										 String btnFiltro4,
+										 String producto,
+										 String rubro,
+										 String deposito,
+										 String tipo_moneda,
+										 String profe,
+										 String tipo_cuenta_id,
+										 String emergencia,
+										 String perimido,
+										 String auditado
+										 ) {
+		Pagination<Orden> p = new Pagination<Orden>();
+		p.setOrderDefault("asc");
+		p.setSortByDefault("expediente.id");
+
+		ExpressionList<Orden> e = find.select("id,fecha_orden,numero_orden_provision,fecha_inicio,fecha_fin,tipo_moneda,nombre,total,totalAjuste")
+		//.fetch("create_usuario")
+		.fetch("proveedor","nombre")
+		//.fetch("proveedor.agente")
+
+		.fetch("ordenRubro","nombre")
+		.fetch("ordenSubrubro","nombre")
+		.fetch("deposito","nombre")
+		.fetch("estado","nombre")
+		.fetch("expediente")
+		.fetch("expediente.ejercicio").where();
+
+		if(!tipo_moneda.isEmpty()){
+		e.isNotNull("tipo_moneda");
+		}
+
+		boolean audi = false;
+		if(!auditado.isEmpty()){
+			if(auditado.compareToIgnoreCase("SI") ==0){
+				audi = true;
+			}
+		}
+
+		e.eq("auditado",audi);
+
+
+
+
+		boolean peri = false;
+
+		if(!perimido.isEmpty()){
+			if(perimido.compareToIgnoreCase("SI") ==0){
+				peri = true;
+			}
+		}
+
+
+
+		e.eq("perimido", peri);
+
+		if(!profe.isEmpty()){
+			if(profe.compareToIgnoreCase("SI") == 0){
+				e.eq("profe", true);
+			}else{
+				e.eq("profe", false);
+			}
+		}
+
+		if(!tipo_cuenta_id.isEmpty()){
+			e.eq("tipo_cuenta_id", Integer.parseInt(tipo_cuenta_id));
+		}
+
+		if(!nombre.isEmpty()){
+			e.ilike("nombre", "%" + nombre + "%");
+		}
+		if(!create_usuario.isEmpty()){
+			e.eq("create_usuario.id", Integer.parseInt(create_usuario));
+		}
+		if(!rubro.isEmpty()){
+			e.eq("orden_rubro_id", Integer.parseInt(rubro));
+		}
+		if(!proveedor.isEmpty()){
+			e.eq("proveedor_id", Integer.parseInt(proveedor));
+		}
+		if(!deposito.isEmpty()){
+			e.eq("deposito_id", Integer.parseInt(deposito));
+		}
+		if(!expediente.isEmpty()){
+			e.eq("expediente_id", Integer.parseInt(expediente));
+		}
+		if(!ejercicio.isEmpty()){
+			e.eq("expediente.ejercicio_id", Integer.parseInt(ejercicio));
+		}
+
+		if(!emergencia.isEmpty()){
+			if(emergencia.compareToIgnoreCase("SI") ==0){
+				e.eq("expediente.emergencia", true);
+			}else{
+				e.eq("expediente.emergencia", false);
+			}
+		}
+
+		if(!numero_orden_provision_desde.isEmpty() && numero_orden_provision_desde.compareTo("0") == 0){
+			e.isNull("fecha_provision");
+		}else{
+			if(!numero_orden_provision_desde.isEmpty()){
+				e.ge("numero_orden_provision",Integer.parseInt(numero_orden_provision_desde) );
+			}
+			if(!numero_orden_provision_hasta.isEmpty()){
+				e.le("numero_orden_provision", Integer.parseInt(numero_orden_provision_hasta));
+			}
+		}
+		if(!fecha_fin_contrato_desde.isEmpty()){
+			Date ffcd = DateUtils.formatDate(fecha_fin_contrato_desde, "dd/MM/yyyy");
+			e.ge("fecha_inicio", ffcd);
+		}
+		if(!fecha_fin_contrato_hasta.isEmpty()){
+			Date ffch = DateUtils.formatDate(fecha_fin_contrato_hasta, "dd/MM/yyyy");
+			e.le("fecha_fin", ffch);
+		}
+		if(!cliente.isEmpty())
+		e.eq("lineas.ordenLineaCliente.cliente_id", Integer.parseInt(cliente));
+
+		if(!fecha_provision_desde.isEmpty()){
+			Date fpd = DateUtils.formatDate(fecha_provision_desde, "dd/MM/yyyy");
+			e.ge("fecha_provision", fpd);
+		}
+		if(!fecha_provision_hasta.isEmpty()){
+			Date fph = DateUtils.formatDate(fecha_provision_hasta, "dd/MM/yyyy");
+			e.le("fecha_provision", fph);
+		}
+		if(!producto.isEmpty()){
+			if(producto.compareTo("42310") == 0) {
+				e.ilike("lineas.producto.nombre", "%alquiler%");
+			}else {
+				e.eq("lineas.producto_id", Integer.parseInt(producto));
+			}
+
+		}
+
+		e = e.eq("state_id", Estado.ORDEN_ESTADO_APROBADO);
+
+
+
+
+
+
+		if(!Permiso.check("verTodoOrden")){
+
+			if(Usuario.getUsurioSesion().plansumarmaterno) {
+				e = e.disjunction();
+				e = e.eq("tipo_cuenta_id",TipoCuenta.PLAN_SUMAR_MATERNO);
+				e = e.in("create_usuario_id", Usuario.getUsersPlanSumarMaterno());
+				Integer[] aa = {new Integer(1),new Integer(2),new Integer(3),new Integer(4),new Integer(5),new Integer(6),new Integer(7),new Integer(8),new Integer(9),new Integer(12),new Integer(13)};
+				e = e.not(Expr.in("expediente.ejercicio_id", aa));
+				e = e.endJunction();
+
+			}
+
+			if(Usuario.getUsurioSesion().obera) {
+				Date fdesde = DateUtils.formatDate("01/08/2022", "dd/MM/yyyy");
+				e = e.ge("create_date", fdesde);
+
+			}
+
+			if(Usuario.getUsurioSesion().organigrama != null && Usuario.getUsurioSesion().organigrama.deposito != null){
+				e = e.disjunction();
+				e = e.eq("deposito_id", Usuario.getUsurioSesion().organigrama.deposito_id.intValue());
+				e = e.eq("create_usuario_id", Usuario.getUsurioSesion().id.intValue());
+				e = e.endJunction();
+			}else{
+				e.eq("create_usuario_id", Usuario.getUsurioSesion().id.intValue());
+			}
+		}
+
+		p.setExpressionList(e);
+
+		return p;
+	}
+
+	public static Integer pasarAuditado(List<Integer> facturasSeleccionados){
+
+		Integer ret;
+		SqlUpdate update1 = Ebean.createSqlUpdate("alter table ordenes disable trigger all");
+		update1.execute();
+
+		SqlUpdate update = Ebean.createSqlUpdate("UPDATE ordenes " +
+				"SET auditado = :auditado ,auditor_date = :auditor_date,auditor_user_id = :auditor_user_id  " +
+				"WHERE id IN (:ids)");
+		update.setParameter("auditado", true);
+		update.setParameter("auditor_date",new Date());
+		update.setParameter("auditor_user_id",new Long(Usuario.getUsuarioSesion()));
+		update.setParameter("ids", facturasSeleccionados);
+		ret = update.execute();
+
+		SqlUpdate update2 = Ebean.createSqlUpdate("alter table ordenes enable trigger all");
+		update2.execute();
+
+
+
+		return ret;
+	}
 
 	/*
 
