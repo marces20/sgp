@@ -165,6 +165,12 @@ GET    /compras/orden/modalModificarNumeroFactura       controllers.compras.Orde
 POST   /compras/orden/modificarNumeroFactura        	controllers.compras.OrdenesAccionesController.modificarNumeroFactura()
 
 GET    /compras/orden/listarProductoAdenda				controllers.compras.OrdenesController.listarProductoAdenda(id:Long ?= 0)
+GET    /compras/orden/auditoria        			controllers.compras.OrdenesController.indexAuditoria()
+GET    /compras/orden/modalPasarAuditado   		controllers.compras.OrdenesAccionesController.modalPasarAuditado()
+POST   /compras/orden/pasarAuditado   			controllers.compras.OrdenesAccionesController.pasarAuditado()
+GET    /compras/orden/modalEditarRubroMasivo   		controllers.compras.OrdenesAccionesController.modalEditarRubroMasivo()
+POST   /compras/orden/editarRubroMasivo   			controllers.compras.OrdenesAccionesController.editarRubroMasivo()
+
 
 GET     /compras/certificacion        		controllers.compras.CertificacionesController.index()
 GET     /compras/certificacion/crear        	controllers.compras.CertificacionesController.crear()
