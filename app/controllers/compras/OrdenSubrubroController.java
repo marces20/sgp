@@ -13,13 +13,20 @@ import controllers.Secured;
 public class OrdenSubrubroController extends Controller {
 
 	public static Result listOptions(Integer rubroId){
-		
-		List<OrdenSubrubro> p = OrdenSubrubro.find.where().eq("orden_rubro_id", rubroId).orderBy("nombre").findList();
-		
+		List<OrdenSubrubro> p = null;
+
+		if(rubroId == 7) {
+			p = OrdenSubrubro.find.where().eq("orden_rubro_id", rubroId).eq("activo", true).orderBy("sigla").findList();
+
+		}else {
+			p = OrdenSubrubro.find.where().eq("orden_rubro_id", rubroId).orderBy("sigla").findList();
+		}
+
+
 		if(p.size() > 0)
 			return ok(optionsListSubrubro.render(p));
 		else
 			return ok();
 	}
-	
+
 }
