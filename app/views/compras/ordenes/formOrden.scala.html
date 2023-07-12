@@ -260,7 +260,7 @@
 				@select(ordenForm("orden_subrubro_id"),
 					ordenForm("ordenRubro.id").value match {
 						case null => {options()}
-						case v if v.matches("\\d+") => {OrdenSubrubro.getOrdenSubrubro(v.toInt).map { p => p.id.toString -> p.nombre}}
+						case v if v.matches("\\d+") => {OrdenSubrubro.getOrdenSubrubro(v.toInt).map { p => p.id.toString -> p.sigla}}
 						case _ => {options()}
 					},
 				'class -> "form-control select", '_default -> "Seleccionar")
