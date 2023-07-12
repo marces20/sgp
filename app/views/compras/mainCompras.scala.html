@@ -5,7 +5,7 @@
 	<div class="row">
 		<div class="col-sm-2">
 			<div class="menu-contenido">
-			
+
 			<ul class="nav nav-pills nav-stacked">
 				<li class="titulo">Gestion Compras</li>
 				@if(Componente.check("solicitudesCompra")) {
@@ -13,6 +13,7 @@
 				}
 				@if(Componente.check("ordenesCompra")) {
 					<li><a href="@controllers.compras.routes.OrdenesController.index()">Ordenes de compras</a></li>
+					<li><a href="@controllers.compras.routes.OrdenesController.indexAuditoria()">Ordenes Auditoria</a></li>
 				}
 				@if(Componente.check("certificacionesCompras")) {
 					<li><a href="@controllers.compras.routes.CertificacionesComprasController.index()">Certificaciones Compras</a></li>
@@ -35,14 +36,14 @@
 				}
 				@if(Componente.check("productosCategoria")) {
 					<li><a href="@controllers.compras.routes.CategoriasController.indexCategoria()">Categorías</a></li>
-				}				
+				}
 				@if(Componente.check("productosTipo")) {
 					<li><a href="@controllers.compras.routes.TipoProductosController.indexTipoProducto()">Tipos de productos</a></li>
 				}
 				@if(Componente.check("articulos")) {
 					<li><a href="@controllers.compras.routes.ArticulosController.indexArticulo()">Artículos</a></li>
 				}
-				
+
 				<li class="titulo">Proveedores</li>
 				@if(Componente.check("proveedores")) {
 					<li><a href="@controllers.compras.routes.ProveedoresController.index()">Gestión</a></li>
