@@ -61,7 +61,7 @@ import views.html.compras.ordenes.modales.*;
 
 @Security.Authenticated(Secured.class)
 public class OrdenesAccionesController extends Controller {
-	
+
   @CheckPermiso(key = "ordenesEditarRubro")
   public static Result modalEditarRubro(Long id) {
     return ok(modalEditarRubro.render(form().bindFromRequest(), id));
@@ -141,8 +141,8 @@ public class OrdenesAccionesController extends Controller {
       String textoMail = "<html><p>SERVICIO COMPRAS PARQUE DE LA SALUD DE LA PROVINCIA DE MISIONES.</p>";
       textoMail = "<p>ORDEN DE PROVISION:" + o.numero_orden_provision + "</p></html>";
       archivo = OrdenProvision.getArchivoReporteOrdenProvision(archivo, false, o, dp, pr);
-      
-      
+
+
       EmailAttachment attachment = new EmailAttachment();
       attachment.setPath(archivo.getPath());
       attachment.setDisposition(EmailAttachment.ATTACHMENT);
@@ -150,7 +150,7 @@ public class OrdenesAccionesController extends Controller {
       attachment.setName(archivo.getName());
       List<EmailAttachment> attachmentList = new ArrayList<>();
       attachmentList.add(attachment);
-      
+
       EmailUtilis eu = new EmailUtilis();
       eu.setFrom("compras@hospitalmadariaga.org");
       eu.setSubject("ORDEN DE PROVISION:" + o.numero_orden_provision);
@@ -230,6 +230,61 @@ public class OrdenesAccionesController extends Controller {
     }
 
   }
+
+  @CheckPermiso(key = "ordenesEditarRubro")
+  public static Result modalEditarRubroMasivo() {
+    return ok(modalEditarRubroMasivo.render(form().bindFromRequest()));
+  }
+
+  @CheckPermiso(key = "ordenesEditarRubro")
+  public static Result editarRubroMasivo() {
+    DynamicForm d = form().bindFromRequest();
+    d.discardErrors();
+
+    List<Integer> ids = getSeleccionados();
+
+    if (ids.isEmpty() || ids.size() < 1) {
+      flash("error", "Debe seleccionar al menos 1 orden.");
+      return ok(modalEditarRubroMasivo.render(d));
+    }
+
+    Long idRubro = null;
+    if (!request().body().asFormUrlEncoded().get("orden_rubro_id")[0].isEmpty()) {
+    	idRubro = new Long(request().body().asFormUrlEncoded().get("orden_rubro_id")[0]);
+    }else{
+    	flash("error", "Seleccione un rubro");
+        return ok(modalEditarRubroMasivo.render(d));
+    }
+
+    Long idSubRubro = null;
+    if (!request().body().asFormUrlEncoded().get("orden_subrubro_id")[0].isEmpty()) {
+    	idSubRubro = new Long(request().body().asFormUrlEncoded().get("orden_subrubro_id")[0]);
+    }else {
+    	flash("error", "Seleccione un subrubro");
+        return ok(modalEditarRubroMasivo.render(d));
+    }
+
+    String detalle =
+        (request().body().asFormUrlEncoded().get("detalle_rubro")[0] != null && !request().body().asFormUrlEncoded().get("detalle_rubro")[0].isEmpty())
+        ? request().body().asFormUrlEncoded().get("detalle_rubro")[0] : null;
+
+    if (d.hasErrors())
+      return ok(modalEditarRubroMasivo.render(d));
+
+    ObjectNode result = Json.newObject();
+    try {
+      Integer count = Orden.editarRubroMasivo(ids, idRubro, idSubRubro, detalle);
+      result.put("success", true);
+      flash("success", "Se actualizo la orden");
+      result.put("html", modalEditarRubroMasivo.render(d).toString());
+      return ok(result);
+    } catch (Exception e) {
+      flash("error", "No se puede modificar los registros." + e);
+      return ok(modalEditarRubroMasivo.render(d));
+    }
+
+  }
+
 
   @CheckPermiso(key = "ordenesEditarFechaProvision")
   public static Result modalEditarFechaProvision(Long id) {
@@ -350,12 +405,12 @@ public class OrdenesAccionesController extends Controller {
     }
 
     Orden o = Orden.find.byId(idOrden);
-    
+
     if (monto.compareTo(o.getTotalTotalSinDiferenciaCotizacion().setScale(2, RoundingMode.HALF_UP)) > 0) {
         flash("error", "El monto adelanto no puede ser mayor al total de la orden.");
         return ok(modalEditarMontoAdelanto.render(d, idOrden));
       }
-    
+
 
     if (o.tipo_orden.compareTo("comun") != 0 && o.tipo_orden.compareTo("servicio") != 0) {
       flash("error", "El monto adelanto solo se puede agregar en Recepcion de productos y Certificacion de Servicios patrimonio");
@@ -835,17 +890,17 @@ public class OrdenesAccionesController extends Controller {
      * try{
      * if(idOrden != null){
      * Orden s1 = Orden.find.byId(idOrden);
-     * 
+     *
      * if(s1.estado_id == Estado.ORDEN_ESTADO_BORRADOR || s1.estado_id == Estado.ORDEN_ESTADO_ENCURSO){
-     * 
+     *
      * List<OrdenLinea> snx = OrdenLinea.find.where().eq("orden_id",idOrden).findList();
      * boolean yaTieneLineas = (snx.size() > 0)?true:false;
-     * 
+     *
      * if (upload != null) {
      * //String fileName = upload.getFilename();
      * //String contentType = upload.getContentType();
      * File file = upload.getFile();
-     * 
+     *
      * FileInputStream input = new FileInputStream(file.getAbsolutePath());
      * POIFSFileSystem fs = new POIFSFileSystem(input);
      * HSSFWorkbook wb = new HSSFWorkbook(fs);
@@ -856,14 +911,14 @@ public class OrdenesAccionesController extends Controller {
      * List<String> listaP = new ArrayList<String>();
      * Map<String,Double> productoControlPrecio = new HashMap<String,Double>();
      * List<String> productosRepetidos = new ArrayList<String>();
-     * 
+     *
      * for (int i = 1; i <= sheet.getLastRowNum(); i++) {
      * row = sheet.getRow(i);
      * SqlRow rowProducto = null;
      * SqlRow rowCuentaAnalitica = null;
      * SqlRow rowUnidad = null;
      * SqlRow rowServicio = null;
-     * 
+     *
      * int num_emp = (int) row.getCell(0).getNumericCellValue();
      * String nombreProducto = row.getCell(1).getStringCellValue().toUpperCase().trim().replace(" ","").replace("-","").replace(".","");
      * String nombreProductoAInsertar = row.getCell(1).getStringCellValue();
@@ -872,8 +927,8 @@ public class OrdenesAccionesController extends Controller {
      * String unidadDeMedida = row.getCell(4).getStringCellValue();
      * Double precio = row.getCell(5).getNumericCellValue();
      * String servicio = row.getCell(6).getStringCellValue();
-     * 
-     * 
+     *
+     *
      * if(productoControlPrecio.containsKey(nombreProducto)){
      * Double a = productoControlPrecio.get(nombreProducto);
      * if(a.compareTo(precio) != 0){
@@ -884,15 +939,15 @@ public class OrdenesAccionesController extends Controller {
      * }else{
      * productoControlPrecio.put(nombreProducto, precio);
      * }
-     * 
+     *
      * String precioAinsertar = (precio != 0)?precio.toString():"1";
      * String insert = "INSERT INTO productos(nombre,referencia,precio_coste,activo,categoria_id," +
      * "tipo_producto_id, articulo_id, udm_id, cuenta_ingreso_id, cuenta_gasto_id,compra,venta) VALUES " +
      * "('"+nombreProductoAInsertar+"','"+nombreProductoAInsertar+"',"+precioAinsertar+",true,XXX,2, 1537, 1, 226,255,false,false);";
-     * 
-     * 
-     * 
-     * 
+     *
+     *
+     *
+     *
      * if(nombreProducto != null && !nombreProducto.isEmpty()){
      * //if(!listaP.contains(nombreProducto)){
      * //String sqlProducto = "SELECT id FROM productos WHERE UPPER(replace(replace(replace(trim(nombre),' ','' ),'-',''),'.','' )) = :nombre";
@@ -903,10 +958,10 @@ public class OrdenesAccionesController extends Controller {
      * for(SqlRow x : rp){
      * rowProducto = x;
      * }
-     * 
-     * 
+     *
+     *
      * if(rowProducto == null || rowProducto.isEmpty()){
-     * 
+     *
      * if(!productosRepetidos.contains(nombreProducto)){
      * if(Usuario.getUsuarioSesion() == 1){
      * error += "<p class='responseError'>"+insert+" </p>";
@@ -929,9 +984,9 @@ public class OrdenesAccionesController extends Controller {
      * error += "<p class='responseError'>-No se encuentra el producto en la linea "+num_emp+" </p>";
      * lineasValidas = false;
      * }
-     * 
-     * 
-     * 
+     *
+     *
+     *
      * if(cuentaAnaliticaCodigo != null && !cuentaAnaliticaCodigo.isEmpty()){
      * String sqlCuentaAnalitica = "SELECT id " +
      * "FROM cuentas_analiticas " +
@@ -947,7 +1002,7 @@ public class OrdenesAccionesController extends Controller {
      * error += "<p class='responseError'>-No se encuentra la cuenta analitica en la linea "+num_emp+" </p>";
      * lineasValidas = false;
      * }
-     * 
+     *
      * if(unidadDeMedida != null && !unidadDeMedida.isEmpty()){
      * String sqlUnidad = "SELECT id FROM udms WHERE UPPER(replace(trim(nombre),' ','' )) = :unidad";
      * rowUnidad = Ebean.createSqlQuery(sqlUnidad)
@@ -961,7 +1016,7 @@ public class OrdenesAccionesController extends Controller {
      * error += "<p class='responseError'>-No se encuentra la unidad en la linea "+num_emp+" </p>";
      * lineasValidas = false;
      * }
-     * 
+     *
      * if(servicio != null && !servicio.isEmpty()){
      * String sqlServicio = "SELECT id FROM departamentos WHERE UPPER(replace(trim(nombre),' ','' )) = :servicio";
      * rowServicio = Ebean.createSqlQuery(sqlServicio)
@@ -975,7 +1030,7 @@ public class OrdenesAccionesController extends Controller {
      * error += "<p class='responseError'>-No se encuentra el servicio en la linea "+num_emp+" </p>";
      * lineasValidas = false;
      * }
-     * 
+     *
      * if(lineasValidas){
      * OrdenLinea sl = new OrdenLinea();
      * sl.producto_id = rowProducto.getLong("id");
@@ -989,10 +1044,10 @@ public class OrdenesAccionesController extends Controller {
      * //sl.c = (long) Usuario.getUsuarioSesion();
      * lsl.add(sl);
      * }
-     * 
+     *
      * cantidadDeRowProcesadas ++;
      * }
-     * 
+     *
      * if(lineasValidas){
      * for(OrdenLinea s : lsl){
      * List<OrdenLinea> sn = OrdenLinea.find.where().eq("producto_id",s.producto_id)
@@ -1004,13 +1059,13 @@ public class OrdenesAccionesController extends Controller {
      * }else{
      * st.cantidad = st.cantidad.add(s.cantidad);
      * }
-     * 
+     *
      * st.cuenta_analitica_id = s.cuenta_analitica_id;
      * st.precio = s.precio;
      * st.udm_id = s.udm_id;
      * st.departamento_id = s.departamento_id;
      * st.update();
-     * 
+     *
      * }
      * }else{
      * s.save();
@@ -1028,7 +1083,7 @@ public class OrdenesAccionesController extends Controller {
      * error += "<p class='responseError'>- No se encuentra la solicitud</p>";
      * }
      * }catch(Exception e){
-     * 
+     *
      * }
      */
     ////////////////////////////////////
@@ -1207,85 +1262,85 @@ public class OrdenesAccionesController extends Controller {
   public static Result modalImportarListaProductos() {
     return ok(modalImportarListaProductosCantidades.render(form().bindFromRequest()));
   }
-  
+
   @CheckPermiso(key = "ordenesModificarNumeroFactura")
   public static Result modalModificarNumeroFactura(Long id) {
-		
+
 	Orden p = Orden.find.byId(id);
-	
+
 	return ok(modalModificarNumeroFactura.render(form().bindFromRequest(),id,p));
   }
-	
+
   @CheckPermiso(key = "ordenesModificarNumeroFactura")
   public static Result modificarNumeroFactura() {
 	DynamicForm d = form().bindFromRequest();
 	d.discardErrors();
-	
+
 	String numero_factura =request().body().asFormUrlEncoded().get("numero_factura")[0];
 	String monto =request().body().asFormUrlEncoded().get("monto")[0];
 	Long id = new Long(request().body().asFormUrlEncoded().get("id")[0]);
 	Orden f = Orden.find.byId(id);
-	
+
 	if(f.estado_id.compareTo((long) Estado.ORDEN_ESTADO_APROBADO) != 0) {
 		flash("error", "La orden debe estar en Estado Aprobado.");
 		return ok(modalModificarNumeroFactura.render(d,id,f));
 	}
-	
+
 	if(f == null) {
 		flash("error", "Esta orden no existe. Ver con el Administrador del sistema.");
 		return ok(modalModificarNumeroFactura.render(d,id,f));
 	}
-		
+
 	if(numero_factura.isEmpty()) {
 		flash("error", "Ingrese un N° de Factura");
 		return ok(modalModificarNumeroFactura.render(d,id,f));
 	}
-	
+
 	if(monto.isEmpty()) {
 		flash("error", "Ingrese un monto");
 		return ok(modalModificarNumeroFactura.render(d,id,f));
 	}
-	
-	
-	 
-	
+
+
+
+
 	if(Factura.existeNumeroFacturaCargadoDesdeOrden(f.id, numero_factura)) {
 		flash("error", "Ya existe este numero de factura cargado.");
 		return ok(modalModificarNumeroFactura.render(d,id,f));
 	}
-	
-	
+
+
 	BigDecimal montoACargar = new BigDecimal(monto.replace(",","."));
 	BigDecimal montoCargado = Factura.getTotalMontoFacturasCargadas(f.id);
 	BigDecimal montoTotal = montoCargado.add(montoACargar);
-	
+
 	if(montoTotal.compareTo(f.getTotalTotal()) > 0) {
 		flash("error", "Los montos de facturas excede el monto de la orden.");
 		return ok(modalModificarNumeroFactura.render(d,id,f));
 	}
-		
-		
+
+
 	ObjectNode result = Json.newObject();
-	try {			
+	try {
 		//Integer count = Pago.modificarNumeroFactura(numero_factura, id);
 		List<Factura> ff = Factura.find.where().isNotNull("factura_principal_id").eq("orden_id", id).findList();
 		Long idFact = null;
-		
+
 		if(ff.size() > 0) {
-			
+
 			idFact = ff.get(0).factura_principal_id;
-			
+
 		}else {
 			ff = Factura.find.where().eq("orden_id", id).findList();
 			if(ff.size() > 0) {
 				idFact = ff.get(0).id;
 			}
-			
+
 		}
-		
-		
+
+
 		Orden.guardarNumeroFactura(ff.get(0).id,new BigDecimal(monto.replace(",",".")),numero_factura,id);
-		
+
 		result.put("success", true);
 		flash("success", "Se actualizado el Numero de factura");
 		result.put("html", modalModificarNumeroFactura.render(d,id,f).toString());
@@ -1294,7 +1349,47 @@ public class OrdenesAccionesController extends Controller {
 		flash("error", "No se puede modificar los registros.");
 		return ok(modalModificarNumeroFactura.render(d,id,f));
 	}
-		
+
   }
-  
+
+	public static Result modalPasarAuditado() {
+		return ok(modalPasarAuditado.render(form().bindFromRequest()));
+	}
+
+	public static Result pasarAuditado() {
+		DynamicForm d = form().bindFromRequest();
+		d.discardErrors();
+
+		List<Integer> ordenesSeleccionados = getSeleccionados();
+
+		if(ordenesSeleccionados.isEmpty()) {
+			flash("error", "Seleccione al menos una orden.");
+			return ok(modalPasarAuditado.render(d));
+		}
+
+		if(d.hasErrors())
+			return ok(modalPasarAuditado.render(d));
+
+		boolean errorControl =  false;
+
+		if(errorControl){
+			flash("error", "error");
+			return ok(modalPasarAuditado.render(d));
+		}else{
+
+			ObjectNode result = Json.newObject();
+			try {
+				Integer count = Orden.pasarAuditado( ordenesSeleccionados);
+
+				result.put("success", true);
+				flash("success", "Se actualizaron " + count + " registros de "+ ordenesSeleccionados.size() +" seleccionados.<br>");
+				result.put("html", modalPasarAuditado.render(d).toString());
+				return ok(result);
+			} catch (Exception e){
+				flash("error", "No se puede modificar los registros.");
+				return ok(modalPasarAuditado.render(d));
+			}
+		}
+	}
+
 }

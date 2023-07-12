@@ -24,6 +24,7 @@ import models.Estado;
 import models.Expediente;
 import models.Factura;
 import models.Orden;
+import models.Orden349;
 import models.OrdenLinea;
 import models.OrdenProvision;
 import models.Proveedor;
@@ -54,6 +55,7 @@ import views.html.compras.lineasAjustesOrdenes.crearLineaAjuste;
 import views.html.compras.ordenes.crearOrden;
 import views.html.compras.ordenes.editarOrden;
 import views.html.compras.ordenes.indexOrden;
+import views.html.compras.ordenes.indexOrdenAuditoria;
 import views.html.compras.ordenes.modalBusquedaOrdenes;
 import views.html.compras.ordenes.verOrden;
 import views.html.compras.ordenes.modales.*;
@@ -1013,6 +1015,61 @@ public class OrdenesController extends Controller {
 		List<SqlRow> precioPorProductoConAjustes = OrdenLinea.getPrecioPorProductoConAjustes(idOrdenCompra);
 
 		return ok(listaProductoAdenda.render(idOrdenCompra, precioPorProductoConAjustes));
+	}
+
+	@CheckPermiso(key = "ordenesComprasVer")
+	public static Result indexAuditoria() {
+		DynamicForm d = form().bindFromRequest();
+		PaginadorFicha pf = new PaginadorFicha(UriTrack.encodeUri());
+		return ok(
+				indexOrdenAuditoria.render(
+						Orden.pageAuditoria(
+								 RequestVar.get("nombre"),
+								 RequestVar.get("create_usuario.id"),
+								 RequestVar.get("proveedor.id"),
+								 RequestVar.get("paciente_id"),
+								 RequestVar.get("expediente.id"),
+								 RequestVar.get("ejercicio"),
+								 RequestVar.get("numero_orden_provision_desde"),
+								 RequestVar.get("numero_orden_provision_hasta"),
+								 RequestVar.get("fecha_fin_desde"),
+								 RequestVar.get("fecha_fin_hasta"),
+								 RequestVar.get("fecha_provision_desde"),
+								 RequestVar.get("fecha_provision_hasta"),
+								 RequestVar.get("btnFiltro[0]"),//borrador
+								 RequestVar.get("btnFiltro[1]"),//en curso
+								 RequestVar.get("btnFiltro[2]"),//aprobado
+								 RequestVar.get("btnFiltro[3]"),//Cancelado
+								 RequestVar.get("btnFiltro[4]"),//Precurso
+								 RequestVar.get("producto_id"),
+								 RequestVar.get("orden_rubro_id"),
+								 RequestVar.get("deposito_id"),
+								 RequestVar.get("tipo_moneda"),
+								 RequestVar.get("profe"),
+								 RequestVar.get("tipo_cuenta_id"),
+								 RequestVar.get("emergencia"),
+								 RequestVar.get("perimido"),
+								 RequestVar.get("auditado")
+								),
+								 d, pf));
+	}
+
+
+
+	public static List<Integer> getSeleccionados(){
+		String[] checks = null;
+		try {
+			checks = request().body().asFormUrlEncoded().get("check_listado[]");
+		} catch (NullPointerException e) {
+		}
+
+		List<Integer> ids = new ArrayList<Integer>();
+		if(checks != null) {
+			for (String id : checks) {
+				ids.add(Integer.valueOf(id));
+			}
+		}
+		return ids;
 	}
 
 }
