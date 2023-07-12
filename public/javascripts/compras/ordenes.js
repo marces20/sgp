@@ -177,6 +177,7 @@ $( function(){
 		dialogoEditarRubro.dialog({title: "Editar Rubro"});
 	});
 
+
 	$(document).on("submit", '#formEditarRubro', function(){
 		var form = $(this);
 		var url = form.attr('action');
