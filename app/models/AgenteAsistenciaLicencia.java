@@ -407,7 +407,7 @@ public class AgenteAsistenciaLicencia extends Model{
 													   String descripcion,
 													   String ejercicio,
 													   String nombre,
-													   String dni,
+													   String cuit,
 													   String activo
 													   ){
 		Date fdesde = DateUtils.formatDate(desde, "dd/MM/yyyy");
@@ -448,8 +448,8 @@ public class AgenteAsistenciaLicencia extends Model{
 			where += "and al.finicio >='"+fdesde+"'  and al.ffin <= '"+fhasta+"' ";
     	}
 
-		if(!dni.isEmpty()){
-			where += "and a.dni ilike '%"+dni+"%' ";
+		if(!cuit.isEmpty()){
+			where += "and a.cuit ilike '%"+cuit+"%' ";
     	}
 
     	if(!nombre.isEmpty()){
