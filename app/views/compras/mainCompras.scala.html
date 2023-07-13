@@ -13,6 +13,8 @@
 				}
 				@if(Componente.check("ordenesCompra")) {
 					<li><a href="@controllers.compras.routes.OrdenesController.index()">Ordenes de compras</a></li>
+				}
+				@if(Componente.check("ordenesCompra") && Permiso.check("ordenesCompraAuditoria")) {
 					<li><a href="@controllers.compras.routes.OrdenesController.indexAuditoria()">Ordenes Auditoria</a></li>
 				}
 				@if(Componente.check("certificacionesCompras")) {
