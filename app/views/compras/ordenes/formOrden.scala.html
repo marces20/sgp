@@ -329,11 +329,24 @@
 
 				</div>
 			</div>
-		<div class="col-sm-8">
+		<div class="col-sm-5">
 			<label class="control-label">Plazo Entrega</label>
 			<div class="form-group">
 				@inputText(ordenForm("plazo_entrega"), 'class -> "form-control",'id -> "detalle_rubro")
 			</div>
+		</div>
+		<div class="col-sm-3">
+			<label for="servicio" class="control-label">Serv. Certifica</label>
+			<div class="input-group @if(ordenForm.error("departamento_id") != null) {has-error}else{has-required}">
+				@inputText(ordenForm("departamento.nombre"),'class -> "form-control", 'id -> "servicio", 'autocomplete -> "off")
+				@inputText(ordenForm("departamento_id"),'hidden -> "hidden", 'id -> "servicio_id")
+				<span class="input-group-addon">
+					<a href="#" id="searchServicio" data-title="Selección de servicio" data-url="@controllers.rrhh.routes.DepartamentosController.modalBuscar()" data-height="650" data-width="700" data-listen="modal.seleccion.departamento.simple" data-label="#servicio" data-field="#servicio_id"><i class="glyphicon glyphicon-search"></i></a>
+				</span>
+			</div>
+			@ordenForm("departamento_id").error.map{ error =>
+				<div class="text-error">@error.message</div>
+			}
 		</div>
 	</div>
 <script>

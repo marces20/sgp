@@ -2,7 +2,7 @@ $( function(){
 	$("#desde, #hasta").mask("99/99/9999");
 	$("#numero_orden_provision, #monto_adelanto").numeric_input();
 	$('#numero_presupuesto').mask("99999999");
-	$('#searchProducto,#searchPaciente,#searchProveedor,#searchPeriodo,#searchSolicitud, #searchExpediente, #searchDeposito, #searchResponsable').modalSearch();
+	$('#searchProducto,#searchServicio,#searchPaciente,#searchProveedor,#searchPeriodo,#searchSolicitud, #searchExpediente, #searchDeposito, #searchResponsable').modalSearch();
 
 	$('#filtrosEstados button').click( function() {
 		var checkbox = $(this).find(':checkbox');

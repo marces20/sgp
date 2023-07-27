@@ -199,6 +199,11 @@ public class Orden extends Model {
 
 	public String descripcion;
 
+	@ManyToOne
+	@JoinColumn(name="departamento_id", referencedColumnName="id", insertable=false, updatable=false)
+	public Departamento departamento;
+	public Long departamento_id;
+
 	@Formula(select = "_b${ta}.total", join = "left outer join (select orden_id, round(sum(CAST(precio * ol.cantidad as numeric)),2) as total from orden_lineas ol group by orden_id) as _b${ta} on _b${ta}.orden_id = ${ta}.id")
 	public BigDecimal total;
 

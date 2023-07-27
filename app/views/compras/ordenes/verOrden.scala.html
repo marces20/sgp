@@ -318,13 +318,17 @@
 			<label class="control-label">Fecha Presupuesto</label>
 			<p class="form-control-static form-control">@ordenForm("fecha_presupueso").value</p>
 		</div>
-		<div class="col-sm-8">
+		<div class="col-sm-5">
 			<div class="">
 				<label for="" class="control-label">Plazo Entrega</label>
 				<p class="form-control-static form-control">
 				@ordenForm("plazo_entrega").value
 				</p>
 			</div>
+		</div>
+		<div class="col-sm-3">
+			<label for="servicio" class="control-label">Serv. Certifica</label>
+			<p class="form-control-static form-control">@if(orden.departamento != null){@orden.departamento.nombre}</p>
 		</div>
 	</div>
 	@if(Orden.getOrdenHija(orden.id) != null){
