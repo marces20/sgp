@@ -261,7 +261,7 @@ public class OrdenesAccionesController extends Controller {
     	idSubRubro = new Long(request().body().asFormUrlEncoded().get("orden_subrubro_id")[0]);
     }else {
     	flash("error", "Seleccione un subrubro");
-        return ok(modalEditarRubroMasivo.render(d));
+    	return ok(modalEditarRubroMasivo.render(d));
     }
 
     String detalle =
@@ -553,9 +553,9 @@ public class OrdenesAccionesController extends Controller {
       return ok(combinarOrdenes.render());
     }
 
-    String sqlCombinado2 = "SELECT count(*) cantidad, producto_id,departamento_id,solicitud_id " + "				FROM orden_lineas ol "
+    String sqlCombinado2 = "SELECT count(*) cantidad, producto_id,ol.departamento_id as departamento_id,solicitud_id " + "				FROM orden_lineas ol "
         + "				inner join ordenes o on o.id =ol.orden_id " + "				WHERE orden_id in (:listId) "
-        + "				GROUP BY producto_id,departamento_id,solicitud_id  ";
+        + "				GROUP BY producto_id,ol.departamento_id,solicitud_id  ";
     List<SqlRow> lineasCombinadas2 = Ebean.createSqlQuery(sqlCombinado2).setParameter("listId", ids).findList();
     Map<Long, Long> controlProductoServicio = new HashMap<>();
 
@@ -728,12 +728,13 @@ public class OrdenesAccionesController extends Controller {
 
     // Recupero el proveedor y el detalle del producto que sea de menor valor
     List<SqlRow> listaDetalles = Ebean
-        .createSqlQuery("SELECT o.proveedor_id, ol.producto_id, ol.precio, ol.udm_id, ol.cuenta_analitica_id,ol.departamento_id " + "FROM ordenes o "
+        .createSqlQuery("SELECT o.proveedor_id, ol.producto_id, ol.precio, ol.udm_id, ol.cuenta_analitica_id,ol.departamento_id as departamento_id "
+        		 		+ "FROM ordenes o "
             + "INNER JOIN orden_lineas ol ON o.id = ol.orden_id "
             + "INNER JOIN (SELECT MIN(precio) precio, producto_id FROM orden_lineas WHERE orden_id IN(" + StringUtils.implode(ordenesSeleccionadas)
             + ") AND (cantidad > 0 AND precio > 0) GROUP BY producto_id) ol2 ON ol.producto_id = ol2.producto_id AND ol.precio = ol2.precio "
             + "WHERE o.id IN(" + StringUtils.implode(ordenesSeleccionadas) + ") "
-            + "GROUP BY o.proveedor_id, ol.producto_id, ol.precio, ol.udm_id, ol.cuenta_analitica_id,ol.departamento_id " + "ORDER BY ol.producto_id")
+            + "GROUP BY o.proveedor_id, ol.producto_id, ol.precio, ol.udm_id, ol.cuenta_analitica_id,ol.departamento_id  " + "ORDER BY ol.producto_id")
         .findList();
 
 
