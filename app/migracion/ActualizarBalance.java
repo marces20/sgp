@@ -1431,13 +1431,13 @@ public class ActualizarBalance extends Controller {
 					//SAFITA S.R.L.
 					if(idProveedor.equals(2713)) {//SAFITA S.R.L.
 
-						if(fl.factura.orden.orden_subrubro_id.equals((long)548)) {//VIANDAS
+						if(fl.factura.orden.orden_subrubro_id != null && fl.factura.orden.orden_subrubro_id.equals((long)548)) {//VIANDAS
 							if(fl.factura.orden.deposito_id.equals((long)1)) {
 								cuentaId = new Long(508);
 							}
 						}
 
-						if(fl.factura.orden.orden_subrubro_id.equals((long)520)) {//LAVADO
+						if(fl.factura.orden.orden_subrubro_id != null && fl.factura.orden.orden_subrubro_id.equals((long)520)) {//LAVADO
 							if(fl.factura.orden.deposito_id.equals((long)1)) {
 								cuentaId = new Long(501);
 							}
@@ -1454,7 +1454,7 @@ public class ActualizarBalance extends Controller {
 						cuentaId = new Long(497);
 					}
 
-					if(fl.factura.orden.orden_subrubro_id.equals((long)553)) {
+					if(fl.factura.orden.orden_subrubro_id != null && fl.factura.orden.orden_subrubro_id.equals((long)553)) {
 						cuentaId = new Long(515);
 						ISHONORARIO = false;
 						SUELDOSCONVENIO= false;

@@ -107,7 +107,7 @@ public class ActualizarBalancePagos {
 							ISHONORARIO = true;
 						}
 
-						if(fllx.factura.orden.orden_subrubro_id.equals((long)553)) {//PASANTIAS
+						if(fllx.factura.orden.orden_subrubro_id != null && fllx.factura.orden.orden_subrubro_id.equals((long)553)) {//PASANTIAS
 							tc = 600;//2.1.4.01.03 Pasantias
 							ISHONORARIO = false;
 							SUELDOSCONVENIO= false;
