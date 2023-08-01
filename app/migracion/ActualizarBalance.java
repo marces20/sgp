@@ -546,6 +546,7 @@ public class ActualizarBalance extends Controller {
 				boolean SUELDOSCONVENIO = false;
 				boolean IMPUESTO_GANANCIAS = false;
 				boolean PRESTAFACIL = false;
+				boolean PASANTIAS = false;
 
 				Map<Long,BigDecimal> montoPorCuenta = new HashMap<Long, BigDecimal>();
 				Long cuentaId=null;
@@ -1453,6 +1454,13 @@ public class ActualizarBalance extends Controller {
 						cuentaId = new Long(497);
 					}
 
+					if(fl.factura.orden.orden_subrubro_id.equals((long)553)) {
+						cuentaId = new Long(515);
+						ISHONORARIO = false;
+						SUELDOSCONVENIO= false;
+						SUELDOSPARQUE = false;
+						PASANTIAS = true;
+					}
 
 
 
@@ -1474,6 +1482,7 @@ public class ActualizarBalance extends Controller {
 				b.orden_pago_id = f.orden_pago_id;
 				b.debe = BigDecimal.ZERO;
 				b.cuenta_propia_id = getCuentaPropiaId(f.tipo_cuenta_id.intValue());
+
 				//HABERRRRRRR
 				Integer ci = null;
 
@@ -1489,12 +1498,14 @@ public class ActualizarBalance extends Controller {
 					ci = new Integer(448);
 				}else {
 					if(ISHONORARIO) {
-						ci = 415;
+						ci = 415;//	2.1.1.01.03 Honorarios a Pagar
 					}else if(SUELDOSCONVENIO){
-						ci = 437;
+						ci = 437;//2.1.4.01.01 Sueldos a Pagar Convenio
 					}else if(SUELDOSPARQUE){
-						ci = 438;
-					}else {
+						ci = 438;//2.1.4.01.02 Sueldos a Pagar Parque
+					}else if(PASANTIAS) {
+						ci = new Integer(600);//2.1.4.01.03 Pasantias
+					} else {
 						ci =  (f.tipo_cuenta_id.compareTo(new Long(2)) == 0)?414:413;
 					}
 				}
