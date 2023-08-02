@@ -51,6 +51,7 @@ public class ActualizarBalance extends Controller {
 		System.out.println("Empezo a ActualizarBalance FACTURA RP");
 		Connection conn2 = null;
 
+		
 		try {
 
 			Date fd = DateUtils.formatDate("01/01/2023", "dd/MM/yyyy");
