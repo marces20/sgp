@@ -909,7 +909,6 @@ public class OrdenesController extends Controller {
 								error = "Nose puede cancelar la orden de provision tiene asociaciones de Recepciones, Certificaciones o Actas.";
 							}else {
 								ordenOk = true;
-								//ordenProvision.delete();
 							}
 
 
