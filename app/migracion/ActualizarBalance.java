@@ -51,7 +51,7 @@ public class ActualizarBalance extends Controller {
 		System.out.println("Empezo a ActualizarBalance FACTURA RP");
 		Connection conn2 = null;
 
-		
+
 		try {
 
 			Date fd = DateUtils.formatDate("01/01/2023", "dd/MM/yyyy");
@@ -554,12 +554,15 @@ public class ActualizarBalance extends Controller {
 				for(FacturaLinea fl :f.facturaLinea) {
 
 					cuentaId=new Long(546);
+					cuentaId = (fl.factura.orden != null)?getCuentaTransferencia(fl.factura.orden.deposito_id):new Long(546);
 
 					Logger.debug("00000000000 "+fl.cuenta_analitica_id);
 
 					Long cuenta_analitica_original_id= (fl.cuenta_analitica_original_id != null)?fl.cuenta_analitica_original_id:fl.cuenta_analitica_id;
 
-					Long cuenta_analitica_reporta_id= fl.cuentaAnaliticaOriginal.cuentaReporta.id;
+					Long cuenta_analitica_reporta_id= (fl.cuenta_analitica_original_id != null)?fl.cuentaAnaliticaOriginal.cuentaReporta.id:fl.cuentaAnalitica.cuentaReporta.id;
+
+
 					if(cuenta_analitica_reporta_id == null) {
 						Logger.debug("ERRRORRRRRRRRRRRR VIENE EN NULL cuenta_analitica_reporta_id: "+ cuenta_analitica_reporta_id);
 						return false;
@@ -1091,16 +1094,23 @@ public class ActualizarBalance extends Controller {
 
 //**************************************NUEVOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO*********************************************
 
-					cuentaId = getCuentaTransferencia(fl.factura.orden.deposito_id);
+					if(fl.factura.orden != null && fl.factura.orden.orden_rubro_id.equals((long)3)) {//INSUMOS VARIOS
+
+						if(fl.factura.orden.deposito_id.equals((long)1)) {
+							cuentaId = new Long(493);//4.2.2/01/01 Insumos Varios
+						}else{
+							cuentaId = getCuentaTransferencia(fl.factura.orden.deposito_id);
+						}
+					}
 
 					//HONORARIOS-------------------------------------------------------
-					if(fl.factura.orden.orden_rubro_id.equals((long)8)) {//HONORARIOS
+					if(fl.factura.orden != null && fl.factura.orden.orden_rubro_id.equals((long)8)) {//HONORARIOS
 						cuentaId = new Long(489);//4.2.1/02/04 Honorarios Profesionales
 						ISHONORARIO = true;
 					}
 
 					//MEDICAMENTOS-------------------------------------------------------
-					if(fl.factura.orden.orden_rubro_id.equals((long)4)) {//MEDICAMENTOS
+					if(fl.factura.orden != null && fl.factura.orden.orden_rubro_id.equals((long)4)) {//MEDICAMENTOS
 						if(fl.factura.orden.deposito_id.equals((long)1) ||
 								fl.factura.orden.deposito_id.equals((long)32) ||
 								fl.factura.orden.deposito_id.equals((long)2) ) {//1	"HOSPITAL ESCUELA DE AGUDOS" LACMI o FATIMA
@@ -1455,7 +1465,7 @@ public class ActualizarBalance extends Controller {
 						cuentaId = new Long(497);
 					}
 
-					if(fl.factura.orden.orden_subrubro_id != null && fl.factura.orden.orden_subrubro_id.equals((long)553)) {
+					if(fl.factura.orden != null && fl.factura.orden.orden_subrubro_id != null && fl.factura.orden.orden_subrubro_id.equals((long)553)) {
 						cuentaId = new Long(515);
 						ISHONORARIO = false;
 						SUELDOSCONVENIO= false;
