@@ -902,7 +902,7 @@ public class OrdenesController extends Controller {
 							Integer recepcion = Recepcion.find.where().eq("ordenProvision.orden_compra_id",orden.id).findRowCount();
 							Integer certificacionesPatrimonio = CertificacionServicio.find.where().eq("ordenProvision.orden_compra_id",orden.id).findRowCount();
 							Integer actas = ActaRecepcion.find.where().eq("orden_provision_id",ordenProvision.id).findRowCount();
-							//
+
 
 							if(recepcion > 0 || certificacionesPatrimonio > 0 || actas > 0){
 								ordenOk = false;
