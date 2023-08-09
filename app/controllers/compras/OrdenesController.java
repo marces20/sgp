@@ -662,12 +662,6 @@ public class OrdenesController extends Controller {
 			ordenOk = false;
 		}
 
-		/*List<Integer> lo = new ArrayList<Integer>();
-		lo.add(orden.id.intValue());
-		if(!soloCuentasAnliticasHijas(lo)){
-			error = "Las cuentas presupuestarias deben ser Hijas unicamente.<br>";
-			ordenOk = false;
-		}*/
 
 
 		if(orden.tipo_orden!= null && (orden.tipo_orden.compareToIgnoreCase("certificacionobra") != 0 && orden.tipo_orden.compareToIgnoreCase("haberesrelacion") != 0 && orden.tipo_orden.compareToIgnoreCase("certificacioncompra") != 0 && orden.tipo_orden.compareToIgnoreCase("personal") != 0 && orden.tipo_orden.compareToIgnoreCase("sinop") != 0 && orden.tipo_orden.compareToIgnoreCase("imputacion") != 0) ){
