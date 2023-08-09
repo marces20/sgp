@@ -666,6 +666,7 @@ public class OrdenesController extends Controller {
 
 
 
+
 		if(orden.tipo_orden!= null && (orden.tipo_orden.compareToIgnoreCase("certificacionobra") != 0 && orden.tipo_orden.compareToIgnoreCase("haberesrelacion") != 0 && orden.tipo_orden.compareToIgnoreCase("certificacioncompra") != 0 && orden.tipo_orden.compareToIgnoreCase("personal") != 0 && orden.tipo_orden.compareToIgnoreCase("sinop") != 0 && orden.tipo_orden.compareToIgnoreCase("imputacion") != 0) ){
 			if(orden.numero_orden_provision == null || orden.numero_orden_provision <= 0){
 				error += "Debe insertar un numero de Orden de provision.<br>";
