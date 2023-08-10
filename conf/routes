@@ -566,6 +566,14 @@ GET     /rrhh/especialidad/get          controllers.rrhh.EspecialidadesControlle
 
 GET     /rrhh/profesion/modalBuscar		controllers.rrhh.ProfesionesController.modalBuscar()
 GET     /rrhh/profesion/get          	controllers.rrhh.ProfesionesController.get(id:Int ?= 0)
+GET     /rrhh/profesion         		controllers.rrhh.ProfesionesController.indexProfesion()
+GET     /rrhh/profesion/crear        	controllers.rrhh.ProfesionesController.crearProfesion()
+POST    /rrhh/profesion/guardar      	controllers.rrhh.ProfesionesController.guardarProfesion()
+GET     /rrhh/profesion/editar       	controllers.rrhh.ProfesionesController.editarProfesion(id:Long)
+GET     /rrhh/profesion/eliminar     	controllers.rrhh.ProfesionesController.eliminarProfesion(id:Long)
+POST    /rrhh/profesion/actualizar   	controllers.rrhh.ProfesionesController.actualizarProfesion()
+
+
 
 GET     /rrhh/cie/modalBuscar		controllers.rrhh.CiesController.modalBuscar()
 GET     /rrhh/cie/get          		controllers.rrhh.CiesController.get(id:Int ?= 0)
