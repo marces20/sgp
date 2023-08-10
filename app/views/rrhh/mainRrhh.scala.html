@@ -3,27 +3,27 @@
 @main(title: String, scripts){
 	<div class="row">
 		<div class="col-sm-2">
-			<div class="menu-contenido"> 
+			<div class="menu-contenido">
 			<ul class="nav nav-pills nav-stacked">
 				<li class="titulo">Agentes</li>
 				@if(Componente.check("agentes")) {
 					<li><a href="@controllers.rrhh.routes.AgentesController.indexAgente()">Agentes </a></li>
 				}
-				
+
 				@if(Componente.check("agentes") && Permiso.check("agentesLicencias")) {
-								   
+
 					<li><a href="@controllers.rrhh.routes.AgentesAsistenciasController.index()">Licencias</a></li>
 					<!-- <li><a href="@controllers.rrhh.routes.AgentesAsistenciasLicenciasController.getListaLicenciasPendientes()">Licencias Pendientes</a></li> -->
 					<li><a href="@controllers.rrhh.routes.AgentesAsistenciasLicenciasController.getListaLicenciasEnFecha()">Licencias en Fecha</a></li>
-					
-				
+
+
 				}
-				
+
 				@if(Componente.check("agentes") && Permiso.check("agentesSeguimientos")) {
 					<li><a href="@controllers.rrhh.routes.AgentesSeguimientoController.index()">Seguimientos</a></li>
 				}
-		 
-				
+
+
 				<li class="titulo">Configuración</li>
 				@if(Componente.check("departamentos")) {
 					<li><a href="@controllers.rrhh.routes.DepartamentosController.indexDepartamento()">Departamentos</a></li>
@@ -33,6 +33,7 @@
 				}
 				@if(Componente.check("puestos")) {
 					<li><a href="@controllers.rrhh.routes.PuestosController.indexPuesto()">Puestos</a></li>
+					<li><a href="@controllers.rrhh.routes.ProfesionesController.indexProfesion()">Profesiones</a></li>
 				}
 				@if(Componente.check("puestos")) {
 					<li><a href="@controllers.rrhh.routes.TipoResidenciasController.indexTipoResidencia()">Tipos Residencias</a></li>

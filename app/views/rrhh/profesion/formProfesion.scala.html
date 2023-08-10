@@ -1,0 +1,15 @@
+@(profesionForm: Form[Profesion])
+@import helper._
+@implicitFieldConstructor = @{ FieldConstructor(simpleInput.render) }
+
+	<div class="row">
+		<div class="col-sm-4">
+			<div class="form-group @if(profesionForm.error("nombre") != null) {has-error}else{has-required}">
+				<label for="inputNombre" class="control-label">Nombre</label>
+				@inputText(profesionForm("nombre"), 'class -> "form-control")
+				@profesionForm("nombre").error.map{ error =>
+					<div class="text-error">@error.message</div>
+				}
+			</div>
+		</div>
+	</div>

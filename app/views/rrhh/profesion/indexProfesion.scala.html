@@ -1,13 +1,13 @@
-@(buscador: utils.pagination.Pagination[Puesto], formBuscador: DynamicForm)
+@(buscador: utils.pagination.Pagination[Profesion], formBuscador: DynamicForm)
 @import helper._
 @implicitFieldConstructor = @{ FieldConstructor(simpleInput.render) }
 
-@views.html.rrhh.mainRrhh("Lista Puestos") {
+@views.html.rrhh.mainRrhh("Lista Profesiones") {
 
 	<div class="page-header">
 		<div class="row">
 			<div class="col-sm-7">
-				<h1>Lista de Puestos</h1>
+				<h1>Lista de Profesion</h1>
 			</div>
 			<div class="col-sm-5">
 				<!--   <div class="dropdown pull-right">
@@ -29,7 +29,7 @@
 				</div>-->
 
 				<div class="pull-right btn-header">
-					<a href="@controllers.rrhh.routes.PuestosController.crearPuesto"  class="form-control btn btn-default"><i class="glyphicon glyphicon-plus-sign"></i> Nuevo Puesto</a>
+					<a href="@controllers.rrhh.routes.ProfesionesController.crearProfesion"  class="form-control btn btn-default"><i class="glyphicon glyphicon-plus-sign"></i> Nueva Profesion</a>
 				</div>
 			</div>
 		</div>
@@ -53,7 +53,7 @@
 				<div class="col-sm-2">
 					<div class="form-group">
 					<label for="nombre" class="control-label">&nbsp;</label>
-					<a href="@controllers.rrhh.routes.PuestosController.indexPuesto()"  class="form-control btn btn-default">Limpiar</a>
+					<a href="@controllers.rrhh.routes.ProfesionesController.indexProfesion()"  class="form-control btn btn-default">Limpiar</a>
 					</div>
 				</div>
 			</form>
@@ -68,7 +68,7 @@
 	@if(buscador.getTotalRowCount == 0) {
 
         <div class="well">
-            <em>No se encuentran Puestos</em>
+            <em>No se encuentran Profesiones</em>
         </div>
 
     } else {
@@ -85,17 +85,17 @@
 				</tr>
 			</thead>
 			<tbody>
-			@for(puesto <- buscador.getList) {
+			@for(p <- buscador.getList) {
 				<tr>
 					<td>
-						<a class="btn btn-default btn-xs notSeleccion" href="@controllers.rrhh.routes.PuestosController.editarPuesto(puesto.id)">
+						<a class="btn btn-default btn-xs notSeleccion" href="@controllers.rrhh.routes.ProfesionesController.editarProfesion(p.id)">
 							<i class="glyphicon glyphicon-edit"></i>
 						</a>
 					</td>
-					<td>@(puesto.id)</td>
-					<td>@(puesto.nombre)</td>
+					<td>@(p.id)</td>
+					<td>@(p.nombre)</td>
 					<td>
-						<a class="btn btn-default btn-xs delete-confirm-link notSeleccion" href="@controllers.rrhh.routes.PuestosController.eliminarPuesto(puesto.id)">
+						<a class="btn btn-default btn-xs delete-confirm-link notSeleccion" href="@controllers.rrhh.routes.ProfesionesController.eliminarProfesion(p.id)">
 							<i class="glyphicon glyphicon-remove-circle"></i>
 						</a>
 					</td>
@@ -105,7 +105,7 @@
         </table>
 
 		<div class="pagination pull-right">
-		    @views.html.helpers.paginador(buscador, controllers.rrhh.routes.PuestosController.indexPuesto())
+		    @views.html.helpers.paginador(buscador, controllers.rrhh.routes.ProfesionesController.indexProfesion())
 		</div>
  	 }
 }

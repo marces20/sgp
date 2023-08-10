@@ -662,12 +662,9 @@ public class OrdenesController extends Controller {
 			ordenOk = false;
 		}
 
-		/*List<Integer> lo = new ArrayList<Integer>();
-		lo.add(orden.id.intValue());
-		if(!soloCuentasAnliticasHijas(lo)){
-			error = "Las cuentas presupuestarias deben ser Hijas unicamente.<br>";
-			ordenOk = false;
-		}*/
+
+
+
 
 
 		if(orden.tipo_orden!= null && (orden.tipo_orden.compareToIgnoreCase("certificacionobra") != 0 && orden.tipo_orden.compareToIgnoreCase("haberesrelacion") != 0 && orden.tipo_orden.compareToIgnoreCase("certificacioncompra") != 0 && orden.tipo_orden.compareToIgnoreCase("personal") != 0 && orden.tipo_orden.compareToIgnoreCase("sinop") != 0 && orden.tipo_orden.compareToIgnoreCase("imputacion") != 0) ){
@@ -901,13 +898,14 @@ public class OrdenesController extends Controller {
 
 							Integer recepcion = Recepcion.find.where().eq("ordenProvision.orden_compra_id",orden.id).findRowCount();
 							Integer certificacionesPatrimonio = CertificacionServicio.find.where().eq("ordenProvision.orden_compra_id",orden.id).findRowCount();
+							Integer actas = ActaRecepcion.find.where().eq("orden_provision_id",ordenProvision.id).findRowCount();
 
-							if(recepcion > 0 || certificacionesPatrimonio > 0){
+
+							if(recepcion > 0 || certificacionesPatrimonio > 0 || actas > 0){
 								ordenOk = false;
-								error = "Nose puede cancelar la orden de provision tiene asociaciones de Recepciones o Certificaciones.";
+								error = "Nose puede cancelar la orden de provision tiene asociaciones de Recepciones, Certificaciones o Actas.";
 							}else {
 								ordenOk = true;
-								//ordenProvision.delete();
 							}
 
 
