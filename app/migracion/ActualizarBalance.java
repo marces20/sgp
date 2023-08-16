@@ -635,6 +635,14 @@ public class ActualizarBalance extends Controller {
 
 					}
 
+					if(fl.factura.orden != null && fl.factura.orden.orden_rubro_id.equals((long)5)) {//"OTROS SERVICIOS"
+						if(fl.factura.orden.deposito_id.equals((long)1)) {
+							cuentaId = new Long(506);//4.2.2.02.10 Servicios Varios Operativos
+						}else{
+							//cuentaId = getCuentaTransferencia(fl.factura.orden.deposito_id);
+						}
+					}
+
 
 					if(cuenta_analitica_original_id.equals((long)269)) {//Banco de Protesis	PROTESIS
 						cuentaId = new Long(349);//1.1.5/02/00 Protesis- Ortesis
@@ -700,7 +708,7 @@ public class ActualizarBalance extends Controller {
 					}
 
 					if(cuenta_analitica_original_id.equals((long)60)) {//OTROS BIENES DE CONSUMO
-						cuentaId = new Long(493);//4.2.2/01/01 Insumos Varios
+						cuentaId = new Long(500);//4.2.2/01/01 Insumos Varios
 						if(fl.factura.orden.deposito_id.equals((long)30)) {
 							if(fl.factura.orden.orden_rubro_id.equals((long)4) || fl.factura.orden.orden_rubro_id.equals((long)2)) {
 								cuentaId = new Long(523);//4.2.2/02/27 Transferencias a Banco de Sangre
@@ -963,7 +971,7 @@ public class ActualizarBalance extends Controller {
 						if(fl.factura.orden.orden_rubro_id.equals((long)7) || fl.factura.orden.orden_rubro_id.equals((long)4)) {
 							cuentaId = new Long(552);//1.1.5/01/00 Medicamentos y Descartables
 						}else if (fl.factura.orden.orden_rubro_id.equals((long)3)) {
-							cuentaId = new Long(493);//4.2.2/01/01 Insumos Varios
+							cuentaId = new Long(500);//4.2.2/01/01 Insumos Varios
 						}
 					}
 
@@ -1097,9 +1105,23 @@ public class ActualizarBalance extends Controller {
 					if(fl.factura.orden != null && fl.factura.orden.orden_rubro_id.equals((long)3)) {//INSUMOS VARIOS
 
 						if(fl.factura.orden.deposito_id.equals((long)1)) {
-							cuentaId = new Long(493);//4.2.2/01/01 Insumos Varios
+							cuentaId = new Long(500);//4.2.2.02.04 Insumos Varios
 						}else{
 							cuentaId = getCuentaTransferencia(fl.factura.orden.deposito_id);
+						}
+					}
+
+					if(fl.factura.orden != null && fl.factura.orden.orden_rubro_id.equals((long)6)) {//PROTESIS
+
+						if(fl.factura.orden.deposito_id.equals((long)1)) {//agudos
+							cuentaId = new Long(487);//4.2.1.02.02 Protesis/ Ortesis
+						}else{
+							if(fl.factura.orden.deposito_id.equals((long)33)) {//o banco de protesis
+								cuentaId = new Long(349);// 1.1.5.02.01 Protesis y Ortesis (Hist)
+							}else {
+								cuentaId = getCuentaTransferencia(fl.factura.orden.deposito_id);
+							}
+
 						}
 					}
 
@@ -1465,6 +1487,42 @@ public class ActualizarBalance extends Controller {
 						cuentaId = new Long(497);
 					}
 
+					//LASER
+					if(idProveedor.equals(12802)) {//LASER
+						//cuentaId = new Long(512);//4.2.2.02.16 Vuelos Sanitarios
+					}
+
+					//SIEMENS HEALTHCARE S.A.
+					if(idProveedor.equals(13323)) {//SIEMENS HEALTHCARE S.A.
+						if(fl.factura.orden.deposito_id.equals((long)1)) {
+							cuentaId = new Long(510);//4.2.2.02.14 Mantenimiento y Reparacion de Equipos
+						}
+					}
+
+					//ANDRUSYSZYN, PABLO JAVIER
+					if(idProveedor.equals(574)) {//ANDRUSYSZYN, PABLO JAVIER
+						if(fl.factura.orden.deposito_id.equals((long)1)) {
+							cuentaId = new Long(498);//4.2.2.02.02 Serv. Mantenimiento Edilicio
+						}
+					}
+
+					//CORPO MEDICA SA
+					if(idProveedor.equals(14107)) {//CORPO MEDICA SA
+						if(fl.factura.orden.deposito_id.equals((long)1)) {
+							cuentaId = new Long(510);//4.2.2.02.14 Mantenimiento y Reparacion de Equipos
+						}
+					}
+
+					//DGR
+					if(idProveedor.equals(1367)) {//DGR
+						if(fl.factura.orden.deposito_id.equals((long)1)) {
+							cuentaId = new Long(511);//4.2.2.02.15 Impuestos y Tasas DGR
+						}
+					}
+
+
+
+
 					if(fl.factura.orden != null && fl.factura.orden.orden_subrubro_id != null && fl.factura.orden.orden_subrubro_id.equals((long)553)) {
 						cuentaId = new Long(515);
 						ISHONORARIO = false;
@@ -1681,6 +1739,7 @@ public class ActualizarBalance extends Controller {
 	public static Long getCuentaTransferencia(Long idInstitucion) {
 		Long ret= new Long(521); //4.2.2.02.25 Transferencias a otras Instituciones
 
+
 		//IMC 4.2.2.05.01 Transferencia a IMC
 		if(idInstitucion.equals((long)34)) {// IMC
 			ret = new Long(575);
@@ -1701,7 +1760,7 @@ public class ActualizarBalance extends Controller {
 		}
 
 		//"2";"LACMI 4.2.2.09.01 Transferencia a LACMI
-		if(idInstitucion.equals((long)2)) {
+		if(idInstitucion.equals((long)3)) {
 			ret = new Long(595);
 		}
 
