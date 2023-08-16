@@ -1,0 +1,24 @@
+@(formBuscador: DynamicForm,soloDeuda: Boolean = false)
+@import helper._
+@import utils._
+@import models.auth._
+@implicitFieldConstructor = @{ FieldConstructor(simpleInput.render) }
+
+@views.html.dashboard.mainDashboard("RESUMEN") {
+
+<div class="page-header">
+	<div class="row">
+		<div class="col-sm-7">
+			<h1>Resumen</h1>
+		</div>
+	</div>
+</div>
+
+@views.html.tags.successError()
+<div class="row"  style="">
+	<div class="col-sm-6" style="">
+
+
+	</div>
+</div>
+}

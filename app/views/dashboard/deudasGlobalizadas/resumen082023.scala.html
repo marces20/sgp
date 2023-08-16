@@ -1,0 +1,303 @@
+@(formBuscador: DynamicForm,proveedoresDestacados: List[com.avaje.ebean.SqlRow],
+proveedoresOtrosServicios: List[com.avaje.ebean.SqlRow],
+proveedoresOtrosRubros: List[com.avaje.ebean.SqlRow],
+proveedoresOtrosEquipos: List[com.avaje.ebean.SqlRow],
+proveedoresBisionesServicios: List[com.avaje.ebean.SqlRow]
+)
+@import helper._
+@import utils._
+@import models.auth._
+@implicitFieldConstructor = @{ FieldConstructor(simpleInput.render) }
+@import java.math.BigDecimal;var monto_total_deuda = new java.math.BigDecimal(0);var monto_total_tramite = new java.math.BigDecimal(0);var hayips:Boolean = new Boolean(false);var haybisio:Boolean = new Boolean(false);var hayra:Boolean = new Boolean(false);var hayteje:Boolean = new Boolean(false);var hayyaka:Boolean = new Boolean(false);var monto_total_bisionesServicios_tmp = new java.math.BigDecimal(0);var monto_total_tramite_bisionesServicios_tmp = new java.math.BigDecimal(0);var total_deuda  = new java.math.BigDecimal(0);var monto_total_bisio_tmp = new java.math.BigDecimal(0);var monto_total_tramite_bisio_tmp = new java.math.BigDecimal(0);var monto_total_equipos_tmp = new java.math.BigDecimal(0);var monto_total_tramite_equipos_tmp = new java.math.BigDecimal(0);var monto_total_otrosrubros_tmp = new java.math.BigDecimal(0);var monto_total_tramite_otrosrubros_tmp = new java.math.BigDecimal(0);var monto_total_servicios_tmp  = new java.math.BigDecimal(0);var monto_total_tramite_servicios_tmp  = new java.math.BigDecimal(0);var zero = new java.math.BigDecimal(0);var monto_total_ips_tmp=new java.math.BigDecimal(0);var monto_total_tramite_ips_tmp=new java.math.BigDecimal(0);var monto_total_ra_tmp=new java.math.BigDecimal(0);var monto_total_tramite_ra_tmp=new java.math.BigDecimal(0);var monto_total_teje_tmp=new java.math.BigDecimal(0);var monto_total_tramite_teje_tmp=new java.math.BigDecimal(0);var monto_total_yaka_tmp=new java.math.BigDecimal(0);var monto_total_tramite_yaka_tmp=new java.math.BigDecimal(0)
+@views.html.dashboard.mainDashboard("Deudas Globalizadas") {
+
+<div class="page-header">
+	<div class="row">
+		<div class="col-sm-7">
+			<h1>Resumen</h1>
+		</div>
+	</div>
+</div>
+
+@views.html.tags.successError()
+<div class="row"  style="">
+	<div class="col-sm-6" style="">
+		<table class="table table-striped table-bordered table-hover" id="listaInforme">
+
+			<thead>
+				<th style="text-align: center;" width="300">PROVEDORES</th>
+				<th style="text-align: center;">DEUDA</th>
+				<th style="text-align: center;">DEUDA EN TRAMITE</th>
+				<th style="text-align: center;">TOTAL</th>
+			</thead>
+			<tbody>
+				@for(pd <- proveedoresDestacados) {
+					@if(Proveedor.getProveedoresDestacadosRA().contains(pd.getLong("proveedor_id"))){
+
+						@{monto_total_ra_tmp= monto_total_ra_tmp.add(pd.getBigDecimal("total_deuda"))}<!-- +total deuda ra tmp-->
+						@{monto_total_tramite_ra_tmp= monto_total_tramite_ra_tmp.add(pd.getBigDecimal("total_compromiso"))}<!-- +total compromiso ra tmp -->
+					}
+					@{hayra = new Boolean(true)}
+
+					@if(Proveedor.getProveedoresTejedor().contains(pd.getLong("proveedor_id"))){
+						@{monto_total_teje_tmp= monto_total_teje_tmp.add(pd.getBigDecimal("total_deuda"))}<!-- +total deuda teje tmp-->
+						@{monto_total_tramite_teje_tmp= monto_total_tramite_teje_tmp.add(pd.getBigDecimal("total_compromiso"))}<!-- +total compromiso teje tmp -->
+					}
+					@{hayteje = new Boolean(true)}
+
+					@if(Proveedor.getProveedoresYacaro().contains(pd.getLong("proveedor_id"))){
+
+						@{monto_total_yaka_tmp= monto_total_yaka_tmp.add(pd.getBigDecimal("total_deuda"))}
+						@{monto_total_tramite_yaka_tmp= monto_total_tramite_yaka_tmp.add(pd.getBigDecimal("total_compromiso"))}
+					}
+					@{hayyaka = new Boolean(true)}
+
+					@if(pd.getLong("proveedor_id").compareTo(new Long(11081)) == 0){
+
+						@{monto_total_ips_tmp= monto_total_ips_tmp.add(pd.getBigDecimal("total_deuda"))}<!-- +total deuda ra tmp-->
+						@{monto_total_tramite_ips_tmp= monto_total_tramite_ips_tmp.add(pd.getBigDecimal("total_compromiso"))}<!-- +total compromiso ra tmp -->
+					}
+					@{hayips = new Boolean(true)}
+
+					@if(pd.getLong("proveedor_id").compareTo(new Long(14733)) == 0){
+
+						@{monto_total_bisio_tmp= monto_total_bisio_tmp.add(pd.getBigDecimal("total_deuda"))}<!-- +total deuda ra tmp-->
+						@{monto_total_tramite_bisio_tmp= monto_total_tramite_bisio_tmp.add(pd.getBigDecimal("total_compromiso"))}<!-- +total compromiso ra tmp -->
+					}
+					@{haybisio = new Boolean(true)}
+
+
+				}
+				@for(otrosServicios <- proveedoresOtrosServicios) {
+
+					@{monto_total_servicios_tmp= monto_total_servicios_tmp.add(otrosServicios.getBigDecimal("total_deuda"))}
+					@{monto_total_tramite_servicios_tmp= monto_total_tramite_servicios_tmp.add(otrosServicios.getBigDecimal("total_compromiso"))}
+				}
+
+				@for(otroRubros <- proveedoresOtrosRubros) {
+
+					@{monto_total_otrosrubros_tmp= monto_total_otrosrubros_tmp.add(otroRubros.getBigDecimal("total_deuda"))}
+					@{monto_total_tramite_otrosrubros_tmp= monto_total_tramite_otrosrubros_tmp.add(otroRubros.getBigDecimal("total_compromiso"))}
+				}
+
+				@for(equipos <- proveedoresOtrosEquipos) {
+
+					@{monto_total_equipos_tmp= monto_total_equipos_tmp.add(equipos.getBigDecimal("total_deuda"))}
+					@{monto_total_tramite_equipos_tmp= monto_total_tramite_equipos_tmp.add(equipos.getBigDecimal("total_compromiso"))}
+				}
+
+				@for(bisionesServicios <- proveedoresBisionesServicios) {
+
+					@{monto_total_bisionesServicios_tmp= monto_total_equipos_tmp.add(bisionesServicios.getBigDecimal("total_deuda"))}
+					@{monto_total_tramite_bisionesServicios_tmp= monto_total_tramite_bisionesServicios_tmp.add(bisionesServicios.getBigDecimal("total_compromiso"))}
+				}
+
+
+				@if(hayteje){
+
+					<tr>
+						<td>TEJEDOR</td>
+						<td align="right">@utils.NumberUtils.monedaSinDecimales(monto_total_teje_tmp)</td>
+						@{monto_total_tramite_teje_tmp = zero}
+						<td align="right">@utils.NumberUtils.monedaSinDecimales(monto_total_tramite_teje_tmp)</td>
+						<td align="right"><b style="font-size: 16px;">@utils.NumberUtils.monedaSinDecimales(monto_total_teje_tmp.add(monto_total_tramite_teje_tmp))</b></td>
+					</tr>
+					@{monto_total_deuda = monto_total_deuda.add(monto_total_teje_tmp)}
+					@{monto_total_tramite = monto_total_tramite.add(monto_total_tramite_teje_tmp)}
+				}
+
+				@if(hayyaka){
+					<tr>
+						<td>YAKARO</td>
+						<td align="right">@utils.NumberUtils.monedaSinDecimales(monto_total_yaka_tmp)</td>
+						@{monto_total_tramite_yaka_tmp = zero}
+						<td align="right">@utils.NumberUtils.monedaSinDecimales(monto_total_tramite_yaka_tmp)  </td>
+						<td align="right"><b style="font-size: 16px;">@utils.NumberUtils.monedaSinDecimales(monto_total_yaka_tmp.add(monto_total_tramite_yaka_tmp))</b></td>
+					</tr>
+					@{monto_total_deuda = monto_total_deuda.add(monto_total_yaka_tmp)}
+					@{monto_total_tramite = monto_total_tramite.add(monto_total_tramite_yaka_tmp)}
+				}
+
+				@if(haybisio){
+
+					@{monto_total_tramite_bisio_tmp = zero}
+					@{monto_total_tramite_bisionesServicios_tmp = zero}
+
+					@{monto_total_bisio_tmp = monto_total_bisio_tmp.subtract(monto_total_bisionesServicios_tmp)}
+					@{monto_total_tramite_bisio_tmp = monto_total_tramite_bisio_tmp.subtract(monto_total_tramite_bisionesServicios_tmp)}
+
+					<tr>
+						<td>BISIONES</td>
+						<td align="right">@utils.NumberUtils.monedaSinDecimales(monto_total_bisio_tmp)</td>
+						<td align="right">@utils.NumberUtils.monedaSinDecimales(monto_total_tramite_bisio_tmp)</td>
+						<td align="right"><b style="font-size: 16px;">@utils.NumberUtils.monedaSinDecimales(monto_total_bisio_tmp.add(monto_total_tramite_bisio_tmp))</b></td>
+					</tr>
+
+					<tr>
+						<td>BISIONES (Servicios)</td>
+						<td align="right">@utils.NumberUtils.monedaSinDecimales(monto_total_bisionesServicios_tmp)</td>
+						<td align="right">@utils.NumberUtils.monedaSinDecimales(monto_total_tramite_bisionesServicios_tmp)  </td>
+						<td align="right"><b style="font-size: 16px;">@utils.NumberUtils.monedaSinDecimales(monto_total_bisionesServicios_tmp.add(monto_total_tramite_bisionesServicios_tmp))</b></td>
+					</tr>
+					@{monto_total_deuda = monto_total_deuda.add(monto_total_bisio_tmp)}
+					@{monto_total_tramite = monto_total_tramite.add(monto_total_tramite_bisio_tmp)}
+
+					@{monto_total_deuda = monto_total_deuda.add(monto_total_bisionesServicios_tmp)}
+					@{monto_total_tramite = monto_total_tramite.add(monto_total_tramite_bisionesServicios_tmp)}
+
+				}
+
+				@for(pd <- proveedoresDestacados) {
+					@if(pd.getLong("proveedor_id").compareTo(new Long(14733)) != 0 && pd.getLong("proveedor_id").compareTo(new Long(11081)) != 0 && pd.getLong("proveedor_id").compareTo(new Long(15631)) != 0 && !Proveedor.getProveedoresYacaro().contains(pd.getLong("proveedor_id")) && !Proveedor.getProveedoresDestacadosRA().contains(pd.getLong("proveedor_id")) && !Proveedor.getProveedoresTejedor().contains(pd.getLong("proveedor_id"))){
+						<tr>
+							<td>@pd.getString("nombre_proveedor")</td>
+							<td align="right">@utils.NumberUtils.monedaSinDecimales(pd.getBigDecimal("total_deuda"))</td>
+							@{total_deuda = zero}
+							<td align="right">@utils.NumberUtils.monedaSinDecimales(total_deuda)</td>
+							<td align="right"><b style="font-size: 16px;">@utils.NumberUtils.monedaSinDecimales(pd.getBigDecimal("total_deuda").add(total_deuda))</b></td>
+						</tr>
+
+						@{monto_total_deuda = monto_total_deuda.add(pd.getBigDecimal("total_deuda"))}
+						@{monto_total_tramite = monto_total_tramite.add(total_deuda)}
+					}
+				}
+
+				<tr>
+					<td>OTROS SERVICIOS</td>
+					<td align="right">@utils.NumberUtils.monedaSinDecimales(monto_total_servicios_tmp)</td>
+					@{monto_total_tramite_servicios_tmp = zero}
+					<td align="right">@utils.NumberUtils.monedaSinDecimales(monto_total_tramite_servicios_tmp)</td>
+					<td align="right"><b style="font-size: 16px;">@utils.NumberUtils.monedaSinDecimales(monto_total_servicios_tmp.add(monto_total_tramite_servicios_tmp))</b></td>
+				</tr>
+					@{monto_total_deuda = monto_total_deuda.add(monto_total_servicios_tmp)}
+					@{monto_total_tramite = monto_total_tramite.add(monto_total_tramite_servicios_tmp)}
+
+				<tr>
+					<td>OTROS </td>
+					<td align="right">@utils.NumberUtils.monedaSinDecimales(monto_total_otrosrubros_tmp)</td>
+					@{monto_total_tramite_otrosrubros_tmp = zero}
+					<td align="right">@utils.NumberUtils.monedaSinDecimales(monto_total_tramite_otrosrubros_tmp)</td>
+					<td align="right"><b style="font-size: 16px;">@utils.NumberUtils.monedaSinDecimales(monto_total_otrosrubros_tmp.add(monto_total_tramite_otrosrubros_tmp))</b></td>
+				</tr>
+					@{monto_total_deuda = monto_total_deuda.add(monto_total_otrosrubros_tmp)}
+					@{monto_total_tramite = monto_total_tramite.add(monto_total_tramite_otrosrubros_tmp)}
+
+			</tbody>
+			<tfoot>
+				<tr>
+					<td align="right"><b>TOTALES</b></td>
+					<td align="right"><b>@utils.NumberUtils.monedaSinDecimales(monto_total_deuda)</b></td>
+					<td align="right"><b>@utils.NumberUtils.monedaSinDecimales(monto_total_tramite)</b></td>
+					<td align="right"><b style="font-size: 18px;">@utils.NumberUtils.monedaSinDecimales(monto_total_deuda.add(monto_total_tramite))</b></td>
+				</tr>
+				<!-- <tr>
+					<td align="center" colspan="4" style="font-size:18px;text-align:center;">
+					<b>TOTAL:
+					</b></td>
+
+				</tr> -->
+			</tfoot>
+		</table>
+<hr>
+		<table class="table table-striped table-bordered table-hover" id="listaInforme">
+
+			<thead>
+				<th style="text-align: center;" width="300">PROVEDORES</th>
+				<th style="text-align: center;">DEUDA</th>
+				<th style="text-align: center;"">DEUDA EN TRAMITE</th>
+				<th style="text-align: center;">TOTAL</th>
+			</thead>
+			<tbody>
+				<tr>
+					<td>R.A.</td>
+					<td align="right">@utils.NumberUtils.monedaSinDecimales(monto_total_ra_tmp)</td>
+					@{monto_total_tramite_ra_tmp = zero}
+					<td align="right">@utils.NumberUtils.monedaSinDecimales(monto_total_tramite_ra_tmp)  </td>
+					<td align="right"><b style="font-size: 18px;">@utils.NumberUtils.monedaSinDecimales(monto_total_ra_tmp.add(monto_total_tramite_ra_tmp))</b></td>
+				</tr>
+			</tbody>
+			<tfoot>
+				<!-- <tr>
+					<td align="right"><b>TOTALES</b></td>
+					<td><b></b></td>
+					<td><b></b></td>
+					<td><b></b></td>
+				</tr>
+				<tr>
+					<td align="center" colspan="4" style="font-size:18px;text-align:center;">
+					<b>TOTAL:
+					</b></td>-->
+
+				</tr>
+			</tfoot>
+		</table>
+<hr>
+		<table class="table table-striped table-bordered table-hover" id="listaInforme">
+
+			<thead>
+				<th style="text-align: center;" width="300">PROVEDORES</th>
+				<th style="text-align: center;">DEUDA</th>
+				<th style="text-align: center;"">DEUDA EN TRAMITE</th>
+				<th style="text-align: center;">TOTAL</th>
+			</thead>
+			<tbody>
+				<tr>
+					<td>EQUIPAMIENTOS.</td>
+					<td align="right">@utils.NumberUtils.monedaSinDecimales(monto_total_equipos_tmp)</td>
+					@{monto_total_tramite_equipos_tmp = zero}
+					<td align="right">@utils.NumberUtils.monedaSinDecimales(monto_total_tramite_equipos_tmp)  </td>
+					<td align="right"><b style="font-size: 18px;">@utils.NumberUtils.monedaSinDecimales(monto_total_equipos_tmp.add(monto_total_tramite_equipos_tmp))</b></td>
+				</tr>
+			</tbody>
+			<tfoot>
+				<!-- <tr>
+					<td align="right"><b>TOTALES</b></td>
+					<td><b></b></td>
+					<td><b></b></td>
+					<td><b></b></td>
+				</tr>
+				<tr>
+					<td align="center" colspan="4" style="font-size:18px;text-align:center;">
+					<b>TOTAL:
+					</b></td>-->
+
+				</tr>
+			</tfoot>
+		</table>
+<hr>
+		<table class="table table-striped table-bordered table-hover" id="listaInforme">
+
+			<thead>
+				<th style="text-align: center;" width="300">PROVEDORES</th>
+				<th style="text-align: center;">DEUDA</th>
+				<th style="text-align: center;">DEUDA EN TRAMITE</th>
+				<th style="text-align: center;">TOTAL</th>
+			</thead>
+			<tbody>
+				<tr>
+					<td>IPS</td>
+					<td align="right">@utils.NumberUtils.monedaSinDecimales(monto_total_ips_tmp)</td>
+					@{monto_total_tramite_ips_tmp = zero}
+					<td align="right">@utils.NumberUtils.monedaSinDecimales(monto_total_tramite_ips_tmp)  </td>
+					<td align="right"><b style="font-size: 18px;">@utils.NumberUtils.monedaSinDecimales(monto_total_ips_tmp.add(monto_total_tramite_ips_tmp))</b></td>
+				</tr>
+			</tbody>
+			<tfoot>
+				<!--  <tr>
+					<td align="right"><b>TOTALES</b></td>
+					<td><b></b></td>
+					<td><b></b></td>
+					<td><b></b></td>
+				</tr>
+				<tr>
+					<td align="center" colspan="4" style="font-size:18px;text-align:center;">
+					<b>TOTAL:
+					</b></td>-->
+
+				</tr>
+			</tfoot>
+		</table>
+
+	</div>
+</div>
+}
