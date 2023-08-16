@@ -185,3 +185,9 @@ GET 	/inventarioRismi						controllers.dashboard.InventarioRismiController.index
 
 GET     /presuControl							controllers.dashboard.PresupuestoController.index()
 GET     /presuControl/devengado					controllers.dashboard.PresupuestoController.devengado()
+
+GET     /index082023									controllers.dashboard.DeudasGlobalizadasController.index082023(soloDeuda:Boolean ?= false)
+GET     /resumen082023						controllers.dashboard.DeudasGlobalizadasController.resumen082023()
+
+
+
