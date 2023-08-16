@@ -100,11 +100,12 @@
 				@if(Componente.check("dashboardInforme")) {
 					<li class="titulo">Informes Deudas</li>
 
-					@if(Permiso.check("dashboardInformeDeudaProveedores")) {
-					<li><a href="@controllers.dashboard.routes.DeudasGlobalizadasController.index(true)">Deudas reportes</a></li>
+					@if(Permiso.check("dashboardInformeDeudaProveedores082023")) {
+						<li><a href="@controllers.dashboard.routes.DeudasGlobalizadasController.resumen082023()"><b>Deudas reportes NUEVO !!</b></a></li>
 					}
 					@if(Permiso.check("dashboardInformeDeudaProveedores")) {
-						<li><a href="@controllers.dashboard.routes.DeudasPorAntiguedadController.index()">Deudas reportes por Antiguedad</a></li>
+						<li><a href="@controllers.dashboard.routes.DeudasGlobalizadasController.index(true)">Deudas reportes</a></li>
+					 	<li><a href="@controllers.dashboard.routes.DeudasPorAntiguedadController.index()">Deudas reportes por Antiguedad</a></li>
 					}
 
 				}
