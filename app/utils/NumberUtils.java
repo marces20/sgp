@@ -28,12 +28,23 @@ public class NumberUtils {
 		return x;
 	}
 
+	public static double roundDouble(double value, int places) {
+	    if (places < 0) throw new IllegalArgumentException();
+
+	    BigDecimal bd = BigDecimal.valueOf(value);
+	    bd = bd.setScale(places, RoundingMode.HALF_UP);
+	    return bd.doubleValue();
+	}
+
 	public static String formatNumber(Double number,int decimales) {
 
 		DecimalFormatSymbols simbolos = new DecimalFormatSymbols();
 		simbolos.setDecimalSeparator(',');
 		DecimalFormat myFormatter = new DecimalFormat("###,###,##0.0",simbolos);
 		switch ( decimales ) {
+		 case 0:
+	    	   myFormatter = new DecimalFormat("###,###,##0",simbolos);
+	           break;
 	      case 1:
 	    	   myFormatter = new DecimalFormat("###,###,##0.0",simbolos);
 	           break;

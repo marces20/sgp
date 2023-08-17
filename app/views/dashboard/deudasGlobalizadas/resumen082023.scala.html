@@ -16,6 +16,19 @@ proveedoresBisionesServicios: List[com.avaje.ebean.SqlRow]
 		<div class="col-sm-7">
 			<h1>Resumen</h1>
 		</div>
+		<div class="col-sm-5">
+			<div class="dropdown pull-right">
+			 <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown">
+			 	<i class="glyphicon glyphicon-list-alt"></i>
+			    Reportes
+			    <span class="caret"></span>
+			  </button>
+			  <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
+			  <li role="presentation">
+			  <a id="" role="menuitem" tabindex="-1" href="@controllers.dashboard.routes.DeudasGlobalizadasController.resumen082023ExportExcel()">Reporte Excel</a></li>
+			  </ul>
+			</div>
+		</div>
 	</div>
 </div>
 
@@ -88,7 +101,7 @@ proveedoresBisionesServicios: List[com.avaje.ebean.SqlRow]
 
 				@for(bisionesServicios <- proveedoresBisionesServicios) {
 
-					@{monto_total_bisionesServicios_tmp= monto_total_equipos_tmp.add(bisionesServicios.getBigDecimal("total_deuda"))}
+					@{monto_total_bisionesServicios_tmp= monto_total_bisionesServicios_tmp.add(bisionesServicios.getBigDecimal("total_deuda"))}
 					@{monto_total_tramite_bisionesServicios_tmp= monto_total_tramite_bisionesServicios_tmp.add(bisionesServicios.getBigDecimal("total_compromiso"))}
 				}
 

@@ -10,9 +10,9 @@ import org.apache.poi.ss.usermodel.DataFormat;
 import org.apache.poi.ss.usermodel.Workbook;
 
 public class ReportesExcelsUtils {
-	
+
 	public CellStyle getCabecera(Workbook libro,int size ) {
-		
+
 		CellStyle estiloCabecera = libro.createCellStyle();
 		estiloCabecera.setDataFormat((short) 7);
 		estiloCabecera.setBorderRight(CellStyle.BORDER_THIN);
@@ -28,10 +28,10 @@ public class ReportesExcelsUtils {
 		estiloCabecera.setAlignment(HSSFCellStyle.ALIGN_CENTER);
 		estiloCabecera.setVerticalAlignment(HSSFCellStyle.ALIGN_CENTER);
 		estiloCabecera.setWrapText(true);
-		
+
 		return estiloCabecera;
 	}
-	
+
 	public CellStyle getCabeceraSinDecimales(Workbook libro,int size ) {
 		DataFormat format = libro.createDataFormat();
 		CellStyle estiloCabecera = libro.createCellStyle();
@@ -49,14 +49,14 @@ public class ReportesExcelsUtils {
 		estiloCabecera.setAlignment(HSSFCellStyle.ALIGN_CENTER);
 		estiloCabecera.setVerticalAlignment(HSSFCellStyle.ALIGN_CENTER);
 		estiloCabecera.setWrapText(true);
-		
+
 		return estiloCabecera;
 	}
-	
+
 	public CellStyle getEstiloMonedaSinDecimales(Workbook libro) {
 		DataFormat format = libro.createDataFormat();
 		CellStyle estiloMoneda = libro.createCellStyle();
-		estiloMoneda.setDataFormat(format.getFormat("#,##0"));
+		estiloMoneda.setDataFormat(format.getFormat("$#,##0"));
 		estiloMoneda.setBorderRight(CellStyle.BORDER_THIN);
 		estiloMoneda.setBorderLeft(CellStyle.BORDER_THIN);
 		estiloMoneda.setBorderTop(CellStyle.BORDER_THIN);
@@ -64,12 +64,12 @@ public class ReportesExcelsUtils {
 		estiloMoneda.setVerticalAlignment(HSSFCellStyle.ALIGN_CENTER);
 		HSSFFont font = (HSSFFont) libro.createFont();
 		font.setBoldweight(HSSFFont.BOLDWEIGHT_BOLD);
-		 
+
 		estiloMoneda.setFont(font);
-		
+
 		return estiloMoneda;
 	}
-	
+
 	public CellStyle getEstiloMoneda(Workbook libro) {
 		DataFormat format = libro.createDataFormat();
 		CellStyle estiloMoneda = libro.createCellStyle();
@@ -81,12 +81,12 @@ public class ReportesExcelsUtils {
 		estiloMoneda.setVerticalAlignment(HSSFCellStyle.ALIGN_CENTER);
 		HSSFFont font = (HSSFFont) libro.createFont();
 		font.setBoldweight(HSSFFont.BOLDWEIGHT_BOLD);
-		 
+
 		estiloMoneda.setFont(font);
-		
+
 		return estiloMoneda;
 	}
-	
+
 	public CellStyle getEstiloComun(Workbook libro) {
 		CellStyle comun = libro.createCellStyle();
 		comun.setBorderRight(CellStyle.BORDER_THIN);
@@ -97,7 +97,7 @@ public class ReportesExcelsUtils {
 		comun.setWrapText(true);
 		return comun;
 	}
-	
+
 	public  CellStyle getEstiloConFondo(Workbook libro) {
 		CellStyle style = libro.createCellStyle();
 		style.setFillForegroundColor(HSSFColor.GREY_25_PERCENT.index);
@@ -111,10 +111,10 @@ public class ReportesExcelsUtils {
 		HSSFFont font = (HSSFFont) libro.createFont();
 		font.setBoldweight(HSSFFont.BOLDWEIGHT_BOLD);
 		style.setFont(font);
-		
+
 		return style;
 	}
-	
+
 	public  CellStyle getEstiloMonedaConFondo(Workbook libro) {
 		CellStyle estiloMonedaConFondo = libro.createCellStyle();
 		estiloMonedaConFondo.setFillForegroundColor(HSSFColor.GREY_25_PERCENT.index);
@@ -128,7 +128,7 @@ public class ReportesExcelsUtils {
 		HSSFFont font = (HSSFFont) libro.createFont();
 		font.setBoldweight(HSSFFont.BOLDWEIGHT_BOLD);
 		estiloMonedaConFondo.setFont(font);
-		
+
 		return estiloMonedaConFondo;
 	}
 }
