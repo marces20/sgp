@@ -829,7 +829,7 @@ public class DeudasGlobalizadasController extends Controller {
 
 			fila = hoja.createRow(x);
 			celda0 = fila.createCell(0);
-			celda0.setCellValue("OTROS");
+			celda0.setCellValue("OTROS PROVEEDORES");
 			celda0.setCellStyle(comun);
 
 			celda0 = fila.createCell(1);
@@ -854,7 +854,7 @@ public class DeudasGlobalizadasController extends Controller {
 
 			fila = hoja.createRow(x);
 			celda0 = fila.createCell(0);
-			celda0.setCellValue("EQUIPAMIENTO");
+			celda0.setCellValue("OTROS EQUIPAMIENTO");
 			celda0.setCellStyle(comun);
 
 			celda0 = fila.createCell(1);
