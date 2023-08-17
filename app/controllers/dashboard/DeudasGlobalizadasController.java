@@ -387,9 +387,9 @@ public class DeudasGlobalizadasController extends Controller {
 		equipos.add(1);//1	"EQUIPAMIENTOS" x
 		List<SqlRow> proveedoresOtrosEquipos = InformeDeudaProveedoresMaterializada.getDeudaPorProveedoresPorRubro(null,equipos);
 
-		List<SqlRow> proveedoresBisionesServicios = InformeDeudaProveedoresMaterializada.getDeudaPorProveedoresDestacados(null,7,14733);
+		//List<SqlRow> proveedoresBisionesServicios = InformeDeudaProveedoresMaterializada.getDeudaPorProveedoresDestacados(null,7,14733);
 
-		return ok(resumen082023.render(d,proveedoresDestacados,proveedoresOtrosServicios,proveedoresOtrosRubros,proveedoresOtrosEquipos,proveedoresBisionesServicios));
+		return ok(resumen082023.render(d,proveedoresDestacados,proveedoresOtrosServicios,proveedoresOtrosRubros,proveedoresOtrosEquipos));
 
 		/*	10	"HABERES"
 			8	"HONORARIOS" X
@@ -424,7 +424,7 @@ public class DeudasGlobalizadasController extends Controller {
 		equiposList.add(1);//1	"EQUIPAMIENTOS" x
 		List<SqlRow> proveedoresOtrosEquipos = InformeDeudaProveedoresMaterializada.getDeudaPorProveedoresPorRubro(null,equiposList);
 
-		List<SqlRow> proveedoresBisionesServicios = InformeDeudaProveedoresMaterializada.getDeudaPorProveedoresDestacados(null,7,14733);
+		//List<SqlRow> proveedoresBisionesServicios = InformeDeudaProveedoresMaterializada.getDeudaPorProveedoresDestacados(null,7,14733);
 
 		BigDecimal total = new BigDecimal(0);
 		BigDecimal total_tramite = new BigDecimal(0);
@@ -439,11 +439,23 @@ public class DeudasGlobalizadasController extends Controller {
 		BigDecimal total_bisio = new BigDecimal(0);
 		BigDecimal total_tramite_bisio = new BigDecimal(0);
 
+		BigDecimal total_safita = new BigDecimal(0);
+		BigDecimal total_tramite_safita = new BigDecimal(0);
+		BigDecimal total_sanjorge = new BigDecimal(0);
+		BigDecimal total_tramite_sanjorge = new BigDecimal(0);
+		BigDecimal total_nr = new BigDecimal(0);
+		BigDecimal total_tramite_nr = new BigDecimal(0);
+		BigDecimal total_pacific = new BigDecimal(0);
+		BigDecimal total_tramite_pacific = new BigDecimal(0);
+		BigDecimal total_pindoi = new BigDecimal(0);
+		BigDecimal total_tramite_pindoi = new BigDecimal(0);
+		BigDecimal total_cms = new BigDecimal(0);
+		BigDecimal total_tramite_cms = new BigDecimal(0);
+
 		for(SqlRow pd:proveedoresDestacados) {
 			if(Proveedor.getProveedoresDestacadosRA().contains(pd.getLong("proveedor_id"))) {
 				total_ra= total_ra.add(pd.getBigDecimal("total_deuda"));
 				total_tramite_ra= total_tramite_ra.add(BigDecimal.ZERO);//pd.getBigDecimal("total_compromiso")
-
 			}
 
 			if(Proveedor.getProveedoresTejedor().contains(pd.getLong("proveedor_id"))){
@@ -471,6 +483,48 @@ public class DeudasGlobalizadasController extends Controller {
 
 				total = total.add(total_bisio);
 				total_tramite = total_tramite.add(total_tramite_bisio);
+			}
+			//////////////////////////////////////////////////////////////////////
+			if(pd.getLong("proveedor_id").compareTo(new Long(2713)) == 0){ //SAFITA
+				total_safita= total_safita.add(pd.getBigDecimal("total_deuda"));
+				total_tramite_safita= total_tramite_safita.add(BigDecimal.ZERO);//pd.getBigDecimal("total_compromiso")
+				total = total.add(total_safita);
+				total_tramite = total_tramite.add(total_tramite_safita);
+			}
+
+			if(pd.getLong("proveedor_id").compareTo(new Long(4359)) == 0){ //SAN JORGE
+				total_sanjorge= total_sanjorge.add(pd.getBigDecimal("total_deuda"));
+				total_tramite_sanjorge= total_tramite_sanjorge.add(BigDecimal.ZERO);//pd.getBigDecimal("total_compromiso")
+				total = total.add(total_sanjorge);
+				total_tramite = total_tramite.add(total_tramite_sanjorge);
+			}
+
+			if(pd.getLong("proveedor_id").compareTo(new Long(1589)) == 0){ //NR
+				total_nr= total_nr.add(pd.getBigDecimal("total_deuda"));
+				total_tramite_nr= total_tramite_nr.add(BigDecimal.ZERO);//pd.getBigDecimal("total_compromiso")
+				total = total.add(total_nr);
+				total_tramite = total_tramite.add(total_tramite_nr);
+			}
+
+			if(pd.getLong("proveedor_id").compareTo(new Long(1838)) == 0){ //PACIFIC OCEAN
+				total_pacific= total_pacific.add(pd.getBigDecimal("total_deuda"));
+				total_tramite_pacific= total_tramite_pacific.add(BigDecimal.ZERO);//pd.getBigDecimal("total_compromiso")
+				total = total.add(total_pacific);
+				total_tramite = total_tramite.add(total_tramite_pacific);
+			}
+
+			if(pd.getLong("proveedor_id").compareTo(new Long(1592)) == 0){ //PINDOI
+				total_pindoi= total_pindoi.add(pd.getBigDecimal("total_deuda"));
+				total_tramite_pindoi= total_tramite_pindoi.add(BigDecimal.ZERO);//pd.getBigDecimal("total_compromiso")
+				total = total.add(total_pindoi);
+				total_tramite = total_tramite.add(total_tramite_pindoi);
+			}
+
+			if(pd.getLong("proveedor_id").compareTo(new Long(1588)) == 0){ //CMS
+				total_cms= total_cms.add(pd.getBigDecimal("total_deuda"));
+				total_tramite_cms= total_tramite_cms.add(BigDecimal.ZERO);//pd.getBigDecimal("total_compromiso")
+				total = total.add(total_cms);
+				total_tramite = total_tramite.add(total_tramite_cms);
 			}
 
 		}
@@ -521,40 +575,8 @@ public class DeudasGlobalizadasController extends Controller {
 			x++;
 
 
-			fila = hoja.createRow(x);
-			celda0 = fila.createCell(0);
-			celda0.setCellValue("TEJEDOR");
-			celda0.setCellStyle(comun);
-
-			celda0 = fila.createCell(1);
-			celda0.setCellValue(total_teje.doubleValue());
-			celda0.setCellStyle(estiloMoneda);
-			celda0 = fila.createCell(2);
-			celda0.setCellValue(total_tramite_teje.doubleValue());
-			celda0.setCellStyle(estiloMoneda);
-			celda0 = fila.createCell(3);
-			celda0.setCellValue( total_teje.add(total_tramite_teje).doubleValue());
-			celda0.setCellStyle(estiloMoneda);
-			x++;
-
-			fila = hoja.createRow(x);
-			celda0 = fila.createCell(0);
-			celda0.setCellValue("YAKARO");
-			celda0.setCellStyle(comun);
-
-			celda0 = fila.createCell(1);
-			celda0.setCellValue(total_yaka.doubleValue());
-			celda0.setCellStyle(estiloMoneda);
-			celda0 = fila.createCell(2);
-			celda0.setCellValue(total_tramite_yaka.doubleValue());
-			celda0.setCellStyle(estiloMoneda);
-			celda0 = fila.createCell(3);
-			celda0.setCellValue( total_yaka.add(total_tramite_yaka).doubleValue());
-			celda0.setCellStyle(estiloMoneda);
-			x++;
-
-
-			BigDecimal total_bisioservicios = new BigDecimal(0);
+			/////////////////////////BISIONES////////////////////////////
+			/*BigDecimal total_bisioservicios = new BigDecimal(0);
 			BigDecimal total_tramite_bisioservicios = new BigDecimal(0);
 
 			for(SqlRow bisionesServicios:proveedoresBisionesServicios) {
@@ -562,10 +584,10 @@ public class DeudasGlobalizadasController extends Controller {
 				total_bisioservicios= total_bisioservicios.add(bisionesServicios.getBigDecimal("total_deuda"));
 				total_tramite_bisioservicios= total_tramite_bisioservicios.add(BigDecimal.ZERO);//bisionesServicios.getBigDecimal("total_compromiso")
 
-			}
+			}*/
 
-			total = total.subtract(total_bisioservicios);
-			total_tramite = total_tramite.subtract(total_tramite_bisioservicios);
+			//total = total.subtract(total_bisioservicios);
+			//total_tramite = total_tramite.subtract(total_tramite_bisioservicios);
 
 			fila = hoja.createRow(x);
 			celda0 = fila.createCell(0);
@@ -573,21 +595,21 @@ public class DeudasGlobalizadasController extends Controller {
 			celda0.setCellStyle(comun);
 
 			celda0 = fila.createCell(1);
-			celda0.setCellValue(total_bisio.subtract(total_bisioservicios).doubleValue());
+			celda0.setCellValue(total_bisio.doubleValue());
 			celda0.setCellStyle(estiloMoneda);
 			celda0 = fila.createCell(2);
-			celda0.setCellValue(total_tramite_bisio.subtract(total_tramite_bisioservicios).doubleValue());
+			celda0.setCellValue(total_tramite_bisio.doubleValue());
 			celda0.setCellStyle(estiloMoneda);
 			celda0 = fila.createCell(3);
-			celda0.setCellValue( total_bisio.subtract(total_bisioservicios).add(total_tramite_bisio).subtract(total_tramite_bisioservicios).doubleValue());
+			celda0.setCellValue( total_bisio.add(total_tramite_bisio).doubleValue());
 			celda0.setCellStyle(estiloMoneda);
 			x++;
 
 
-			total = total.add(total_bisioservicios);
-			total_tramite = total_tramite.add(total_tramite_bisioservicios);
+			//total = total.add(total_bisioservicios);
+			//total_tramite = total_tramite.add(total_tramite_bisioservicios);
 
-			fila = hoja.createRow(x);
+			/*fila = hoja.createRow(x);
 			celda0 = fila.createCell(0);
 			celda0.setCellValue("BISIONES (Servicios)");
 			celda0.setCellStyle(comun);
@@ -601,10 +623,144 @@ public class DeudasGlobalizadasController extends Controller {
 			celda0 = fila.createCell(3);
 			celda0.setCellValue( total_bisioservicios.add(total_tramite_bisioservicios).doubleValue());
 			celda0.setCellStyle(estiloMoneda);
+			x++;*/
+
+			////////////////////////SAFITA////////////////////////////
+			fila = hoja.createRow(x);
+			celda0 = fila.createCell(0);
+			celda0.setCellValue("SAFITA");
+			celda0.setCellStyle(comun);
+
+			celda0 = fila.createCell(1);
+			celda0.setCellValue(total_safita.doubleValue());
+			celda0.setCellStyle(estiloMoneda);
+			celda0 = fila.createCell(2);
+			celda0.setCellValue(total_tramite_safita.doubleValue());
+			celda0.setCellStyle(estiloMoneda);
+			celda0 = fila.createCell(3);
+			celda0.setCellValue(total_safita.add(total_tramite_safita).doubleValue());
+			celda0.setCellStyle(estiloMoneda);
+			x++;
+
+			////////////////////////SAN JORGE////////////////////////////
+			fila = hoja.createRow(x);
+			celda0 = fila.createCell(0);
+			celda0.setCellValue("SAN JORGE");
+			celda0.setCellStyle(comun);
+
+			celda0 = fila.createCell(1);
+			celda0.setCellValue(total_sanjorge.doubleValue());
+			celda0.setCellStyle(estiloMoneda);
+			celda0 = fila.createCell(2);
+			celda0.setCellValue(total_tramite_sanjorge.doubleValue());
+			celda0.setCellStyle(estiloMoneda);
+			celda0 = fila.createCell(3);
+			celda0.setCellValue( total_sanjorge.add(total_tramite_sanjorge).doubleValue());
+			celda0.setCellStyle(estiloMoneda);
+			x++;
+
+			////////////////////////TEJEDOR////////////////////////////
+			fila = hoja.createRow(x);
+			celda0 = fila.createCell(0);
+			celda0.setCellValue("TEJEDOR (protesis + dialisis + alimentacion parenteral)");
+			celda0.setCellStyle(comun);
+
+			celda0 = fila.createCell(1);
+			celda0.setCellValue(total_teje.doubleValue());
+			celda0.setCellStyle(estiloMoneda);
+			celda0 = fila.createCell(2);
+			celda0.setCellValue(total_tramite_teje.doubleValue());
+			celda0.setCellStyle(estiloMoneda);
+			celda0 = fila.createCell(3);
+			celda0.setCellValue( total_teje.add(total_tramite_teje).doubleValue());
+			celda0.setCellStyle(estiloMoneda);
+			x++;
+
+////////////////////////NR////////////////////////////
+			fila = hoja.createRow(x);
+			celda0 = fila.createCell(0);
+			celda0.setCellValue("NR (mensual + insumos)");
+			celda0.setCellStyle(comun);
+
+			celda0 = fila.createCell(1);
+			celda0.setCellValue(total_nr.doubleValue());
+			celda0.setCellStyle(estiloMoneda);
+			celda0 = fila.createCell(2);
+			celda0.setCellValue(total_tramite_nr.doubleValue());
+			celda0.setCellStyle(estiloMoneda);
+			celda0 = fila.createCell(3);
+			celda0.setCellValue( total_nr.add(total_tramite_nr).doubleValue());
+			celda0.setCellStyle(estiloMoneda);
+			x++;
+
+////////////////////////YAKARO////////////////////////////
+			fila = hoja.createRow(x);
+			celda0 = fila.createCell(0);
+			celda0.setCellValue("YAKARO (incluido Mission Group)");
+			celda0.setCellStyle(comun);
+
+			celda0 = fila.createCell(1);
+			celda0.setCellValue(total_yaka.doubleValue());
+			celda0.setCellStyle(estiloMoneda);
+			celda0 = fila.createCell(2);
+			celda0.setCellValue(total_tramite_yaka.doubleValue());
+			celda0.setCellStyle(estiloMoneda);
+			celda0 = fila.createCell(3);
+			celda0.setCellValue( total_yaka.add(total_tramite_yaka).doubleValue());
+			celda0.setCellStyle(estiloMoneda);
+			x++;
+
+////////////////////////PACIFIC////////////////////////////
+			fila = hoja.createRow(x);
+			celda0 = fila.createCell(0);
+			celda0.setCellValue("Pacific Ocean");
+			celda0.setCellStyle(comun);
+
+			celda0 = fila.createCell(1);
+			celda0.setCellValue(total_pacific.doubleValue());
+			celda0.setCellStyle(estiloMoneda);
+			celda0 = fila.createCell(2);
+			celda0.setCellValue(total_tramite_pacific.doubleValue());
+			celda0.setCellStyle(estiloMoneda);
+			celda0 = fila.createCell(3);
+			celda0.setCellValue(total_pacific.add(total_tramite_pacific).doubleValue());
+			celda0.setCellStyle(estiloMoneda);
+			x++;
+////////////////////////Constructora Pindoi	////////////////////////////
+			fila = hoja.createRow(x);
+			celda0 = fila.createCell(0);
+			celda0.setCellValue("Constructora Pindoi");
+			celda0.setCellStyle(comun);
+
+			celda0 = fila.createCell(1);
+			celda0.setCellValue(total_pindoi.doubleValue());
+			celda0.setCellStyle(estiloMoneda);
+			celda0 = fila.createCell(2);
+			celda0.setCellValue(total_tramite_pindoi.doubleValue());
+			celda0.setCellStyle(estiloMoneda);
+			celda0 = fila.createCell(3);
+			celda0.setCellValue(total_pindoi.add(total_tramite_pindoi).doubleValue());
+			celda0.setCellStyle(estiloMoneda);
+			x++;
+////////////////////////CMS////////////////////////////
+			fila = hoja.createRow(x);
+			celda0 = fila.createCell(0);
+			celda0.setCellValue("CMS");
+			celda0.setCellStyle(comun);
+
+			celda0 = fila.createCell(1);
+			celda0.setCellValue(total_cms.doubleValue());
+			celda0.setCellStyle(estiloMoneda);
+			celda0 = fila.createCell(2);
+			celda0.setCellValue(total_tramite_cms.doubleValue());
+			celda0.setCellStyle(estiloMoneda);
+			celda0 = fila.createCell(3);
+			celda0.setCellValue(total_cms.add(total_tramite_cms).doubleValue());
+			celda0.setCellStyle(estiloMoneda);
 			x++;
 
 
-			for(SqlRow pd:proveedoresDestacados) {
+			/*for(SqlRow pd:proveedoresDestacados) {
 				if(pd.getLong("proveedor_id").compareTo(new Long(14733)) != 0 && pd.getLong("proveedor_id").compareTo(new Long(11081)) != 0 && pd.getLong("proveedor_id").compareTo(new Long(15631)) != 0 && !Proveedor.getProveedoresYacaro().contains(pd.getLong("proveedor_id")) && !Proveedor.getProveedoresDestacadosRA().contains(pd.getLong("proveedor_id")) && !Proveedor.getProveedoresTejedor().contains(pd.getLong("proveedor_id"))){
 
 					fila = hoja.createRow(x);
@@ -626,7 +782,7 @@ public class DeudasGlobalizadasController extends Controller {
 					total = total.add(pd.getBigDecimal("total_deuda"));
 					total_tramite = total_tramite.add(BigDecimal.ZERO);//pd.getBigDecimal("total_deuda")
 				}
-			}
+			}*/
 
 
 
@@ -687,6 +843,33 @@ public class DeudasGlobalizadasController extends Controller {
 			celda0.setCellStyle(estiloMoneda);
 			x++;
 
+			BigDecimal total_equipo = new BigDecimal(0);
+			BigDecimal total_tramite_equipo = new BigDecimal(0);
+			for(SqlRow equipos:proveedoresOtrosEquipos) {
+				total_equipo = total_equipo.add(equipos.getBigDecimal("total_deuda"));
+				total_tramite_equipo = new BigDecimal(0);//equipos.getBigDecimal("total_compromiso")
+			}
+			total = total.add(total_equipo);
+			total_tramite = total_tramite.add(total_tramite_equipo);
+
+			fila = hoja.createRow(x);
+			celda0 = fila.createCell(0);
+			celda0.setCellValue("EQUIPAMIENTO");
+			celda0.setCellStyle(comun);
+
+			celda0 = fila.createCell(1);
+			celda0.setCellValue(total_equipo.doubleValue());
+			celda0.setCellStyle(estiloMoneda);
+			celda0 = fila.createCell(2);
+			celda0.setCellValue(total_tramite_equipo.doubleValue());
+			celda0.setCellStyle(estiloMoneda);
+			celda0 = fila.createCell(3);
+			celda0.setCellValue( total_equipo.add(total_tramite_equipo).doubleValue());
+			celda0.setCellStyle(estiloMoneda);
+			x++;
+
+
+
 			fila = hoja.createRow(x);
 			celda0 = fila.createCell(0);
 			celda0.setCellValue("TOTALES");
@@ -744,53 +927,30 @@ public class DeudasGlobalizadasController extends Controller {
 			celda0.setCellValue( total_ra.add(total_tramite_ra).doubleValue());
 			celda0.setCellStyle(estiloMoneda);
 
-
-
-			//-------------------------------EQUIPAMIENTO
-			x++;x++;x++;
+			x++;
+			x++;x++;
 			fila = hoja.createRow(x);
 			celda0 = fila.createCell(0);
-			celda0.setCellValue("EQUIPAMIENTO");
+			celda0.setCellValue("TOTAL PROVEEDORES DESTACADOS Y R.A");
 			celda0.setCellStyle(cabeceraPrincipal);
 			hoja.addMergedRegion(new  CellRangeAddress(x,x,0,3));
 			x++;
-
 			fila = hoja.createRow(x);
 			celda0 = fila.createCell(0);
-			celda0.setCellValue("PROVEEDORES");
-			celda0.setCellStyle(cabecera);
+			celda0.setCellValue("TOTAL PROVEEDORES DESTACADOS Y R.A");
+			celda0.setCellStyle(comun);
+
 			celda0 = fila.createCell(1);
-			celda0.setCellValue("DEUDA");
-			celda0.setCellStyle(cabecera);
+			celda0.setCellValue(total.add(total_ra).doubleValue());
+			celda0.setCellStyle(estiloMoneda);
 			celda0 = fila.createCell(2);
-			celda0.setCellValue("DEUDA EN TRAMITE");
-			celda0.setCellStyle(cabecera);
+			celda0.setCellValue(total_tramite.add(total_tramite_ra).doubleValue());
+			celda0.setCellStyle(estiloMoneda);
 			celda0 = fila.createCell(3);
-			celda0.setCellValue("TOTAL");
-			celda0.setCellStyle(cabecera);
-			x++;
+			celda0.setCellValue(total.add(total_ra).add(total_tramite).add(total_tramite_ra).doubleValue());
+			celda0.setCellStyle(estiloMoneda);
 
-			BigDecimal total_equipo = new BigDecimal(0);
-			BigDecimal total_tramite_equipo = new BigDecimal(0);
-			for(SqlRow equipos:proveedoresOtrosEquipos) {
-				total_equipo = total_equipo.add(equipos.getBigDecimal("total_deuda"));
-				total_tramite_equipo = new BigDecimal(0);//equipos.getBigDecimal("total_compromiso")
 
-			}
-				fila = hoja.createRow(x);
-				celda0 = fila.createCell(0);
-				celda0.setCellValue("EQUIPAMIENTO");
-				celda0.setCellStyle(comun);
-
-				celda0 = fila.createCell(1);
-				celda0.setCellValue(total_equipo.doubleValue());
-				celda0.setCellStyle(estiloMoneda);
-				celda0 = fila.createCell(2);
-				celda0.setCellValue(total_tramite_equipo.doubleValue());
-				celda0.setCellStyle(estiloMoneda);
-				celda0 = fila.createCell(3);
-				celda0.setCellValue( total_equipo.add(total_tramite_equipo).doubleValue());
-				celda0.setCellStyle(estiloMoneda);
 
 
 			//-------------------------------IPS
@@ -841,12 +1001,12 @@ public class DeudasGlobalizadasController extends Controller {
 		} catch (IOException e) {
 			e.printStackTrace();
 			flash("error", "No se pudo generar el reporte");
-			return ok(resumen082023.render(d,proveedoresDestacados,proveedoresOtrosServicios,proveedoresOtrosRubros,proveedoresOtrosEquipos,proveedoresBisionesServicios));
+			return ok(resumen082023.render(d,proveedoresDestacados,proveedoresOtrosServicios,proveedoresOtrosRubros,proveedoresOtrosEquipos));
 
 		} catch (Exception e) {
 			e.printStackTrace();
 			flash("error", "No se pudo generar el reporte");
-			return ok(resumen082023.render(d,proveedoresDestacados,proveedoresOtrosServicios,proveedoresOtrosRubros,proveedoresOtrosEquipos,proveedoresBisionesServicios));
+			return ok(resumen082023.render(d,proveedoresDestacados,proveedoresOtrosServicios,proveedoresOtrosRubros,proveedoresOtrosEquipos));
 
 		}
 
