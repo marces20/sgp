@@ -213,6 +213,7 @@ public class Proveedor extends Model {
     	List<Long> ret = new ArrayList<Long>();
     	ret.add((long)15890);//LAS MISIONES DROGUERIA de Servicios Farmaceuticos S.R.L.
     	ret.add((long)2749);//"IMPLANTEJ DE TEJEDOR FACUNDO
+    	ret.add((long)15080);//"PRESTACIONES NEFROLOGICAS S.R.L.
     	return ret;
     }
 
@@ -248,18 +249,28 @@ public class Proveedor extends Model {
 		listaProveedores.add(14106);//DROGUERIA POSADAS S.R.L.
 		listaProveedores.add(16359);//BIOFIX de Ezcurra Mariel Cristina
 		///////////////////////////////////////////////////
-		listaProveedores.add(7348);//CONSTRUCTORA TABAY SA
+		//listaProveedores.add(7348);//CONSTRUCTORA TABAY SA
 		listaProveedores.add(1589);//NR CONSTRUCCIONES S.A.
-		listaProveedores.add(1530);//MOFAR S.A.
+		//listaProveedores.add(1530);//MOFAR S.A.
 		listaProveedores.add(4359);//DROGUERIA SAN JORGE S.A.
 		listaProveedores.add(2749);//IMPLANTEJ DE TEJEDOR FACUNDO
-		listaProveedores.add(15156);//MACROFAR
+		//listaProveedores.add(15156);//MACROFAR
 
 		//listaProveedores.add(1498);//MEDICALPRO
 		listaProveedores.add(14733);//BISIONES S.R.L.
 
 		listaProveedores.add(11081);//IPS
 		listaProveedores.add((int)Proveedor.HABERES_VARIOS);//Sin Proveedor Asignado
+		//////////////////////////////
+
+		listaProveedores.add(15890);//	15890	"LAS MISIONES DROGUERIA de Servicios Farmaceuticos S.R.L."
+		listaProveedores.add(15080);//	15080	"PRESTACIONES NEFROLOGICAS S.R.L."
+		listaProveedores.add(16727);//	16727	"YAKARO S.A."
+		listaProveedores.add(17217);//	17217	"MISSION GROUP S.R.L."
+		listaProveedores.add(1838);// 	1838	"PACIFIC OCEAN S.A."
+		listaProveedores.add(1588);// 	1588	"COMPAÑIA MISIONERA DE SEGURIDAD S.R.L."
+		listaProveedores.add(2713);// 	2713	"SAFITA S.R.L."
+		listaProveedores.add(1592);// 	1592	Constructora Pindoi S.R.L.
 
 		return listaProveedores;
     }
@@ -268,15 +279,24 @@ public class Proveedor extends Model {
     	List<Integer> listaProveedores = new ArrayList<Integer>();
 
 
-		listaProveedores.add(7348);//CONSTRUCTORA TABAY SA
+		//listaProveedores.add(7348);//CONSTRUCTORA TABAY SA
 		listaProveedores.add(1589);//NR CONSTRUCCIONES S.A.
-		listaProveedores.add(1530);//MOFAR S.A.
+		//listaProveedores.add(1530);//MOFAR S.A.
 		listaProveedores.add(4359);//DROGUERIA SAN JORGE S.A.
 		listaProveedores.add(2749);//IMPLANTEJ DE TEJEDOR FACUNDO
 		listaProveedores.add(14733);//BISIONES S.R.L.
 		listaProveedores.add(11081);//IPS
-		listaProveedores.add(15156);//MACROFAR
+		//listaProveedores.add(15156);//MACROFAR
 		listaProveedores.add((int)Proveedor.HABERES_VARIOS);//Sin Proveedor Asignado
+
+		listaProveedores.add(15890);//	15890	"LAS MISIONES DROGUERIA de Servicios Farmaceuticos S.R.L."
+		listaProveedores.add(15080);//	15080	"PRESTACIONES NEFROLOGICAS S.R.L."
+		listaProveedores.add(16727);//	16727	"YAKARO S.A."
+		listaProveedores.add(17217);//	17217	"MISSION GROUP S.R.L."
+		listaProveedores.add(1838);// 	1838	"PACIFIC OCEAN S.A."
+		listaProveedores.add(1588);// 	1588	"COMPAÑIA MISIONERA DE SEGURIDAD S.R.L."
+		listaProveedores.add(2713);// 	2713	"SAFITA S.R.L."
+		listaProveedores.add(1592);// 	1592	Constructora Pindoi S.R.L.
 
 		//listaProveedores.add(1498);
 
