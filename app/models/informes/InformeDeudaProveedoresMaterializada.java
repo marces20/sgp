@@ -424,14 +424,15 @@ public class InformeDeudaProveedoresMaterializada extends Model{
 
 		String sql = "SELECT i.proveedor_id proveedor_id,i.nombre_proveedor nombre_proveedor,"
 				+ " CASE WHEN coalesce(SUM(CASE WHEN total_deuda > 0 THEN total_deuda ELSE 0 END),0) > 0 THEN coalesce(SUM(CASE WHEN total_deuda > 0 THEN total_deuda ELSE 0 END),0) ELSE 0 END total_deuda,"
-				+ " CASE WHEN coalesce(SUM(CASE WHEN total_compromiso > 0 THEN total_compromiso ELSE 0 END),0) > 0 THEN coalesce(SUM(CASE WHEN total_compromiso > 0 THEN total_compromiso ELSE 0 END),0) ELSE 0 END total_compromiso "
+				+ " CASE WHEN coalesce(SUM(CASE WHEN total_deuda_en_tramite > 0 THEN total_deuda_en_tramite ELSE 0 END),0) > 0 THEN coalesce(SUM(CASE WHEN total_deuda_en_tramite > 0 THEN total_deuda_en_tramite ELSE 0 END),0) "
+				+ "ELSE 0 END total_deuda_en_tramite "
 				+ " FROM informe_estadistico_deuda_proveedores_matrializada i 	"
 				+ " INNER JOIN proveedores p ON p.id = i.proveedor_id " + " WHERE i.perimido = false ";
 
-		if (true) {
+		if (false) {
 			sql += "AND (i.total_deuda > 0.01) ";
 		} else {
-			sql += "AND (i.total_deuda > 0.01 OR i.total_compromiso > 0) ";
+			sql += "AND (i.total_deuda > 0.01 OR i.total_deuda_en_tramite > 0) ";
 		}
 
 
@@ -489,14 +490,14 @@ public class InformeDeudaProveedoresMaterializada extends Model{
 
 			String sql = "SELECT i.proveedor_id proveedor_id,i.nombre_proveedor nombre_proveedor,"
 					+ " CASE WHEN coalesce(SUM(CASE WHEN total_deuda > 0 THEN total_deuda ELSE 0 END),0) > 0 THEN coalesce(SUM(CASE WHEN total_deuda > 0 THEN total_deuda ELSE 0 END),0) ELSE 0 END total_deuda,"
-					+ " CASE WHEN coalesce(SUM(CASE WHEN total_compromiso > 0 THEN total_compromiso ELSE 0 END),0) > 0 THEN coalesce(SUM(CASE WHEN total_compromiso > 0 THEN total_compromiso ELSE 0 END),0) ELSE 0 END total_compromiso "
+					+ " CASE WHEN coalesce(SUM(CASE WHEN total_deuda_en_tramite > 0 THEN total_deuda_en_tramite ELSE 0 END),0) > 0 THEN coalesce(SUM(CASE WHEN total_deuda_en_tramite > 0 THEN total_deuda_en_tramite ELSE 0 END),0) ELSE 0 END total_deuda_en_tramite "
 					+ " FROM informe_estadistico_deuda_proveedores_matrializada i 	"
 					+ " INNER JOIN proveedores p ON p.id = i.proveedor_id " + " WHERE i.perimido = false ";
 
-			if (true) {
+			if (false) {
 				sql += "AND (i.total_deuda > 0.01) ";
 			} else {
-				sql += "AND (i.total_deuda > 0.01 OR i.total_compromiso > 0) ";
+				sql += "AND (i.total_deuda > 0.01 OR i.total_deuda_en_tramite > 0) ";
 			}
 
 

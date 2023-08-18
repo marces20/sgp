@@ -455,31 +455,31 @@ public class DeudasGlobalizadasController extends Controller {
 		for(SqlRow pd:proveedoresDestacados) {
 			if(Proveedor.getProveedoresDestacadosRA().contains(pd.getLong("proveedor_id"))) {
 				total_ra= total_ra.add(pd.getBigDecimal("total_deuda"));
-				total_tramite_ra= total_tramite_ra.add(BigDecimal.ZERO);//pd.getBigDecimal("total_compromiso")
+				total_tramite_ra= total_tramite_ra.add(pd.getBigDecimal("total_deuda_en_tramite"));//
 			}
 
 			if(Proveedor.getProveedoresTejedor().contains(pd.getLong("proveedor_id"))){
 				total_teje= total_teje.add(pd.getBigDecimal("total_deuda"));
-				total_tramite_teje= total_tramite_teje.add(BigDecimal.ZERO);//pd.getBigDecimal("total_compromiso")
+				total_tramite_teje= total_tramite_teje.add(pd.getBigDecimal("total_deuda_en_tramite"));//
 				total = total.add(total_teje);
 				total_tramite = total_tramite.add(total_tramite_teje);
 			}
 
 			if(Proveedor.getProveedoresYacaro().contains(pd.getLong("proveedor_id"))){
 				total_yaka= total_yaka.add(pd.getBigDecimal("total_deuda"));
-				total_tramite_yaka= total_tramite_yaka.add(BigDecimal.ZERO);//pd.getBigDecimal("total_compromiso")
+				total_tramite_yaka= total_tramite_yaka.add(pd.getBigDecimal("total_deuda_en_tramite"));//
 				total = total.add(total_yaka);
 				total_tramite = total_tramite.add(total_tramite_yaka);
 			}
 
 			if(pd.getLong("proveedor_id").compareTo(new Long(11081)) == 0){
 				total_ips= total_ips.add(pd.getBigDecimal("total_deuda"));
-				total_tramite_ips= total_tramite_ips.add(BigDecimal.ZERO);//pd.getBigDecimal("total_compromiso")
+				total_tramite_ips= total_tramite_ips.add(pd.getBigDecimal("total_deuda_en_tramite"));//
 			}
 
 			if(pd.getLong("proveedor_id").compareTo(new Long(14733)) == 0){
 				total_bisio= total_bisio.add(pd.getBigDecimal("total_deuda"));
-				total_tramite_bisio= total_tramite_bisio.add(BigDecimal.ZERO);//pd.getBigDecimal("total_compromiso")
+				total_tramite_bisio= total_tramite_bisio.add(pd.getBigDecimal("total_deuda_en_tramite"));//
 
 				total = total.add(total_bisio);
 				total_tramite = total_tramite.add(total_tramite_bisio);
@@ -487,42 +487,42 @@ public class DeudasGlobalizadasController extends Controller {
 			//////////////////////////////////////////////////////////////////////
 			if(pd.getLong("proveedor_id").compareTo(new Long(2713)) == 0){ //SAFITA
 				total_safita= total_safita.add(pd.getBigDecimal("total_deuda"));
-				total_tramite_safita= total_tramite_safita.add(BigDecimal.ZERO);//pd.getBigDecimal("total_compromiso")
+				total_tramite_safita= total_tramite_safita.add(pd.getBigDecimal("total_deuda_en_tramite"));//
 				total = total.add(total_safita);
 				total_tramite = total_tramite.add(total_tramite_safita);
 			}
 
 			if(pd.getLong("proveedor_id").compareTo(new Long(4359)) == 0){ //SAN JORGE
 				total_sanjorge= total_sanjorge.add(pd.getBigDecimal("total_deuda"));
-				total_tramite_sanjorge= total_tramite_sanjorge.add(BigDecimal.ZERO);//pd.getBigDecimal("total_compromiso")
+				total_tramite_sanjorge= total_tramite_sanjorge.add(pd.getBigDecimal("total_deuda_en_tramite"));//
 				total = total.add(total_sanjorge);
 				total_tramite = total_tramite.add(total_tramite_sanjorge);
 			}
 
 			if(pd.getLong("proveedor_id").compareTo(new Long(1589)) == 0){ //NR
 				total_nr= total_nr.add(pd.getBigDecimal("total_deuda"));
-				total_tramite_nr= total_tramite_nr.add(BigDecimal.ZERO);//pd.getBigDecimal("total_compromiso")
+				total_tramite_nr= total_tramite_nr.add(pd.getBigDecimal("total_deuda_en_tramite"));//
 				total = total.add(total_nr);
 				total_tramite = total_tramite.add(total_tramite_nr);
 			}
 
 			if(pd.getLong("proveedor_id").compareTo(new Long(1838)) == 0){ //PACIFIC OCEAN
 				total_pacific= total_pacific.add(pd.getBigDecimal("total_deuda"));
-				total_tramite_pacific= total_tramite_pacific.add(BigDecimal.ZERO);//pd.getBigDecimal("total_compromiso")
+				total_tramite_pacific= total_tramite_pacific.add(pd.getBigDecimal("total_deuda_en_tramite"));//
 				total = total.add(total_pacific);
 				total_tramite = total_tramite.add(total_tramite_pacific);
 			}
 
 			if(pd.getLong("proveedor_id").compareTo(new Long(1592)) == 0){ //PINDOI
 				total_pindoi= total_pindoi.add(pd.getBigDecimal("total_deuda"));
-				total_tramite_pindoi= total_tramite_pindoi.add(BigDecimal.ZERO);//pd.getBigDecimal("total_compromiso")
+				total_tramite_pindoi= total_tramite_pindoi.add(pd.getBigDecimal("total_deuda_en_tramite"));//
 				total = total.add(total_pindoi);
 				total_tramite = total_tramite.add(total_tramite_pindoi);
 			}
 
 			if(pd.getLong("proveedor_id").compareTo(new Long(1588)) == 0){ //CMS
 				total_cms= total_cms.add(pd.getBigDecimal("total_deuda"));
-				total_tramite_cms= total_tramite_cms.add(BigDecimal.ZERO);//pd.getBigDecimal("total_compromiso")
+				total_tramite_cms= total_tramite_cms.add(pd.getBigDecimal("total_deuda_en_tramite"));//
 				total = total.add(total_cms);
 				total_tramite = total_tramite.add(total_tramite_cms);
 			}
@@ -795,7 +795,7 @@ public class DeudasGlobalizadasController extends Controller {
 			for(SqlRow otrosServicios:proveedoresOtrosServicios) {
 
 				total_servicios= total_servicios.add(otrosServicios.getBigDecimal("total_deuda"));
-				total_tramite_servicios= total_tramite_servicios.add(BigDecimal.ZERO);//otrosServicios.getBigDecimal("total_compromiso")
+				total_tramite_servicios= total_tramite_servicios.add(otrosServicios.getBigDecimal("total_deuda_en_tramite"));//
 			}
 			total = total.add(total_servicios);
 			total_tramite = total_tramite.add(total_tramite_servicios);
@@ -821,7 +821,7 @@ public class DeudasGlobalizadasController extends Controller {
 			for(SqlRow otros:proveedoresOtrosRubros) {
 
 				total_otros= total_otros.add(otros.getBigDecimal("total_deuda"));
-				total_tramite_otros= total_tramite_otros.add(BigDecimal.ZERO);//otros.getBigDecimal("total_compromiso")
+				total_tramite_otros= total_tramite_otros.add(otros.getBigDecimal("total_deuda_en_tramite"));//
 			}
 			total = total.add(total_otros);
 			total_tramite = total_tramite.add(total_tramite_otros);
@@ -847,7 +847,7 @@ public class DeudasGlobalizadasController extends Controller {
 			BigDecimal total_tramite_equipo = new BigDecimal(0);
 			for(SqlRow equipos:proveedoresOtrosEquipos) {
 				total_equipo = total_equipo.add(equipos.getBigDecimal("total_deuda"));
-				total_tramite_equipo = new BigDecimal(0);//equipos.getBigDecimal("total_compromiso")
+				total_tramite_equipo = total_tramite_equipo.add(equipos.getBigDecimal("total_deuda_en_tramite"));
 			}
 			total = total.add(total_equipo);
 			total_tramite = total_tramite.add(total_tramite_equipo);
