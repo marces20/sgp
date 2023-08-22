@@ -10,14 +10,38 @@ import server.Configuration;
 
 public class ClienteMigracion {
 public void migrar(){
-		
+
+	/*
+	 alter table orden_lineas disable trigger all;
+update orden_lineas set cliente_id =18453 where cliente_id in(21718,21719); --
+alter table orden_lineas enable trigger all;
+
+alter table solicitudes disable trigger all;
+update solicitudes set cliente_id =18453 where cliente_id in(21718,21719); --
+alter table solicitudes enable trigger all;
+
+alter table remito_linea_clientes disable trigger all;
+update remito_linea_clientes set cliente_id =18453 where cliente_id in(21718,21719); --
+alter table remito_linea_clientes enable trigger all;
+
+alter table orden_linea_clientes disable trigger all;
+update orden_linea_clientes set cliente_id =18453 where cliente_id in(21718,21719); --
+alter table orden_linea_clientes enable trigger all;
+
+alter table orden_linea_anulacion_clientes disable trigger all;
+update orden_linea_anulacion_clientes set cliente_id =18453 where cliente_id in(21718,21719); --
+alter table orden_linea_anulacion_clientes enable trigger all;
+
+delete from clientes where id in(21718,21719);
+	 */
+
 		Connection conn = null;
 		Connection conn2 = null;
 
 		try {
-			
+
 			System.out.println("Empezo a migrar ClienteMigracion");
-			
+
         	conn = Configuration.get().getConnection();
         	conn2 = Configuracion2.get2().getConnection2();
         	System.out.println("2222222222");
@@ -29,16 +53,16 @@ public void migrar(){
 					" ru.create_uid," +
 					" ru.create_date " +
 					" from res_partner ru where customer = true");
-			
+
 			ResultSet rs = stmt.executeQuery();
 			PreparedStatement stmt2 = null;
-			 
+
 			while (rs.next()) {
 				System.out.print('1');
 				stmt2 = conn2.prepareStatement("INSERT INTO clientes " +
 						" (id,nombre,activo,cuit,nro_inscripcion,create_usuario_id,create_date)" +
 						" VALUES (?,?,?,?,?,?,?)");
-				
+
 				stmt2.setLong(1, rs.getLong(1));
 				stmt2.setString(2, rs.getString(2));
 				stmt2.setBoolean(3, rs.getBoolean(3));
@@ -49,11 +73,11 @@ public void migrar(){
 				}else{
 					stmt2.setLong(6, rs.getLong(6));
 				}
-				
+
 				stmt2.setDate(7, rs.getDate(7));
-				
+
 				stmt2.executeUpdate();
-				
+
 				PreparedStatement stmt3 = conn.prepareStatement("select " +
 						" ru.id,ru.partner_id,"+
 						" ru.street," +
@@ -73,11 +97,11 @@ public void migrar(){
 						" ru.create_uid " +
 						" from res_partner_address ru where partner_id = ? ");
 				stmt3.setLong(1, rs.getLong(1));
-				
+
 				ResultSet rs3 = stmt3.executeQuery();
-				
+
 				while (rs3.next()) {
-					
+
 					PreparedStatement stmt5 = conn2.prepareStatement("INSERT INTO clientes_direcciones " +
 							" (id,cliente_id,calle,activo,ciudad,nombre,zip,pais_id,provincia_id," +
 							"  localidad_id,email,numero,telefono,fax,mobile,create_date,create_usuario_id)" +
@@ -89,25 +113,25 @@ public void migrar(){
 					stmt5.setString(5, rs3.getString(5));// ciudad
 					stmt5.setString(6, rs3.getString(6));
 					stmt5.setString(7, rs3.getString(7));
-					 
+
 					if(rs3.getLong(8) == 0){
 						stmt5.setNull(8,0);
 					}else{
 						stmt5.setLong(8, rs3.getLong(8));
 					}
-					
+
 					if(rs3.getLong(9) == 0){
 						stmt5.setNull(9,0);
 					}else{
 						stmt5.setLong(9, rs3.getLong(9));
 					}
-					
+
 					if(rs3.getLong(10) == 0){
 						stmt5.setNull(10,0);
 					}else{
 						stmt5.setLong(10, rs3.getLong(10));
 					}
-										
+
 					stmt5.setString(11, rs3.getString(11));
 					stmt5.setString(12, rs3.getString(12));
 					stmt5.setString(13, rs3.getString(13));
@@ -119,11 +143,11 @@ public void migrar(){
 					}else{
 						stmt5.setLong(17, rs3.getLong(17));
 					}
-					
+
 					stmt5.executeUpdate();
-					 
+
 				}
-				
+
 			}
 			rs.close();
 			stmt.close();
