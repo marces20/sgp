@@ -22,16 +22,16 @@ $( function(){
 	      });
 	    return false;
 	});
-	
+
 	$('table tr.pointer td:not(:has(.notSeleccion))').click( function(){
 		window.location.href = $(this).closest('tr').attr('data-href');
 	});
 	$(document).on('click', '.btn-disable-onclick', function(){
 		$('.btn-disable-onclick').attr("disabled", true);
 	});
-	
+
 	$(".inputNumericMask").numeric_input();
-	
+
 	jQuery(function($){
         $.datepicker.regional['es'] = {
                 closeText: 'Cerrar',
@@ -53,18 +53,18 @@ $( function(){
                 yearSuffix: ''};
         $.datepicker.setDefaults($.datepicker.regional['es']);
 	});
-	
+
 	$('#checkAll').change( function(){
 		var table = $(this).closest('table');
 		table.find("input[name='check_listado[]']").prop("checked", $(this).prop( "checked" ) );
 		$(this).trigger("cambio.lista.seleccion");
 	});
-	
+
 	$( ".datepicker" ).datepicker();
 	$( ".date" ).mask("99/99/9999");
 	$( ".dateMask" ).mask("99/99/9999");
 	$( ".inputDateMascara" ).mask("99/99/9999");
-	
+
 	$(document).on('mouseover', '.tip-top', function(){
 		$(".tip-top").tooltip({placement : 'top'});
 	});
@@ -77,8 +77,8 @@ $( function(){
 	$(document).on('mouseover', '.tip-left', function(){
 	    $(".tip-left").tooltip({ placement : 'left'});
 	});
-	
-	$('#getExpedientesSinFirma').click( function() { 
+
+	$('#getExpedientesSinFirma').click( function() {
 		var url = $(this).attr("data-url");
 		var dialogo = $('<div></div>');
 		dialogo.dialog({
@@ -99,13 +99,13 @@ $( function(){
 		    open: function( event, ui ) {
 				$.get(url, function(data){
 					dialogo.html(data);
-				});	
+				});
 		    }
 	      });
-		
+
 	});
-	
-	$('#getDiferenciaAutorizadoPagos').click( function() {  
+
+	$('#getDiferenciaAutorizadoPagos').click( function() {
 		var url = $(this).attr("data-url");
 		var dialogo = $('<div></div>');
 		dialogo.dialog({
@@ -114,7 +114,7 @@ $( function(){
 			autoOpen: true,
 			modal: true,
 			height: 400,
-			width:800,
+			width:1200,
 	        buttons: {
 		          Cerrar: function() {
 		            $( this ).dialog( "destroy" );
@@ -126,12 +126,12 @@ $( function(){
 		    open: function( event, ui ) {
 				$.get(url, function(data){
 					dialogo.html(data);
-				});	
+				});
 		    }
 	      });
-		
+
 	});
-	
+
 	$('#getExpedientesRecepcionSinFirma').click( function() { //abrir modal para mostrar mensaje solicitud 322
 		var url = $(this).attr("data-url");
 		var dialogo = $('<div></div>');
@@ -153,10 +153,10 @@ $( function(){
 		    open: function( event, ui ) {
 				$.get(url, function(data){
 					dialogo.html(data);
-				});	
+				});
 		    }
 	      });
-		
+
 	});
 });
 
@@ -173,17 +173,17 @@ function formatNumberPesos(n){
 	x = Number(n).toFixed(2).replace(/./g, function(c, i, a) {
 	    return i && c !== "." && !((a.length - i) % 3) ? ',' + c : c;
 	});
-	 
+
 	var r;
-	 
+
 	if(x.indexOf(".") > 1){
 		var elem = x.split('.');
 		r = elem[0].replace(/,/g,".")+","+elem[1];
-		
+
 	}else{
 		r = x.replace(",",".");
 	}
-	
+
 	return "$"+r;
 }
 
@@ -207,8 +207,8 @@ function crearDialogoGeneral(url){
 	    open: function( event, ui ) {
 			$.get(url, function(data){
 				dialogo.html(data);
-			});	
-			
+			});
+
 	    }
       });
 }
