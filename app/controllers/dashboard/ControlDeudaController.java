@@ -61,16 +61,17 @@ public class ControlDeudaController extends Controller {
 	
 	@CheckPermiso(key = "dashboardInformeDeudaPorActas")
 	public static Result getAutorizadoDistintoDePagado() {
-			
-		
-		actualizarVistaMaterializada ();
+
+
+		//actualizarVistaMaterializada ();
 		ExpressionList<InformeDeudaProveedoresMaterializada> e =InformeDeudaProveedoresMaterializada.find
 												.fetch("proveedor", "nombre")
 												.fetch("ordenProvision", "numero, orden_compra_id")
 												.where();
 		e = e.ne("rubro_id",8);
-    	e = e.raw("total_autorizado <> total_pagado"); 
-		
+		e = e.ne("rubro_id",10);
+    	e = e.raw("total_autorizado <> total_pagado");
+
 		return ok(listaAutorizadoDistintoPagado.render(e.findList()));
 	}
 	
