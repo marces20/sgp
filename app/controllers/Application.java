@@ -448,6 +448,7 @@ order by c.id ascv
 	    			.fetch("ordenProvision", "numero, orden_compra_id")
 	    			.where();
 	    	e = e.ne("rubro_id",8);
+	    	e = e.ne("rubro_id",10);
 	    	e = e.raw("total_autorizado <> total_pagado");
 	    	eSize = e.findList().size();
     	}
