@@ -664,6 +664,7 @@ GET     /rrhh/agente-asistencia-licencia/resumen         		controllers.rrhh.Agen
 
 GET     /rrhh/agente-asistencia-licencia/getListaLicenciasPendientes controllers.rrhh.AgentesAsistenciasLicenciasController.getListaLicenciasPendientes()
 GET     /rrhh/agente-asistencia-licencia/getListaLicenciasEnFecha controllers.rrhh.AgentesAsistenciasLicenciasController.getListaLicenciasEnFecha()
+GET     /rrhh/agente-asistencia-licencia/getListaLicenciasEnFechaExcel controllers.rrhh.AgentesAsistenciasLicenciasController.getListaLicenciasEnFechaExcel()
 
 POST     /rrhh/agenteAsistencia/reporteLicencia	 		controllers.rrhh.AgentesAsistenciasReportesController.reporteLicencia()
 POST     /rrhh/agenteAsistencia/reporteLicenciaMedicinaLaboral	 		controllers.rrhh.AgentesAsistenciasReportesController.reporteLicenciaMedicinaLaboral(id: Long)
