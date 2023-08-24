@@ -29,10 +29,31 @@
 				<h1>Lista de Licencias Por ejercicio</h1>
 			</div>
 			<div class="col-sm-5">
+				<div class="dropdown pull-right">
+				 <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown">
+				 	<i class="glyphicon glyphicon-list-alt"></i>
+				    Reportes
+				    <span class="caret"></span>
+				  </button>
+				  <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
+				  		<li role="presentation">
+
+				  		<a id="generarArchivo" href="#" role="menuitem" tabindex="-1"  data-url="@controllers.rrhh.routes.AgentesAsistenciasLicenciasController.getListaLicenciasEnFechaExcel()">
+				  		  Excel</a>
+				  		</li>
+			  	  </ul>
+				</div>
 			</div>
 		</div>
 	</div>
+<script>
 
+$( function() {
+	var baseUrl = $('#generarArchivo').attr('data-url')
+	$('#generarArchivo').attr('href', baseUrl + '?descarga=&' + window.location.href.slice(window.location.href.indexOf('?') + 1))
+});
+
+</script>
 	@views.html.tags.successError()
 
 	<div id="actions">
@@ -165,6 +186,7 @@
 			<table class="table table-striped table-bordered">
 				<thead>
 					<tr>
+						<th width="30"><input type="checkbox" name="checkAll" id="checkAll"/></th>
 						<th>Apellido y Nombre</th>
 						<th>CUIT</th>
 						<th>Organigrama</th>
@@ -181,6 +203,7 @@
 				<tbody>
 				@for(sql <- lista) {
 					<tr class='@getClassEstado(sql.getInteger("idestado"))'>
+						<td><input type="checkbox" name="check_listado[]" value="" class="notSeleccion" id="check-"/></td>
 						<td>@sql.getString("apellido")</td>
 						<td>@sql.getString("cuit")</td>
 						<td>@sql.getString("organigrama")</td>
