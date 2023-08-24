@@ -2,6 +2,13 @@ package controllers.rrhh;
 
 import static play.data.Form.form;
 
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStreamWriter;
+import java.io.Writer;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
@@ -11,9 +18,19 @@ import java.util.Map;
 
 import javax.persistence.PersistenceException;
 
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.CellStyle;
+import org.apache.poi.ss.usermodel.Font;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
+
+import com.avaje.ebean.SqlRow;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
 import models.AgenteAsistenciaLicencia;
+import models.AgenteNovedad;
 import models.CertificacionLinea;
 import models.Ejercicio;
 import models.Estado;
@@ -24,9 +41,11 @@ import models.OrdenPagoCircuito;
 import models.Organigrama;
 import models.Usuario;
 import models.auth.Permiso;
+import models.recupero.InformeTotal;
 import controllers.Secured;
 import controllers.auth.CheckPermiso;
 import play.Logger;
+import play.Play;
 import play.data.DynamicForm;
 import play.data.Form;
 import play.libs.Json;
@@ -437,5 +456,177 @@ public class AgentesAsistenciasLicenciasController extends Controller {
 																			 RequestVar.get("cuit"),
 																			 RequestVar.get("activo")
 																			 ),d));
+	}
+
+	public static Result getListaLicenciasEnFechaExcel () {
+
+		AgenteAsistenciaLicencia aal = new AgenteAsistenciaLicencia();
+
+		List<SqlRow> ss = aal.getDiasLicenciasEnFecha(RequestVar.get("desde"),
+				 RequestVar.get("hasta"),
+				 RequestVar.get("organigrama_id"),
+				 RequestVar.get("tipo_relacion_laboral"),
+				 RequestVar.get("tipo_licencia_id"),
+				 RequestVar.get("estado_id"),
+				 RequestVar.get("descripcion"),
+				 RequestVar.get("ejercicio"),
+				 RequestVar.get("nombre"),
+				 RequestVar.get("cuit"),
+				 RequestVar.get("activo"));
+
+		try {
+			String dirTemp = System.getProperty("java.io.tmpdir");
+
+			File archivo = new File(dirTemp+"/listado_agente.xls");
+
+			if(archivo.exists()) archivo.delete();
+			archivo.createNewFile();
+
+
+			Workbook libro = new HSSFWorkbook();
+			FileOutputStream archivoTmp = new FileOutputStream(archivo);
+			Sheet hoja = libro.createSheet("Licencias");
+			Cell celda;
+
+
+			CellStyle style = libro.createCellStyle();
+			Font defaultFont = libro.createFont();
+		    defaultFont.setFontHeightInPoints((short)8);
+		    style.setFont(defaultFont);
+			style.setDataFormat(libro.createDataFormat().getFormat("$ #,##0.00"));
+
+			if(ss.size() > 0){
+
+				CellStyle comun = libro.createCellStyle();
+				comun.setBorderRight(CellStyle.BORDER_THIN);
+				comun.setBorderLeft(CellStyle.BORDER_THIN);
+				comun.setBorderTop(CellStyle.BORDER_THIN);
+				comun.setBorderBottom(CellStyle.BORDER_THIN);
+
+				int x = 0;
+				Row fila = hoja.createRow(x);
+
+				fila = hoja.createRow(x);
+				Cell celda0 = fila.createCell(0);
+				celda0.setCellValue("Apellido y Nombre");
+				celda0.setCellStyle(comun);
+				celda0 = fila.createCell(1);
+				celda0.setCellValue("DNI");
+				celda0.setCellStyle(comun);
+				celda0 = fila.createCell(2);
+				celda0.setCellValue("CUIT");
+				celda0.setCellStyle(comun);
+				celda0 = fila.createCell(3);
+				celda0.setCellValue("Organigrama");
+				celda0.setCellStyle(comun);
+				celda0 = fila.createCell(4);
+				celda0.setCellValue("Profesion");
+				celda0.setCellStyle(comun);
+				celda0 = fila.createCell(5);
+				celda0.setCellValue("Categoría");
+				celda0.setCellStyle(comun);
+				celda0 = fila.createCell(6);
+				celda0.setCellValue("Carga horaria");
+				celda0.setCellStyle(comun);
+				celda0 = fila.createCell(7);
+				celda0.setCellValue("Relación");
+				celda0.setCellStyle(comun);
+				celda0 = fila.createCell(8);
+				celda0.setCellValue("Fecha Inicio");
+				celda0.setCellStyle(comun);
+				celda0 = fila.createCell(9);
+				celda0.setCellValue("Fecha Fin");
+				celda0.setCellStyle(comun);
+				celda0 = fila.createCell(10);
+				celda0.setCellValue("Dias");
+				celda0.setCellStyle(comun);
+				celda0 = fila.createCell(11);
+				celda0.setCellValue("Tipo Licencia");
+				celda0.setCellStyle(comun);
+				celda0 = fila.createCell(12);
+				celda0.setCellValue("Estado");
+				celda0.setCellStyle(comun);
+
+				x++;
+				for (SqlRow i : ss) {
+
+					fila = hoja.createRow(x);
+					celda0 = fila.createCell(0);
+					celda0.setCellValue(i.getString("apellido"));
+					celda0.setCellStyle(comun);
+					celda0 = fila.createCell(1);
+					celda0.setCellValue(i.getString("dni"));
+					celda0.setCellStyle(comun);
+					celda0 = fila.createCell(2);
+					celda0.setCellValue(i.getString("cuit"));
+					celda0.setCellStyle(comun);
+					celda0 = fila.createCell(3);
+					celda0.setCellValue(i.getString("organigrama"));
+					celda0.setCellStyle(comun);
+					celda0 = fila.createCell(4);
+					celda0.setCellValue(i.getString("profesion"));
+					celda0.setCellStyle(comun);
+
+					celda0 = fila.createCell(5);
+					celda0.setCellValue(i.getString("escala"));
+					celda0.setCellStyle(comun);
+
+					celda0 = fila.createCell(6);
+					celda0.setCellValue(i.getString("carga_horaria"));
+					celda0.setCellStyle(comun);
+
+					String relacion = "";
+					switch ( i.getString("tipo_relacion_laboral") ) {
+				    	case  "1": relacion = "Contrato Relacion Parque de la salud"; break;
+				    	case  "2": relacion = "Monotributo Parque de la salud"; break;
+				    	case  "3": relacion = "Contrato Relacion Convenio Ministerio Salud"; break;
+				    	case  "4": relacion = "Planta Ministerio Salud"; break;
+				    	case  "5": relacion = "Contrato Relacion Ministerio Salud"; break;
+				    	case  "6": relacion = "Adscripto Otras Entidades"; break;
+				    	case  "7": relacion = "Contrato Convenio Nacion"; break;
+				    	case  "8": relacion = "Planta Temporaria - Otras Entidades"; break;
+				    	case  "9": relacion = "Otro"; break;
+				    }
+
+					celda0 = fila.createCell(7);
+					celda0.setCellValue(relacion);
+					celda0.setCellStyle(comun);
+
+					celda0 = fila.createCell(8);
+					celda0.setCellValue(utils.DateUtils.formatDate(i.getDate("finicio")));
+					celda0.setCellStyle(comun);
+					celda0 = fila.createCell(9);
+					celda0.setCellValue(utils.DateUtils.formatDate(i.getDate("ffin")));
+					celda0.setCellStyle(comun);
+					celda0 = fila.createCell(10);
+					celda0.setCellValue(i.getInteger("dias"));
+					celda0.setCellStyle(comun);
+					celda0 = fila.createCell(11);
+					celda0.setCellValue(i.getString("tipoLicencia"));
+					celda0.setCellStyle(comun);
+					celda0 = fila.createCell(12);
+					celda0.setCellValue(i.getString("estado"));
+					celda0.setCellStyle(comun);
+
+					x++;
+				}
+			}
+
+
+			libro.write(archivoTmp);
+
+			Writer out = new BufferedWriter(new OutputStreamWriter(archivoTmp, "UTF8"));
+			out.flush();
+			out.close();
+
+
+			return ok(archivo);
+
+		} catch (IOException e) {
+		    e.printStackTrace();
+		}
+
+
+		return ok("ddd");
 	}
 }
