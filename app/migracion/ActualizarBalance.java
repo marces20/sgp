@@ -548,6 +548,8 @@ public class ActualizarBalance extends Controller {
 				boolean IMPUESTO_GANANCIAS = false;
 				boolean PRESTAFACIL = false;
 				boolean PASANTIAS = false;
+				boolean SUELDOSJUBILACION = false;
+				boolean SUELDOSOBRASOCIAL = false;
 
 				Map<Long,BigDecimal> montoPorCuenta = new HashMap<Long, BigDecimal>();
 				Long cuentaId=null;
@@ -601,13 +603,21 @@ public class ActualizarBalance extends Controller {
 								cuentaId = new Long(515);//4.2.2/02/19 Haberes
 								IMPUESTO_GANANCIAS = true;
 							}
-						}else if(fl.factura.proveedor_id.equals(12770)){//GRUPO PRESTAFACIL S.A.
+						}else if(fl.factura.proveedor_id.equals(12770) ||  fl.factura.proveedor_id.equals(16546) ||  fl.factura.proveedor_id.equals(16564) ||  fl.factura.proveedor_id.equals(15669)  ){// ORANGEDATA S.A. || GRUPO PRESTAFACIL S.A. || ASOCIACIÓN MUTUAL UNIÓN SOLIDARIA (AMUS) || IPRODHA
 							cuentaId = new Long(515);//4.2.2/02/19 Haberes
 							PRESTAFACIL = true;
 
 						}else {
 							cuentaId = new Long(515);//4.2.2/02/19 Haberes
 						}
+
+						if(fl.producto_id.equals((long)40224)) {// Aportes Jubilacion
+							SUELDOSJUBILACION = true;
+						}
+						if(fl.producto_id.equals((long)40337)) {// "Aportes Obra Social"
+							SUELDOSOBRASOCIAL = true;
+						}
+
 						Logger.debug("cuentaIdcuentaIdcuentaIdcuentaIdcuentaIdcuentaIdcuentaId");
 						Logger.debug(cuentaId.toString());
 						Logger.debug("ssssss "+fl.factura.proveedor_id.equals(3172));
@@ -1528,6 +1538,8 @@ public class ActualizarBalance extends Controller {
 						ISHONORARIO = false;
 						SUELDOSCONVENIO= false;
 						SUELDOSPARQUE = false;
+						SUELDOSJUBILACION = false;
+						SUELDOSOBRASOCIAL  = false;
 						PASANTIAS = true;
 					}
 
@@ -1562,9 +1574,9 @@ public class ActualizarBalance extends Controller {
 				}else if(cuentaId.equals((long)518)) {//4.2.2/02/22 Seguro Vida
 					ci = new Integer(444);
 				}else if(IMPUESTO_GANANCIAS) {	//2.1.4/02/07 AFIP- Retención Ganancias Art 79
-					ci = new Integer(440);
+					ci = new Integer(446);
 				}else if(PRESTAFACIL) {
-					ci = new Integer(448);
+					ci = new Integer(448);//Código 	2.1.4.02.09 Nombre 	Convenio Prestafácil
 				}else {
 					if(ISHONORARIO) {
 						ci = 415;//	2.1.1.01.03 Honorarios a Pagar
@@ -1574,6 +1586,10 @@ public class ActualizarBalance extends Controller {
 						ci = 438;//2.1.4.01.02 Sueldos a Pagar Parque
 					}else if(PASANTIAS) {
 						ci = new Integer(600);//2.1.4.01.03 Pasantias
+					}else if(SUELDOSJUBILACION) {
+						ci = 440;//2.1.4.02.01 Aportes Reg. Nac. Seguridad Social
+					}else if(SUELDOSOBRASOCIAL) {
+						ci = 442;//2.1.4.02.03 Aportes Reg. Nac. Obra Social
 					} else {
 						ci =  (f.tipo_cuenta_id.compareTo(new Long(2)) == 0)?414:413;
 					}
