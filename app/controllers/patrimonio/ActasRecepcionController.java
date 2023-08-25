@@ -16,6 +16,9 @@ import java.util.Map.Entry;
 
 import javax.persistence.PersistenceException;
 
+import com.avaje.ebean.Ebean;
+import com.avaje.ebean.SqlRow;
+
 import models.ActaMovimiento;
 import models.ActaRecepcion;
 import models.ActaRecepcionLinea;
@@ -43,6 +46,7 @@ import utils.pagination.PaginadorFicha;
 import utils.pagination.Pagination;
 import views.html.sinPermiso;
 import views.html.patrimonio.actaRecepcion.*;
+import views.html.patrimonio.actaRecepcion.modales.modalAsignarActaRecepcion;
 import views.html.patrimonio.remitos.crearRemito;
 import controllers.Secured;
 import controllers.auth.CheckPermiso;
@@ -405,8 +409,14 @@ public class ActasRecepcionController extends Controller {
 	    	  if(!Permiso.check("actaPasarAprobado")) {
 				  return ok(sinPermiso.render(request().getHeader("referer")));
 			  }
-	    	  
-	    	  pasarEnAprobado(acta);   
+
+
+	  		  if (acta.ordenProvision.ordenCompra.fecha_provision == null) {
+	  			flash("error", "No se puede asignar acta porque la Orden no tiene Fecha de Provision Asignada.");
+	  			return redirect(request().getHeader("referer"));
+	  		  }
+
+	    	  pasarEnAprobado(acta);
 	          break;
 	      default:
 	           break;
