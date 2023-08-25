@@ -434,6 +434,9 @@ public class DeudasGlobalizadasController extends Controller {
 		BigDecimal total_tramite_teje = new BigDecimal(0);
 		BigDecimal total_yaka = new BigDecimal(0);
 		BigDecimal total_tramite_yaka = new BigDecimal(0);
+		BigDecimal total_mission = new BigDecimal(0);
+		BigDecimal total_tramite_mission = new BigDecimal(0);
+
 		BigDecimal total_ips = new BigDecimal(0);
 		BigDecimal total_tramite_ips = new BigDecimal(0);
 		BigDecimal total_bisio = new BigDecimal(0);
@@ -461,16 +464,22 @@ public class DeudasGlobalizadasController extends Controller {
 			if(Proveedor.getProveedoresTejedor().contains(pd.getLong("proveedor_id"))){
 				total_teje= total_teje.add(pd.getBigDecimal("total_deuda"));
 				total_tramite_teje= total_tramite_teje.add(pd.getBigDecimal("total_deuda_en_tramite"));//
-				total = total.add(total_teje);
-				total_tramite = total_tramite.add(total_tramite_teje);
+
 			}
 
 			if(Proveedor.getProveedoresYacaro().contains(pd.getLong("proveedor_id"))){
 				total_yaka= total_yaka.add(pd.getBigDecimal("total_deuda"));
 				total_tramite_yaka= total_tramite_yaka.add(pd.getBigDecimal("total_deuda_en_tramite"));//
-				total = total.add(total_yaka);
-				total_tramite = total_tramite.add(total_tramite_yaka);
+
 			}
+
+			if(pd.getLong("proveedor_id").compareTo(new Long(17217)) == 0){ //MISSION GROUP S.R.L.
+				total_mission= total_mission.add(pd.getBigDecimal("total_deuda"));
+				total_tramite_mission= total_tramite_mission.add(pd.getBigDecimal("total_deuda_en_tramite"));//
+				total = total.add(total_mission);
+				total_tramite = total_tramite.add(total_tramite_mission);
+			}
+
 
 			if(pd.getLong("proveedor_id").compareTo(new Long(11081)) == 0){
 				total_ips= total_ips.add(pd.getBigDecimal("total_deuda"));
@@ -500,10 +509,10 @@ public class DeudasGlobalizadasController extends Controller {
 			}
 
 			if(pd.getLong("proveedor_id").compareTo(new Long(1589)) == 0){ //NR
-				total_nr= total_nr.add(pd.getBigDecimal("total_deuda"));
-				total_tramite_nr= total_tramite_nr.add(pd.getBigDecimal("total_deuda_en_tramite"));//
-				total = total.add(total_nr);
-				total_tramite = total_tramite.add(total_tramite_nr);
+				//total_nr= total_nr.add(pd.getBigDecimal("total_deuda"));
+				//total_tramite_nr= total_tramite_nr.add(pd.getBigDecimal("total_deuda_en_tramite"));//
+				//total = total.add(total_nr);
+				//total_tramite = total_tramite.add(total_tramite_nr);
 			}
 
 			if(pd.getLong("proveedor_id").compareTo(new Long(1838)) == 0){ //PACIFIC OCEAN
@@ -514,10 +523,10 @@ public class DeudasGlobalizadasController extends Controller {
 			}
 
 			if(pd.getLong("proveedor_id").compareTo(new Long(1592)) == 0){ //PINDOI
-				total_pindoi= total_pindoi.add(pd.getBigDecimal("total_deuda"));
-				total_tramite_pindoi= total_tramite_pindoi.add(pd.getBigDecimal("total_deuda_en_tramite"));//
-				total = total.add(total_pindoi);
-				total_tramite = total_tramite.add(total_tramite_pindoi);
+				//total_pindoi= total_pindoi.add(pd.getBigDecimal("total_deuda"));
+				//total_tramite_pindoi= total_tramite_pindoi.add(pd.getBigDecimal("total_deuda_en_tramite"));//
+				//total = total.add(total_pindoi);
+				//total_tramite = total_tramite.add(total_tramite_pindoi);
 			}
 
 			if(pd.getLong("proveedor_id").compareTo(new Long(1588)) == 0){ //CMS
@@ -528,6 +537,11 @@ public class DeudasGlobalizadasController extends Controller {
 			}
 
 		}
+
+		total = total.add(total_teje);
+		total_tramite = total_tramite.add(total_tramite_teje);
+		total = total.add(total_yaka);
+		total_tramite = total_tramite.add(total_tramite_yaka);
 
 
 		try {
@@ -549,13 +563,21 @@ public class DeudasGlobalizadasController extends Controller {
 			hoja.setColumnWidth(1, 5000);
 			hoja.setColumnWidth(2, 5000);
 			hoja.setColumnWidth(3, 5000);
-			hoja.setDefaultRowHeight( (short) 400);
+			hoja.setDefaultRowHeight( (short) 450);
 
 			int x = 0;
 			Row fila = hoja.createRow(x);
 			Cell celda0 = fila.createCell(0);
 			celda0.setCellValue("RESUMEN");
 			celda0.setCellStyle(cabeceraPrincipal);
+
+			celda0 = fila.createCell(1);
+			celda0.setCellStyle(cabeceraPrincipal);
+			celda0 = fila.createCell(2);
+			celda0.setCellStyle(cabeceraPrincipal);
+			celda0 = fila.createCell(3);
+			celda0.setCellStyle(cabeceraPrincipal);
+
 			hoja.addMergedRegion(new  CellRangeAddress(x,x,0,3));
 			x++;
 
@@ -591,7 +613,7 @@ public class DeudasGlobalizadasController extends Controller {
 
 			fila = hoja.createRow(x);
 			celda0 = fila.createCell(0);
-			celda0.setCellValue("BISIONES");
+			celda0.setCellValue("BISIONES (Servicios + Insumos)");
 			celda0.setCellStyle(comun);
 
 			celda0 = fila.createCell(1);
@@ -662,7 +684,7 @@ public class DeudasGlobalizadasController extends Controller {
 			////////////////////////TEJEDOR////////////////////////////
 			fila = hoja.createRow(x);
 			celda0 = fila.createCell(0);
-			celda0.setCellValue("TEJEDOR (protesis + dialisis + alimentacion parenteral)");
+			celda0.setCellValue("TEJEDOR (IMPLANTEJ - LAS MISIONES - PRESTACIONES NEFROLOGICAS)");
 			celda0.setCellStyle(comun);
 
 			celda0 = fila.createCell(1);
@@ -677,9 +699,9 @@ public class DeudasGlobalizadasController extends Controller {
 			x++;
 
 ////////////////////////NR////////////////////////////
-			fila = hoja.createRow(x);
+			/*fila = hoja.createRow(x);
 			celda0 = fila.createCell(0);
-			celda0.setCellValue("NR (mensual + insumos)");
+			celda0.setCellValue("NR (Servicio mensual + Insumos)");
 			celda0.setCellStyle(comun);
 
 			celda0 = fila.createCell(1);
@@ -691,12 +713,12 @@ public class DeudasGlobalizadasController extends Controller {
 			celda0 = fila.createCell(3);
 			celda0.setCellValue( total_nr.add(total_tramite_nr).doubleValue());
 			celda0.setCellStyle(estiloMoneda);
-			x++;
+			x++;*/
 
 ////////////////////////YAKARO////////////////////////////
 			fila = hoja.createRow(x);
 			celda0 = fila.createCell(0);
-			celda0.setCellValue("YAKARO (incluido Mission Group)");
+			celda0.setCellValue("YAKARO");
 			celda0.setCellStyle(comun);
 
 			celda0 = fila.createCell(1);
@@ -709,6 +731,24 @@ public class DeudasGlobalizadasController extends Controller {
 			celda0.setCellValue( total_yaka.add(total_tramite_yaka).doubleValue());
 			celda0.setCellStyle(estiloMoneda);
 			x++;
+
+////////////////////////MISSION GROUP S.R.L.////////////////////////////
+			fila = hoja.createRow(x);
+			celda0 = fila.createCell(0);
+			celda0.setCellValue("MISSION GROUP S.R.L.");
+			celda0.setCellStyle(comun);
+
+			celda0 = fila.createCell(1);
+			celda0.setCellValue(total_mission.doubleValue());
+			celda0.setCellStyle(estiloMoneda);
+			celda0 = fila.createCell(2);
+			celda0.setCellValue(total_tramite_mission.doubleValue());
+			celda0.setCellStyle(estiloMoneda);
+			celda0 = fila.createCell(3);
+			celda0.setCellValue( total_mission.add(total_tramite_mission).doubleValue());
+			celda0.setCellStyle(estiloMoneda);
+			x++;
+
 
 ////////////////////////PACIFIC////////////////////////////
 			fila = hoja.createRow(x);
@@ -727,7 +767,7 @@ public class DeudasGlobalizadasController extends Controller {
 			celda0.setCellStyle(estiloMoneda);
 			x++;
 ////////////////////////Constructora Pindoi	////////////////////////////
-			fila = hoja.createRow(x);
+			/*fila = hoja.createRow(x);
 			celda0 = fila.createCell(0);
 			celda0.setCellValue("Constructora Pindoi");
 			celda0.setCellStyle(comun);
@@ -741,7 +781,7 @@ public class DeudasGlobalizadasController extends Controller {
 			celda0 = fila.createCell(3);
 			celda0.setCellValue(total_pindoi.add(total_tramite_pindoi).doubleValue());
 			celda0.setCellStyle(estiloMoneda);
-			x++;
+			x++;*/
 ////////////////////////CMS////////////////////////////
 			fila = hoja.createRow(x);
 			celda0 = fila.createCell(0);
@@ -802,7 +842,7 @@ public class DeudasGlobalizadasController extends Controller {
 
 			fila = hoja.createRow(x);
 			celda0 = fila.createCell(0);
-			celda0.setCellValue("OTROS SERVICIOS");
+			celda0.setCellValue("OTROS SERVICIOS (Oxigeno, Jefatura, Multimedios, Derivaciones, Mantenimiento Equipos, Pasajes, etc)");
 			celda0.setCellStyle(comun);
 
 			celda0 = fila.createCell(1);
@@ -829,7 +869,7 @@ public class DeudasGlobalizadasController extends Controller {
 
 			fila = hoja.createRow(x);
 			celda0 = fila.createCell(0);
-			celda0.setCellValue("OTROS PROVEEDORES");
+			celda0.setCellValue("OTROS PROVEEDORES (Protesis, descartables, repuestos, libreria, combustible, agua, etc)");
 			celda0.setCellStyle(comun);
 
 			celda0 = fila.createCell(1);
@@ -854,7 +894,7 @@ public class DeudasGlobalizadasController extends Controller {
 
 			fila = hoja.createRow(x);
 			celda0 = fila.createCell(0);
-			celda0.setCellValue("OTROS EQUIPAMIENTO");
+			celda0.setCellValue("EQUIPAMIENTOS");
 			celda0.setCellStyle(comun);
 
 			celda0 = fila.createCell(1);
@@ -872,7 +912,7 @@ public class DeudasGlobalizadasController extends Controller {
 
 			fila = hoja.createRow(x);
 			celda0 = fila.createCell(0);
-			celda0.setCellValue("TOTALES");
+			celda0.setCellValue("SUB-TOTALES");
 			celda0.setCellStyle(comun);
 
 			celda0 = fila.createCell(1);
@@ -889,11 +929,18 @@ public class DeudasGlobalizadasController extends Controller {
 
 
 			//-------------------------------RA
-			x++;x++;
+			x++;
 			fila = hoja.createRow(x);
 			celda0 = fila.createCell(0);
 			celda0.setCellValue("R.A");
 			celda0.setCellStyle(cabeceraPrincipal);
+			celda0 = fila.createCell(1);
+			celda0.setCellStyle(cabeceraPrincipal);
+			celda0 = fila.createCell(2);
+			celda0.setCellStyle(cabeceraPrincipal);
+			celda0 = fila.createCell(3);
+			celda0.setCellStyle(cabeceraPrincipal);
+
 			hoja.addMergedRegion(new  CellRangeAddress(x,x,0,3));
 			x++;
 
@@ -927,11 +974,17 @@ public class DeudasGlobalizadasController extends Controller {
 			celda0.setCellValue( total_ra.add(total_tramite_ra).doubleValue());
 			celda0.setCellStyle(estiloMoneda);
 
+			/*x++;
 			x++;
-			x++;x++;
 			fila = hoja.createRow(x);
 			celda0 = fila.createCell(0);
 			celda0.setCellValue("TOTAL PROVEEDORES DESTACADOS Y R.A");
+			celda0.setCellStyle(cabeceraPrincipal);
+			celda0 = fila.createCell(1);
+			celda0.setCellStyle(cabeceraPrincipal);
+			celda0 = fila.createCell(2);
+			celda0.setCellStyle(cabeceraPrincipal);
+			celda0 = fila.createCell(3);
 			celda0.setCellStyle(cabeceraPrincipal);
 			hoja.addMergedRegion(new  CellRangeAddress(x,x,0,3));
 			x++;
@@ -948,16 +1001,22 @@ public class DeudasGlobalizadasController extends Controller {
 			celda0.setCellStyle(estiloMoneda);
 			celda0 = fila.createCell(3);
 			celda0.setCellValue(total.add(total_ra).add(total_tramite).add(total_tramite_ra).doubleValue());
-			celda0.setCellStyle(estiloMoneda);
+			celda0.setCellStyle(estiloMoneda);*/
 
 
 
 
 			//-------------------------------IPS
-			x++;x++;x++;
+			/*x++;x++;
 			fila = hoja.createRow(x);
 			celda0 = fila.createCell(0);
 			celda0.setCellValue("IPS");
+			celda0.setCellStyle(cabeceraPrincipal);
+			celda0 = fila.createCell(1);
+			celda0.setCellStyle(cabeceraPrincipal);
+			celda0 = fila.createCell(2);
+			celda0.setCellStyle(cabeceraPrincipal);
+			celda0 = fila.createCell(3);
 			celda0.setCellStyle(cabeceraPrincipal);
 			hoja.addMergedRegion(new  CellRangeAddress(x,x,0,3));
 			x++;
@@ -990,7 +1049,7 @@ public class DeudasGlobalizadasController extends Controller {
 			celda0.setCellStyle(estiloMoneda);
 			celda0 = fila.createCell(3);
 			celda0.setCellValue( total_ips.add(total_tramite_ips).doubleValue());
-			celda0.setCellStyle(estiloMoneda);
+			celda0.setCellStyle(estiloMoneda);*/
 
 
 
