@@ -79,7 +79,7 @@ public class ActasRecepcionAccionesController extends Controller {
 			return ok(modalCrearActaRecepcion.render(actaForm));
 		}
 
-		String sql2 = " SELECT * FROM recepciones r " +
+		/*String sql2 = " SELECT * FROM recepciones r " +
 				" INNER JOIN ordenes_provision op ON op.id = r.orden_provision_id " +
 				" INNER JOIN ordenes o ON o.id = op.orden_compra_id " +
 				" WHERE r.id in (:listId) AND o.fecha_provision is null ";
@@ -87,7 +87,7 @@ public class ActasRecepcionAccionesController extends Controller {
 		if (ordenesSinFecha.size() > 0) {
 			flash("error", "No se puede asignar acta porque la Orden no tiene Fecha de Provision Asignada.");
 			return ok(modalCrearActaRecepcion.render(actaForm));
-		}
+		}*/
 
 		if (!Permiso.check("verTodoOrdenProvision")) {
 			if (Usuario.getUsurioSesion().organigrama != null
@@ -228,7 +228,7 @@ public class ActasRecepcionAccionesController extends Controller {
 			return ok(modalAsignarActaRecepcion.render(actaForm));
 		}
 
-		String sql2 = " SELECT * FROM recepciones r " +
+		/*String sql2 = " SELECT * FROM recepciones r " +
 				" INNER JOIN ordenes_provision op ON op.id = r.orden_provision_id " +
 				" INNER JOIN ordenes o ON o.id = op.orden_compra_id " +
 				" WHERE r.id in (:listId) AND o.fecha_provision is null ";
@@ -236,7 +236,7 @@ public class ActasRecepcionAccionesController extends Controller {
 		if (ordenesSinFecha.size() > 0) {
 			flash("error", "No se puede asignar acta porque la Orden no tiene Fecha de Provision Asignada.");
 			return ok(modalAsignarActaRecepcion.render(actaForm));
-		}
+		}*/
 
 		if (!Permiso.check("verTodoOrdenProvision")) {
 			if (Usuario.getUsurioSesion().organigrama != null
