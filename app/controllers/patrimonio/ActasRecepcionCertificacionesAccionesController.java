@@ -87,7 +87,7 @@ public class ActasRecepcionCertificacionesAccionesController extends Controller 
 			return ok(modalCrearActaRecepcionCertificaciones.render(actaForm));
 		}
 
-		String sql2 = " SELECT * FROM certificaciones_servicios r " +
+		/*String sql2 = " SELECT * FROM certificaciones_servicios r " +
 				" INNER JOIN ordenes_provision op ON op.id = r.orden_provision_id " +
 				" INNER JOIN ordenes o ON o.id = op.orden_compra_id " +
 				" WHERE r.id in (:listId) AND o.fecha_provision is null ";
@@ -95,7 +95,7 @@ public class ActasRecepcionCertificacionesAccionesController extends Controller 
 		if (ordenesSinFecha.size() > 0) {
 			flash("error", "No se puede asignar acta porque la Orden no tiene Fecha de Provision Asignada.");
 			return ok(modalCrearActaRecepcionCertificaciones.render(actaForm));
-		}
+		}*/
 
 		String sqlOrdenDistinta = " SELECT orden_provision_id FROM certificaciones_servicios WHERE id in (:listId) GROUP BY orden_provision_id ";
 		List<SqlRow> recepcionesOrdenDistinta = Ebean.createSqlQuery(sqlOrdenDistinta).setParameter("listId", ids)
@@ -267,7 +267,7 @@ public class ActasRecepcionCertificacionesAccionesController extends Controller 
 			return ok(modalAsignarActaRecepcionCertificaciones.render(actaForm));
 		}
 
-		String sql2 = " SELECT * FROM certificaciones_servicios r " +
+		/*String sql2 = " SELECT * FROM certificaciones_servicios r " +
 				" INNER JOIN ordenes_provision op ON op.id = r.orden_provision_id " +
 				" INNER JOIN ordenes o ON o.id = op.orden_compra_id " +
 				" WHERE r.id in (:listId) AND o.fecha_provision is null ";
@@ -275,7 +275,7 @@ public class ActasRecepcionCertificacionesAccionesController extends Controller 
 		if (ordenesSinFecha.size() > 0) {
 			flash("error", "No se puede asignar acta porque la Orden no tiene Fecha de Provision Asignada.");
 			return ok(modalAsignarActaRecepcionCertificaciones.render(actaForm));
-		}
+		}*/
 
 		if (!Permiso.check("verTodoOrdenProvision")) {
 			if (Usuario.getUsurioSesion().organigrama != null
