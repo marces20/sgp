@@ -219,7 +219,7 @@ public class Proveedor extends Model {
 
     public static List getProveedoresYacaro(){
     	List<Long> ret = new ArrayList<Long>();
-    	ret.add((long)17217);//MISSION GROUP S.R.L.
+    	//ret.add((long)17217);//MISSION GROUP S.R.L.
     	ret.add((long)16727);//YAKARO S.A.
     	return ret;
     }
@@ -250,7 +250,7 @@ public class Proveedor extends Model {
 		listaProveedores.add(16359);//BIOFIX de Ezcurra Mariel Cristina
 		///////////////////////////////////////////////////
 		//listaProveedores.add(7348);//CONSTRUCTORA TABAY SA
-		listaProveedores.add(1589);//NR CONSTRUCCIONES S.A.
+		//listaProveedores.add(1589);//NR CONSTRUCCIONES S.A.
 		//listaProveedores.add(1530);//MOFAR S.A.
 		listaProveedores.add(4359);//DROGUERIA SAN JORGE S.A.
 		listaProveedores.add(2749);//IMPLANTEJ DE TEJEDOR FACUNDO
@@ -270,7 +270,7 @@ public class Proveedor extends Model {
 		listaProveedores.add(1838);// 	1838	"PACIFIC OCEAN S.A."
 		listaProveedores.add(1588);// 	1588	"COMPAÑIA MISIONERA DE SEGURIDAD S.R.L."
 		listaProveedores.add(2713);// 	2713	"SAFITA S.R.L."
-		listaProveedores.add(1592);// 	1592	Constructora Pindoi S.R.L.
+		//listaProveedores.add(1592);// 	1592	Constructora Pindoi S.R.L.
 
 		return listaProveedores;
     }
