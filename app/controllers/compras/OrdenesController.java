@@ -775,6 +775,13 @@ public class OrdenesController extends Controller {
 					errorControl =  true;
 				}
 			}
+		}else {
+
+			if(orden.orden_rubro_id.compareTo(new Long(7))  == 0) {
+				aviso += "Solo se puede poner rubro SERVICIO si es certificacion patrimonio o recepcion de productos.<br>";
+				errorControl =  true;
+			}
+
 		}
 
 
