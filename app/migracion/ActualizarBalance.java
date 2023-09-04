@@ -1581,9 +1581,9 @@ public class ActualizarBalance extends Controller {
 					if(ISHONORARIO) {
 						ci = 415;//	2.1.1.01.03 Honorarios a Pagar
 					}else if(SUELDOSCONVENIO){
-						ci = 437;//2.1.4.01.01 Sueldos a Pagar Convenio
+						ci = 437;//2.1.4.01.01 Sueldos a Pagar
 					}else if(SUELDOSPARQUE){
-						ci = 438;//2.1.4.01.02 Sueldos a Pagar Parque
+						ci = 437;//2.1.4.01.01 Sueldos a Pagar
 					}else if(PASANTIAS) {
 						ci = new Integer(600);//2.1.4.01.03 Pasantias
 					}else if(SUELDOSJUBILACION) {
