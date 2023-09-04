@@ -156,6 +156,9 @@ public class AgentesReportesController extends Controller  {
 				celda0 = fila.createCell(17);
 				celda0.setCellValue("email");
 				celda0.setCellStyle(comun);
+				celda0 = fila.createCell(18);
+				celda0.setCellValue("edad");
+				celda0.setCellStyle(comun);
 				x++;
 
 
@@ -272,6 +275,10 @@ public class AgentesReportesController extends Controller  {
 
                     celda0 = fila.createCell(17);
                     celda0.setCellValue(l.email);
+                    celda0.setCellStyle(comun);
+
+                    celda0 = fila.createCell(17);
+                    celda0.setCellValue(l.getEdad());
                     celda0.setCellStyle(comun);
 
 					x++;
