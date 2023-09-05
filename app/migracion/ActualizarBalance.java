@@ -1153,6 +1153,12 @@ public class ActualizarBalance extends Controller {
 						}
 					}
 
+					////OTROS SERVICIOS-------------------------------------------------------
+					if(fl.factura.orden != null && fl.factura.orden.orden_rubro_id.equals((long)4)) {//OTROS SERVICIOS
+						cuentaId = getCuentaTransferencia(fl.factura.orden.deposito_id);
+
+					}
+
 					//EQUIPOS-------------------------------------------------------
 					/*HOSPITAL ESCUELA DE AGUDOSX
 					INSTITUTO DE GENETICA HUMANAX
