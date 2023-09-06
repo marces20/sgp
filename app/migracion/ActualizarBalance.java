@@ -1161,7 +1161,11 @@ public class ActualizarBalance extends Controller {
 
 					////ESTUDIOS MEDICOS-------------------------------------------------------
 					if(fl.factura.orden != null && fl.factura.orden.orden_rubro_id.equals((long)2)) {//ESTUDIOS MEDICOS
-						cuentaId = getCuentaTransferencia(fl.factura.orden.deposito_id);
+						if(fl.factura.orden.deposito_id.equals((long)1)) {
+							cuentaId = new Long(497);
+						}else {
+							cuentaId = getCuentaTransferencia(fl.factura.orden.deposito_id);
+						}
 
 					}
 
