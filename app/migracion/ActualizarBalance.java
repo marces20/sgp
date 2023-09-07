@@ -470,7 +470,7 @@ public class ActualizarBalance extends Controller {
 		try {
 
 			Date fd = DateUtils.formatDate("01/01/2023", "dd/MM/yyyy");
-			Date fh = DateUtils.formatDate("31/01/2023", "dd/MM/yyyy");
+			Date fh = DateUtils.formatDate("31/03/2023", "dd/MM/yyyy");
 
 
 			conn2 = Configuracion2.get2().getConnection2();
@@ -558,7 +558,7 @@ public class ActualizarBalance extends Controller {
 					cuentaId=new Long(546);
 					cuentaId = (fl.factura.orden != null)?getCuentaTransferencia(fl.factura.orden.deposito_id):new Long(546);
 
-					Logger.debug("00000000000 "+fl.cuenta_analitica_id);
+					Logger.debug("00000000000facturaId "+fl.id);
 
 					Long cuenta_analitica_original_id= (fl.cuenta_analitica_original_id != null)?fl.cuenta_analitica_original_id:fl.cuenta_analitica_id;
 
@@ -1154,7 +1154,7 @@ public class ActualizarBalance extends Controller {
 					}
 
 					////OTROS SERVICIOS-------------------------------------------------------
-					if(fl.factura.orden != null && fl.factura.orden.orden_rubro_id.equals((long)4)) {//OTROS SERVICIOS
+					if(fl.factura.orden != null && fl.factura.orden.orden_rubro_id.equals((long)5)) {//OTROS SERVICIOS
 						cuentaId = getCuentaTransferencia(fl.factura.orden.deposito_id);
 
 					}
