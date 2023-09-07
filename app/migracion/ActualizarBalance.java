@@ -1565,6 +1565,7 @@ public class ActualizarBalance extends Controller {
 						SUELDOSJUBILACION = false;
 						SUELDOSOBRASOCIAL  = false;
 						PASANTIAS = true;
+						cuentaId = new Long(489);//4.2.1.02.04 Honorarios Profesionales
 					}
 
 
