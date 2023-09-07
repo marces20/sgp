@@ -753,7 +753,8 @@ public class ActualizarBalance extends Controller {
 
 
 					if(cuenta_analitica_original_id.equals((long)642)) {//OTROS BIENES DE CONSUMO (FATIMA)
-						cuentaId = new Long(528);//4.2.2/02/32 Transferencias a Fatima
+						//cuentaId = new Long(528);//4.2.2/02/32 Transferencias a Fatima
+						cuentaId = getCuentaTransferencia(fl.factura.orden.deposito_id);
 					}
 
 					if(cuenta_analitica_original_id.equals((long)339)) {//OTROS BIENES DE CONSUMO (IGH)
