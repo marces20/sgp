@@ -153,7 +153,8 @@ public class Balance extends Model {
 										   String tipo,
 										   String expediente_id,
 										   String ordenPagoId,
-										   String marca) {
+										   String marca,
+										   String deposito_id) {
 
 		Pagination<Balance> p = new Pagination<Balance>();
 		p.setOrderDefault("ASC");
@@ -169,6 +170,7 @@ public class Balance extends Model {
 		.fetch("expediente", "nombre, id")
 		.fetch("expediente.ejercicio", "nombre")
 		.fetch("expediente.parent.ejercicio", "nombre")
+		.fetch("orden.deposito.nombre","nombre")
 		.where();
 
 		if(!ejercicio.equals("")){
@@ -191,6 +193,10 @@ public class Balance extends Model {
 
 		if(!cuenta_id.equals("")){
 			f.eq("cuenta_id", Integer.parseInt(cuenta_id));
+		}
+
+		if(!deposito_id.equals("")){
+			f.eq("orden.deposito_id", Integer.parseInt(deposito_id));
 		}
 
 		if(!cuentaPropiaId.equals("")){
