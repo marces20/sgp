@@ -171,7 +171,7 @@ public class Balance extends Model {
 		.fetch("expediente", "nombre, id")
 		.fetch("expediente.ejercicio", "nombre")
 		.fetch("expediente.parent.ejercicio", "nombre")
-		.fetch("orden.deposito.nombre","nombre")
+		.fetch("orden.deposito","nombre")
 		.where();
 
 		if(!ejercicio.equals("")){
