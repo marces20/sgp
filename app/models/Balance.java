@@ -165,6 +165,7 @@ public class Balance extends Model {
 		ExpressionList<Balance> f = find
 		.fetch("estado", "id,nombre")
 		.fetch("cuentaPropia", "nombre")
+		.fetch("cuenta", "nombre")
 		.fetch("ordenPago", "numero")
 		.fetch("ordenPago.ejercicio", "nombre")
 		.fetch("expediente", "nombre, id")
