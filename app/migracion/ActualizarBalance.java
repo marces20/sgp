@@ -520,7 +520,7 @@ public class ActualizarBalance extends Controller {
 
 												   //.not(Expr.in("expediente_id",idsExpLiq))
 													//.eq("id", 66556)
-												   //.eq("orden_pago_id",29783)
+												   //.eq("orden_pago_id",35875)
 													.findList();
 
 			System.out.println("-------------- "+lf.size());
@@ -1146,7 +1146,7 @@ public class ActualizarBalance extends Controller {
 					if(fl.factura.orden != null && fl.factura.orden.orden_rubro_id.equals((long)4)) {//MEDICAMENTOS
 						if(fl.factura.orden.deposito_id.equals((long)1) ||
 								fl.factura.orden.deposito_id.equals((long)32) ||
-								fl.factura.orden.deposito_id.equals((long)2) ) {//1	"HOSPITAL ESCUELA DE AGUDOS" LACMI o FATIMA
+								fl.factura.orden.deposito_id.equals((long)3) ) {//1	"HOSPITAL ESCUELA DE AGUDOS" LACMI o FATIMA
 							cuentaId = new Long(552);
 						}else {
 
@@ -1313,7 +1313,7 @@ public class ActualizarBalance extends Controller {
 						}
 
 						//"2";"LACMI	4.2.2.09.02 Serv. Mantenimiento Edilicio LACMI
-						if(fl.factura.orden.deposito_id.equals((long)2)) {
+						if(fl.factura.orden.deposito_id.equals((long)3)) {
 							cuentaId = new Long(588);
 						}
 					}
@@ -1406,7 +1406,7 @@ public class ActualizarBalance extends Controller {
 						}
 
 						//LACMI	4.2.2.09.04 Servicio Vigilancia LACMI
-						if(fl.factura.orden.deposito_id.equals((long)2)) {
+						if(fl.factura.orden.deposito_id.equals((long)3)) {
 							cuentaId = new Long(599);
 						}
 					}
@@ -1442,7 +1442,7 @@ public class ActualizarBalance extends Controller {
 						}
 
 						//LACMI	   4.2.2.09.03 Servicios Seguridad Policial LACMI
-						if(fl.factura.orden.deposito_id.equals((long)2)) {
+						if(fl.factura.orden.deposito_id.equals((long)3)) {
 							cuentaId = new Long(594);
 						}
 					}
