@@ -267,7 +267,11 @@
 					<td class="">@(utils.NumberUtils.moneda(bcp.haber))</td>
 					<td class="estado">@if(bcp.estado != null){@(bcp.estado.nombre)}</td>
 					<td class="">@bcp.tipo</td>
-					<td class="">@bcp.orden.deposito.nombre</td>
+					<td class="">
+						@if(bcp.orden != null && bcp.orden.deposito != null){
+							@bcp.orden.deposito.nombre
+						}
+					</td>
 
 				</tr>
 				@{debe = debe.add(bcp.debe)}
