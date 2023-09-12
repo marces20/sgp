@@ -1144,9 +1144,7 @@ public class ActualizarBalance extends Controller {
 
 					//MEDICAMENTOS-------------------------------------------------------
 					if(fl.factura.orden != null && fl.factura.orden.orden_rubro_id.equals((long)4)) {//MEDICAMENTOS
-						if(fl.factura.orden.deposito_id.equals((long)1) ||
-								fl.factura.orden.deposito_id.equals((long)32) ||
-								fl.factura.orden.deposito_id.equals((long)3) ) {//1	"HOSPITAL ESCUELA DE AGUDOS" LACMI o FATIMA
+						if(fl.factura.orden.deposito_id.equals((long)1) ) {//1	"HOSPITAL ESCUELA DE AGUDOS"
 							cuentaId = new Long(552);
 						}else {
 
@@ -1519,7 +1517,11 @@ public class ActualizarBalance extends Controller {
 					}
 					//AT.ME.DO. S.R.L
 					if(idProveedor.equals(2176)) {//AT.ME.DO. S.R.L
-						cuentaId = new Long(497);
+						if(fl.factura.orden.deposito_id.equals((long)1)) {
+							Long ret= new Long(521); //4.2.2.02.25 Transferencias a otras Instituciones
+						}else {
+							cuentaId = new Long(497); //4.2.2.02.01 Proveedores de Servicios
+						}
 					}
 
 					//LASER
