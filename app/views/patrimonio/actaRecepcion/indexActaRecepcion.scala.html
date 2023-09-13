@@ -59,10 +59,16 @@
 				  </button>
 				  <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
 				  	 @if(Permiso.check("expedientesPasarAOtroServicio")) {
-				    <li role="presentation"><a role="menuitem" id="accionPasarOtroServicio" tabindex="-1" href="#"
-				    						   data-url="@controllers.patrimonio.routes.ActasMovimientosController.modalPasarOtroServicio()">
-				    						   Pasar a otro servicio</a>
-				 	</li>
+					    <li role="presentation"><a role="menuitem" id="accionPasarOtroServicio" tabindex="-1" href="#"
+					    						   data-url="@controllers.patrimonio.routes.ActasMovimientosController.modalPasarOtroServicio()">
+					    						   Pasar a otro servicio</a>
+					 	</li>
+					 	<li role="presentation">
+					  		<a role="menuitem" id="accionCerrarCircuitoPase" tabindex="-1" href="#"
+					    						   data-url="@controllers.patrimonio.routes.ActasMovimientosController.modalCierreCircuitoIndividual(-1)">
+					    						   Cerrar Circuito Pases</a>
+
+					 	</li>
 				 	}
 				 	@if(Permiso.check("expedientesCancelarPase")) {
 				 	<li role="presentation"><a role="menuitem" id="cancelarPaseLista" tabindex="-1" href="#"
