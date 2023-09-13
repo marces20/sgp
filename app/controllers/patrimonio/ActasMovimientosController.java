@@ -272,8 +272,10 @@ final static Form<ActaMovimiento> lineaForm = form(ActaMovimiento.class);
 		if(request().body().asFormUrlEncoded().get("idActa") != null){
 			String idActaString =request().body().asFormUrlEncoded().get("idActa")[0];
 			idActa =  new Long(idActaString);
-			actasSeleccionados.clear();
-			actasSeleccionados.add(idActa.intValue());
+			if(idActa.compareTo(new Long(-1)) != 0) {
+				actasSeleccionados.clear();
+				actasSeleccionados.add(idActa.intValue());
+			}
 		}
 		
 		
@@ -331,8 +333,8 @@ final static Form<ActaMovimiento> lineaForm = form(ActaMovimiento.class);
 		}
 		
 		if(d.hasErrors())
-			return ok(modalCierreCircuito.render(d,idActa,null));	
-		
+			return ok(modalCierreCircuito.render(d,idActa,null));
+
 		ObjectNode result = Json.newObject();
 		try {
 			
@@ -399,46 +401,46 @@ final static Form<ActaMovimiento> lineaForm = form(ActaMovimiento.class);
 		d.discardErrors();
 		
 		List<Integer> actasSeleccionados = getSeleccionados();
-		
+
 		Long idActa = null;
-		
+
 		if(request().body().asFormUrlEncoded().get("idActa") != null){
 			String idActaString =request().body().asFormUrlEncoded().get("idActa")[0];
 			idActa =  new Long(idActaString);
 			actasSeleccionados.clear();
 			actasSeleccionados.add(idActa.intValue());
 		}
-		
-		
+
+
 		if(actasSeleccionados.isEmpty()) {
 			flash("error", "Seleccione al menos un acta.");
 			return ok(modalPasarOtroServicio.render(d,idActa,null));
 		}
-		
-		 
-		
+
+
+
 		if(Usuario.getUsurioSesion().organigrama == null) {
 			flash("error", "No tienes un servicio asignado a tu usuarios. Debes solicitar que se te asignen uno.");
 			return ok(modalPasarOtroServicio.render(d,idActa,null));
 		}
-		
+
 		String orgaId =request().body().asFormUrlEncoded().get("organigrama_id")[0];
 		String descripcion = request().body().asFormUrlEncoded().get("descripcion")[0];
-		
+
 		if(orgaId.isEmpty()){
 			d.reject("organigrama_id","Debe seleccionar un servicio.");
 			return ok(modalPasarOtroServicio.render(d,idActa,null));
 		}
-		
+
 		if(orgaId.compareTo(Usuario.getUsurioSesion().organigrama_id.toString()) == 0){
 			d.reject("organigrama_id","No puede dar un pase a tu mismo servicio.");
 			return ok(modalPasarOtroServicio.render(d,idActa,null));
 		}
-		
+
 		List<Long> soloDeMiServicio = soloDeMiServicio(actasSeleccionados);
-		
-			
-		
+
+
+
 		if(soloDeMiServicio.size() > 0) {
 			String error = "Solo se puede modificar realizar movimientos que se encuentren en mi servicio "+Usuario.getUsurioSesion().organigrama.nombre+" <br>";
 			error += "Actas que no se encuentan en mi servicio:<br>";
@@ -446,15 +448,15 @@ final static Form<ActaMovimiento> lineaForm = form(ActaMovimiento.class);
 				ActaRecepcion e = ActaRecepcion.find.byId(x);
 				error += "- "+e.getNombre()+"\n";
 			}
-			
+
 			flash("error", error);
 			return ok(modalPasarOtroServicio.render(d,idActa,null));
 		}
-		
+
 		List<Long> soloAbiertas = ActaMovimiento.getStringIsNotMovimientoCierre(actasSeleccionados);
-		
+
 		Logger.debug("++++++++++++++++ "+soloAbiertas.size());
-		
+
 		if(soloAbiertas.size() > 0) {
 			String error = "NO SE PUEDE CAMBIAR ACTAS CON EL CIRCUITO CERRADO<br>";
 			error += "Actas que se encuentan CERRADAS:<br>";
@@ -462,183 +464,183 @@ final static Form<ActaMovimiento> lineaForm = form(ActaMovimiento.class);
 				ActaRecepcion e = ActaRecepcion.find.byId(x);
 				error += "- "+e.getNombre()+"\n";
 			}
-			
+
 			flash("error", error);
 			return ok(modalPasarOtroServicio.render(d,idActa,null));
 		}
-		
+
 		List<ActaRecepcion> act = ActaRecepcion.find.where().ne("estado_id",Estado.ACTA_ESTADO_APROBADA).in("id",actasSeleccionados).findList();
 		if(act.size() > 0) {
 			flash("error", "Solo se pueden realizar Pases en Actas en estado APROBADAS.");
 			return ok(modalPasarOtroServicio.render(d,idActa,null));
 		}
-		
+
 		if(d.hasErrors())
-			return ok(modalPasarOtroServicio.render(d,idActa,null));	
-		
+			return ok(modalPasarOtroServicio.render(d,idActa,null));
+
 		ObjectNode result = Json.newObject();
 		try {
 			Long organigramaId =  new Long(orgaId);
 			Integer count = ActaMovimiento.pasarOtroServicioMasivo(actasSeleccionados, organigramaId, descripcion);
 			result.put("success", true);
 			flash("success", "Se actualizaron " + count + " registros de "+ actasSeleccionados.size() +" seleccionados.");
-			
-			
+
+
 			String dirTemp = System.getProperty("java.io.tmpdir");
 			File archivo = new File(dirTemp+"/paseActas.odt");
-			List<String> listaErrores = new ArrayList<String>(); 
+			List<String> listaErrores = new ArrayList<String>();
 			File archivoPdf = new File(dirTemp+"/paseActa-"+Usuario.getUsuarioSesion()+".pdf");
-			try {	
-				
+			try {
+
 				InputStream in = Play.application().resourceAsStream("resources/reportes/patrimonio/actasRecepcion/paseActas.odt");
 				IXDocReport report = XDocReportRegistry.getRegistry().loadReport( in, TemplateEngineKind.Velocity );
 				IContext context = report.createContext();
-				
+
 				List<ActaMovimiento> x = new ArrayList<ActaMovimiento>();
 				for(Integer z : actasSeleccionados){
 					ActaMovimiento um = ActaMovimiento.getLastMovimiento(z.longValue());
 					ActaMovimiento ma = ActaMovimiento.getMovimientoAnterior(um);
 					x.add(um);
 				}
-				
+
 				context.put("um",x);
 				context.put("util",new DateUtils());
 				context.put("user",Usuario.getUsurioSesion());
 				context.put("ActaMovimiento",new ActaMovimiento());
-				
-				
-				
+
+
+
 				//OutputStream out = new FileOutputStream(archivo);
 				//report.process(context, out);
-				
+
 		        OutputStream out = new FileOutputStream(archivoPdf);
 				Options options = Options.getTo(ConverterTypeTo.PDF).via(ConverterTypeVia.ODFDOM);
 				report.convert(context, options, out);
-		        
-		        
+
+
 			} catch (IOException e) {
 				e.printStackTrace();
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
-			
-			
+
+
 			result.put("html", modalPasarOtroServicio.render(d,idActa,archivoPdf.getPath()).toString());
 			return ok(result);
 		} catch (Exception e){
 			flash("error", "No se puede modificar los registros.");
 			return ok(modalPasarOtroServicio.render(d,idActa,null));
-		}		
+		}
 	}
 	
 	public static List<Long> soloDeMiServicio(List<Integer> actasSeleccionados) {
-		
+
 		List<Long> ret = ActaMovimiento.getStringIsNotMovimientoServicioUsuario(actasSeleccionados, Usuario.getUsurioSesion().organigrama_id);
-		
+
 		return ret;
 	}
-	
+
 	@CheckPermiso(key = "expedientesCancelarPase")
 	public static Result cancelarPase(Long id) {
 		ObjectNode restJs = Json.newObject();
-		
+
 		try {
-			
+
 			ActaMovimiento um = ActaMovimiento.getLastMovimiento(id);
 			ActaMovimiento ma = ActaMovimiento.getMovimientoAnterior(um);
-			
+
 			if(um == null || um.usuario_id.compareTo(Usuario.getUsurioSesion().id.longValue()) != 0){
-				
+
 				restJs.put("error", "El ultimo pase no ha sido realizado por este usuario");
 				return ok(restJs);
 			}
-			
+
 			if(um == null || um.cierre){
-				
+
 				restJs.put("error", "No se puede cancelar pases de CIERRE");
 				return ok(restJs);
 			}
-			
+
 			if(ma != null){
 				SqlUpdate update = Ebean.createSqlUpdate("UPDATE actas_movimientos SET fecha_salida = null WHERE id = :id ");
 				update.setParameter("id", ma.id);
 				update.execute();
 			}
-			
+
 			SqlUpdate update2 = Ebean.createSqlUpdate("UPDATE actas_movimientos SET cancelado = true WHERE id = :id ");
 			update2.setParameter("id", um.id);
 			update2.execute();
-			
-				
+
+
 		} catch (PersistenceException pe) {
 			restJs.put("succes", false);
 		}
-		
+
 		restJs.put("success", true);
 		return ok(restJs);
 	}
-	
+
 	@CheckPermiso(key = "expedientesAsignarMiServicio")
 	public static Result asignarMiServicio(Long id) {
 		ObjectNode restJs = Json.newObject();
-		 
+
 		try {
-			
+
 			Long organigramaId = Usuario.getUsurioSesion().organigrama_id;
 			List<Integer> expedientesSeleccionados = new ArrayList<Integer>();
 			expedientesSeleccionados.add(id.intValue());
 			Integer count = ActaMovimiento.pasarOtroServicioMasivo(expedientesSeleccionados, organigramaId, "Autoasignacion");
-			
+
 		} catch (PersistenceException pe) {
 			restJs.put("succes", false);
 		}
-		
+
 		restJs.put("success", true);
 		return ok(restJs);
 	}
-	
+
 	@CheckPermiso(key = "expedientesCancelarPase")
 	public static Result cancelarPaseLista() {
 		ObjectNode restJs = Json.newObject();
-		
+
 		try {
-			
+
 			List<Integer> actasSeleccionados = getSeleccionados();
-			
+
 			if(actasSeleccionados.isEmpty()) {
 				restJs.put("error", "Debe seleccionar algun acta.");
 				return ok(restJs);
-			}	
-			
+			}
+
 			List<Long> umx = new ArrayList<Long>();
 			List<Long> max = new ArrayList<Long>();
 			boolean error = false;
 			boolean error2 = false;
 			String errorString = "El ultimo pase de estos de estas actas no han sidos realizados por este usuarios: ";
 			String errorString2 = "No se puede cancelar pases de CIERRE";
-			
+
 			for(Integer z : actasSeleccionados){
 				ActaMovimiento um = ActaMovimiento.getLastMovimiento(z.longValue());
 				ActaMovimiento ma = ActaMovimiento.getMovimientoAnterior(um);
 				umx.add(um.id);
-				
+
 				if(ma == null){
 					max.add(um.id);
 				}else{
 					max.add(ma.id);
 				}
-				
+
 				if(um == null || um.usuario_id.compareTo(Usuario.getUsurioSesion().id.longValue()) != 0){
 					error = true;
 					errorString += um.acta.getNombre()+"-";
 				}
-				
+
 				if(um == null || um.cierre){
 					error = true;
 					errorString2 += um.acta.getNombre()+"-";
 				}
 			}
-			
+
 			if(error){
 				restJs.put("error", errorString);
 				return ok(restJs);
@@ -646,103 +648,103 @@ final static Form<ActaMovimiento> lineaForm = form(ActaMovimiento.class);
 				restJs.put("error", errorString2);
 				return ok(restJs);
 			}else{
-				
+
 				SqlUpdate update = Ebean.createSqlUpdate("UPDATE actas_movimientos SET estado_id = null, fecha_salida = null WHERE id IN(:idList) ");
 				update.setParameter("idList", max);
 				update.execute();
-				
+
 				SqlUpdate update2 = Ebean.createSqlUpdate("UPDATE actas_movimientos SET estado_id = null, cancelado = true WHERE id in(:idList) ");
 				update2.setParameter("idList", umx);
 				update2.execute();
 			}
-			
+
 		} catch (PersistenceException pe) {
 			restJs.put("succes", false);
 		}
-		
+
 		restJs.put("success", true);
 		return ok(restJs);
 	}
-	
+
 	public static Result modalAsignarMiServicio() {
 		return ok(modalAsignarAMiServicio.render(form().bindFromRequest()));
 	}
-	
+
 	@CheckPermiso(key = "expedientesAsignarMiServicio")
 	public static Result asignarAMiServicioMasivo() {
-		 
+
 		DynamicForm d = form().bindFromRequest();
 		d.discardErrors();
 		List<Integer> actasSeleccionados = getSeleccionados();
-		
+
 		if(actasSeleccionados.isEmpty()) {
 			flash("error", "Seleccione al menos un acta.");
 			return ok(modalAsignarAMiServicio.render(d));
 		}
-		
-		  
-		
+
+
+
 		Long organigramaId = Usuario.getUsurioSesion().organigrama_id;
 		if(organigramaId == null){
 			flash("error", "El usuario no tiene asignado un servicio.");
 			return ok(modalAsignarAMiServicio.render(d));
 		}
-		
-		
-		
-		
+
+
+
+
 		Integer count = 0;
 		try {
-			
+
 			 count = ActaMovimiento.pasarOtroServicioMasivo(actasSeleccionados, organigramaId, "Autoasignacion");
-			
+
 		} catch (PersistenceException pe) {
 			flash("error", "No se puede asignar los actas.");
 			return ok(modalAsignarAMiServicio.render(d));
 		}
-		
+
 		flash("success", "Se asignaron "+count+" actas a su servicio.");
 		return ok(modalAsignarAMiServicio.render(d));
 	}
-	
+
 	public static Result aceptarPase(Long id) {
 		ObjectNode restJs = Json.newObject();
-		
+
 		try {
-			
+
 			ActaMovimiento linea = ActaMovimiento.find.where().eq("id", id).findUnique();
 			linea.estado_id = (long) Estado.ACTA_MOVIMIENTO_RECEPCIONADO;
 			linea.fecha_llegada = new Date();
 			linea.usuario_receptor_id = new Long(Usuario.getUsuarioSesion());
 			linea.save();
-			
-			
+
+
 		} catch (PersistenceException pe) {
 			restJs.put("success", false);
 		}
-		
+
 		restJs.put("success", true);
 		return ok(restJs);
 	}
-	
+
 	public static Result rechazarPase(Long id) {
 		ObjectNode restJs = Json.newObject();
-		
+
 		try {
-			
+
 			ActaMovimiento linea = ActaMovimiento.find.where().eq("id", id).findUnique();
 			linea.estado_id = (long) Estado.ACTA_MOVIMIENTO_RECEPCIONADO_CANCELADO;
 			linea.cancelado = true;
 			linea.usuario_receptor_id = new Long(Usuario.getUsuarioSesion());
 			linea.save();
-			
-			
+
+
 		} catch (PersistenceException pe) {
 			restJs.put("success", false);
 		}
-		
+
 		restJs.put("success", true);
 		return ok(restJs);
 	}
-	
+
 }
