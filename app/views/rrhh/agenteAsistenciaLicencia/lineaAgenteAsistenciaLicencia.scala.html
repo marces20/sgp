@@ -34,13 +34,13 @@
 	<td>@if(linea.fpresentacion != null){@(utils.DateUtils.formatDate(linea.create_date))}</td>
 	<td>@if(linea.finicio != null){@(utils.DateUtils.formatDate(linea.finicio))}</td>
 	<td>@if(linea.ffin != null){@(utils.DateUtils.formatDate(linea.ffin))}</td>
-	<td>@linea.getDiasEntreFechas()</td>
+	<td>@if(linea.dias !=null){@linea.dias}else{@linea.getDiasEntreFechas()}</td>
 	<td>@linea.ejercicio.nombre</td>
 	<td>@linea.nota</td>
 	<td>@linea.create_usuario.nombre</td>
 	<td>@if(linea.write_usuario != null){@linea.write_usuario.nombre - @(utils.DateUtils.formatDate(linea.write_date))}</td>
 	<td class="estado">@linea.estado.nombre</td>
-	@if(editable && Permiso.check("agentesLicenciasEliminar")){
+	@if(editable && Permiso.check("agentesLicenciasEliminar") && linea.estado_id.compareTo(Estado.AGENTE_LICENCIA_APROBADO) != 0){
 		<td><a class="btn btn-default btn-xs eliminarAgenteAsistenciaLicencia" href="@controllers.rrhh.routes.AgentesAsistenciasLicenciasController.eliminar(linea.id)"><i class="glyphicon glyphicon-trash icono-eliminar"></i></a></td>
 	}else{
 		<td></td>
