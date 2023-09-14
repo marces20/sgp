@@ -1154,8 +1154,13 @@ public class ActualizarBalance extends Controller {
 
 					////OTROS SERVICIOS-------------------------------------------------------
 					if(fl.factura.orden != null && fl.factura.orden.orden_rubro_id.equals((long)5)) {//OTROS SERVICIOS
-						cuentaId = getCuentaTransferencia(fl.factura.orden.deposito_id);
 
+						if(fl.factura.orden.deposito_id.equals((long)1) ) {//1	"HOSPITAL ESCUELA DE AGUDOS"
+							cuentaId = new Long(497);//HOSPITAL ESCUELA DE AGUDOS	4.2.2.02.01 Proveedores de Servicios
+						}else {
+
+							cuentaId = getCuentaTransferencia(fl.factura.orden.deposito_id);
+						}
 					}
 
 					////ESTUDIOS MEDICOS-------------------------------------------------------
@@ -1171,8 +1176,12 @@ public class ActualizarBalance extends Controller {
 					////SERVICIOS-------------------------------------------------------
 					if(fl.factura.orden != null && fl.factura.orden.orden_rubro_id.equals((long)7)) {//SERVICIOS
 						cuentaId = getCuentaTransferencia(fl.factura.orden.deposito_id);
-
 					}
+
+					if(fl.factura.orden.deposito_id.equals((long)33) && !fl.factura.orden.orden_rubro_id.equals((long)6)) {// banco de protesis
+						cuentaId = new Long(487);//4.2.1.02.02 Protesis/ Ortesis
+					}
+
 
 					//EQUIPOS-------------------------------------------------------
 					/*HOSPITAL ESCUELA DE AGUDOSX
@@ -1232,6 +1241,8 @@ public class ActualizarBalance extends Controller {
 					if(cuenta_analitica_reporta_id.equals((long)517) || cuenta_analitica_reporta_id.equals((long)255)) {//
 						cuentaId = new Long(525);//	4.2.2.02.29 Transferencias a Transplante de Medula
 					}
+
+
 
 					//LIMPIEZA Pindoi
 					if(idProveedor.equals(1592)) {//Proveedor: Constructora Pindoi S.R.L./
@@ -1354,7 +1365,7 @@ public class ActualizarBalance extends Controller {
 
 						//HOSPITAL ESCUELA DE AGUDOS	4.2.2.02.01 Proveedores de Servicios
 						if(fl.factura.orden.deposito_id.equals((long)1)) {
-							cuentaId = new Long(497);
+							cuentaId = new Long(497);//HOSPITAL ESCUELA DE AGUDOS	4.2.2.02.01 Proveedores de Servicios
 						}
 
 						//HOSPITAL MATERNO NEONATAL	4.2.2.08.01 Transferencia a Materno
