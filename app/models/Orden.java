@@ -508,8 +508,8 @@ public class Orden extends Model {
 		SqlUpdate update2 = Ebean.createSqlUpdate("alter table ordenes enable trigger all");
 		update2.execute();
 
-		InformeDeudaProveedoresMaterializada.actualizarVistaMaterializada();
-		InformeDeudaPorActaMaterializada.actualizarVistaMaterializada();
+		//InformeDeudaProveedoresMaterializada.actualizarVistaMaterializada();
+		//InformeDeudaPorActaMaterializada.actualizarVistaMaterializada();
 
 		return ret;
 	}
@@ -531,8 +531,8 @@ public class Orden extends Model {
 		SqlUpdate update2 = Ebean.createSqlUpdate("alter table ordenes enable trigger all");
 		update2.execute();
 
-		InformeDeudaProveedoresMaterializada.actualizarVistaMaterializada();
-		InformeDeudaPorActaMaterializada.actualizarVistaMaterializada();
+		//InformeDeudaProveedoresMaterializada.actualizarVistaMaterializada();
+		//InformeDeudaPorActaMaterializada.actualizarVistaMaterializada();
 
 		return ret;
 	}
@@ -551,8 +551,8 @@ public class Orden extends Model {
 
 		SqlUpdate update2 = Ebean.createSqlUpdate("alter table ordenes enable trigger all");
 		update2.execute();
-		InformeDeudaProveedoresMaterializada.actualizarVistaMaterializada();
-		InformeDeudaPorActaMaterializada.actualizarVistaMaterializada();
+		//InformeDeudaProveedoresMaterializada.actualizarVistaMaterializada();
+		//InformeDeudaPorActaMaterializada.actualizarVistaMaterializada();
 		return ret;
 	}
 
@@ -569,8 +569,8 @@ public class Orden extends Model {
 
 		SqlUpdate update2 = Ebean.createSqlUpdate("alter table ordenes enable trigger all");
 		update2.execute();
-		InformeDeudaProveedoresMaterializada.actualizarVistaMaterializada();
-		InformeDeudaPorActaMaterializada.actualizarVistaMaterializada();
+		//InformeDeudaProveedoresMaterializada.actualizarVistaMaterializada();
+		//InformeDeudaPorActaMaterializada.actualizarVistaMaterializada();
 		return ret;
 	}
 
@@ -593,8 +593,8 @@ public class Orden extends Model {
 
 		SqlUpdate update2 = Ebean.createSqlUpdate("alter table ordenes enable trigger all");
 		update2.execute();
-		InformeDeudaProveedoresMaterializada.actualizarVistaMaterializada();
-		InformeDeudaPorActaMaterializada.actualizarVistaMaterializada();
+		//InformeDeudaProveedoresMaterializada.actualizarVistaMaterializada();
+		//InformeDeudaPorActaMaterializada.actualizarVistaMaterializada();
 		return ret;
 	}
 
