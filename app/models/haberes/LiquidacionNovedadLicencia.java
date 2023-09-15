@@ -32,7 +32,7 @@ public class LiquidacionNovedadLicencia extends Model{
 	@Required(message="Requiere un agente")
 	public Long agente_asistencia_licencia_id;
 
-	public Integer numero_orden_provision;
+
 	@ManyToOne
 	@JoinColumn(name="periodo_id", referencedColumnName="id", insertable=false, updatable=false)
 	public Periodo periodo;
@@ -43,16 +43,33 @@ public class LiquidacionNovedadLicencia extends Model{
 
 	public static Model.Finder<Long,LiquidacionNovedadLicencia> find = new Model.Finder<Long,LiquidacionNovedadLicencia>(Long.class, LiquidacionNovedadLicencia.class);
 
-	public static Pagination<LiquidacionNovedadLicencia> page(String numero){
+	public static Pagination<LiquidacionNovedadLicencia> page(String nombre,
+			  String cuit,String dni,String periodo_id){
 
 		Pagination<LiquidacionNovedadLicencia> p = new Pagination<LiquidacionNovedadLicencia>();
 		p.setOrderDefault("ASC");
 		p.setSortByDefault("periodo_id, agenteAsistenciaLicencia.agente");
 
 		ExpressionList<LiquidacionNovedadLicencia> e = find.
-													   fetch("agenteAsistenciaLicencia.agente","apellido")
+														fetch("periodo","nombre").
+													   fetch("agenteAsistenciaLicencia").
+													   fetch("agenteAsistenciaLicencia.agente","apellido,dni,cuit")
 													   .where();
+		if (!periodo_id.isEmpty()) {
+	      e.eq("periodo_id", Integer.parseInt(periodo_id));
+	    }
 
+		if(!dni.isEmpty()){
+    		e.ilike("agenteAsistenciaLicencia.agente.dni", "%" + dni + "%");
+    	}
+
+    	if(!nombre.isEmpty()){
+    		e.ilike("agenteAsistenciaLicencia.agente.apellido", "%" + nombre + "%");
+    		//.or(Ebean.getExpressionFactory().ilike("apellido", "%" + nombre + "%"), Ebean.getExpressionFactory().ilike("nombre", "%" + nombre + "%"))
+    	}
+    	if(!cuit.isEmpty()){
+    		e.ilike("agenteAsistenciaLicencia.agente.cuit", "%" + cuit + "%");
+    	}
 
 
 		p.setExpressionList(e);
