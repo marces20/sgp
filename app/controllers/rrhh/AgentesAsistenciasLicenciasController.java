@@ -41,6 +41,7 @@ import models.OrdenPagoCircuito;
 import models.Organigrama;
 import models.Usuario;
 import models.auth.Permiso;
+import models.haberes.LiquidacionNovedadLicencia;
 import models.recupero.InformeTotal;
 import controllers.Secured;
 import controllers.auth.CheckPermiso;
@@ -72,6 +73,17 @@ public class AgentesAsistenciasLicenciasController extends Controller {
 		Pagination<AgenteAsistenciaLicencia> lineas = AgenteAsistenciaLicencia.page(agenteId,tipoLicencia);
 		Logger.debug("zzzzzzzzzzzzzzzzzzzzzzzzz");
 		return ok(indexAgenteAsistenciaLicencia.render(lineas, editable));
+	}
+
+	public static Result indexLicenciaNovedadesLiquidacion() {
+		DynamicForm d = form().bindFromRequest();
+		d.discardErrors();
+
+		Pagination<LiquidacionNovedadLicencia> lineas = LiquidacionNovedadLicencia.page(RequestVar.get("nombre"),
+				 RequestVar.get("cuit"),RequestVar.get("dni"),
+				 RequestVar.get("periodo_id"));
+
+		return ok(indexLicenciaNovedadesLiquidacion.render(lineas,d));
 	}
 
 	@CheckPermiso(key = "agentesLicenciasCrear")
@@ -335,12 +347,26 @@ public class AgentesAsistenciasLicenciasController extends Controller {
 			return ok(modalPasarAprobado.render(d));
 		}
 
+
+
+
 		if(d.hasErrors())
 			return ok(modalPasarAprobado.render(d));
 
 		ObjectNode result = Json.newObject();
 		try {
 			Integer count = AgenteAsistenciaLicencia.modificarEstadoMasivo(Estado.AGENTE_LICENCIA_APROBADO, lSeleccionados);
+
+			List<AgenteAsistenciaLicencia> ll = AgenteAsistenciaLicencia.find.where().in("id", lSeleccionados).findList();
+
+			for(AgenteAsistenciaLicencia llx : ll) {
+				llx.dias = llx.getDiasEntreFechas();
+				llx.save();
+				if(llx.tipo_licencia_id.compareTo(new Long(5)) == 0) {
+					AgenteAsistenciaLicencia.setDiasPorPeriodos(llx.id.intValue());
+				}
+			}
+
 			result.put("success", true);
 			flash("success", "Se actualizaron " + count + " registros de "+ lSeleccionados.size() +" seleccionados.");
 			result.put("html", modalPasarAprobado.render(d).toString());
