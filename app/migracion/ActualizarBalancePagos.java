@@ -29,8 +29,8 @@ public class ActualizarBalancePagos {
 		Connection conn2 = null;
 		try {
 
-			Date fd = DateUtils.formatDate("01/01/2022", "dd/MM/yyyy");
-			Date fh = DateUtils.formatDate("31/12/2022", "dd/MM/yyyy");
+			Date fd = DateUtils.formatDate("01/01/2023", "dd/MM/yyyy");
+			Date fh = DateUtils.formatDate("31/03/2023", "dd/MM/yyyy");
 
 			List<Integer> idsExpLiq = new ArrayList<Integer>();
 			idsExpLiq.add(34720);
@@ -42,7 +42,7 @@ public class ActualizarBalancePagos {
 			List<Pago> lf = Pago.find.where()	   .ge("fecha_pago", fd)
 												   .le("fecha_pago", fh)
 												   .eq("tipo", "payment")
-												   .in("expediente_id", idsExpLiq)
+												   //.in("expediente_id", idsExpLiq)
 												   //.eq("expediente_id",27473)
 												   //.eq("tipo_cuenta_id", TipoCuenta.PLAN_SUMAR_LACMI)
 												   .disjunction()
