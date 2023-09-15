@@ -469,7 +469,7 @@ public class ActualizarBalance extends Controller {
 
 		try {
 
-			Date fd = DateUtils.formatDate("01/01/2023", "dd/MM/yyyy");
+			Date fd = DateUtils.formatDate("01/03/2023", "dd/MM/yyyy");
 			Date fh = DateUtils.formatDate("31/03/2023", "dd/MM/yyyy");
 
 
@@ -1178,7 +1178,7 @@ public class ActualizarBalance extends Controller {
 						cuentaId = getCuentaTransferencia(fl.factura.orden.deposito_id);
 					}
 
-					if(fl.factura.orden.deposito_id.equals((long)33) && !fl.factura.orden.orden_rubro_id.equals((long)6)) {// banco de protesis
+					if(fl.factura.orden != null && fl.factura.orden.deposito_id.equals((long)33) && !fl.factura.orden.orden_rubro_id.equals((long)6)) {// banco de protesis
 						cuentaId = new Long(487);//4.2.1.02.02 Protesis/ Ortesis
 					}
 
