@@ -79,23 +79,28 @@ public class AgentesAsistenciasLicenciasController extends Controller {
 		DynamicForm d = form().bindFromRequest();
 		d.discardErrors();
 
-		/*List<Integer> aa = new ArrayList<>();
-				aa.add(1);
-				aa.add(2);
-				aa.add(3);
-				aa.add(4);
+		List<Integer> aa = new ArrayList<>();
 
-		List<AgenteAsistenciaLicencia> ll = AgenteAsistenciaLicencia.find.where().eq("tipo_licencia_id", 5).in("ejercicio_id", aa).findList();
+				aa.add(5);
+						aa.add(6);
+								aa.add(7);
+				//aa.add(8);
+				//aa.add(9);
+				//aa.add(12);
+				//aa.add(13);
+				//aa.add(14);
+
+		//List<AgenteAsistenciaLicencia> ll = AgenteAsistenciaLicencia.find.where().ne("tipo_licencia_id", 5).in("ejercicio_id", aa).findList();
 		int a = 0;
-		for(AgenteAsistenciaLicencia llx : ll) {
-			llx.dias = llx.getDiasEntreFechas();
-			llx.save();
-			if(llx.tipo_licencia_id.compareTo(new Long(5)) == 0) {
-				AgenteAsistenciaLicencia.setDiasPorPeriodos(llx.id.intValue());
-				a++;
-			}
-		}
-		Logger.debug("TERMINAAAAAAAAAAAAAAAAAAAAAA "+a);*/
+		//for(AgenteAsistenciaLicencia llx : ll) {
+		//	llx.dias = llx.getDiasEntreFechas();
+		//	llx.save();
+			//if(llx.tipo_licencia_id.compareTo(new Long(5)) == 0) {
+			//	AgenteAsistenciaLicencia.setDiasPorPeriodos(llx.id.intValue());
+			//	a++;
+			//}
+		//}
+		Logger.debug("TERMINAAAAAAAAAAAAAAAAAAAAAA "+a);
 
 		Pagination<LiquidacionNovedadLicencia> lineas = LiquidacionNovedadLicencia.page(RequestVar.get("nombre"),
 				 																		RequestVar.get("cuit"),
@@ -409,6 +414,8 @@ public class AgentesAsistenciasLicenciasController extends Controller {
 		return AgenteAsistenciaLicencia.find.where().ne("estado_id", Estado.AGENTE_LICENCIA_PREAPROBADO).in("id", opcSeleccionados).findRowCount() == 0;
 	}
 
+
+
 	@CheckPermiso(key = "agentesLicenciasPasarCancelado")
 	public static Result modalPasarCancelado() {
 		return ok(modalPasarCancelado.render(form().bindFromRequest()));
@@ -423,6 +430,11 @@ public class AgentesAsistenciasLicenciasController extends Controller {
 		if(lSeleccionados.isEmpty()) {
 			flash("error", "Seleccione al menos una licencia.");
 			return ok(modalPasarCancelado.render(d));
+		}
+
+		if(!soloBorrador(lSeleccionados) && !soloPreaprobado(lSeleccionados)) {
+			flash("error", "Solo se puede modificar registros en estado en borrador o preaprobado.");
+			return ok(modalPasarAprobado.render(d));
 		}
 
 		if(d.hasErrors())
