@@ -11,7 +11,7 @@
 <div class="page-header">
 	<div class="row">
 		<div class="col-sm-7">
-			<h1>Lista de Agentes</h1>
+			<h1>Lista Licencias por Periodos</h1>
 		</div>
 
 		<div class="col-sm-5">
@@ -48,27 +48,7 @@
 	<form action="" id="formSearchAgentes" method="GET">
 
 		<div class="row" >
-			<div class="col-sm-2">
-				<div class="form-group">
-					<label for="nombre" class="control-label">Nombre
-					@inputText(formBuscador("nombre"), 'class -> "form-control")
-					</label>
-				</div>
-			</div>
-			<div class="col-sm-2">
-				<div class="form-group">
-					<label for="cuit" class="control-label">DNI
-					@inputText(formBuscador("dni"), 'class -> "form-control")
-					</label>
-				</div>
-			</div>
-			<div class="col-sm-2">
-				<div class="form-group">
-					<label for="cuit" class="control-label">Cuit
-					@inputText(formBuscador("cuit"), 'class -> "form-control")
-					</label>
-				</div>
-			</div>
+
 			<div class="col-sm-2">
 				<label for="inputPeriodo" class="control-label">Periodo</label>
 				<div class="input-group">
@@ -90,17 +70,63 @@
 				</div>
 			</div>
 			<div class="col-sm-2">
-						<div class="form-group">
-						<label for="nombre" class="control-label">&nbsp;</label>
-						<button  class="form-control btn btn-primary">Buscar</button>
-						</div>
-					</div>
-					<div class="col-sm-2">
-						<div class="form-group">
-						<label for="nombre" class="control-label">&nbsp;</label>
-						<a href="@controllers.rrhh.routes.AgentesAsistenciasLicenciasController.indexLicenciaNovedadesLiquidacion()"  class="form-control btn btn-default">Limpiar</a>
-						</div>
-					</div>
+				<div class="form-group">
+					<label for="nombre" class="control-label">Nombre
+					@inputText(formBuscador("nombre"), 'class -> "form-control")
+					</label>
+				</div>
+			</div>
+			<div class="col-sm-2">
+				<div class="form-group">
+					<label for="cuit" class="control-label">Cuit
+					@inputText(formBuscador("cuit"), 'class -> "form-control")
+					</label>
+				</div>
+			</div>
+			<div class="col-sm-2">
+				<div class="form-group">
+					<label for="cuit" class="control-label">DNI
+					@inputText(formBuscador("dni"), 'class -> "form-control")
+					</label>
+				</div>
+			</div>
+			<div class="col-sm-2">
+				<label class="control-label">
+					Activo
+					@select(formBuscador("activo"),options(""->"","SI"->"SI","NO"->"NO"), 'class -> "form-control select")
+				</label>
+			</div>
+
+		</div>
+		<div class="row" >
+			<div class="col-sm-2">
+				<div class="form-group">
+					<label for="cuit" class="control-label">Tipo Relacion
+					@select(formBuscador("tipo_relacion_laboral"),
+					TipoRelacionLaboral.find.all().map { p => p.id.toString -> p.nombre},
+					'class -> "form-control select", '_default -> "Seleccionar")
+					</label>
+				</div>
+			</div>
+			<div class="col-sm-5">
+				<div class="form-group">
+					<label for="inputOrganigrama" class="control-label">Departamento/Servicio</label>
+					@inputText(formBuscador("organigrama.nombre"),'class -> "form-control",'id -> "organigrama")
+					@inputText(formBuscador("organigrama_id"),'hidden -> "hidden")
+				</div>
+			</div>
+			<div class="col-sm-2">
+				<div class="form-group">
+				<label for="nombre" class="control-label">&nbsp;</label>
+				<button  class="form-control btn btn-primary">Buscar</button>
+				</div>
+			</div>
+			<div class="col-sm-2">
+				<div class="form-group">
+				<label for="nombre" class="control-label">&nbsp;</label>
+				<a href="@controllers.rrhh.routes.AgentesAsistenciasLicenciasController.indexLicenciaNovedadesLiquidacion()"  class="form-control btn btn-default">Limpiar</a>
+				</div>
+			</div>
 
 		</div>
 	</form>
@@ -121,30 +147,48 @@
 					<th width="30">
 						<input type="checkbox" name="checkAll" id="checkAll"/>
 					</th>
-					<th width="30">#</th>
+
+					<th>idLic</th>
 					<th>Agente</th>
+					<th>Dni</th>
+					<th>Cuit</th>
 					<th>Periodo</th>
 					<th>Dias</th>
 					<th>Año</th>
 					<th>Inicio</th>
 					<th>Fin</th>
+					<th>Organigrama</th>
+					<th>Tipo Relacion</th>
 
-					<th width="30">#</th>
 				</tr>
 			</thead>
 			<tbody>
 			@for(linea <- buscador.getList) {
 				<tr>
 					<td width="30"><input type="checkbox" name="checkAll" id="checkAll"/></td>
-					<td width="50"></td>
+					<td width="50">@linea.agenteAsistenciaLicencia.id</td>
 					<td>@if(linea.agenteAsistenciaLicencia != null){@linea.agenteAsistenciaLicencia.agente.apellido}</td>
+					<td>@if(linea.agenteAsistenciaLicencia != null){@linea.agenteAsistenciaLicencia.agente.dni}</td>
+					<td>@if(linea.agenteAsistenciaLicencia != null){@linea.agenteAsistenciaLicencia.agente.cuit}</td>
 					<td>@linea.periodo.nombre</td>
 					<td>@linea.dias</td>
 
 					<td>@linea.agenteAsistenciaLicencia.ejercicio.nombre</td>
 					<td>@if(linea.agenteAsistenciaLicencia.finicio != null){@(utils.DateUtils.formatDate(linea.agenteAsistenciaLicencia.finicio))}</td>
 					<td>@if(linea.agenteAsistenciaLicencia.ffin != null){@(utils.DateUtils.formatDate(linea.agenteAsistenciaLicencia.ffin))}</td>
-					<td class="50"></td>
+					<td>@if(linea.agenteAsistenciaLicencia.agente.organigrama != null){@linea.agenteAsistenciaLicencia.agente.organigrama.nombre}</td>
+					<td>
+						@linea.agenteAsistenciaLicencia.agente.tipo_relacion_laboral match {
+				    	case "1" => {Contrato Relacion Parque de la salud}
+						case "2" => {Monotributo Parque de la salud}
+						case "3" => {Contrato Relacion Convenio Ministerio Salud}
+						case "4" => {Planta Ministerio Salud}
+						case "5" => {Contrato Relacion Ministerio Salud}
+						case "6" => {Adscripto Otras Entidades}
+				    	case _ => {}
+						}
+					</td>
+
 				</tr>
 
 			}
