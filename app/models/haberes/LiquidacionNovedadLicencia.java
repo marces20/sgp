@@ -44,17 +44,23 @@ public class LiquidacionNovedadLicencia extends Model{
 	public static Model.Finder<Long,LiquidacionNovedadLicencia> find = new Model.Finder<Long,LiquidacionNovedadLicencia>(Long.class, LiquidacionNovedadLicencia.class);
 
 	public static Pagination<LiquidacionNovedadLicencia> page(String nombre,
-			  String cuit,String dni,String periodo_id){
+										  						String cuit,
+										  						String dni,
+										  						String periodo_id,
+										  						String tipo_relacion_laboral,
+										  						String organigrama_id,
+										  						String activo){
 
 		Pagination<LiquidacionNovedadLicencia> p = new Pagination<LiquidacionNovedadLicencia>();
-		p.setOrderDefault("ASC");
-		p.setSortByDefault("periodo_id, agenteAsistenciaLicencia.agente");
+		p.setOrderDefault(" ");
+		p.setSortByDefault("periodo_id DESC, agenteAsistenciaLicencia.agente.apellido ASC");
 
 		ExpressionList<LiquidacionNovedadLicencia> e = find.
-														fetch("periodo","nombre").
+													   fetch("periodo","nombre").
 													   fetch("agenteAsistenciaLicencia").
-													   fetch("agenteAsistenciaLicencia.agente","apellido,dni,cuit")
-													   .where();
+													   fetch("agenteAsistenciaLicencia.agente","apellido,dni,cuit,tipo_relacion_laboral,activo,organigrama_id").
+													   fetch("agenteAsistenciaLicencia.agente.organigrama","nombre").
+													   where();
 		if (!periodo_id.isEmpty()) {
 	      e.eq("periodo_id", Integer.parseInt(periodo_id));
 	    }
@@ -71,6 +77,20 @@ public class LiquidacionNovedadLicencia extends Model{
     		e.ilike("agenteAsistenciaLicencia.agente.cuit", "%" + cuit + "%");
     	}
 
+    	if(!tipo_relacion_laboral.isEmpty()){
+    		e.eq("agenteAsistenciaLicencia.agente.tipo_relacion_laboral", tipo_relacion_laboral);
+    	}
+
+    	if(!activo.isEmpty()){
+    		if(activo.compareToIgnoreCase("SI") == 0){
+    			e.eq("agenteAsistenciaLicencia.agente.activo", true);
+    		}else{
+    			e.eq("agenteAsistenciaLicencia.agente.activo", false);
+    		}
+    	}
+    	if(!organigrama_id.isEmpty()){
+    		e.eq("agenteAsistenciaLicencia.agente.organigrama_id", Integer.parseInt(organigrama_id));
+    	}
 
 		p.setExpressionList(e);
 		return p;
