@@ -79,9 +79,32 @@ public class AgentesAsistenciasLicenciasController extends Controller {
 		DynamicForm d = form().bindFromRequest();
 		d.discardErrors();
 
+		/*List<Integer> aa = new ArrayList<>();
+				aa.add(1);
+				aa.add(2);
+				aa.add(3);
+				aa.add(4);
+
+		List<AgenteAsistenciaLicencia> ll = AgenteAsistenciaLicencia.find.where().eq("tipo_licencia_id", 5).in("ejercicio_id", aa).findList();
+		int a = 0;
+		for(AgenteAsistenciaLicencia llx : ll) {
+			llx.dias = llx.getDiasEntreFechas();
+			llx.save();
+			if(llx.tipo_licencia_id.compareTo(new Long(5)) == 0) {
+				AgenteAsistenciaLicencia.setDiasPorPeriodos(llx.id.intValue());
+				a++;
+			}
+		}
+		Logger.debug("TERMINAAAAAAAAAAAAAAAAAAAAAA "+a);*/
+
 		Pagination<LiquidacionNovedadLicencia> lineas = LiquidacionNovedadLicencia.page(RequestVar.get("nombre"),
-				 RequestVar.get("cuit"),RequestVar.get("dni"),
-				 RequestVar.get("periodo_id"));
+				 																		RequestVar.get("cuit"),
+				 																		RequestVar.get("dni"),
+				 																		RequestVar.get("periodo_id"),
+				 																		RequestVar.get("tipo_relacion_laboral"),
+				 																		RequestVar.get("organigrama_id"),
+				 																		RequestVar.get("activo")
+				 																		);
 
 		return ok(indexLicenciaNovedadesLiquidacion.render(lineas,d));
 	}
