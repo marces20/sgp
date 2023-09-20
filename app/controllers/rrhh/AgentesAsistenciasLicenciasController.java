@@ -81,25 +81,25 @@ public class AgentesAsistenciasLicenciasController extends Controller {
 
 		List<Integer> aa = new ArrayList<>();
 
-				aa.add(5);
-						aa.add(6);
-								aa.add(7);
 				//aa.add(8);
-				//aa.add(9);
+				aa.add(9);
 				//aa.add(12);
 				//aa.add(13);
 				//aa.add(14);
 
-		//List<AgenteAsistenciaLicencia> ll = AgenteAsistenciaLicencia.find.where().ne("tipo_licencia_id", 5).in("ejercicio_id", aa).findList();
+		//List<AgenteAsistenciaLicencia> ll = AgenteAsistenciaLicencia.find.where().eq("tipo_licencia_id", 5).in("ejercicio_id", aa).findList();
+
 		int a = 0;
 		//for(AgenteAsistenciaLicencia llx : ll) {
 		//	llx.dias = llx.getDiasEntreFechas();
 		//	llx.save();
-			//if(llx.tipo_licencia_id.compareTo(new Long(5)) == 0) {
+			//if(llx.tipo_licencia_id.compareTo(new Long(5)) == 0) { //select count(*) from agente_asistencia_licencias where tipo_licencia_id <> 5 and ejercicio_id in(9)
+
 			//	AgenteAsistenciaLicencia.setDiasPorPeriodos(llx.id.intValue());
 			//	a++;
 			//}
-		//}
+			a++;
+			//}
 		Logger.debug("TERMINAAAAAAAAAAAAAAAAAAAAAA "+a);
 
 		Pagination<LiquidacionNovedadLicencia> lineas = LiquidacionNovedadLicencia.page(RequestVar.get("nombre"),
@@ -137,8 +137,8 @@ public class AgentesAsistenciasLicenciasController extends Controller {
 			} else {
 				AgenteAsistenciaLicencia l = lineaForm.get();
 				if(lineaForm.get().ffin.before(lineaForm.get().finicio)){
-					flash("error", "La Fecha de fin es manor a la Fecha de inicio.");
-					return ok(crearAgenteAsistenciaLicencia.render(lineaForm));
+					//flash("error", "La Fecha de fin es manor a la Fecha de inicio.");
+					//return ok(crearAgenteAsistenciaLicencia.render(lineaForm));
 				}
 
 				int diasPermitidos = 30;
@@ -217,8 +217,8 @@ public class AgentesAsistenciasLicenciasController extends Controller {
 				AgenteAsistenciaLicencia fl = lineaForm.get();
 
 				if(lineaForm.get().ffin.before(lineaForm.get().finicio)){
-					flash("error", "La Fecha de fin es manor a la Fecha de inicio.");
-					return ok(editarAgenteAsistenciaLicencia.render(lineaForm,true));
+					//flash("error", "La Fecha de fin es manor a la Fecha de inicio.");
+					//return ok(editarAgenteAsistenciaLicencia.render(lineaForm,true));
 				}
 				if(!fl.tienePermisosTipoLicencia(fl)){
 					flash("error", "No tiene permisos para cargar este tipo de licencias.");
