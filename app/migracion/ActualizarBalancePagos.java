@@ -157,7 +157,7 @@ public class ActualizarBalancePagos {
 					}else if(SUELDOSCONVENIO){
 						tc = 437;//2.1.4.01.01 Sueldos a Pagar Convenio
 					}else if(SUELDOSPARQUE){
-						tc = 438;//2.1.4.01.02 Sueldos a Pagar Parque
+						tc = 437;//2.1.4.01.02 Sueldos a Pagar Parque
 
 					}
 
