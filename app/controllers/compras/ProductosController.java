@@ -26,7 +26,9 @@ import models.Udm;
 import models.Usuario;
 import models.auth.Permiso;
 import models.recupero.RecuperoFactura;
+import models.recupero.RecuperoFacturaLinea;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
@@ -823,37 +825,57 @@ public class ProductosController extends Controller {
 
 		Logger.debug("-------xxxxxxxxxxxx------------ "+Controller.request().toString());
 
-		Logger.debug("-------xxxxzzzzzzzz------------ "+request().body());
+		Logger.debug("-------asJson()------------ "+request().body().asJson());
+
+		/*foreach($dominios as $d) {
+		    $url .= "&array_dominio[]=" . $d->id_dominio;
+		}*/
+
+		Logger.debug("idfactura------------------------------ "+request().body().asFormUrlEncoded().get("idfactura")[0]);
+
+    	Logger.debug("cuit------------------------------ "+request().body().asFormUrlEncoded().get("cuit")[0]);
+    	Logger.debug("razonsocial------------------------------ "+request().body().asFormUrlEncoded().get("razonsocial")[0]);
+    	Logger.debug("domicilio------------------------------ "+request().body().asFormUrlEncoded().get("domicilio")[0]);
+    	Logger.debug("doc------------------------------ "+request().body().asFormUrlEncoded().get("doc")[0]);
+
+    	Logger.debug("pv_id------------------------------ "+request().body().asFormUrlEncoded().get("pv_id")[0]);
+    	Logger.debug("nrofactura------------------------------ "+request().body().asFormUrlEncoded().get("nrofactura")[0]);//
+    	Logger.debug("condiva_id------------------------------ "+request().body().asFormUrlEncoded().get("condiva_id")[0]);//
+    	Logger.debug("condventa_id------------------------------ "+request().body().asFormUrlEncoded().get("condventa_id")[0]);
 
 
+    	Logger.debug("total------------------------------ "+request().body().asFormUrlEncoded().get("total")[0]);
+    	Logger.debug("cae------------------------------ "+request().body().asFormUrlEncoded().get("cae")[0]);//
+    	Logger.debug("fecha_vencimiento------------------------------ "+request().body().asFormUrlEncoded().get("fecha_vencimiento")[0]);//
+    	Logger.debug("fecha_vencimiento------------------------------ "+request().body().asFormUrlEncoded().get("fecha_emision")[0]);//
+    	Logger.debug("fecha_desde------------------------------ "+request().body().asFormUrlEncoded().get("fecha_desde")[0]);//
+    	Logger.debug("fecha_hasta------------------------------ "+request().body().asFormUrlEncoded().get("fecha_hasta")[0]);//
 
-		Logger.debug("------------------------------ "+RequestVar.get("idfactura"));
-
-    	Logger.debug("------------------------------ "+RequestVar.get("cuit"));
-    	Logger.debug("------------------------------ "+RequestVar.get("razonsocial"));
-    	Logger.debug("------------------------------ "+RequestVar.get("domicilio"));
-    	Logger.debug("------------------------------ "+RequestVar.get("doc"));
-
-    	Logger.debug("------------------------------ "+RequestVar.get("pv_id"));
-    	Logger.debug("------------------------------ "+RequestVar.get("nrofactura"));//
-    	Logger.debug("------------------------------ "+RequestVar.get("condiva_id"));//
-    	Logger.debug("------------------------------ "+RequestVar.get("condventa_id"));
+    	//Logger.debug("lineas------------------------------ "+request().body().asFormUrlEncoded().get("lineas[]").toString() );//
 
 
-    	Logger.debug("------------------------------ "+RequestVar.get("total"));
-    	Logger.debug("------------------------------ "+RequestVar.get("cae"));//
-    	Logger.debug("------------------------------ "+RequestVar.get("fecha_vencimiento"));//
-    	Logger.debug("------------------------------ "+RequestVar.get("fecha_emision"));//
-    	Logger.debug("------------------------------ "+RequestVar.get("fecha_desde"));//
-    	Logger.debug("------------------------------ "+RequestVar.get("fecha_hasta"));//
+    	Logger.debug("------------------------------ "+RequestVar.getArray("array_dominio[]")[0]);
 
 
-    	//Logger.debug("------------------------------ "+RequestVar.getArray("array_dominio[]")[0]);
+    	JsonNode json = Controller.request().body().asJson();
+
+		Logger.debug("idfactura -> " + json.get("idfactura").asInt());
+		//Logger.debug("lineas -> " + json.get("lineas").);
+		for (JsonNode data : json.withArray("lineas")) {
+			Logger.debug("-------asJson()------------ "+data.get("productoNombre"));
+		}
+
 
 
     	try{
     		RecuperoFactura rf = new RecuperoFactura();
-    		rf.cliente_id = null;
+
+    		//{"idfactura":"11046","cuit":30712131310,"pv_id":7,"nrofactura":"3","doc":"2856584","tipo_doc_id":"91","condiva_id":"5","condventa_id":"1","razonsocial":"ACOSTA NU\u00d1EZ, ROCIO","domicilio":"ENCARNACION - CALLE PADRE ANTONIO RIERA 2220 - B\u00ba LA PAZ","total":"72932.53","cae":"72270300226369","fecha_vencimiento":"72270300226369","fecha_emision":"72270300226369","fecha_desde":"2022-06-30","fecha_hasta":"2022-07-06",
+
+
+    		//rf.cliente_id = null;//
+
+
     		rf.fecha = null;
     		rf.serie = null;
     		rf.numero= RequestVar.get("nrofactura");
@@ -874,6 +896,11 @@ public class ProductosController extends Controller {
     		rf.fecha_emision = new Date(RequestVar.get("fecha_emision"));
     		rf.fecha_desde = new Date(RequestVar.get("fecha_desde"));
     		rf.fecha_hasta = new Date(RequestVar.get("fecha_hasta"));
+
+    		rf.save();
+
+    		RecuperoFacturaLinea rfl =
+
 
     	}catch(Exception e){
     		Logger.debug("------------------------------ "+e);
