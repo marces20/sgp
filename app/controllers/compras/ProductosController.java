@@ -831,25 +831,9 @@ public class ProductosController extends Controller {
 		    $url .= "&array_dominio[]=" . $d->id_dominio;
 		}*/
 
-		Logger.debug("idfactura------------------------------ "+request().body().asFormUrlEncoded().get("idfactura")[0]);
-
-    	Logger.debug("cuit------------------------------ "+request().body().asFormUrlEncoded().get("cuit")[0]);
-    	Logger.debug("razonsocial------------------------------ "+request().body().asFormUrlEncoded().get("razonsocial")[0]);
-    	Logger.debug("domicilio------------------------------ "+request().body().asFormUrlEncoded().get("domicilio")[0]);
-    	Logger.debug("doc------------------------------ "+request().body().asFormUrlEncoded().get("doc")[0]);
-
-    	Logger.debug("pv_id------------------------------ "+request().body().asFormUrlEncoded().get("pv_id")[0]);
-    	Logger.debug("nrofactura------------------------------ "+request().body().asFormUrlEncoded().get("nrofactura")[0]);//
-    	Logger.debug("condiva_id------------------------------ "+request().body().asFormUrlEncoded().get("condiva_id")[0]);//
-    	Logger.debug("condventa_id------------------------------ "+request().body().asFormUrlEncoded().get("condventa_id")[0]);
 
 
-    	Logger.debug("total------------------------------ "+request().body().asFormUrlEncoded().get("total")[0]);
-    	Logger.debug("cae------------------------------ "+request().body().asFormUrlEncoded().get("cae")[0]);//
-    	Logger.debug("fecha_vencimiento------------------------------ "+request().body().asFormUrlEncoded().get("fecha_vencimiento")[0]);//
-    	Logger.debug("fecha_vencimiento------------------------------ "+request().body().asFormUrlEncoded().get("fecha_emision")[0]);//
-    	Logger.debug("fecha_desde------------------------------ "+request().body().asFormUrlEncoded().get("fecha_desde")[0]);//
-    	Logger.debug("fecha_hasta------------------------------ "+request().body().asFormUrlEncoded().get("fecha_hasta")[0]);//
+
 
     	//Logger.debug("lineas------------------------------ "+request().body().asFormUrlEncoded().get("lineas[]").toString() );//
 
@@ -860,6 +844,27 @@ public class ProductosController extends Controller {
     	JsonNode json = Controller.request().body().asJson();
 
 		Logger.debug("idfactura -> " + json.get("idfactura").asInt());
+		//Logger.debug("idfactura------------------------------ "+request().body().asFormUrlEncoded().get("idfactura")[0]);
+
+    	Logger.debug("cuit------------------------------ "+json.get("cuit").toString());
+    	Logger.debug("razonsocial------------------------------ "+json.get("razonsocial").toString());
+    	Logger.debug("domicilio------------------------------ "+json.get("domicilio").toString());
+    	Logger.debug("doc------------------------------ "+json.get("doc").toString());
+
+    	Logger.debug("pv_id------------------------------ "+json.get("pv_id").toString());
+    	Logger.debug("nrofactura------------------------------ "+json.get("nrofactura").toString());//
+    	Logger.debug("condiva_id------------------------------ "+json.get("condiva_id").toString());//
+    	Logger.debug("condventa_id------------------------------ "+json.get("condventa_id").toString());
+
+
+    	Logger.debug("total------------------------------ "+json.get("total").asDouble());
+    	Logger.debug("cae------------------------------ "+json.get("cae").toString());//
+    	Logger.debug("fecha_vencimiento------------------------------ "+json.get("fecha_vencimiento").toString());//
+    	Logger.debug("fecha_vencimiento------------------------------ "+json.get("fecha_emision").toString());//
+    	Logger.debug("fecha_desde------------------------------ "+json.get("fecha_desde").toString());//
+    	Logger.debug("fecha_hasta------------------------------ "+json.get("fecha_hasta").toString());//
+
+
 		//Logger.debug("lineas -> " + json.get("lineas").);
 		for (JsonNode data : json.withArray("lineas")) {
 			Logger.debug("-------asJson()------------ "+data.get("productoNombre"));
@@ -876,7 +881,7 @@ public class ProductosController extends Controller {
     		//rf.cliente_id = null;//
 
 
-    		rf.fecha = null;
+    		/*rf.fecha = null;
     		rf.serie = null;
     		rf.numero= RequestVar.get("nrofactura");
     		rf.nombre = null;//?
@@ -887,19 +892,19 @@ public class ProductosController extends Controller {
     		rf.planilla_id = null;
     		rf.presupuesto_id = null;
     		rf.puntoventa_id = 7;
-    		//////////////////////////////
-    		rf.id_factura_materno = new Long(RequestVar.get("idfactura"));
+
+     		rf.id_factura_materno = new Long(RequestVar.get("idfactura"));
     		rf.condicionventa_id = new Integer(RequestVar.get("condventa_id"));
     		rf.condicioniva_id = new Integer(RequestVar.get("condiva_id"));
     		rf.cae = RequestVar.get("cae");
     		rf.fecha_vencimiento = new Date(RequestVar.get("fecha_vencimiento"));
     		rf.fecha_emision = new Date(RequestVar.get("fecha_emision"));
     		rf.fecha_desde = new Date(RequestVar.get("fecha_desde"));
-    		rf.fecha_hasta = new Date(RequestVar.get("fecha_hasta"));
+    		rf.fecha_hasta = new Date(RequestVar.get("fecha_hasta"));*/
 
     		rf.save();
 
-    		RecuperoFacturaLinea rfl =
+    		//RecuperoFacturaLinea rfl =
 
 
     	}catch(Exception e){
