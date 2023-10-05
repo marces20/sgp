@@ -465,9 +465,9 @@ public class CertificacionesServiciosController extends Controller {
 				}
 				Logger.debug("XXXXXXX ");
 				if (cantidadTotalLineas.compareTo(ol.cantidad) > 0) {
-					errorControl = true;
-					erroresCantidad += "La cantidad cargada en la linea " + ol.producto.nombre
-							+ " supera a la cantida de la linea original<br>";
+					//errorControl = true;
+					//erroresCantidad += "La cantidad cargada en la linea " + ol.producto.nombre
+					//		+ " supera a la cantida de la linea original<br>";
 				}
 			}
 		}
