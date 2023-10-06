@@ -325,6 +325,11 @@ public class BalanceController extends Controller {
 				celda0 = fila.createCell(6);
 				celda0.setCellValue("HABER");
 				celda0.setCellStyle(comun);
+
+				celda0 = fila.createCell(7);
+				celda0.setCellValue("DATA");
+				celda0.setCellStyle(comun);
+
 				x++;
 				for(Balance oll : b){
 					fila = hoja.createRow(x);
@@ -364,6 +369,17 @@ public class BalanceController extends Controller {
 					celda0.setCellType(Cell.CELL_TYPE_NUMERIC);
 					celda0.setCellValue(oll.haber.doubleValue());
 					celda0.setCellStyle(estiloMoneda);
+
+					celda0 = fila.createCell(7);
+					String depo = "";
+					if(oll.orden != null && oll.orden.deposito != null){
+						depo = oll.orden.deposito.nombre;
+					}
+
+					celda0.setCellValue(depo);
+					celda0.setCellStyle(comun);
+
+
 
 					x++;
 				}
