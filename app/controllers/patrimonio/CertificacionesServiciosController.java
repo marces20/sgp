@@ -446,7 +446,7 @@ public class CertificacionesServiciosController extends Controller {
 		CertificacionServicio cert = CertificacionServicio.find.byId(idCertificacion);
 		String erroresCantidad = "";
 		boolean errorControl = false;
-		List<CertificacionServicioLinea> csl = CertificacionServicioLinea.find.where()
+		/*List<CertificacionServicioLinea> csl = CertificacionServicioLinea.find.where()
 				.eq("certificaciones_servicio_id", cert.id).findList();
 		if (csl.size() > 0) {
 
@@ -463,14 +463,9 @@ public class CertificacionesServiciosController extends Controller {
 																	// PARA SUMAR Y COMPARAR CONTRA EL TOTAL
 					cantidadTotalLineas = cantidadTotalLineas.add(cslolx.cantidad);
 				}
-				Logger.debug("XXXXXXX ");
-				if (cantidadTotalLineas.compareTo(ol.cantidad) > 0) {
-					//errorControl = true;
-					//erroresCantidad += "La cantidad cargada en la linea " + ol.producto.nombre
-					//		+ " supera a la cantida de la linea original<br>";
-				}
+
 			}
-		}
+		}*/
 
 		if (errorControl) {
 			flash("error", erroresCantidad);
