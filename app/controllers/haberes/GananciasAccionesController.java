@@ -234,7 +234,7 @@ public class GananciasAccionesController extends Controller {
 	/**
 	 * Extracts a zip file specified by the zipFilePath to a directory specified by
 	 * destDirectory (will be created if does not exists)
-	 * 
+	 *
 	 * @param zipFilePath
 	 * @param destDirectory
 	 * @throws IOException
@@ -266,7 +266,7 @@ public class GananciasAccionesController extends Controller {
 
 	/**
 	 * Extracts a zip entry (file entry)
-	 * 
+	 *
 	 * @param zipIn
 	 * @param filePath
 	 * @throws IOException
@@ -441,26 +441,26 @@ public class GananciasAccionesController extends Controller {
 		}
 
 		// Cargo deducciones
-		
+
 		/*NodeList listaEmpleados = doc.getElementsByTagName("deduccion");
 		for (int temp = 0; temp < listaEmpleados.getLength(); temp++) {
             Node nodo = listaEmpleados.item(temp);
-            
+
             System.out.println("Elemento:" + nodo.getNodeName());
-            
+
             if (nodo.getNodeType() == Node.ELEMENT_NODE) {
                 Element element = (Element) nodo;
                 System.out.println("tipo: " + element.getAttribute("tipo"));
                 System.out.println("tipoDoc: " + element.getElementsByTagName("tipoDoc").item(0).getTextContent());
-                
+
                 System.out.println("detalles: " + element.getElementsByTagName("detalles").item(0).getChildNodes().item(0).getTextContent().toString());
-                
-                 
+
+
             }
         }*/
-		
-		
-		
+
+
+
 		NodeList deducciones = XPath.selectNodes("//deducciones/deduccion", doc);
 		for (int i = 0; i < deducciones.getLength(); i++) {
 			Element d = (Element) deducciones.item(i);
@@ -479,32 +479,50 @@ public class GananciasAccionesController extends Controller {
 				flash("error", "La carga de deducciones de " + a.apellido + " no se puedo insertar");
 				return false;
 			} else {
-				
-				 
-				
+
+
+
 				NodeList detallesDeducciones = XPath.selectNodes("detalles", d);
-				
+
 				for (int dd = 0; dd < detallesDeducciones.getLength(); dd++) {
 					Element edd = (Element) detallesDeducciones.item(dd);
 					NodeList detalles = XPath.selectNodes("detalle", edd);
 					for (int ddh = 0; ddh < detalles.getLength(); ddh++) {
 						Element eddh = (Element) detalles.item(ddh);
 						System.out.println("---------- ---------- ---------- ----------");
-						
+
 						System.out.println("---------- "+eddh.getNodeName());
 						System.out.println("---------- "+XPath.selectText("@nombre", eddh).toString());
 						System.out.println("---------- "+XPath.selectText("@valor", eddh).toString());
-						
+						//<detalle nombre="motivo" valor="2"/>
 						System.out.println("---------- ---------- ---------- ----------");
-						
+
 						cargarDeduccionDetalle(idDeducciones, XPath.selectText("@nombre", eddh).toString(),XPath.selectText("@valor", eddh).toString());
 					}
-					
-					
-					
-					
 				}
-				
+
+				NodeList periodosDeducciones = XPath.selectNodes("periodos", d);
+
+				for (int dd = 0; dd < periodosDeducciones.getLength(); dd++) {
+
+					Element edd = (Element) periodosDeducciones.item(dd);
+					NodeList periodox = XPath.selectNodes("periodo", edd);
+					for (int ddh = 0; ddh < periodox.getLength(); ddh++) {
+						Element eddh = (Element) periodox.item(ddh);
+						System.out.println("---------- ---------- ---------- ----------");
+						//<periodo mesDesde="1" mesHasta="1" montoMensual="27370.00"/>
+
+						System.out.println("---------- "+eddh.getNodeName());
+						System.out.println("---------- "+XPath.selectText("@mesDesde", eddh).toString());
+						System.out.println("---------- "+XPath.selectText("@mesHasta", eddh).toString());
+						System.out.println("---------- "+XPath.selectText("@montoMensual", eddh).toString());
+
+						System.out.println("---------- ---------- ---------- ----------");
+
+						cargarDeduccionPeriodos(idDeducciones, XPath.selectText("@mesDesde", eddh).toString(),XPath.selectText("@mesHasta", eddh).toString(),new BigDecimal(XPath.selectText("@montoMensual", eddh).toString()));
+					}
+				}
+
 				System.out.print("---------- Se cargó cargarDeduccion");
 			}
 
@@ -739,17 +757,17 @@ public class GananciasAccionesController extends Controller {
 		insert.setParameter("motivo", motivo);
 
 		//return (insert.execute() > 0);
-		
+
 		if (insert.execute() == 0) {
 			return null;
 		}
 
 		return Ebean.createSqlQuery("SELECT currval('ganancias_deducciones_572_id_seq') id;").findUnique()
 				.getInteger("id");
-		
-		
+
+
 	}
-	
+
 	private static Integer cargarDeduccionDetalle(Integer idDeduccion, String nombre, String valor)
 			throws PSQLException {
 
@@ -759,18 +777,42 @@ public class GananciasAccionesController extends Controller {
 
 		insert.setParameter("ganancias_deducciones_572_id", idDeduccion);
 		insert.setParameter("nombre", nombre);
-		insert.setParameter("valor", valor); 
+		insert.setParameter("valor", valor);
 
 		//return (insert.execute() > 0);
-		
+
 		if (insert.execute() == 0) {
 			return null;
 		}
 
 		return Ebean.createSqlQuery("SELECT currval('ganancias_deducciones_572_id_seq') id;").findUnique()
 				.getInteger("id");
-		
-		
+
+
+	}
+
+	private static Integer cargarDeduccionPeriodos(Integer idDeduccion, String mesDesde, String mesHasta,BigDecimal monto)
+			throws PSQLException {
+
+		SqlUpdate insert = Ebean.createSqlUpdate(
+				"INSERT INTO ganancias_deducciones_572_periodos (ganancias_deducciones_572_id, mesDesde, mesHasta ,monto) VALUES "
+				+ "(:ganancias_deducciones_572_id, :mesDesde,:mesHasta, :monto)");
+
+		insert.setParameter("ganancias_deducciones_572_id", idDeduccion);
+		insert.setParameter("mesDesde", mesDesde);
+		insert.setParameter("mesHasta", mesHasta);
+		insert.setParameter("monto", monto);
+
+		//return (insert.execute() > 0);
+
+		if (insert.execute() == 0) {
+			return null;
+		}
+
+		return Ebean.createSqlQuery("SELECT currval('ganancias_deducciones_572_id_seq') id;").findUnique()
+				.getInteger("id");
+
+
 	}
 
 	private static Boolean cargarOtrosEmpleadores(Integer idPresentacion, String cuit, String denominacion)
