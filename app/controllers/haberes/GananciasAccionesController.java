@@ -795,7 +795,7 @@ public class GananciasAccionesController extends Controller {
 			throws PSQLException {
 
 		SqlUpdate insert = Ebean.createSqlUpdate(
-				"INSERT INTO ganancias_deducciones_572_periodos (ganancias_deducciones_572_id, mesDesde, mesHasta ,monto) VALUES "
+				"INSERT INTO ganancias_deducciones_572_periodos (ganancias_deducciones_572_id, mesDesde, mesHasta ,montoMensual) VALUES "
 				+ "(:ganancias_deducciones_572_id, :mesDesde,:mesHasta, :monto)");
 
 		insert.setParameter("ganancias_deducciones_572_id", idDeduccion);
