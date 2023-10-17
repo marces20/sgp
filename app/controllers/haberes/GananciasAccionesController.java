@@ -519,7 +519,7 @@ public class GananciasAccionesController extends Controller {
 
 						System.out.println("---------- ---------- ---------- ----------");
 
-						cargarDeduccionPeriodos(idDeducciones, XPath.selectText("@mesDesde", eddh).toString(),XPath.selectText("@mesHasta", eddh).toString(),new BigDecimal(XPath.selectText("@montoMensual", eddh).toString()));
+						cargarDeduccionPeriodos(idDeducciones, new Integer(XPath.selectText("@mesDesde", eddh).toString()),new Integer(XPath.selectText("@mesHasta", eddh).toString()),new BigDecimal(XPath.selectText("@montoMensual", eddh).toString()));
 					}
 				}
 
@@ -791,7 +791,7 @@ public class GananciasAccionesController extends Controller {
 
 	}
 
-	private static Integer cargarDeduccionPeriodos(Integer idDeduccion, String mesDesde, String mesHasta,BigDecimal monto)
+	private static Integer cargarDeduccionPeriodos(Integer idDeduccion, Integer mesDesde, Integer mesHasta,BigDecimal monto)
 			throws PSQLException {
 
 		SqlUpdate insert = Ebean.createSqlUpdate(
