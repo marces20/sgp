@@ -190,5 +190,5 @@ GET     /index082023							controllers.dashboard.DeudasGlobalizadasController.in
 GET     /resumen082023							controllers.dashboard.DeudasGlobalizadasController.resumen082023()
 GET 	/resumen082023ExportExcel				controllers.dashboard.DeudasGlobalizadasController.resumen082023ExportExcel()
 
-
+GET     /resumenDetalle082023					controllers.dashboard.DeudasGlobalizadasController.resumenDetalle082023(title:String)
 
