@@ -358,10 +358,54 @@ public class DeudasGlobalizadasController extends Controller {
 
 	}
 
+	public static Result resumenDetalle082023(String title) {
+
+		DynamicForm d = form().bindFromRequest();
+		List<SqlRow> proveedoresDestacados = null;
+		List<SqlRow> proveedoresOtrosServicios = null;
+		List<SqlRow> proveedoresOtrosRubros = null;
+		List<SqlRow> proveedoresOtrosEquipos = null;
+
+		if(title.compareTo("TEJEDOR") == 0 || title.compareTo("Yacaro") == 0 || title.compareTo("R.A.") == 0){
+			proveedoresDestacados = InformeDeudaProveedoresMaterializada.getDeudaPorProveedoresDestacados(null,null,null);
+		}
+
+		List<Integer> otrosServicios = new ArrayList<Integer>();
+		otrosServicios.add(5);//5	"OTROS SERVICIOS" X
+		otrosServicios.add(7);//7	"SERVICIOS"x
+
+		if(title.compareTo("OTROS SERVICIOS") == 0){
+			proveedoresOtrosServicios = InformeDeudaProveedoresMaterializada.getDeudaPorProveedoresPorRubro(null,otrosServicios);
+		}
+
+		List<Integer> otros = new ArrayList<Integer>();
+		otros.add(3);//3	"INSUMOS VARIOS" X
+		otros.add(4);//4	"MEDICAMENTOS"   X
+		otros.add(6);//6	"PROTESIS" X
+		otros.add(2);//2	"ESTUDIOS MEDICOS"
+		otros.add(9);//9	"REFACCIONES"
+
+		if(title.compareTo("OTROS PROVEEDORES") == 0){
+			proveedoresOtrosRubros = InformeDeudaProveedoresMaterializada.getDeudaPorProveedoresPorRubro(null,otros);
+		}
+
+		List<Integer> equipos = new ArrayList<Integer>();
+		equipos.add(1);//1	"EQUIPAMIENTOS" x
+
+		if(title.compareTo("EQUIPAMIENTOS") == 0){
+			proveedoresOtrosEquipos = InformeDeudaProveedoresMaterializada.getDeudaPorProveedoresPorRubro(null,equipos);
+		}
+
+		return ok(resumenDetalle082023.render(proveedoresDestacados,proveedoresOtrosServicios,proveedoresOtrosRubros,proveedoresOtrosEquipos,title));
+
+	}
+
+
 	public static Result index082023(boolean soloDeuda) {
 		DynamicForm d = form().bindFromRequest();
 		return ok(index082023.render(d,soloDeuda));
 	}
+
 
 	public static Result resumen082023() {
 
