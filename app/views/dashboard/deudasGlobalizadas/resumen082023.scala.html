@@ -8,10 +8,12 @@ proveedoresOtrosEquipos: List[com.avaje.ebean.SqlRow]
 @import models.auth._
 @implicitFieldConstructor = @{ FieldConstructor(simpleInput.render) }
 @import java.math.BigDecimal;var haycms = new Boolean(false);var haymission = new Boolean(false);var monto_total_mission_tmp= new java.math.BigDecimal(0);var monto_total_tramite_mission_tmp= new java.math.BigDecimal(0);var monto_total_tramite_nr_tmp= new java.math.BigDecimal(0); var monto_total_cms_tmp= new java.math.BigDecimal(0);var monto_total_tramite_cms_tmp= new java.math.BigDecimal(0);var haypindoi:Boolean = new Boolean(false);var monto_total_pindoi_tmp= new java.math.BigDecimal(0);var monto_total_tramite_pindoi_tmp= new java.math.BigDecimal(0);var haypacific:Boolean = new Boolean(false);var monto_total_pacific_tmp= new java.math.BigDecimal(0);var monto_total_tramite_pacific_tmp= new java.math.BigDecimal(0);var haynr :Boolean = new Boolean(false);var monto_total_nr_tmp= new java.math.BigDecimal(0);var haysanjorge :Boolean = new Boolean(false);var monto_total_sanjorge_tmp= new java.math.BigDecimal(0);var monto_total_tramite_sanjorge_tmp= new java.math.BigDecimal(0);var haysafita:Boolean = new Boolean(false);var monto_total_safita_tmp= new java.math.BigDecimal(0);var monto_total_tramite_safita_tmp= new java.math.BigDecimal(0);var monto_total_deuda = new java.math.BigDecimal(0);var monto_total_tramite = new java.math.BigDecimal(0);var hayips:Boolean = new Boolean(false);var haybisio:Boolean = new Boolean(false);var hayra:Boolean = new Boolean(false);var hayteje:Boolean = new Boolean(false);var hayyaka:Boolean = new Boolean(false);var monto_total_bisionesServicios_tmp = new java.math.BigDecimal(0);var monto_total_tramite_bisionesServicios_tmp = new java.math.BigDecimal(0);var total_deuda  = new java.math.BigDecimal(0);var monto_total_bisio_tmp = new java.math.BigDecimal(0);var monto_total_tramite_bisio_tmp = new java.math.BigDecimal(0);var monto_total_equipos_tmp = new java.math.BigDecimal(0);var monto_total_tramite_equipos_tmp = new java.math.BigDecimal(0);var monto_total_otrosrubros_tmp = new java.math.BigDecimal(0);var monto_total_tramite_otrosrubros_tmp = new java.math.BigDecimal(0);var monto_total_servicios_tmp  = new java.math.BigDecimal(0);var monto_total_tramite_servicios_tmp  = new java.math.BigDecimal(0);var zero = new java.math.BigDecimal(0);var monto_total_ips_tmp=new java.math.BigDecimal(0);var monto_total_tramite_ips_tmp=new java.math.BigDecimal(0);var monto_total_ra_tmp=new java.math.BigDecimal(0);var monto_total_tramite_ra_tmp=new java.math.BigDecimal(0);var monto_total_teje_tmp=new java.math.BigDecimal(0);var monto_total_tramite_teje_tmp=new java.math.BigDecimal(0);var monto_total_yaka_tmp=new java.math.BigDecimal(0);var monto_total_tramite_yaka_tmp=new java.math.BigDecimal(0);
+@scripts = {
+	<script src="@routes.Assets.at("javascripts/dashboard/resumen082023.js")" type="text/javascript"></script>
+}
 
 
-
-@views.html.informes.mainInformes("RESUMEN") {
+@views.html.informes.mainInformes("RESUMEN", scripts) {
 <div class="page-content" class="" style="padding-left: 10px;">
 <div class="page-header">
 	<div class="row">
@@ -186,7 +188,7 @@ proveedoresOtrosEquipos: List[com.avaje.ebean.SqlRow]
 				@if(hayteje){
 
 					<tr>
-						<td>TEJEDOR (IMPLANTEJ - LAS MISIONES - PRESTACIONES NEFROLOGICAS)</td>
+						<td class="getDetalleProveedor" data-title="TEJEDOR" style="cursor: pointer; color:blue;">TEJEDOR (IMPLANTEJ - LAS MISIONES - PRESTACIONES NEFROLOGICAS)</td>
 						<td align="right">@utils.NumberUtils.monedaSinDecimales(monto_total_teje_tmp)</td>
 						<td align="right">@utils.NumberUtils.monedaSinDecimales(monto_total_tramite_teje_tmp)</td>
 						<td align="right"><b style="font-size: 16px;">@utils.NumberUtils.monedaSinDecimales(monto_total_teje_tmp.add(monto_total_tramite_teje_tmp))</b></td>
@@ -209,7 +211,7 @@ proveedoresOtrosEquipos: List[com.avaje.ebean.SqlRow]
 
 				@if(hayyaka){
 					<tr>
-						<td>YAKARO</td>
+						<td class="getDetalleProveedor" data-title="Yacaro" style="cursor: pointer; color:blue;">YAKARO</td>
 						<td align="right">@utils.NumberUtils.monedaSinDecimales(monto_total_yaka_tmp)</td>
 						<td align="right">@utils.NumberUtils.monedaSinDecimales(monto_total_tramite_yaka_tmp)  </td>
 						<td align="right"><b style="font-size: 16px;">@utils.NumberUtils.monedaSinDecimales(monto_total_yaka_tmp.add(monto_total_tramite_yaka_tmp))</b></td>
@@ -268,7 +270,7 @@ proveedoresOtrosEquipos: List[com.avaje.ebean.SqlRow]
 
 
 				<tr>
-					<td>OTROS SERVICIOS (Oxigeno, Jefatura, Multimedios, Derivaciones, Mantenimiento Equipos, Pasajes, etc)</td>
+					<td class="getDetalleProveedor" data-title="OTROS SERVICIOS" style="cursor: pointer; color:blue;">OTROS SERVICIOS (Oxigeno, Jefatura, Multimedios, Derivaciones, Mantenimiento Equipos, Pasajes, etc)</td>
 					<td align="right">@utils.NumberUtils.monedaSinDecimales(monto_total_servicios_tmp)</td>
 					<td align="right">@utils.NumberUtils.monedaSinDecimales(monto_total_tramite_servicios_tmp)</td>
 					<td align="right"><b style="font-size: 16px;">@utils.NumberUtils.monedaSinDecimales(monto_total_servicios_tmp.add(monto_total_tramite_servicios_tmp))</b></td>
@@ -277,7 +279,7 @@ proveedoresOtrosEquipos: List[com.avaje.ebean.SqlRow]
 					@{monto_total_tramite = monto_total_tramite.add(monto_total_tramite_servicios_tmp)}
 
 				<tr>
-					<td>OTROS PROVEEDORES (Protesis, descartables, repuestos, libreria, combustible, agua, etc)</td>
+					<td class="getDetalleProveedor" data-title="OTROS PROVEEDORES" style="cursor: pointer; color:blue;">OTROS PROVEEDORES (Protesis, descartables, repuestos, libreria, combustible, agua, etc)</td>
 					<td align="right">@utils.NumberUtils.monedaSinDecimales(monto_total_otrosrubros_tmp)</td>
 					<td align="right">@utils.NumberUtils.monedaSinDecimales(monto_total_tramite_otrosrubros_tmp)</td>
 					<td align="right"><b style="font-size: 16px;">@utils.NumberUtils.monedaSinDecimales(monto_total_otrosrubros_tmp.add(monto_total_tramite_otrosrubros_tmp))</b></td>
@@ -286,7 +288,7 @@ proveedoresOtrosEquipos: List[com.avaje.ebean.SqlRow]
 					@{monto_total_tramite = monto_total_tramite.add(monto_total_tramite_otrosrubros_tmp)}
 
 				<tr>
-					<td>EQUIPAMIENTOS</td>
+					<td class="getDetalleProveedor" data-title="EQUIPAMIENTOS" style="cursor: pointer; color:blue;">EQUIPAMIENTOS</td>
 					<td align="right">@utils.NumberUtils.monedaSinDecimales(monto_total_equipos_tmp)</td>
 					<td align="right">@utils.NumberUtils.monedaSinDecimales(monto_total_tramite_equipos_tmp)  </td>
 					<td align="right"><b style="font-size: 18px;">@utils.NumberUtils.monedaSinDecimales(monto_total_equipos_tmp.add(monto_total_tramite_equipos_tmp))</b></td>
@@ -322,7 +324,7 @@ proveedoresOtrosEquipos: List[com.avaje.ebean.SqlRow]
 			</thead>
 			<tbody>
 				<tr>
-					<td>R.A.</td>
+					<td class="getDetalleProveedor" data-title="R.A." style="cursor: pointer; color:blue;">R.A.</td>
 					<td align="right">@utils.NumberUtils.monedaSinDecimales(monto_total_ra_tmp)</td>
 					<td align="right">@utils.NumberUtils.monedaSinDecimales(monto_total_tramite_ra_tmp)  </td>
 					<td align="right"><b style="font-size: 18px;">@utils.NumberUtils.monedaSinDecimales(monto_total_ra_tmp.add(monto_total_tramite_ra_tmp))</b></td>
@@ -357,6 +359,12 @@ proveedoresOtrosEquipos: List[com.avaje.ebean.SqlRow]
 		</table> -->
 
 	</div>
-</div>
+
+	<div class="col-sm-6" style="">
+		<div id="contenedorCarga">
+
+
+		</div>
+	</div>
 </div>
 }
