@@ -454,6 +454,9 @@ public class InformeEstadisticoPagoProveedoresController extends Controller {
 			}
 		}
 
+		if(!RequestVar.get("deposito_id").isEmpty()){
+			l =  l.eq("deposito_id", Integer.parseInt(RequestVar.get("deposito_id")));
+		}
 
 		if(!RequestVar.get("orden_rubro_id").isEmpty()){
 			l =  l.eq("rubro_id", Integer.parseInt(RequestVar.get("orden_rubro_id")));
