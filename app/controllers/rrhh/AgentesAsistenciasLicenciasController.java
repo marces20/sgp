@@ -432,9 +432,9 @@ public class AgentesAsistenciasLicenciasController extends Controller {
 			return ok(modalPasarCancelado.render(d));
 		}
 
-		if(!soloBorrador(lSeleccionados) && !soloPreaprobado(lSeleccionados)) {
+		if(!soloBorrador(lSeleccionados) && !soloPreaprobado(lSeleccionados) && !Permiso.check("agentesLicenciasPasarCancelado")) {
 			flash("error", "Solo se puede modificar registros en estado en borrador o preaprobado.");
-			return ok(modalPasarAprobado.render(d));
+			return ok(modalPasarCancelado.render(d));
 		}
 
 		if(d.hasErrors())
