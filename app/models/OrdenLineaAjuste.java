@@ -54,7 +54,7 @@ public class OrdenLineaAjuste extends Model{
 	public String nota;
 	public boolean ajuste_automatico;
 
-	public boolean suma_precio = true;
+	public boolean suma_precio = false;
 
 	@ManyToOne
 	@JoinColumn(name="producto_id", referencedColumnName="id", insertable=false, updatable=false)
