@@ -363,7 +363,7 @@ public class OrdenLinea extends Model{
 					 "from orden_lineas ol "+
 					 "inner join productos p on p.id = ol.producto_id  "+
 					 "LEFT JOIN ( SELECT sum(round(precio, 2)) as total,orden_id,producto_id  "+
-					 "           FROM orden_lineas_ajustes "+
+					 "           FROM orden_lineas_ajustes where suma_precio = true "+
 					 "          group by orden_id,producto_id) oec ON oec.orden_id = ol.orden_id and   oec.producto_id = ol.producto_id  "+
 					 "where ol.orden_id = :idOrden  "+
 					 "group by ol.producto_id,ol.orden_id, p.nombre ";
