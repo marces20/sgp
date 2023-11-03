@@ -7,7 +7,7 @@
 	<b>Ajustes por Productos</b>
 	@if(Permiso.check("ordenesAgregarLineaAjuste")) {
 		@if(orden != null && (orden.estado_id == 11) && editable){
-		<a class="btn btn-default btn-xs" href="#" id="nuevoAjuste"><i class="glyphicon glyphicon-plus"></i> Nuevo</a>	 	
+		<a class="btn btn-default btn-xs" href="#" id="nuevoAjuste"><i class="glyphicon glyphicon-plus"></i> Nuevo</a>
 		}
 	}
 </p>
@@ -34,8 +34,9 @@
 			<th >Cantidad</th>
 			<th>Precio</th>
 			<th>Subtotal</th>
+			<th>Suma Precio</th>
 			<th>Nota</th>
-		<tr>	
+		<tr>
 	</thead>
 	<tbody>
 	@for(linea <- paginador.getList) {
@@ -54,7 +55,7 @@ $( function(){
 	/**
 	 * Ventana de carga linea de productos en ordenes
 	 */
-	 
+
 	var contenedor = $("#listaLineaAjustes");
 
 	contenedor.on('click', '#nuevoAjuste', function(){
@@ -62,14 +63,14 @@ $( function(){
 		mostrarModal(urlContenidoModal);
 		return false;
 	});
-	
+
 	contenedor.on('click', '.modificarProducto', function(){
 		lineaParaEditar = $(this).closest('tr');
 		var modal = mostrarModal($(this).attr('href'));
-		modal.dialog('option', 'title', 'Editar producto');	
+		modal.dialog('option', 'title', 'Editar producto');
 		return false;
 	});
-	
+
 	contenedor.on('click', '.eliminarAjuste', function(){
 		var url = $(this).attr('href');
 		$this = $(this);
@@ -82,7 +83,7 @@ $( function(){
 		});
 		return false;
 	});
-	
+
 	function mostrarModal(url){
 		modalCargaProductos = $('<div></div>').dialog({
 			resizable: false,
@@ -99,43 +100,43 @@ $( function(){
 		    	modalCargaProductos.dialog('destroy');
 			}
 		  });
-		
+
 		modalCargaProductos.on('click', '.cancelar', function(){
 			modalCargaProductos.dialog('destroy');
 			return false;
 		});
-		
+
 		modalCargaProductos.on('submit', function(e){
 			var href = $(e.target).attr('action');
 			var data = $(e.target).serialize();
-			
+
 			$("#btn-guardar-linea-ajuste-orden").attr("disabled", true);
 			$.post(href, data, function(resultado){
 				if(resultado.success && resultado.nuevo){
 					$('#listaDeAjustes tbody').prepend(resultado.html);
-					
+
 					$('.successAddLineaAjuste').html(resultado.message)
 					$('.successAddLineaAjuste').show();
-					
+
 					modalCargaProductos.dialog( "destroy" );
 				} else if(resultado.success && resultado.modificar){
 					$(lineaParaEditar).replaceWith(resultado.html);
 					modalCargaProductos.dialog( "destroy" );
 				} else {
 					modalCargaProductos.html(resultado);
-				} 
+				}
 				$("#btn-guardar-linea-ajuste-orden").attr("disabled", false);
 			});
 			return false;
 		});
-		
-		
+
+
 		return modalCargaProductos;
 	}
-	
-	
+
+
 	contenedor.find('form').on('submit', function(){
-		 
+
 		var url = $(this).attr("action");
 		var query = $(this).serialize();
 		$.get(url+"?"+query, function(data){
