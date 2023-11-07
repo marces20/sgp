@@ -1,4 +1,4 @@
-@(formularioCarga: Boolean, creditoPresupuestario: CreditoPresupuestario = null)
+@(formularioCarga: Boolean, idCreditoPresupuestario: Long = null)
 
 <ul id="solicitudTab" class="nav nav-tabs">
 	<li class="active"><a class="tabCredito" href="#contenedorCreditoOriginal" data-toggle="tab">Crédito original</a></li>
@@ -9,15 +9,15 @@
 
 	<div class="tab-pane active" id="contenedorCreditoOriginal">
 		<h3>Credito Original</h3>
-		@views.html.presupuesto.creditoPresupuestario.contenidoTabCredito(formularioCarga, creditoPresupuestario)	
+		@views.html.presupuesto.creditoPresupuestario.contenidoTabCredito(formularioCarga, idCreditoPresupuestario)
 	</div>
-	
+
 	<div class="tab-pane" id="contenedorRecursos">
 		<h3>Calculo de Recursos</h3>
-		@views.html.presupuesto.creditoPresupuestario.contenidoTabRecurso(formularioCarga, creditoPresupuestario)	
-		
-	</div>
-	
+		@views.html.presupuesto.creditoPresupuestario.contenidoTabRecurso(formularioCarga, idCreditoPresupuestario)
 
-	
+	</div>
+
+
+
 </div>

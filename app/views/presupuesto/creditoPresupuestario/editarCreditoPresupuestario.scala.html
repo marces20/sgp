@@ -1,4 +1,4 @@
-@(creditoForm: Form[CreditoPresupuestario])
+@(creditoForm: Form[CreditoPresupuestario],id:Long = null))
 @import helper._
 @import utils._
 @implicitFieldConstructor = @{ FieldConstructor(simpleInput.render) }
@@ -10,20 +10,20 @@
 			<div class="col-sm-10">
 				<h1>Editar Crédito presupuestario</h1>
 			</div>
-			
+
 			<div class="col-sm-2">
-				<a href="@controllers.presupuesto.routes.CreditosPresupuestariosController.index()" class="btn btn-default"><i class="glyphicon glyphicon-list"></i></a> 
-				<a href="#" class="btn btn-default"><i class="glyphicon glyphicon-align-justify"></i></a> 
+				<a href="@controllers.presupuesto.routes.CreditosPresupuestariosController.index()" class="btn btn-default"><i class="glyphicon glyphicon-list"></i></a>
+				<a href="#" class="btn btn-default"><i class="glyphicon glyphicon-align-justify"></i></a>
 			</div>
 		</div>
 	</div>
-	
+
 	@views.html.tags.successError()
-	
+
 	@helper.form(action = controllers.presupuesto.routes.CreditosPresupuestariosController.actualizar()) {
 		@inputText(creditoForm("id"), 'hidden -> "hidden")
 		@views.html.presupuesto.creditoPresupuestario.formCreditoPresupuestario(creditoForm)
-		@views.html.presupuesto.creditoPresupuestario.tabsCreditoPresupuestario(true,creditoForm.get())
+		@views.html.presupuesto.creditoPresupuestario.tabsCreditoPresupuestario(true,id)
 		<div class="row form-actions">
 		    <div class="col-lg-offset-4 col-lg-8">
 		      <a href="@controllers.presupuesto.routes.CreditosPresupuestariosController.index()" class="btn btn-default">Cancelar</a>

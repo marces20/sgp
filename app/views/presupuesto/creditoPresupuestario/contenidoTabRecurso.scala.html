@@ -1,12 +1,12 @@
-@(formularioCarga: Boolean, creditoPresupuestario: CreditoPresupuestario = null)
+@(formularioCarga: Boolean, idCreditoPresupuestario: Long = null)
 @import java.util.List
 
-@if(creditoPresupuestario == null){
+@if(idCreditoPresupuestario == null){
 	<p>Para cargar lineas primero debe dar de alta el crédito presupuestario.</p>
 } else {
 	<script>
 		$( function (){
-			$.get('@controllers.presupuesto.routes.LineasRecursosPresupuestariosController.index(creditoPresupuestario.id, formularioCarga)', function(data){
+			$.get('@controllers.presupuesto.routes.LineasRecursosPresupuestariosController.index(idCreditoPresupuestario, formularioCarga)', function(data){
 				$('#listaLineaRecursos').parent().html(data);
 			})
 		});
