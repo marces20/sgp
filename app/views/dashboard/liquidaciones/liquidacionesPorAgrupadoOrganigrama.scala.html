@@ -1,4 +1,4 @@
-@(formBuscador: DynamicForm,rowParque:List[com.avaje.ebean.SqlRow])
+@(formBuscador: DynamicForm,rowParque:List[com.avaje.ebean.SqlRow],rowConvenio:List[com.avaje.ebean.SqlRow])
 @import helper._
 @import utils._
 @import models.auth._
@@ -27,43 +27,43 @@ $( function(){ $('.searchModal').modalSearch();})
 			</div>
 		</div>
 	</div>
-</div>	
+</div>
 @views.html.tags.successError()
 <div id="actions">
 	<form action="" method="GET">
 		<div class="row">
 			<form action="" id="formSearchLiquidacionesPorOrganigrama" method="GET">
 			<div class="col-sm-2">
-				<label for="inputPeriodo" class="control-label">Periodo</label> 
+				<label for="inputPeriodo" class="control-label">Periodo</label>
 				<div class="input-group">
 					@inputText(formBuscador("periodo"),'class -> "form-control",'id -> "periodo")
 					@inputText(formBuscador("periodo_id"),'hidden -> "hidden",'id -> "periodo_id")
 					<span class="input-group-addon">
 					<a href="#" class="searchModal"
-								id="searchPeriodo" 
-								data-title="Selección de Periodo" 
-								data-url="@controllers.contabilidad.routes.PeriodosController.modalBuscar()" 
-								data-height="650" 
-								data-width="700" 
-								data-listen="modal.seleccion.periodo.simple" 
-								data-label="#periodo" 
+								id="searchPeriodo"
+								data-title="Selección de Periodo"
+								data-url="@controllers.contabilidad.routes.PeriodosController.modalBuscar()"
+								data-height="650"
+								data-width="700"
+								data-listen="modal.seleccion.periodo.simple"
+								data-label="#periodo"
 								data-field="#periodo_id">
 						<i class="glyphicon glyphicon-search"></i>
 					</a>
 					</span>
 				</div>
 			</div>
-			
+
 			<!-- <div class="col-sm-4">
-				<label for="inputOrgranigrama" class="control-label">Departamento/Servicio</label> 
+				<label for="inputOrgranigrama" class="control-label">Departamento/Servicio</label>
 				<div class="input-group">
 					@inputText(formBuscador("organigrama.nombre"),'class -> "form-control",'id -> "organigrama")
 					@inputText(formBuscador("organigrama_id"),'hidden -> "hidden",'id -> "organigrama_id")
 					<span class="input-group-addon">
-	                	<a href="#" id="searchOrganigrama" data-title="Selección de Departamento/Servicio" 
-	                				data-url="@controllers.administracion.routes.OrganigramasController.modalBuscarServicios()" 
-	                				data-height="650" data-width="700" 
-	                				data-listen="modal.seleccion.servicio.simple" 
+	                	<a href="#" id="searchOrganigrama" data-title="Selección de Departamento/Servicio"
+	                				data-url="@controllers.administracion.routes.OrganigramasController.modalBuscarServicios()"
+	                				data-height="650" data-width="700"
+	                				data-listen="modal.seleccion.servicio.simple"
 	                				data-label="#organigrama" data-field="#organigrama_id" /> <i class="glyphicon glyphicon-search"></i></a>
 	                </span>
 				</div>
@@ -85,7 +85,7 @@ $( function(){ $('.searchModal').modalSearch();})
 			<div class="row">
 				<div class="col-sm-12">
 					<h2>PARQUE SALUD</h2>
-					
+
 					<table class="table table-bordered">
 						<thead>
 							<tr>
@@ -93,9 +93,9 @@ $( function(){ $('.searchModal').modalSearch();})
 								<td><b>Cantidad</b></td>
 								<td align="center"><b>Total Con Aportes</b></td>
 								<td align="center"><b>Total Sin Aportes</b></td>
-								<td align="center"><b>Retenciones</b></td>	 
+								<td align="center"><b>Retenciones</b></td>
 								<!-- <td align="center">Total NETO</td> -->
-								<td align="center"><b>TOTAL GASTO</b></td>	 	 
+								<td align="center"><b>TOTAL GASTO</b></td>
 							</tr>
 						</thead>
 						<tbody>
@@ -108,61 +108,153 @@ $( function(){ $('.searchModal').modalSearch();})
 									<tr>
 										<td>@rp.getString("nombre")</td>
 										<td align="center">@rp.getInteger("cantidadEmpleados")</td>
-										<td align="center">	
+										<td align="center">
 											@if(rp.getBigDecimal("totalConAporte").compareTo(java.math.BigDecimal.ZERO) > 0){
 												@(utils.NumberUtils.moneda(rp.getBigDecimal("totalConAporte")))
-											} 
+											}
 										</td>
-										<td align="center">	
+										<td align="center">
 											@if(rp.getBigDecimal("totalSinAporte").compareTo(java.math.BigDecimal.ZERO) > 0){
 												@(utils.NumberUtils.moneda(rp.getBigDecimal("totalSinAporte")))
-											} 
+											}
 										</td>
-										<td align="center">	
+										<td align="center">
 											@if(rp.getBigDecimal("totalRetenciones").compareTo(java.math.BigDecimal.ZERO) > 0){
 												@(utils.NumberUtils.moneda(rp.getBigDecimal("totalRetenciones")))
-											} 
+											}
 										</td>
-										<!--<td align="center">	
-											 
+										<!--<td align="center">
+
 												@(utils.NumberUtils.moneda(rp.getBigDecimal("totalConAporte").add(rp.getBigDecimal("totalSinAporte")).subtract(rp.getBigDecimal("totalRetenciones"))))
-											 
+
 										</td> -->
-										<td align="center">	
+										<td align="center">
 											@(utils.NumberUtils.moneda(rp.getBigDecimal("totalConAporte").add(rp.getBigDecimal("totalSinAporte")).add(rp.getBigDecimal("totalRetenciones"))))
 										</td>
 									</tr>
-								
-							}					
+
+							}
 								<tr>
 										<td><b>TOTALES</b></td>
 										<td align="center"><b>@totalcant</b></td>
-										<td align="center">	
-											 
+										<td align="center">
+
 												<b>@(utils.NumberUtils.moneda(totalaporte))</b>
-											 
+
 										</td>
-										<td align="center">	
-											 
+										<td align="center">
+
 												<b>@(utils.NumberUtils.moneda(totalsinaporte))</b>
-											 
+
 										</td>
-										<td align="center">	
-											 
+										<td align="center">
+
 												<b>@(utils.NumberUtils.moneda(totalret))</b>
-											 
+
 										</td>
-										 
-										<td align="center">	
+
+										<td align="center">
 											<b>@(utils.NumberUtils.moneda(totalgasto))</b>
 										</td>
 									</tr>
 						</tbody>
-					</table>		
-					
-					
+					</table>
+
+
 				</div>
-			</div>	
+			</div>
+		}
+	}
+
+	@if(rowConvenio != null){
+		@if(rowConvenio.size() > 0){
+			<div class="row">
+				<div class="col-sm-12">
+					<h2>CONVENIO</h2>
+
+					<table class="table table-bordered">
+						<thead>
+							<tr>
+								<td><b>Organigrama</b></td>
+								<td><b>Cantidad</b></td>
+								<td align="center"><b>Total Con Aportes</b></td>
+								<td align="center"><b>Total Sin Aportes</b></td>
+								<td align="center"><b>Retenciones</b></td>
+								<!-- <td align="center">Total NETO</td> -->
+								<td align="center"><b>TOTAL GASTO</b></td>
+							</tr>
+						</thead>
+						<tbody>
+							@{totalcant =new java.math.BigDecimal(0);}
+						 	@{totalaporte = new java.math.BigDecimal(0);}
+						 	@{totalsinaporte = new java.math.BigDecimal(0);}
+						 	@{totalret = new java.math.BigDecimal(0);}
+						 	@{totalgasto = new java.math.BigDecimal(0);}
+
+							@for(rp <- rowConvenio){
+								 	@{totalcant = totalcant.add(rp.getBigDecimal("cantidadEmpleados"))}
+								 	@{totalaporte = totalaporte.add(rp.getBigDecimal("totalConAporte"))}
+								 	@{totalsinaporte = totalsinaporte.add(rp.getBigDecimal("totalSinAporte"))}
+								 	@{totalret = totalret.add(rp.getBigDecimal("totalRetenciones"))}
+								 	@{totalgasto = totalgasto.add(rp.getBigDecimal("totalConAporte").add(rp.getBigDecimal("totalSinAporte")).add(rp.getBigDecimal("totalRetenciones")))}
+									<tr>
+										<td>@rp.getString("nombre")</td>
+										<td align="center">@rp.getInteger("cantidadEmpleados")</td>
+										<td align="center">
+											@if(rp.getBigDecimal("totalConAporte").compareTo(java.math.BigDecimal.ZERO) > 0){
+												@(utils.NumberUtils.moneda(rp.getBigDecimal("totalConAporte")))
+											}
+										</td>
+										<td align="center">
+											@if(rp.getBigDecimal("totalSinAporte").compareTo(java.math.BigDecimal.ZERO) > 0){
+												@(utils.NumberUtils.moneda(rp.getBigDecimal("totalSinAporte")))
+											}
+										</td>
+										<td align="center">
+											@if(rp.getBigDecimal("totalRetenciones").compareTo(java.math.BigDecimal.ZERO) > 0){
+												@(utils.NumberUtils.moneda(rp.getBigDecimal("totalRetenciones")))
+											}
+										</td>
+										<!--<td align="center">
+
+												@(utils.NumberUtils.moneda(rp.getBigDecimal("totalConAporte").add(rp.getBigDecimal("totalSinAporte")).subtract(rp.getBigDecimal("totalRetenciones"))))
+
+										</td> -->
+										<td align="center">
+											@(utils.NumberUtils.moneda(rp.getBigDecimal("totalConAporte").add(rp.getBigDecimal("totalSinAporte")).add(rp.getBigDecimal("totalRetenciones"))))
+										</td>
+									</tr>
+
+							}
+								<tr>
+										<td><b>TOTALES</b></td>
+										<td align="center"><b>@totalcant</b></td>
+										<td align="center">
+
+												<b>@(utils.NumberUtils.moneda(totalaporte))</b>
+
+										</td>
+										<td align="center">
+
+												<b>@(utils.NumberUtils.moneda(totalsinaporte))</b>
+
+										</td>
+										<td align="center">
+
+												<b>@(utils.NumberUtils.moneda(totalret))</b>
+
+										</td>
+
+										<td align="center">
+											<b>@(utils.NumberUtils.moneda(totalgasto))</b>
+										</td>
+									</tr>
+						</tbody>
+					</table>
+
+
+				</div>
+			</div>
 		}
 	}
 }
