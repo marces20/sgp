@@ -2,7 +2,7 @@
 @import helper._
 @import utils._
 @import models.auth._
-@implicitFieldConstructor = @{ FieldConstructor(simpleInput.render) } 
+@implicitFieldConstructor = @{ FieldConstructor(simpleInput.render) }
 
 @views.html.presupuesto.mainPresupuesto("Lista de Saldos Presupuestarios") {
 
@@ -55,7 +55,7 @@
 			</form>
 		</div>
 	</div>
-	@if(Permiso.check("crearCredito")) {  	  
+	@if(Permiso.check("crearCredito")) {
 	<div class="row">
 		<div class="col-sm-2">
 			<a href="@controllers.presupuesto.routes.CreditosPresupuestariosController.crear"  class="form-control btn btn-default">Nuevo crédito</a>
@@ -63,15 +63,15 @@
 	</div>
 	}
 	@if(buscador.getTotalRowCount == 0) {
-        
+
         <div class="well">
             <em>No se encuentran créditos</em>
         </div>
-        
+
     } else {
-		
-		Mostrando @buscador.getDisplayXtoYofZ(" a "," de ") resultado(s). 
-		
+
+		Mostrando @buscador.getDisplayXtoYofZ(" a "," de ") resultado(s).
+
 		<table class="table table-striped table-bordered">
 			<thead>
 				<tr>
@@ -80,11 +80,13 @@
 					<th width="100">Código</th>
 					<th width="500">Ley</th>
 					<th width="30">Fecha</th>
-					 
-					<th width="">Ejercicio</th>
-					<th width="">Total</th>
-					<th width="">Total Recurso</th>
-					<th width="">Estado</th>
+
+					<th style="text-align:center">Ejercicio</th>
+					<th style="text-align:center">Total</th>
+					<th style="text-align:center">Total Recurso</th>
+					<th style="text-align:center">Plan Sumar</th>
+					<th style="text-align:center">Afecta</th>
+					<th style="text-align:center">Estado</th>
 					<th class="50">#</th>
 				</tr>
 			</thead>
@@ -93,7 +95,7 @@
 				<tr class="pointer" data-href="@controllers.presupuesto.routes.CreditosPresupuestariosController.ver(credito.id)">
 					<td><input type="checkbox" name="check_listado[]" class="notSeleccion" value="@credito.id" id="check-@credito.id"/></td>
 					<td>
-						@if(Permiso.check("crearCredito")) {  
+						@if(Permiso.check("crearCredito")) {
 						<a class="btn btn-default btn-xs notSeleccion" href="@controllers.presupuesto.routes.CreditosPresupuestariosController.editar(credito.id)">
 							<i class="glyphicon glyphicon-edit"></i>
 						</a>
@@ -102,14 +104,16 @@
 					<td>@(credito.id)</td>
 					<td>@(credito.nombre)</td>
 					<td>@(utils.DateUtils.formatDate(credito.fecha))</td>
-					 
-					<td>@(credito.ejercicio.nombre)</td>
+
+					<td align="center">@(credito.ejercicio.nombre)</td>
 					<td align="center">@utils.NumberUtils.moneda(credito.getTotal())</td>
 					<td align="center">@utils.NumberUtils.moneda(credito.getTotalRecursos())</td>
-					<td>@(credito.estado)</td>
-					
+					<td align="center">@if(credito.plan_sumar == true){SI}else{NO}</td>
+					<td align="center">@if(credito.afecta == true){SI}else{NO}</td>
+					<td align="center">@(credito.estado)</td>
+
 					<td>
-						@if(Permiso.check("eliminarCredito")) { 
+						@if(Permiso.check("eliminarCredito")) {
 						<a href="@controllers.presupuesto.routes.CreditosPresupuestariosController.eliminar(credito.id)">
 							<i class="glyphicon glyphicon-remove-circle"></i>
 						</a>
@@ -119,7 +123,7 @@
              }
 	        </tbody>
         </table>
-		
+
 		<div class="pagination pull-right">
 		    @views.html.helpers.paginador(buscador, controllers.presupuesto.routes.CreditosPresupuestariosController.index())
 		</div>
@@ -127,10 +131,10 @@
 }
 <script>
 $( function(){
-$('#reporteListadoCreditos').click( function() { 
+$('#reporteListadoCreditos').click( function() {
 		var url = $(this).attr("data-url");
 		var dialogo = $('<div></div>');
-		 
+
 		dialogo.dialog({
 			title: "Listado Creditos",
 	    	resizable: false,
@@ -149,15 +153,14 @@ $('#reporteListadoCreditos').click( function() {
 		    open: function( event, ui ) {
 				$.post(url, getCheckSeleccionados(), function(data){
 					dialogo.html(data);
-				});	
+				});
 		    }
 	    });
 	});
-});		
+});
 
 function getCheckSeleccionados(){
 	return $("input[name='check_listado[]']").serialize();
 }
-</script>		
-	
-	
+</script>
+

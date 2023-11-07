@@ -1,19 +1,19 @@
 @(creditoForm: Form[CreditoPresupuestario])
 @import helper._
-@implicitFieldConstructor = @{ FieldConstructor(simpleInput.render) } 
+@implicitFieldConstructor = @{ FieldConstructor(simpleInput.render) }
 	@inputText(creditoForm("id"), 'type -> "hidden", 'id -> "creditoPresupuestarioId")
 	<div class="row">
 		<div class="col-sm-6">
 			<div class="form-group @if(creditoForm.error("nombre") != null) {has-error}else{has-required}">
-				<label for="inputNombre" class="control-label">Ley</label> 
+				<label for="inputNombre" class="control-label">Ley</label>
 				@inputText(creditoForm("nombre"), 'class -> "form-control")
 				@creditoForm("nombre").error.map{ error =>
 					<div class="text-error">@error.message</div>
 				}
 			</div>
 		</div>
-		
-		
+
+
 		<div class="col-sm-2">
 			<div class="form-group @if(creditoForm.error("ejercicio.id") != null) {has-error}else{has-required}">
 			<label class="control-label">Ejercicio
@@ -24,38 +24,59 @@
 				}
 			</div>
 		</div>
-		
+
 		<div class="col-sm-2">
-			<label for="expediente" class="control-label">Expediente</label> 
+			<label for="expediente" class="control-label">Expediente</label>
 			<div class="input-group">
 				@inputText(creditoForm("expediente.nombre"),'class -> "form-control", 'id -> "expediente")
 				@inputText(creditoForm("expediente.id"),'hidden -> "hidden", 'id -> "expediente_id")
 				<span class="input-group-addon">
-					<a href="#" 
-						id="searchExpediente" 
-						data-title="Selección de expediente" 
-						data-url="@controllers.expediente.routes.ExpedientesController.modalBuscar()" 
-						data-height="650" 
-						data-width="700" 
-						data-listen="modal.seleccion.expediente.simple" 
-						data-label="#expediente" 
+					<a href="#"
+						id="searchExpediente"
+						data-title="Selección de expediente"
+						data-url="@controllers.expediente.routes.ExpedientesController.modalBuscar()"
+						data-height="650"
+						data-width="700"
+						data-listen="modal.seleccion.expediente.simple"
+						data-label="#expediente"
 						data-field="#expediente_id">
 						<i class="glyphicon glyphicon-search"></i>
 					</a>
 				</span>
 			</div>
 		</div>
-		
+
 	</div>
 	<div class="row">
 		<div class="col-sm-2">
 			<div class="form-group @if(creditoForm.error("fecha") != null) {has-error}else{has-required}">
-				<label for="inputFechaStart" class="control-label">Fecha</label> 
+				<label for="inputFechaStart" class="control-label">Fecha</label>
 				@inputText(creditoForm("fecha"),'class -> "form-control date", 'id -> "fecha")
 			</div>
 		</div>
+		<div class="col-sm-2">
+			<div class="form-group @if(creditoForm.error("plan_sumar") != null) {has-error}else{has-required}">
+				<label class="control-label">
+					PLAN SUMAR
+					@select(creditoForm("plan_sumar"),options(""->"","true"->"SI","false"->"NO"), 'class -> "form-control select")
+				</label>
+				@creditoForm("plan_sumar").error.map{ error =>
+					<div class="text-error">@error.message</div>
+				}
+			</div>
+		</div>
+		<div class="col-sm-6">
+			<div class="form-group @if(creditoForm.error("afecta") != null) {has-error}else{has-required}">
+				<label class="control-label">
+					AFECTA
+					@select(creditoForm("afecta"),options(""->"","true"->"SI","false"->"NO"), 'class -> "form-control select")
+				</label>
+				@creditoForm("afecta").error.map{ error =>
+					<div class="text-error">@error.message</div>
+				}
+			</div>
+		</div>
 	</div>
-	
-   
-  
-	
+
+
+
