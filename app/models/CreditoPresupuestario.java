@@ -45,7 +45,10 @@ public class CreditoPresupuestario extends Model{
 	@Formats.DateTime(pattern="dd/MM/yyyy")
 	public Date fecha;
 
+	@Required(message="Requiere Plan Sumar")
 	public Boolean plan_sumar = false;
+
+	@Required(message="Requiere Afecta")
 	public Boolean afecta = false;
 
 	@ManyToOne
