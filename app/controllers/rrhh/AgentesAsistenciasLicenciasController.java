@@ -437,6 +437,15 @@ public class AgentesAsistenciasLicenciasController extends Controller {
 			return ok(modalPasarCancelado.render(d));
 		}
 
+		List<AgenteAsistenciaLicencia> laal = AgenteAsistenciaLicencia.find.where().in("id", lSeleccionados).findList();
+		for(AgenteAsistenciaLicencia laalx : laal) {
+			List<LiquidacionNovedadLicencia> lnl = LiquidacionNovedadLicencia.find.where().in("agente_asistencia_licencia_id", laalx.id).findList();
+			for(LiquidacionNovedadLicencia lnlx : lnl) {
+				lnlx.delete();
+			}
+			laalx.delete();
+		}
+
 		if(d.hasErrors())
 			return ok(modalPasarCancelado.render(d));
 
@@ -444,7 +453,7 @@ public class AgentesAsistenciasLicenciasController extends Controller {
 		try {
 			Integer count = AgenteAsistenciaLicencia.modificarEstadoMasivo(Estado.AGENTE_LICENCIA_CANCELADO, lSeleccionados);
 			result.put("success", true);
-			flash("success", "Se actualizaron " + count + " registros de "+ lSeleccionados.size() +" seleccionados.");
+			flash("success", "Se actualizaron registros seleccionados.");
 			result.put("html", modalPasarCancelado.render(d).toString());
 			return ok(result);
 		} catch (Exception e){
