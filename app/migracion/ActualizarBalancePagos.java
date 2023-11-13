@@ -29,9 +29,9 @@ public class ActualizarBalancePagos {
 		Connection conn2 = null;
 		try {
 
-			Date fd = DateUtils.formatDate("01/01/2023", "dd/MM/yyyy");
-			Date fh = DateUtils.formatDate("31/03/2023", "dd/MM/yyyy");
-
+			Date fd = DateUtils.formatDate("01/06/2023", "dd/MM/yyyy");
+			Date fh = DateUtils.formatDate("30/06/2023", "dd/MM/yyyy");
+			System.out.println("Tffffffffffffffffffffffffffffffffffffff");
 			List<Integer> idsExpLiq = new ArrayList<Integer>();
 			idsExpLiq.add(34720);
 			idsExpLiq.add(35055);
@@ -43,7 +43,8 @@ public class ActualizarBalancePagos {
 												   .le("fecha_pago", fh)
 												   .eq("tipo", "payment")
 												   //.in("expediente_id", idsExpLiq)
-												   //.eq("expediente_id",27473)
+												   //.eq("expediente_id",37237)
+												   //.eq("orden_pago_id",35787)
 												   //.eq("tipo_cuenta_id", TipoCuenta.PLAN_SUMAR_LACMI)
 												   .disjunction()
 												   .eq("state_id", Estado.PAGO_ESTADO_PAGADO)
@@ -64,6 +65,8 @@ public class ActualizarBalancePagos {
 			List<Long> listaOpSueldo = new ArrayList<Long>();
 			List<Long> listaOpSueldoConvenio = new ArrayList<Long>();
 
+			System.out.println("Tffffffffffffffffffffffffffffffffffffff "+lf.size());
+
 			for(Pago f:lf) {// ACA VOY A TENER TODOS LOS PAGOS
 
 				Integer tc = 413;
@@ -71,16 +74,45 @@ public class ActualizarBalancePagos {
 				if(f.tipo_cuenta_id.compareTo(TipoCuenta.PROFE) == 0) {
 					tc = 414;
 					cuentaPagoBanco = 289;
+				}else if(f.tipo_cuenta_id.compareTo(TipoCuenta.FONDO_PERMANENTE_MATERNO) == 0) {
+					cuentaPagoBanco = 562; //111/02/13 Bco Macro C/C $ Nº 0942042260/7 Fondo Perm. Matern
+				}else if(f.tipo_cuenta_id.compareTo(TipoCuenta.FONDO_PERMANENTE_OBERA) == 0) {
+						cuentaPagoBanco = 563; //Bco Macro C/C $ Nº 0942033812/6 Fondo Perm. Obera2
+				}else if(f.tipo_cuenta_id.compareTo(TipoCuenta.PLAN_SUMAR_FATIMA) == 0) {
+					cuentaPagoBanco = 296; //1.1.1.02.09 Bco Macro C/C $ N 0941661279/1 Prog Sumar Fátima
+				}else if(f.tipo_cuenta_id.compareTo(TipoCuenta.PLAN_SUMAR_HEARM) == 0) {
+					cuentaPagoBanco = 294; //1.1.1.02.07 Bco Macro C/C $ N 0941423613/9 Prog Sumar HEARM
+				}else if(f.tipo_cuenta_id.compareTo(TipoCuenta.PLAN_SUMAR_LACMI) == 0) {
+					cuentaPagoBanco = 295; //1.1.1.02.08 Bco Macro C/C $ N 0941646917/7 Prog Sumar Lacmi
+				}else if(f.tipo_cuenta_id.compareTo(TipoCuenta.PLAN_SUMAR_MATERNO) == 0) {
+					cuentaPagoBanco = 561; //111/02/12 Bco Macro C/C $ Nº 0942037597/4 Sumar Materno
+				}else if(f.tipo_cuenta_id.compareTo(TipoCuenta.PLAN_SUMAR_OBERA) == 0) {
+					cuentaPagoBanco = 564; //111/02/15 Bco Macro C/C $ Nº 0942035024/5 Sumar Obera
 				}else {
 					tc = 413;
 					cuentaPagoBanco = 288;
 				}
+
+            /*
+                <option value="4">PLAN SUMAR LACMI</option>
+                <option value="3">PLAN SUMAR HEARM</option>
+                <option value="1">OPERATIVA</option>
+                <option value="2">PROFE</option>
+                <option value="6">PLAN SUMAR MATERNO</option>
+                <option value="5">PLAN SUMAR FATIMA</option>
+                <option value="8">FONDO PERMANENTE OBERA</option>
+                <option value="7">FONDO PERMANENTE MATERNO</option>
+                <option value="9">PLAN SUMAR OBERA</option>*/
+
+
+				boolean ISHONORARIONEW = false;
 
 				if(!idsfacturaCargadas.contains(f.factura_id)) {
 					boolean ISHONORARIO = false;
 					boolean SUELDOSPARQUE = false;
 					boolean SUELDOSCONVENIO = false;
 
+					System.out.println("Tffffffffffffffffff222222222222222222 "+lf.size());
 
 					List<FacturaLinea> fll = FacturaLinea.find.where().eq("factura_id", f.factura_id).findList();
 					for(FacturaLinea fllx :fll) {
@@ -139,6 +171,49 @@ public class ActualizarBalancePagos {
 								}
 							}
 						}
+
+						if(SUELDOSPARQUE || SUELDOSCONVENIO) {
+							if(fllx.producto_id.equals((long)40224)) {// 2.1.4.02.01 Aportes Reg. Nac. Seguridad Social
+								tc = 440;// 2.1.4.02.01 Aportes Reg. Nac. Seguridad Socialx
+								ISHONORARIONEW = true;
+							}
+							if(fllx.producto_id.equals((long)40337)) {// 2.1.4.02.03 Aportes Reg. Nac. Obra Social
+								tc = 442;// 2.1.4.02.03 Aportes Reg. Nac. Obra Socialx
+								ISHONORARIONEW = true;
+							}
+							if(fllx.factura.proveedor_id.equals(3172)){//NACIÓN SEGUROS
+
+								if(fllx.producto_id.equals((long)42201) || fllx.producto_id.equals((long)36881)) {
+									if(SUELDOSPARQUE) {
+										tc = 445;//2.1.4.02.06 - Seguro Sepelio - x
+										ISHONORARIONEW = true;
+									}else if(SUELDOSCONVENIO) {
+										tc = 445;//2.1.4.02.06 - Seguro Sepelio - x
+										ISHONORARIONEW = true;
+									}
+
+								}else if(fllx.producto_id.equals((long)42202) || fllx.producto_id.equals((long)36882)) {
+									if(SUELDOSPARQUE) {
+										tc = 444;//2.1.4.02.05 - Seguro de vida -x
+										ISHONORARIONEW = true;
+									}else if(SUELDOSCONVENIO) {
+										tc = 444;//2.1.4.02.05 - Seguro de vida -x
+										ISHONORARIONEW = true;
+									}
+
+								}
+							}
+							if(fllx.factura.proveedor_id.equals(1366)){//AFIP
+								if(fllx.producto_id.equals((long)52513)) {//IMPUESTO A LAS GANANCIAS (30100)
+									tc = 446;//2.1.4.02.07 AFIP- Retención Ganancias Art 79x
+									ISHONORARIONEW = true;
+								}
+							}
+							if(fllx.factura.proveedor_id.equals(12770) ||  fllx.factura.proveedor_id.equals(16546) ||  fllx.factura.proveedor_id.equals(16564) ||  fllx.factura.proveedor_id.equals(15669)  ){// ORANGEDATA S.A. || GRUPO PRESTAFACIL S.A. || ASOCIACIÓN MUTUAL UNIÓN SOLIDARIA (AMUS) || IPRODHA
+								tc = 448;//2.1.4.02.09 Convenio Prestafácilx
+								ISHONORARIONEW = true;
+							}
+						}
 					}
 
 
@@ -152,13 +227,14 @@ public class ActualizarBalancePagos {
 					b.cuenta_propia_id = getCuentaPropiaId(f.tipo_cuenta_id.intValue());
 
 
-					if(ISHONORARIO) {
-						tc = 415;//	2.1.1.01.03 Honorarios a Pagar
-					}else if(SUELDOSCONVENIO){
-						tc = 437;//2.1.4.01.01 Sueldos a Pagar Convenio
-					}else if(SUELDOSPARQUE){
-						tc = 437;//2.1.4.01.02 Sueldos a Pagar Parque
-
+					if(!ISHONORARIONEW){
+						if(ISHONORARIO) {
+							tc = 415;//	2.1.1.01.03 Honorarios a Pagar
+						}else if(SUELDOSCONVENIO){
+							tc = 437;//2.1.4.01.01 Sueldos a Pagar Convenio
+						}else if(SUELDOSPARQUE){
+							tc = 437;//2.1.4.01.02 Sueldos a Pagar Parque
+						}
 					}
 
 
@@ -190,34 +266,122 @@ public class ActualizarBalancePagos {
 															    .eq("state_id", Estado.PAGO_ESTADO_CONCILIADO)
 															    .endJunction()
 															    .findList();
-					for(Pago pay:pagosPayments) {
 
-						Balance bx = new Balance();//ACA HABER DEL PAGO PRINCIPAL
-						bx.fecha = pay.fecha_pago;
-						bx.fecha_debito = pay.fecha_pago;
-						bx.haber= pay.total.subtract(pay.total_credito);
-						bx.expediente_id = pay.expediente_id;
-						bx.orden_pago_id = pay.orden_pago_id;
-						bx.debe = BigDecimal.ZERO;;
-						bx.cuenta_propia_id = getCuentaPropiaId(pay.tipo_cuenta_id.intValue());
-						bx.cuenta_id = cuentaPagoBanco;
-						bx.estado_id = (long) Estado.BALANCE_BORRADOR;
-						bx.asiento = asiento;
-						bx.tipo = "pagos";
-						bx.orden_id = f.factura.orden_id;
-						bx.create_date = new Date();
-						bx.create_usuario_id = new Long(Usuario.getUsuarioSesion());
-						bx.save();
 
-						BalanceExpediente bex = new BalanceExpediente();
-						bex.balance_id = bx.id;
-						bex.expediente_id= pay.expediente_id.longValue();
-						bex.save();
 
-						BalanceOrdenPago box = new BalanceOrdenPago();
-						box.balance_id = bx.id;
-						box.orden_pago_id = pay.orden_pago_id;
-						box.save();
+					if((SUELDOSPARQUE || SUELDOSCONVENIO) && pagosPayments.size() > 1) {
+						int x = 0;
+
+						System.out.println("AAAAAAAAAAAAAAAAAAAAAA ");
+						for(Pago pay:pagosPayments) {
+
+
+
+							if(x == 0 ) {
+
+
+
+							}else {
+								b.debe = f.factura.getBase().subtract(pay.total.subtract(pay.total_credito));//DEBEEEEEEEEEEEEE
+								b.save();
+
+								///////////////////////////////////////////////////////////////////////
+								Balance bx = new Balance();//DEBEEEEEEEEEEEEEEE
+								bx.fecha = pay.fecha_pago;
+								bx.fecha_debito = pay.fecha_pago;
+								bx.haber= BigDecimal.ZERO;
+								bx.expediente_id = f.expediente_id;
+								bx.orden_pago_id = f.orden_pago_id;
+								bx.debe = pay.total.subtract(pay.total_credito); //f.total.subtract(f.total_credito);
+								bx.cuenta_propia_id = getCuentaPropiaId(f.tipo_cuenta_id.intValue());
+								bx.cuenta_id = tc;
+								bx.estado_id = (long) Estado.BALANCE_BORRADOR;
+								bx.asiento = asiento;
+								bx.tipo = "pagos";
+								bx.orden_id = f.factura.orden_id;
+								bx.create_date = new Date();
+								bx.create_usuario_id = new Long(Usuario.getUsuarioSesion());
+								bx.save();
+
+								BalanceExpediente bex = new BalanceExpediente();
+								bex.balance_id = bx.id;
+								bex.expediente_id= f.expediente_id.longValue();
+								bex.save();
+
+								BalanceOrdenPago box = new BalanceOrdenPago();
+								box.balance_id = bx.id;
+								box.orden_pago_id = f.orden_pago_id;
+								box.save();
+								System.out.println("1111111111111111 "+pay.total.subtract(pay.total_credito));
+								//////////////////////////////////////////////////////////////////////
+							}
+
+
+							Balance bx2 = new Balance();//HABEEEEEEEEEEEEER
+							bx2.fecha = pay.fecha_pago;
+							bx2.fecha_debito = pay.fecha_pago;
+							bx2.haber= pay.total.subtract(pay.total_credito);
+							bx2.expediente_id = pay.expediente_id;
+							bx2.orden_pago_id = pay.orden_pago_id;
+							bx2.debe = BigDecimal.ZERO;
+							bx2.cuenta_propia_id = getCuentaPropiaId(pay.tipo_cuenta_id.intValue());
+							bx2.cuenta_id = cuentaPagoBanco;
+							bx2.estado_id = (long) Estado.BALANCE_BORRADOR;
+							bx2.asiento = asiento;
+							bx2.tipo = "pagos";
+							bx2.orden_id = f.factura.orden_id;
+							bx2.create_date = new Date();
+							bx2.create_usuario_id = new Long(Usuario.getUsuarioSesion());
+							bx2.save();
+							System.out.println("222222222222222 "+pay.total.subtract(pay.total_credito));
+							BalanceExpediente bex2 = new BalanceExpediente();
+							bex2.balance_id = bx2.id;
+							bex2.expediente_id= pay.expediente_id.longValue();
+							bex2.save();
+
+							BalanceOrdenPago box2 = new BalanceOrdenPago();
+							box2.balance_id = bx2.id;
+							box2.orden_pago_id = pay.orden_pago_id;
+							box2.save();
+
+							x++;
+						}
+
+
+						System.out.println("ZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZ ");
+
+
+
+					}else {
+						for(Pago pay:pagosPayments) {
+
+							Balance bx = new Balance();//ACA HABER DEL PAGO PRINCIPAL
+							bx.fecha = pay.fecha_pago;
+							bx.fecha_debito = pay.fecha_pago;
+							bx.haber= pay.total.subtract(pay.total_credito);
+							bx.expediente_id = pay.expediente_id;
+							bx.orden_pago_id = pay.orden_pago_id;
+							bx.debe = BigDecimal.ZERO;;
+							bx.cuenta_propia_id = getCuentaPropiaId(pay.tipo_cuenta_id.intValue());
+							bx.cuenta_id = cuentaPagoBanco;
+							bx.estado_id = (long) Estado.BALANCE_BORRADOR;
+							bx.asiento = asiento;
+							bx.tipo = "pagos";
+							bx.orden_id = f.factura.orden_id;
+							bx.create_date = new Date();
+							bx.create_usuario_id = new Long(Usuario.getUsuarioSesion());
+							bx.save();
+
+							BalanceExpediente bex = new BalanceExpediente();
+							bex.balance_id = bx.id;
+							bex.expediente_id= pay.expediente_id.longValue();
+							bex.save();
+
+							BalanceOrdenPago box = new BalanceOrdenPago();
+							box.balance_id = bx.id;
+							box.orden_pago_id = pay.orden_pago_id;
+							box.save();
+						}
 					}
 
 				}
