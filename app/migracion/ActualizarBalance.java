@@ -117,8 +117,8 @@ public class ActualizarBalance extends Controller {
 
 		try {
 
-			Date fd = DateUtils.formatDate("01/11/2022", "dd/MM/yyyy");
-			Date fh = DateUtils.formatDate("31/12/2022", "dd/MM/yyyy");
+			Date fd = DateUtils.formatDate("01/01/2023", "dd/MM/yyyy");
+			Date fh = DateUtils.formatDate("31/03/2023", "dd/MM/yyyy");
 
 
 			conn2 = Configuracion2.get2().getConnection2();
@@ -236,8 +236,8 @@ public class ActualizarBalance extends Controller {
 
 		try {
 
-			Date fd = DateUtils.formatDate("01/11/2022", "dd/MM/yyyy");
-			Date fh = DateUtils.formatDate("31/12/2022", "dd/MM/yyyy");
+			Date fd = DateUtils.formatDate("01/01/2023", "dd/MM/yyyy");
+			Date fh = DateUtils.formatDate("31/03/2023", "dd/MM/yyyy");
 
 
 			conn2 = Configuracion2.get2().getConnection2();
@@ -469,8 +469,8 @@ public class ActualizarBalance extends Controller {
 
 		try {
 
-			Date fd = DateUtils.formatDate("01/03/2023", "dd/MM/yyyy");
-			Date fh = DateUtils.formatDate("31/03/2023", "dd/MM/yyyy");
+			Date fd = DateUtils.formatDate("01/06/2023", "dd/MM/yyyy");
+			Date fh = DateUtils.formatDate("30/06/2023", "dd/MM/yyyy");
 
 
 			conn2 = Configuracion2.get2().getConnection2();
@@ -1163,10 +1163,20 @@ public class ActualizarBalance extends Controller {
 						}
 					}
 
+					if(fl.factura.orden != null && fl.factura.orden.orden_rubro_id.equals((long)5)) {
+						if(fl.factura.proveedor_id.equals(11101) || fl.factura.proveedor_id.equals(2756)  ) { //INTERBANKING SA / Banco Macro S.A.
+							cuentaId = new Long(499);//4.2.2/02/03 Gastos y Comisiones Bancarias
+						}else {
+							if(fl.factura.orden.orden_subrubro_id != null  && fl.factura.orden.orden_subrubro_id.equals((long)556)) {
+								cuentaId = new Long(499);//4.2.2/02/03 Gastos y Comisiones Bancarias
+							}
+						}
+					}
+
 					////ESTUDIOS MEDICOS-------------------------------------------------------
 					if(fl.factura.orden != null && fl.factura.orden.orden_rubro_id.equals((long)2)) {//ESTUDIOS MEDICOS
 						if(fl.factura.orden.deposito_id.equals((long)1)) {
-							cuentaId = new Long(497);
+							cuentaId = new Long(497);//HOSPITAL ESCUELA DE AGUDOS	4.2.2.02.01 Proveedores de Servicios
 						}else {
 							cuentaId = getCuentaTransferencia(fl.factura.orden.deposito_id);
 						}
@@ -1175,7 +1185,12 @@ public class ActualizarBalance extends Controller {
 
 					////SERVICIOS-------------------------------------------------------
 					if(fl.factura.orden != null && fl.factura.orden.orden_rubro_id.equals((long)7)) {//SERVICIOS
-						cuentaId = getCuentaTransferencia(fl.factura.orden.deposito_id);
+
+						if(fl.factura.orden.deposito_id.equals((long)1) ) {//1	"HOSPITAL ESCUELA DE AGUDOS"
+							cuentaId = new Long(497);//HOSPITAL ESCUELA DE AGUDOS	4.2.2.02.01 Proveedores de Servicios
+						}else {
+							cuentaId = getCuentaTransferencia(fl.factura.orden.deposito_id);
+						}
 					}
 
 					if(fl.factura.orden != null && fl.factura.orden.deposito_id.equals((long)33) && !fl.factura.orden.orden_rubro_id.equals((long)6)) {// banco de protesis
@@ -1287,6 +1302,11 @@ public class ActualizarBalance extends Controller {
 						//"27";"UNIDAD DE TRASLADO" 4.2.2.02.37 Servicio Limpieza Ud Traslado
 						if(fl.factura.orden.deposito_id.equals((long)27)) {
 							cuentaId = new Long(557);
+						}
+
+						//"2";"LACMI	Transferencia LACMI
+						if(fl.factura.orden.deposito_id.equals((long)3)) {
+							cuentaId = new Long(595);
 						}
 					}
 
@@ -1506,6 +1526,7 @@ public class ActualizarBalance extends Controller {
 					//SAFITA S.R.L.
 					if(idProveedor.equals(2713)) {//SAFITA S.R.L.
 
+
 						if(fl.factura.orden.orden_subrubro_id != null && fl.factura.orden.orden_subrubro_id.equals((long)548)) {//VIANDAS
 							if(fl.factura.orden.deposito_id.equals((long)1)) {
 								cuentaId = new Long(508);
@@ -1517,6 +1538,7 @@ public class ActualizarBalance extends Controller {
 								cuentaId = new Long(501);
 							}
 						}
+
 
 
 
