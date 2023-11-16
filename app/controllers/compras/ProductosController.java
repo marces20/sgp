@@ -892,18 +892,19 @@ public class ProductosController extends Controller {
     		if(lc.size() > 0) {
     			idCLiente = lc.get(9).id;
     		}else {
+
     			Cliente clnew = new Cliente();
     			clnew.nombre = json.get("razonsocial").textValue();
     			clnew.create_usuario_id = new Long(1);
     			clnew.create_date = new Date();
     			clnew.activo = true;
 
-    			String doc = json.get("doc").textValue();
-    			if(doc.compareTo("96") == 0) {
+    			String tipo_doc_id = json.get("tipo_doc_id").textValue();
+    			if(tipo_doc_id.compareTo("96") == 0) {
     				clnew.dni = new Integer(json.get("doc").textValue());
-    			}else if(doc.compareTo("91") == 0) {
+    			}else if(tipo_doc_id.compareTo("91") == 0) {
     				clnew.cie  = json.get("doc").textValue();
-    			}else if(doc.compareTo("80") == 0 || doc.compareTo("86") == 0) {
+    			}else if(tipo_doc_id.compareTo("80") == 0 || tipo_doc_id.compareTo("86") == 0) {
     				clnew.cuit2  = json.get("doc").textValue();
     			}
     			clnew.save();
