@@ -884,7 +884,7 @@ public class ProductosController extends Controller {
 
     		List<Cliente> lc = Cliente.find.where()
     							.disjunction()
-    							.eq("dni",json.get("doc").toString())
+    							.eq("dni",new Integer(json.get("doc").toString()))
     							.eq("cie",json.get("doc").toString())
     							.eq("cuit2",json.get("doc").toString())
     							.endJunction().findList();
