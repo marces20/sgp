@@ -838,31 +838,33 @@ public class ProductosController extends Controller {
     	//Logger.debug("lineas------------------------------ "+request().body().asFormUrlEncoded().get("lineas[]").toString() );//
 
 
-    	Logger.debug("------------------------------ "+RequestVar.getArray("array_dominio[]")[0]);
+    	//Logger.debug("------------------------------ "+RequestVar.getArray("array_dominio[]")[0]);
 
 
     	JsonNode json = Controller.request().body().asJson();
 
-		Logger.debug("idfactura -> " + json.get("idfactura").asInt());
+		Logger.debug("idfactura -> " + json.get("idfactura").asInt());//x
 		//Logger.debug("idfactura------------------------------ "+request().body().asFormUrlEncoded().get("idfactura")[0]);
 
     	Logger.debug("cuit------------------------------ "+json.get("cuit").toString());
     	Logger.debug("razonsocial------------------------------ "+json.get("razonsocial").toString());
     	Logger.debug("domicilio------------------------------ "+json.get("domicilio").toString());
+    	Logger.debug("tipo_doc_id------------------------------ "+json.get("tipo_doc_id").toString());
+
     	Logger.debug("doc------------------------------ "+json.get("doc").toString());
 
-    	Logger.debug("pv_id------------------------------ "+json.get("pv_id").toString());
-    	Logger.debug("nrofactura------------------------------ "+json.get("nrofactura").toString());//
-    	Logger.debug("condiva_id------------------------------ "+json.get("condiva_id").toString());//
-    	Logger.debug("condventa_id------------------------------ "+json.get("condventa_id").toString());
+    	Logger.debug("pv_id------------------------------ "+json.get("pv_id").toString());//x
+    	Logger.debug("nrofactura------------------------------ "+json.get("nrofactura").toString());//x
+    	Logger.debug("condiva_id------------------------------ "+json.get("condiva_id").toString());//x
+    	Logger.debug("condventa_id------------------------------ "+json.get("condventa_id").toString());//x
 
 
     	Logger.debug("total------------------------------ "+json.get("total").asDouble());
-    	Logger.debug("cae------------------------------ "+json.get("cae").toString());//
-    	Logger.debug("fecha_vencimiento------------------------------ "+json.get("fecha_vencimiento").toString());//
-    	Logger.debug("fecha_vencimiento------------------------------ "+json.get("fecha_emision").toString());//
-    	Logger.debug("fecha_desde------------------------------ "+json.get("fecha_desde").toString());//
-    	Logger.debug("fecha_hasta------------------------------ "+json.get("fecha_hasta").toString());//
+    	Logger.debug("cae------------------------------ "+json.get("cae").toString());//x
+    	Logger.debug("fecha_vencimiento------------------------------ "+json.get("fecha_vencimiento").toString());//x
+    	Logger.debug("fecha_vencimiento------------------------------ "+json.get("fecha_emision").toString());//x
+    	Logger.debug("fecha_desde------------------------------ "+json.get("fecha_desde").toString());//x
+    	Logger.debug("fecha_hasta------------------------------ "+json.get("fecha_hasta").toString());//x
 
 
 		//Logger.debug("lineas -> " + json.get("lineas").);
@@ -873,17 +875,51 @@ public class ProductosController extends Controller {
 
 
     	try{
-    		RecuperoFactura rf = new RecuperoFactura();
+
 
     		//{"idfactura":"11046","cuit":30712131310,"pv_id":7,"nrofactura":"3","doc":"2856584","tipo_doc_id":"91","condiva_id":"5","condventa_id":"1","razonsocial":"ACOSTA NU\u00d1EZ, ROCIO","domicilio":"ENCARNACION - CALLE PADRE ANTONIO RIERA 2220 - B\u00ba LA PAZ","total":"72932.53","cae":"72270300226369","fecha_vencimiento":"72270300226369","fecha_emision":"72270300226369","fecha_desde":"2022-06-30","fecha_hasta":"2022-07-06",
 
 
-    		//rf.cliente_id = null;//
 
 
-    		/*rf.fecha = null;
-    		rf.serie = null;
-    		rf.numero= RequestVar.get("nrofactura");
+    		List<Cliente> lc = Cliente.find.where()
+    							.disjunction()
+    							.eq("dni",json.get("doc").toString())
+    							.eq("cie",json.get("doc").toString())
+    							.eq("cuit2",json.get("doc").toString())
+    							.endJunction().findList();
+    		Long idCLiente = null;
+    		if(lc.size() > 0) {
+    			idCLiente = lc.get(9).id;
+    		}else {
+    			Cliente clnew = new Cliente();
+    			clnew.nombre = json.get("razonsocial").toString();
+    			clnew.create_usuario_id = new Long(1);
+    			clnew.create_date = new Date();
+    			clnew.activo = true;
+
+    			String doc = json.get("doc").toString();
+    			if(doc.compareTo("96") == 0) {
+    				clnew.dni = new Integer(json.get("doc").toString());
+    			}else if(doc.compareTo("91") == 0) {
+    				clnew.cie  = json.get("doc").toString();
+    			}else if(doc.compareTo("80") == 0 || doc.compareTo("86") == 0) {
+    				clnew.cuit2  = json.get("doc").toString();
+    			}
+    			clnew.save();
+    			idCLiente = clnew.id;
+
+
+    		}
+
+
+    		RecuperoFactura rf = new RecuperoFactura();
+
+    		rf.cliente_id = idCLiente;
+
+    		rf.fecha = new Date(json.get("fecha_desde").toString());;
+    		rf.serie = "c";
+    		rf.numero= json.get("nrofactura").toString();
     		rf.nombre = null;//?
     		rf.nota = null;
     		rf.estado_id = (long) Estado.RECUPERO_FACTURA_BORRADOR;
@@ -893,18 +929,49 @@ public class ProductosController extends Controller {
     		rf.presupuesto_id = null;
     		rf.puntoventa_id = 7;
 
-     		rf.id_factura_materno = new Long(RequestVar.get("idfactura"));
-    		rf.condicionventa_id = new Integer(RequestVar.get("condventa_id"));
-    		rf.condicioniva_id = new Integer(RequestVar.get("condiva_id"));
-    		rf.cae = RequestVar.get("cae");
-    		rf.fecha_vencimiento = new Date(RequestVar.get("fecha_vencimiento"));
-    		rf.fecha_emision = new Date(RequestVar.get("fecha_emision"));
-    		rf.fecha_desde = new Date(RequestVar.get("fecha_desde"));
-    		rf.fecha_hasta = new Date(RequestVar.get("fecha_hasta"));*/
+     		rf.id_factura_materno = new Long(json.get("idfactura").asInt());
+    		rf.condicionventa_id = new Integer(json.get("condventa_id").toString());
+    		rf.condicioniva_id = new Integer(json.get("condiva_id").toString());
+    		rf.cae = json.get("cae").toString();
+    		rf.fecha_vencimiento = new Date(json.get("fecha_vencimiento").toString());
+    		rf.fecha_emision = new Date(json.get("fecha_emision").toString());
+    		rf.fecha_desde = new Date(json.get("fecha_desde").toString());
+    		rf.fecha_hasta = new Date(json.get("fecha_hasta").toString());
+    		rf.create_usuario_id = new Long(1);
+    		rf.create_date = new Date();
 
     		rf.save();
 
-    		//RecuperoFacturaLinea rfl =
+    		for (JsonNode data : json.withArray("lineas")) {
+    			Logger.debug("-------asJson()------------ "+data.get("productoNombre"));
+
+    			Producto pe = new Producto();
+        		pe.activo =  true ;
+        		pe.nombre = data.get("productoNombre").toString();
+        		pe.articulo_id = 3042;
+        		pe.categoria_id = 36;
+        		pe.tipo_producto_id = 2;
+        		pe.udm_id = 1;
+        		pe.codigo_rismi = null;
+        		pe.save();
+
+
+
+    			RecuperoFacturaLinea rfl = new RecuperoFacturaLinea();
+    			rfl.recupero_factura_id = rf.id;
+    			rfl.producto_id = pe.id;
+    			rfl.cuenta_analitica_id= new Long(478);
+    			rfl.cuenta_id =new Long(226);
+    			rfl.precio= new BigDecimal(data.get("monto").toString());
+    			rfl.cantidad=new BigDecimal(data.get("cantidad").toString());
+    			rfl.udm_id= new Long(1);
+    			rfl.create_usuario_id= new Long(1);
+    			rfl.create_date = new Date();
+    			rfl.save();
+
+
+    		}
+
 
 
     	}catch(Exception e){
