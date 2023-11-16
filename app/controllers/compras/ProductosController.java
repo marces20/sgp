@@ -900,10 +900,12 @@ public class ProductosController extends Controller {
     			clnew.activo = true;
 
     			String tipo_doc_id = json.get("tipo_doc_id").textValue();
+    			clnew.cliente_tipo_id = new Long(7);
     			if(tipo_doc_id.compareTo("96") == 0) {
     				clnew.dni = new Integer(json.get("doc").textValue());
     			}else if(tipo_doc_id.compareTo("91") == 0) {
     				clnew.cie  = json.get("doc").textValue();
+    				clnew.cliente_tipo_id = new Long(3);
     			}else if(tipo_doc_id.compareTo("80") == 0 || tipo_doc_id.compareTo("86") == 0) {
     				clnew.cuit2  = json.get("doc").textValue();
     			}
