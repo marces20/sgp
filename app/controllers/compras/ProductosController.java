@@ -846,25 +846,25 @@ public class ProductosController extends Controller {
 		Logger.debug("idfactura -> " + json.get("idfactura").asInt());//x
 		//Logger.debug("idfactura------------------------------ "+request().body().asFormUrlEncoded().get("idfactura")[0]);
 
-    	Logger.debug("cuit------------------------------ "+json.get("cuit").toString());
-    	Logger.debug("razonsocial------------------------------ "+json.get("razonsocial").toString());
-    	Logger.debug("domicilio------------------------------ "+json.get("domicilio").toString());
-    	Logger.debug("tipo_doc_id------------------------------ "+json.get("tipo_doc_id").toString());
+    	Logger.debug("cuit------------------------------ "+json.get("cuit").textValue());
+    	Logger.debug("razonsocial------------------------------ "+json.get("razonsocial").textValue());
+    	Logger.debug("domicilio------------------------------ "+json.get("domicilio").textValue());
+    	Logger.debug("tipo_doc_id------------------------------ "+json.get("tipo_doc_id").textValue());
 
-    	Logger.debug("doc------------------------------ "+json.get("doc").toString());
+    	Logger.debug("doc------------------------------ "+json.get("doc").textValue());
 
-    	Logger.debug("pv_id------------------------------ "+json.get("pv_id").toString());//x
-    	Logger.debug("nrofactura------------------------------ "+json.get("nrofactura").toString());//x
-    	Logger.debug("condiva_id------------------------------ "+json.get("condiva_id").toString());//x
-    	Logger.debug("condventa_id------------------------------ "+json.get("condventa_id").toString());//x
+    	Logger.debug("pv_id------------------------------ "+json.get("pv_id").textValue());//x
+    	Logger.debug("nrofactura------------------------------ "+json.get("nrofactura").textValue());//x
+    	Logger.debug("condiva_id------------------------------ "+json.get("condiva_id").textValue());//x
+    	Logger.debug("condventa_id------------------------------ "+json.get("condventa_id").textValue());//x
 
 
     	Logger.debug("total------------------------------ "+json.get("total").asDouble());
-    	Logger.debug("cae------------------------------ "+json.get("cae").toString());//x
-    	Logger.debug("fecha_vencimiento------------------------------ "+json.get("fecha_vencimiento").toString());//x
-    	Logger.debug("fecha_vencimiento------------------------------ "+json.get("fecha_emision").toString());//x
-    	Logger.debug("fecha_desde------------------------------ "+json.get("fecha_desde").toString());//x
-    	Logger.debug("fecha_hasta------------------------------ "+json.get("fecha_hasta").toString());//x
+    	Logger.debug("cae------------------------------ "+json.get("cae").textValue());//x
+    	Logger.debug("fecha_vencimiento------------------------------ "+json.get("fecha_vencimiento").textValue());//x
+    	Logger.debug("fecha_vencimiento------------------------------ "+json.get("fecha_emision").textValue());//x
+    	Logger.debug("fecha_desde------------------------------ "+json.get("fecha_desde").textValue());//x
+    	Logger.debug("fecha_hasta------------------------------ "+json.get("fecha_hasta").textValue());//x
 
 
 		//Logger.debug("lineas -> " + json.get("lineas").);
@@ -884,27 +884,27 @@ public class ProductosController extends Controller {
 
     		List<Cliente> lc = Cliente.find.where()
     							.disjunction()
-    							.eq("dni",new Integer(json.get("doc").toString()))
-    							.eq("cie",json.get("doc").toString())
-    							.eq("cuit2",json.get("doc").toString())
+    							.eq("dni",new Integer(json.get("doc").asText()))
+    							.eq("cie",json.get("doc").textValue())
+    							.eq("cuit2",json.get("doc").textValue())
     							.endJunction().findList();
     		Long idCLiente = null;
     		if(lc.size() > 0) {
     			idCLiente = lc.get(9).id;
     		}else {
     			Cliente clnew = new Cliente();
-    			clnew.nombre = json.get("razonsocial").toString();
+    			clnew.nombre = json.get("razonsocial").textValue();
     			clnew.create_usuario_id = new Long(1);
     			clnew.create_date = new Date();
     			clnew.activo = true;
 
-    			String doc = json.get("doc").toString();
+    			String doc = json.get("doc").textValue();
     			if(doc.compareTo("96") == 0) {
-    				clnew.dni = new Integer(json.get("doc").toString());
+    				clnew.dni = new Integer(json.get("doc").textValue());
     			}else if(doc.compareTo("91") == 0) {
-    				clnew.cie  = json.get("doc").toString();
+    				clnew.cie  = json.get("doc").textValue();
     			}else if(doc.compareTo("80") == 0 || doc.compareTo("86") == 0) {
-    				clnew.cuit2  = json.get("doc").toString();
+    				clnew.cuit2  = json.get("doc").textValue();
     			}
     			clnew.save();
     			idCLiente = clnew.id;
@@ -917,9 +917,9 @@ public class ProductosController extends Controller {
 
     		rf.cliente_id = idCLiente;
 
-    		rf.fecha = new Date(json.get("fecha_desde").toString());;
+    		rf.fecha = new Date(json.get("fecha_desde").textValue());;
     		rf.serie = "c";
-    		rf.numero= json.get("nrofactura").toString();
+    		rf.numero= json.get("nrofactura").textValue();
     		rf.nombre = null;//?
     		rf.nota = null;
     		rf.estado_id = (long) Estado.RECUPERO_FACTURA_BORRADOR;
@@ -930,13 +930,13 @@ public class ProductosController extends Controller {
     		rf.puntoventa_id = 7;
 
      		rf.id_factura_materno = new Long(json.get("idfactura").asInt());
-    		rf.condicionventa_id = new Integer(json.get("condventa_id").toString());
-    		rf.condicioniva_id = new Integer(json.get("condiva_id").toString());
-    		rf.cae = json.get("cae").toString();
-    		rf.fecha_vencimiento = new Date(json.get("fecha_vencimiento").toString());
-    		rf.fecha_emision = new Date(json.get("fecha_emision").toString());
-    		rf.fecha_desde = new Date(json.get("fecha_desde").toString());
-    		rf.fecha_hasta = new Date(json.get("fecha_hasta").toString());
+    		rf.condicionventa_id = new Integer(json.get("condventa_id").textValue());
+    		rf.condicioniva_id = new Integer(json.get("condiva_id").textValue());
+    		rf.cae = json.get("cae").textValue();
+    		rf.fecha_vencimiento = new Date(json.get("fecha_vencimiento").textValue());
+    		rf.fecha_emision = new Date(json.get("fecha_emision").textValue());
+    		rf.fecha_desde = new Date(json.get("fecha_desde").textValue());
+    		rf.fecha_hasta = new Date(json.get("fecha_hasta").textValue());
     		rf.create_usuario_id = new Long(1);
     		rf.create_date = new Date();
 
@@ -947,7 +947,7 @@ public class ProductosController extends Controller {
 
     			Producto pe = new Producto();
         		pe.activo =  true ;
-        		pe.nombre = data.get("productoNombre").toString();
+        		pe.nombre = data.get("productoNombre").textValue();
         		pe.articulo_id = 3042;
         		pe.categoria_id = 36;
         		pe.tipo_producto_id = 2;
@@ -962,8 +962,8 @@ public class ProductosController extends Controller {
     			rfl.producto_id = pe.id;
     			rfl.cuenta_analitica_id= new Long(478);
     			rfl.cuenta_id =new Long(226);
-    			rfl.precio= new BigDecimal(data.get("monto").toString());
-    			rfl.cantidad=new BigDecimal(data.get("cantidad").toString());
+    			rfl.precio= new BigDecimal(data.get("monto").textValue());
+    			rfl.cantidad=new BigDecimal(data.get("cantidad").textValue());
     			rfl.udm_id= new Long(1);
     			rfl.create_usuario_id= new Long(1);
     			rfl.create_date = new Date();
