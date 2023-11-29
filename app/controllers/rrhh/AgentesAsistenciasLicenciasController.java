@@ -387,10 +387,17 @@ public class AgentesAsistenciasLicenciasController extends Controller {
 
 			List<AgenteAsistenciaLicencia> ll = AgenteAsistenciaLicencia.find.where().in("id", lSeleccionados).findList();
 
+			Logger.debug("0000000000  "+ll.size());
+
 			for(AgenteAsistenciaLicencia llx : ll) {
+				Logger.debug("aaaaaaaaaaaaaa111111111");
+
 				llx.dias = llx.getDiasEntreFechas();
 				llx.save();
+				Logger.debug("11111111111111111");
+
 				if(llx.tipo_licencia_id.compareTo(new Long(5)) == 0) {
+					Logger.debug("222222222222");
 					AgenteAsistenciaLicencia.setDiasPorPeriodos(llx.id.intValue());
 				}
 			}
@@ -443,7 +450,7 @@ public class AgentesAsistenciasLicenciasController extends Controller {
 			for(LiquidacionNovedadLicencia lnlx : lnl) {
 				lnlx.delete();
 			}
-			laalx.delete();
+			//laalx.delete();
 		}
 
 		if(d.hasErrors())
