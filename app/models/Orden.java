@@ -170,6 +170,7 @@ public class Orden extends Model {
 	@OneToOne
 	@JoinColumn(name="orden_subrubro_id", referencedColumnName="id", insertable=false, updatable=false)
 	public OrdenSubrubro ordenSubrubro;
+	@Required(message="Requiere un SUBRUBRO")
 	public Long orden_subrubro_id;
 
 	public String detalle_rubro;
