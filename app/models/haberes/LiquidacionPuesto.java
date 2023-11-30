@@ -509,9 +509,12 @@ public class LiquidacionPuesto extends Model {
     try {
 
       conn = play.db.DB.getConnection();
-      stmt = conn.prepareStatement("SELECT lp.id as id,a.email as email  " + "FROM liquidacion_puestos lp  "
-          + "inner join liquidacion_meses lm on lm.id = lp.liquidacion_mes_id " + "inner join puestos_laborales pl on pl.id = lp.puesto_laboral_id "
-          + "inner join legajos l on l.id = pl.legajo_id " + "inner join agentes a on a.id = l.agente_id " +
+      stmt = conn.prepareStatement("SELECT lp.id as id,a.email as email  "
+          + "FROM liquidacion_puestos lp  "
+          + "inner join liquidacion_meses lm on lm.id = lp.liquidacion_mes_id "
+          + "inner join puestos_laborales pl on pl.id = lp.puesto_laboral_id "
+          + "inner join legajos l on l.id = pl.legajo_id "
+          + "inner join agentes a on a.id = l.agente_id " +
           "where pl.id in(790) and " +
           // "where lp.id in(414519) and "+
           // "where "+
