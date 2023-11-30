@@ -804,6 +804,11 @@ public class OrdenesController extends Controller {
 			}
 		}
 
+		if(orden.orden_subrubro_id  == null) {
+			aviso += "Debe Selecionar un SUBRUBRO<br>";
+			errorControl =  true;
+		}
+
 		ArrayNode a = BalancePresupuestario.controlSaldoPreventivo(lo);
 		for(JsonNode o :a){
 			boolean success = new Boolean(o.get("success").toString());
