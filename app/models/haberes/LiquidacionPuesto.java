@@ -340,9 +340,9 @@ public class LiquidacionPuesto extends Model {
    * " FROM pagos c " +
    * " WHERE c.fecha_pago < (select date_start from ejercicios where now() BETWEEN date_start AND date_stop) AND id in(:ids)" +
    * " GROUP BY c.id";
-   * 
+   *
    * List<SqlRow> l = Ebean.createSqlQuery(sql).setParameter("ids", ids).findList();
-   * 
+   *
    * return (l.size() == 0);
    * }
    */
@@ -417,8 +417,26 @@ public class LiquidacionPuesto extends Model {
         attachment.setDisposition(EmailAttachment.ATTACHMENT);
         attachment.setDescription("Recibo");
         attachment.setName(archivoPdf.getName());
+
+       /* File archivoPdf2 =   Play.application().getFile("conf/resources/email/FIN_CICLO_ESCOLAR_2023.pdf");
+        EmailAttachment attachment2 = new EmailAttachment();
+        attachment2.setPath(archivoPdf2.getPath());
+        attachment2.setDisposition(EmailAttachment.ATTACHMENT);
+        attachment2.setDescription("Ayuda Escolar");
+        attachment2.setName(archivoPdf2.getName());
+
+        File archivoPdf3 = Play.application().getFile("conf/resources/email/ACTUALIZAR_DOCUMENTACION_2023.pdf");
+        EmailAttachment attachment3 = new EmailAttachment();
+        attachment3.setPath(archivoPdf3.getPath());
+        attachment3.setDisposition(EmailAttachment.ATTACHMENT);
+        attachment3.setDescription("Actualizacion Documentacion");
+        attachment3.setName(archivoPdf3.getName());*/
+
         List<EmailAttachment> attachmentList = new ArrayList<>();
         attachmentList.add(attachment);
+        //attachmentList.add(attachment2);
+        //attachmentList.add(attachment3);
+
 
         EmailUtilis eu = new EmailUtilis();
         eu.setSubject("LIQUIDACION:" + lp.liquidacionMes.nro_liquidacion_parque + "-" + lp.liquidacionMes.periodo.nombre);
@@ -464,7 +482,7 @@ public class LiquidacionPuesto extends Model {
         em.tipo = tipoEnvio;
         em.save();
       } catch (Exception e) {
-        // TODO: handle exception
+    	  Logger.error("Error enviarMailReciboByLiquidacionPuestoId: " + e);
       }
     }
   }
@@ -493,7 +511,8 @@ public class LiquidacionPuesto extends Model {
       conn = play.db.DB.getConnection();
       stmt = conn.prepareStatement("SELECT lp.id as id,a.email as email  " + "FROM liquidacion_puestos lp  "
           + "inner join liquidacion_meses lm on lm.id = lp.liquidacion_mes_id " + "inner join puestos_laborales pl on pl.id = lp.puesto_laboral_id "
-          + "inner join legajos l on l.id = pl.legajo_id " + "inner join agentes a on a.id = l.agente_id " + "where pl.id in(790) and " +
+          + "inner join legajos l on l.id = pl.legajo_id " + "inner join agentes a on a.id = l.agente_id " +
+          "where pl.id in(790) and " +
           // "where lp.id in(414519) and "+
           // "where "+
           "lp.envio_mail = 0  " + "and lp.estado_id = ? " +
@@ -546,7 +565,7 @@ public class LiquidacionPuesto extends Model {
         x++;
       }
 
-    } catch (SQLException e) {
+    } catch (Exception e) {
       Logger.error("Error duplicar: " + e);
     } finally {
       if (stmt != null)
