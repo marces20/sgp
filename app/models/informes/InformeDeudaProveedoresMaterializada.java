@@ -72,6 +72,7 @@ public class InformeDeudaProveedoresMaterializada extends Model{
 
 	public Long ejercicio_id;
 	public Long rubro_id;
+	public Long subrubro_id;
 	public String rubro;
 	public String ano;
 	public Boolean profe;
@@ -127,7 +128,8 @@ public class InformeDeudaProveedoresMaterializada extends Model{
 																	  String acta_sin_adelanto_menor_pago,
 																	  String monto_adelanto,
 																	  String emergencia,
-																	  String perimido) {
+																	  String perimido,
+																	  String orden_subrubro_id) {
     	Pagination<InformeDeudaProveedoresMaterializada> p = new Pagination<InformeDeudaProveedoresMaterializada>();
     	p.setOrderDefault("ASC");
     	p.setSortByDefault("expediente, numero_orden_provision");
@@ -214,6 +216,10 @@ public class InformeDeudaProveedoresMaterializada extends Model{
 
     	if(!rubro_id.isEmpty()){
     		e.eq("rubro_id", Integer.parseInt(rubro_id));
+    	}
+
+    	if(!orden_subrubro_id.isEmpty()){
+    		e.eq("subrubro_id", Integer.parseInt(orden_subrubro_id));
     	}
 
     	if(!deuda_mayor.isEmpty()){
