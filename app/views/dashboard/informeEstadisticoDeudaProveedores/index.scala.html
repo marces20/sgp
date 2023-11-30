@@ -1,6 +1,6 @@
 @(buscador: utils.pagination.Pagination[models.informes.InformeDeudaProveedoresMaterializada], formBuscador: DynamicForm)
 @import helper._
-@implicitFieldConstructor = @{ FieldConstructor(simpleInput.render) } 
+@implicitFieldConstructor = @{ FieldConstructor(simpleInput.render) }
 
 
 @getActas(orden_provision_id:Long) = @{
@@ -10,7 +10,7 @@
 }
 
 @views.html.dashboard.mainDashboard(title = "Informe estadístico") {
-    
+
 <div class="page-header">
 	<div class="row">
 		<div class="col-sm-9">
@@ -30,10 +30,10 @@
 $( function() {
 	var baseUrl = $('#generarArchivo').attr('href')
 	$('#generarArchivo').attr('href', baseUrl + '?descarga=&' + window.location.href.slice(window.location.href.indexOf('?') + 1))
-	
+
 	/*
 	$('#generarArchivo').click( function() {
-		
+
 		var href = $(this).attr('href') + '?descarga=&' + escape(window.location.href.slice(window.location.href.indexOf('?') + 1).split('&'));
 		alert(href);
 		window.location = href;
@@ -52,27 +52,27 @@ $( function() {
 }
 @if(flash.containsKey("error")) {
 	<div class="alert alert-danger"><i class="glyphicon glyphicon-remove-sign"></i> @flash.get("error")</div>
-} 
+}
 
 
     <form action="" method="GET" id="filtroInforme">
 		<div class="row seccion">
-			
-			
+
+
 			<div class="col-sm-2">
 				<label class="control-label">Proveedor
-					<div class="input-group">	
+					<div class="input-group">
 						@inputText(formBuscador("proveedor_nombre"), 'name -> "", 'autofocus -> "autofocus", 'class -> "form-control", 'id -> "proveedor")
 						@inputText(formBuscador("proveedor_id"), 'hidden -> "hidden", 'id -> "proveedor_id")
 						<span class="input-group-addon">
 							<a href="#" class="searchModal"
-										id="searchProveedor" 
-										data-title="Selección de Proveedores" 
-										data-url="@controllers.compras.routes.ProveedoresController.modalBuscar()" 
-										data-height="650" 
-										data-width="700" 
-										data-listen="modal.seleccion.proveedor.simple" 
-										data-label="#proveedor" 
+										id="searchProveedor"
+										data-title="Selección de Proveedores"
+										data-url="@controllers.compras.routes.ProveedoresController.modalBuscar()"
+										data-height="650"
+										data-width="700"
+										data-listen="modal.seleccion.proveedor.simple"
+										data-label="#proveedor"
 										data-field="#proveedor_id">
 								<i class="glyphicon glyphicon-search"></i>
 							</a>
@@ -80,80 +80,96 @@ $( function() {
 					</div>
 				</label>
 			</div>
-			
+
 			<div class="col-sm-2">
 				<label class="control-label">Expediente
 					<div class="input-group">
 						@inputText(formBuscador("expediente.nombre"), 'name -> "", 'class -> "form-control", 'id -> "expediente")
 						@inputText(formBuscador("expediente_id"), 'hidden -> "hidden", 'id -> "expediente_id")
-						
+
 						<span class="input-group-addon">
 							<a href="#" class="searchModal"
-										id="searchExpediente" 
-										data-title="Selección de expediente" 
-										data-url="@controllers.expediente.routes.ExpedientesController.modalBuscar()" 
-										data-height="650" 
-										data-width="700" 
-										data-listen="modal.seleccion.expediente.simple" 
-										data-label="#expediente" 
+										id="searchExpediente"
+										data-title="Selección de expediente"
+										data-url="@controllers.expediente.routes.ExpedientesController.modalBuscar()"
+										data-height="650"
+										data-width="700"
+										data-listen="modal.seleccion.expediente.simple"
+										data-label="#expediente"
 										data-field="#expediente_id">
 								<i class="glyphicon glyphicon-search"></i>
 							</a>
 						</span>
 					</div>
 				</label>
-			</div>  
-				
+			</div>
+
 			<div class="col-sm-2">
 				<label class="control-label">Ejercicio</label>
 					@select(formBuscador("ejercicio"), Ejercicio.getEjercicios().map { p => p.id.toString -> p.nombre}, 'class -> "form-control select", '_default -> "Seleccionar")
-				
-			</div>	
-			
-			<div class="col-sm-2">
-				<div class="seleccionOrdenRubro">
-					<label for="@formBuscador("rubro_id").id" class="control-label">Rubro</label>
-					@select(formBuscador("rubro_id"), 
-					OrdenRubro.find.all().map { p => p.id.toString -> p.nombre}
-					
-					, 'class -> "form-control select", '_default -> "Seleccionar")
+
+			</div>
+			<div class="contenedorRubros">
+				<div class="col-sm-2">
+					<div class="seleccionOrdenRubro">
+						<label for="@formBuscador("rubro_id").id" class="control-label">Rubro</label>
+						@select(formBuscador("rubro_id"),
+						OrdenRubro.find.all().map { p => p.id.toString -> p.nombre}
+
+						, 'class -> "form-control select", '_default -> "Seleccionar")
+					</div>
+				</div>
+				<div class="col-sm-3">
+					<div class="seleccionSubrubros form-group">
+						<label for="@formBuscador("orden_subrubro_id").id" class="control-label">Sub-Rubro</label>
+						@select(formBuscador("orden_subrubro_id"),
+							formBuscador("ordenRubro.id").value match {
+								case null => {options()}
+								case v if v.matches("\\d+") => {OrdenSubrubro.getOrdenSubrubro(v.toInt).map { p => p.id.toString -> p.sigla}}
+								case _ => {options()}
+							},
+						'class -> "form-control select", '_default -> "Seleccionar")
+
+					</div>
 				</div>
 			</div>
-
 		<!-- <div class="col-sm-2">
-			<label class="control-label"> 
+			<label class="control-label">
 				Cuenta
 				@select(formBuscador("profe"),options(""->"Todos","profe"->"PROFE","operativa"->"OPERATIVA"), 'class -> "form-control select")
 			</label>
 		</div> -->
-		
+
+
+
+
+	</div>
+
+	<div class="row">
 		<div class="col-sm-2">
-			<label for="deposito" class="control-label">Institucion</label> 
+			<label for="deposito" class="control-label">Institucion</label>
 			<div class="input-group">
 				@inputText(formBuscador("deposito.nombre"),'class -> "form-control", 'id -> "deposito_nombre", 'autocomplete -> "off")
 				@inputText(formBuscador("deposito_id"),'hidden -> "hidden", 'id -> "deposito_id")
 				<span class="input-group-addon">
-                	<a href="#" id="searchDeposito" data-title="Selección de Institucion" 
-                	data-url="@controllers.delegacion.routes.DepositosController.modalBuscar()" 
-                	data-height="650" data-width="700" 
-                	data-listen="modal.seleccion.deposito.simple" 
+                	<a href="#" id="searchDeposito" data-title="Selección de Institucion"
+                	data-url="@controllers.delegacion.routes.DepositosController.modalBuscar()"
+                	data-height="650" data-width="700"
+                	data-listen="modal.seleccion.deposito.simple"
                 	data-label="#deposito_nombre" data-field="#deposito_id" /> <i class="glyphicon glyphicon-search"></i></a>
                 </span>
 			</div>
 		</div>
+
 		<div class="col-sm-2 input-group">
-			<label class="control-label"> 
+			<label class="control-label">
 				Tipo Cuenta
-				@select(formBuscador("tipo_cuenta_id"), 
+				@select(formBuscador("tipo_cuenta_id"),
 				TipoCuenta.find.all().map { p => p.id.toString -> p.nombre}, 'class -> "form-control select", '_default -> "Seleccionar")
 			</label>
 		</div>
-			
-	</div>
-	
-	<div class="row">
-	
-		<div class="col-sm-2">		
+
+		<div class="col-sm-2">
 			<div class="form-group">
 				<label for="mayor_a">Deuda entre</label>
 				<div class="input-group">
@@ -162,9 +178,9 @@ $( function() {
 		    		@inputText(formBuscador("deuda_menor"), 'class -> "form-control", 'placeholder -> "Menor a")
 				</div>
 			</div>
-		</div>			
-			
-		<div class="col-sm-2">		
+		</div>
+
+		<div class="col-sm-2">
 			<div class="form-group">
 				<label for="pago_ma">Pago entre</label>
 				<div class="input-group">
@@ -173,9 +189,9 @@ $( function() {
 		    		@inputText(formBuscador("pago_menor"), 'class -> "form-control", 'placeholder -> "Menor a")
 				</div>
 			</div>
-		</div>			
-			
-		<div class="col-sm-2">		
+		</div>
+
+		<div class="col-sm-2">
 			<div class="form-group">
 				<label for="compromiso_ma">Compromiso entre</label>
 				<div class="input-group">
@@ -184,10 +200,17 @@ $( function() {
 		    		@inputText(formBuscador("compromiso_menor"), 'class -> "form-control", 'placeholder -> "Menor a")
 				</div>
 			</div>
-		</div>		
-		
-			
-			
+		</div>
+
+
+
+
+	</div>
+
+
+
+
+	<div class="row">
 		<div class="col-sm-2">
 			<label class="control-label">Moneda</label>
 			<div class="form-group">
@@ -197,7 +220,7 @@ $( function() {
 		<div class="col-sm-4">
 			<div class="col-sm-4">
 				<div class="checkbox">
-					<label class="control-label"> 
+					<label class="control-label">
 						Con monto adelanto
 						@checkbox(formBuscador("monto_adelanto"))
 					</label><br>
@@ -205,31 +228,25 @@ $( function() {
 			</div>
 			<div class="col-sm-4">
 				<div class="checkbox">
-					<label class="control-label"> 
+					<label class="control-label">
 						Acta Menor a Pago
 						@checkbox(formBuscador("acta_sin_adelanto_menor_pago"))
 					</label><br>
 				</div>
-			</div>	
+			</div>
 			<div class="col-sm-2">
-				<label class="control-label"> 
+				<label class="control-label">
 					Emergencia
 					@select(formBuscador("emergencia"),options(""->"","SI"->"SI","NO"->"NO"), 'class -> "form-control select")
 				</label>
 			</div>
 			<div class="col-sm-2">
-				<label class="control-label"> 
+				<label class="control-label">
 					Perimido
 					@select(formBuscador("perimido"),options("NO"->"NO","SI"->"SI"), 'class -> "form-control select")
 				</label>
 			</div>
 		</div>
-	</div>
-		
-		
-	 
-		
-	<div class="row">
 		<div class="col-sm-4">
 			<div class="col-sm-6">
 				<div class="form-group">
@@ -245,25 +262,25 @@ $( function() {
 			</div>
 		</div>
 	</div>
-		 
 
-	 
-		
-		
+
+
+
+
     </form>
     @if(buscador.getTotalRowCount == 0) {
-        
+
         <div class="well">
             <em>No se encuentran resultados</em>
         </div>
-        
+
     } else {
-		 
+
 		<table class="table table-striped table-bordered" id="listaInforme">
 			<thead>
 				<tr style="background: #FFFFFF;">
 					<td colspan="6">
-						Mostrando @buscador.getDisplayXtoYofZ(" a "," de ") resultado(s).  
+						Mostrando @buscador.getDisplayXtoYofZ(" a "," de ") resultado(s).
 					</td>
 					<td><b>Total:</b><br /><span class="ordenFooter"></span></td>
 					<td><b>Total:</b><br /><span class="autorizadoFooter"></span></td>
@@ -280,7 +297,7 @@ $( function() {
 					<th width="80">Inst.</th>
 					<th>Proveedor</th>
 					<th width="90">Orden</th>
-					
+
 					<th width="90">Autorizado</th>
 					<th width="90">Pagado</th>
 					<th width="90">Deuda</th>
@@ -304,7 +321,7 @@ $( function() {
 					<td>@informe.deposito.nombre</td>
 					<td>@informe.nombreProveedor</td>
 					<td class="totalOrden" data-valor="@informe.totalOrden">@utils.NumberUtils.moneda(informe.totalOrden)</td>
-					
+
 					<td class="totalAutorizado" data-valor="@informe.totalAutorizado">@utils.NumberUtils.moneda(informe.totalAutorizado)</td>
 					<td class="totalPagado" data-valor="@informe.totalPagado">@utils.NumberUtils.moneda(informe.totalPagado)</td>
 					<td class="totalDeuda" data-valor="@informe.totalDeuda">
@@ -313,18 +330,18 @@ $( function() {
 
 					</td>
 					<td class="totalCompromiso" data-valor="@informe.totalCompromiso">
-					
+
 
 							@utils.NumberUtils.moneda(informe.totalCompromiso)
-	
-						
+
+
 					</td>
 					@if(informe.orden_provision_id != null) {
 						<td><a href="@controllers.dashboard.routes.InformeEstadisticoDeudaProveedoresController.getActas(informe.orden_provision_id)" class="actas"><i class="glyphicon glyphicon-align-justify"></i></a></td>
 					} else {
 						<td></td>
 					}
-					
+
 				</tr>
 		        }
 			</tbody>
@@ -344,8 +361,8 @@ $( function() {
 		    @views.html.helpers.paginador(buscador, controllers.dashboard.routes.InformeEstadisticoDeudaProveedoresController.index())
 		</div>
 	}
-	
-	
+
+
 	<script type="text/javascript">
 	$( function() {
 		$('#searchExpediente, #searchProveedor,#searchDeposito').modalSearch();
@@ -358,11 +375,11 @@ $( function() {
 			});
 			return false;
 		});
-		
+
 		var trs = $('#listaInforme tbody tr');
 
 		var orden = 0; var pagado = 0; var deuda = 0; var compromiso = 0;var autorizado = 0;
-		
+
 		trs.each( function() {
 			orden += Number($('.totalOrden',this).attr("data-valor"));
 			autorizado += Number($('.totalAutorizado',this).attr("data-valor"));
@@ -376,9 +393,26 @@ $( function() {
 		$(".pagadoFooter").html(formatNumberPesos(parseFloat(pagado).toFixed(2)));
 		$(".deudaFooter").html(formatNumberPesos(parseFloat(deuda).toFixed(2)));
 		$(".compromisoFooter").html(formatNumberPesos(parseFloat(compromiso).toFixed(2)));
-		
+
+		urlOrdenSubrubro  = '@controllers.compras.routes.OrdenSubrubroController.listOptions()';
+
+		var contenedorRubros = $('.contenedorRubros');
+
+		contenedorRubros.on('change', '.seleccionOrdenRubro .select', function(){
+			var id = $(this).find('option:selected').val();
+			var contenedor = $(this).closest('.contenedorRubros');
+			contenedor.find('.seleccionSubrubros .select').find('option:gt(0)').remove();
+
+			if(id == "") return false;
+
+			$.get(urlOrdenSubrubro + '?rubroId='+id, function(data){
+				contenedor.find('.seleccionSubrubros .select').html(data);
+			});
+		});
+
+
 	});
 	</script>
-	
-	
+
+
 }
