@@ -546,7 +546,8 @@ public class AutorizadosController extends Controller {
 				RequestVar.get("acta_sin_adelanto_menor_pago"),
 				"",
 				RequestVar.get("emergencia"),
-				RequestVar.get("perimido"));
+				RequestVar.get("perimido"),
+				RequestVar.get("subrubro_id"));
 
 		Logger.debug("zzzzzzzzzzzzz " + RequestVar.get("profe"));
 		Logger.debug("zzzzzzzzzzzzz " + RequestVar.get("tipo_cuenta_id"));
@@ -1020,39 +1021,39 @@ public class AutorizadosController extends Controller {
 					errorMontoActasAutorizado = cargarCertificacionCompra(cc.id, autorizado, montoACargar);
 					Logger.debug("11111111111111 " + errorMontoActasAutorizado);
 					/*
-					 * 
+					 *
 					 * String sqlActaMonto =
 					 * "SELECT COALESCE(SUM(monto),0) monto,certificacion_compra_id FROM autorizado_linea_actas "
 					 * +
 					 * "WHERE certificacion_compra_id = :certificacion_compra_id " +
 					 * "GROUP BY certificacion_compra_id";
-					 * 
+					 *
 					 * SqlRow sa =
 					 * Ebean.createSqlQuery(sqlActaMonto).setParameter("certificacion_compra_id",cc.
 					 * id).findUnique();
 					 * BigDecimal montoActaAutorizado = new BigDecimal(0);
-					 * 
+					 *
 					 * if(sa !=null){
 					 * montoActaAutorizado = sa.getBigDecimal("monto");
 					 * }//saco el total autorizado por certificacion
-					 * 
-					 * 
-					 * 
+					 *
+					 *
+					 *
 					 * Long ordenId = cc.orden_id.longValue();
 					 * AutorizadoLinea altmp = AutorizadoLinea.find.where()
 					 * .eq("autorizado_id", atId)
 					 * .eq("orden_id", ordenId)
 					 * .setMaxRows(1).findUnique();
 					 * Long autoLineaId = null;
-					 * 
+					 *
 					 * BigDecimal monto_totales = new BigDecimal(monto_totalesStr[i].replace(","
 					 * ,".")).setScale(2, RoundingMode.HALF_UP);
 					 * BigDecimal montos = new BigDecimal(montosStr[i].replace(","
 					 * ,".")).setScale(2, RoundingMode.HALF_UP);
 					 * BigDecimal montoACargar = (montos.compareTo(BigDecimal.ZERO) >
 					 * 0)?montos:monto_totales;
-					 * 
-					 * 
+					 *
+					 *
 					 * if(altmp != null){//acumulo el monto del total en la misma linea de
 					 * autorizado_linea para no tener mas de una linea de la misma orden
 					 * autoLineaId = altmp.id;
@@ -1072,7 +1073,7 @@ public class AutorizadosController extends Controller {
 					 * al.save();
 					 * autoLineaId = al.id;
 					 * }
-					 * 
+					 *
 					 * Logger.debug(
 					 * "zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz---------------------------------"
 					 * );
@@ -1082,8 +1083,8 @@ public class AutorizadosController extends Controller {
 					 * add(montoACargar));
 					 * Logger.debug("acta.getTotal(): "+cc.getTotal().setScale(2,
 					 * RoundingMode.HALF_UP));
-					 * 
-					 * 
+					 *
+					 *
 					 * if(montoActaAutorizado.add(montoACargar).compareTo(cc.getTotal().setScale(2,
 					 * RoundingMode.HALF_UP)) > 0){
 					 * errorMontoActasAutorizado = true;
@@ -1095,7 +1096,7 @@ public class AutorizadosController extends Controller {
 					 * ala.create_date = new Date();
 					 * ala.create_usuario_id = new Long(Usuario.getUsuarioSesion());
 					 * ala.save();
-					 * 
+					 *
 					 * }
 					 */
 
@@ -1784,7 +1785,7 @@ public class AutorizadosController extends Controller {
 			 * monto_totales = new BigDecimal(monto_deuda_limiteStr[i]).setScale(2,
 			 * RoundingMode.HALF_UP);
 			 * }
-			 * 
+			 *
 			 * BigDecimal montos = new BigDecimal(montosStr[i].replace(","
 			 * ,".")).setScale(2, RoundingMode.HALF_UP);
 			 * BigDecimal montoACargar = (montos.compareTo(BigDecimal.ZERO) >
@@ -2279,11 +2280,11 @@ public class AutorizadosController extends Controller {
 					 * String ca =
 					 * al.proveedor.nombre+" - "+al.expediente.getInstitucionExpedienteEjercicio()
 					 * +" - "+af;
-					 * 
+					 *
 					 * celda = fila.createCell(0);
 					 * celda.setCellValue(ca);
 					 * celda.setCellStyle(comun);
-					 * 
+					 *
 					 * x++;
 					 * x++;
 					 * i = x;
