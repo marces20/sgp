@@ -6,14 +6,14 @@
 	@if(ordenForm.field("tipo_orden").value != null && ordenForm.field("tipo_orden").value == "comun"){
 	<li><a class="tabProductosAnulados" href="#contenedorProductosAnulados" data-toggle="tab">Producto anulados</a></li>
 	}
-	@if(ordenForm.field("tipo_orden").value != null && ordenForm.field("tipo_orden").value == "servicio"){
+	@if(ordenForm.field("tipo_orden").value != null && (ordenForm.field("tipo_orden").value == "servicio")){
 	<li><a class="tabNoCertificados" href="#contenedorNoCertificados" data-toggle="tab">No Certificados</a></li>
 	}
 	<li><a class="tabNotas" href="#contenedorNotas" data-toggle="tab">Notas</a></li>
 	<li><a class="tabDispos" href="#contenedorDispos" data-toggle="tab">Disposiciones</a></li>
 	<li><a id="tabFacturaDatos" href="#contenedorFacturaDatos" data-toggle="tab">Numeros Facturas</a></li>
-	@if(ordenForm.field("tipo_orden").value != null && ordenForm.field("tipo_orden").value == "servicio"){
-	<li><a class="tabProductoAdenda" href="#contenedorProductoAdenda" data-toggle="tab">Producto Adenda</a></li>
+	@if(ordenForm.field("tipo_orden").value != null && (ordenForm.field("tipo_orden").value == "servicio" || ordenForm.field("tipo_orden").value == "certificacioncompra")){
+		<li><a class="tabProductoAdenda" href="#contenedorProductoAdenda" data-toggle="tab">Producto Adenda</a></li>
 	}
 </ul>
 
@@ -37,7 +37,10 @@
 	<div class="tab-pane" id="contenedorNoCertificados">
 		@views.html.compras.ordenes.contenidoTabNoCertificados(formularioCarga, ordenForm)
 	</div>
+	}
+	@if(ordenForm.field("tipo_orden").value != null && (ordenForm.field("tipo_orden").value == "servicio" || ordenForm.field("tipo_orden").value == "certificacioncompra")){
 	<div class="tab-pane" id="contenedorProductoAdenda">
+
 		@views.html.compras.ordenes.contenidoTabProductoAdenda(formularioCarga, ordenForm)
 	</div>
 
