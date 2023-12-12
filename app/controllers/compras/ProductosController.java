@@ -31,7 +31,9 @@ import models.recupero.RecuperoFacturaLinea;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.sun.org.apache.xml.internal.serializer.utils.Utils;
 
+import akka.japi.Util;
 import play.Logger;
 import play.data.DynamicForm;
 import play.data.Form;
@@ -40,6 +42,7 @@ import play.mvc.Controller;
 import play.mvc.Result;
 import play.mvc.Security;
 import utils.ArrayUtils;
+import utils.DateUtils;
 import utils.RequestVar;
 import utils.UriTrack;
 import utils.pagination.PaginadorFicha;
@@ -862,7 +865,7 @@ public class ProductosController extends Controller {
     	Logger.debug("total------------------------------ "+json.get("total").asDouble());
     	Logger.debug("cae------------------------------ "+json.get("cae").textValue());//x
     	Logger.debug("fecha_vencimiento------------------------------ "+json.get("fecha_vencimiento").textValue());//x
-    	Logger.debug("fecha_vencimiento------------------------------ "+json.get("fecha_emision").textValue());//x
+    	Logger.debug("fecha_emision------------------------------ "+json.get("fecha_emision").textValue());//x
     	Logger.debug("fecha_desde------------------------------ "+json.get("fecha_desde").textValue());//x
     	Logger.debug("fecha_hasta------------------------------ "+json.get("fecha_hasta").textValue());//x
 
@@ -890,7 +893,7 @@ public class ProductosController extends Controller {
     							.endJunction().findList();
     		Long idCLiente = null;
     		if(lc.size() > 0) {
-    			idCLiente = lc.get(9).id;
+    			idCLiente = lc.get(0).id;
     		}else {
 
     			Cliente clnew = new Cliente();
@@ -905,7 +908,7 @@ public class ProductosController extends Controller {
     				clnew.dni = new Integer(json.get("doc").textValue());
     			}else if(tipo_doc_id.compareTo("91") == 0) {
     				clnew.cie  = json.get("doc").textValue();
-    				clnew.cliente_tipo_id = new Long(3);
+    				clnew.cliente_tipo_id = new Long(2);
     			}else if(tipo_doc_id.compareTo("80") == 0 || tipo_doc_id.compareTo("86") == 0) {
     				clnew.cuit2  = json.get("doc").textValue();
     			}
@@ -920,8 +923,13 @@ public class ProductosController extends Controller {
 
     		rf.cliente_id = idCLiente;
 
-    		rf.fecha = new Date(json.get("fecha_desde").textValue());;
+    		rf.fecha = DateUtils.formatDate(json.get("fecha_desde").textValue(), "yyyy-MM-dd");
     		rf.serie = "c";
+
+    		String nroFactura = json.get("nrofactura").textValue();
+    		int widht = 8 - nroFactura.length();
+    		String formatted = String.format("%0" + widht + "d", Integer.valueOf(nroFactura));
+
     		rf.numero= json.get("nrofactura").textValue();
     		rf.nombre = null;//?
     		rf.nota = null;
@@ -936,10 +944,10 @@ public class ProductosController extends Controller {
     		rf.condicionventa_id = new Integer(json.get("condventa_id").textValue());
     		rf.condicioniva_id = new Integer(json.get("condiva_id").textValue());
     		rf.cae = json.get("cae").textValue();
-    		rf.fecha_vencimiento = new Date(json.get("fecha_vencimiento").textValue());
-    		rf.fecha_emision = new Date(json.get("fecha_emision").textValue());
-    		rf.fecha_desde = new Date(json.get("fecha_desde").textValue());
-    		rf.fecha_hasta = new Date(json.get("fecha_hasta").textValue());
+    		rf.fecha_vencimiento = DateUtils.formatDate(json.get("fecha_vencimiento").textValue(), "yyyy-MM-dd"); //new Date(json.get("fecha_vencimiento").textValue());
+    		rf.fecha_emision = DateUtils.formatDate(json.get("fecha_emision").textValue(), "yyyy-MM-dd"); //new Date(json.get("fecha_emision").textValue());
+    		rf.fecha_desde = DateUtils.formatDate(json.get("fecha_desde").textValue(), "yyyy-MM-dd"); //new Date(json.get("fecha_desde").textValue());
+    		rf.fecha_hasta = DateUtils.formatDate(json.get("fecha_hasta").textValue(), "yyyy-MM-dd"); //new Date(json.get("fecha_hasta").textValue());
     		rf.create_usuario_id = new Long(1);
     		rf.create_date = new Date();
 
@@ -948,21 +956,30 @@ public class ProductosController extends Controller {
     		for (JsonNode data : json.withArray("lineas")) {
     			Logger.debug("-------asJson()------------ "+data.get("productoNombre"));
 
-    			Producto pe = new Producto();
-        		pe.activo =  true ;
-        		pe.nombre = data.get("productoNombre").textValue();
-        		pe.articulo_id = 3042;
-        		pe.categoria_id = 36;
-        		pe.tipo_producto_id = 2;
-        		pe.udm_id = 1;
-        		pe.codigo_rismi = null;
-        		pe.save();
+    			List<Producto> pe = Producto.find.where().eq("nombre",  data.get("productoNombre").textValue()).findList();
+    			Long idProducto = null;
+    			if(pe.size() > 0) {
+    				idProducto = pe.get(0).id;
+    			}else {
+    				Producto peNew = new Producto();
+    				peNew.activo =  true ;
+    				peNew.nombre = data.get("productoNombre").textValue();
+    				peNew.articulo_id = 3042;
+    				peNew.categoria_id = 36;
+    				peNew.tipo_producto_id = 2;
+    				peNew.udm_id = 1;
+    				peNew.codigo_rismi = null;
+    				peNew.save();
+
+    				idProducto = peNew.id;
+    			}
+
 
 
 
     			RecuperoFacturaLinea rfl = new RecuperoFacturaLinea();
     			rfl.recupero_factura_id = rf.id;
-    			rfl.producto_id = pe.id;
+    			rfl.producto_id = idProducto;
     			rfl.cuenta_analitica_id= new Long(478);
     			rfl.cuenta_id =new Long(226);
     			rfl.precio= new BigDecimal(data.get("monto").textValue());
