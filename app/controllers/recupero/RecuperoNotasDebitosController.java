@@ -12,36 +12,34 @@ import javax.persistence.PersistenceException;
 
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
+import controllers.Secured;
+import controllers.auth.CheckPermiso;
 import models.Estado;
-import models.Factura;
 import models.Usuario;
 import models.recupero.RecuperoFactura;
-import models.recupero.RecuperoFacturaLinea;
 import models.recupero.RecuperoNotaCredito;
+import models.recupero.RecuperoNotaDebito;
 import models.recupero.RecuperoPago;
-import play.Logger;
 import play.data.Form;
 import play.libs.Json;
 import play.mvc.Controller;
 import play.mvc.Result;
 import play.mvc.Security;
 import utils.pagination.Pagination;
-import views.html.recupero.recuperoNotaCredito.*;
-import controllers.Secured;
-import controllers.auth.CheckPermiso;
+import views.html.recupero.recuperoNotaDebito.*;
 
 @Security.Authenticated(Secured.class)
-public class RecuperoNotasCreditosController extends Controller {
+public class RecuperoNotasDebitosController extends Controller {
 
-	final static Form<RecuperoNotaCredito> lineaForm = form(RecuperoNotaCredito.class);
+	final static Form<RecuperoNotaDebito> lineaForm = form(RecuperoNotaDebito.class);
 
 	public static Result index(Long facturaId, Boolean editable) {
 
-		Pagination<RecuperoNotaCredito> lineas = RecuperoNotaCredito.page(facturaId);
+		Pagination<RecuperoNotaDebito> lineas = RecuperoNotaDebito.page(facturaId);
 
 		RecuperoFactura rf = RecuperoFactura.find.byId(facturaId);
 
-		return ok(indexRecuperoNotaCredito.render(lineas, editable,rf));
+		return ok(indexRecuperoNotaDebito.render(lineas, editable,rf));
 	}
 
 	public static Result crear(String facturaId) {
@@ -49,9 +47,9 @@ public class RecuperoNotasCreditosController extends Controller {
 		Map<String,String> b = new HashMap<String, String>();
 		b.put("recupero_factura_id", facturaId);
 		b.put("udm_id","1");
-		Form<RecuperoNotaCredito> linea = form(RecuperoNotaCredito.class).bind(b);
+		Form<RecuperoNotaDebito> linea = form(RecuperoNotaDebito.class).bind(b);
 		linea.discardErrors();
-		return ok(crearLineaNotaCredito.render(linea));
+		return ok(crearLineaNotaDebito.render(linea));
 	}
 
 	@CheckPermiso(key = "recuperoNotasEliminar")
@@ -59,7 +57,7 @@ public class RecuperoNotasCreditosController extends Controller {
 		ObjectNode restJs = Json.newObject();
 
 		try {
-			RecuperoNotaCredito nc = RecuperoNotaCredito.find.byId(id);
+			RecuperoNotaDebito nc = RecuperoNotaDebito.find.byId(id);
 
 			List<RecuperoPago> rpl = RecuperoPago.find.where()
 					 .eq("recupero_factura_id", nc.recupero_factura_id)
@@ -71,7 +69,7 @@ public class RecuperoNotasCreditosController extends Controller {
 						  .eq("parcializada",true)
 						  .eq("recupero_factura_id",nc.recupero_factura_id)
 						  .findUnique();
-				rpx.total = rpx.total.add(nc.getTotal());
+				rpx.total = rpx.total.subtract(nc.getTotal());
 				rpx.save();
 
 
@@ -82,10 +80,10 @@ public class RecuperoNotasCreditosController extends Controller {
 			   			.eq("estado_id", Estado.RECUPERO_PAGO_BORRADOR)
 			   			.findUnique();
 				if(rpx == null){
-					flash("error", "No se pueden agregar NOTAS DE CREDITOS no existe pagos en borrador ni parciales");
+					flash("error", "No se pueden agregar NOTAS DE DEBITOS no existe pagos en borrador ni parciales");
 					restJs.put("success", false);
 				}else {
-					rpx.total = rpx.total.add(nc.getTotal());
+					rpx.total = rpx.total.subtract(nc.getTotal());
 					rpx.save();
 				}
 			}
@@ -101,14 +99,15 @@ public class RecuperoNotasCreditosController extends Controller {
 	}
 
 	public static Result guardar() {
-		Form<RecuperoNotaCredito> lineaForm = form(RecuperoNotaCredito.class).bindFromRequest();
+		Form<RecuperoNotaDebito> lineaForm = form(RecuperoNotaDebito.class).bindFromRequest();
 
 		try {
 			if(lineaForm.hasErrors()) {
 				flash("error", "Error en formulario "+lineaForm.errors());
-				return ok(crearLineaNotaCredito.render(lineaForm));
+				return ok(crearLineaNotaDebito.render(lineaForm));
 			} else {
-				RecuperoNotaCredito l = lineaForm.get();
+
+				RecuperoNotaDebito l = lineaForm.get();
 
 				List<RecuperoPago> rpl = RecuperoPago.find.where()
 										 .eq("recupero_factura_id", l.recupero_factura_id)
@@ -116,7 +115,7 @@ public class RecuperoNotasCreditosController extends Controller {
 
 				if(rpl.size() == 0){
 					flash("error", "No existen pagos asociados a esa factura");
-					return ok(crearLineaNotaCredito.render(lineaForm));
+					return ok(crearLineaNotaDebito.render(lineaForm));
 				}
 
 				BigDecimal ttmp = new BigDecimal(0);
@@ -128,10 +127,10 @@ public class RecuperoNotasCreditosController extends Controller {
 
 				RecuperoFactura rf = RecuperoFactura.find.byId(l.recupero_factura_id);
 
-				if(pstr != null && rf.getTotal().subtract(l.getTotal()).compareTo(ttmp) > 0){
-					flash("error", "El total de la factura excede al total de pagos relacionados. Modifique primero los pagos. Pagos: "+pstr);
-					return ok(crearLineaNotaCredito.render(lineaForm));
-				}
+				//if(pstr != null && rf.getTotal().add(l.getTotal()).compareTo(ttmp) > 0){
+					//flash("error", "El total de la factura excede al total de pagos relacionados. Modifique primero los pagos. Pagos: "+pstr);
+					//return ok(crearLineaNotaDebito.render(lineaForm));
+				//}
 
 				if(rpl.size() > 1){//SI HAY MAS DE UN SOLO PAGO LE RESTO A LA PARCIAL
 
@@ -144,37 +143,42 @@ public class RecuperoNotasCreditosController extends Controller {
 
 
 
-					if( rpx.total.subtract(l.getTotal()).compareTo(BigDecimal.ZERO) < 0) {
+					if( rpx.total.add(l.getTotal()).compareTo(BigDecimal.ZERO) < 0) {
 						//SI EL MONTO DE LA NOTA ES MAYOR AL MONTO DE LA PARCIAL NO DEJO AGREGAR LA NOTA
 						flash("error", "La nota de credito es mayor al saldo del pago parcial");
-						return ok(crearLineaNotaCredito.render(lineaForm));
+						return ok(crearLineaNotaDebito.render(lineaForm));
 					}
 
 
-					rpx.total = rpx.total.subtract(l.getTotal());
+					rpx.total = rpx.total.add(l.getTotal());
 					rpx.save();
+
 				}else if(rpl.size() == 1){//SI HAY UN SOLO PAGO Y ESTÁ PAGADO.. QUIERE DECIR Q NO SE HIZO LA PARCIAL POR ENDE NO SE PUEDE AGREGAR NOTA DE CREDITO
 
 
-					RecuperoPago rpx = RecuperoPago.find.where()
-							   			.eq("id", rpl.get(0).id)
-							   			.eq("estado_id", Estado.RECUPERO_PAGO_BORRADOR)
-							   			.findUnique();
-					if(rpx == null){
-						flash("error", "No se pueden agregar NOTAS DE CREDITOS no existe pagos en borrador ni parciales");
-						return ok(crearLineaNotaCredito.render(lineaForm));
-					}else {
-						if( rpx.total.subtract(l.getTotal()).compareTo(BigDecimal.ZERO) < 0) {
-							//SI EL MONTO DE LA NOTA ES MAYOR AL MONTO DEL PAGO NO DEJO AGREGAR LA NOTA
-							flash("error", "La nota de credito es mayor al saldo del pago");
-							return ok(crearLineaNotaCredito.render(lineaForm));
-						}
 
 
-						rpx.total = rpx.total.subtract(l.getTotal());
-						rpx.save();
-					}
-					//---------------------------------------------------------------------------------------
+					RecuperoPago rp = new RecuperoPago();
+					rp.fecha = new Date();
+					rp.cliente_id = rf.cliente_id;
+					rp.estado_id = (long) Estado.RECUPERO_PAGO_BORRADOR;
+					rp.recupero_factura_id = rf.id.intValue();
+					rp.periodo_id = rf.periodo_id;
+					rp.expediente_id = rf.expediente_id;
+					rp.parcializada = true;
+					rp.total = rf.getTotal().add(l.getTotal());
+					rp.save();
+
+					RecuperoPago rpOld = rpl.get(0);
+					rpOld.pago_principal_id = rp.id;
+					rpOld.save();
+
+
+
+
+
+
+
 				}
 
 				l.create_usuario_id = new Long(Usuario.getUsuarioSesion());
@@ -185,11 +189,11 @@ public class RecuperoNotasCreditosController extends Controller {
 		} catch (Exception e){
 			play.Logger.error("excepcion", e);
 			flash("error", "No se ha podido almacenar el registro."+e.getMessage());
-			return ok(crearLineaNotaCredito.render(lineaForm));
+			return ok(crearLineaNotaDebito.render(lineaForm));
 		}
 
-		RecuperoNotaCredito linea = RecuperoNotaCredito.find.where().eq("id", lineaForm.get().id).findUnique();
-		Object c = verLineaNotaCredito.render(linea);
+		RecuperoNotaDebito linea = RecuperoNotaDebito.find.where().eq("id", lineaForm.get().id).findUnique();
+		Object c = verLineaNotaDebito.render(linea);
 		ObjectNode restJs = Json.newObject();
 		restJs.put("success", true);
 		restJs.put("nuevo", true);
@@ -200,21 +204,21 @@ public class RecuperoNotasCreditosController extends Controller {
 	@CheckPermiso(key = "recuperoNotasEditar")
 	public static Result editar(Long id) {
 		flash().clear();
-		RecuperoNotaCredito linea = RecuperoNotaCredito.find.byId(id);
-		return ok(editarLineaNotaCredito.render(lineaForm.fill(linea)));
+		RecuperoNotaDebito linea = RecuperoNotaDebito.find.byId(id);
+		return ok(editarLineaNotaDebito.render(lineaForm.fill(linea)));
 	}
 
 	@CheckPermiso(key = "recuperoNotasEditar")
 	public static Result actualizar() {
 
-		Form<RecuperoNotaCredito> lineaForm = form(RecuperoNotaCredito.class).bindFromRequest();
+		Form<RecuperoNotaDebito> lineaForm = form(RecuperoNotaDebito.class).bindFromRequest();
 
 		try {
 			if(lineaForm.hasErrors()) {
 				flash("error", "Error en formulario");
-				return ok(editarLineaNotaCredito.render(lineaForm));
+				return ok(editarLineaNotaDebito.render(lineaForm));
 			} else {
-				RecuperoNotaCredito l = lineaForm.get();
+				RecuperoNotaDebito l = lineaForm.get();
 
 				/*List<RecuperoPago> rpl = RecuperoPago.find.where()
 						 .eq("recupero_factura_id", l.recupero_factura_id)
@@ -247,16 +251,15 @@ public class RecuperoNotasCreditosController extends Controller {
 		} catch (Exception e){
 			play.Logger.error("excepcion", e);
 			flash("error", "No se ha podido almacenar el registro.");
-			return ok(editarLineaNotaCredito.render(lineaForm));
+			return ok(editarLineaNotaDebito.render(lineaForm));
 		}
 
-		RecuperoNotaCredito linea = RecuperoNotaCredito.find.where().eq("id", lineaForm.get().id).findUnique();
-		Object c = verLineaNotaCredito.render(linea);
+		RecuperoNotaDebito linea = RecuperoNotaDebito.find.where().eq("id", lineaForm.get().id).findUnique();
+		Object c = verLineaNotaDebito.render(linea);
 		ObjectNode restJs = Json.newObject();
 		restJs.put("success", true);
 		restJs.put("modificar", true);
 		restJs.put("html", c.toString());
 		return ok(restJs);
 	}
-
 }
