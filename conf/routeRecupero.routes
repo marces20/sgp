@@ -42,6 +42,13 @@ POST   /nota-credito-linea/guardar  	controllers.recupero.RecuperoNotasCreditosC
 POST   /nota-credito-linea/actualizar  	controllers.recupero.RecuperoNotasCreditosController.actualizar()
 GET    /nota-credito-linea/eliminar    	controllers.recupero.RecuperoNotasCreditosController.eliminar(id:Long)
 
+GET    /nota-debito-linea/index    	controllers.recupero.RecuperoNotasDebitosController.index(id:Long ?= 0, editable:Boolean ?= false)
+GET    /nota-debito-linea/crear    	controllers.recupero.RecuperoNotasDebitosController.crear(facturaId:String)
+GET    /nota-debito-linea/editar   	controllers.recupero.RecuperoNotasDebitosController.editar(id:Long)
+POST   /nota-debito-linea/guardar  	controllers.recupero.RecuperoNotasDebitosController.guardar()
+POST   /nota-debito-linea/actualizar  	controllers.recupero.RecuperoNotasDebitosController.actualizar()
+GET    /nota-debito-linea/eliminar    	controllers.recupero.RecuperoNotasDebitosController.eliminar(id:Long)
+
 GET    /pago        	   	controllers.recupero.RecuperoPagosController.index()
 GET    /pago/crear        	controllers.recupero.RecuperoPagosController.crear()
 POST   /pago/guardar      	controllers.recupero.RecuperoPagosController.guardar()
@@ -83,7 +90,7 @@ POST   /recupero/reportes/reporteFacturasExcel   controllers.recupero.RecuperoRe
 
 GET    /facturas/imprimir-factura       controllers.recupero.RecuperoReportesController.imprimirFactura(id:Long)
 GET    /pagos/imprimir-recibo           controllers.recupero.RecuperoReportesController.imprimirRecibo(id:Long)
-		
+
 
 GET    	/reportesPlanilla/modalPlanilla   		controllers.recupero.RecuperoReportesController.modalPlanilla()
 POST    /reportesPlanilla/imprimirPlanilla   	controllers.recupero.RecuperoReportesController.informePlanilla()
