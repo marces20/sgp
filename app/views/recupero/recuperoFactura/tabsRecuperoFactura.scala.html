@@ -5,11 +5,11 @@
 		<li class="active"><a class="tabProducto" href="#contenedorProductos" data-toggle="tab">Productos</a></li>
 		<li><a class="tabNotas" href="#contenedorNotas" data-toggle="tab">Notas</a></li>
 	</ul>
-	
+
 	<div class="tab-content">
-	
+
 		<div class="tab-pane active" id="contenedorProductos">
-			@views.html.recupero.recuperoFactura.contenidoTabProducto(formularioCarga, recuperoFacturaForm)	
+			@views.html.recupero.recuperoFactura.contenidoTabProducto(formularioCarga, recuperoFacturaForm)
 		</div>
 		<div class="tab-pane" id="contenedorNotas">
 			@if(formularioCarga){
@@ -18,20 +18,26 @@
 				<textarea name="nota" disabled="disabled" class="form-control" rows="5">@recuperoFacturaForm.field("nota").value</textarea>
 			}
 		</div>
-	
+
 	</div>
 </div>
 
 <hr />
 
 <div class="row">
-	<div class="col-sm-7">
+	<div class="col-sm-6">
 		@views.html.recupero.recuperoFactura.contenidoTabNotaCredito(formularioCarga,recuperoFacturaForm)
 	</div>
-	<div class="col-sm-5">
+	<div class="col-sm-6">
+		@views.html.recupero.recuperoFactura.contenidoTabNotaDebito(formularioCarga,recuperoFacturaForm)
+	</div>
+
+</div>
+<div class="row">
+	<div class="col-sm-6">
 		@if(!formularioCarga){
 			@views.html.recupero.recuperoFactura.contenidoTabDetalle(formularioCarga,recuperoFacturaForm,factura)
 		}
-		
+
 	</div>
 </div>

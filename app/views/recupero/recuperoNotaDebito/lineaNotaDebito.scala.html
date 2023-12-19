@@ -1,0 +1,23 @@
+@(linea: models.recupero.RecuperoNotaDebito, editable: Boolean)
+@import models.auth._
+
+<tr data-id="@linea.id">
+
+	<!-- <td class="accion-editar"><a class="btn btn-default btn-xs modificarNotaCredito" href="@controllers.recupero.routes.RecuperoNotasCreditosController.editar(linea.id)"><i class="glyphicon glyphicon-edit"></i></a></td>
+	  -->
+	<td>@if(linea.planilla != null){@(linea.planilla.getRecuperoPlanillaEjercicio())}</td>
+	<td>@if(linea.fecha != null){@(utils.DateUtils.formatDate(linea.fecha))}</td>
+	<td>@linea.producto.nombre</td>
+	<td>@linea.udm.nombre</td>
+	<td>@linea.cantidad</td>
+	<td>@utils.NumberUtils.moneda(linea.precio, 2)</td>
+	<td>@utils.NumberUtils.moneda(linea.getTotal(),2)</td>
+
+		<td>
+		@if(Permiso.check("recuperoNotasEliminar")) {
+			<a class="btn btn-default btn-xs eliminarNotaCredito delete-confirm-link" href="@controllers.recupero.routes.RecuperoNotasDebitosController.eliminar(linea.id)">
+			<i class="glyphicon glyphicon-trash icono-eliminar"></i></a>
+		}
+		</td>
+
+</tr>

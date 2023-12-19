@@ -1,0 +1,158 @@
+@(buscador: utils.pagination.Pagination[models.recupero.RecuperoNotaCredito], formBuscador: DynamicForm)
+@import helper._
+@import utils._
+@import models.auth._
+@implicitFieldConstructor = @{ FieldConstructor(simpleInput.render) }
+@scripts = {
+	<script src="@routes.Assets.at("javascripts/recupero/recuperoFactura.js")" type="text/javascript"></script>
+}
+
+@getClassEstado(i:Estado) = @{
+	var classEstado:String = new String()
+	if(i != null && i.id == 65){
+		classEstado = "borrador"
+	}else if(i != null && i.id == 68){
+		classEstado = "cancelada"
+	}else if(i != null && i.id == 67){
+		classEstado = "autorizado"
+	}
+	classEstado
+	
+}
+
+@views.html.recupero.mainRecupero("Notas De Creditos", scripts) {
+	<div class="page-header">
+		<div class="row">
+			<div class="col-sm-7">
+				<h1>Lista de facturas</h1>
+			</div>
+			
+			<div class="col-sm-5">
+				<div class="dropdown pull-right">
+				 <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown">
+				 	<i class="glyphicon glyphicon-list-alt"></i>
+				    Reportes
+				    <span class="caret"></span>
+				  </button>
+				  <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
+				  </ul>
+				</div>
+				
+				<div class="dropdown pull-right btn-header">
+				 <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown">
+				 	<i class="glyphicon glyphicon-cog"></i>
+				    Acciones
+				    <span class="caret"></span>
+				  </button>
+				  <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
+				  	
+				  </ul>
+				</div>
+					
+				<div class="pull-right btn-header">
+				</div>
+			</div>
+		</div>
+	</div>
+	
+	@views.html.tags.successError()
+	
+	
+	<div id="actions">
+		<form action="" id="formSearchRecuperoFacturas" method="GET">
+		 
+
+		<div class="row">	
+    		
+			<div class="col-sm-2">
+				<div class="form-group">
+					<label for="nombre" class="control-label">Nombre</label>
+					<div class="">
+					@inputText(formBuscador("nombre"), 'class -> "form-control", 'autofocus -> "autofocus")
+					</div>
+				</div>
+			</div>
+			<div class="col-sm-2">
+				<label class="control-label">Punto Venta</label>
+				<div class="">
+				@select(formBuscador("puntoventa_id"), 
+				PuntoVenta.find.all().map { p => p.id.toString -> p.numero}, 'class -> "form-control select", '_default -> "Seleccionar")
+				</div>
+			</div>
+			<div class="col-sm-2">
+				<div class="form-group">
+					<label for="nombre" class="control-label">Numero</label>
+					<div class="">
+					@inputText(formBuscador("numero"), 'class -> "form-control", 'autofocus -> "autofocus")
+					</div>
+				</div>
+			</div>
+			
+			<div class="col-sm-4">
+				<label class="control-label">Cliente</label>
+					<div class="input-group">
+						@inputText(formBuscador("cliente.nombre"), 'name -> "", 'class -> "form-control", 'id -> "cliente")
+						@inputText(formBuscador("cliente_id"), 'hidden -> "hidden", 'id -> "cliente_id")
+						<span class="input-group-addon">
+							<a href="#" class="searchModal"
+										id="searchCliente" 
+										data-title="Selección de Clientes" 
+										data-url="@controllers.compras.routes.ClientesController.modalBuscar()" 
+										data-height="650" 
+										data-width="700" 
+										data-listen="modal.seleccion.cliente.simple" 
+										data-label="#cliente" 
+										data-field="#cliente_id">
+								<i class="glyphicon glyphicon-search"></i>
+							</a>
+						</span>
+					</div>
+				
+			</div>
+
+			
+			<div class="col-sm-2 input-group">
+				<label class="control-label">Fecha </label>
+				<div>
+				@inputText(formBuscador("fecha_desde"), 'class -> "form-control dateMask inputDateMascara", 'id -> "desde", 'placeholder -> "Desde")
+				@inputText(formBuscador("fecha_hasta"), 'class -> "form-control dateMask inputDateMascara", 'id -> "hasta", 'placeholder -> "Hasta")
+				</div>
+				
+			</div>
+		</div>
+		<div class="row">
+			 
+			 
+			<div class="col-sm-2">
+				<div class="form-group">
+				<label for="nombre" class="control-label">&nbsp;</label>
+				<button  class="form-control btn btn-primary">Buscar</button>
+				</div>
+			</div>
+			<div class="col-sm-2">
+				<div class="form-group">
+				<label for="nombre" class="control-label">&nbsp;</label>
+				<a href="@controllers.recupero.routes.RecuperoFacturasController.index()"  class="form-control btn btn-default">Limpiar</a>
+				</div>
+			</div>
+		</div>
+		 
+		</form>
+	</div>
+	@if(buscador.getTotalRowCount == 0) {
+        
+        <div class="well">
+            <em>No se encuentran Notas</em>
+        </div>
+        
+    } else {
+    
+     
+    
+    <div class="pagination pull-right">
+	    @views.html.helpers.paginador(buscador, controllers.recupero.routes.RecuperoNotasCreditosController.index())
+	</div>
+<script>
+</script>
+	}
+}

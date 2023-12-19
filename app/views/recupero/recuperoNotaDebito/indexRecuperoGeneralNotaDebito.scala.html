@@ -1,0 +1,138 @@
+@(paginador:  utils.pagination.Pagination[models.recupero.RecuperoNotaCredito], editable: Boolean,rf:models.recupero.RecuperoFactura)
+<div id="listaLineaNotaCreditos" class="contenedorPaginador ajaxPaginador">
+
+<div class="panel panel-default">
+		<div class="panel-heading"><b>Notas de Creditos</b>
+		
+		 	 
+		@if(rf.estado_id == models.Estado.RECUPERO_FACTURA_APROBADO) {
+			<a class="btn btn-default btn-xs" href="#" id="nuevoNotaCredito"><i class="glyphicon glyphicon-plus"></i> Nuevo</a>	 	
+		}	 
+		</div>
+		<div class="panel-body">
+			@if(paginador.getTotalRowCount == 0) {
+        		<p id="mensajeSinResultados" class="well"><i class="glyphicon glyphicon-info-sign"></i> No hay Notas de creditos para esta factura.</p>
+    		} 
+			
+			<table id="listaDeNotaCreditos" class="table table-striped table-bordered @if(paginador.getTotalRowCount() <= 0){hide}">
+				<thead>
+					<tr>
+						<!--  <th class="accion-editar">#</th>-->
+						<th>Planilla</th>
+						<th>Fecha</th>
+						<th>Producto</th>
+						<th>UDM</th>
+						<th>Cantidad</th>
+						<th>Precio</th>
+						<th>Subtotal</th>
+							<th></th>
+						
+					<tr>	
+				</thead>
+				<tbody>
+				@for(linea <- paginador.getList) {
+					@views.html.recupero.recuperoNotaCredito.lineaNotaCredito(linea, editable)
+				}
+				</tbody>
+			</table>
+
+			<div class="pagination pull-right">		
+			    @views.html.helpers.paginador(paginador, controllers.recupero.routes.RecuperoNotasCreditosController.index())
+			</div>
+	</div>
+</div>
+<script>
+$( function(){
+	/**
+	 * Ventana de carga linea de productos en ordenes
+	 */
+	 
+	var contenedor = $("#listaLineaNotaCreditos");
+
+	contenedor.on('click', '#nuevoNotaCredito', function(){
+		urlContenidoModal = '/recupero/nota-credito-linea/crear?facturaId='+$('#recuperoFacturaId').val();
+							
+		mostrarModal(urlContenidoModal);
+		return false;
+	});
+	
+	contenedor.on('click', '.modificarNotaCredito', function(){
+		lineaParaEditar = $(this).closest('tr');
+		var modal = mostrarModal($(this).attr('href'));
+		modal.dialog('option', 'title', 'Editar producto');	
+		return false;
+	});
+	
+	contenedor.on('click', '.eliminarNotaCredito', function(){
+		var mensaje = "¿Confirma que desea eliminar el registro?";
+		if(confirm(mensaje)){
+			var url = $(this).attr('href');
+			$this = $(this);
+			$.get(url, function(data){
+				if(data.success){
+					$this.closest("tr").remove();
+				} else {
+					alert("No se puedo eliminar el registro.");
+				}
+			});
+		}
+		return false;
+	});
+	
+	
+	function mostrarModal(url){
+		modalCargaProductos = $('<div></div>').dialog({
+			resizable: false,
+		    title: "Cargar producto",
+		    height: 400,
+		    width: 750,
+		    modal: true,
+		    open: function( event, ui ) {
+				$.get(url, function(data){
+					modalCargaProductos.html(data);
+				});
+		    },
+		    close: function(event, ui ){
+		    	modalCargaProductos.dialog('destroy');
+			}
+		  });
+		
+		modalCargaProductos.on('click', '.cancelar', function(){
+			modalCargaProductos.dialog('destroy');
+			return false;
+		});
+		
+		modalCargaProductos.on('submit', function(e){
+			var href = $(e.target).attr('action');
+			var data = $(e.target).serialize();
+			$.post(href, data, function(resultado){
+				if(resultado.success && resultado.nuevo){
+					$('#listaLineaNotaCreditos tbody').prepend(resultado.html);
+					$('#mensajeSinResultados').remove();
+					$('#listaDeNotaCreditos').removeClass('hide');
+					modalCargaProductos.dialog( "destroy" );
+				} else if(resultado.success && resultado.modificar){
+					$(lineaParaEditar).replaceWith(resultado.html);
+					modalCargaProductos.dialog( "destroy" );
+				} else {
+					modalCargaProductos.html(resultado);
+				}
+			});
+			return false;
+		});
+		
+		
+		return modalCargaProductos;
+	}
+	
+	
+	contenedor.find('form').on('submit', function(){
+		var url = $(this).attr("action");
+		var query = $(this).serialize();
+		$.get(url+"?"+query, function(data){
+			contenedor.parent().html(data);
+		});
+		return false;
+	});
+});
+</script>
