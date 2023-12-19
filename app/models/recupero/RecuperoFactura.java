@@ -139,14 +139,25 @@ public class RecuperoFactura extends Model {
 
 	@Formula(select = "_b${ta}.total_nota_credito", join = "left outer join (select recupero_factura_id,  round(sum(precio * cantidad)::numeric,2) as total_nota_credito from recupero_notas_creditos group by recupero_factura_id) as _b${ta} on _b${ta}.recupero_factura_id = ${ta}.id")
 	public BigDecimal total_nota_credito;
+
 	public BigDecimal getTotalNotaCredito(){
 		if (total_nota_credito == null)
 			return new BigDecimal(0);
 		return total_nota_credito;
 	}
 
+	@Formula(select = "_nd${ta}.total_nota_debito", join = "left outer join (select recupero_factura_id,  round(sum(precio * cantidad)::numeric,2) as total_nota_debito from recupero_notas_debitos group by recupero_factura_id) as _nd${ta} on _nd${ta}.recupero_factura_id = ${ta}.id")
+
+	public BigDecimal total_nota_debito;
+
+	public BigDecimal getTotalNotaDebito(){
+		if (total_nota_debito == null)
+			return new BigDecimal(0);
+		return total_nota_debito;
+	}
+
 	public BigDecimal getTotal(){
-		return getBase().subtract(getTotalNotaCredito());
+		return getBase().subtract(getTotalNotaCredito()).add(getTotalNotaDebito());
 	}
 
 	@Formula(select = "_d${ta}.total_pagado", join = "LEFT OUTER JOIN (select p.recupero_factura_id, COALESCE(sum(p.total),0) as total_pagado FROM recupero_pagos p WHERE p.estado_id = "+Estado.RECUPERO_PAGO_PAGADO+" GROUP BY p.recupero_factura_id) as _d${ta} on _d${ta}.recupero_factura_id = ${ta}.id")
