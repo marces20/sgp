@@ -100,7 +100,7 @@ $( function(){ $('.searchModal').modalSearch();})
 		</div>
 	</div>
 	<div class="row">
-		<div class="col-sm-5">
+		<div class="col-sm-3">
 			<div class="form-group @if(conceptoForm.error("liquidacion_concepto_clasificacion_id") != null) {has-error}else{has-required}">
 				<label for="liquidacion_concepto_clasificacion_id" class="control-label">Clasificacion</label>
 
@@ -110,6 +110,14 @@ $( function(){ $('.searchModal').modalSearch();})
 			</div>
 			@conceptoForm("liquidacion_concepto_clasificacion_id").error.map{ error =><div class="text-error">@error.message</div>}
 		</div>
+
+		<div class="col-sm-2">
+			<label class="control-label">
+				Control Guardia
+				@select(conceptoForm("control_guardia"),options("false"->"NO","true"->"SI"), 'class -> "form-control select")
+			</label>
+		</div>
+
 		<div class="col-sm-2">
 			<label class="control-label">
 				Deduce ganancias
