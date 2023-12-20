@@ -38,61 +38,65 @@ import views.html.haberes.liquidacionTipos.crearLiquidacionTipo;
 import views.html.haberes.novedades.*;
 
 public class NovedadesController extends Controller {
-	
+
 	@CheckPermiso(key = "liquidacionNovedadesIndex")
 	public static Result index() {
 		DynamicForm d = form().bindFromRequest();
 
-		Pagination<Novedad> lista = Novedad.page(RequestVar.get("puesto_laboral_id"), 
-												 RequestVar.get("liquidacion_concepto_id"), 
-												 RequestVar.get("periodo_inicio_id"), 
-												 RequestVar.get("fecha_desde"), 
-												 RequestVar.get("fecha_hasta"), 
-												 RequestVar.get("liquidacion_tipo_id"), 
-												 RequestVar.get("carga"), 
-												 RequestVar.get("periodo_inicio_id"), 
+		Pagination<Novedad> lista = Novedad.page(RequestVar.get("puesto_laboral_id"),
+												 RequestVar.get("liquidacion_concepto_id"),
+												 RequestVar.get("periodo_inicio_id"),
+												 RequestVar.get("fecha_desde"),
+												 RequestVar.get("fecha_hasta"),
+												 RequestVar.get("liquidacion_tipo_id"),
+												 RequestVar.get("carga"),
+												 RequestVar.get("periodo_inicio_id"),
 												 RequestVar.get("periodo_fin_id"),
 												 RequestVar.get("activo"),
-												 RequestVar.get("cm")
+												 RequestVar.get("cm"),
+												 RequestVar.get("periodo_concepto_id"),
+												 RequestVar.get("organigrama_id")
 												 );
 		return ok(indexNovedades.render(lista, d));
 	}
 
 	@CheckPermiso(key = "liquidacionNovedadesIndex")
 	public static Result lista() {
-		Pagination<Novedad> lista = Novedad.page(RequestVar.get("puesto_laboral_id"), 
-												 RequestVar.get("liquidacion_concepto_id"), 
-												 RequestVar.get("periodo_inicio_id"), 
-												 RequestVar.get("fecha_desde"), 
-												 RequestVar.get("fecha_hasta"), 
-												 RequestVar.get("liquidacion_tipo_id"), 
-												 RequestVar.get("carga"), 
-												 RequestVar.get("periodo_inicio_id"), 
+		Pagination<Novedad> lista = Novedad.page(RequestVar.get("puesto_laboral_id"),
+												 RequestVar.get("liquidacion_concepto_id"),
+												 RequestVar.get("periodo_inicio_id"),
+												 RequestVar.get("fecha_desde"),
+												 RequestVar.get("fecha_hasta"),
+												 RequestVar.get("liquidacion_tipo_id"),
+												 RequestVar.get("carga"),
+												 RequestVar.get("periodo_inicio_id"),
 												 RequestVar.get("periodo_fin_id"),
 												 "activo",
-												 RequestVar.get("cm")
+												 RequestVar.get("cm"),
+												 RequestVar.get("periodo_concepto_id"),
+												 RequestVar.get("organigrama_id")
 												 );
 		return ok(listaNovedades.render(lista));
 	}
 
-	
+
 	@CheckPermiso(key = "liquidacionNovedadesCrear")
 	public static Result crear() {
-		
+
 		Form<Novedad> nForm = form(Novedad.class);
-		
+
 		return ok(crearNovedades.render(nForm));
 	}
-	
+
 	@CheckPermiso(key = "liquidacionNovedadesVer")
 	public static Result ver(Long id) {
 
-		
+
 		return ok();
 	}
-	
+
 	@CheckPermiso(key = "liquidacionNovedadesCrear")
-	public static Result guardar() {		
+	public static Result guardar() {
 		Form<Novedad> nForm = form(Novedad.class).bindFromRequest();
 
 		if(nForm.hasErrors()) {
@@ -106,36 +110,36 @@ public class NovedadesController extends Controller {
 			flash("error", "El periodo de fin debe ser mayor o igual al periodo de inicio.");
 			return ok(crearNovedades.render(nForm));
 		}
-		
+
 		try {
-			
-			
+
+
 			n.fecha_novedad = new Date();
-			n.usuario_id = (long) Usuario.getUsuarioSesion();	
+			n.usuario_id = (long) Usuario.getUsuarioSesion();
 			n.cargaMasiva = false;
 			n.activo = true;
 			flash("success", "Se ha creado la novedad.");
 			n.save();
-			
+
 
 		} catch (Exception e) {
 			flash("error", "No se pudo crear la novedad"+e);
 		}
 
-		
+
 		return ok(crearNovedades.render(nForm));
 
 	}
-	
+
 	@CheckPermiso(key = "liquidacionNovedadesEditar")
 	public static Result editar(Long id) {
 		Novedad novedad = Novedad.find.byId(id);
-		
+
 		Form<Novedad> nForm = form(Novedad.class).fill(novedad);
-		
+
 		return ok(editarNovedades.render(nForm));
 	}
-	
+
 	@CheckPermiso(key = "liquidacionNovedadesEditar")
 	public static Result actualizar() {
 		Form<Novedad> nForm = form(Novedad.class).bindFromRequest();
@@ -146,26 +150,26 @@ public class NovedadesController extends Controller {
 		}
 
 		Novedad n = nForm.get();
-		
+
 		if(!n.comprobarPeriodoInicioConPeriodoFin()) {
 			flash("error", "El periodo de fin debe ser mayor o igual al periodo de inicio.");
 			return ok(editarNovedades.render(nForm));
 		}
 
 		try {
-			n.usuario_id = (long) Usuario.getUsuarioSesion();	
+			n.usuario_id = (long) Usuario.getUsuarioSesion();
 			flash("success", "La novedad se ha modificado correctamente.");
 			n.update();
-			
+
 
 		} catch (Exception e) {
 			flash("error", "No se pudo modificar la novedad" + e);
 		}
 
-		
+
 		return ok(editarNovedades.render(nForm));
 	}
-	
+
 	@CheckPermiso(key = "liquidacionNovedadesEliminar")
 	public static Result eliminar(Long id) {
 		ObjectNode restJs = Json.newObject();
@@ -181,5 +185,5 @@ public class NovedadesController extends Controller {
 
 		return ok(restJs);
 	}
-	
+
 }
