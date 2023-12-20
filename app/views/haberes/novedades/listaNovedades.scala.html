@@ -7,14 +7,14 @@
 
 
  @if(buscador.getTotalRowCount == 0) {
-      
+
       <div class="well">
           <em>No se encuentran novedades</em>
       </div>
-      
+
   } else {
 
-Mostrando @buscador.getDisplayXtoYofZ(" a "," de ") resultado(s).   
+Mostrando @buscador.getDisplayXtoYofZ(" a "," de ") resultado(s).
 <table class="table table-striped table-bordered table-hover">
 	<thead>
 		<tr>
@@ -26,13 +26,15 @@ Mostrando @buscador.getDisplayXtoYofZ(" a "," de ") resultado(s).
 			<th width="90">Periodo inicio</th>
 			<th width="90">Periodo fin</th>
 			<th width="90">Tipo Liq.</th>
+			<th width="90">P. Conc.</th>
+			<th width="90">Orga.</th>
 			<th width="30"></th>
 		</tr>
 	</thead>
 	<tbody>
-	
 
-	
+
+
         @for(novedad <- buscador.getList) {
 		<tr class="pointer" data-href="@controllers.haberes.routes.NovedadesController.ver(novedad.id)&@UriTrack.encode()">
 			<td><a class="btn btn-default btn-xs notSeleccion" href="@controllers.haberes.routes.NovedadesController.editar(novedad.id)&@UriTrack.encode()"><i class="glyphicon glyphicon-edit"></i></a></td>
@@ -43,8 +45,10 @@ Mostrando @buscador.getDisplayXtoYofZ(" a "," de ") resultado(s).
 			<td>@novedad.periodoInicio.nombre</td>
 			<td>@if(novedad.periodoFin != null){@novedad.periodoFin.nombre}</td>
 			<td>@if(novedad.liquidacionTipo != null){@novedad.liquidacionTipo.nombre}</td>
+			<td>@if(novedad.periodoConcepto != null){@novedad.periodoConcepto.nombre}</td>
+			<td>@if(novedad.organigrama != null){@novedad.organigrama.nombre}</td>
 			<td>
-				@if(Permiso.check("liquidacionNovedadesEliminar")) {	
+				@if(Permiso.check("liquidacionNovedadesEliminar")) {
 				<a class="btn btn-default btn-xs  eliminarNovedad notSeleccion" href="@controllers.haberes.routes.NovedadesController.eliminar(novedad.id)&@UriTrack.encode()"><i class="glyphicon glyphicon-trash icono-eliminar"></i></a>
 				}
 			</td>

@@ -1,17 +1,17 @@
 $( function() {
-	
+
 	$("#desde, #hasta").mask("99/99/9999");
-	
+
 	$("#cantidad, #importe_tope").numeric_input();
 	$("#importe").numeric_input({allowNegative: true});
 
-	$('#searchPuestoLaboral, #searchPeriodoInicio, #searchPeriodoFin, #searchConcepto').modalSearch();
+	$('#searchPuestoLaboral, #searchPeriodoInicio,#searchPeriodoConcepto, #searchPeriodoFin, #searchConcepto,#searchOrganigrama').modalSearch();
 
 	$('#puesto_laboral_id').on('change', function(){
 		$(document).trigger("novedad.cambio");
 	});
-	
-	
+
+
 	$(document).on('click', '#eliminarNovedadIndex', function(){
 
 		link = $(this).attr("href");
@@ -43,9 +43,9 @@ $( function() {
 	      });
 	    return false;
 	})
-	
-	
-	
+
+
+
 	//Cuando cambia de inicio, coloco el mismo en periodo de fin... solo si esta vacio
 	$('#periodo_inicio_id').on('change', function(){
 		var id = $(this).val();
@@ -56,19 +56,19 @@ $( function() {
 		}
 
 	});
-	
-	
+
+
 	$(document).on("novedad.cambio", function() {
 		var url = $('#listaNovedades').attr('data-href');
 
 		$.get(url, {puesto_laboral_id: $('#puesto_laboral_id').val()}, function(data) {
 			$('#listaNovedades').html(data);
 		});
-		
+
 	});
-	
+
 	$(document).trigger("novedad.cambio");
-	
+
 	$('#listaNovedades').on('click', '.eliminarNovedad', function() {
 		var url = $(this).attr('href');
 		var linea = $(this).closest('tr');
@@ -99,33 +99,45 @@ $( function() {
 	      });
 		return false;
 	});
-	
-	
-	
+
+
 	var options = {
 			script:"/contabilidad/suggestPeriodo/",
 			varname:"",
 			json:true,
 			shownoresults:true,
 			maxresults:6,
-			callback: function (obj) { 
-										$("#periodo_inicio_id").val(obj.id); 
+			callback: function (obj) {
+										$("#periodo_concepto_id").val(obj.id);
+										$("#periodo_concepto_id").change();
+									 }
+		};
+	var as_json = new bsn.AutoSuggest('periodo_concepto', options);
+
+	var options = {
+			script:"/contabilidad/suggestPeriodo/",
+			varname:"",
+			json:true,
+			shownoresults:true,
+			maxresults:6,
+			callback: function (obj) {
+										$("#periodo_inicio_id").val(obj.id);
 										$("#periodo_inicio_id").change();
 									 }
 		};
 	var as_json = new bsn.AutoSuggest('periodo_inicio', options);
-	
+
 	var options = {
 			script:"/contabilidad/suggestPeriodo/",
 			varname:"",
 			json:true,
 			shownoresults:true,
 			maxresults:6,
-			callback: function (obj) { 
-										$("#periodo_hasta_id").val(obj.id); 
+			callback: function (obj) {
+										$("#periodo_hasta_id").val(obj.id);
 										$("#periodo_hasta_id").change();
 									 }
 		};
 	var as_json = new bsn.AutoSuggest('periodo_fin', options);
-	
+
 });
