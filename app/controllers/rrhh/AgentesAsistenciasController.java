@@ -25,19 +25,19 @@ import utils.UriTrack;
 import views.html.rrhh.agenteAsistencia.*;
 
 @Security.Authenticated(Secured.class)
-public class AgentesAsistenciasController extends Controller { 
-	
+public class AgentesAsistenciasController extends Controller {
+
 	public static Result URL_LISTA_AGENTE = redirect(
 			controllers.rrhh.routes.AgentesAsistenciasController.index()
 	);
-	
+
 	@CheckPermiso(key = "agentesLicencias")
 	public static Result index() {
 		DynamicForm d = form().bindFromRequest();
 
 		return ok(indexAgenteAsistencia.render(
 				Agente.page(RequestVar.get("nombre"),
-				 RequestVar.get("cuit"), 
+				 RequestVar.get("cuit"),
 				 RequestVar.get("organigrama_id"),
 				 RequestVar.get("btnFiltro[0]"),//borrador
 				 RequestVar.get("btnFiltro[1]"),//cargado
@@ -58,20 +58,20 @@ public class AgentesAsistenciasController extends Controller {
 				 RequestVar.get("fcud_desde"),
 				 RequestVar.get("fcud_hasta")
 				 ),d));
-		
+
 	}
-	
+
 	@CheckPermiso(key = "agentesLicencias")
 	public static Result editar(Long id) {
 		Agente agente = Ebean.find(Agente.class, id);
 		return ok(editarAgenteAsistencia.render(agente));
 	}
-	
+
 	@CheckPermiso(key = "agentesLicencias")
 	public static Result actualizarAgente(Long agenteId){
 		return redirect( controllers.rrhh.routes.AgentesAsistenciasController.ver(agenteId,0)+ UriTrack.get("&"));
 	}
-	
+
 	@CheckPermiso(key = "agentesLicencias")
 	public static Result ver(Long id,Long tipoLicencia) throws IOException {
 		Form<AgenteAsistenciaLicencia> lineaForm = form(AgenteAsistenciaLicencia.class).bindFromRequest();
@@ -81,8 +81,10 @@ public class AgentesAsistenciasController extends Controller {
 			flash("error", "No se encuentra el agente.");
 			return URL_LISTA_AGENTE;
 		}
-		
-		return ok(verAgenteAsistencia.render(agente,lineaForm,tipoLicencia));
+
+
+
+		return ok(verAgenteAsistencia.render(agente,lineaForm,tipoLicencia,AgenteAsistenciaLicencia.getDiasLicenciaReglamentariaPorEjercicio(id)));
 	}
-	
+
 }

@@ -11,6 +11,7 @@ import java.io.OutputStreamWriter;
 import java.io.Writer;
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -70,37 +71,15 @@ public class AgentesAsistenciasLicenciasController extends Controller {
 		Logger.debug("zzzzzzzzzzzzzzzzzzzzzzzzz");
 
 
+
 		Pagination<AgenteAsistenciaLicencia> lineas = AgenteAsistenciaLicencia.page(agenteId,tipoLicencia);
 		Logger.debug("zzzzzzzzzzzzzzzzzzzzzzzzz");
-		return ok(indexAgenteAsistenciaLicencia.render(lineas, editable));
+		return ok(indexAgenteAsistenciaLicencia.render(lineas, editable,AgenteAsistenciaLicencia.getDiasLicenciaReglamentariaPorEjercicio(agenteId)));
 	}
 
 	public static Result indexLicenciaNovedadesLiquidacion() {
 		DynamicForm d = form().bindFromRequest();
 		d.discardErrors();
-
-		List<Integer> aa = new ArrayList<>();
-
-				//aa.add(8);
-				aa.add(9);
-				//aa.add(12);
-				//aa.add(13);
-				//aa.add(14);
-
-		//List<AgenteAsistenciaLicencia> ll = AgenteAsistenciaLicencia.find.where().eq("tipo_licencia_id", 5).in("ejercicio_id", aa).findList();
-
-		int a = 0;
-		//for(AgenteAsistenciaLicencia llx : ll) {
-		//	llx.dias = llx.getDiasEntreFechas();
-		//	llx.save();
-			//if(llx.tipo_licencia_id.compareTo(new Long(5)) == 0) { //select count(*) from agente_asistencia_licencias where tipo_licencia_id <> 5 and ejercicio_id in(9)
-
-			//	AgenteAsistenciaLicencia.setDiasPorPeriodos(llx.id.intValue());
-			//	a++;
-			//}
-			a++;
-			//}
-		Logger.debug("TERMINAAAAAAAAAAAAAAAAAAAAAA "+a);
 
 		Pagination<LiquidacionNovedadLicencia> lineas = LiquidacionNovedadLicencia.page(RequestVar.get("nombre"),
 				 																		RequestVar.get("cuit"),
@@ -140,6 +119,28 @@ public class AgentesAsistenciasLicenciasController extends Controller {
 					//flash("error", "La Fecha de fin es manor a la Fecha de inicio.");
 					//return ok(crearAgenteAsistenciaLicencia.render(lineaForm));
 				}
+
+
+				Calendar calendarFinicio = Calendar.getInstance();
+				calendarFinicio.setTime(lineaForm.get().finicio);
+
+				Calendar calendarFfin = Calendar.getInstance();
+				calendarFfin.setTime(lineaForm.get().ffin);
+
+				Integer YEARFINICIO = calendarFinicio.get(Calendar.YEAR);
+				Ejercicio ejFinicio = Ejercicio.find.where().eq("nombre", YEARFINICIO.toString()).findUnique();
+				if(ejFinicio == null) {
+					flash("error", "No existe el ejercicio para la fecha de inicio");
+					return ok(crearAgenteAsistenciaLicencia.render(lineaForm));
+				}
+
+				Integer YEARFFIN = calendarFfin.get(Calendar.YEAR);
+				Ejercicio ejFin= Ejercicio.find.where().eq("nombre", YEARFFIN.toString()).findUnique();
+				if(ejFin == null) {
+					flash("error", "No existe el ejercicio para la fecha de fin");
+					return ok(crearAgenteAsistenciaLicencia.render(lineaForm));
+				}
+
 
 				int diasPermitidos = 30;
 				int diasPermitidosFin = 120;
