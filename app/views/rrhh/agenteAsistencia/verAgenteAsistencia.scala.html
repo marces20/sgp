@@ -1,4 +1,4 @@
-@(agente:Agente,lineaForm: Form[AgenteAsistenciaLicencia],tipoLicencia:Long)
+@(agente:Agente,lineaForm: Form[AgenteAsistenciaLicencia],tipoLicencia:Long,p:Map[Long,Integer])
 @import helper._
 @import utils._
 @import models.auth._
@@ -61,10 +61,12 @@
 </hr>
 <form action="@controllers.rrhh.routes.AgentesAsistenciasController.ver(agente.id)@UriTrack.get("&")" method="GET" id="formb">
 <div class="row menu-acciones">
-	<div class="col-sm-3">
+
+	<div class="col-sm-2">
 		<a href="@controllers.rrhh.routes.AgentesAsistenciasController.editar(agente.id)@UriTrack.get("&")"  class="btn btn-default"><i class="glyphicon glyphicon-edit"></i> Editar</a>
 	</div>
-	<div class="col-sm-6">
+
+	<div class="col-sm-5">
 		<div class="form-group">
 			<label for="" class="control-label">Tipo Licencia</label>
 			@select(lineaForm("tipoLicencia"),
@@ -75,12 +77,13 @@
 
 		</div>
 	</div>
-				<div class="col-sm-2">
-					<div class="form-group">
-					<label for="nombre" class="control-label">&nbsp;</label>
-					<button  class="form-control btn btn-primary">Buscar</button>
-					</div>
-				</div>
+	<div class="col-sm-2">
+		<div class="form-group">
+		<label for="nombre" class="control-label">&nbsp;</label>
+		<button  class="form-control btn btn-primary">Buscar</button>
+		</div>
+	</div>
+
 	<div class="col-sm-2">
 		<a href="@UriTrack.getOnNull(controllers.rrhh.routes.AgentesAsistenciasController.index().absoluteURL())" class="btn btn-default"><i class="glyphicon glyphicon-list"></i></a>
 	</div>
@@ -90,7 +93,6 @@
 </div>
 </form>
 <h2>@agente.apellido - Fecha Ingreso @DateUtils.formatDate(agente.fingreso,"dd/MM/yyyy")</h2>
-
 
 @views.html.rrhh.agenteAsistencia.tabsAgenteAsistencia(agente,false,tipoLicencia)
 
