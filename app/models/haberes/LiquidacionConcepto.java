@@ -50,6 +50,8 @@ public class LiquidacionConcepto extends Model{
 
 	public Boolean reporte_ganancias = false;
 
+	public Boolean control_guardia = false;
+
 	@ManyToOne
 	@JoinColumn(name="liquidacion_base_calculo_id", referencedColumnName="id", insertable=false, updatable=false)
 	public LiquidacionBaseCalculo liquidacionBaseCalculo;
