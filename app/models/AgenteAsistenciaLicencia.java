@@ -6,10 +6,13 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.TreeMap;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -126,6 +129,68 @@ public class AgenteAsistenciaLicencia extends Model{
     	return p;
 	}
 
+	public static Map<Long,Integer>  getDiasLicenciaReglamentariaPorEjercicio(Long idAgente){
+		Agente a = Agente.find.where().eq("id", idAgente).findUnique();
+
+		TreeMap<Long,Integer> ret= new TreeMap<>();
+
+		if(a != null) {
+			Calendar calendarHoy = Calendar.getInstance();
+			calendarHoy.setTime(new Date());
+
+			Date fingreso = a.fingreso;
+			Calendar calendar = Calendar.getInstance();
+			calendar.setTime(fingreso);
+
+
+			Logger.debug("DAY_OF_MONTH "+calendar.get(Calendar.DAY_OF_MONTH) );
+			Logger.debug("MONTH "+calendar.get(Calendar.MONTH) );
+			Logger.debug("YEAR "+calendar.get(Calendar.YEAR) );
+
+			Integer YEAR = calendar.get(Calendar.YEAR);
+			int YEARHASTAHOY = calendarHoy.get(Calendar.YEAR) - calendar.get(Calendar.YEAR);
+
+
+			if(calendar.get(Calendar.MONTH) > 6) { // INGRESO despues de julio
+				YEAR = calendar.get(Calendar.YEAR)+1;
+			}else {// INGRESO antes de julio
+
+			}
+
+			boolean bandera = true;
+			int contador_anios = 1;
+			int dias = 0;
+			while(bandera) {
+
+				Ejercicio e = Ejercicio.find.where().eq("nombre", YEAR.toString()).findUnique();
+
+				if(contador_anios < 5) {
+					dias = 15;
+				}else if(contador_anios >= 5 && contador_anios < 10) {
+					dias = 20;
+				}else if(contador_anios >= 10) {
+					dias = 25;
+				}
+
+				ret.put(e.id, dias);
+
+				contador_anios ++;
+				YEAR++;
+
+				if(YEAR == calendarHoy.get(Calendar.YEAR)+2) {
+
+					bandera = false;
+				}
+			}
+
+
+
+
+		}
+
+		return ret;
+	}
+
 	public static Integer modificarEstadoMasivo(Integer idEstado, List<Integer> opcSeleccionados){
 
 		SqlUpdate update = Ebean.createSqlUpdate("UPDATE agente_asistencia_licencias " +
@@ -187,7 +252,7 @@ public class AgenteAsistenciaLicencia extends Model{
 			stmt.setBoolean(4, habiles);
 
 			rs = stmt.executeQuery();
-
+			Logger.debug("xxxxxxxxxxxxx "+finicio);
 			if (rs.next()) {
 				ret = rs.getInt(1);
 			}
@@ -215,7 +280,7 @@ public class AgenteAsistenciaLicencia extends Model{
 
 			boolean habiles = true;
 
-
+			Logger.debug("333333333");
 
 			stmt = conn.prepareStatement("SELECT get_dias_periodo_licencias(?,?,?)");
 			stmt.setBoolean(1, habiles);
@@ -283,7 +348,7 @@ public class AgenteAsistenciaLicencia extends Model{
 
 	public Map<String, Map<String, Integer[]>> getResumenInasistencia(Long agente_id){
 
-
+		TreeMap<String, Map<String, Integer[]>> sorted = new TreeMap<>(Collections.reverseOrder());
 		Map<String, Map<String, Integer[]>> ret = new HashMap<String, Map<String, Integer[]>>();
 		try {
 				List<AgenteAsistenciaLicencia> laall = AgenteAsistenciaLicencia.find
@@ -297,6 +362,9 @@ public class AgenteAsistenciaLicencia extends Model{
 
 
 				int i= 0;
+
+				Map<Long,Integer> diasLicenciaReglamentariaPorEjercicio = getDiasLicenciaReglamentariaPorEjercicio(agente_id);
+
 				for(AgenteAsistenciaLicencia ax :laall){
 
 					Integer ejj = new Integer(ax.ejercicio.nombre)-4;
@@ -306,9 +374,12 @@ public class AgenteAsistenciaLicencia extends Model{
 
 					Logger.debug("ax.agente.fingreso.compareTo(xd) "+ax.agente.fingreso.compareTo(xd));
 
-					if(ax.agente.fingreso.compareTo(xd) <= 0 && ax.tipo_licencia_id.compareTo(new Long(5)) == 0) {
-						dias = 20;
+					if(ax.tipo_licencia_id.compareTo(new Long(5)) == 0) {
+						//dias = 20;
+						dias = diasLicenciaReglamentariaPorEjercicio.get(ax.ejercicio.id);
 					}
+
+
 
 					Logger.debug("ejercicio - original "+ax.ejercicio.nombre);
 					Logger.debug("ejercicio - restado "+ejj);
@@ -352,12 +423,15 @@ public class AgenteAsistenciaLicencia extends Model{
 				}
 
 
+				sorted.putAll(ret);
+
+
 		}catch (Exception e) {
 			Logger.error("Error duplicar: "+e);
         } finally {
         }
 
-		return ret;
+		return sorted;
 	}
 
 	public static List<SqlRow> getDiasLicencias(String ejercicio,
