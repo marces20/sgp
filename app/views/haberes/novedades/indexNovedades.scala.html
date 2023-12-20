@@ -144,7 +144,42 @@
 						</span>
 					</div>
 				</div>
-
+	</div>
+	<div class="row">
+				<div class="col-sm-2">
+					<label for="inputPeriodo" class="control-label">Periodo Concepto</label>
+					<div class="input-group">
+						@inputText(formBuscador("periodo_concepto"),'class -> "form-control",'id -> "periodo_concepto")
+						@inputText(formBuscador("periodo_concepto_id"),'hidden -> "hidden",'id -> "periodo_concepto_id")
+						<span class="input-group-addon">
+						<a href="#" class="searchModal"
+									id="searchPeriodoConcepto"
+									data-title="Selección de Periodo"
+									data-url="@controllers.contabilidad.routes.PeriodosController.modalBuscar()"
+									data-height="650"
+									data-width="700"
+									data-listen="modal.seleccion.periodo.simple"
+									data-label="#periodo_concepto"
+									data-field="#periodo_concepto_id">
+							<i class="glyphicon glyphicon-search"></i>
+						</a>
+						</span>
+					</div>
+				</div>
+				<div class="col-sm-4">
+					<label for="inputOrgranigrama" class="control-label">Organigrama Concepto</label>
+					<div class="input-group">
+						@inputText(formBuscador("organigrama.nombre"),'class -> "form-control",'id -> "organigrama")
+						@inputText(formBuscador("organigrama_id"),'hidden -> "hidden",'id -> "organigrama_id")
+						<span class="input-group-addon">
+		                	<a href="#" id="searchOrganigrama" data-title="Selección de Departamento/Servicio"
+		                				data-url="@controllers.administracion.routes.OrganigramasController.modalBuscarServicios()"
+		                				data-height="650" data-width="700"
+		                				data-listen="modal.seleccion.servicio.simple"
+		                				data-label="#organigrama" data-field="#organigrama_id" /> <i class="glyphicon glyphicon-search"></i></a>
+		                </span>
+					</div>
+				</div>
 				<div class="col-sm-2">
 					<div class="form-group">
 					<label for="buscar" class="control-label">&nbsp;</label>
