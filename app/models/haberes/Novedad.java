@@ -120,7 +120,9 @@ public class Novedad extends Model{
 										   String periodo_inicio,
 										   String periodo_fin,
 										   String activo,
-										   String cm) {
+										   String cm,
+										   String periodo_concepto_id,
+										   String organigrama_id) {
     	Pagination<Novedad> p = new Pagination<Novedad>();
     	p.setOrderDefault("ASC");
     	p.setSortByDefault("puestoLaboral.legajo.agente.apellido");
@@ -151,6 +153,13 @@ public class Novedad extends Model{
     		}
     	}
 
+    	if(!periodo_concepto_id.isEmpty()) {
+    		e.eq("periodo_concepto_id", Integer.parseInt(periodo_concepto_id));
+    	}
+
+    	if(!organigrama_id.isEmpty()) {
+    		e.eq("organigrama_id", Integer.parseInt(organigrama_id));
+    	}
 
     	if(!puesto_laboral_id.isEmpty()) {
     		e.eq("puesto_laboral_id", Integer.parseInt(puesto_laboral_id));
