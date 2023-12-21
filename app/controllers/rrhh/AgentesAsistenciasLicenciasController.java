@@ -229,6 +229,7 @@ public class AgentesAsistenciasLicenciasController extends Controller {
 
 				fl.write_usuario_id = new Long(Usuario.getUsuarioSesion());
 				fl.write_date = new Date();
+				fl.dias = fl.getDiasEntreFechas();
 				fl.update(fl.id);
 			}
 		} catch (Exception e){
