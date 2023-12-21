@@ -171,6 +171,7 @@ public class AgentesAsistenciasLicenciasController extends Controller {
 					return ok(crearAgenteAsistenciaLicencia.render(lineaForm));
 				}
 
+				l.dias = l.getDiasEntreFechas();
 				l.create_usuario_id = new Long(Usuario.getUsuarioSesion());
 				l.create_date = new Date();
 				l.estado_id = (long)Estado.AGENTE_LICENCIA_BORRADOR;
@@ -391,10 +392,12 @@ public class AgentesAsistenciasLicenciasController extends Controller {
 			Logger.debug("0000000000  "+ll.size());
 
 			for(AgenteAsistenciaLicencia llx : ll) {
+
 				Logger.debug("aaaaaaaaaaaaaa111111111");
 
 				llx.dias = llx.getDiasEntreFechas();
 				llx.save();
+
 				Logger.debug("11111111111111111");
 
 				if(llx.tipo_licencia_id.compareTo(new Long(5)) == 0) {
