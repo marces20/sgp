@@ -580,7 +580,8 @@ public class LiquidacionMes extends Model {
           while (rs2.next()) {
             ret = rs2.getString(1);
 
-            if (ret.compareTo("0xx") != 0) {
+            if(!ret.contains("0xx")) {
+            //if (ret.compareTo("0xx") != 0) {
               liquidados++;
               x++;
               Logger.debug("TERMINA PUESTO ID: " + rs.getInt("pid"));
