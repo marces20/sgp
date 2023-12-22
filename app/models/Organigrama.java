@@ -101,6 +101,7 @@ public class Organigrama extends Model {
 		List<SqlRow> s = Ebean.createSqlQuery(sql)
 				.setParameter("orgaId", orgaId)
 				.findList();
+		luAux.add(orgaId);
 		for(SqlRow m : s){
 			luAux.add(new Integer(m.getString("id")));
 		}
