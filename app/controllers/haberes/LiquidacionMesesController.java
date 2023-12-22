@@ -44,13 +44,13 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import controllers.auth.CheckPermiso;
 
 public class LiquidacionMesesController extends Controller {
-	
+
 	final static Form<LiquidacionMes> liquidacionMesForm = form(LiquidacionMes.class);
-	
+
 	public static Result URL_LISTA_LIQUIDACION_MES = redirect(
 			controllers.haberes.routes.LiquidacionMesesController.index()
 	);
-	
+
 	@CheckPermiso(key = "liquidacionMesIndex")
 	public static Result index() {
 		DynamicForm d = form().bindFromRequest();
@@ -69,18 +69,18 @@ public class LiquidacionMesesController extends Controller {
 								 ),
 								 d));
 	}
-	
+
 	@CheckPermiso(key = "liquidacionMesCrear")
 	public static Result crear() {
 		Form<LiquidacionMes> liquidacionMesForm = form(LiquidacionMes.class);
 		return ok(crearLiquidacionMes.render(liquidacionMesForm));
 	}
-	
+
 	@CheckPermiso(key = "liquidacionMesCrear")
 	public static Result guardar() {
-		
+
 		Form<LiquidacionMes> liquidacionMesForm = form(LiquidacionMes.class).bindFromRequest();
-		
+
 		try {
 			if(liquidacionMesForm.hasErrors()) {
 				flash("error", "Error en formulario ");
@@ -100,25 +100,25 @@ public class LiquidacionMesesController extends Controller {
 			return badRequest(crearLiquidacionMes.render(liquidacionMesForm));
 		}
 	}
-	
+
 	@CheckPermiso(key = "liquidacionMesEditar")
 	public static Result editar(Long id) {
 		LiquidacionMes lc = Ebean.find(LiquidacionMes.class, id);
-		
+
 		if(lc.estado_id == Estado.LIQUIDACION_MES_APROBADO || lc.estado_id == Estado.LIQUIDACION_MES_CANCELADO){
 			flash("error", "La liquidacion no se puede editar en este Estado. Debe cambiar su estado a borrador.");
 			return redirect(request().getHeader("referer"));
 		}
 		return ok(editarLiquidacionMes.render(liquidacionMesForm.fill(lc)));
 	}
-	
+
 	@CheckPermiso(key = "liquidacionMesEditar")
 	public static Result actualizar(){
-		
+
 		Form<LiquidacionMes> liquidacionMesForm = form(LiquidacionMes.class).bindFromRequest();
-		
+
 		try {
-			
+
 			if(liquidacionMesForm.hasErrors()) {
 				flash("error", "Error en formulario");
 				return badRequest(editarLiquidacionMes.render(liquidacionMesForm));
@@ -130,14 +130,14 @@ public class LiquidacionMesesController extends Controller {
 				flash("success", "La liquidacion mes se ha actualizado");
 				return redirect( controllers.haberes.routes.LiquidacionMesesController.ver( liquidacionMesForm.get().id ) + UriTrack.get("&"));
 			}
-			
+
 		} catch (PersistenceException pe){
 			play.Logger.error("excepcion", pe);
 			flash("error", "No se ha podido almacenar la liquidacion.");
 			return badRequest(editarLiquidacionMes.render(liquidacionMesForm));
 		}
 	}
-	
+
 	@CheckPermiso(key = "liquidacionMesEliminar")
 	public static Result eliminar(Long id) {
 		try {
@@ -152,7 +152,7 @@ public class LiquidacionMesesController extends Controller {
 
 		return redirect(request().getHeader("referer"));
 	}
-	
+
 	@CheckPermiso(key = "liquidacionMesVer")
 	public static Result ver(Long id) throws IOException {
 		LiquidacionMes lc = LiquidacionMes.find.byId(id);
@@ -161,40 +161,40 @@ public class LiquidacionMesesController extends Controller {
 			flash("error", "No se encuentra la liquidación.");
 			return URL_LISTA_LIQUIDACION_MES;
 		}
-		
+
 		return ok(verLiquidacionMes.render(liquidacionMesForm.fill(lc),lc,dataPorConcepto));
 	}
-	
+
 	public static Result suggestLiquidacionMes(String input) {
-		 
+
 		ObjectNode rpta = Json.newObject();
 	    ArrayNode liquidacionMes = rpta.arrayNode();
-	    
+
 	    LiquidacionMes lc = new LiquidacionMes();
-		 
+
 		for(LiquidacionMes a : lc.getDataSuggest(input, 25)){
-			
+
 			String cm = (a.convenio_ministerio)?"Convenio":"Parque";
-			
+
 			ObjectNode restJs = Json.newObject();
 	        restJs.put("id", a.id);
 	        restJs.put("value","N° "+a.nro_liquidacion_parque+" - "+cm);
 	        liquidacionMes.add(restJs);
 		}
-		
+
 		ObjectNode response = Json.newObject();
 		response.put("results", liquidacionMes);
-		 
+
 		return ok(response);
 	}
-	
+
 	public static Result get(int id){
 		LiquidacionMes lc = LiquidacionMes.find.select("id, nro_liquidacion_parque,convenio_ministerio").where().eq("id", id).findUnique();
-		
+
 		ObjectNode obj = Json.newObject();
 	    ArrayNode nodo = obj.arrayNode();
 		ObjectNode restJs = Json.newObject();
-		
+
 		if(lc == null) {
 			restJs.put("success", false);
 			restJs.put("message", "No se encuentra la liquidacion.");
@@ -206,36 +206,36 @@ public class LiquidacionMesesController extends Controller {
 		nodo.add(restJs);
 		return ok(restJs);
 	}
-	
+
 	public static Result modalBuscar() {
     	Pagination<LiquidacionMes> p = new Pagination<LiquidacionMes>();
     	p.setOrderDefault("DESC");
-    	p.setSortByDefault("id");	
+    	p.setSortByDefault("id");
     	ExpressionList<LiquidacionMes> e = LiquidacionMes.find
     			.select("id,nro_liquidacion_parque,convenio_ministerio,titulo,periodo_id")
     			.fetch("periodo", "nombre")
     			.where();
-    			
+
     	if(!RequestVar.get("nro_liquidacion_parque").isEmpty()){
     		e.eq("nro_liquidacion_parque", Integer.parseInt(RequestVar.get("nro_liquidacion_parque")));
     	}
-    	
+
     	p.setExpressionList(e);
 		return ok(modalBusquedaLiquidacionMes.render(p, form().bindFromRequest()) );
 	}
-	
+
 	@CheckPermiso(key = "liquidacionMesPreliquidar")
 	public static Result preliquidar(Long id) throws EmailException{
-		
+
 		try {
-			String host = request().host(); 
+			String host = request().host();
 			LiquidacionMes lm = LiquidacionMes.find.byId(id);
 			Long userLogin =  new Long(Usuario.getUsuarioSesion());
 			Long idNew = lm.preliquidar(id,host);
 			//List<SqlRow> dataPorConcepto = LiquidacionMes.getDataPorConcepto(id);
-			
+
 			flash("success", "Se ha preliquidado correctamente");
-			
+
 			String refererUrl = request().getHeader("referer");
 			return redirect(refererUrl);
 		} catch (PersistenceException pe) {
@@ -245,10 +245,12 @@ public class LiquidacionMesesController extends Controller {
 			return redirect(refererUrl);
 		}
 	}
-	
+
 	public static Result cambiarEstado(Long idLiquidacion, Long idEstado) throws IOException{
 		Boolean permiso = false;
-		
+		List<Solicitud> sl = null;
+		List<Factura> fl = null;
+
 		switch ( idEstado.intValue() ) {
 	      case  Estado.LIQUIDACION_MES_BORRADOR:
 	    	  if(!Permiso.check("liquidacionMesPasarABorrador")) {
@@ -257,60 +259,86 @@ public class LiquidacionMesesController extends Controller {
 	    	  pasarEnBorrador(idLiquidacion);
 	    	  break;
 	      case Estado.LIQUIDACION_MES_PRELIQUIDAR:
+
+	    	  sl = Solicitud.find.where().eq("liquidacion_mes_id", idLiquidacion).findList();
+	    	  if(sl.size() > 0){
+	    		  flash("error", "Nose puede Cancelar, tiene solicitudes asociadas.");
+	    		  return redirect(controllers.haberes.routes.LiquidacionMesesController.ver(idLiquidacion)+ UriTrack.get("&"));
+	    	  }
+
+	    	  fl = Factura.find.where().eq("liquidacion_mes_id", idLiquidacion).findList();
+	    	  if(fl.size() > 0){
+	    		  flash("error", "Nose puede Cancelar, tiene facturas asociadas.");
+	    		  return redirect(controllers.haberes.routes.LiquidacionMesesController.ver(idLiquidacion)+ UriTrack.get("&"));
+	    	  }
+
 	    	  if(!Permiso.check("liquidacionMesPasarAAprobado")) {
 				  return ok(sinPermiso.render(request().getHeader("referer")));
 			  }
-	    	  pasarPreliquidar(idLiquidacion); 
-	      break;	 
+	    	  pasarPreliquidar(idLiquidacion);
+	      break;
 	      case Estado.LIQUIDACION_MES_LIQUIDADO:
 	    	  if(!Permiso.check("liquidacionMesPasarAAprobado")) {
 				  return ok(sinPermiso.render(request().getHeader("referer")));
 			  }
-	    	  pasarLiquidado(idLiquidacion); 
+	    	  pasarLiquidado(idLiquidacion);
 	      break;
 	      case Estado.LIQUIDACION_MES_APROBADO:
+
+	    	  sl = Solicitud.find.where().eq("liquidacion_mes_id", idLiquidacion).findList();
+	    	  if(sl.size() > 0){
+	    		  flash("error", "Nose puede Cancelar, tiene solicitudes asociadas.");
+	    		  return redirect(controllers.haberes.routes.LiquidacionMesesController.ver(idLiquidacion)+ UriTrack.get("&"));
+	    	  }
+
+	    	  fl = Factura.find.where().eq("liquidacion_mes_id", idLiquidacion).findList();
+	    	  if(fl.size() > 0){
+	    		  flash("error", "Nose puede Cancelar, tiene facturas asociadas.");
+	    		  return redirect(controllers.haberes.routes.LiquidacionMesesController.ver(idLiquidacion)+ UriTrack.get("&"));
+	    	  }
+
 	    	  if(!Permiso.check("liquidacionMesPasarAAprobado")) {
 				  return ok(sinPermiso.render(request().getHeader("referer")));
 			  }
-	    	  pasarAprobado(idLiquidacion); 
+	    	  pasarAprobado(idLiquidacion);
 	    	  break;
 	      case Estado.LIQUIDACION_MES_CERRADA:
 	    	  if(!Permiso.check("liquidacionMesPasarACerrado")) {
 				  return ok(sinPermiso.render(request().getHeader("referer")));
 			  }
-	    	  pasarCerrado(idLiquidacion); 
-	    	  break;	  
+	    	  pasarCerrado(idLiquidacion);
+	    	  break;
 	      case Estado.LIQUIDACION_MES_CANCELADO:
-	    	  
-	    	  List<Solicitud> sl = Solicitud.find.where().eq("liquidacion_mes_id", idLiquidacion).findList();
+
+	    	  sl = Solicitud.find.where().eq("liquidacion_mes_id", idLiquidacion).findList();
 	    	  if(sl.size() > 0){
 	    		  flash("error", "Nose puede Cancelar, tiene solicitudes asociadas.");
 	    		  return redirect(controllers.haberes.routes.LiquidacionMesesController.ver(idLiquidacion)+ UriTrack.get("&"));
 	    	  }
-	    	  
-	    	  List<Factura> fl = Factura.find.where().eq("liquidacion_mes_id", idLiquidacion).findList();
+
+	    	  fl = Factura.find.where().eq("liquidacion_mes_id", idLiquidacion).findList();
 	    	  if(fl.size() > 0){
 	    		  flash("error", "Nose puede Cancelar, tiene facturas asociadas.");
 	    		  return redirect(controllers.haberes.routes.LiquidacionMesesController.ver(idLiquidacion)+ UriTrack.get("&"));
 	    	  }
-	    	  
+
 	    	  if(!Permiso.check("liquidacionMesPasarACancelado")) {
 				  return ok(sinPermiso.render(request().getHeader("referer")));
 			  }
-	    	  pasarCancelado(idLiquidacion);   
+	    	  pasarCancelado(idLiquidacion);
 	          break;
 	      default:
 	           break;
-	      } 
-	    
+	      }
+
 		return redirect(controllers.haberes.routes.LiquidacionMesesController.ver(idLiquidacion)+ UriTrack.get("&"));
 	}
-	
+
 	public static void pasarEnBorrador(Long idLiquidacion){
-		
+
 		LiquidacionMes lp = Ebean.find(LiquidacionMes.class).select("id, estado_id").setId(idLiquidacion).findUnique();
-		
-		if(lp != null){			
+
+		if(lp != null){
 			lp.write_date = new Date();
 			lp.write_usuario_id = new Long(Usuario.getUsuarioSesion());
 			lp.estado_id = new Long(Estado.LIQUIDACION_MES_BORRADOR);
@@ -320,25 +348,25 @@ public class LiquidacionMesesController extends Controller {
 			flash("error", "Parámetros incorrectos");
 		}
 	}
-	
+
 	public static void pasarAprobado(Long idLiquidacion){
-		
+
 		LiquidacionMes lp = Ebean.find(LiquidacionMes.class).select("id, estado_id,orden_pago_id,").setId(idLiquidacion).findUnique();
-		
+
 		List<LiquidacionPuesto> lc = LiquidacionPuesto.find.where()
 				   .ne("estado_id",Estado.LIQUIDACION_PUESTOS_APROBADO)
 				   .eq("liquidacionMes.id", idLiquidacion).findList();
-		
+
 		if(lc.size() > 0) {
 			flash("error", "No se puede cambiar el estado de la liquidacion pq hay liquidaciones no aprobadas.");
-			 
+
 		}else {
-			
+
 			if(lp.orden_pago_id == null){
 				flash("error", "Debe ingresa una Orden de pago. ");
 			}else {
-			
-				if(lp != null){		
+
+				if(lp != null){
 					lp.write_date = new Date();
 					lp.write_usuario_id = new Long(Usuario.getUsuarioSesion());
 					lp.estado_id = new Long(Estado.LIQUIDACION_MES_APROBADO);
@@ -350,13 +378,13 @@ public class LiquidacionMesesController extends Controller {
 			}
 		}
 	}
-	
+
 	public static void pasarCerrado(Long idLiquidacion){
-		
+
 		LiquidacionMes lp = Ebean.find(LiquidacionMes.class).select("id, estado_id").setId(idLiquidacion).findUnique();
-		
-		
-		if(lp != null){		
+
+
+		if(lp != null){
 			lp.write_date = new Date();
 			lp.write_usuario_id = new Long(Usuario.getUsuarioSesion());
 			lp.estado_id = new Long(Estado.LIQUIDACION_MES_CERRADA);
@@ -365,14 +393,14 @@ public class LiquidacionMesesController extends Controller {
 		} else {
 			flash("error", "Parámetros incorrectos");
 		}
-		
+
 	}
-	
+
 	public static void pasarPreliquidar(Long idLiquidacion){
-		
+
 		LiquidacionMes lp = Ebean.find(LiquidacionMes.class).select("id, estado_id").setId(idLiquidacion).findUnique();
-		
-		if(lp != null){		
+
+		if(lp != null){
 			lp.write_date = new Date();
 			lp.write_usuario_id = new Long(Usuario.getUsuarioSesion());
 			lp.estado_id = new Long(Estado.LIQUIDACION_MES_PRELIQUIDAR);
@@ -381,14 +409,14 @@ public class LiquidacionMesesController extends Controller {
 		} else {
 			flash("error", "Parámetros incorrectos");
 		}
-		
+
 	}
-	
+
 	public static void pasarLiquidado(Long idLiquidacion){
-		
+
 		LiquidacionMes lp = Ebean.find(LiquidacionMes.class).select("id, estado_id").setId(idLiquidacion).findUnique();
-		
-		if(lp != null){		
+
+		if(lp != null){
 			lp.write_date = new Date();
 			lp.write_usuario_id = new Long(Usuario.getUsuarioSesion());
 			lp.estado_id = new Long(Estado.LIQUIDACION_MES_LIQUIDADO);
@@ -397,14 +425,14 @@ public class LiquidacionMesesController extends Controller {
 		} else {
 			flash("error", "Parámetros incorrectos");
 		}
-		
+
 	}
-	
+
 	public static void pasarCancelado(Long idLiquidacion){
-		
+
 		LiquidacionMes lp = Ebean.find(LiquidacionMes.class).select("id, estado_id").setId(idLiquidacion).findUnique();
-		
-		if(lp != null){		
+
+		if(lp != null){
 			lp.write_date = new Date();
 			lp.fecha_preliquidacion = null;
 			lp.write_usuario_id = new Long(Usuario.getUsuarioSesion());
@@ -414,5 +442,5 @@ public class LiquidacionMesesController extends Controller {
 		} else {
 			flash("error", "Parámetros incorrectos");
 		}
-	}	
+	}
 }
