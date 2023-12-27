@@ -384,7 +384,7 @@ public class LiquidacionPuesto extends Model {
         .eq("id", lpid)
         .findUnique();
 
-    String textoMail = "<html><p>LIQUIDACION:" + lp.liquidacionMes.titulo + "</p><p>N°:" + lp.liquidacionMes.nro_liquidacion_parque + "</p>";
+    String textoMail = "<html><p>LIQUIDACION:" + lp.liquidacionMes.titulo + "</p><p>Numero:" + lp.liquidacionMes.nro_liquidacion_parque + "</p>";
     textoMail += "<p>PERIODO:" + lp.liquidacionMes.periodo.nombre + "</p>";
     textoMail += "<p>TIPO:" + lp.liquidacionMes.liquidacionTipo.nombre + "</p>";
     textoMail += "</html>";
