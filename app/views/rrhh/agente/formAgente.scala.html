@@ -1,25 +1,26 @@
 @(agenteForm: Form[Agente],agente:Agente)
 @import helper._
 @import utils._
-@implicitFieldConstructor = @{ FieldConstructor(simpleInput.render) } 
-	
+@import models.auth._
+@implicitFieldConstructor = @{ FieldConstructor(simpleInput.render) }
+
 	<div class="row menu-acciones">
 		<div class="col-sm-10">
 			<button type="submit" class="btn btn-default" title="Guardar agente"><i class="glyphicon glyphicon-floppy-disk"></i> Guardar</button>
 			<a href="@if(request().getHeader("referer")){ @request().getHeader("referer") } else {@controllers.rrhh.routes.AgentesController.indexAgente()@UriTrack.decode()}" title="Cancelar editar" class="btn btn-default"><i class="glyphicon glyphicon-floppy-remove"></i> Cancelar</a>
 		</div>
 		<div class="col-sm-2">
-			<a href="@UriTrack.decode()" title="Volver al listado" class="btn btn-default"><i class="glyphicon glyphicon-list"></i></a> 
+			<a href="@UriTrack.decode()" title="Volver al listado" class="btn btn-default"><i class="glyphicon glyphicon-list"></i></a>
 			@if(agenteForm.field("id").value){<a href="@controllers.rrhh.routes.AgentesController.ver(agenteForm.field("id").value.toLong)@UriTrack.get("&")" title="Ver agente" class="btn btn-default"><i class="glyphicon glyphicon-align-justify"></i></a>}
 		</div>
 	</div>
-	
+
 	<input type="hidden" name=@UriTrack.getKey() value="@UriTrack.code()" />
 	@inputText(agenteForm("id"), 'type -> "hidden", 'id -> "agenteId")
 	<div class="row">
 		<div class="col-sm-4">
 			<div class="form-group @if(agenteForm.error("apellido") != null) {has-error}else{has-required}">
-				<label for="inputNombre" class="control-label">Apellido y Nombre</label> 
+				<label for="inputNombre" class="control-label">Apellido y Nombre</label>
 				@inputText(agenteForm("apellido"), 'class -> "form-control")
 				@agenteForm("apellido").error.map{ error =>
 					<div class="text-error">@error.message</div>
@@ -31,14 +32,14 @@
 			<div class="row">
 				<div class="col-sm-5">
 					<div class="radio">
-						<label class="control-label"> 
+						<label class="control-label">
 							@inputRadioGroup(agenteForm("planta"), options = Seq("true"->"Planta"))
 						</label>
 					</div>
 				</div>
 				<div class="col-sm-7">
 					<div class="radio">
-						<label class="control-label"> 
+						<label class="control-label">
 							@inputRadioGroup(agenteForm("planta"),options = Seq("false"->"Contratado"))
 						</label>
 					</div>
@@ -47,20 +48,20 @@
 			@agenteForm("planta").error.map{ error =>
 				<div class="text-error">@error.message</div>
 			}
-		</div> 
+		</div>
 		<div class="col-sm-2 @if(agenteForm.error("activo") != null) {has-error}else{has-required}">
 			<b>¿Agente activo?</b>
 			<div class="row">
 				<div class="col-sm-3">
 					<div class="radio">
-						<label class="control-label"> 
+						<label class="control-label">
 							@inputRadioGroup(agenteForm("activo"), options = Seq("true"->"Si"))
 						</label>
 					</div>
 				</div>
 				<div class="col-sm-9">
 					<div class="radio">
-						<label class="control-label"> 
+						<label class="control-label">
 							@inputRadioGroup(agenteForm("activo"),options = Seq("false"->"No"))
 						</label>
 					</div>
@@ -69,14 +70,14 @@
 			@agenteForm("activo").error.map{ error =>
 				<div class="text-error">@error.message</div>
 			}
-		</div> 
+		</div>
 		<div class="col-sm-2">
 			<div class="form-group @if(agenteForm.error("tipo_relacion_laboral") != null) {has-error}else{has-required}">
 				<label for="@agenteForm("tipo_relacion_laboral")" class="control-label">Tipo Relacion Laboral</label>
-				@select(agenteForm("tipo_relacion_laboral"), 
-				TipoRelacionLaboral.find.all().map { p => p.id.toString -> p.nombre}, 
+				@select(agenteForm("tipo_relacion_laboral"),
+				TipoRelacionLaboral.find.all().map { p => p.id.toString -> p.nombre},
 				'class -> "form-control select", '_default -> "Seleccionar")
-				
+
 				@agenteForm("tipo_relacion_laboral").error.map{ error =>
 					<div class="text-error">@error.message</div>
 				}
@@ -84,15 +85,15 @@
 		</div>
 		<div class="col-sm-2">
 			<div class="form-group">
-				<label for="inputMatricula" class="control-label">Matr&iacute;cula</label> 
+				<label for="inputMatricula" class="control-label">Matr&iacute;cula</label>
 				@inputText(agenteForm("pin"), 'class -> "form-control")
 			</div>
-		</div> 
+		</div>
 	</div>
 	<div class="row">
 		<div class="col-sm-2">
 			<div class="form-group @if(agenteForm.error("dni") != null) {has-error}else{has-required}">
-				<label for="inputNombre" class="control-label">Documento</label> 
+				<label for="inputNombre" class="control-label">Documento</label>
 				@inputText(agenteForm("dni"), 'class -> "form-control", 'id -> "dni")
 				@agenteForm("dni").error.map{ error =>
 					<div class="text-error">@error.message</div>
@@ -101,17 +102,17 @@
 		</div>
 		<div class="col-sm-2 @if(agenteForm.error("cuit") != null) {has-error}else{has-required}">
 			<div class="form-group">
-				<label for="inputCuit" class="control-label">Cuil</label> 
+				<label for="inputCuit" class="control-label">Cuil</label>
 				@inputText(agenteForm("cuit"), 'class -> "form-control", 'id -> "cuit")
 			</div>
 				@agenteForm("cuit").error.map{ error =>
 					<div class="text-error">@error.message</div>
 				}
-		</div> 
+		</div>
 		<div class="col-sm-2">
 			<div class="form-group @if(agenteForm.error("sexo") != null) {has-error}else{has-required}">
 				<label for="@agenteForm("sexo")" class="control-label">Sexo</label>
-				@select(agenteForm("sexo"), options("male"->"Masculino","famele"->"Femenino"), 
+				@select(agenteForm("sexo"), options("male"->"Masculino","famele"->"Femenino"),
 				'class -> "form-control select", '_default -> "Seleccionar")
 				@agenteForm("sexo").error.map{ error =>
 					<div class="text-error">@error.message</div>
@@ -120,7 +121,7 @@
 		</div>
 		<div class="col-sm-2">
 			<div class="form-group @if(agenteForm.error("fnacimiento") != null) {has-error}else{has-required}">
-				<label for="inputNombre" class="control-label">Fecha nacimiento</label> 
+				<label for="inputNombre" class="control-label">Fecha nacimiento</label>
 				@inputText(agenteForm("fnacimiento"), 'class -> "form-control", 'id -> "nacimiento")
 				@agenteForm("fnacimiento").error.map{ error =>
 					<div class="text-error">@error.message</div>
@@ -130,10 +131,10 @@
 		<div class="col-sm-2">
 			<div class="form-group @if(agenteForm.error("estado_civil") != null) {has-error}else{has-required}">
 				<label for="@agenteForm("estado_civil")" class="control-label">Estado Civil</label>
-				@select(agenteForm("estado_civil"), 
-				EstadoCivil.find.all().map { p => p.id.toString -> p.nombre}, 
-				'class -> "form-control select", '_default -> "Seleccionar") 
-				
+				@select(agenteForm("estado_civil"),
+				EstadoCivil.find.all().map { p => p.id.toString -> p.nombre},
+				'class -> "form-control select", '_default -> "Seleccionar")
+
 				@agenteForm("estado_civil").error.map{ error =>
 					<div class="text-error">@error.message</div>
 				}
@@ -141,16 +142,16 @@
 		</div>
 		<div class="col-sm-2">
 			<div class="form-group">
-				<label for="inputFIngreso" class="control-label">Fecha Matrimonio</label> 
+				<label for="inputFIngreso" class="control-label">Fecha Matrimonio</label>
 				@inputText(agenteForm("finicio_matrimonio"), 'class -> "form-control", 'id -> "finicio_matrimonio")
 			</div>
 		</div>
-		
+
 	</div>
 	<div class="row">
 		<div class="col-sm-2">
 			<div class="form-group @if(agenteForm.error("fingresooriginal") != null) {has-error}else{has-required}">
-				<label for="inputFIngresoOriginal" class="control-label">Fecha Ingreso Principal</label> 
+				<label for="inputFIngresoOriginal" class="control-label">Fecha Ingreso Principal</label>
 				@inputText(agenteForm("fingresooriginal"), 'class -> "form-control", 'id -> "ingresooriginal")
 				@agenteForm("fingresooriginal").error.map{ error =>
 					<div class="text-error">@error.message</div>
@@ -159,7 +160,7 @@
 		</div>
 		<div class="col-sm-2">
 			<div class="form-group @if(agenteForm.error("fingreso") != null) {has-error}else{has-required}">
-				<label for="inputFIngreso" class="control-label">Fecha Ingreso</label> 
+				<label for="inputFIngreso" class="control-label">Fecha Ingreso</label>
 				@inputText(agenteForm("fingreso"), 'class -> "form-control", 'id -> "ingreso")
 				@agenteForm("fingreso").error.map{ error =>
 					<div class="text-error">@error.message</div>
@@ -168,7 +169,7 @@
 		</div>
 		<div class="col-sm-2">
 			<div class="form-group @if(agenteForm.error("fbaja") != null) {has-error}else{has-required}">
-				<label for="inputFBaja" class="control-label">Fecha Baja</label> 
+				<label for="inputFBaja" class="control-label">Fecha Baja</label>
 				@inputText(agenteForm("fbaja"), 'class -> "form-control", 'id -> "fbaja")
 				@agenteForm("fbaja").error.map{ error =>
 					<div class="text-error">@error.message</div>
@@ -177,19 +178,19 @@
 		</div>
 		<div class="col-sm-2">
 			<div class="form-group">
-				<label for="inputFIngreso" class="control-label">N° Legajo</label> 
-				
+				<label for="inputFIngreso" class="control-label">N° Legajo</label>
+
 			</div>
 		</div>
 		<div class="col-sm-2">
 			<div class="form-group">
-				<label for="inputNombre" class="control-label">N° Legajo Externo</label> 
+				<label for="inputNombre" class="control-label">N° Legajo Externo</label>
 				@inputText(agenteForm("nro_legajo_externo"), 'class -> "form-control", 'id -> "nro_legajo_externo")
 			</div>
 		</div>
-		
+
 		<div class="col-sm-2">
-			<label class="control-label"> 
+			<label class="control-label">
 				Asignaciones Familiares
 				@select(agenteForm("asignacion_familiar"),options("true"->"SI","false"->"NO"), 'class -> "form-control select")
 			</label>
@@ -198,22 +199,34 @@
 	<div class="row">
 		<div class="col-sm-2">
 			<label class="control-label">Licencia Conducir</label>
-				 @select(agenteForm("tipo_licencia_conducir_id"), 
-				TipoLicenciaConducir.find.all().map { p => p.id.toString -> p.nombre}, 
-				'class -> "form-control select", '_default -> "Seleccionar")				
+				 @select(agenteForm("tipo_licencia_conducir_id"),
+				TipoLicenciaConducir.find.all().map { p => p.id.toString -> p.nombre},
+				'class -> "form-control select", '_default -> "Seleccionar")
 		</div>
 		<div class="col-sm-2">
 			<div class="form-group">
-				<label for="inputFLicenciaConducit" class="control-label">Fecha L.Conducir</label> 
+				<label for="inputFLicenciaConducit" class="control-label">Fecha L.Conducir</label>
 				@inputText(agenteForm("flicencia_conducir"), 'class -> "form-control", 'id -> "flicencia_conducir")
-		 
+
 			</div>
 		</div>
 		<div class="col-sm-2">
 			<div class="form-group">
-				<label for="inputCud" class="control-label">C.U.D.</label> 
+				<label for="inputCud" class="control-label">C.U.D.</label>
 				@inputText(agenteForm("cud"), 'class -> "form-control", 'id -> "cud")
-		 
+
+			</div>
+		</div>
+
+		<div class="col-sm-2">
+			<div class="form-group">
+				<label for="inputCud" class="control-label">Limite Guardia</label>
+				@if(Permiso.check("agenteModificarLimiteGuardia")) {
+					@inputText(agenteForm("limite_guardia"), 'class -> "form-control", 'id -> "limite_guardia")
+				}else{
+					<p class="form-control-static form-control">@agenteForm("limite_guardia").value</p>
+				}
+
 			</div>
 		</div>
 	</div>
@@ -226,106 +239,106 @@
 	<div class="row">
 		<div class="col-sm-4">
 			<div class="form-group">
-				<label for="inputConyugueNombre" class="control-label">Nombre</label> 
+				<label for="inputConyugueNombre" class="control-label">Nombre</label>
 				@inputText(agenteForm("conyugue_nombre"), 'class -> "form-control")
 			</div>
-		</div> 
+		</div>
 		<div class="col-sm-2">
 			<div class="form-group">
-				<label for="inputConyugueDni" class="control-label">DNI</label> 
+				<label for="inputConyugueDni" class="control-label">DNI</label>
 				@inputText(agenteForm("conyugue_dni"), 'class -> "form-control",'id -> "conyugue_dni")
 			</div>
-		</div> 
-		
+		</div>
+
 	</div>	 -->
 	<div class="row">
 		<div class="col-sm-12">
 			<hr>
 			<h3>Datos Contactos</h3>
-			
+
 		</div>
 	</div>
 	<div class="row">
-		 
+
 			<div class="col-sm-2">
 				<div class="form-group">
-					<label for="inputCalle" class="control-label">Calle banco</label> 
+					<label for="inputCalle" class="control-label">Calle banco</label>
 					@inputText(agenteForm("calle_banco"), 'class -> "form-control")
 				</div>
-			</div> 
+			</div>
 			<div class="col-sm-4">
 				<div class="form-group @if(agenteForm.error("calle") != null) {has-error}else{has-required}">
-					<label for="inputCalle" class="control-label">Calle</label> 
+					<label for="inputCalle" class="control-label">Calle</label>
 					@inputText(agenteForm("calle"), 'class -> "form-control")
 					@agenteForm("calle").error.map{ error =>
 						<div class="text-error">@error.message</div>
 					}
 				</div>
-			</div> 
-		 
+			</div>
+
 		<div class="col-sm-2">
 			<div class="form-group @if(agenteForm.error("numero") != null) {has-error}else{has-required}">
-				<label for="inputNumero" class="control-label">Número</label> 
+				<label for="inputNumero" class="control-label">Número</label>
 				@inputText(agenteForm("numero"), 'class -> "form-control")
 				@agenteForm("numero").error.map{ error =>
 					<div class="text-error">@error.message</div>
 				}
 			</div>
-		</div> 
+		</div>
 		<div class="col-sm-1">
 			<div class="form-group">
-				<label for="inputPiso" class="control-label">Piso</label> 
+				<label for="inputPiso" class="control-label">Piso</label>
 				@inputText(agenteForm("piso"), 'class -> "form-control")
 			</div>
-		</div> 
+		</div>
 		<div class="col-sm-1">
 			<div class="form-group">
-				<label for="inputDepto" class="control-label">Depto</label> 
+				<label for="inputDepto" class="control-label">Depto</label>
 				@inputText(agenteForm("depto"), 'class -> "form-control")
 			</div>
-		</div> 
+		</div>
 		<div class="col-sm-1">
 			<div class="form-group  @if(agenteForm.error("zip") != null) {has-error}else{has-required}">
-				<label for="inputTelefono" class="control-label">C.P</label> 
+				<label for="inputTelefono" class="control-label">C.P</label>
 				@inputText(agenteForm("zip"), 'class -> "form-control")
 				@agenteForm("zip").error.map{ error =>
 					<div class="text-error">@error.message</div>
 				}
 			</div>
-		</div> 
-		
+		</div>
+
 	</div>
 	<div class="row">
 		<div class="col-sm-2">
 			<div class="form-group @if(agenteForm.error("telefono") != null) {has-error}else{has-required}">
-				<label for="inputTelefono" class="control-label">Tel&eacute;fono</label> 
+				<label for="inputTelefono" class="control-label">Tel&eacute;fono</label>
 				@inputText(agenteForm("telefono"), 'class -> "form-control")
 				@agenteForm("telefono").error.map{ error =>
 					<div class="text-error">@error.message</div>
 				}
 			</div>
-		</div> 
+		</div>
 		<div class="col-sm-2">
 			<div class="form-group">
-				<label for="inputTelefono" class="control-label">Celular</label> 
+				<label for="inputTelefono" class="control-label">Celular</label>
 				@inputText(agenteForm("mobile"), 'class -> "form-control")
 			</div>
-		</div> 
+		</div>
 		<div class="col-sm-2">
 			<div class="form-group">
-				<label for="inputTelefono" class="control-label">Tel. Alternativo</label> 
+				<label for="inputTelefono" class="control-label">Tel. Alternativo</label>
 				@inputText(agenteForm("fax"), 'class -> "form-control")
 			</div>
-		</div> 
+		</div>
 		<div class="col-sm-3">
 			<div class="form-group @if(agenteForm.error("email") != null) {has-error}else{has-required}">
-				<label for="inputTelefono" class="control-label">Email</label> 
+				<label for="inputTelefono" class="control-label">Email</label>
 				@inputText(agenteForm("email"), 'class -> "form-control")
 				@agenteForm("email").error.map{ error =>
 					<div class="text-error">@error.message</div>
 				}
 			</div>
-		</div> 
+		</div>
 	</div>
 	<div class="row contenedorUbicacion">
 		<div class="col-sm-4">
@@ -337,32 +350,32 @@
 				}
 			</div>
 		</div>
-	
+
 		<div class="col-sm-4">
 			<div class="seleccionProvincia form-group @if(agenteForm.error("localidad.provincia.id") != null) {has-error}">
 				<label for="@agenteForm("localidad.provincia.id").id" class="control-label">Provincia</label>
-				@select(agenteForm("localidad.provincia.id"), 
+				@select(agenteForm("localidad.provincia.id"),
 					agenteForm("localidad.provincia.pais.id").value match {
 						case null => {options()}
 						case v if v.matches("\\d+") => {Provincia.getProvincias(v.toInt).map { p => p.id.toString -> p.nombre}}
 						case _ => {options()}
-					}, 
+					},
 				'class -> "form-control select", '_default -> "Seleccionar")
 				@agenteForm("localidad.provincia.id").error.map{ error =>
 					<div class="text-error">@error.message</div>
 				}
 			</div>
 		</div>
-	
+
 		<div class="col-sm-4">
 			<div class="seleccionLocalidad form-group @if(agenteForm.error("localidad_id") != null) {has-error} else {has-required}">
 				<label for="@agenteForm("localidad.id").id" class="control-label">Localidad</label>
-				@select(agenteForm("localidad_id"), 
+				@select(agenteForm("localidad_id"),
 					agenteForm("localidad.provincia.id").value match {
 						case null => {options()}
 						case v if v.matches("\\d+") => {Localidad.getLocalidades(v.toInt).map { p => p.id.toString -> p.nombre}}
 						case _ => {options()}
-					}, 
+					},
 				'class -> "form-control select", '_default -> "Seleccionar")
 				@agenteForm("localidad_id").error.map{ error =>
 					<div class="text-error">@error.message</div>
@@ -379,7 +392,7 @@
 	<div class="row">
 		<div class="col-sm-8">
 			<div class="form-group @if(agenteForm.error("organigrama_id") != null) {has-error}else{has-required}">
-				<label for="inputOrganigrama" class="control-label">Departamento/Servicio</label> 
+				<label for="inputOrganigrama" class="control-label">Departamento/Servicio</label>
 				@inputText(agenteForm("organigrama.nombre"),'class -> "form-control",'id -> "organigrama")
 				@inputText(agenteForm("organigrama_id"),'hidden -> "hidden")
 				@agenteForm("organigrama_id").error.map{ error =>
@@ -388,15 +401,15 @@
 			</div>
 		</div>
 		<div class="col-sm-4">
-			<label for="inputDepartamento" class="control-label">Profesion</label> 
+			<label for="inputDepartamento" class="control-label">Profesion</label>
 			<div class="input-group @if(agenteForm.error("profesion.id") != null) {has-error}else{has-required}">
 				@inputText(agenteForm("profesion.nombre"),'class -> "form-control",'id -> "profesion")
 				@inputText(agenteForm("profesion_id"),'hidden -> "hidden",'id -> "profesion_id")
 				<span class="input-group-addon">
-                	<a href="#" id="searchProfesion" data-title="Selección de profesion" 
-                				data-url="@controllers.rrhh.routes.ProfesionesController.modalBuscar()" 
-                				data-height="650" data-width="700" 
-                				data-listen="modal.seleccion.profesion.simple" 
+                	<a href="#" id="searchProfesion" data-title="Selección de profesion"
+                				data-url="@controllers.rrhh.routes.ProfesionesController.modalBuscar()"
+                				data-height="650" data-width="700"
+                				data-listen="modal.seleccion.profesion.simple"
                 				data-label="#profesion" data-field="#profesion_id" /> <i class="glyphicon glyphicon-search"></i></a>
                 </span>
 			</div>
@@ -405,12 +418,12 @@
 			}
 		</div>
 	</div>
-	
-	
+
+
 	<div class="row">
 		<!-- <div class="col-sm-4">
 			<div class="form-group @if(agenteForm.error("departamento.id") != null) {has-error}else{}">
-				<label for="inputDepartamento" class="control-label">Departamento</label> 
+				<label for="inputDepartamento" class="control-label">Departamento</label>
 				@inputText(agenteForm("departamento.nombre"),'class -> "form-control")
 				@inputText(agenteForm("departamento.id"),'hidden -> "hidden")
 				@agenteForm("departamento.id").error.map{ error =>
@@ -418,26 +431,26 @@
 				}
 			</div>
 		</div> -->
-		
+
 		<div class="col-sm-4">
-			<label for="inputDepartamento" class="control-label">Residencia</label> 
+			<label for="inputDepartamento" class="control-label">Residencia</label>
 			<div class="input-group">
 				@inputText(agenteForm("tipoResidencia.nombre"),'class -> "form-control",'id -> "tipoResidencia")
 				@inputText(agenteForm("tipo_residencia_id"),'hidden -> "hidden",'id -> "tipo_residencia_id")
 				<span class="input-group-addon">
-                	<a href="#" id="searchTipoResidencia" data-title="Selección de Tipo Residencia" 
-                				data-url="@controllers.rrhh.routes.TipoResidenciasController.modalBuscar()" 
-                				data-height="650" data-width="700" 
-                				data-listen="modal.seleccion.tipoResidencia.simple" 
-                				data-label="#tipoResidencia" 
+                	<a href="#" id="searchTipoResidencia" data-title="Selección de Tipo Residencia"
+                				data-url="@controllers.rrhh.routes.TipoResidenciasController.modalBuscar()"
+                				data-height="650" data-width="700"
+                				data-listen="modal.seleccion.tipoResidencia.simple"
+                				data-label="#tipoResidencia"
                 				data-field="#tipo_residencia_id" /> <i class="glyphicon glyphicon-search"></i></a>
                 </span>
 			</div>
 		</div>
-		
+
 		<div class="col-sm-4">
 			<div class="form-group @if(agenteForm.error("especialidad.id") != null) {has-error}else{}">
-				<label for="inputEspecialidad" class="control-label">Especialidad</label> 
+				<label for="inputEspecialidad" class="control-label">Especialidad</label>
 				@inputText(agenteForm("especialidad.nombre"),'class -> "form-control")
 				@inputText(agenteForm("especialidad_id"),'hidden -> "hidden")
 				@agenteForm("especialidad_id").error.map{ error =>
@@ -447,7 +460,7 @@
 		</div>
 		<div class="col-sm-4">
 			<div class="form-group @if(agenteForm.error("puesto.id") != null) {has-error}else{}">
-				<label for="inputPuesto" class="control-label">Puesto</label> 
+				<label for="inputPuesto" class="control-label">Puesto</label>
 				@inputText(agenteForm("puesto.nombre"),'class -> "form-control")
 				@inputText(agenteForm("puesto.id"),'hidden -> "hidden")
 				@agenteForm("puesto.id").error.map{ error =>
@@ -461,40 +474,40 @@
 			@views.html.rrhh.agente.contenidoTabNovedad(true, agenteForm, agente:Agente)
 		</div>
 	</div>
-	
+
 <script>
 	$( function() {
 		$("#cuit").mask("99999999999");
+		$("#limite_guardia").numeric_input();
 		$("#dni,#conyugue_dni").mask("99999999");
 		$("#nacimiento,#flicencia_conducir, #ingreso,#ingresooriginal,#fbaja,#finicio_matrimonio,#cud").mask("99/99/9999");
 		urlProvincias  = '@controllers.administracion.routes.ProvinciasController.listOptions()';
 		urlLocalidades = '@controllers.administracion.routes.LocalidadesController.listOptions()';
-		
+
 		$('.seleccionPais .select').on('change', function(){
 			var id = $(this).find('option:selected').val();
 			var contenedor = $(this).closest('.contenedorUbicacion');
 			contenedor.find('.seleccionProvincia .select, .seleccionLocalidad .select').find('option:gt(0)').remove();
-			
+
 			if(id == "") return false;
 
 			$.get(urlProvincias + '?paisId='+id, function(data){
 				contenedor.find('.seleccionProvincia .select').html(data);
 			});
 		});
-		
+
 		$('.seleccionProvincia .select').on('change', function(){
 			var id = $(this).find('option:selected').val();
-			
+
 			var contenedor = $(this).closest('.contenedorUbicacion');
 			contenedor.find('.seleccionLocalidad .select').find('option:gt(0)').remove();
-			
+
 			if(id == "") return false;
 
 			$.get(urlLocalidades + '?provinciaId='+id, function(data){
 				contenedor.find('.seleccionLocalidad .select').html(data);
 			});
 		});
-	
+
 	});
-</script>	
-	
+</script>
