@@ -176,6 +176,11 @@ public class AgentesAsistenciasLicenciasController extends Controller {
 				l.create_date = new Date();
 				l.estado_id = (long)Estado.AGENTE_LICENCIA_BORRADOR;
 				l.save();
+
+				AgenteAsistenciaLicencia fltmp = AgenteAsistenciaLicencia.find.byId(l.id);
+				fltmp.dias = fltmp.getDiasEntreFechas();
+				fltmp.update();
+
 				flash("success", "El registro se almacenó correctamente.");
 			}
 		} catch (Exception e){
@@ -230,7 +235,13 @@ public class AgentesAsistenciasLicenciasController extends Controller {
 				fl.write_usuario_id = new Long(Usuario.getUsuarioSesion());
 				fl.write_date = new Date();
 				fl.dias = fl.getDiasEntreFechas();
-				fl.update(fl.id);
+				fl.update();
+
+				AgenteAsistenciaLicencia fltmp = AgenteAsistenciaLicencia.find.byId(fl.id);
+				fltmp.dias = fltmp.getDiasEntreFechas();
+				fltmp.update();
+
+
 			}
 		} catch (Exception e){
 			play.Logger.error("excepcion", e);
