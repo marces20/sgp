@@ -60,6 +60,8 @@ public class Organigrama extends Model {
 	@Required(message="Requiere una Institucion")
 	public Long deposito_id;
 
+	public Integer limite_guardia;
+
 	public static Model.Finder<Long,Organigrama> find = new Model.Finder<Long,Organigrama>(Long.class, Organigrama.class);
 
 	public List<Organigrama> getDataSuggest(String input,Integer limit){
