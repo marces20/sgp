@@ -163,24 +163,27 @@ public class AgenteAsistenciaLicencia extends Model{
 			while(bandera) {
 
 				Ejercicio e = Ejercicio.find.where().eq("nombre", YEAR.toString()).findUnique();
+				if(e != null) {
+					if(contador_anios < 5) {
+						dias = 15;
+					}else if(contador_anios >= 5 && contador_anios < 10) {
+						dias = 20;
+					}else if(contador_anios >= 10 && contador_anios < 15) {
+						dias = 25;
+					}else if(contador_anios >= 15) {
+						dias = 30;
+					}
 
-				if(contador_anios < 5) {
-					dias = 15;
-				}else if(contador_anios >= 5 && contador_anios < 10) {
-					dias = 20;
-				}else if(contador_anios >= 10) {
-					dias = 25;
+					ret.put(e.id, dias);
 				}
+					contador_anios ++;
+					YEAR++;
 
-				ret.put(e.id, dias);
+					if(YEAR == calendarHoy.get(Calendar.YEAR)+2) {
 
-				contador_anios ++;
-				YEAR++;
+						bandera = false;
+					}
 
-				if(YEAR == calendarHoy.get(Calendar.YEAR)+2) {
-
-					bandera = false;
-				}
 			}
 
 
@@ -240,8 +243,11 @@ public class AgenteAsistenciaLicencia extends Model{
 			conn = play.db.DB.getConnection();
 
 			boolean habiles = false;
+			Logger.debug("ffffffffffffffffffffffffffffffffff "+id);
+
 
 			if(tipoLicencia != null && tipoLicencia.habiles != null && tipoLicencia.habiles == true){
+				Logger.debug(tipoLicencia.habiles.toString());
 				habiles = true;
 			}
 
