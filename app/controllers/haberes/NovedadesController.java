@@ -4,6 +4,7 @@ import static play.data.Form.form;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -21,8 +22,10 @@ import controllers.auth.CheckPermiso;
 
 import models.RemitoBaul;
 import models.Usuario;
+import models.haberes.LiquidacionConcepto;
 import models.haberes.LiquidacionTipo;
 import models.haberes.Novedad;
+import models.haberes.PuestoLaboral;
 import play.Logger;
 import play.data.DynamicForm;
 import play.data.Form;
@@ -106,6 +109,48 @@ public class NovedadesController extends Controller {
 
 		Novedad n = nForm.get();
 
+		LiquidacionConcepto lc = LiquidacionConcepto.find.byId(n.liquidacion_concepto_id);
+		if(lc.control_guardia) {
+			if(n.organigrama_id == null || n.periodo_concepto_id == null) {
+				flash("error", "Para este tipo de Conceptos debe cargar Periodo y Organigrama");
+				return ok(crearNovedades.render(nForm));
+			}
+
+			PuestoLaboral pl = PuestoLaboral.find.byId(n.puesto_laboral_id);
+
+			BigDecimal saldoGuardiaPorAgente = Novedad.getSaldoGuardiaPorAgente(pl.legajo.agente_id,n.periodo_concepto_id,new Long(-1));
+			if(saldoGuardiaPorAgente != null && n.cantidad != null) {
+				Logger.debug("------------------saldoGuardiaPorAgente "+saldoGuardiaPorAgente);
+				Logger.debug("------------------n.cantidad.intValue() "+n.cantidad.toString());
+
+				if( saldoGuardiaPorAgente.compareTo(n.cantidad) < 0) {
+					flash("error", "Este Agente no tiene saldo de Guardias Disponibles para este periodo. Saldo Disponible: "+saldoGuardiaPorAgente);
+					return ok(crearNovedades.render(nForm));
+				}
+			}else {
+				flash("error", "No se puede controlar las guardias");
+				return ok(crearNovedades.render(nForm));
+			}
+
+			BigDecimal saldoGuardiaPorOrganigrma = Novedad.getSaldoGuardiaPorOrganigrama(n.organigrama_id,n.periodo_concepto_id,new Long(-1));
+
+			if(saldoGuardiaPorOrganigrma != null && n.cantidad != null) {
+				Logger.debug("------------------saldoGuardiaPorOrganigrma "+saldoGuardiaPorOrganigrma);
+				Logger.debug("------------------n.cantidad.intValue() "+n.cantidad.intValue());
+
+				if( saldoGuardiaPorOrganigrma.compareTo(n.cantidad) < 0 ) {
+					flash("error", "Este Servicio no tiene saldo de Guardias Disponibles para este periodo. Saldo Disponible: "+saldoGuardiaPorOrganigrma);
+					return ok(crearNovedades.render(nForm));
+				}
+			}else {
+				flash("error", "No se puede controlar las guardias");
+				return ok(crearNovedades.render(nForm));
+			}
+		}
+
+
+
+
 		if(!n.comprobarPeriodoInicioConPeriodoFin()) {
 			flash("error", "El periodo de fin debe ser mayor o igual al periodo de inicio.");
 			return ok(crearNovedades.render(nForm));
@@ -150,6 +195,49 @@ public class NovedadesController extends Controller {
 		}
 
 		Novedad n = nForm.get();
+
+		LiquidacionConcepto lc = LiquidacionConcepto.find.byId(n.liquidacion_concepto_id);
+		if(lc.control_guardia) {
+			if(n.organigrama_id == null || n.periodo_concepto_id == null) {
+				flash("error", "Para este tipo de Conceptos debe cargar Periodo y Organigrama");
+				return ok(editarNovedades.render(nForm));
+			}
+
+			PuestoLaboral pl = PuestoLaboral.find.byId(n.puesto_laboral_id);
+
+			BigDecimal saldoGuardiaPorAgente = Novedad.getSaldoGuardiaPorAgente(pl.legajo.agente_id,n.periodo_concepto_id,n.id);
+
+			if(saldoGuardiaPorAgente != null && n.cantidad != null) {
+
+				Logger.debug("------------------saldoGuardiaPorAgente "+saldoGuardiaPorAgente);
+				Logger.debug("------------------n.cantidad.intValue() "+n.cantidad.intValue());
+
+				if( saldoGuardiaPorAgente.compareTo(n.cantidad) < 0 ) {
+					flash("error", "Este Agente no tiene saldo de Guardias Disponibles para este periodo. Saldo Disponible: "+saldoGuardiaPorAgente);
+					return ok(editarNovedades.render(nForm));
+				}
+			}else {
+				flash("error", "No se puede controlar las guardias");
+				return ok(editarNovedades.render(nForm));
+			}
+
+			BigDecimal saldoGuardiaPorOrganigrama = Novedad.getSaldoGuardiaPorOrganigrama(n.organigrama_id,n.periodo_concepto_id,n.id);
+
+			if(saldoGuardiaPorOrganigrama != null && n.cantidad != null) {
+
+				Logger.debug("------------------saldoGuardiaPorOrganigrama "+saldoGuardiaPorOrganigrama);
+				Logger.debug("------------------n.cantidad.intValue() "+n.cantidad.toString());
+
+				if( saldoGuardiaPorOrganigrama.compareTo(n.cantidad) <  0) {
+					flash("error", "Este Servicio no tiene saldo de Guardias Disponibles para este periodo. Saldo Disponible: "+saldoGuardiaPorOrganigrama);
+					return ok(editarNovedades.render(nForm));
+				}
+			}else {
+				flash("error", "No se puede controlar las guardias");
+				return ok(editarNovedades.render(nForm));
+			}
+
+		}
 
 		if(!n.comprobarPeriodoInicioConPeriodoFin()) {
 			flash("error", "El periodo de fin debe ser mayor o igual al periodo de inicio.");
