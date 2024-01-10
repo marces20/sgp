@@ -262,7 +262,7 @@ public class LiquidacionMesesController extends Controller {
 
 	    	  sl = Solicitud.find.where().eq("liquidacion_mes_id", idLiquidacion).findList();
 	    	  if(sl.size() > 0){
-	    		  flash("error", "Nose puede Cancelar, tiene solicitudes asociadas.");
+	    		  flash("error", "Nose puede Pasar preliquidado, tiene solicitudes asociadas.");
 	    		  return redirect(controllers.haberes.routes.LiquidacionMesesController.ver(idLiquidacion)+ UriTrack.get("&"));
 	    	  }
 
@@ -287,7 +287,7 @@ public class LiquidacionMesesController extends Controller {
 
 	    	  sl = Solicitud.find.where().eq("liquidacion_mes_id", idLiquidacion).findList();
 	    	  if(sl.size() > 0){
-	    		  flash("error", "Nose puede Cancelar, tiene solicitudes asociadas.");
+	    		  flash("error", "Nose puede Aprobar, tiene solicitudes asociadas.");
 	    		  return redirect(controllers.haberes.routes.LiquidacionMesesController.ver(idLiquidacion)+ UriTrack.get("&"));
 	    	  }
 
