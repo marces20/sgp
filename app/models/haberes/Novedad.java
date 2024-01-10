@@ -1,6 +1,10 @@
 package models.haberes;
 
 import java.math.BigDecimal;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.Date;
 
 import javax.persistence.Column;
@@ -20,6 +24,7 @@ import models.Organigrama;
 import models.Periodo;
 import models.Remito;
 import models.Usuario;
+import play.Logger;
 import play.data.validation.Constraints.Required;
 import play.db.ebean.Model;
 import play.db.ebean.Model.Finder;
@@ -216,5 +221,148 @@ public class Novedad extends Model{
 	public Boolean comprobarPeriodoInicioConPeriodoFin() {
 		return periodo_inicio_id <= periodo_hasta_id;
 	}
+
+	public static BigDecimal getSaldoGuardiaPorAgente(Long agenteId,Long periodo_id,Long novedad_id) {
+		ResultSet rssi = null;
+	    PreparedStatement stmtsi = null;
+	    Connection conn2 = null;
+	    PreparedStatement stmt2 = null;
+
+	    BigDecimal ret = null;
+
+		try {
+		      conn2 = play.db.DB.getConnection();
+
+		      stmtsi = conn2.prepareStatement("select (COALESCE(a.limite_guardia,0)-COALESCE(c.cantidad,0)) as saldo " +
+		    		  "		from agentes a  " +
+		    		  "		left outer join ( " +
+			    		  "		select COALESCE(sum(cantidad),0) as cantidad,a.id as agente_id,ln.periodo_concepto_id " +
+			    		  "		from liquidacion_novedades ln " +
+			    		  "		inner join liquidacion_conceptos lc on lc.id = ln.liquidacion_concepto_id " +
+			    		  "		left join puestos_laborales pl on pl.id = ln.puesto_laboral_id " +
+			    		  "		left join legajos l on l.id = pl.legajo_id " +
+			    		  "		left join agentes a on a.id = l.agente_id " +
+			    		  "		where lc.control_guardia = true " +
+			    		  "		AND a.id = ? " +
+			    		  "		AND ln.periodo_concepto_id = ? " +
+			    		  "		AND ln.id <> ? " +
+			    		  "		group by a.id,ln.periodo_concepto_id " +
+		    		  "		) as c on c.agente_id = a.id " +
+		    		  "		where a.id = ? ");
+
+
+
+		      stmtsi.setLong(1, agenteId);
+		      stmtsi.setLong(2, periodo_id);
+		      stmtsi.setLong(3, novedad_id);
+		      stmtsi.setLong(4, agenteId);
+
+		      rssi = stmtsi.executeQuery();
+
+		      if (rssi.next()) {
+		        ret = rssi.getBigDecimal("saldo");
+		      }
+
+		      return ret;
+
+	    } catch (SQLException e) {
+	      Logger.error("Error duplicar: " + e);
+	    } finally {
+	      if (stmt2 != null)
+	        try {
+	          stmt2.close();
+	        } catch (Exception e) {
+	        }
+	      if (stmtsi != null)
+	        try {
+	          stmtsi.close();
+	        } catch (Exception e) {
+	        }
+	      if (rssi != null)
+	        try {
+	          rssi.close();
+	        } catch (Exception e) {
+	        }
+	      if (conn2 != null)
+	        try {
+	          conn2.close();
+	        } catch (Exception e) {
+	        }
+	    }
+
+		return ret;
+
+	}
+
+	public static BigDecimal getSaldoGuardiaPorOrganigrama(Long organigramaId,Long periodo_id,Long novedad_id) {
+		ResultSet rssi = null;
+	    PreparedStatement stmtsi = null;
+	    Connection conn2 = null;
+	    PreparedStatement stmt2 = null;
+
+	    BigDecimal ret = null;
+
+		try {
+		      conn2 = play.db.DB.getConnection();
+
+		      stmtsi = conn2.prepareStatement("select (COALESCE(a.limite_guardia,0)-COALESCE(c.cantidad,0)) as saldo " +
+		    		  "		from organigramas a  " +
+		    		  "		left outer join ( " +
+			    		  "		select COALESCE(sum(cantidad),0) as cantidad,a.id as organigrama_id,ln.periodo_concepto_id " +
+			    		  "		from liquidacion_novedades ln " +
+			    		  "		inner join liquidacion_conceptos lc on lc.id = ln.liquidacion_concepto_id " +
+			    		  "		left join organigramas a on a.id = ln.organigrama_id " +
+			    		  "		where lc.control_guardia = true " +
+			    		  "		AND a.id = ? " +
+			    		  "		AND ln.periodo_concepto_id = ? " +
+			    		  "		AND ln.id <> ? " +
+			    		  "		group by a.id,ln.periodo_concepto_id " +
+		    		  "		) as c on c.organigrama_id = a.id " +
+		    		  "		where a.id = ? ");
+
+
+
+		      stmtsi.setLong(1, organigramaId);
+		      stmtsi.setLong(2, periodo_id);
+		      stmtsi.setLong(3, novedad_id);
+		      stmtsi.setLong(4, organigramaId);
+
+		      rssi = stmtsi.executeQuery();
+
+		      if (rssi.next()) {
+		        ret = rssi.getBigDecimal("saldo");
+		      }
+
+		      return ret;
+
+	    } catch (SQLException e) {
+	      Logger.error("Error duplicar: " + e);
+	    } finally {
+	      if (stmt2 != null)
+	        try {
+	          stmt2.close();
+	        } catch (Exception e) {
+	        }
+	      if (stmtsi != null)
+	        try {
+	          stmtsi.close();
+	        } catch (Exception e) {
+	        }
+	      if (rssi != null)
+	        try {
+	          rssi.close();
+	        } catch (Exception e) {
+	        }
+	      if (conn2 != null)
+	        try {
+	          conn2.close();
+	        } catch (Exception e) {
+	        }
+	    }
+
+		return ret;
+
+	}
+
 
 }
