@@ -1040,6 +1040,9 @@ POST    /haberes/gananciasAcciones/modalFormularioF649   	controllers.haberes.Ga
 GET     /haberes/prestaFacil/enviarArchivo         			controllers.haberes.PrestaFacilController.enviarArchivo()
 
 
+GET     /haberes/controlGuardiaAgente	         			controllers.haberes.ControlHaberes.controlGuardiasPorAgentePorPeriodo()
+
+
 #-----------------------------FIN MODULO HABERES ---------------------------------
 
 
