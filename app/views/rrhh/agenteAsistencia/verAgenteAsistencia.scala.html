@@ -23,7 +23,8 @@
 				  </button>
 				  <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
 					@if(Permiso.check("agentesLicenciasReporteLicencia")) {
-				  		<li><a id="reporteLicencia" href="#" data-url="@controllers.rrhh.routes.AgentesAsistenciasReportesController.reporteLicencia()">Ficha Licencia</a></li>
+				  		<li><a class="reporteLicencia" href="#" data-url="@controllers.rrhh.routes.AgentesAsistenciasReportesController.reporteLicencia(true)">Ficha Licencia</a></li>
+				  		<li><a class="reporteLicencia" href="#" data-url="@controllers.rrhh.routes.AgentesAsistenciasReportesController.reporteLicencia(false)">Ficha Licencia Interrumpida</a></li>
 					}
 					@if(Permiso.check("agentesLicenciasReporteLicenciaMedica")) {
 				  		<li><a class="reporteLicenciaMedica" href="#" data-url="@controllers.rrhh.routes.AgentesAsistenciasReportesController.reporteLicenciaMedicinaLaboral(-1)">Ficha Licencia Medicina Laboral</a></li>
