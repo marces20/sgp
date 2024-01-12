@@ -139,7 +139,7 @@ $( function(){
 		return false;
 	});
 
-	$('#reporteLicencia').click( function() {
+	$('.reporteLicencia').click( function() {
 		var url = $(this).attr("data-url");
 		var dialogo = $('<div></div>');
 
