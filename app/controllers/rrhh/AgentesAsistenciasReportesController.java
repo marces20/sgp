@@ -93,7 +93,7 @@ public class AgentesAsistenciasReportesController extends Controller {
 		return ok(reporteLicencia.render(archivo.getPath()));
 	}
 
-	public static Result reporteLicencia() {
+	public static Result reporteLicencia(boolean comun) {
 
 		List<Integer> licenciaSeleccionados = getSeleccionados();
 		if(licenciaSeleccionados.isEmpty()) {
@@ -110,11 +110,20 @@ public class AgentesAsistenciasReportesController extends Controller {
 
 
 		String dirTemp = System.getProperty("java.io.tmpdir");
+
 		File archivo = new File(dirTemp+"/ficha_licencia.odt");
+		if(!comun) {
+			archivo = new File(dirTemp+"/licencia_interrupcion.odt");
+		}
 
 		try{
 
 			InputStream in = Play.application().resourceAsStream("resources/reportes/rrhh/ficha_licencia.odt");
+			if(!comun) {
+				in = Play.application().resourceAsStream("resources/reportes/rrhh/licencia_interrupcion.odt");
+			}
+
+
 			IXDocReport report = XDocReportRegistry.getRegistry().loadReport( in, TemplateEngineKind.Velocity );
 
 			FieldsMetadata metadata = report.createFieldsMetadata();
