@@ -489,7 +489,7 @@ public class AgentesAsistenciasLicenciasController extends Controller {
 	public static List<Integer> getSeleccionados(){
 		String[] checks = null;
 		try {
-			checks = request().body().asFormUrlEncoded().get("check_listado_inasistencia[]");
+			checks = request().body().asFormUrlEncoded().get("check_listado[]");
 		} catch (NullPointerException e) {
 		}
 

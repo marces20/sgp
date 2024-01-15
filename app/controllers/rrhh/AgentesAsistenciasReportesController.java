@@ -155,18 +155,6 @@ public class AgentesAsistenciasReportesController extends Controller {
 					celda0.setCellValue(oll.periodo.nombre);
 					celda0.setCellStyle(comun);
 
-
-
-
-
-
-
-
-
-
-
-
-
 					x++;
 
 
