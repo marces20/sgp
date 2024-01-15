@@ -22,7 +22,7 @@
 			    <span class="caret"></span>
 			  </button>
 			  <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
-
+				<li role="presentation"><a id="exportacionNovedadesLicencias" data-url="@controllers.rrhh.routes.AgentesAsistenciasReportesController.exportacionNovedadesLicencias()" href="#">Exportacion Novedades</a></li>
 			  </ul>
 			</div>
 
@@ -165,7 +165,7 @@
 			<tbody>
 			@for(linea <- buscador.getList) {
 				<tr>
-					<td width="30"><input type="checkbox" name="checkAll" id="checkAll"/></td>
+					<td width="30"><input type="checkbox" name="check_listado[]" value="@linea.id" id="check-@linea.id"></td>
 					<td width="50">@linea.agenteAsistenciaLicencia.id</td>
 					<td>@if(linea.agenteAsistenciaLicencia != null){@linea.agenteAsistenciaLicencia.agente.apellido}</td>
 					<td>@if(linea.agenteAsistenciaLicencia != null){@linea.agenteAsistenciaLicencia.agente.dni}</td>
