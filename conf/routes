@@ -668,6 +668,7 @@ GET     /rrhh/agente-asistencia-licencia/getListaLicenciasEnFechaExcel controlle
 
 POST     /rrhh/agenteAsistencia/reporteLicencia	 		controllers.rrhh.AgentesAsistenciasReportesController.reporteLicencia(comun:Boolean ?= true)
 POST     /rrhh/agenteAsistencia/reporteLicenciaMedicinaLaboral	 		controllers.rrhh.AgentesAsistenciasReportesController.reporteLicenciaMedicinaLaboral(id: Long)
+POST     /rrhh/agenteAsistencia/exportacionNovedadesLicencias	 		controllers.rrhh.AgentesAsistenciasReportesController.exportacionNovedadesLicencias()
 
 GET    /rrhh/agente-asistencia-licencia/indexLicenciaNovedadesLiquidacion   	controllers.rrhh.AgentesAsistenciasLicenciasController.indexLicenciaNovedadesLiquidacion()
 
