@@ -10,6 +10,39 @@ $( function(){
 	});
 	$('#filtrosEstados button:has(:checkbox:checked)').addClass('activeFiltro');
 
+	$('#exportacionNovedadesLicencias').click( function() {
+		var url = $(this).attr("data-url");
+		var dialogo = $('<div>...</div>');
+
+		dialogo.dialog({
+			title: "Exportacion Novedades",
+	    	resizable: false,
+			autoOpen: true,
+			modal: true,
+			height: 250,
+			width:750,
+	        buttons: {
+		          Cerrar: function() {
+		            $( this ).dialog( "destroy" );
+		          }
+		    },
+	    	close: function(event, ui ){
+	    		$(this).dialog( "destroy" );
+	    	},
+		    open: function( event, ui ) {
+
+		    }
+	    });
+
+		$.post(url, getCheckSeleccionados(), function(data){
+			if(data.url) {
+				window.location.href = data.url;
+			}
+			dialogo.html(data);
+		});
+
+	});
+
 	$('#modalDatosRulAgente').click( function() {
 		var url = $(this).attr("data-url");
 		var dialogo = $('<div></div>');
