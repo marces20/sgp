@@ -20,7 +20,7 @@
 
 <tr data-id="@linea.id" class="pointer @getClassEstado(linea)" data-estado="@linea.estado_id" >
 	<td class="">
-		<input type="checkbox" name="check_listado_inasistencia[]" value="@linea.id" class="notSeleccion" id="check-@linea.id"/>
+		<input type="checkbox" name="check_listado[]" value="@linea.id" class="notSeleccion" id="check-@linea.id"/>
 	</td>
 	@if(editable && (linea.estado_id.compareTo(Estado.AGENTE_LICENCIA_BORRADOR) == 0 || linea.estado_id.compareTo(Estado.AGENTE_LICENCIA_PREAPROBADO) == 0 || Permiso.check("agentesLicenciasModificarAprobadas")) && Permiso.check("agentesLicenciasModificar")){
 
