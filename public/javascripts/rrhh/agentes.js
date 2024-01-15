@@ -192,7 +192,7 @@ $( function(){
 	    		$(this).dialog( "destroy" );
 	    	},
 		    open: function( event, ui ) {
-				$.post(url, $("input[name='check_listado_inasistencia[]']").serialize(), function(data){
+				$.post(url, $("input[name='check_listado[]']").serialize(), function(data){
 					dialogo.html(data);
 				});
 		    }
@@ -219,7 +219,7 @@ $( function(){
 	    		$(this).dialog( "destroy" );
 	    	},
 		    open: function( event, ui ) {
-				$.post(url, $("input[name='check_listado_inasistencia[]']").serialize(), function(data){
+				$.post(url, $("input[name='check_listado[]']").serialize(), function(data){
 					dialogo.html(data);
 				});
 		    }
@@ -235,8 +235,8 @@ $( function(){
 
 	$(document).on("submit", '#formPasarBorradorLicencia', function(){
 		var form = $(this);
-		var url = form.attr('action');
-		var data = form.serialize()+'&'+$("input[name='check_listado_inasistencia[]']").serialize();
+		var url = form.attr('action');check_listado
+		var data = form.serialize()+'&'+$("input[name='check_listado[]']").serialize();
 		var submit = form.find("button[type='submit']");
 		submit.replaceWith(getLoading());
 		$.post(url, data, function(data){
@@ -263,7 +263,7 @@ $( function(){
 	$(document).on("submit", '#formPasarPreAprobadoLicencia', function(){
 		var form = $(this);
 		var url = form.attr('action');
-		var data = form.serialize()+'&'+$("input[name='check_listado_inasistencia[]']").serialize();
+		var data = form.serialize()+'&'+$("input[name='check_listado[]']").serialize();
 		var submit = form.find("button[type='submit']");
 		submit.replaceWith(getLoading());
 		$.post(url, data, function(data){
@@ -290,7 +290,7 @@ $( function(){
 	$(document).on("submit", '#formPasarAprobadoLicencia', function(){
 		var form = $(this);
 		var url = form.attr('action');
-		var data = form.serialize()+'&'+$("input[name='check_listado_inasistencia[]']").serialize();
+		var data = form.serialize()+'&'+$("input[name='check_listado[]']").serialize();
 		var submit = form.find("button[type='submit']");
 		submit.replaceWith(getLoading());
 		$.post(url, data, function(data){
@@ -318,7 +318,7 @@ $( function(){
 	$(document).on("submit", '#formPasarCanceladoLicencia', function(){
 		var form = $(this);
 		var url = form.attr('action');
-		var data = form.serialize()+'&'+$("input[name='check_listado_inasistencia[]']").serialize();
+		var data = form.serialize()+'&'+$("input[name='check_listado[]']").serialize();
 		var submit = form.find("button[type='submit']");
 		submit.replaceWith(getLoading());
 		$.post(url, data, function(data){
