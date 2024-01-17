@@ -297,7 +297,18 @@ public class BalanceController extends Controller {
 			Sheet hoja = libro.createSheet("lineas");
 
 
-			List<Balance> b = Balance.find.where().in("id",balanSeleccionados).findList();
+			List<Balance> b = Balance.find
+							.fetch("cuentaPropia", "nombre")
+							.fetch("cuenta", "nombre")
+							.fetch("cuenta", "nombre")
+							.fetch("ordenPago", "nombreCompleto")
+			    			.fetch("ordenPago", "numero")
+			    			.fetch("ordenPago.ejercicio", "nombre")
+			    			.fetch("expediente", "nombre, id, emergencia")
+			    			.fetch("expediente.ejercicio", "nombre")
+			    			.fetch("expediente.parent.ejercicio", "nombre")
+			    			.fetch("orden.deposito", "nombre")
+							.where().in("id",balanSeleccionados).findList();
 
 			if(b.size() > 0){
 				int x = 0;
