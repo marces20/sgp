@@ -65,6 +65,8 @@ import views.html.expediente.expedientesMovimientos.crearExpedienteMovimiento;
 import com.avaje.ebean.Ebean;
 import com.avaje.ebean.Expr;
 import com.avaje.ebean.ExpressionList;
+import com.avaje.ebean.SqlQuery;
+import com.avaje.ebean.SqlRow;
 
 import controllers.Secured;
 import controllers.auth.CheckPermiso;
@@ -187,14 +189,20 @@ public class ExpedientesController extends Controller {
 
 		String str ="";
         try{
-        	List<Expediente> ee = Expediente.find.where()
+        	/*List<Expediente> ee = Expediente.find.where()
 					  .eq("ejercicio_id", ID_EJERCICIO_PREDETERMINADO)
 					  .eq("residuo_pasivo",false)
 					  .isNull("padre_copia_id").orderBy("nombre DESC")
-					  .findList();
+					  .findList();*/
+
+        	String sql = "select max(nombre) as nombre from expedientes where residuo_pasivo= false and padre_copia_id is null and ejercicio_id = :ejercicio_id";
+        	SqlQuery sqlQuery = Ebean.createSqlQuery(sql)
+					.setParameter("ejercicio_id", ID_EJERCICIO_PREDETERMINADO);
+        	SqlRow  row = sqlQuery.findUnique();
 
 
-        	str = ee.get(0).nombre;
+
+        	str = row.getString("nombre"); //ee.get(0).nombre;
             int number = Integer.parseInt(str)+1;
 
             str = NumberUtils.agregarCerosAlaIzquierda(number,4);
