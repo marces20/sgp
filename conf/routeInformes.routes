@@ -17,3 +17,8 @@ POST /honorarios/getCountRrrhPorEscala					controllers.informes.InformesHonorari
 GET  /deuda/deudasFotoPorFecha             				controllers.informes.InformesDeudasController.deudasFotoPorFecha()
 
 GET  /informeMensual									controllers.informes.InformeMensualController.index()
+
+GET  /informeMensualPorInstitucion						controllers.informes.InformeMensualController.informeMensualPorInstitucion()
+
+GET  /getObligacionPorOrganigrama						controllers.informes.InformeMensualController.getObligacionPorOrganigrama()
+GET  /getObligacionPorOrganigramaPorRubroPorPeriodo						controllers.informes.InformeMensualController.getObligacionPorOrganigramaPorRubroPorPeriodo(deposito:String,rubro:String,periodoId:Long ?= 0)

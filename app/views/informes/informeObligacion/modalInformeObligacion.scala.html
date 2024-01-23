@@ -1,0 +1,29 @@
+@(s:List[com.avaje.ebean.SqlRow])
+@import java.math.BigDecimal;var total=new java.math.BigDecimal(0);
+
+<div class="row">
+	<div class="col-sm-12">
+		<table class="table table-bordered">
+			<tr>
+				<th>Proveedor</th>
+				<th>SubRubro</th>
+				<th>Total</th>
+			</tr>
+			@for(sx <- s) {
+				<tr>
+					<td>@sx.getString("proveedor")</td>
+					<td>@sx.getString("rubro")</td>
+					<td>@utils.NumberUtils.monedaSinDecimales(sx.getBigDecimal("total"))</td>
+				</tr>
+
+				@{total = total.add(sx.getBigDecimal("total"))}
+
+			}
+			<tr>
+					<td colspan="2">TOTAL</td>
+					<td>@utils.NumberUtils.monedaSinDecimales(total)</td>
+			<tr>
+
+		</table>
+	</div>
+</div>
