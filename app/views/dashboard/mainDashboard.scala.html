@@ -96,6 +96,13 @@
 					}
 				}
 
+				@if(Componente.check("dashboardInforme")) {
+					@if(Permiso.check("dashboardInformeControlGastos")) {
+						<li class="titulo">Informes Control Gastos</li>
+
+							<li><a href="@controllers.informes.routes.InformeMensualController.getObligacionPorOrganigrama()"><b>Control Obligaciones NUEVO !!</b></a></li>
+					}
+				}
 
 				@if(Componente.check("dashboardInforme")) {
 					<li class="titulo">Informes Deudas</li>
