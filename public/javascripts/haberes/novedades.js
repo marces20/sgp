@@ -8,6 +8,7 @@ $( function() {
 	$('#searchPuestoLaboral, #searchPeriodoInicio,#searchPeriodoConcepto, #searchPeriodoFin, #searchConcepto,#searchOrganigrama').modalSearch();
 
 	$('#puesto_laboral_id').on('change', function(){
+		alert("2222")
 		$(document).trigger("novedad.cambio");
 	});
 
@@ -60,10 +61,11 @@ $( function() {
 
 	$(document).on("novedad.cambio", function() {
 		var url = $('#listaNovedades').attr('data-href');
-
-		$.get(url, {puesto_laboral_id: $('#puesto_laboral_id').val()}, function(data) {
-			$('#listaNovedades').html(data);
-		});
+		if(url != undefined){
+			$.get(url, {puesto_laboral_id: $('#puesto_laboral_id').val()}, function(data) {
+				$('#listaNovedades').html(data);
+			});
+		}
 
 	});
 
