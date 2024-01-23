@@ -444,11 +444,12 @@ public class InformeMensualController extends Controller {
 
 	public static Result getObligacionPorOrganigrama(){
 
+
 		Periodo px = Periodo.getPeriodoByDate(new Date());
 		int periodo6meses = px.id.intValue() -6 ;
 		List<Periodo> p = Periodo.find.where().ge("id", periodo6meses).le("id", px.id).orderBy("id asc").findList();
 
-		String sql = "select d.nombre::text as depo,od.nombre as rubro, to_char(a.fecha,'MM/yyyy') as periodo,round(sum(a.total)) as total "+
+		String sql = "select d.id as depositoId,d.nombre::text as depo,od.nombre as rubro,od.orden as rubroOrden, to_char(a.fecha,'MM/yyyy') as periodo,round(sum(a.total)) as total "+
 					"FROM ordenes o "+
 					"inner join depositos d on d.id = o.deposito_id "+
 					"inner join ordenes_rubros od on od.id = o.orden_rubro_id "+
@@ -484,12 +485,13 @@ public class InformeMensualController extends Controller {
 					    "      GROUP BY cc.orden_id, cc.state_id,cc.fecha_certificacion, o_1.cot_dolar) a ON a.orden_id = o.id "+
 
 					"where  "+
-					" o.deposito_id in(1) "+
-					" and a.fecha >= ? "+
-					//"and o.orden_rubro_id = 2 "+
-					//"	--and to_char(a.fecha,''MM/yyyy'')  = '01/2023' "+
-					"group by d.nombre,od.nombre, to_char(a.fecha,'MM/yyyy') "+
-					"order by d.nombre,od.nombre, to_char(a.fecha,'MM/yyyy') ";
+					" o.deposito_id in(1,2,3,4,25,31,32,34) and "+
+					//" o.deposito_id in(1,2) and "+
+					" a.fecha >= ? "+
+					//" and o.orden_rubro_id = 7 "+
+					//" and to_char(a.fecha,'MM/yyyy')  = '07/2023' "+
+					"group by d.id,d.nombre,od.nombre,od.orden, to_char(a.fecha,'MM/yyyy') "+
+					"order by d.id,od.orden, to_char(a.fecha,'MM/yyyy') ";
 
 		SqlQuery sqlQuery = Ebean.createSqlQuery(sql);
 		sqlQuery.setParameter(1, p.get(0).date_start);
@@ -497,8 +499,8 @@ public class InformeMensualController extends Controller {
 		List<SqlRow>  row = sqlQuery.findList();
 
 		Map<String,BigDecimal> periodoTotal = new HashMap<>();
-		Map<String,Map<String,BigDecimal>> rubroPeriodoTotal = new HashMap<>();
-		Map<String,Map<String,Map<String,BigDecimal>>> OrganigramaRubroPeriodoTotal = new HashMap<>();
+		Map<Integer,Map<String,BigDecimal>> rubroPeriodoTotal = new HashMap<>();
+		Map<String,Map<Integer,Map<String,BigDecimal>>> OrganigramaRubroPeriodoTotal = new HashMap<>();
 
 
 
@@ -507,34 +509,30 @@ public class InformeMensualController extends Controller {
 		for(SqlRow sr : row) {
 
 			Map<String,BigDecimal> periodoTotalTmp =new HashMap<>();
-			Map<String,Map<String,BigDecimal>> rubroPeriodoTotalTmp = new HashMap<>();
-			Map<String,Map<String,Map<String,BigDecimal>>> OrganigramaRubroPeriodoTotalTmp = new HashMap<>();
+			Map<Integer,Map<String,BigDecimal>> rubroPeriodoTotalTmp = new HashMap<>();
+			Map<String,Map<Integer,Map<String,BigDecimal>>> OrganigramaRubroPeriodoTotalTmp = new HashMap<>();
 
 			String depo = sr.getString("depo");
+
 			String rubro = sr.getString("rubro");
+			Integer rubroOrden = sr.getInteger("rubroOrden");
 			String periodo = sr.getString("periodo");
 			BigDecimal total = sr.getBigDecimal("total");
 
 
-			/*
-			  	"HPS" , {"ESTUDIOS",{"01","$5243"} }
-			 *
-			 */
-
 			if(OrganigramaRubroPeriodoTotal.containsKey(depo)) {// si esta el organigrama
+
 
 				rubroPeriodoTotalTmp = OrganigramaRubroPeriodoTotal.get(depo);// traigo el organigrama
 
-				if(OrganigramaRubroPeriodoTotal.get(depo).containsKey(rubro)) {// si tiene el rubro el organigrama
-
-
+				if(OrganigramaRubroPeriodoTotal.get(depo).containsKey(rubroOrden)) {// si tiene el rubro el organigrama
 
 					OrganigramaRubroPeriodoTotalTmp = OrganigramaRubroPeriodoTotal;
 
-					periodoTotalTmp = rubroPeriodoTotalTmp.get(rubro);
+					periodoTotalTmp = rubroPeriodoTotalTmp.get(rubroOrden);
 					periodoTotalTmp.put(periodo, total);
 
-					rubroPeriodoTotalTmp.put(rubro,periodoTotalTmp);
+					rubroPeriodoTotalTmp.put(rubroOrden,periodoTotalTmp);
 
 
 
@@ -547,10 +545,13 @@ public class InformeMensualController extends Controller {
 
 					periodoTotalTmp.put(periodo, total);
 
+					OrganigramaRubroPeriodoTotalTmp = OrganigramaRubroPeriodoTotal;
 
 					rubroPeriodoTotalTmp = OrganigramaRubroPeriodoTotal.get(depo);
-					rubroPeriodoTotalTmp.put(rubro,periodoTotalTmp);
+					rubroPeriodoTotalTmp.put(rubroOrden,periodoTotalTmp);
+
 					OrganigramaRubroPeriodoTotalTmp.put(depo,rubroPeriodoTotalTmp);
+
 					OrganigramaRubroPeriodoTotal = OrganigramaRubroPeriodoTotalTmp;
 
 
@@ -558,23 +559,44 @@ public class InformeMensualController extends Controller {
 
 
 			}else {
+
+				periodoTotal = new HashMap<>();
 				periodoTotal.put(periodo, total);
-				rubroPeriodoTotal.put(rubro, periodoTotal);
+				rubroPeriodoTotal = new HashMap<>();
+				rubroPeriodoTotal.put(rubroOrden, periodoTotal);
 				OrganigramaRubroPeriodoTotal.put(depo, rubroPeriodoTotal);
 			}
 
 
 		}
 
+
+
+		Map<String,Map<Integer,Map<String,BigDecimal>>> OrganigramaRubroPeriodoTotalTmp = new HashMap<>();
+		for(Map.Entry<String,Map<Integer,Map<String,BigDecimal>>> rubroPeriodoTotalTmp : OrganigramaRubroPeriodoTotal.entrySet()) {
+
+			Map<Integer,Map<String,BigDecimal>> rubroPeriodoTotalTree = new TreeMap(rubroPeriodoTotalTmp.getValue());
+
+			OrganigramaRubroPeriodoTotalTmp.put(rubroPeriodoTotalTmp.getKey(), rubroPeriodoTotalTree);
+		}
+
+
+		Map<String,Map<Integer,Map<String,BigDecimal>>> OrganigramaRubroPeriodoTotalTree = new TreeMap(OrganigramaRubroPeriodoTotalTmp);
+
+		Map<Integer,String> ordenRubro = new HashMap<>();
+		for(OrdenRubro orx:OrdenRubro.find.orderBy("orden asc").findList()) {
+			ordenRubro.put(orx.orden, orx.nombre);
+		}
+
 		//return row;
-		return ok(obligacion_new.render(OrganigramaRubroPeriodoTotal,p));
+		return ok(obligacion_new.render(OrganigramaRubroPeriodoTotalTree,p,ordenRubro));
 	}
 
-	public static Result getObligacionPorOrganigramaPorRubroPorPeriodo(String deposito,String rubro, Long periodoId){
+	public static Result getObligacionPorOrganigramaPorRubroPorPeriodo(String deposito,Integer ordenRubro, Long periodoId){
 
 		Periodo px = Periodo.find.byId(periodoId);
 		Deposito d = Deposito.find.where().eq("nombre", deposito).findUnique();
-		OrdenRubro or = OrdenRubro.find.where().eq("nombre", rubro).findUnique();
+		OrdenRubro or = OrdenRubro.find.where().eq("orden", ordenRubro).findUnique();
 
 		//int periodo6meses = px.id.intValue() -6 ;
 		//List<Periodo> p = Periodo.find.where().ge("id", periodo6meses).le("id", px.id).orderBy("id asc").findList();
@@ -583,7 +605,7 @@ public class InformeMensualController extends Controller {
 					"FROM ordenes o "+
 					"inner join proveedores d on d.id = o.proveedor_id "+
 					//"inner join depositos d on d.id = o.deposito_id "+
-					"inner join ordenes_subrubros od on od.id = o.orden_subrubro_id "+
+					"left join ordenes_subrubros od on od.id = o.orden_subrubro_id "+
 					"inner JOIN ( "+
 						"SELECT a_2.orden_compra_id AS orden_id, ar.fecha as fecha, "+
 					    "                sum(a_2.total) AS total, "+
