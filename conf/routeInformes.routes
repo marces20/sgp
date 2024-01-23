@@ -21,4 +21,4 @@ GET  /informeMensual									controllers.informes.InformeMensualController.index
 GET  /informeMensualPorInstitucion						controllers.informes.InformeMensualController.informeMensualPorInstitucion()
 
 GET  /getObligacionPorOrganigrama						controllers.informes.InformeMensualController.getObligacionPorOrganigrama()
-GET  /getObligacionPorOrganigramaPorRubroPorPeriodo						controllers.informes.InformeMensualController.getObligacionPorOrganigramaPorRubroPorPeriodo(deposito:String,rubro:String,periodoId:Long ?= 0)
+GET  /getObligacionPorOrganigramaPorRubroPorPeriodo						controllers.informes.InformeMensualController.getObligacionPorOrganigramaPorRubroPorPeriodo(deposito:String,ordenRubro:Int ?= 0,periodoId:Long ?= 0)
