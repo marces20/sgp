@@ -12,6 +12,7 @@ import com.avaje.ebean.ExpressionList;
 
 import models.Agente;
 import models.AgenteAsistenciaLicencia;
+import models.Estado;
 import models.Periodo;
 import play.data.validation.Constraints.Required;
 import play.db.ebean.Model;
@@ -40,6 +41,11 @@ public class LiquidacionNovedadLicencia extends Model{
 	public Long periodo_id;
 
 	public Integer dias;
+
+	@ManyToOne
+	@JoinColumn(name = "estado_id", referencedColumnName = "id", insertable = false, updatable = false)
+	public Estado estado;
+	public Long estado_id;
 
 	public static Model.Finder<Long,LiquidacionNovedadLicencia> find = new Model.Finder<Long,LiquidacionNovedadLicencia>(Long.class, LiquidacionNovedadLicencia.class);
 
