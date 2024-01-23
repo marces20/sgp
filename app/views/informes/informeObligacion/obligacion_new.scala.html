@@ -1,10 +1,12 @@
-@(ret: java.util.Map[String,java.util.Map[String,java.util.Map[String,java.math.BigDecimal]]],p:List[models.Periodo])
+@(ret: java.util.Map[String,java.util.Map[Integer,java.util.Map[String,java.math.BigDecimal]]],p:List[models.Periodo],orx:java.util.Map[Integer,String])
 @import helper._
 @import utils._
 @import models.auth._
 @implicitFieldConstructor = @{ FieldConstructor(simpleInput.render) }
-@import java.math.BigDecimal;var total=new java.math.BigDecimal(0);var totaltmp=new java.math.BigDecimal(0);var totaltmp2=new java.math.BigDecimal(0);
-@import java.util.HashMap;var totales=new java.util.HashMap[String,java.math.BigDecimal];var totalesTmp=new java.util.HashMap[String,java.math.BigDecimal];
+@import java.math.BigDecimal;var total=new java.math.BigDecimal(0);var totaltmp=new java.math.BigDecimal(0);var tmpT=new java.math.BigDecimal(0);var totaltmp2=new java.math.BigDecimal(0);var totalPorcentaje=new java.math.BigDecimal(0);var totalPorcentajeTmp=new java.math.BigDecimal(0);
+@import java.util.HashMap;var totales=new java.util.HashMap[String,java.math.BigDecimal];var totalesTmp=new java.util.HashMap[String,java.math.BigDecimal];var ordenRubroTmp=new java.util.HashMap[String,java.util.HashMap[String,java.math.BigDecimal]];
+
+
 
 @scripts = {
 	<script src="@routes.Assets.at("javascripts/informes/informes.js")" type="text/javascript"></script>
@@ -13,65 +15,127 @@
 @views.html.informes.mainInformes("Informe Mensual Obligaciones",scripts) {
 
 <div class="page-header">
-	<div class="row">
-		<div class="col-sm-7">
-			<h1>Obligaciones Por Institucion</h1>
+<div class="row">
+		<div class="col-sm-12">
+
+					<h1 style="font-size: 25px; " >Obligaciones por Institucion</h1>
+
+
 		</div>
-	</div>
+</div>
 </div>
 
-<table class="table table-bordered">
-		<tr>
-
-		</tr>
 
 	@for((key,value) <- ret) {
-		<tr>
-			<td colspan="8">@key</td>
-		</tr>
-		<tr>
-			<td colspan=""></td>
-			@for(valuep <- p) {
-				<td>@valuep.nombre</td>
-			}
-		</tr>
-		@for((key2,value2) <- value) {
+		<table class="table table-bordered">
 			<tr>
-				<td>@key2</td>
+				<td colspan="15" align="center">
+					<span style="font-size: 20px;font-weight: bold;">@key</span>
+					@if(key == "HOSPITAL ESCUELA DE AGUDOS"){
+						<img src="/assets/images/logo-hearm.png" width="200" height="200"/>
+					}
+					@if(key == "HOSPITAL FATIMA"){
+
+					}
+					@if(key == "HOSPITAL MATERNO NEONATAL"){
+						<img src="/assets/images/logo-materno.jpeg" width="200" height="200"/>
+					}
+					@if(key == "HOSPITAL SAMIC DE OBERA"){
+						<img src="/assets/images/logo-obera.jpeg" width="200" height="200"/>
+					}
+					@if(key == "INSTITUTO MISIONERO DEL CANCER"){
+						<img src="/assets/images/logo-imc.png" width="200" height="200"/>
+					}
+					@if(key == "LACMI"){
+						<img src="/assets/images/logo-lacmi.png" width="200" height="200"/>
+					}
+					@if(key == "MINISTERIO DE SALUD PUBLICA"){
+						<img src="/assets/images/logo-ministerio.jpeg" width="200" height="200"/>
+					}
+					@if(key == "HOSPITAL PEDIATRICO"){
+						<img src="/assets/images/logo-pediatria.jpg" width="200" height="200"/>
+					}
+
+				</td>
+
+			</tr>
+			<tr>
+				<td colspan="" width="200"></td>
 				@for(valuep <- p) {
-					<td><a href="#" data-url="@controllers.informes.routes.InformeMensualController.getObligacionPorOrganigramaPorRubroPorPeriodo(key,key2, valuep.id)"
-					class="infoObligaciones" >@utils.NumberUtils.monedaSinDecimales(value2.get(valuep.nombre))</a></td>
-
-						@if(totales.containsKey(valuep.nombre)){
-
-							@{totaltmp = totales.get(valuep.nombre)}
-
-							@if(value2.get(valuep.nombre) != null){
-								@{totaltmp  = totaltmp.add(value2.get(valuep.nombre))}
-							}
+					<td align="center" colspan="2"><span style="font-weight: bold;">@valuep.nombre</span></td>
+				}
+			</tr>
 
 
-							@{totaltmp2 = totales.put(valuep.nombre,totaltmp)}
+			@{totales=new java.util.HashMap[String,java.math.BigDecimal]}
 
+			@for((key2,value2) <- value) {
+				<tr>
+					<td  align="left" ><span style="font-weight: bold;">@orx.get(key2)</span></td>
 
+					@{totalPorcentajeTmp=new java.math.BigDecimal(0)}
+					@{totalPorcentaje=new java.math.BigDecimal(0)}
+					@for(valuep <- p) {
+						<td  align="center"><a href="#" data-url="@controllers.informes.routes.InformeMensualController.getObligacionPorOrganigramaPorRubroPorPeriodo(key,key2, valuep.id)"
+						class="infoObligaciones" >@utils.NumberUtils.monedaSinDecimales(value2.get(valuep.nombre))</a></td>
+
+						@if(value2.get(valuep.nombre)== null){
+							@{tmpT = new java.math.BigDecimal(0)}
 						}else{
-							@{totaltmp2 = totales.put(valuep.nombre,value2.get(valuep.nombre))}
+							@{tmpT = value2.get(valuep.nombre)}
 						}
 
-				}
-			</tr>
-		}
+						@if(totalPorcentajeTmp.compareTo(new java.math.BigDecimal(0)) != 0 ){
+							@{ totalPorcentaje = tmpT.divide(totalPorcentajeTmp, 2, java.math.RoundingMode.HALF_UP).subtract(new java.math.BigDecimal(1)).multiply(new java.math.BigDecimal(100))  }
+						}else{
 
-			<tr>
-				<td>TOTALES</td>
-				@for(valuepx <- p) {
-				<td>@utils.NumberUtils.monedaSinDecimales(totales.get(valuepx.nombre))</td>
-				}
-			</tr>
+						}
 
+
+						<td align="center" >
+							@if(totalPorcentaje.compareTo(new java.math.BigDecimal(20)) > 0){
+								<span style="color:red;font-weight: bold;">
+							}else{
+								<span>
+							}
+									@totalPorcentaje %
+								</span>
+						</td>
+
+							@if(totales.containsKey(valuep.nombre)){
+
+								@{totaltmp = totales.get(valuep.nombre)}
+
+								@if(value2.get(valuep.nombre) != null){
+									@{totaltmp  = totaltmp.add(value2.get(valuep.nombre))}
+								}
+
+
+								@{totaltmp2 = totales.put(valuep.nombre,totaltmp)}
+
+
+							}else{
+								@{totaltmp2 = totales.put(valuep.nombre,value2.get(valuep.nombre))}
+							}
+
+							@{ totalPorcentajeTmp = tmpT}
+
+					}
+				</tr>
+			}
+
+				<tr>
+					<td  align="right"><span style="font-size: 20px;font-weight: bold;">TOTALES</span></td>
+					@for(valuepx <- p) {
+						<td  align="center"><span style="font-size: 15px;font-weight: bold;">@utils.NumberUtils.monedaSinDecimales(totales.get(valuepx.nombre))</span></td>
+						<td></td>
+					}
+				</tr>
+		</table>
+		</br></br>
 	}
 
 
-</table>
+
 
 }
