@@ -35,6 +35,8 @@ public class OrdenRubro extends Model {
 	@Required(message="Debe escribir el nombre")
 	public String nombre;
 
+	public Integer orden;
+
 	@OneToMany
 	List<OrdenSubrubro> ordenSubrubro;
 
