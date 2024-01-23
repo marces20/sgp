@@ -132,7 +132,15 @@ public class Novedad extends Model{
     	p.setOrderDefault("ASC");
     	p.setSortByDefault("puestoLaboral.legajo.agente.apellido");
 
-    	ExpressionList<Novedad> e = find.fetch("periodoFin").fetch("periodoInicio").fetch("concepto").fetch("puestoLaboral").fetch("puestoLaboral.legajo").fetch("puestoLaboral.legajo.agente").where();
+    	ExpressionList<Novedad> e = find
+    								.fetch("periodoFin","nombre")
+    								.fetch("periodoInicio","nombre")
+    								.fetch("concepto")
+    								.fetch("puestoLaboral.legajo.agente","apellido")
+    								.fetch("organigrama","nombre")
+    								.fetch("periodoConcepto","nombre")
+    								.fetch("liquidacionTipo","nombre")
+    								.where();
 
     	if(!activo.isEmpty()) {
     		if(activo.equals("activo"))
