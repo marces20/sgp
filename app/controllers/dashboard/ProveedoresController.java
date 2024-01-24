@@ -63,12 +63,15 @@ public class ProveedoresController  extends Controller {
 		if(!RequestVar.get("ejercicio").isEmpty()){
 			ExpressionList<Orden> ox = Orden.find
 									   .fetch("expediente")
+									   .fetch("estado")
 									   .fetch("proveedor")
 									   .fetch("lineas")
 									   .fetch("lineas.producto")
 									   .fetch("lineas.ordenLineaCliente")
 									   .fetch("lineas.ordenLineaCliente.cliente")
 									   .where();
+
+			ox.eq("state_id", Estado.ORDEN_ESTADO_APROBADO);
 
 			if(!RequestVar.get("proveedor.id").isEmpty()){
 				ox.eq("proveedor_id",new Long(RequestVar.get("proveedor.id")));
@@ -172,6 +175,7 @@ public class ProveedoresController  extends Controller {
 			if(ejercicioId.compareTo(new Long(0)) != 0){
 				ExpressionList<Orden> ox = Orden.find
 										   .fetch("expediente")
+										   .fetch("estado")
 										   .fetch("proveedor")
 										   .fetch("lineas")
 										   .fetch("lineas.producto")
