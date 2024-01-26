@@ -446,7 +446,7 @@ public class InformeMensualController extends Controller {
 
 
 		Periodo px = Periodo.getPeriodoByDate(new Date());
-		int periodo6meses = px.id.intValue() -6 ;
+		int periodo6meses = px.id.intValue() -5 ;
 		List<Periodo> p = Periodo.find.where().ge("id", periodo6meses).le("id", px.id).orderBy("id asc").findList();
 
 		String sql = "select d.id as depositoId,d.nombre::text as depo,od.nombre as rubro,od.orden as rubroOrden, to_char(a.fecha,'MM/yyyy') as periodo,round(sum(a.total)) as total "+
@@ -485,7 +485,7 @@ public class InformeMensualController extends Controller {
 					    "      GROUP BY cc.orden_id, cc.state_id,cc.fecha_certificacion, o_1.cot_dolar) a ON a.orden_id = o.id "+
 
 					"where  "+
-					" o.deposito_id in(1,2,3,4,25,31,32,34) and "+
+					" o.deposito_id in(1,2,3,4,25,31,32,34,35) and "+
 					//" o.deposito_id in(1,2) and "+
 					" a.fecha >= ? "+
 					//" and o.orden_rubro_id = 7 "+
