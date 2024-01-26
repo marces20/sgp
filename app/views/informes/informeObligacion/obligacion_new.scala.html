@@ -35,7 +35,7 @@
 						<img src="/assets/images/logo-hearm.png" width="200" height="200"/>
 					}
 					@if(key == "HOSPITAL FATIMA"){
-
+						<img src="/assets/images/logo-fatima.jpeg" width="200" height="200"/>
 					}
 					@if(key == "HOSPITAL MATERNO NEONATAL"){
 						<img src="/assets/images/logo-materno.jpeg" width="200" height="200"/>
@@ -55,6 +55,11 @@
 					@if(key == "HOSPITAL PEDIATRICO"){
 						<img src="/assets/images/logo-pediatria.jpg" width="200" height="200"/>
 					}
+
+					@if(key == "HOSPITAL PEDIATRICO"){
+						<img src="/assets/images/logo-pediatria.jpg" width="200" height="200"/>
+					}
+
 
 				</td>
 
@@ -76,7 +81,7 @@
 					@{totalPorcentajeTmp=new java.math.BigDecimal(0)}
 					@{totalPorcentaje=new java.math.BigDecimal(0)}
 					@for(valuep <- p) {
-						<td  align="center"><a href="#" data-url="@controllers.informes.routes.InformeMensualController.getObligacionPorOrganigramaPorRubroPorPeriodo(key,key2, valuep.id)"
+						<td  align="center"><a style="cursor: pointer;" data-url="@controllers.informes.routes.InformeMensualController.getObligacionPorOrganigramaPorRubroPorPeriodo(key,key2, valuep.id)"
 						class="infoObligaciones" >@utils.NumberUtils.monedaSinDecimales(value2.get(valuep.nombre))</a></td>
 
 						@if(value2.get(valuep.nombre)== null){
