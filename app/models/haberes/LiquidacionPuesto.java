@@ -442,7 +442,7 @@ public class LiquidacionPuesto extends Model {
         EmailUtilis eu = new EmailUtilis();
         eu.setSubject("LIQUIDACION:" + lp.liquidacionMes.nro_liquidacion_parque + "-" + lp.liquidacionMes.periodo.nombre);
         eu.setHtmlMsg(textoMail);
-        eu.setFrom("liquidacionesparque@gmail.com");
+        eu.setFrom("liquidaciones@parquesaludmnes.org.ar");
         eu.setAttach(attachmentList);
 
         List<String> adds = new ArrayList<>();
