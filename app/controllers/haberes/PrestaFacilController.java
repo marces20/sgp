@@ -99,8 +99,8 @@ public class PrestaFacilController extends Controller {
 
 
       HtmlEmail mail = new HtmlEmail();
-      
-      
+
+
       List<EmailAttachment> attachmentList = new ArrayList<>();
       EmailAttachment attachment = null;
       attachment = new EmailAttachment();
@@ -125,7 +125,7 @@ public class PrestaFacilController extends Controller {
       EmailUtilis eu = new EmailUtilis();
       eu.setSubject("Bases de " + periodo);
       eu.setHtmlMsg("Archivos correspondientes al periodo " + periodo);
-      eu.setFrom("liquidacionesparque@gmail.com");
+      eu.setFrom("liquidaciones@parquesaludmnes.org.ar");
       eu.setAttach(attachmentList);
       
       
