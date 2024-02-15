@@ -503,7 +503,7 @@ public class LiquidacionMes extends Model {
           EmailUtilis eu = new EmailUtilis();
           eu.setSubject("LIQUIDACION EMPIEZA:" + lmx.nro_liquidacion_parque + "-" + c);
           eu.setHtmlMsg("LIQUIDACION EMPIEZA:" + lmx.nro_liquidacion_parque + "-" + c);
-          eu.setFrom("marces2000@gmail.com");
+          eu.setFrom("liquidaciones@parquesaludmnes.org.ar");
 
           List<String> adds = new ArrayList<>();
           adds.add("marces2000@gmail.com");
@@ -596,7 +596,7 @@ public class LiquidacionMes extends Model {
             EmailUtilis eu = new EmailUtilis();
             eu.setSubject("LIQUIDACION:" + lmx.nro_liquidacion_parque + "-" + c + " VA POR EL NUMERO: " + x);
             eu.setHtmlMsg("LIQUIDACION:" + lmx.nro_liquidacion_parque + "-" + c + " VA POR EL NUMERO: " + x);
-            eu.setFrom("marces2000@gmail.com");
+            eu.setFrom("liquidaciones@parquesaludmnes.org.ar");
 
             List<String> adds = new ArrayList<>();
             adds.add("marces2000@gmail.com");
@@ -611,7 +611,7 @@ public class LiquidacionMes extends Model {
         String c = (lmx.convenio_ministerio) ? "CONVENIO" : "PARQUE";
         eu.setSubject("LIQUIDACION TERMINA:" + lmx.nro_liquidacion_parque + "-" + c + " TOTAL NUMERO: " + x);
         eu.setHtmlMsg("LIQUIDACION TERMINA:" + lmx.nro_liquidacion_parque + "-" + c + " TOTAL NUMERO: " + x);
-        eu.setFrom("marces2000@gmail.com");
+        eu.setFrom("liquidaciones@parquesaludmnes.org.ar");
 
         List<String> adds = new ArrayList<>();
         adds.add("marces2000@gmail.com");
@@ -661,7 +661,7 @@ public class LiquidacionMes extends Model {
         c = (lmx.convenio_ministerio) ? "CONVENIO" : "PARQUE";
         eu.setSubject("LIQUIDACION LIQUIDADA:" + lmx.nro_liquidacion_parque + "-" + c);
         eu.setHtmlMsg(r);
-        eu.setFrom("marces2000@gmail.com");
+        eu.setFrom("liquidaciones@parquesaludmnes.org.ar");
 
 
         eu.setAdds(adds);
@@ -737,7 +737,7 @@ public class LiquidacionMes extends Model {
         String c = (convenio_ministerio) ? "CONVENIO" : "PARQUE";
         eu.setSubject("LIQUIDACION LIQUIDADA:" + nro_liquidacion_parque + "-" + c);
         eu.setHtmlMsg(r);
-        eu.setFrom("marces2000@gmail.com");
+        eu.setFrom("liquidaciones@parquesaludmnes.org.ar");
 
         List<String> adds = new ArrayList<>();
         adds.add("marces2000@gmail.com");
