@@ -183,7 +183,8 @@ private static final long serialVersionUID = 1L;
 	public static final int ACTA_MOVIMIENTO_ENVIADO = 116;
 
 	public static final int LIQUIDACION_LICENCIAS_NOVEDADES_BORRADOR = 117;
-	public static final int LIQUIDACION_LICENCIAS_NOVEDADES_APROBADO = 118;
+	public static final int LIQUIDACION_LICENCIAS_NOVEDADES_CONTROLADO = 118;
+	public static final int LIQUIDACION_LICENCIAS_NOVEDADES_APROBADO = 119;
 
 	@Id
 	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="estados_id_seq")
