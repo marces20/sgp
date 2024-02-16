@@ -24,7 +24,8 @@ public class Profesion extends Model{
 	@Required(message="Debe escribir un nombre")
 	public String nombre;
 
-	public boolean asistencial;
+
+	public Boolean asistencial = false;
 
 	public static Finder<Long,Profesion> find = new Finder<Long,Profesion>(Long.class, Profesion.class);
 
