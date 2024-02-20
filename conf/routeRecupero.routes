@@ -89,6 +89,7 @@ POST   /recupero/reportes/reportePagosExcel   controllers.recupero.RecuperoRepor
 POST   /recupero/reportes/reporteFacturasExcel   controllers.recupero.RecuperoReportesController.reporteFacturasExcel()
 
 GET    /facturas/imprimir-factura       controllers.recupero.RecuperoReportesController.imprimirFactura(id:Long)
+GET    /facturas/imprimir-factura-afip       controllers.recupero.RecuperoReportesController.imprimirFacturaAfip(id:Long)
 GET    /pagos/imprimir-recibo           controllers.recupero.RecuperoReportesController.imprimirRecibo(id:Long)
 
 
