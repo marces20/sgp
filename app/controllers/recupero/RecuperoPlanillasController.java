@@ -41,17 +41,17 @@ import controllers.auth.CheckPermiso;
 
 @Security.Authenticated(Secured.class)
 public class RecuperoPlanillasController  extends Controller {
-	
+
 	final static Form<RecuperoPlanilla> planillaForm = form(RecuperoPlanilla.class);
-	
+
 	public static Result URL_LISTA_PLANILLA = redirect(
 			controllers.recupero.routes.RecuperoPlanillasController.index()
 	);
-	
+
 	@CheckPermiso(key = "planillaVer")
 	public static Result index() {
 		DynamicForm d = form().bindFromRequest();
-		
+
 		return ok(indexPlanilla.render(
 											RecuperoPlanilla.page(
 												  		RequestVar.get("numero"),
@@ -61,17 +61,17 @@ public class RecuperoPlanillasController  extends Controller {
 												  		RequestVar.get("deposito_id")
 												  		),d));
 	}
-	
+
 	@CheckPermiso(key = "planillaVer")
 	public static Result ver(Long id) {
 		RecuperoPlanilla p = RecuperoPlanilla.find.byId(id);
 		if(p != null){
-			
+
 			if(!p.controlPermisoDeposito()) {
 				flash("error", "La institucion de la planilla no corresponde a su institucion asignada.");
 				return redirect(controllers.recupero.routes.RecuperoPlanillasController.index()+UriTrack.get("?"));
 			}
-			
+
 			Form<RecuperoPlanilla> planillaForm = form(RecuperoPlanilla.class).fill(p);
 			return ok(verPlanilla.render(planillaForm, p));
 		}else{
@@ -79,55 +79,55 @@ public class RecuperoPlanillasController  extends Controller {
 			return redirect(controllers.recupero.routes.RecuperoPlanillasController.index()+UriTrack.get("?"));
 		}
 	}
-	
+
 	@CheckPermiso(key = "planillaCrear")
 	public static Result crear() {
-		
+
 		Map<String,String> p = new HashMap<String, String>();
-	 
+
 		Form<RecuperoPlanilla> planillaForm = form(RecuperoPlanilla.class).bind(p);
 		planillaForm.discardErrors();
-		
+
 		return ok(crearPlanilla.render(planillaForm));
 	}
-	
+
 	@CheckPermiso(key = "planillaCrear")
 	public static Result guardar() {
-		
+
 		Form<RecuperoPlanilla> planillaForm = form(RecuperoPlanilla.class).bindFromRequest();
-		
+
 		if(planillaForm.hasErrors()) {
 			flash("error", "Error en formulario");
 			return badRequest(crearPlanilla.render(planillaForm));
 		}
-		
+
 		try {
 			RecuperoPlanilla c = planillaForm.get();
-			
+
 			if(!c.controlPermisoDeposito()) {
 				flash("error", "La institucion no corresponde a su institucion asignada.");
 				return badRequest(crearPlanilla.render(planillaForm));
 			}
-			
-			
+
+
 			Expediente e  = Expediente.find.byId(c.expediente_id.longValue());
-			
+
 			List<RecuperoPlanilla> rpx = RecuperoPlanilla.find.where()
 											.eq("numero", c.numero)
 								    		.eq("expediente.ejercicio_id",e.ejercicio_id)
 								    		.eq("expediente_id",e.id)
 								    		.eq("deposito_id", c.deposito_id)
 								    		.findList();
-			
-			 
+
+
 			if(rpx.size() > 0){
 				flash("error", "Ya existe ese numero de planilla para este ejercicio.");
 				return badRequest(crearPlanilla.render(planillaForm));
 			}else{
 				c.save();
 			}
-			
-			
+
+
 			flash("success", "La Planilla se ha creado");
 			return redirect( controllers.recupero.routes.RecuperoPlanillasController.ver(planillaForm.get().id)+UriTrack.get("&") );
 		} catch (PersistenceException pe) {
@@ -136,11 +136,11 @@ public class RecuperoPlanillasController  extends Controller {
 			return badRequest(crearPlanilla.render(planillaForm));
 		}
 	}
-	
+
 	@CheckPermiso(key = "planillaModificar")
 	public static Result editar(Long id) {
 		RecuperoPlanilla planilla = RecuperoPlanilla.find.byId(id);
-		
+
 		if(planilla  == null){
 			flash("error", "No se encuentra la planilla.");
 			return redirect(controllers.recupero.routes.RecuperoPlanillasController.index()+UriTrack.get("?"));
@@ -150,39 +150,39 @@ public class RecuperoPlanillasController  extends Controller {
 				return redirect(controllers.recupero.routes.RecuperoPlanillasController.index()+UriTrack.get("?"));
 			}
 		}
-		
+
 		return ok(editarPlanilla.render(planillaForm.fill(planilla),planilla));
 	}
-	
+
 	@CheckPermiso(key = "planillaModificar")
 	public static Result actualizar(Long id){
-		
+
 		Form<RecuperoPlanilla> planillaForm = form(RecuperoPlanilla.class).bindFromRequest();
-		
+
 		RecuperoPlanilla planilla = Ebean.find(RecuperoPlanilla.class, id);
-		
+
 		if(planillaForm.hasErrors()) {
 			flash("error", "Error en formulario");
 			return badRequest(editarPlanilla.render(planillaForm,planilla));
 		}
-		
+
 		try {
 			RecuperoPlanilla c = planillaForm.get();
-			
+
 			if(!c.controlPermisoDeposito()) {
 				flash("error", "La institucion no corresponde a su institucion asignada.");
 				return badRequest(editarPlanilla.render(planillaForm,planilla));
 			}
-			
+
 			Expediente e  = Expediente.find.byId(c.expediente_id.longValue());
-			
+
 			List<RecuperoPlanilla> rpx = RecuperoPlanilla.find.where()
 											.eq("numero", c.numero)
 											.eq("expediente.ejercicio_id",e.ejercicio_id)
 											.eq("deposito_id", c.deposito_id)
 											.eq("expediente_id",e.id)
 								   			.ne("id", c.id).findList();
-			
+
 			Logger.debug("cccccccccccccccccccccccccccccccccccccccccc");
 			if(rpx.size() > 0){
 				flash("error", "Ya existe ese numero de planilla para este ejercicio.");
@@ -190,7 +190,7 @@ public class RecuperoPlanillasController  extends Controller {
 			}else{
 				c.update();
 			}
-			
+
 			flash("success", "La planilla se ha actualizado");
 			return redirect( controllers.recupero.routes.RecuperoPlanillasController.ver(planillaForm.get().id) + UriTrack.get("&") );
 		} catch (PersistenceException pe){
@@ -199,31 +199,31 @@ public class RecuperoPlanillasController  extends Controller {
 			return badRequest(editarPlanilla.render(planillaForm,planilla));
 		}
 	}
-	
+
 	@CheckPermiso(key = "planillaEliminar")
 	public static Result eliminar(Long id) {
-		
+
 		RecuperoPlanilla planilla = Ebean.find(RecuperoPlanilla.class).select("id").setId(id).findUnique();
-		
+
 		if(planilla == null){
 			flash("error", "No se encuentra la planilla.");
 			return redirect(controllers.recupero.routes.RecuperoPlanillasController.index()+UriTrack.get("?"));
 		}
-		
+
 		List<RecuperoFactura> rf = RecuperoFactura.find.where().eq("planilla_id", planilla.id).findList();
 		if(rf.size() > 0){
 			flash("error", "No se puede eliminar la planilla porque tiene facturas asociadas");
 			return redirect(controllers.recupero.routes.RecuperoPlanillasController.index()+UriTrack.get("?"));
 		}
-		
+
 		List<RecuperoPago> rp = RecuperoPago.find.where().eq("planilla_id", planilla.id).findList();
 		if(rp.size() > 0){
 			flash("error", "No se puede eliminar la planilla porque tiene pagos asociadas");
 			return redirect(controllers.recupero.routes.RecuperoPlanillasController.index()+UriTrack.get("?"));
 		}
-		
-		
-		
+
+
+
  			try {
 				planilla.delete();
 				flash("success", "Se ha eliminado la planilla");
@@ -232,19 +232,19 @@ public class RecuperoPlanillasController  extends Controller {
 				play.Logger.error("excepcion", pe);
 				flash("error", "No se ha podido eliminar la planilla");
 			}
-	 
+
 
 		String refererUrl = request().getHeader("referer");
 		return redirect(refererUrl);
 	}
-						 
+
 	public static Result suggestRecuperoPlanilla(String input) {
-		 
+
 		ObjectNode rpta = Json.newObject();
 	    ArrayNode rp = rpta.arrayNode();
-	    
+
 	    RecuperoPlanilla ad = new RecuperoPlanilla();
-		 
+
 		for(RecuperoPlanilla a : ad.getDataSuggest(input, 25)){
 			ObjectNode restJs = Json.newObject();
 	        restJs.put("id", a.id);
@@ -252,20 +252,20 @@ public class RecuperoPlanillasController  extends Controller {
 	        restJs.put("info", "");
 	        rp.add(restJs);
 		}
-		
+
 		ObjectNode response = Json.newObject();
 		response.put("results", rp);
-		 
+
 		return ok(response);
 	}
-	
+
 	public static Result get(int id){
 		RecuperoPlanilla rp = RecuperoPlanilla.find.where().eq("id", id).findUnique();
-		
+
 		ObjectNode obj = Json.newObject();
 	    ArrayNode nodo = obj.arrayNode();
 		ObjectNode restJs = Json.newObject();
-		
+
 		if(rp == null) {
 			restJs.put("success", false);
 			restJs.put("message", "No se encuentra la planilla");
@@ -277,26 +277,26 @@ public class RecuperoPlanillasController  extends Controller {
 		nodo.add(restJs);
 		return ok(restJs);
 	}
-	
+
 	public static Result modalBuscar() {
     	Pagination<RecuperoPlanilla> p = new Pagination<RecuperoPlanilla>();
     	p.setOrderDefault("DESC");
-    	p.setSortByDefault("id");	
-    	
+    	p.setSortByDefault("id");
+
     	ExpressionList<RecuperoPlanilla> e = RecuperoPlanilla.find.where();
-    	
+
     	if(!RequestVar.get("ejercicio").isEmpty()){
-    		e.eq("expediente.ejercicio.id", Integer.parseInt( RequestVar.get("ejercicio")) );
+    		e = e.eq("expediente.ejercicio.id", Integer.parseInt( RequestVar.get("ejercicio")) );
     	}
-    	
+
     	if(!RequestVar.get("numero").isEmpty()){
-    		e.eq("numero", Integer.parseInt( RequestVar.get("numero")));
+    		e = e.eq("numero", Integer.parseInt( RequestVar.get("numero")));
     	}
-    	
-    	e = e.disjunction();
-    	
-    	
-    	
+
+    	//e = e.disjunction();
+
+
+
     	p.setExpressionList(e);
 		return ok( modalBusquedaRecuperoPlanilla.render(p, form().bindFromRequest()) );
 	}
