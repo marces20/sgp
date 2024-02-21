@@ -27,6 +27,7 @@ import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 
+import com.avaje.ebean.Ebean;
 import com.avaje.ebean.SqlRow;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
@@ -38,11 +39,15 @@ import models.Estado;
 import models.ExpedienteMovimiento;
 import models.Factura;
 import models.FacturaLinea;
+import models.Orden349;
 import models.OrdenPagoCircuito;
 import models.Organigrama;
 import models.Usuario;
 import models.auth.Permiso;
+import models.haberes.LiquidacionConcepto;
 import models.haberes.LiquidacionNovedadLicencia;
+import models.haberes.Novedad;
+import models.haberes.PuestoLaboral;
 import models.recupero.InformeTotal;
 import controllers.Secured;
 import controllers.auth.CheckPermiso;
@@ -59,6 +64,9 @@ import utils.RequestVar;
 import utils.pagination.Pagination;
 import utils.validation.DateValidation;
 import utils.validation.Validator;
+import views.html.contabilidad.facturas.acciones.modalCargar349;
+import views.html.contabilidad.facturas.acciones.modalPasarEnPreCurso;
+import views.html.contabilidad.facturas.acciones.modalPasarPreAprobado;
 import views.html.rrhh.agenteAsistenciaLicencia.*;
 import views.html.rrhh.agenteAsistenciaLicencia.acciones.*;
 
@@ -87,7 +95,10 @@ public class AgentesAsistenciasLicenciasController extends Controller {
 				 																		RequestVar.get("periodo_id"),
 				 																		RequestVar.get("tipo_relacion_laboral"),
 				 																		RequestVar.get("organigrama_id"),
-				 																		RequestVar.get("activo")
+				 																		RequestVar.get("activo"),
+				 																		RequestVar.get("btnFiltro[0]"),//borrador
+				 																		RequestVar.get("btnFiltro[1]"),//cargado
+				 																		RequestVar.get("btnFiltro[2]")//aprobado
 				 																		);
 
 		return ok(indexLicenciaNovedadesLiquidacion.render(lineas,d));
@@ -722,4 +733,261 @@ public class AgentesAsistenciasLicenciasController extends Controller {
 
 		return ok("ddd");
 	}
+
+	@CheckPermiso(key = "agentesLicenciasPasarCancelado")
+	public static Result modalPasarABorradorNovedadLicencia() {
+		return ok(modalPasarABorradorNovedadLicencia.render(form().bindFromRequest()));
+	}
+
+	public static Result PasarABorradorNovedadLicencia() {
+
+		DynamicForm d = form().bindFromRequest();
+		d.discardErrors();
+		ObjectNode result = Json.newObject();
+		List<Integer> nSeleccionados = getSeleccionados();
+
+		if(nSeleccionados.isEmpty()) {
+			flash("error", "Seleccione al menos una licencia.");
+			result.put("success",false);
+			result.put("html", modalPasarABorradorNovedadLicencia.render(d).toString());
+			return ok(result);
+		}
+
+		List<LiquidacionNovedadLicencia> lnl = LiquidacionNovedadLicencia.find.where().in("id", nSeleccionados).ne("estado_id", Estado.LIQUIDACION_LICENCIAS_NOVEDADES_CONTROLADO).findList();
+		if(lnl.size() > 0) {
+			flash("error", "Solo puede modificar novedades con licencias en estado Controlado.");
+			result.put("success",false);
+			result.put("html", modalPasarABorradorNovedadLicencia.render(d).toString());
+			return ok(result);
+		}
+
+
+		try {
+
+			lnl = LiquidacionNovedadLicencia.find.where().in("id", nSeleccionados).findList();
+			int cargas = 0;
+
+			for(LiquidacionNovedadLicencia lnlx : lnl) {
+
+				LiquidacionNovedadLicencia ll = LiquidacionNovedadLicencia.find.where().eq("id", lnlx.id).findUnique();
+				ll.estado_id = (long) Estado.LIQUIDACION_LICENCIAS_NOVEDADES_BORRADOR;
+				ll.save();
+				cargas ++;
+			}
+
+
+			flash("success", "Se actualizaron <b>("+cargas+")</b> novedades" );
+			result.put("success",true);
+			result.put("html", modalPasarABorradorNovedadLicencia.render(d).toString());
+			return ok(result);
+
+		} catch (Exception e){
+			flash("error", "No se han podido cargar las novedades");
+			result.put("success",false);
+			result.put("html", modalPasarABorradorNovedadLicencia.render(d).toString());
+			return ok(result);
+		}finally {
+
+		}
+
+
+	}
+
+	@CheckPermiso(key = "agentesLicenciasPasarCancelado")
+	public static Result modalPasarAControladoNovedadLicencia() {
+		return ok(modalPasarAControladoNovedadLicencia.render(form().bindFromRequest()));
+	}
+
+	public static Result PasarAControladoNovedadLicencia() {
+
+		DynamicForm d = form().bindFromRequest();
+		d.discardErrors();
+		ObjectNode result = Json.newObject();
+
+		List<Integer> nSeleccionados = getSeleccionados();
+
+		if(nSeleccionados.isEmpty()) {
+			flash("error", "Seleccione al menos una licencia.");
+			result.put("success",false);
+			result.put("html", modalPasarAControladoNovedadLicencia.render(d).toString());
+			return ok(result);
+		}
+
+		List<LiquidacionNovedadLicencia> lnl = LiquidacionNovedadLicencia.find.where().in("id", nSeleccionados).ne("estado_id", Estado.LIQUIDACION_LICENCIAS_NOVEDADES_BORRADOR).findList();
+		if(lnl.size() > 0) {
+			flash("error", "Solo puede cargar novedades con licencias en estado Borrador.");
+			result.put("success",false);
+			result.put("html", modalPasarAControladoNovedadLicencia.render(d).toString());
+			return ok(result);
+		}
+
+		try {
+
+			lnl = LiquidacionNovedadLicencia.find.where().in("id", nSeleccionados).findList();
+			int cargas = 0;
+			for(LiquidacionNovedadLicencia lnlx : lnl) {
+				LiquidacionNovedadLicencia ll = LiquidacionNovedadLicencia.find.where().eq("id", lnlx.id).findUnique();
+				ll.estado_id = (long) Estado.LIQUIDACION_LICENCIAS_NOVEDADES_CONTROLADO;
+				ll.save();
+				cargas ++;
+			}
+
+
+			flash("success", "Se actualizaron <b>("+cargas+")</b> novedades" );
+			result.put("success",true);
+			result.put("html", modalPasarAControladoNovedadLicencia.render(d).toString());
+			return ok(result);
+
+		} catch (Exception e){
+			flash("error", "No se han podido cargar las novedades");
+			result.put("success",false);
+			result.put("html", modalPasarAControladoNovedadLicencia.render(d).toString());
+			return ok(result);
+
+		}finally {
+
+		}
+
+
+	}
+
+	@CheckPermiso(key = "agentesLicenciasPasarCancelado")
+	public static Result modalCrearNovedadLicencia() {
+		return ok(modalCrearNovedadLicencia.render(form().bindFromRequest()));
+	}
+
+	public static Result crearNovedadLicencia() {
+
+		DynamicForm d = form().bindFromRequest();
+		d.discardErrors();
+		ObjectNode result = Json.newObject();
+
+		Long periodo_id =null;
+
+		try {
+			periodo_id = new Long(request().body().asFormUrlEncoded().get("periodo_id_modal_agui")[0]);
+		}catch (Exception e) {
+			flash("error", "No se puede determinar el periodo. Seleccione uno. ");
+			result.put("success",false);
+			result.put("html", modalCrearNovedadLicencia.render(d).toString());
+			return ok(result);
+		}
+
+		if(periodo_id == null) {
+			flash("error", "No se puede determinar el periodo. Seleccione uno. ");
+			result.put("success",false);
+			result.put("html", modalCrearNovedadLicencia.render(d).toString());
+			return ok(result);
+		}
+
+		Long tipo_licencia_id =null;
+
+		try {
+			tipo_licencia_id = new Long(request().body().asFormUrlEncoded().get("liquidacion_tipo_id")[0]);
+		}catch (Exception e) {
+			flash("error", "No se puede determinar el tipo de licencia. Seleccione uno. ");
+			result.put("success",false);
+			result.put("html", modalCrearNovedadLicencia.render(d).toString());
+			return ok(result);
+		}
+
+		if(tipo_licencia_id == null) {
+			flash("error", "No se puede determinar el tipo de licencia. Seleccione uno. ");
+			result.put("success",false);
+			result.put("html", modalCrearNovedadLicencia.render(d).toString());
+			return ok(result);
+		}
+
+
+
+		List<Integer> nSeleccionados = getSeleccionados();
+
+		if(nSeleccionados.isEmpty()) {
+			flash("error", "Seleccione al menos una licencia.");
+			result.put("success",false);
+			result.put("html", modalCrearNovedadLicencia.render(d).toString());
+			return ok(result);
+		}
+
+		List<LiquidacionNovedadLicencia> lnl = LiquidacionNovedadLicencia.find.where().in("id", nSeleccionados)
+											   .ne("estado_id", Estado.LIQUIDACION_LICENCIAS_NOVEDADES_CONTROLADO).findList();
+		if(lnl.size() > 0) {
+			flash("error", "Solo puede cargar novedades con licencias en estado Controlado.");
+			result.put("success",false);
+			result.put("html", modalCrearNovedadLicencia.render(d).toString());
+			return ok(result);
+		}
+
+
+		Ebean.beginTransaction();
+		try {
+
+			lnl = LiquidacionNovedadLicencia.find.where().in("id", nSeleccionados).findList();
+
+			LiquidacionConcepto lc10960 = LiquidacionConcepto.find.where().eq("codigo", 10960).findUnique();
+			LiquidacionConcepto lc70960 = LiquidacionConcepto.find.where().eq("codigo", 70960).findUnique();
+
+			int cargas = 0;
+			for(LiquidacionNovedadLicencia lnlx : lnl) {
+
+				PuestoLaboral pl  = PuestoLaboral.find.where().eq("legajo.agente_id", lnlx.agenteAsistenciaLicencia.agente_id).isNull("fecha_baja").findUnique();
+
+				if(pl == null) {
+					Ebean.rollbackTransaction();
+					flash("error", "No existe el puesto laboral activo para el agente "+ lnlx.agenteAsistenciaLicencia.agente.apellido);
+					result.put("success",false);
+					result.put("html", modalCrearNovedadLicencia.render(d).toString());
+					return ok(result);
+				}
+
+				Long concepto_id = (lnlx.dias > 0)?lc10960.id:lc70960.id;
+
+				Novedad n = new Novedad();
+				n.puesto_laboral_id = pl.id;
+				n.liquidacion_concepto_id = concepto_id;
+				n.periodo_inicio_id = periodo_id;
+				n.periodo_hasta_id = periodo_id;
+				n.periodo_concepto_id = lnlx.periodo_id;
+				n.organigrama_id = lnlx.agenteAsistenciaLicencia.agente.organigrama_id;
+				n.fecha_novedad = new Date();
+				n.importe = new BigDecimal(0);
+				n.cantidad = new BigDecimal(lnlx.dias);
+				n.usuario_id = new Long(Usuario.getUsuarioSesion());
+				n.liquidacion_tipo_id = tipo_licencia_id;
+				n.save();
+
+				LiquidacionNovedadLicencia ll = LiquidacionNovedadLicencia.find.where().eq("id", lnlx.id).findUnique();
+
+				ll.estado_id = (long) Estado.LIQUIDACION_LICENCIAS_NOVEDADES_APROBADO;
+				ll.save();
+
+				cargas ++;
+
+
+			}
+
+			Ebean.commitTransaction();
+			result.put("success", true);
+			flash("success", "Se han creado <b>("+cargas+")</b> novedades" );
+			result.put("html", modalCrearNovedadLicencia.render(d).toString());
+			return ok(result);
+
+			//return ok(modalCrearNovedadLicencia.render(d));
+
+		} catch (Exception e){
+			Ebean.rollbackTransaction();
+			Logger.debug(" xxxxxxxxxxxx "+e);
+			flash("error", "No se han podido cargar las novedades. "+e);
+			result.put("success",false);
+			result.put("html", modalCrearNovedadLicencia.render(d).toString());
+			return ok(result);
+
+			//return ok(modalCrearNovedadLicencia.render(d));
+		}finally {
+			Ebean.endTransaction();
+		}
+
+
+	}
+
 }
