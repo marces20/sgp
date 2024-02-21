@@ -117,6 +117,14 @@ public class AgentesAsistenciasReportesController extends Controller {
 					celda0 = fila.createCell(6);
 					celda0.setCellValue("PERIODO");
 					celda0.setCellStyle(comun);
+					celda0 = fila.createCell(7);
+					celda0.setCellValue("INSTITUCION");
+					celda0.setCellStyle(comun);
+
+					celda0 = fila.createCell(8);
+					celda0.setCellValue("EJERCICIO-LICENCIA");
+					celda0.setCellStyle(comun);
+
 					x++;
 				for(LiquidacionNovedadLicencia oll : o){
 					fila = hoja.createRow(x);
@@ -153,6 +161,14 @@ public class AgentesAsistenciasReportesController extends Controller {
 
 					celda0 = fila.createCell(6);
 					celda0.setCellValue(oll.periodo.nombre);
+					celda0.setCellStyle(comun);
+
+					celda0 = fila.createCell(7);
+					celda0.setCellValue(oll.agenteAsistenciaLicencia.agente.organigrama.nombre);
+					celda0.setCellStyle(comun);
+
+					celda0 = fila.createCell(8);
+					celda0.setCellValue(oll.agenteAsistenciaLicencia.ejercicio.nombre);
 					celda0.setCellStyle(comun);
 
 					x++;
