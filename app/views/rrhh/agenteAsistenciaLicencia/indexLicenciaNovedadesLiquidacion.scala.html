@@ -5,6 +5,23 @@
 @scripts = {
 	<script src="@routes.Assets.at("javascripts/rrhh/agentes.js")" type="text/javascript"></script>
 }
+
+@getClassEstado(i:models.haberes.LiquidacionNovedadLicencia) = @{
+	var classEstado:String = new String()
+
+		if(i.estado != null && (i.estado.id == 117) ){
+			classEstado = "borrador"
+		}else if(i.estado != null && i.estado.id == 118){
+			classEstado = ""
+		}else if(i.estado != null && i.estado.id == 119){
+			classEstado = "autorizado"
+		}else{
+			classEstado = "borrador"
+		}
+
+	classEstado
+}
+
 @implicitFieldConstructor = @{ FieldConstructor(simpleInput.render) }
 
 @views.html.rrhh.mainRrhh("Lista Licencias por Periodos",scripts) {
@@ -32,7 +49,25 @@
 			    Acciones
 			    <span class="caret"></span>
 			  </button>
+			  	<ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
 
+
+					    @if(Permiso.check("agentesLicenciasPasarAprobado")) {
+					    	<li role="presentation"><a role="menuitem" id="accionPasarABorradorLicencia" tabindex="-1" href="#"
+					    	data-url="@controllers.rrhh.routes.AgentesAsistenciasLicenciasController.modalPasarABorradorNovedadLicencia()">Pasar a Borrador</a></li>
+					    }
+					    @if(Permiso.check("agentesLicenciasPasarAprobado")) {
+					    	<li role="presentation"><a role="menuitem" id="accionPasarAControladoLicencia" tabindex="-1" href="#"
+					    	data-url="@controllers.rrhh.routes.AgentesAsistenciasLicenciasController.modalPasarAControladoNovedadLicencia()">Pasar a Controlado</a></li>
+					    }
+
+					    @if(Permiso.check("liquidacionNovedadesCrear")) {
+					    	<li role="presentation"><a role="menuitem" id="accionCrearNovedeadesLicencia" tabindex="-1" href="#"
+					    	data-url="@controllers.rrhh.routes.AgentesAsistenciasLicenciasController.modalCrearNovedadLicencia()">Cargar Novedades</a></li>
+					    }
+
+
+				  </ul>
 			</div>
 
 			<div class="pull-right btn-header">
@@ -48,6 +83,25 @@
 	<form action="" id="formSearchAgentes" method="GET">
 
 		<div class="row" >
+
+			<div class="col-sm-2 filtrosEstados" id="filtrosEstados">
+				<div class="btn-group">
+				  <button type="button" rel="borrador" class="btn btn-default btn-filtros">
+				  	<i class="glyphicon glyphicon-pencil size-14"></i><br>Borrador
+				  	@checkbox(formBuscador("btnFiltro[0]"), 'hidden -> "hidden")
+				  </button>
+				  <button type="button" rel="imputado" class="btn btn-default btn-filtros">
+				  	<i class="glyphicon glyphicon-arrow-right"></i><br>Controlado
+				  	@checkbox(formBuscador("btnFiltro[1]"), 'hidden -> "hidden")
+				 </button>
+
+				 <button type="button" rel="aprobado" class="btn btn-default btn-filtros">
+				  	<i class="glyphicon glyphicon-ok"></i><br>Cargado
+				  	@checkbox(formBuscador("btnFiltro[2]"), 'hidden -> "hidden")
+				 </button>
+
+				</div>
+			</div>
 
 			<div class="col-sm-2">
 				<label for="inputPeriodo" class="control-label">Periodo</label>
@@ -159,12 +213,13 @@
 					<th>Fin</th>
 					<th>Organigrama</th>
 					<th>Tipo Relacion</th>
+					<th>Estado</th>
 
 				</tr>
 			</thead>
 			<tbody>
 			@for(linea <- buscador.getList) {
-				<tr>
+				<tr class="@getClassEstado(linea)" >
 					<td width="30"><input type="checkbox" name="check_listado[]" value="@linea.id" id="check-@linea.id"></td>
 					<td width="50">@linea.agenteAsistenciaLicencia.id</td>
 					<td>@if(linea.agenteAsistenciaLicencia != null){@linea.agenteAsistenciaLicencia.agente.apellido}</td>
@@ -188,6 +243,7 @@
 				    	case _ => {}
 						}
 					</td>
+					<td>@if(linea.estado_id != null){@linea.estado.nombre}</td>
 
 				</tr>
 
