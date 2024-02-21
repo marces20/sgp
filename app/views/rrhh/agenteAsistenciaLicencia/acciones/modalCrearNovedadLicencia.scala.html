@@ -1,0 +1,64 @@
+@(formBuscador: DynamicForm)
+@import helper._
+@implicitFieldConstructor = @{ FieldConstructor(simpleInput.render) }
+
+@helper.form(action = controllers.rrhh.routes.AgentesAsistenciasLicenciasController.crearNovedadLicencia(), 'id -> "formCrearNovedadLicencia") {
+
+	@views.html.tags.successError()
+
+	<div class="row">
+		<div class="col-sm-3">
+			<label for="inputPeriodo" class="control-label">Periodo</label>
+			<div class="input-group">
+				@inputText(formBuscador("periodo_modal_agui"),'class -> "form-control",'id -> "periodo_modal_agui")
+				@inputText(formBuscador("periodo_id_modal_agui"),'hidden -> "hidden",'id -> "periodo_id_modal_agui")
+				<span class="input-group-addon">
+				<a href="#" class="searchModal"
+							id="searchPeriodoModal"
+							data-title="Selección de Periodo"
+							data-url="@controllers.contabilidad.routes.PeriodosController.modalBuscar()"
+							data-height="650"
+							data-width="700"
+							data-listen="modal.seleccion.periodo.simple"
+							data-label="#periodo_modal_agui"
+							data-field="#periodo_id_modal_agui">
+					<i class="glyphicon glyphicon-search"></i>
+				</a>
+				</span>
+			</div>
+		</div>
+		<div class="col-sm-2">
+			<label class="control-label">Tipo Liquidacion
+			@select(formBuscador("liquidacion_tipo_id"), models.haberes.LiquidacionTipo.getTipos().map { p => p.id.toString -> p.nombre}, 'class -> "form-control select", '_default -> "Seleccionar")
+			</label>
+
+		</div>
+
+		<div class="col-sm-5"><br />
+			<button type="submit" class="btn btn-default" title="Cargar Novedades Licencias"><i class="glyphicon glyphicon-arrow-right"></i> Cargar Novedades Licencias</button>
+		</div>
+
+	</div>
+
+
+}
+<script>
+$( function(){
+	$('#searchPeriodoModal').modalSearch();
+	if($("#periodo_modal_agui").length){
+		var options = {
+				script:"/contabilidad/suggestPeriodo/",
+				varname:"",
+				json:true,
+				shownoresults:true,
+				maxresults:6,
+				callback: function (obj) {
+											$("#periodo_id_modal_agui").val(obj.id);
+										 }
+			};
+		var as_json = new bsn.AutoSuggest('periodo_modal_agui', options);
+	}
+
+});
+</script>
+@flash().clear()

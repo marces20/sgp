@@ -2,7 +2,7 @@ $( function(){
 
 	$("#fechax").mask("99/99/9999");
 
-	$('#searchOrganigrama,#searchAgente,#searchProfesion,#searchTipoResidencia,#searchEscalaLaboral,#searchEspecialidad,#searchPeriodo').modalSearch();
+	$('#searchOrganigrama,#searchAgente,#searchProfesion,#searchTipoResidencia,#searchEscalaLaboral,#searchEspecialidad,#searchPeriodo,#searchPeriodoModal').modalSearch();
 	$('#filtrosEstados button').click( function() {
 		var checkbox = $(this).find(':checkbox');
 		checkbox.is(':checked') ? checkbox.removeAttr('checked') : checkbox.attr('checked', 'checked');
@@ -226,6 +226,91 @@ $( function(){
 	    });
 	});
 
+	$('#accionPasarABorradorLicencia').click( function() { //abrir modal para pasar a borrador
+		var url = $(this).attr("data-url");
+		dialogoPasarABorradorNovedeadesLicencia = crearDialogoGeneral(url);
+		dialogoPasarABorradorNovedeadesLicencia.dialog({title: "Pasar a Borrador",
+			close: function( event, ui ) {location.reload();},
+			buttons:{ "Cerrar": function() { $(this).dialog("close"); location.reload();} }});
+	});
+
+
+	$(document).on("submit", '#formPasarABorradorLicencia', function(){
+		var form = $(this);
+		var url = form.attr('action');
+		var data = form.serialize()+'&'+$("input[name='check_listado[]']").serialize();
+		var submit = form.find("button[type='submit']");
+		submit.replaceWith(getLoading());
+		$.post(url, data, function(data){
+			if(data.success) {
+				location.reload();
+				//form.replaceWith(data);
+			} else {
+				form.replaceWith(data.html);
+			}
+		});
+
+		return false;
+	});
+
+
+	$('#accionPasarAControladoLicencia').click( function() { //abrir modal para pasar a borrador
+		var url = $(this).attr("data-url");
+		dialogoCrearNovedeadesLicencia = crearDialogoGeneral(url);
+		dialogoCrearNovedeadesLicencia.dialog({title: "Pasar a Controlado",
+			close: function( event, ui ) {location.reload();},
+			buttons:{ "Cerrar": function() { $(this).dialog("close"); location.reload();} }});
+	});
+
+
+	$(document).on("submit", '#formPasarAControladoLicencia', function(){
+		var form = $(this);
+		var url = form.attr('action');
+		var data = form.serialize()+'&'+$("input[name='check_listado[]']").serialize();
+		var submit = form.find("button[type='submit']");
+		submit.replaceWith(getLoading());
+		$.post(url, data, function(data){
+			if(data.success) {
+				location.reload();
+				//form.replaceWith(data);
+			} else {
+				form.replaceWith(data.html);
+			}
+		});
+
+		return false;
+	});
+
+	$('#accionCrearNovedeadesLicencia').click( function() { //abrir modal para pasar a borrador
+		var url = $(this).attr("data-url");
+		dialogoCrearNovedeadesLicencia = crearDialogoGeneral(url);
+		dialogoCrearNovedeadesLicencia.dialog({title: "Crear Novedeades Licencias",
+			close: function( event, ui ) {location.reload();},
+			buttons:{ "Cerrar": function() { $(this).dialog("close"); location.reload();} }});
+	});
+
+
+	$(document).on("submit", '#formCrearNovedadLicencia', function(){
+		var form = $(this);
+		var url = form.attr('action');
+		var data = form.serialize()+'&'+$("input[name='check_listado[]']").serialize();
+		var submit = form.find("button[type='submit']");
+		submit.replaceWith(getLoading());
+		$.post(url, data, function(data){
+
+			if(data.success) {
+
+				location.reload();
+				//form.replaceWith(data);
+			} else {
+				alert
+				form.replaceWith(data.html);
+			}
+		});
+
+		return false;
+	});
+
 
 	$('#accionLicenciaPasarBorrador').click( function() { //abrir modal para pasar a borrador
 		var url = $(this).attr("data-url");
@@ -235,7 +320,7 @@ $( function(){
 
 	$(document).on("submit", '#formPasarBorradorLicencia', function(){
 		var form = $(this);
-		var url = form.attr('action');check_listado
+		var url = form.attr('action');
 		var data = form.serialize()+'&'+$("input[name='check_listado[]']").serialize();
 		var submit = form.find("button[type='submit']");
 		submit.replaceWith(getLoading());
