@@ -666,6 +666,15 @@ GET     /rrhh/agente-asistencia-licencia/getListaLicenciasPendientes controllers
 GET     /rrhh/agente-asistencia-licencia/getListaLicenciasEnFecha controllers.rrhh.AgentesAsistenciasLicenciasController.getListaLicenciasEnFecha()
 GET     /rrhh/agente-asistencia-licencia/getListaLicenciasEnFechaExcel controllers.rrhh.AgentesAsistenciasLicenciasController.getListaLicenciasEnFechaExcel()
 
+GET     /rrhh/agente-asistencia-licencia/modalCrearNovedadLicencia 	controllers.rrhh.AgentesAsistenciasLicenciasController.modalCrearNovedadLicencia()
+POST    /rrhh/agente-asistencia-licencia/crearNovedadLicencia 		controllers.rrhh.AgentesAsistenciasLicenciasController.crearNovedadLicencia()
+
+GET     /rrhh/agente-asistencia-licencia/modalPasarAControladoNovedadLicencia 	controllers.rrhh.AgentesAsistenciasLicenciasController.modalPasarAControladoNovedadLicencia()
+POST    /rrhh/agente-asistencia-licencia/PasarAControladoNovedadLicencia 		controllers.rrhh.AgentesAsistenciasLicenciasController.PasarAControladoNovedadLicencia()
+
+GET     /rrhh/agente-asistencia-licencia/modalPasarABorradorNovedadLicencia controllers.rrhh.AgentesAsistenciasLicenciasController.modalPasarABorradorNovedadLicencia()
+POST    /rrhh/agente-asistencia-licencia/PasarABorradorNovedadLicencia 		controllers.rrhh.AgentesAsistenciasLicenciasController.PasarABorradorNovedadLicencia()
+
 POST     /rrhh/agenteAsistencia/reporteLicencia	 		controllers.rrhh.AgentesAsistenciasReportesController.reporteLicencia(comun:Boolean ?= true)
 POST     /rrhh/agenteAsistencia/reporteLicenciaMedicinaLaboral	 		controllers.rrhh.AgentesAsistenciasReportesController.reporteLicenciaMedicinaLaboral(id: Long)
 POST     /rrhh/agenteAsistencia/exportacionNovedadesLicencias	 		controllers.rrhh.AgentesAsistenciasReportesController.exportacionNovedadesLicencias()
