@@ -734,7 +734,7 @@ public class AgentesAsistenciasLicenciasController extends Controller {
 		return ok("ddd");
 	}
 
-	@CheckPermiso(key = "agentesLicenciasPasarCancelado")
+	@CheckPermiso(key = "agentesLicenciasPasarAprobado")
 	public static Result modalPasarABorradorNovedadLicencia() {
 		return ok(modalPasarABorradorNovedadLicencia.render(form().bindFromRequest()));
 	}
@@ -793,7 +793,7 @@ public class AgentesAsistenciasLicenciasController extends Controller {
 
 	}
 
-	@CheckPermiso(key = "agentesLicenciasPasarCancelado")
+	@CheckPermiso(key = "agentesLicenciasPasarAprobado")
 	public static Result modalPasarAControladoNovedadLicencia() {
 		return ok(modalPasarAControladoNovedadLicencia.render(form().bindFromRequest()));
 	}
@@ -851,7 +851,7 @@ public class AgentesAsistenciasLicenciasController extends Controller {
 
 	}
 
-	@CheckPermiso(key = "agentesLicenciasPasarCancelado")
+	@CheckPermiso(key = "liquidacionNovedadesCrear")
 	public static Result modalCrearNovedadLicencia() {
 		return ok(modalCrearNovedadLicencia.render(form().bindFromRequest()));
 	}
