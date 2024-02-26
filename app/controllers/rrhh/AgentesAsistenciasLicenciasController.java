@@ -614,40 +614,49 @@ public class AgentesAsistenciasLicenciasController extends Controller {
 				Cell celda0 = fila.createCell(0);
 				celda0.setCellValue("Apellido y Nombre");
 				celda0.setCellStyle(comun);
+
 				celda0 = fila.createCell(1);
 				celda0.setCellValue("DNI");
 				celda0.setCellStyle(comun);
+
 				celda0 = fila.createCell(2);
 				celda0.setCellValue("CUIT");
 				celda0.setCellStyle(comun);
+
 				celda0 = fila.createCell(3);
 				celda0.setCellValue("Organigrama");
 				celda0.setCellStyle(comun);
+
 				celda0 = fila.createCell(4);
 				celda0.setCellValue("Profesion");
 				celda0.setCellStyle(comun);
+
 				celda0 = fila.createCell(5);
+				celda0.setCellValue("Puesto");
+				celda0.setCellStyle(comun);
+
+				celda0 = fila.createCell(6);
 				celda0.setCellValue("Categoría");
 				celda0.setCellStyle(comun);
-				celda0 = fila.createCell(6);
+				celda0 = fila.createCell(7);
 				celda0.setCellValue("Carga horaria");
 				celda0.setCellStyle(comun);
-				celda0 = fila.createCell(7);
+				celda0 = fila.createCell(8);
 				celda0.setCellValue("Relación");
 				celda0.setCellStyle(comun);
-				celda0 = fila.createCell(8);
+				celda0 = fila.createCell(9);
 				celda0.setCellValue("Fecha Inicio");
 				celda0.setCellStyle(comun);
-				celda0 = fila.createCell(9);
+				celda0 = fila.createCell(10);
 				celda0.setCellValue("Fecha Fin");
 				celda0.setCellStyle(comun);
-				celda0 = fila.createCell(10);
+				celda0 = fila.createCell(11);
 				celda0.setCellValue("Dias");
 				celda0.setCellStyle(comun);
-				celda0 = fila.createCell(11);
+				celda0 = fila.createCell(12);
 				celda0.setCellValue("Tipo Licencia");
 				celda0.setCellStyle(comun);
-				celda0 = fila.createCell(12);
+				celda0 = fila.createCell(13);
 				celda0.setCellValue("Estado");
 				celda0.setCellStyle(comun);
 
@@ -672,10 +681,14 @@ public class AgentesAsistenciasLicenciasController extends Controller {
 					celda0.setCellStyle(comun);
 
 					celda0 = fila.createCell(5);
-					celda0.setCellValue(i.getString("escala"));
+					celda0.setCellValue(i.getString("puesto"));
 					celda0.setCellStyle(comun);
 
 					celda0 = fila.createCell(6);
+					celda0.setCellValue(i.getString("escala"));
+					celda0.setCellStyle(comun);
+
+					celda0 = fila.createCell(7);
 					celda0.setCellValue(i.getString("carga_horaria"));
 					celda0.setCellStyle(comun);
 
@@ -692,23 +705,23 @@ public class AgentesAsistenciasLicenciasController extends Controller {
 				    	case  "9": relacion = "Otro"; break;
 				    }
 
-					celda0 = fila.createCell(7);
+					celda0 = fila.createCell(8);
 					celda0.setCellValue(relacion);
 					celda0.setCellStyle(comun);
 
-					celda0 = fila.createCell(8);
+					celda0 = fila.createCell(9);
 					celda0.setCellValue(utils.DateUtils.formatDate(i.getDate("finicio")));
 					celda0.setCellStyle(comun);
-					celda0 = fila.createCell(9);
+					celda0 = fila.createCell(10);
 					celda0.setCellValue(utils.DateUtils.formatDate(i.getDate("ffin")));
 					celda0.setCellStyle(comun);
-					celda0 = fila.createCell(10);
+					celda0 = fila.createCell(11);
 					celda0.setCellValue(i.getInteger("dias"));
 					celda0.setCellStyle(comun);
-					celda0 = fila.createCell(11);
+					celda0 = fila.createCell(12);
 					celda0.setCellValue(i.getString("tipoLicencia"));
 					celda0.setCellStyle(comun);
-					celda0 = fila.createCell(12);
+					celda0 = fila.createCell(13);
 					celda0.setCellValue(i.getString("estado"));
 					celda0.setCellStyle(comun);
 
