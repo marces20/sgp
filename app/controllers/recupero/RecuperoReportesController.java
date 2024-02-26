@@ -28,6 +28,7 @@ import models.recupero.InformeTotal;
 import models.recupero.RecuperoFactura;
 import models.recupero.RecuperoFacturaLinea;
 import models.recupero.RecuperoNotaCredito;
+import models.recupero.RecuperoNotaDebito;
 import models.recupero.RecuperoPago;
 import models.recupero.RecuperoPlanilla;
 
@@ -1208,7 +1209,13 @@ public class RecuperoReportesController extends Controller {
 		String dirTemp = System.getProperty("java.io.tmpdir");
 
 		//RecuperoFactura factura = RecuperoFactura.find.byId(id);
-
+		/*
+		 select nc.numero, pv.numero,rf.numero
+from recupero_notas_creditos nc
+inner join recupero_facturas rf on rf.id = nc.recupero_factura_id
+inner join punto_ventas pv on pv.id = rf.puntoventa_id
+order by nc.numero
+		 * */
 
 
 		if(idPlanilla == null){
@@ -1321,7 +1328,7 @@ public class RecuperoReportesController extends Controller {
 				celda.setCellStyle(comun);
 
 				celda = f.createCell(2);
-				celda.setCellValue(rffi.serie+rffi.numero);
+				celda.setCellValue(rffi.serie+rffi.puntoVenta.numero+"-"+rffi.numero);
 				celda.setCellStyle(comun);
 
 				celda = f.createCell(3);//FACTURADO
@@ -1389,17 +1396,18 @@ public class RecuperoReportesController extends Controller {
 
 			}
 
+			/////////////////////////// - NOTAS DE CREDITOS- /////////////////////////////////7
 
-			List<Object> idsf = RecuperoFactura.find.where().eq("planilla_id",idPlanilla).findIds();
+			//List<Object> idsf = RecuperoFactura.find.where().eq("planilla_id",idPlanilla).findIds();
 			List<RecuperoNotaCredito> ncl = RecuperoNotaCredito.find.where()
 											 //.in("recupero_factura_id",idsf)
 											  .in("planilla_id",idPlanilla)
 											 .findList();
 
 			for(RecuperoNotaCredito nc : ncl){
-
+				RecuperoFactura rfn = nc.recupero_factura;
 				if(!idsFacturas.contains(nc.recupero_factura_id)){
-					RecuperoFactura rfn = nc.recupero_factura;
+
 
 					f = hoja.createRow(x);
 					celda = f.createCell(0);
@@ -1411,7 +1419,7 @@ public class RecuperoReportesController extends Controller {
 					celda.setCellStyle(comun);
 
 					celda = f.createCell(2);
-					celda.setCellValue(rfn.serie+rfn.numero);
+					celda.setCellValue(rfn.serie+rfn.puntoVenta.numero+"-"+rfn.numero);
 					celda.setCellStyle(comun);
 
 					celda = f.createCell(3);//FACTURADO
@@ -1447,7 +1455,7 @@ public class RecuperoReportesController extends Controller {
 				celda.setCellStyle(comun);
 
 				celda = f.createCell(2);
-				celda.setCellValue("NC "+nc.numero);
+				celda.setCellValue("NC"+rfn.puntoVenta.numero+"-"+nc.numero);
 				celda.setCellStyle(comun);
 
 				celda = f.createCell(3);
@@ -1471,7 +1479,91 @@ public class RecuperoReportesController extends Controller {
 				x++;
 			}
 
+			/////////////////////////- NOTA DEBITOS-///////////////////////////
 
+			//List<Object> idsf = RecuperoFactura.find.where().eq("planilla_id",idPlanilla).findIds();
+			List<RecuperoNotaDebito> ndl = RecuperoNotaDebito.find.where()
+											 //.in("recupero_factura_id",idsf)
+											  .in("planilla_id",idPlanilla)
+											 .findList();
+
+			for(RecuperoNotaDebito nd : ndl){
+				RecuperoFactura rfn = nd.recupero_factura;
+				if(!idsFacturas.contains(nd.recupero_factura_id)){
+
+
+					f = hoja.createRow(x);
+					celda = f.createCell(0);
+					celda.setCellValue(n.toString());
+					celda.setCellStyle(comun);
+
+					celda = f.createCell(1);
+					celda.setCellValue(utils.DateUtils.formatDate(rfn.fecha));
+					celda.setCellStyle(comun);
+
+					celda = f.createCell(2);
+					celda.setCellValue(rfn.serie+rfn.puntoVenta.numero+"-"+rfn.numero);
+					celda.setCellStyle(comun);
+
+					celda = f.createCell(3);//FACTURADO
+					celda.setCellType(Cell.CELL_TYPE_NUMERIC);
+					celda.setCellValue(rfn.getBase().doubleValue());
+					celda.setCellStyle(estiloMoneda);
+					total_facturado = total_facturado.add(rfn.getBase());
+
+					celda = f.createCell(4);
+					celda.setCellValue("");
+					celda.setCellStyle(comun);
+					celda = f.createCell(5);
+					celda.setCellValue("");
+					celda.setCellStyle(comun);
+
+					celda = f.createCell(6);
+					celda.setCellValue(nd.recupero_factura.cliente.nombre);
+					celda.setCellStyle(comun);
+
+					n++;
+					x++;
+				}
+
+
+				f = hoja.createRow(x);
+
+				celda = f.createCell(0);
+				celda.setCellValue(n.toString());
+				celda.setCellStyle(comun);
+
+				celda = f.createCell(1);
+				celda.setCellValue(utils.DateUtils.formatDate(nd.fecha));
+				celda.setCellStyle(comun);
+
+				celda = f.createCell(2);
+				//celda.setCellValue("ND "+nd.numero);
+				celda.setCellValue("ND"+rfn.puntoVenta.numero+"-"+nd.numero);
+				celda.setCellStyle(comun);
+
+				celda = f.createCell(3);
+				celda.setCellType(Cell.CELL_TYPE_NUMERIC);
+				celda.setCellValue(nd.getTotal().multiply(new BigDecimal(-1)).doubleValue());
+				celda.setCellStyle(estiloMoneda);
+				total_facturado = total_facturado.add(nd.getTotal());
+
+				celda = f.createCell(4);
+				celda.setCellValue("");
+				celda.setCellStyle(comun);
+				celda = f.createCell(5);
+				celda.setCellValue("");
+				celda.setCellStyle(comun);
+
+				celda = f.createCell(6);
+				celda.setCellValue(nd.recupero_factura.cliente.nombre);
+				celda.setCellStyle(comun);
+
+				n++;
+				x++;
+			}
+
+			////////////////////////-TOTALES-////////////////////////////
 			f = hoja.createRow(x);
 
 			celda = f.createCell(2);
@@ -1520,7 +1612,7 @@ public class RecuperoReportesController extends Controller {
 
 			f = hoja.createRow(x);
 			celda = f.createCell(4);
-			celda.setCellValue("Deposito");
+			celda.setCellValue("Tranferencias");
 			celda.setCellStyle(comun);
 
 			celda = f.createCell(5);
