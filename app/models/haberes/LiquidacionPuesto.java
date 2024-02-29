@@ -497,7 +497,7 @@ public class LiquidacionPuesto extends Model {
     String r = "";
 
     EmailUtilis eu = new EmailUtilis();
-    eu.setFrom("liquidacionesparque@gmail.com");
+    eu.setFrom("liquidaciones@parquesaludmnes.org.ar");
     eu.setSubject("LIQUIDACION envio nummero:");
     eu.setHtmlMsg("VA POR EL NUMERO ");
 
@@ -553,7 +553,7 @@ public class LiquidacionPuesto extends Model {
 
 
           eu = new EmailUtilis();
-          eu.setFrom("liquidacionesparque@gmail.com");
+          eu.setFrom("liquidaciones@parquesaludmnes.org.ar");
           eu.setSubject("LIQUIDACION envio nummero:" + x);
           eu.setHtmlMsg("VA POR EL NUMERO " + x + " hora:" + new Date());
           eu.setAdds(adds);
