@@ -20,56 +20,56 @@ import play.db.ebean.Model;
 import play.db.ebean.Model.Finder;
 import utils.pagination.Pagination;
 
-@Entity 
-@Table(name = "agente_hijos")
+@Entity
+@Table(name = "agente_hijos_old")
 public class AgenteHijo extends Model{
-	
+
 	private static final long serialVersionUID = 1L;
-	
-	@Id  
+
+	@Id
 	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="agente_hijos_id_seq")
 	public Long id;
-	
+
 	@ManyToOne
 	@JoinColumn(name="agente_id", referencedColumnName="id", insertable=false, updatable=false)
 	public Agente agente;
 	@Required(message="Debe tener un agente asociado.")
 	public Long agente_id;
-	
+
 	@Required(message="Requiere nombre.")
 	public String nombre;
-	
+
 	@Required(message="Requiere dni.")
 	public String dni;
-	
+
 	@ManyToOne
 	@JoinColumn(name="estudio_nivel_id", referencedColumnName="id", insertable=false, updatable=false)
 	public EstudioNivel estudioNivel;
 	public Long estudio_nivel_id;
-	
+
 	@ManyToOne
 	@JoinColumn(name="estudio_estado_id", referencedColumnName="id", insertable=false, updatable=false)
 	public EstudioEstado estudioEstado;
 	public Long estudio_estado_id;
-	
+
 	@Formats .DateTime(pattern="dd/MM/yyyy")
 	@Required(message="Requiere fecha nacimiento.")
 	public Date fnacimiento;
-	
+
 	@Required(message="Debe especificar si es discapacitado o no")
 	public Boolean discapacidad;
-	
+
 	public Integer discapacidad_nivel;
-	
+
 	@ManyToOne
 	@JoinColumn(name="estado_civil_id", referencedColumnName="id", insertable=false, updatable=false)
 	public EstadoCivil estadoCivil;
 	@Required(message="Debe seleccionar un estado civil.")
 	public Long estado_civil_id;
-	
+
 	@Required(message="Debe seleccionar el sexo")
 	public String sexo;
-	
+
 	public String cod_convivencia;
 	public String cod_actividad;
 	@Required(message="Debe especificar si es vive o no")
@@ -80,25 +80,25 @@ public class AgenteHijo extends Model{
 	public Date finicio_certificado_ar;
 	@Formats .DateTime(pattern="dd/MM/yyyy")
 	public Date ffin_certificado_ar;
-	
+
 	@ManyToOne
 	@JoinColumn(name="create_usuario_id", referencedColumnName="id", insertable=false, updatable=false)
-	public Usuario create_usuario; 
+	public Usuario create_usuario;
 	@Column(name="create_usuario_id")
 	public Long create_usuario_id;
-	 
-	public Date create_date; 
-	public Date write_date; 
-	
+
+	public Date create_date;
+	public Date write_date;
+
 	@ManyToOne
 	@JoinColumn(name="write_usuario_id", referencedColumnName="id", insertable=false, updatable=false)
-	public Usuario write_usuario; 
+	public Usuario write_usuario;
 	@Column(name="write_usuario_id")
 	public Long write_usuario_id;
-	
+
 	@Required(message="Debe especificar si esta cargado el hijo en el conyugue o no.")
 	public Boolean carga_en_conyugue;
-	
+
 	public int getEdad(){
 		int edad = 0;
 		if(fnacimiento != null){
@@ -118,33 +118,33 @@ public class AgenteHijo extends Model{
 	        //Regresa la edad en base a la fecha de nacimiento
 	        return año;
 		}
-		
+
 		return edad;
 	}
-	
+
 	public static List<AgenteHijo> controlCargaHijos(String dni,Long id){
-		
+
 		List<AgenteHijo> r = new ArrayList<AgenteHijo>();
-		
+
 		if(id != null){
 			r = find.where().like("dni","%"+dni+"%").ne("id",id).findList();
 		}else{
 			r = find.where().like("dni","%"+dni+"%").findList();
 		}
-		
+
 		return r;
 	}
-	
+
 	public static Finder<Long,AgenteHijo> find = new Finder<Long,AgenteHijo>(Long.class, AgenteHijo.class);
-	
-	public static Pagination<AgenteHijo> page(Long agenteId) {    	
+
+	public static Pagination<AgenteHijo> page(Long agenteId) {
     	Pagination<AgenteHijo> p = new Pagination<AgenteHijo>();
     	p.setOrderDefault("DESC");
     	p.setSortByDefault("id");
-    	
+
     	p.setExpressionList(find.where().eq("agente_id", agenteId));
     	return p;
 	}
-	
-	
+
+
 }
