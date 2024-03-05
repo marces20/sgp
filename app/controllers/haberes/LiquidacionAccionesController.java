@@ -48,27 +48,27 @@ import com.google.common.base.Strings;
 import controllers.auth.CheckPermiso;
 
 public class LiquidacionAccionesController extends Controller {
-	
+
 	@CheckPermiso(key = "liquidacionMesExportBanco")
 	public static Result exportMacroSueldosLista(Boolean nuevo) {
 		// obtengo datos de la liquidacion
 		//LiquidacionMes liquidacion = LiquidacionMes.find.byId(liquidacionId);
-		
+
 		List<Integer> seleccionadas = getSeleccionados();
-		
+
 		if(seleccionadas.isEmpty()) {
 			flash("error", "No se han seleccionado liquidaciones");
 			return ok(modalExportMacroSueldosLista.render(null));
 		}
-		
+
 		List<LiquidacionMes> lm = LiquidacionMes.find.where().in("id",seleccionadas).ne("estado_id", Estado.LIQUIDACION_MES_APROBADO).findList();
 		if(lm.size() > 0) {
 			flash("error", "LAS LIQUIDACIONES DEBEN ESTAR EN ESTADO APROBADAS.");
 			return ok(modalExportMacroSueldosLista.render(null));
 		}
-		
-		 
-		
+
+
+
 		// obtengo la liquidacion para cada puesto laboral
 		List<LiquidacionPuesto> liquidacionPuestos = LiquidacionPuesto.find
 													.fetch("puestoLaboral")
@@ -77,7 +77,7 @@ public class LiquidacionAccionesController extends Controller {
 													.where()
 													.in("liquidacion_mes_id",seleccionadas)
 													.eq("estado_id", Estado.LIQUIDACION_PUESTOS_APROBADO).findList();
-		
+
 		String dirTemp = System.getProperty("java.io.tmpdir");
 		try {
 
@@ -85,14 +85,14 @@ public class LiquidacionAccionesController extends Controller {
 			File archivo = new File(dirTemp + "/export_banco_"+random_int+".txt");
 			File tempFile = new File(dirTemp + "/tmp_export_banco_"+random_int+".txt");
 			Writer out = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(archivo), Charset.forName( "UTF8")));
-			
+
 			String data = "";
 			boolean b = true;
 			boolean listo = false;
 			for (LiquidacionPuesto liquidacionPuesto : liquidacionPuestos) {
-				
-				
-				
+
+
+
 				if (liquidacionPuesto.puestoLaboral != null) {
 
 					// busco cuenta bancaria
@@ -112,12 +112,12 @@ public class LiquidacionAccionesController extends Controller {
 					}else {
 						numeroCuenta = row.getString("numero_cuenta");
 					}
-					
-					
+
+
 					if(liquidacionPuesto.getTotalACobrar().compareTo(BigDecimal.ZERO) > 0) {
 						if(nuevo) {
 							/*
-							 \t 
+							 \t
 							legajo	7	numerico	NO
 							cuil	11	numerico	SI
 							apellido	64	texto 	SI
@@ -128,18 +128,18 @@ public class LiquidacionAccionesController extends Controller {
 							*/
 							data += StringUtils.cortarString(liquidacionPuesto.puestoLaboral.legajo.numero.toString(),7)+"\t"; // legajo
 							data += StringUtils.cortarString(liquidacionPuesto.puestoLaboral.legajo.agente.cuit.toString(),11)+"\t";//cuil
-							
+
 							String apellido = liquidacionPuesto.puestoLaboral.legajo.agente.apellido;
 							String[] split = apellido.split(",");
-							
+
 							if(b && !listo){
-								
+
 								StringBuilder sb = new StringBuilder();
 								String x = "";
-								
-								for (int n = 0; n < split[1].length (); n ++){ 
+
+								for (int n = 0; n < split[1].length (); n ++){
 									char c = split[1].charAt(n);
-									
+
 									if(!listo) {
 										listo= true;
 										if(c == 'A') {
@@ -155,7 +155,7 @@ public class LiquidacionAccionesController extends Controller {
 										}else {
 											listo= false;
 										}
-										
+
 									}
 									sb.append(c);
 								}
@@ -163,14 +163,14 @@ public class LiquidacionAccionesController extends Controller {
 							}else {
 								apellido = liquidacionPuesto.puestoLaboral.legajo.agente.apellido;
 							}
-							
-							
+
+
 							data += StringUtils.cortarString(apellido,64)+"\t"; // apellido
-							
-							
+
+
 							data += StringUtils.cortarString(numeroCuenta,15)+"\t"; // cuenta
 							data += "\t";//StringUtils.alfanumerico("", 22)+"\t"; // cbu
-							
+
 							//String df = new DecimalFormat("00000000000.00").format(liquidacionPuesto.getTotalACobrar());
 							//data += df.replace(",", "");// importe
 							data += liquidacionPuesto.getTotalACobrar().toString()+"\t";
@@ -183,37 +183,37 @@ public class LiquidacionAccionesController extends Controller {
 							data += StringUtils.numerico(liquidacionPuesto.puestoLaboral.legajo.agente.dni.toString(), 10); // ID_Cliente
 						}
 						data += "\r\n";
-						
-						
+
+
 					}
-				}	
+				}
 			}
-			
-			
-			 
+
+
+
 			out.append(data);
 			out.flush();
 			out.close();
-			
-			 
+
+
 
 			flash("success", "El archivo fue creado correctamente.");
 			return ok(modalExportMacroSueldosLista.render(archivo.getPath()));
-			
+
 		} catch (IOException e) {
 			e.printStackTrace();
 		} catch (Exception e) {
 			e.printStackTrace();
-		}	
-		
+		}
+
 		return ok();
 	}
-	
+
 	@CheckPermiso(key = "liquidacionMesExportBanco")
 	public static Result exportMacroSueldos(Long liquidacionId,Boolean nuevo) {
 		// obtengo datos de la liquidacion
 		LiquidacionMes liquidacion = LiquidacionMes.find.byId(liquidacionId);
-		
+
 		// obtengo la liquidacion para cada puesto laboral
 		List<LiquidacionPuesto> liquidacionPuestos = LiquidacionPuesto.find
 													.fetch("puestoLaboral")
@@ -223,20 +223,20 @@ public class LiquidacionAccionesController extends Controller {
 													.eq("liquidacion_mes_id", liquidacion.id)
 													.eq("estado_id", Estado.LIQUIDACION_PUESTOS_APROBADO)
 													.findList();
-		
+
 		String dirTemp = System.getProperty("java.io.tmpdir");
 		try {
-			
+
 			int random_int = (int)Math.floor(Math.random()*(10000-0+1)+0);
 			File archivo = new File(dirTemp + "/export_banco_"+random_int+".txt");
 			File tempFile = new File(dirTemp + "/tmp_export_banco_"+random_int+".txt");
 			Writer out = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(archivo), StandardCharsets.UTF_8));
-			
+
 			String data = "";
 			boolean b = true;
 			boolean listo = false;
 			for (LiquidacionPuesto liquidacionPuesto : liquidacionPuestos) {
-				
+
 				if (liquidacionPuesto.puestoLaboral != null) {
 
 					// busco cuenta bancaria
@@ -256,14 +256,14 @@ public class LiquidacionAccionesController extends Controller {
 					}else {
 						numeroCuenta = row.getString("numero_cuenta");
 					}
-					
-					
+
+
 					if(liquidacionPuesto.getTotalACobrar().compareTo(BigDecimal.ZERO) > 0) {
 						if(nuevo) {
-							
-							 
+
+
 							/*
-							 \t 
+							 \t
 							legajo	7	numerico	NO
 							cuil	11	numerico	SI
 							apellido	64	texto 	SI
@@ -274,18 +274,18 @@ public class LiquidacionAccionesController extends Controller {
 							*/
 							data += StringUtils.cortarString(liquidacionPuesto.puestoLaboral.legajo.numero.toString(),7)+"\t"; // legajo
 							data += StringUtils.cortarString(liquidacionPuesto.puestoLaboral.legajo.agente.cuit.toString(),11)+"\t";//cuil
-							
+
 							String apellido = liquidacionPuesto.puestoLaboral.legajo.agente.apellido;
 							String[] split = apellido.split(",");
-							
+
 							if(b && !listo){
-								
+
 								StringBuilder sb = new StringBuilder();
 								String x = "";
-								
-								for (int n = 0; n < split[1].length (); n ++){ 
+
+								for (int n = 0; n < split[1].length (); n ++){
 									char c = split[1].charAt(n);
-									
+
 									if(!listo) {
 										listo= true;
 										if(c == 'A') {
@@ -301,7 +301,7 @@ public class LiquidacionAccionesController extends Controller {
 										}else {
 											listo= false;
 										}
-										
+
 									}
 									sb.append(c);
 								}
@@ -309,20 +309,20 @@ public class LiquidacionAccionesController extends Controller {
 							}else {
 								apellido = liquidacionPuesto.puestoLaboral.legajo.agente.apellido;
 							}
-							
-							
+
+
 							data += StringUtils.cortarString(apellido,64)+"\t"; // apellido
-							
-							
+
+
 							data += StringUtils.cortarString(numeroCuenta,15)+"\t"; // cuenta
 							data += "\t";//StringUtils.alfanumerico("", 22)+"\t"; // cbu
-							
+
 							data += liquidacionPuesto.getTotalACobrar().toString()+"\t";
 							data += "";//StringUtils.alfanumerico("", 7)+"\t"; // comprobante
-							
-							
-							
-							
+
+
+
+
 						}else {
 							data += StringUtils.numerico(liquidacionPuesto.puestoLaboral.legajo.numero.toString(), 10); // ID_Cliente
 							String df = new DecimalFormat("000000000.00").format(liquidacionPuesto.getTotalACobrar());
@@ -332,21 +332,21 @@ public class LiquidacionAccionesController extends Controller {
 						}
 						data += "\r\n";
 					}
-					
-				}	
+
+				}
 			}
-			
-			 
+
+
 			//byte[] bytes = data.getBytes(StandardCharsets.UTF_8);
 
-			//String utf8EncodedString = new String(bytes, StandardCharsets.UTF_8);  
-			
+			//String utf8EncodedString = new String(bytes, StandardCharsets.UTF_8);
+
 			out.append(data);
 			//out.append("ññ");
 			out.flush();
 	        out.close();
-			
-			 
+
+
 	        /*BufferedReader reader = new BufferedReader(new FileReader(archivo));
 	        BufferedWriter writer = new BufferedWriter(new FileWriter(tempFile));
 	        String lineToRemove = "ññ";
@@ -359,11 +359,11 @@ public class LiquidacionAccionesController extends Controller {
 	            if(trimmedLine.equals(lineToRemove)) continue;
 	            writer.write(currentLine + System.getProperty("line.separator"));
 	        }
-	        writer.close(); 
-	        reader.close(); 
+	        writer.close();
+	        reader.close();
 	        boolean successful = tempFile.renameTo(archivo);*/
-	 		
-	        
+
+
 	        /*byte inbytes[] = new byte[1024];
 
 	        FileInputStream fis = new FileInputStream(dirTemp + "/export_banco_"+random_int+".txt");
@@ -371,22 +371,22 @@ public class LiquidacionAccionesController extends Controller {
 	        FileOutputStream fos = new FileOutputStream(dirTemp + "/response-2.txt");
 	        String in = new String(inbytes, "UTF8");
 	        fos.write(in.getBytes());*/
-	        
+
 	        //String fileName = archivo.getPath();
 
-	         
+
 			flash("success", "El archivo fue creado correctamente.");
 			return ok(reporteBanco.render(archivo.getPath()));
-			 
+
 		} catch (IOException e) {
 			e.printStackTrace();
 		} catch (Exception e) {
 			e.printStackTrace();
-		}	
-		
+		}
+
 		return ok();
 	}
-	
+
 	@CheckPermiso(key = "liquidacionMesExportBanco")
 	public static Result exportBanco(Long liquidacionId) {
 
@@ -446,7 +446,7 @@ public class LiquidacionAccionesController extends Controller {
 			/*
 			 * agrego una linea para cada puesto laboral
 			 */
-			
+
 			String error = "";
 			boolean errorb = false;
 			for (LiquidacionPuesto liquidacionPuesto : liquidacionPuestos) {
@@ -644,7 +644,7 @@ public class LiquidacionAccionesController extends Controller {
 					if(liquidacion.liquidacion_tipo_id == LiquidacionTipo.SAC){
 						aportS= new DecimalFormat("00000.00").format(new BigDecimal(0));
 					}
-					
+
 					aportS = aportS.replace(",", "").toString();
 					data += Strings.padStart(aportS, 7, '0');
 
@@ -775,7 +775,7 @@ public class LiquidacionAccionesController extends Controller {
 					}
 
 					// catidad de hijos
-					String sql = "select count(*) hijos from agente_hijos where agente_id = :agente_id ";
+					String sql = "select count(*) hijos from agente_familias where tipo_familia_id = 1 and agente_id = :agente_id ";
 					SqlQuery sqlQuery = Ebean.createSqlQuery(sql);
 					sqlQuery.setParameter("agente_id",liquidacionPuesto.puestoLaboral.legajo.agente.id);
 					SqlRow row = sqlQuery.findUnique();
@@ -791,17 +791,17 @@ public class LiquidacionAccionesController extends Controller {
 															// contratacion
 					data += Strings.padEnd("", 6, '0'); // cod obra social
 					data += Strings.padEnd("", 2, '0'); // cantidad de aderentes
-					
-					
-					
+
+
+
 					BigDecimal remuns2 = liquidacionPuesto.getTotalCA().add(
 							liquidacionPuesto.getTotalSA());
-					
+
 					NumberFormat numberFormat = NumberFormat.getInstance();
 					numberFormat.setMaximumFractionDigits(2);
 					//String remuns = numberFormat.format(remuns2);
 					String remuns = new DecimalFormat("###.##").format(remuns2);
-					
+
 					data += Strings.padStart(remuns.replace('.', ','), 12, ' '); // remuneracion total
 
 					data += Strings.padStart(remuns.replace('.', ','), 12, ' '); // remuneracion
@@ -872,7 +872,7 @@ public class LiquidacionAccionesController extends Controller {
 					// remuneracion
 					//data += Strings.padStart("0,00", 12, ' '); // remun  imponible 9
 					data += Strings.padStart(remuns.replace('.', ','), 12, ' ');// remun  imponible 9
-					
+
 					data += Strings.padStart("0,00", 9, ' '); // contrib tarea
 					// diferencial
 					data += Strings.padEnd("0", 3, '0'); // horas trabajadas
@@ -904,14 +904,14 @@ public class LiquidacionAccionesController extends Controller {
 	public static Result descargarAfip(String url) {
 		return ok(new File(url));
 	}
-	
+
 	public static List<Integer> getSeleccionados(){
 		String[] checks = null;
 		try {
 			checks = request().body().asFormUrlEncoded().get("check_listado[]");
 		} catch (NullPointerException e) {
 		}
-		
+
 		List<Integer> ids = new ArrayList<Integer>();
 		if(checks != null) {
 			for (String id : checks) {
