@@ -1424,24 +1424,29 @@ public class BalancePresupuestarioReportesController extends Controller {
 			//for (Entry<Integer, String> e:  sorted.entrySet()) {
 			fila = hoja.createRow(x);
 			celda0 = fila.createCell(1);
-			celda0.setCellValue("Preventivo");
+			celda0.setCellValue("Saldo");
 			celda0.setCellStyle(style);
 			hoja.addMergedRegion(new  CellRangeAddress(x,x,1,2));
 
-
 			celda0 = fila.createCell(3);
-			celda0.setCellValue("Definitivo");
+			celda0.setCellValue("Preventivo");
 			celda0.setCellStyle(style);
 			hoja.addMergedRegion(new  CellRangeAddress(x,x,3,4));
 
 
 			celda0 = fila.createCell(5);
-			celda0.setCellValue("Obligacion");
+			celda0.setCellValue("Definitivo");
 			celda0.setCellStyle(style);
 			hoja.addMergedRegion(new  CellRangeAddress(x,x,5,6));
 
 
 			celda0 = fila.createCell(7);
+			celda0.setCellValue("Obligacion");
+			celda0.setCellStyle(style);
+			hoja.addMergedRegion(new  CellRangeAddress(x,x,7,8));
+
+
+			celda0 = fila.createCell(9);
 			celda0.setCellValue("Pago");
 			celda0.setCellStyle(style);
 			x++;
@@ -1457,6 +1462,7 @@ public class BalancePresupuestarioReportesController extends Controller {
 			celda0 = fila.createCell(2);
 			celda0.setCellValue("Saldo");
 			celda0.setCellStyle(style);
+
 			celda0 = fila.createCell(3);
 			celda0.setCellValue("Total");
 			celda0.setCellStyle(style);
@@ -1470,6 +1476,12 @@ public class BalancePresupuestarioReportesController extends Controller {
 			celda0.setCellValue("Saldo");
 			celda0.setCellStyle(style);
 			celda0 = fila.createCell(7);
+			celda0.setCellValue("Total");
+			celda0.setCellStyle(style);
+			celda0 = fila.createCell(8);
+			celda0.setCellValue("Saldo");
+			celda0.setCellStyle(style);
+			celda0 = fila.createCell(9);
 			celda0.setCellValue("Total");
 			celda0.setCellStyle(style);
 
@@ -1492,6 +1504,8 @@ public class BalancePresupuestarioReportesController extends Controller {
 				celda0.setCellValue(value);
 				celda0.setCellStyle(comun);
 
+				BigDecimal totalSaldo = new BigDecimal(0);
+				BigDecimal saldoSaldo = new BigDecimal(0);
 				BigDecimal totalPreventivo = new BigDecimal(0);
 				BigDecimal saldoPreventivo = new BigDecimal(0);
 				BigDecimal totalDefinitivo = new BigDecimal(0);
@@ -1500,33 +1514,23 @@ public class BalancePresupuestarioReportesController extends Controller {
 				BigDecimal saldoObligacion = new BigDecimal(0);
 				BigDecimal totalPago = new BigDecimal(0);
 
-
-
 				for (BalancePresupuestario l :BalancePresupuestario.getSaldosPorCuentaPorExpedientes(key,null,idEjecicio.intValue(),null,null)){
 
+
+
+					//totalSaldo = totalSaldo.add(l.saldo);
+
+
 					totalPreventivo = totalPreventivo.add(l.preventivo);
-
-
 					saldoPreventivo = saldoPreventivo.add(l.preventivo.subtract(l.definitivo));
 
-
 					totalDefinitivo = totalDefinitivo.add(l.definitivo);
-
-
 					saldoDefinitivo = saldoDefinitivo.add(l.definitivo.subtract(l.obligacion));
 
-
 					totalObligacion = totalObligacion.add(l.obligacion);
-
-
-
 					saldoObligacion = saldoObligacion.add(l.obligacion.subtract(l.pago));
 
-
 					totalPago = totalPago.add(l.pago);
-
-
-
 				}
 
 				//if(id == 2) {
@@ -1539,37 +1543,50 @@ public class BalancePresupuestarioReportesController extends Controller {
 				celda.setCellValue("TOTALES");
 				celda.setCellStyle(comun);*/
 
+				totalSaldo = BalancePresupuestario.getSaldoInicialPorCuenta(key.intValue(),idEjecicio.intValue());
+				saldoSaldo = saldoSaldo.add(totalSaldo.subtract(totalPreventivo));
+
 				Cell celda = fila.createCell(1);
 				celda.setCellType(Cell.CELL_TYPE_NUMERIC);
-				celda.setCellValue(totalPreventivo.setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue());
+				celda.setCellValue(totalSaldo.setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue());
 				celda.setCellStyle(estiloMoneda);
 
 				celda = fila.createCell(2);
 				celda.setCellType(Cell.CELL_TYPE_NUMERIC);
-				celda.setCellValue(saldoPreventivo.setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue());
+				celda.setCellValue(saldoSaldo.setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue());
 				celda.setCellStyle(estiloMoneda);
 
 				celda = fila.createCell(3);
 				celda.setCellType(Cell.CELL_TYPE_NUMERIC);
-				celda.setCellValue(totalDefinitivo.setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue());
+				celda.setCellValue(totalPreventivo.setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue());
 				celda.setCellStyle(estiloMoneda);
 
 				celda = fila.createCell(4);
 				celda.setCellType(Cell.CELL_TYPE_NUMERIC);
-				celda.setCellValue(saldoDefinitivo.setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue());
+				celda.setCellValue(saldoPreventivo.setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue());
 				celda.setCellStyle(estiloMoneda);
 
 				celda = fila.createCell(5);
 				celda.setCellType(Cell.CELL_TYPE_NUMERIC);
-				celda.setCellValue(totalObligacion.setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue());
+				celda.setCellValue(totalDefinitivo.setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue());
 				celda.setCellStyle(estiloMoneda);
 
 				celda = fila.createCell(6);
 				celda.setCellType(Cell.CELL_TYPE_NUMERIC);
-				celda.setCellValue(saldoObligacion.setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue());
+				celda.setCellValue(saldoDefinitivo.setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue());
 				celda.setCellStyle(estiloMoneda);
 
 				celda = fila.createCell(7);
+				celda.setCellType(Cell.CELL_TYPE_NUMERIC);
+				celda.setCellValue(totalObligacion.setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue());
+				celda.setCellStyle(estiloMoneda);
+
+				celda = fila.createCell(8);
+				celda.setCellType(Cell.CELL_TYPE_NUMERIC);
+				celda.setCellValue(saldoObligacion.setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue());
+				celda.setCellStyle(estiloMoneda);
+
+				celda = fila.createCell(9);
 				celda.setCellType(Cell.CELL_TYPE_NUMERIC);
 				celda.setCellValue(totalPago.setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue());
 				celda.setCellStyle(estiloMoneda);
