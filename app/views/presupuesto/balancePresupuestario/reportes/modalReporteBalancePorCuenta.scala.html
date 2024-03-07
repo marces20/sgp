@@ -1,0 +1,58 @@
+@(url: String = null,formBuscador: DynamicForm)
+@import helper._
+@implicitFieldConstructor = @{ FieldConstructor(simpleInput.render) }
+
+@if(url) {
+	<div class="panel panel-default">
+		<div class="panel-body">
+	    	<i class="glyphicon glyphicon-save"></i> <a href="@controllers.contabilidad.routes.FacturasAccionesController.descargar322(url)">
+	    	Descargar archivo</a>
+		</div>
+	</div>
+
+
+}else{
+
+
+
+	@helper.form(action = controllers.presupuesto.routes.BalancePresupuestarioReportesController.reporteBalancePorCuenta(), 'id -> "formReporteBalancePorCuenta") {
+			@views.html.tags.successError()
+
+
+
+		<div class="row">
+			<div class="col-sm-2">
+				<label class="control-label">Ejercicio
+				@select(formBuscador("ejercicio"), Ejercicio.getEjercicios().map { p => p.id.toString -> p.nombre},
+				'class -> "form-control select")
+				</label>
+			</div>
+			<div class="col-sm-5"><br />
+				<button type="submit" class="btn btn-default" title="Buscar"><i class="glyphicon glyphicon-floppy-disk"></i> Buscar</button>
+			</div>
+		</div>
+	}
+}
+
+@flash().clear()
+<script>
+ $( function () {
+	 $(document).on("submit", '#formReporteBalancePorCuenta', function(){
+			var form = $(this);
+			var url = form.attr('action');
+			var data = form.serialize();
+			var submit = form.find("button[type='submit']");
+			submit.replaceWith(getLoading());
+			$.post(url, data, function(data){
+				if(data.success) {
+
+					form.replaceWith(data.html);
+				} else {
+					form.replaceWith(data);
+				}
+			});
+
+			return false;
+		});
+ });
+</script>
