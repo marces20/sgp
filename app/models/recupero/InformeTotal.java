@@ -71,6 +71,7 @@ public class InformeTotal extends Model {
 	public BigDecimal totalLineasFactura;
 	public BigDecimal totalFactura;
 	public BigDecimal totalNotas;
+	public BigDecimal totalNotaDebitos;
 	public BigDecimal totalPagos;
 	public BigDecimal totalDeuda;
 
