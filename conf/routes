@@ -747,10 +747,13 @@ GET     /presupuesto/linea-recurso/eliminar         			controllers.presupuesto.L
 GET     /presupuesto/balance-presupuestario         			controllers.presupuesto.BalancePresupuestarioController.index()
 GET     /presupuesto/balancePresupuestarioPorExpediente         controllers.presupuesto.BalancePresupuestarioController.balancePresupuestarioPorExpediente()
 
-GET    /presupuesto/reporte/modalReporteBalancePorCuentaPorExpediente  controllers.presupuesto.BalancePresupuestarioReportesController.modalReporteBalancePorCuentaPorExpediente(id:Integer ?= 0)
-POST   /presupuesto/reporte/reporteBalancePorCuentaPorExpediente  controllers.presupuesto.BalancePresupuestarioReportesController.reporteBalancePorCuentaPorExpediente(id:Integer ?= 0)
+GET    /presupuesto/reporte/modalReporteBalancePorCuentaPorExpediente  	controllers.presupuesto.BalancePresupuestarioReportesController.modalReporteBalancePorCuentaPorExpediente(id:Integer ?= 0)
+POST   /presupuesto/reporte/reporteBalancePorCuentaPorExpediente  		controllers.presupuesto.BalancePresupuestarioReportesController.reporteBalancePorCuentaPorExpediente(id:Integer ?= 0)
 GET    /presupuesto/reporte/modalReporteExportarDatosPresupuestoControl  controllers.presupuesto.BalancePresupuestarioReportesController.modalReporteExportarDatosPresupuestoControl()
-POST   /presupuesto/reporte/reporteExportarDatosPresupuestoControl  controllers.presupuesto.BalancePresupuestarioReportesController.reporteExportarDatosPresupuestoControl()
+POST   /presupuesto/reporte/reporteExportarDatosPresupuestoControl  	controllers.presupuesto.BalancePresupuestarioReportesController.reporteExportarDatosPresupuestoControl()
+GET    /presupuesto/reporte/modalReporteBalancePorCuenta  				controllers.presupuesto.BalancePresupuestarioReportesController.modalReporteBalancePorCuenta()
+POST   /presupuesto/reporte/reporteBalancePorCuenta  					controllers.presupuesto.BalancePresupuestarioReportesController.reporteBalancePorCuenta()
+
 
 GET    /presupuesto/reporte/reporteBalanceDiferenciaPreventivoDefinitivo controllers.presupuesto.BalancePresupuestarioReportesController.reporteBalanceDiferenciaPreventivoDefinitivo(idEjercicio:Long)
 
