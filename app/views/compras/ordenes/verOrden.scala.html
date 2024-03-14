@@ -86,7 +86,7 @@
 					<a href="@controllers.compras.routes.OrdenesController.crear()@UriTrack.get("?")"  class="btn btn-default"><i class="glyphicon glyphicon-plus-sign"></i> Nueva Orden</a>
 				</div>
 
-				@if(Permiso.check("dashboardInformeDeudaPorActas") && orden.tipo_moneda != null) {
+				@if(Permiso.check("controlDeudaMonedaExtranjera") && orden.tipo_moneda != null) {
 					<div class="pull-right btn-header">
 
 				 		<a target="_blank"  href="/dashboard/controlDeudaMonedaExtranjera?orden_id=@orden.id" class="btn btn-default">
