@@ -619,25 +619,40 @@ public class LiquidacionAccionesController extends Controller {
 					}
 					data += Strings.padEnd(sex, 1, ' ');
 
-					// cantidad de adherentes N
+					////////////////////////////////////////////////////////////// cantidad de adherentes N
 					data += Strings.padStart("0", 1, '0');
 
+					//////////////////////////////////////////////////////////////////////////////////////
+
 					// remun imponible jub N
+
+
 					String remun = new DecimalFormat("0000000.00").format(liquidacionPuesto.getTotalCA());
+					int f= 9;
+					if(liquidacionPuesto.getTotalCA().compareTo(BigDecimal.ZERO) < 0) {
+						remun = new DecimalFormat("000000.00").format(liquidacionPuesto.getTotalCA());
+						f= 8;
+					}
+
 					remun = remun.replace(",", "").toString();
-					data += Strings.padStart(remun, 9, '0');
+					data += Strings.padStart(remun, f, '0');
+
+					//////////////////////////////////////////////////////////////////////////////////////
 
 					// remun imponible obra soc N
 					if(liquidacion.liquidacion_tipo_id == LiquidacionTipo.SAC){
 						data += "000000000";
 					}else{
-						data += Strings.padStart(remun, 9, '0');
+						data += Strings.padStart(remun, f, '0');
 					}
+
+					//////////////////////////////////////////////////////////////////////////////////////
 
 					// aporte jubilatorio N
 					String aport = new DecimalFormat("00000.00").format(liquidacionPuesto.getTotalCA().multiply(new BigDecimal(0.19)));
 					aport = aport.replace(",", "").toString();
-					data += Strings.padStart(aport, 7, '0');
+					//data += Strings.padStart(aport, 7, '0');
+					data += Strings.padStart("0", 7, '0');//APORTES JUBILACION DEJAMOS TODOS EN CERO PQ SE PASA EL VALOR
 
 					// aporte obra social N
 					String aportS = new DecimalFormat("00000.00").format(liquidacionPuesto.getTotalCA().multiply(new BigDecimal(0.05)));
@@ -646,7 +661,8 @@ public class LiquidacionAccionesController extends Controller {
 					}
 
 					aportS = aportS.replace(",", "").toString();
-					data += Strings.padStart(aportS, 7, '0');
+					//data += Strings.padStart(aportS, 7, '0');
+					data += Strings.padStart("0", 7, '0');//APORTES OBRA SOCIAL DEJAMOS TODOS EN CERO PQ SE PASA EL VALOR
 
 					// aporte serv funerario N
 					data += Strings.padStart("0", 7, '0');
@@ -686,7 +702,7 @@ public class LiquidacionAccionesController extends Controller {
 								String imp = new DecimalFormat("000000.00").format(importe);
 								imp = imp.replace(",", "").toString();
 								data += Strings.padStart(imp, 8, '0');
-							}else{
+ 							}else{
 								String imp = new DecimalFormat("0000000.00").format(importe);
 								imp = imp.replace(",", "").toString();
 								data += Strings.padStart(imp, 9, '0');
