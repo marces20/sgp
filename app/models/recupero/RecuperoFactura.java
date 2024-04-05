@@ -160,6 +160,11 @@ public class RecuperoFactura extends Model {
 		return getBase().subtract(getTotalNotaCredito()).add(getTotalNotaDebito());
 	}
 
+	public BigDecimal getTotalFacturado(){
+		return getBase();
+	}
+
+
 	@Formula(select = "_d${ta}.total_pagado", join = "LEFT OUTER JOIN (select p.recupero_factura_id, COALESCE(sum(p.total),0) as total_pagado FROM recupero_pagos p WHERE p.estado_id = "+Estado.RECUPERO_PAGO_PAGADO+" GROUP BY p.recupero_factura_id) as _d${ta} on _d${ta}.recupero_factura_id = ${ta}.id")
 	public BigDecimal total_pagado;
 
