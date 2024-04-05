@@ -43,6 +43,7 @@ private static final long serialVersionUID = 1L;
 	public static final Integer	AGENTE_SEGUIMIENTO = 24;
 	public static final Integer	ACTA_MOVIMIENTO = 25;
 	public static final Integer TIPO_LIQUIDACION_LICENCIAS_NOVEDADES = 26;
+	public static final Integer TIPO_RECUPERO_RECIBO = 27;
 
 	public static final int SOLICITUD_ESTADO_BORRADOR = 1;
 	public static final int SOLICITUD_ESTADO_ENCURSO = 2;
@@ -185,6 +186,10 @@ private static final long serialVersionUID = 1L;
 	public static final int LIQUIDACION_LICENCIAS_NOVEDADES_BORRADOR = 117;
 	public static final int LIQUIDACION_LICENCIAS_NOVEDADES_CONTROLADO = 118;
 	public static final int LIQUIDACION_LICENCIAS_NOVEDADES_APROBADO = 119;
+
+	public static final int RECUPERO_RECIBOS_BORRADOR = 120;
+	public static final int RECUPERO_RECIBOS_APROBADO = 121;
+	public static final int RECUPERO_RECIBOS_CANCELADO = 122;
 
 	@Id
 	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="estados_id_seq")
