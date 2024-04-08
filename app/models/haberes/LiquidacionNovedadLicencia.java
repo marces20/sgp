@@ -87,6 +87,8 @@ public class LiquidacionNovedadLicencia extends Model{
 			e = e.endJunction();
     	}
 
+
+
 		if (!periodo_id.isEmpty()) {
 	      e.le("periodo_id", Integer.parseInt(periodo_id));
 	    }
@@ -103,9 +105,9 @@ public class LiquidacionNovedadLicencia extends Model{
     		e.ilike("agenteAsistenciaLicencia.agente.cuit", "%" + cuit + "%");
     	}
 
-    	if(!tipo_relacion_laboral.isEmpty()){
-    		e.eq("agenteAsistenciaLicencia.agente.tipo_relacion_laboral", tipo_relacion_laboral);
-    	}
+    	//if(!tipo_relacion_laboral.isEmpty()){
+    		e.eq("agenteAsistenciaLicencia.agente.tipo_relacion_laboral", "1");
+    	//}
 
     	if(!activo.isEmpty()){
     		if(activo.compareToIgnoreCase("SI") == 0){
