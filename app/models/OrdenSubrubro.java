@@ -35,7 +35,7 @@ public class OrdenSubrubro extends Model {
 	public static Model.Finder<Long,OrdenSubrubro> find = new Model.Finder<Long,OrdenSubrubro>(Long.class, OrdenSubrubro.class);
 
 	public static List<OrdenSubrubro> getOrdenSubrubro(int rubroId){
-		return find.where().eq("orden_rubro_id", rubroId).orderBy("sigla").findList();
+		return find.where().eq("orden_rubro_id", rubroId).eq("activo", true).orderBy("sigla").findList();
 	}
 
 
