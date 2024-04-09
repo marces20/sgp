@@ -15,12 +15,14 @@ public class OrdenSubrubroController extends Controller {
 	public static Result listOptions(Integer rubroId){
 		List<OrdenSubrubro> p = null;
 
-		if(rubroId == 7 || rubroId == 5 || rubroId == 4 || rubroId == 3 || rubroId == 2) {
-			p = OrdenSubrubro.find.where().eq("orden_rubro_id", rubroId).eq("activo", true).orderBy("sigla").findList();
+		p = OrdenSubrubro.find.where().eq("orden_rubro_id", rubroId).eq("activo", true).orderBy("sigla").findList();
+
+		/*if(rubroId == 7 || rubroId == 5 || rubroId == 4 || rubroId == 3 || rubroId == 2) {
+
 
 		}else {
 			p = OrdenSubrubro.find.where().eq("orden_rubro_id", rubroId).orderBy("sigla").findList();
-		}
+		}*/
 
 
 		if(p.size() > 0)
