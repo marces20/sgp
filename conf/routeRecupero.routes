@@ -59,13 +59,6 @@ POST   /pago/actualizar   	controllers.recupero.RecuperoPagosController.actualiz
 GET    /pago/cambiarEstado	controllers.recupero.RecuperoPagosController.cambiarEstado(idRecuperoPago:Long, idEstado: Long)
 GET    /pago/crearPagoParcial      	controllers.recupero.RecuperoPagosController.crearPagoParcial(id:Long)
 
-GET    /pago/cheques/crear        	controllers.recupero.RecuperoChequesController.crear(pagoId:String)
-POST   /pago/cheques/guardar      	controllers.recupero.RecuperoChequesController.guardar()
-GET    /pago/cheques/editar        	controllers.recupero.RecuperoChequesController.editar(id:Long)
-POST   /pago/cheques/actualizar    	controllers.recupero.RecuperoChequesController.actualizar()
-GET    /pago/cheques/eliminar    	controllers.recupero.RecuperoChequesController.eliminar(id:Long)
-GET    /pago/cheque/index   		controllers.recupero.RecuperoChequesController.index(id:Long ?= 0, editable:Boolean ?= false)
-
 GET    /recibo        	  	controllers.recupero.RecuperoRecibosController.index()
 GET    /recibo/crear        controllers.recupero.RecuperoRecibosController.crear()
 POST   /recibo/guardar      controllers.recupero.RecuperoRecibosController.guardar()
@@ -73,6 +66,15 @@ GET    /recibo/editar       controllers.recupero.RecuperoRecibosController.edita
 GET    /recibo/eliminar     controllers.recupero.RecuperoRecibosController.eliminar(id:Long)
 GET    /recibo/ver          controllers.recupero.RecuperoRecibosController.ver(id:Long)
 POST   /recibo/actualizar   controllers.recupero.RecuperoRecibosController.actualizar(id:Long)
+
+GET    /pago/cheques/crear        	controllers.recupero.RecuperoChequesController.crear(pagoId:String)
+POST   /pago/cheques/guardar      	controllers.recupero.RecuperoChequesController.guardar()
+GET    /pago/cheques/editar        	controllers.recupero.RecuperoChequesController.editar(id:Long)
+POST   /pago/cheques/actualizar    	controllers.recupero.RecuperoChequesController.actualizar()
+GET    /pago/cheques/eliminar    	controllers.recupero.RecuperoChequesController.eliminar(id:Long)
+GET    /pago/cheque/index   		controllers.recupero.RecuperoChequesController.index(id:Long ?= 0, editable:Boolean ?= false)
+
+
 
 
 GET    /planilla        	  controllers.recupero.RecuperoPlanillasController.index()
