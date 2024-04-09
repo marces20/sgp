@@ -66,6 +66,14 @@ POST   /pago/cheques/actualizar    	controllers.recupero.RecuperoChequesControll
 GET    /pago/cheques/eliminar    	controllers.recupero.RecuperoChequesController.eliminar(id:Long)
 GET    /pago/cheque/index   		controllers.recupero.RecuperoChequesController.index(id:Long ?= 0, editable:Boolean ?= false)
 
+GET    /recibo        	  	controllers.recupero.RecuperoRecibosController.index()
+GET    /recibo/crear        controllers.recupero.RecuperoRecibosController.crear()
+POST   /recibo/guardar      controllers.recupero.RecuperoRecibosController.guardar()
+GET    /recibo/editar       controllers.recupero.RecuperoRecibosController.editar(id:Long)
+GET    /recibo/eliminar     controllers.recupero.RecuperoRecibosController.eliminar(id:Long)
+GET    /recibo/ver          controllers.recupero.RecuperoRecibosController.ver(id:Long)
+POST   /recibo/actualizar   controllers.recupero.RecuperoRecibosController.actualizar(id:Long)
+
 
 GET    /planilla        	  controllers.recupero.RecuperoPlanillasController.index()
 GET    /planilla/crear        controllers.recupero.RecuperoPlanillasController.crear()
