@@ -123,6 +123,13 @@
 					</span>
 				</div>
 			</div>
+
+			<div class="col-sm-2">
+				<label class="control-label">Ejercicio
+				@select(formBuscador("ejercicio"), Ejercicio.getEjercicios().map { p => p.id.toString -> p.nombre}, 'class -> "form-control select", '_default -> "Seleccionar")
+				</label>
+			</div>
+
 			<div class="col-sm-2">
 				<div class="form-group">
 					<label for="nombre" class="control-label">Nombre
@@ -144,15 +151,18 @@
 					</label>
 				</div>
 			</div>
+
+
+		</div>
+		<div class="row" >
 			<div class="col-sm-2">
+				<div class="form-group">
 				<label class="control-label">
 					Activo
 					@select(formBuscador("activo"),options(""->"","SI"->"SI","NO"->"NO"), 'class -> "form-control select")
 				</label>
+				</div>
 			</div>
-
-		</div>
-		<div class="row" >
 			<!-- <div class="col-sm-2">
 				<div class="form-group">
 					<label for="cuit" class="control-label">Tipo Relacion
