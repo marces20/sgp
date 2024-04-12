@@ -8,11 +8,13 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import com.avaje.ebean.Expr;
 import com.avaje.ebean.ExpressionList;
 
 import models.Agente;
 import models.AgenteAsistenciaLicencia;
 import models.Estado;
+import models.Expediente;
 import models.Periodo;
 import play.data.validation.Constraints.Required;
 import play.db.ebean.Model;
@@ -90,8 +92,11 @@ public class LiquidacionNovedadLicencia extends Model{
     	}
 
 		if (!ejercicio.isEmpty()) {
-		      e.eq("agenteAsistenciaLicencia.ejercicio_id", Integer.parseInt(ejercicio));
-		    }
+	      e.eq("agenteAsistenciaLicencia.ejercicio_id", Integer.parseInt(ejercicio));
+	    }else {
+
+	    	 e.ge("agenteAsistenciaLicencia.ejercicio_id", new  Long(13));
+	    }
 
 		if (!periodo_id.isEmpty()) {
 	      e.le("periodo_id", Integer.parseInt(periodo_id));
