@@ -93,6 +93,7 @@ public class AgentesAsistenciasLicenciasController extends Controller {
 				 																		RequestVar.get("tipo_relacion_laboral"),
 				 																		RequestVar.get("organigrama_id"),
 				 																		RequestVar.get("activo"),
+				 																		RequestVar.get("ejercicio"),
 				 																		RequestVar.get("btnFiltro[0]"),//borrador
 				 																		RequestVar.get("btnFiltro[1]"),//cargado
 				 																		RequestVar.get("btnFiltro[2]")//aprobado
