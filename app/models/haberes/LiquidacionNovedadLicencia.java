@@ -56,6 +56,7 @@ public class LiquidacionNovedadLicencia extends Model{
 										  						String tipo_relacion_laboral,
 										  						String organigrama_id,
 										  						String activo,
+										  						String ejercicio,
 										  						String btnFiltro0,//borrador
 																String btnFiltro1,//cargada
 															    String btnFiltro2){
@@ -68,6 +69,7 @@ public class LiquidacionNovedadLicencia extends Model{
 													   fetch("periodo","nombre").
 													   fetch("estado", "nombre").
 													   fetch("agenteAsistenciaLicencia").
+													   fetch("agenteAsistenciaLicencia.ejercicio","id,nombre").
 													   fetch("agenteAsistenciaLicencia.agente","apellido,dni,cuit,tipo_relacion_laboral,activo,organigrama_id").
 													   fetch("agenteAsistenciaLicencia.agente.organigrama","nombre").
 													   where();
@@ -87,7 +89,9 @@ public class LiquidacionNovedadLicencia extends Model{
 			e = e.endJunction();
     	}
 
-
+		if (!ejercicio.isEmpty()) {
+		      e.eq("agenteAsistenciaLicencia.ejercicio_id", Integer.parseInt(ejercicio));
+		    }
 
 		if (!periodo_id.isEmpty()) {
 	      e.le("periodo_id", Integer.parseInt(periodo_id));
