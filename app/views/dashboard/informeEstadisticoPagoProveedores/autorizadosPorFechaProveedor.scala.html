@@ -40,6 +40,21 @@
 				</div>
 			</label>
 		</div>
+		<div class="col-sm-2">
+			<label for="deposito" class="control-label">Institucion</label>
+			<div class="input-group">
+				@inputText(formBuscador("deposito.nombre"),'class -> "form-control", 'id -> "deposito_nombre", 'autocomplete -> "off")
+				@inputText(formBuscador("deposito_id"),'hidden -> "hidden", 'id -> "deposito_id")
+				<span class="input-group-addon">
+                	<a href="#" id="searchDeposito" data-title="Selección de Institucion"
+                	data-url="@controllers.delegacion.routes.DepositosController.modalBuscar()"
+                	data-height="650" data-width="700"
+                	data-listen="modal.seleccion.deposito.simple"
+                	data-label="#deposito_nombre" data-field="#deposito_id" /> <i class="glyphicon glyphicon-search"></i></a>
+                </span>
+			</div>
+		</div>
+
 		<div class="col-sm-2 input-group">
 			<label class="control-label">Fecha Pago</label>
 			<div>
@@ -92,12 +107,12 @@
 		</table>
 
 <script type="text/javascript">
-	$( function() {
-		$('#searchProveedor').modalSearch();
+$( function() {
+	$('#searchProveedor,#searchDeposito').modalSearch();
 
 
-	});
-	</script>
+});
+</script>
 
 
 }
