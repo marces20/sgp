@@ -126,12 +126,18 @@ public class InformeEstadisticoPagoProveedoresController extends Controller {
 			}
 		}
 
+		if(!RequestVar.get("deposito_id").isEmpty()){
+			where += " AND o.deposito_id = "+Integer.parseInt(RequestVar.get("deposito_id"));
+		}
+
 		List<SqlRow> s = null;
 
 		if(where != "1 = 1 ") {
-			String sql = "SELECT p.nombre as proveedor,SUM(monto) as total FROM autorizados a "+
+			String sql = "SELECT p.nombre as proveedor,SUM(monto) as total "+
+					"FROM autorizados a "+
 					"INNER JOIN autorizado_lineas al ON al.autorizado_id = a.id "+
 					"INNER JOIN proveedores p ON p.id = al.proveedor_id "+
+					"INNER JOIN ordenes o ON o.id = al.orden_id "+
 					"WHERE "+where+
 					"GROUP BY al.proveedor_id,p.nombre "+
 					"ORDER BY p.nombre";
