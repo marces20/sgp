@@ -13,6 +13,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import models.Organigrama;
+import models.Periodo;
 import models.Puesto;
 import models.Usuario;
 import models.haberes.LiquidacionConcepto;
@@ -104,6 +106,8 @@ public class NovedadesAccionesController extends Controller {
 				Boolean pasar = false;
 				String cuit = null;
 				Long codigo = null;
+				String organigrama = null;
+				String periodo = null;
 				BigDecimal cantidad = null;
 				BigDecimal importe = null;
 
@@ -134,6 +138,21 @@ public class NovedadesAccionesController extends Controller {
 					msgArchivo.add("Linea " + (i + 1) + ". El MONTO se encuentra vacío.");
 					pasar = true;
 				}
+
+				try {
+					row.getCell(6).getCellType();
+				} catch (Exception e) {
+					msgArchivo.add("Linea " + (i + 1) + ". El Organigrama se encuentra vacío.");
+					pasar = true;
+				}
+
+				try {
+					row.getCell(7).getCellType();
+				} catch (Exception e) {
+					msgArchivo.add("Linea " + (i + 1) + ". El Periodo se encuentra vacío.");
+					pasar = true;
+				}
+
 
 				if (pasar) {
 					cargar = false;
@@ -179,6 +198,22 @@ public class NovedadesAccionesController extends Controller {
 					pasar = true;
 				}
 
+				// Compruebo el organigrama
+				if (HSSFCell.CELL_TYPE_STRING == row.getCell(6).getCellType()) {
+					organigrama = row.getCell(6).getStringCellValue();
+				} else {
+					msgArchivo.add("Linea " + (i + 1) + ". La celda de ORGANIGRAMA debe ser formato text.");
+					pasar = true;
+				}
+
+				// Compruebo el organigrama
+				if (HSSFCell.CELL_TYPE_STRING == row.getCell(7).getCellType()) {
+					periodo = row.getCell(7).getStringCellValue();
+				} else {
+					msgArchivo.add("Linea " + (i + 1) + ". La celda de PERIODO debe ser formato text.");
+					pasar = true;
+				}
+
 				if (pasar) {
 					System.out.println("paaaaasa");
 					cargar = false;
@@ -195,6 +230,7 @@ public class NovedadesAccionesController extends Controller {
 							+ "</b> no se encuentra en el sistema.");
 					pasar = true;
 				}
+
 				System.out.println("-----------------------------------------" + codigo);
 				// Busco y compruebo si el concepto se encuentra en el sistema
 				LiquidacionConcepto concepto = LiquidacionConcepto.find.where().isNull("fecha_baja")
@@ -205,6 +241,25 @@ public class NovedadesAccionesController extends Controller {
 							"Linea " + (i + 1) + ". El concepto <b>" + codigo + "</b> no se encuentra en el sistema.");
 					pasar = true;
 				}
+
+				System.out.println("------------organigrama---------------" + organigrama);
+				Organigrama orga = Organigrama.find.where().eq("nombre", organigrama).findUnique();
+
+				if (orga == null) {
+					msgConcepto.add(
+							"Linea " + (i + 1) + ". El organigrama <b>" + organigrama + "</b> no se encuentra en el sistema.");
+					pasar = true;
+				}
+
+				System.out.println("------------periodo---------------" + periodo);
+				Periodo peri = Periodo.find.where().eq("nombre", periodo).findUnique();
+
+				if (peri == null) {
+					msgConcepto.add(
+							"Linea " + (i + 1) + ". El periodo <b>" + periodo + "</b> no se encuentra en el sistema.");
+					pasar = true;
+				}
+
 
 				if (pasar) {
 					cargar = false;
@@ -244,7 +299,8 @@ public class NovedadesAccionesController extends Controller {
 					n.activo = true;
 					n.usuario_id = Usuario.getUsuarioSesion().longValue();
 					n.fecha_novedad = new Date();
-
+					n.organigrama_id =orga.id.longValue();
+					n.periodo_concepto_id = peri.id.longValue();
 					n.save();
 
 				}
