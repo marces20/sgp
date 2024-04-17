@@ -2,7 +2,7 @@
 @import helper._
 @import utils._
 @import models.auth._
-
+@import java.math.BigDecimal;var diferencia=new java.math.BigDecimal(0);
 @implicitFieldConstructor = @{ FieldConstructor(simpleInput.render) }
 
 @scripts = {
@@ -109,36 +109,48 @@
 				<table class="table table-striped table-bordered" id="">
 					<thead>
 						<tr align="center">
-							<th  colspan="5">DETALLES CANTIDAD GUARDIAS</th>
+							<th  colspan="6">DETALLES CANTIDAD GUARDIAS</th>
 						</tr>
 						<tr>
 							<th align="center">Periodo</th>
 							<th align="center">Organigrama</th>
 							<th align="center">Agente</th>
 							<th width="50" align="center">Total</th>
-							<th width="30" align="center"></th>
+							<th width="50" align="center">Limite</th>
+							<th width="50" align="center">Diferencia</th>
+
 						</tr>
 					</thead>
 					<tbody>
 						@if(s.size() > 0){
 							@for(sx <- s) {
-								<tr data-id="">
+
+								@{diferencia = sx.getBigDecimal("total").subtract(sx.getBigDecimal("limite_guardia"))}
+
+								@if(diferencia.compareTo(java.math.BigDecimal.ZERO) < 0){
+									<tr style="color:red;" >
+								}else{
+									<tr data-id="" >
+								}
+
 									<td>@sx.getString("periodo")</td>
 									<td>@sx.getString("organigrama")</td>
 									<td>@sx.getString("agente")</td>
 									<td align="center">@sx.getBigDecimal("total")</td>
-									<td></td>
+									<td align="center">@sx.getBigDecimal("limite_guardia")</td>
+									<td align="center">@diferencia</td>
+
 								</tr>
 								@{total = total.add(sx.getBigDecimal("total"))}
 							}
 							<tr>
 				        		<td colspan="3"></td>
 				        		<td align="center">@{total}</td>
-								<td></td>
+								 <td colspan="2"></td>
 							</tr>
 						}else{
 							<tr>
-								<td colspan="5" align="center">SIN RESULTADOS</td>
+								<td colspan="6" align="center">SIN RESULTADOS</td>
 							</tr>
 						}
 
