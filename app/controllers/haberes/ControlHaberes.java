@@ -31,7 +31,7 @@ public class ControlHaberes extends Controller {
 			return ok(controlGuardiasPorAgentePorPeriodo.render(d,sqlQueryoRet));
 		}
 
-		String sql = "SELECT sum(ld.cantidad) as total,a.id,a.apellido as agente,o.nombre as organigrama,p.nombre as periodo " +
+		String sql = "SELECT sum(ld.cantidad) as total,a.id,a.apellido as agente,o.nombre as organigrama,p.nombre as periodo,COALESCE(a.limite_guardia,0) " +
 				"FROM liquidacion_detalles ld " +
 				"inner join liquidacion_puestos lp on ld.liquidacion_puesto_id = lp.id " +
 				"inner join liquidacion_conceptos lc on ld.liquidacion_concepto_id = lc.id " +
@@ -55,7 +55,8 @@ public class ControlHaberes extends Controller {
 		}
 
 		sql += "and lc.control_guardia = true " +
-				"group by a.id,a.apellido,o.nombre,p.nombre order by a.apellido,o.nombre ";
+				"group by a.id,a.apellido,o.nombre,p.nombre,COALESCE(a.limite_guardia,0) "
+				+ "order by a.apellido,o.nombre ";
 
 		SqlQuery sqlQuery = Ebean.createSqlQuery(sql);
 
