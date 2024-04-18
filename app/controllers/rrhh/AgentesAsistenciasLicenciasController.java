@@ -96,7 +96,9 @@ public class AgentesAsistenciasLicenciasController extends Controller {
 				 																		RequestVar.get("ejercicio"),
 				 																		RequestVar.get("btnFiltro[0]"),//borrador
 				 																		RequestVar.get("btnFiltro[1]"),//cargado
-				 																		RequestVar.get("btnFiltro[2]")//aprobado
+				 																		RequestVar.get("btnFiltro[2]"),
+				 																		RequestVar.get("btnFiltro[3]"),
+				 																		RequestVar.get("periodo_exacto_id")//aprobado
 				 																		);
 
 		return ok(indexLicenciaNovedadesLiquidacion.render(lineas,d));
@@ -376,6 +378,8 @@ public class AgentesAsistenciasLicenciasController extends Controller {
 		}
 
 	}
+
+
 
 	@CheckPermiso(key = "agentesLicenciasPasarAprobado")
 	public static Result modalPasarAprobado() {
@@ -803,6 +807,65 @@ public class AgentesAsistenciasLicenciasController extends Controller {
 
 
 	}
+
+	@CheckPermiso(key = "agentesLicenciasPasarAprobado")
+	public static Result modalPasarARevisarNovedadLicencia() {
+		return ok(modalPasarARevisarNovedadLicencia.render(form().bindFromRequest()));
+	}
+
+	public static Result PasarARevisarNovedadLicencia() {
+
+		DynamicForm d = form().bindFromRequest();
+		d.discardErrors();
+		ObjectNode result = Json.newObject();
+
+		List<Integer> nSeleccionados = getSeleccionados();
+
+		if(nSeleccionados.isEmpty()) {
+			flash("error", "Seleccione al menos una licencia.");
+			result.put("success",false);
+			result.put("html", modalPasarARevisarNovedadLicencia.render(d).toString());
+			return ok(result);
+		}
+
+		List<LiquidacionNovedadLicencia> lnl = LiquidacionNovedadLicencia.find.where().in("id", nSeleccionados).ne("estado_id", Estado.LIQUIDACION_LICENCIAS_NOVEDADES_BORRADOR).findList();
+		if(lnl.size() > 0) {
+			flash("error", "Solo puede cargar novedades con licencias en estado Borrador.");
+			result.put("success",false);
+			result.put("html", modalPasarARevisarNovedadLicencia.render(d).toString());
+			return ok(result);
+		}
+
+		try {
+
+			lnl = LiquidacionNovedadLicencia.find.where().in("id", nSeleccionados).findList();
+			int cargas = 0;
+			for(LiquidacionNovedadLicencia lnlx : lnl) {
+				LiquidacionNovedadLicencia ll = LiquidacionNovedadLicencia.find.where().eq("id", lnlx.id).findUnique();
+				ll.estado_id = (long) Estado.LIQUIDACION_LICENCIAS_NOVEDADES_AREVISAR;
+				ll.save();
+				cargas ++;
+			}
+
+
+			flash("success", "Se actualizaron <b>("+cargas+")</b> novedades" );
+			result.put("success",true);
+			result.put("html", modalPasarARevisarNovedadLicencia.render(d).toString());
+			return ok(result);
+
+		} catch (Exception e){
+			flash("error", "No se han podido cargar las novedades "+ e.toString());
+			result.put("success",false);
+			result.put("html", modalPasarARevisarNovedadLicencia.render(d).toString());
+			return ok(result);
+
+		}finally {
+
+		}
+
+
+	}
+
 
 	@CheckPermiso(key = "agentesLicenciasPasarAprobado")
 	public static Result modalPasarAControladoNovedadLicencia() {
