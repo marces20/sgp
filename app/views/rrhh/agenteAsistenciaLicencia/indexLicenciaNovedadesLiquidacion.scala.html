@@ -13,6 +13,8 @@
 			classEstado = "borrador"
 		}else if(i.estado != null && i.estado.id == 118){
 			classEstado = ""
+		}else if(i.estado != null && i.estado.id == 123){
+			classEstado = "ordenPrecurso"
 		}else if(i.estado != null && i.estado.id == 119){
 			classEstado = "autorizado"
 		}else{
@@ -61,6 +63,11 @@
 					    	data-url="@controllers.rrhh.routes.AgentesAsistenciasLicenciasController.modalPasarAControladoNovedadLicencia()">Pasar a Controlado</a></li>
 					    }
 
+					    @if(Permiso.check("agentesLicenciasPasarAprobado")) {
+					    	<li role="presentation"><a role="menuitem" id="accionPasarARevisarLicencia" tabindex="-1" href="#"
+					    	data-url="@controllers.rrhh.routes.AgentesAsistenciasLicenciasController.modalPasarARevisarNovedadLicencia()">Pasar a Revisar</a></li>
+					    }
+
 					    @if(Permiso.check("liquidacionNovedadesCrear")) {
 					    	<li role="presentation"><a role="menuitem" id="accionCrearNovedeadesLicencia" tabindex="-1" href="#"
 					    	data-url="@controllers.rrhh.routes.AgentesAsistenciasLicenciasController.modalCrearNovedadLicencia()">Cargar Novedades</a></li>
@@ -84,8 +91,12 @@
 
 		<div class="row" >
 
-			<div class="col-sm-2 filtrosEstados" id="filtrosEstados">
+			<div class="col-sm-3 filtrosEstados" id="filtrosEstados">
 				<div class="btn-group">
+					<button type="button" rel="borrador" class="btn btn-default btn-filtros">
+				  	<i class="glyphicon glyphicon-question-sign size-14"></i><br>A Revisar
+				  	@checkbox(formBuscador("btnFiltro[3]"), 'hidden -> "hidden")
+				  </button>
 				  <button type="button" rel="borrador" class="btn btn-default btn-filtros">
 				  	<i class="glyphicon glyphicon-pencil size-14"></i><br>Borrador
 				  	@checkbox(formBuscador("btnFiltro[0]"), 'hidden -> "hidden")
@@ -125,6 +136,27 @@
 			</div>
 
 			<div class="col-sm-2">
+				<label for="inputPeriodo" class="control-label">Periodo Exacto</label>
+				<div class="input-group">
+					@inputText(formBuscador("periodo_exacto"),'class -> "form-control",'id -> "periodo_exacto")
+					@inputText(formBuscador("periodo_exacto_id"),'hidden -> "hidden",'id -> "periodo_exacto_id")
+					<span class="input-group-addon">
+					<a href="#" class="searchModal"
+								id="searchPeriodo"
+								data-title="Selección de Periodo"
+								data-url="@controllers.contabilidad.routes.PeriodosController.modalBuscar()"
+								data-height="650"
+								data-width="700"
+								data-listen="modal.seleccion.periodo.simple"
+								data-label="#periodo_exacto"
+								data-field="#periodo_exacto_id">
+						<i class="glyphicon glyphicon-search"></i>
+					</a>
+					</span>
+				</div>
+			</div>
+
+			<div class="col-sm-2">
 				<label class="control-label">Ejercicio
 				@select(formBuscador("ejercicio"), Ejercicio.getEjercicios().map { p => p.id.toString -> p.nombre}, 'class -> "form-control select", '_default -> "Seleccionar")
 				</label>
@@ -137,6 +169,10 @@
 					</label>
 				</div>
 			</div>
+
+
+		</div>
+		<div class="row" >
 			<div class="col-sm-2">
 				<div class="form-group">
 					<label for="cuit" class="control-label">Cuit
@@ -152,15 +188,19 @@
 				</div>
 			</div>
 
-
-		</div>
-		<div class="row" >
 			<div class="col-sm-2">
 				<div class="form-group">
 				<label class="control-label">
 					Activo
 					@select(formBuscador("activo"),options(""->"","SI"->"SI","NO"->"NO"), 'class -> "form-control select")
 				</label>
+				</div>
+			</div>
+			<div class="col-sm-4">
+				<div class="form-group">
+					<label for="inputOrganigrama" class="control-label">Departamento/Servicio</label>
+					@inputText(formBuscador("organigrama.nombre"),'class -> "form-control",'id -> "organigrama")
+					@inputText(formBuscador("organigrama_id"),'hidden -> "hidden")
 				</div>
 			</div>
 			<!-- <div class="col-sm-2">
@@ -172,13 +212,9 @@
 					</label>
 				</div>
 			</div> -->
-			<div class="col-sm-5">
-				<div class="form-group">
-					<label for="inputOrganigrama" class="control-label">Departamento/Servicio</label>
-					@inputText(formBuscador("organigrama.nombre"),'class -> "form-control",'id -> "organigrama")
-					@inputText(formBuscador("organigrama_id"),'hidden -> "hidden")
-				</div>
-			</div>
+		</div>
+		<div class="row" >
+
 			<div class="col-sm-2">
 				<div class="form-group">
 				<label for="nombre" class="control-label">&nbsp;</label>
@@ -264,6 +300,24 @@
         <div class="pagination pull-right">
 		    @views.html.helpers.paginador(buscador, controllers.rrhh.routes.AgentesAsistenciasLicenciasController.indexLicenciaNovedadesLiquidacion())
 		</div>
+<script>
+$(function(){
+
+	if($("#periodo_exacto").length){
+		var options = {
+				script:"/contabilidad/suggestPeriodo/",
+				varname:"",
+				json:true,
+				shownoresults:true,
+				maxresults:6,
+				callback: function (obj) {
+											$("#periodo_exacto_id").val(obj.id);
+										 }
+			};
+		var as_json = new bsn.AutoSuggest('periodo_exacto', options);
+	}
+});
+</script>
 
     }
 
