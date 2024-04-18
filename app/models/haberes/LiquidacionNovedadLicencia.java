@@ -108,7 +108,7 @@ public class LiquidacionNovedadLicencia extends Model{
 	    }
 
 		if (!periodo_exacto_id.isEmpty()) {
-		      e.eq("periodo_exacto_id", Integer.parseInt(periodo_exacto_id));
+		      e.eq("periodo_id", Integer.parseInt(periodo_exacto_id));
 		    }
 
 		if(!dni.isEmpty()){
