@@ -675,6 +675,9 @@ POST    /rrhh/agente-asistencia-licencia/PasarAControladoNovedadLicencia 		contr
 GET     /rrhh/agente-asistencia-licencia/modalPasarABorradorNovedadLicencia controllers.rrhh.AgentesAsistenciasLicenciasController.modalPasarABorradorNovedadLicencia()
 POST    /rrhh/agente-asistencia-licencia/PasarABorradorNovedadLicencia 		controllers.rrhh.AgentesAsistenciasLicenciasController.PasarABorradorNovedadLicencia()
 
+GET     /rrhh/agente-asistencia-licencia/modalPasarARevisarNovedadLicencia controllers.rrhh.AgentesAsistenciasLicenciasController.modalPasarARevisarNovedadLicencia()
+POST    /rrhh/agente-asistencia-licencia/PasarARevisarNovedadLicencia 		controllers.rrhh.AgentesAsistenciasLicenciasController.PasarARevisarNovedadLicencia()
+
 POST     /rrhh/agenteAsistencia/reporteLicencia	 		controllers.rrhh.AgentesAsistenciasReportesController.reporteLicencia(comun:Boolean ?= true)
 POST     /rrhh/agenteAsistencia/reporteLicenciaMedicinaLaboral	 		controllers.rrhh.AgentesAsistenciasReportesController.reporteLicenciaMedicinaLaboral(id: Long)
 POST     /rrhh/agenteAsistencia/exportacionNovedadesLicencias	 		controllers.rrhh.AgentesAsistenciasReportesController.exportacionNovedadesLicencias()
