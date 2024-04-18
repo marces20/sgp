@@ -186,6 +186,7 @@ private static final long serialVersionUID = 1L;
 	public static final int LIQUIDACION_LICENCIAS_NOVEDADES_BORRADOR = 117;
 	public static final int LIQUIDACION_LICENCIAS_NOVEDADES_CONTROLADO = 118;
 	public static final int LIQUIDACION_LICENCIAS_NOVEDADES_APROBADO = 119;
+	public static final int LIQUIDACION_LICENCIAS_NOVEDADES_AREVISAR = 123;
 
 	public static final int RECUPERO_RECIBOS_BORRADOR = 120;
 	public static final int RECUPERO_RECIBOS_APROBADO = 121;
