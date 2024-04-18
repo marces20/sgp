@@ -61,7 +61,9 @@ public class LiquidacionNovedadLicencia extends Model{
 										  						String ejercicio,
 										  						String btnFiltro0,//borrador
 																String btnFiltro1,//cargada
-															    String btnFiltro2){
+															    String btnFiltro2,
+															    String btnFiltro3,
+															    String periodo_exacto_id){
 
 		Pagination<LiquidacionNovedadLicencia> p = new Pagination<LiquidacionNovedadLicencia>();
 		p.setOrderDefault(" ");
@@ -76,7 +78,7 @@ public class LiquidacionNovedadLicencia extends Model{
 													   fetch("agenteAsistenciaLicencia.agente.organigrama","nombre").
 													   where();
 
-		if(!btnFiltro0.isEmpty() || !btnFiltro1.isEmpty() || !btnFiltro2.isEmpty()){
+		if(!btnFiltro0.isEmpty() || !btnFiltro1.isEmpty() || !btnFiltro2.isEmpty() || !btnFiltro3.isEmpty()){
     		e = e.disjunction();
 			if(!btnFiltro0.isEmpty()){
 				 e = e.eq("estado_id", Estado.LIQUIDACION_LICENCIAS_NOVEDADES_BORRADOR);
@@ -86,6 +88,9 @@ public class LiquidacionNovedadLicencia extends Model{
 			}
 			if(!btnFiltro2.isEmpty()){
 				 e = e.eq("estado_id", Estado.LIQUIDACION_LICENCIAS_NOVEDADES_APROBADO);
+			}
+			if(!btnFiltro3.isEmpty()){
+				 e = e.eq("estado_id", Estado.LIQUIDACION_LICENCIAS_NOVEDADES_AREVISAR);
 			}
 
 			e = e.endJunction();
@@ -101,6 +106,10 @@ public class LiquidacionNovedadLicencia extends Model{
 		if (!periodo_id.isEmpty()) {
 	      e.le("periodo_id", Integer.parseInt(periodo_id));
 	    }
+
+		if (!periodo_exacto_id.isEmpty()) {
+		      e.eq("periodo_exacto_id", Integer.parseInt(periodo_exacto_id));
+		    }
 
 		if(!dni.isEmpty()){
     		e.ilike("agenteAsistenciaLicencia.agente.dni", "%" + dni + "%");
