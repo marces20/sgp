@@ -187,10 +187,13 @@ private static final long serialVersionUID = 1L;
 	public static final int LIQUIDACION_LICENCIAS_NOVEDADES_CONTROLADO = 118;
 	public static final int LIQUIDACION_LICENCIAS_NOVEDADES_APROBADO = 119;
 	public static final int LIQUIDACION_LICENCIAS_NOVEDADES_AREVISAR = 123;
+	public static final int LIQUIDACION_LICENCIAS_NOVEDADES_ELIMINADO = 124;
 
 	public static final int RECUPERO_RECIBOS_BORRADOR = 120;
 	public static final int RECUPERO_RECIBOS_APROBADO = 121;
 	public static final int RECUPERO_RECIBOS_CANCELADO = 122;
+
+	//ULTIMOOOO ID ES 124
 
 	@Id
 	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="estados_id_seq")
