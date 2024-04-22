@@ -675,6 +675,9 @@ POST    /rrhh/agente-asistencia-licencia/PasarAControladoNovedadLicencia 		contr
 GET     /rrhh/agente-asistencia-licencia/modalPasarABorradorNovedadLicencia controllers.rrhh.AgentesAsistenciasLicenciasController.modalPasarABorradorNovedadLicencia()
 POST    /rrhh/agente-asistencia-licencia/PasarABorradorNovedadLicencia 		controllers.rrhh.AgentesAsistenciasLicenciasController.PasarABorradorNovedadLicencia()
 
+GET     /rrhh/agente-asistencia-licencia/modalPasarAEliminadoNovedadLicencia controllers.rrhh.AgentesAsistenciasLicenciasController.modalPasarAEliminadoNovedadLicencia()
+POST    /rrhh/agente-asistencia-licencia/PasarAEliminadoNovedadLicencia 		controllers.rrhh.AgentesAsistenciasLicenciasController.PasarAEliminadoNovedadLicencia()
+
 GET     /rrhh/agente-asistencia-licencia/modalPasarARevisarNovedadLicencia controllers.rrhh.AgentesAsistenciasLicenciasController.modalPasarARevisarNovedadLicencia()
 POST    /rrhh/agente-asistencia-licencia/PasarARevisarNovedadLicencia 		controllers.rrhh.AgentesAsistenciasLicenciasController.PasarARevisarNovedadLicencia()
 
