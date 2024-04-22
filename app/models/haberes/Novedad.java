@@ -112,6 +112,7 @@ public class Novedad extends Model{
 	@Required(message="Debe indicar el tipo")
 	public Long liquidacion_tipo_id;
 
+	public Date create_date;
 
 	public static Finder<Long,Novedad> find = new Finder<Long,Novedad>(Long.class, Novedad.class);
 

@@ -8,7 +8,7 @@ $( function() {
 	$('#searchPuestoLaboral, #searchPeriodoInicio,#searchPeriodoConcepto, #searchPeriodoFin, #searchConcepto,#searchOrganigrama').modalSearch();
 
 	$('#puesto_laboral_id').on('change', function(){
-		alert("2222")
+
 		$(document).trigger("novedad.cambio");
 	});
 
