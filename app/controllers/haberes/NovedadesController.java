@@ -110,11 +110,13 @@ public class NovedadesController extends Controller {
 		Novedad n = nForm.get();
 
 		LiquidacionConcepto lc = LiquidacionConcepto.find.byId(n.liquidacion_concepto_id);
+		if(n.organigrama_id == null || n.periodo_concepto_id == null) {
+			flash("error", "Para este tipo de Conceptos debe cargar Periodo y Organigrama");
+			return ok(crearNovedades.render(nForm));
+		}
+
+
 		if(lc.control_guardia) {
-			if(n.organigrama_id == null || n.periodo_concepto_id == null) {
-				flash("error", "Para este tipo de Conceptos debe cargar Periodo y Organigrama");
-				return ok(crearNovedades.render(nForm));
-			}
 
 			PuestoLaboral pl = PuestoLaboral.find.byId(n.puesto_laboral_id);
 
