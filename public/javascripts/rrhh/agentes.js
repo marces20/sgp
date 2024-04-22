@@ -253,6 +253,34 @@ $( function(){
 		return false;
 	});
 
+	$('#accionPasarAEliminadoLicencia').click( function() { //abrir modal para pasar a borrador
+		var url = $(this).attr("data-url");
+		dialogoPasarAEliminadoNovedeadesLicencia = crearDialogoGeneral(url);
+		dialogoPasarAEliminadoNovedeadesLicencia.dialog({title: "Pasar a Eliminado",
+			close: function( event, ui ) {location.reload();},
+			buttons:{ "Cerrar": function() { $(this).dialog("close"); location.reload();} }});
+	});
+
+
+	$(document).on("submit", '#formPasarAEliminadoLicencia', function(){
+		var form = $(this);
+		var url = form.attr('action');
+		var data = form.serialize()+'&'+$("input[name='check_listado[]']").serialize();
+		var submit = form.find("button[type='submit']");
+		submit.replaceWith(getLoading());
+		$.post(url, data, function(data){
+			if(data.success) {
+				location.reload();
+				//form.replaceWith(data);
+			} else {
+				form.replaceWith(data.html);
+			}
+		});
+
+		return false;
+	});
+
+
 	$('#accionPasarABorradorLicencia').click( function() { //abrir modal para pasar a borrador
 		var url = $(this).attr("data-url");
 		dialogoPasarABorradorNovedeadesLicencia = crearDialogoGeneral(url);
