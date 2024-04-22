@@ -63,7 +63,9 @@ public class LiquidacionNovedadLicencia extends Model{
 																String btnFiltro1,//cargada
 															    String btnFiltro2,
 															    String btnFiltro3,
-															    String periodo_exacto_id){
+															    String btnFiltro4,
+															    String periodo_exacto_id,
+															    String residente){
 
 		Pagination<LiquidacionNovedadLicencia> p = new Pagination<LiquidacionNovedadLicencia>();
 		p.setOrderDefault(" ");
@@ -74,11 +76,16 @@ public class LiquidacionNovedadLicencia extends Model{
 													   fetch("estado", "nombre").
 													   fetch("agenteAsistenciaLicencia").
 													   fetch("agenteAsistenciaLicencia.ejercicio","id,nombre").
-													   fetch("agenteAsistenciaLicencia.agente","apellido,dni,cuit,tipo_relacion_laboral,activo,organigrama_id").
+													   fetch("agenteAsistenciaLicencia.agente","apellido,dni,cuit,tipo_relacion_laboral,activo,organigrama_id,tipo_residencia_id").
 													   fetch("agenteAsistenciaLicencia.agente.organigrama","nombre").
 													   where();
+		if(!residente.isEmpty()){
+    		if(residente.compareToIgnoreCase("SI") == 0){
+    			e.isNotNull("agenteAsistenciaLicencia.agente.tipo_residencia_id");
+    		}
+		}
 
-		if(!btnFiltro0.isEmpty() || !btnFiltro1.isEmpty() || !btnFiltro2.isEmpty() || !btnFiltro3.isEmpty()){
+		if(!btnFiltro0.isEmpty() || !btnFiltro1.isEmpty() || !btnFiltro2.isEmpty() || !btnFiltro3.isEmpty() || !btnFiltro4.isEmpty()){
     		e = e.disjunction();
 			if(!btnFiltro0.isEmpty()){
 				 e = e.eq("estado_id", Estado.LIQUIDACION_LICENCIAS_NOVEDADES_BORRADOR);
@@ -91,6 +98,9 @@ public class LiquidacionNovedadLicencia extends Model{
 			}
 			if(!btnFiltro3.isEmpty()){
 				 e = e.eq("estado_id", Estado.LIQUIDACION_LICENCIAS_NOVEDADES_AREVISAR);
+			}
+			if(!btnFiltro4.isEmpty()){
+				 e = e.eq("estado_id", Estado.LIQUIDACION_LICENCIAS_NOVEDADES_ELIMINADO);
 			}
 
 			e = e.endJunction();
