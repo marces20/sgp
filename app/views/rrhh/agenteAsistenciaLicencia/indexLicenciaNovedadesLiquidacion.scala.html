@@ -255,7 +255,7 @@
     } else {
     	Mostrando @buscador.getDisplayXtoYofZ(" a "," de ") resultado(s).
 
-		<table class="table table-striped table-bordered">
+		<table id="asistenciasLicenciasTable" class="table table-striped table-bordered">
 			<thead>
 				<tr>
 					<th width="30">
@@ -287,7 +287,7 @@
 					<td>@if(linea.agenteAsistenciaLicencia != null){@linea.agenteAsistenciaLicencia.agente.dni}</td>
 					<td>@if(linea.agenteAsistenciaLicencia != null){@linea.agenteAsistenciaLicencia.agente.cuit}</td>
 					<td>@linea.periodo.nombre</td>
-					<td>@linea.dias</td>
+					<td class="totalCA" data-valor="@linea.dias">@linea.dias</td>
 
 					<td>@linea.agenteAsistenciaLicencia.ejercicio.nombre</td>
 					<td>@if(linea.agenteAsistenciaLicencia.finicio != null){@(utils.DateUtils.formatDate(linea.agenteAsistenciaLicencia.finicio))}</td>
@@ -311,6 +311,16 @@
 
 			}
 			</tbody>
+			<tfoot>
+	        	<tr>
+	        		<td colspan="6">Mostrando @buscador.getDisplayXtoYofZ(" a "," de ") resultado(s).</td>
+
+	        		<td><span class="totalCAFooter"></span></td>
+
+
+	        		<td colspan="7">&nbsp</td>
+	        	</tr>
+	        </tfoot>
         </table>
 
         <div class="pagination pull-right">
@@ -332,8 +342,31 @@ $(function(){
 			};
 		var as_json = new bsn.AutoSuggest('periodo_exacto', options);
 	}
+
+	var trs = $('#asistenciasLicenciasTable tbody tr');
+	sumarFilas(trs);
+
+	$('#checkAll').click( function() {
+		sumarFilas(trs);
+	});
+
+	$('input[name="check_listado[]"]').click( function() {
+		sumarFilas( $('#asistenciasLicenciasTable tbody tr:has(td:eq(0):has(input:checked))') );
+	});
+
+	function sumarFilas(trs) {
+		var ca = 0;
+		trs.each( function() {
+			ca += Number($('.totalCA',this).attr("data-valor"));
+
+		});
+
+		$(".totalCAFooter").html(parseFloat(ca).toFixed(2));
+
+	}
 });
 </script>
+
 
     }
 
