@@ -96,9 +96,11 @@ public class AgentesAsistenciasLicenciasController extends Controller {
 				 																		RequestVar.get("ejercicio"),
 				 																		RequestVar.get("btnFiltro[0]"),//borrador
 				 																		RequestVar.get("btnFiltro[1]"),//cargado
-				 																		RequestVar.get("btnFiltro[2]"),
+				 																		RequestVar.get("btnFiltro[2]"),//aprobado
 				 																		RequestVar.get("btnFiltro[3]"),
-				 																		RequestVar.get("periodo_exacto_id")//aprobado
+				 																		RequestVar.get("btnFiltro[4]"),
+				 																		RequestVar.get("periodo_exacto_id"),
+				 																		RequestVar.get("residente")
 				 																		);
 
 		return ok(indexLicenciaNovedadesLiquidacion.render(lineas,d));
