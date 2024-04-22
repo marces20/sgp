@@ -54,7 +54,10 @@
 			    <span class="caret"></span>
 			  </button>
 			  	<ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
-
+						 @if(Permiso.check("agentesLicenciasPasarAprobado")) {
+					    	<li role="presentation"><a role="menuitem" id="accionPasarAEliminadoLicencia" tabindex="-1" href="#"
+					    	data-url="@controllers.rrhh.routes.AgentesAsistenciasLicenciasController.modalPasarAEliminadoNovedadLicencia()">Pasar a Eliminado</a></li>
+					    }
 
 					    @if(Permiso.check("agentesLicenciasPasarAprobado")) {
 					    	<li role="presentation"><a role="menuitem" id="accionPasarABorradorLicencia" tabindex="-1" href="#"
