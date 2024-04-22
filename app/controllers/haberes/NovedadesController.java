@@ -165,6 +165,7 @@ public class NovedadesController extends Controller {
 			n.usuario_id = (long) Usuario.getUsuarioSesion();
 			n.cargaMasiva = false;
 			n.activo = true;
+			n.create_date = new Date();
 			flash("success", "Se ha creado la novedad.");
 			n.save();
 
