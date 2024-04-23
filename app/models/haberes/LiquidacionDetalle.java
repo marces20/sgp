@@ -59,6 +59,11 @@ public class LiquidacionDetalle  extends Model{
 	public Organigrama organigrama;
 	public Long organigrama_id;
 
+	@ManyToOne
+	@JoinColumn(name="liquidacion_novedad_id", referencedColumnName="id", insertable=false, updatable=false)
+	public Novedad liquidacionNovedad;
+	public Long liquidacion_novedad_id;
+
 
 	public BigDecimal getTotal(){
 		return cantidad.multiply(importe).setScale(2, BigDecimal.ROUND_HALF_UP);
