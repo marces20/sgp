@@ -10,6 +10,10 @@ import com.avaje.ebean.SqlRow;
 
 import controllers.Secured;
 import controllers.auth.CheckPermiso;
+import models.haberes.LiquidacionDetalle;
+import models.haberes.LiquidacionNovedadLicencia;
+import models.haberes.Novedad;
+import play.Logger;
 import play.data.DynamicForm;
 import play.mvc.Controller;
 import play.mvc.Result;
@@ -23,6 +27,26 @@ public class ControlHaberes extends Controller {
 	@CheckPermiso(key = "liquidacionMesIndex")
 	public static Result controlGuardiasPorAgentePorPeriodo() {
 
+		/*Logger.debug("EMPIEZAAAAAAAAAAAAAAAAAAA");
+
+		List<LiquidacionDetalle> ld = LiquidacionDetalle.find.where()
+				.eq("liquidacionPuesto.liquidacionMes.periodo_id", 154)
+				.isNotNull("liquidacion_novedad_id")
+				.findList();
+
+		for(LiquidacionDetalle ldx : ld) {
+			if(ldx.liquidacion_novedad_id != null) {
+				Novedad n = Novedad.find.byId(ldx.liquidacion_novedad_id);
+				if(n !=null) {
+					ldx.periodo_id = n.periodo_concepto_id;
+					ldx.organigrama_id = n.organigrama_id;
+					ldx.update();
+ 				}
+			}
+		}
+
+		Logger.debug("terminaaaaaaaaaaaaaaa");*/
+
 		DynamicForm d = form().bindFromRequest();
 		List<SqlRow>  sqlQueryoRet = null;
 
@@ -31,7 +55,7 @@ public class ControlHaberes extends Controller {
 			return ok(controlGuardiasPorAgentePorPeriodo.render(d,sqlQueryoRet));
 		}
 
-		String sql = "SELECT sum(ld.cantidad) as total,a.id,a.apellido as agente,o.nombre as organigrama,p.nombre as periodo,COALESCE(a.limite_guardia,0) " +
+		String sql = "SELECT sum(ld.cantidad) as total,a.id,a.apellido as agente,o.nombre as organigrama,p.nombre as periodo,COALESCE(a.limite_guardia,0) as limite_guardia " +
 				"FROM liquidacion_detalles ld " +
 				"inner join liquidacion_puestos lp on ld.liquidacion_puesto_id = lp.id " +
 				"inner join liquidacion_conceptos lc on ld.liquidacion_concepto_id = lc.id " +
