@@ -50,7 +50,7 @@ public class ControlHaberes extends Controller {
 		DynamicForm d = form().bindFromRequest();
 		List<SqlRow>  sqlQueryoRet = null;
 
-		if(RequestVar.get("periodo_id").isEmpty() && RequestVar.get("agente_id").isEmpty()  && RequestVar.get("organigrma_id").isEmpty()){
+		if(RequestVar.get("periodo_id").isEmpty() && RequestVar.get("agente_id").isEmpty()  && RequestVar.get("organigrama_id").isEmpty()){
 			flash("error", "Debe seleccionar algun filtro.");
 			return ok(controlGuardiasPorAgentePorPeriodo.render(d,sqlQueryoRet));
 		}
@@ -70,8 +70,8 @@ public class ControlHaberes extends Controller {
 			sql += "and ld.periodo_id = :periodo_id ";
 		}
 
-		if(!RequestVar.get("organigrma_id").isEmpty()) {
-			sql += "and ld.organigrma_id = :organigrma_id ";
+		if(!RequestVar.get("organigrama_id").isEmpty()) {
+			sql += "and ld.organigrama_id = :organigrama_id ";
 		}
 
 		if(!RequestVar.get("agente_id").isEmpty()) {
@@ -86,6 +86,10 @@ public class ControlHaberes extends Controller {
 
 		if(!RequestVar.get("periodo_id").isEmpty()) {
 			sqlQuery.setParameter("periodo_id",new Long(RequestVar.get("periodo_id")));
+		}
+
+		if(!RequestVar.get("organigrama_id").isEmpty()) {
+			sqlQuery.setParameter("organigrama_id",new Long(RequestVar.get("organigrama_id")));
 		}
 
 		if(!RequestVar.get("agente_id").isEmpty()) {
