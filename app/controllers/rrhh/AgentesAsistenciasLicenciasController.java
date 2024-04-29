@@ -809,7 +809,7 @@ public class AgentesAsistenciasLicenciasController extends Controller {
 
 	}
 
-	@CheckPermiso(key = "agentesLicenciasPasarAprobado")
+	@CheckPermiso(key = "agentesLicenciasLiquidacionesPasarABorrador")
 	public static Result modalPasarABorradorNovedadLicencia() {
 		return ok(modalPasarABorradorNovedadLicencia.render(form().bindFromRequest()));
 	}
@@ -868,7 +868,7 @@ public class AgentesAsistenciasLicenciasController extends Controller {
 
 	}
 
-	@CheckPermiso(key = "agentesLicenciasPasarAprobado")
+	@CheckPermiso(key = "agentesLicenciasLiquidacionesPasarARevisar")
 	public static Result modalPasarARevisarNovedadLicencia() {
 		return ok(modalPasarARevisarNovedadLicencia.render(form().bindFromRequest()));
 	}
@@ -927,7 +927,7 @@ public class AgentesAsistenciasLicenciasController extends Controller {
 	}
 
 
-	@CheckPermiso(key = "agentesLicenciasPasarAprobado")
+	@CheckPermiso(key = "agentesLicenciasLiquidacionesPasarAprobado")
 	public static Result modalPasarAControladoNovedadLicencia() {
 		return ok(modalPasarAControladoNovedadLicencia.render(form().bindFromRequest()));
 	}
@@ -962,6 +962,8 @@ public class AgentesAsistenciasLicenciasController extends Controller {
 			for(LiquidacionNovedadLicencia lnlx : lnl) {
 				LiquidacionNovedadLicencia ll = LiquidacionNovedadLicencia.find.where().eq("id", lnlx.id).findUnique();
 				ll.estado_id = (long) Estado.LIQUIDACION_LICENCIAS_NOVEDADES_CONTROLADO;
+				ll.write_date = new Date();
+				ll.write_user_id = new Long(Usuario.getUsuarioSesion());
 				ll.save();
 				cargas ++;
 			}
@@ -985,7 +987,7 @@ public class AgentesAsistenciasLicenciasController extends Controller {
 
 	}
 
-	@CheckPermiso(key = "liquidacionNovedadesCrear")
+	@CheckPermiso(key = "agentesLicenciasLiquidacionesCrearNovedad")
 	public static Result modalCrearNovedadLicencia() {
 		return ok(modalCrearNovedadLicencia.render(form().bindFromRequest()));
 	}
