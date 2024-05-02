@@ -3,6 +3,9 @@ package controllers.patrimonio;
 import static play.data.Form.form;
 
 import java.math.BigDecimal;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -13,6 +16,7 @@ import play.libs.Json;
 
 import com.avaje.ebean.Ebean;
 import com.avaje.ebean.SqlRow;
+import com.avaje.ebean.SqlUpdate;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
@@ -35,6 +39,8 @@ import models.OrdenProvision;
 import models.OrdenProvisionLineas;
 import models.Usuario;
 import models.auth.Permiso;
+import models.informes.InformeDeudaPorActaMaterializada;
+import models.informes.InformeDeudaProveedoresMaterializada;
 import play.Logger;
 import play.data.DynamicForm;
 import play.data.Form;
@@ -470,15 +476,101 @@ public class CertificacionesServiciosController extends Controller {
 		if (errorControl) {
 			flash("error", erroresCantidad);
 		} else {
+			Connection conn = null;
+		    PreparedStatement stmt = null;
+		    PreparedStatement stmt2 = null;
+		    ResultSet rs = null;
+		    int x = 0;
 			try {
+
+				conn = play.db.DB.getConnection();
+
+			    stmt = conn.prepareStatement("alter table certificaciones_servicios disable trigger actualiza_total_orden");
+			    x = stmt.executeUpdate();
+			    stmt.close();
+			    stmt = conn.prepareStatement("alter table certificaciones_servicios_lineas disable trigger actualiza_total_orden");
+			    x = stmt.executeUpdate();
+			    stmt.close();
+
+			    stmt = conn.prepareStatement("alter table orden_lineas_ajustes disable trigger actualiza_total_orden");
+			    x = stmt.executeUpdate();
+			    stmt.close();
+
+			    stmt = conn.prepareStatement("alter table orden_lineas_ajustes disable trigger after_insert_update_delete");
+			    x = stmt.executeUpdate();
+			    stmt.close();
+
+			    stmt = conn.prepareStatement("alter table ordenes disable trigger actualiza_total_orden");
+			    x = stmt.executeUpdate();
+			    stmt.close();
+
+
+
+
+
 				cert.write_usuario_id = new Long(Usuario.getUsuarioSesion());
 				cert.write_date = new Date();
 				cert.estado_id = new Long(Estado.CERTIFICACION_SERVICIO_NOCERTIFICADA);
 				cert.save();
+
+				stmt = conn.prepareStatement("alter table certificaciones_servicios enable trigger actualiza_total_orden");
+				stmt.execute();
+			    stmt.close();
+
+			    stmt = conn.prepareStatement("alter table certificaciones_servicios_lineas enable trigger actualiza_total_orden");
+			    stmt.execute();
+			    stmt.close();
+
+			    stmt = conn.prepareStatement("alter table orden_lineas_ajustes enable trigger actualiza_total_orden");
+			    stmt.execute();
+			    stmt.close();
+
+			    stmt = conn.prepareStatement("alter table orden_lineas_ajustes enable trigger after_insert_update_delete");
+			    stmt.execute();
+			    stmt.close();
+
+
+			    stmt = conn.prepareStatement("alter table ordenes enable trigger actualiza_total_orden");
+			    stmt.execute();
+			    stmt.close();
+
+			    stmt = conn.prepareStatement("select actualiza_totales_ordenes_ordenes(null)");
+			    stmt.execute();
+			    stmt.close();
+
+			    stmt = conn.prepareStatement("select actualiza_totales_ordenes_recepcionados(null)");
+			    stmt.execute();
+			    stmt.close();
+
+			    InformeDeudaProveedoresMaterializada.actualizarVistaMaterializada();
+			    InformeDeudaPorActaMaterializada.actualizarVistaMaterializada();
+
 				flash("success", "Operación exitosa. Estado actual: No Certificada");
+
 			} catch (Exception e) {
-				flash("error", "No se pudo cambiar el estado.");
-			}
+				flash("error", "No se pudo cambiar el estado. "+e);
+			}finally {
+			      if (stmt != null)
+			          try {
+			            stmt.close();
+			          } catch (Exception e) {
+			          }
+			      if (stmt2 != null)
+			          try {
+			            stmt2.close();
+			          } catch (Exception e) {
+			          }
+			        if (rs != null)
+			          try {
+			            rs.close();
+			          } catch (Exception e) {
+			          }
+			        if (conn != null)
+			          try {
+			            conn.close();
+			          } catch (Exception e) {
+			          }
+			      }
 		}
 	}
 
