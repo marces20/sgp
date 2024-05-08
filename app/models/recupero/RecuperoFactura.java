@@ -21,7 +21,9 @@ import models.Estado;
 import models.Expediente;
 import models.Orden;
 import models.Periodo;
+import models.Producto;
 import models.PuntoVenta;
+import models.TipoResidencia;
 import models.Usuario;
 import models.auth.Permiso;
 
@@ -127,6 +129,12 @@ public class RecuperoFactura extends Model {
 	public CondicionVenta condicionVenta;
 	public Integer condicionventa_id;
 
+	@ManyToOne
+	@JoinColumn(name="recupero_tipo_pago_id", referencedColumnName="id", insertable=false, updatable=false)
+	public RecuperoTipoPago recuperoTipoPago;
+	@Required(message="Seleccion Tipo Pago")
+	@Column(name="recupero_tipo_pago_id")
+	public Long recupero_tipo_pago_id;
 
 
 	@Formula(select = "_c${ta}.base", join = "left outer join (select recupero_factura_id, round(sum(precio * cantidad)::numeric,2) as base from recupero_factura_lineas group by recupero_factura_id) as _c${ta} on _c${ta}.recupero_factura_id = ${ta}.id")
@@ -303,6 +311,15 @@ public class RecuperoFactura extends Model {
 				r = false;
 			}
 		}
+
+		return r;
+	}
+
+	public List<RecuperoFactura> getDataSuggest(String input,Integer limit){
+		ExpressionList<RecuperoFactura> l = find.fetch("cliente", "nombre").fetch("puntoVenta", "numero").where().eq("estado_id", Estado.RECUPERO_FACTURA_APROBADO).ilike("numero", "%"+input+"%");
+
+
+		List<RecuperoFactura>	r =	l.setMaxRows(limit).orderBy("id desc").findList();
 
 		return r;
 	}

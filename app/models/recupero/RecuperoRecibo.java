@@ -14,6 +14,7 @@ import javax.persistence.Table;
 import com.avaje.ebean.ExpressionList;
 
 import models.Estado;
+import models.PuntoVenta;
 import models.Usuario;
 import models.auth.Permiso;
 import play.data.format.Formats;
@@ -40,9 +41,9 @@ public class RecuperoRecibo extends Model {
 	public Date fecha;
 
 	@ManyToOne
-	@JoinColumn(name="create_usuario_id", referencedColumnName="id", insertable=false, updatable=false)
+	@JoinColumn(name="create_user_id", referencedColumnName="id", insertable=false, updatable=false)
 	public Usuario create_usuario;
-	@Column(name="create_usuario_id")
+	@Column(name="create_user_id")
 	public Long create_usuario_id;
 
 
@@ -50,10 +51,22 @@ public class RecuperoRecibo extends Model {
 	public Date create_date;
 
 	@ManyToOne
-	@JoinColumn(name="state_id", referencedColumnName="id", insertable=false, updatable=false)
+	@JoinColumn(name="estado_id", referencedColumnName="id", insertable=false, updatable=false)
 	public Estado estado;
-	@Column(name="state_id")
+	@Column(name="estado_id")
 	public Long estado_id;
+
+	@ManyToOne
+	@JoinColumn(name="puntoventa_id", referencedColumnName="id", insertable=false, updatable=false)
+	public PuntoVenta puntoVenta;
+	@Required(message="Seleccion punto venta")
+	public Integer puntoventa_id;
+
+	public String getNumeroRecibo(){
+		String puntoventa = (puntoventa_id != null)?puntoVenta.numero:"";
+		return "X"+puntoventa+"-"+numero;
+	}
+
 
 	public static Model.Finder<Long,RecuperoRecibo> find = new Finder<Long,RecuperoRecibo>(Long.class, RecuperoRecibo.class);
 
