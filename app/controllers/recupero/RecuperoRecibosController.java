@@ -2,6 +2,7 @@ package controllers.recupero;
 
 import static play.data.Form.form;
 
+import java.io.IOException;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -16,10 +17,12 @@ import controllers.auth.CheckPermiso;
 import models.Estado;
 import models.Expediente;
 import models.Usuario;
+import models.auth.Permiso;
 import models.recupero.RecuperoFactura;
 import models.recupero.RecuperoPago;
 import models.recupero.RecuperoPlanilla;
 import models.recupero.RecuperoRecibo;
+import models.recupero.RecuperoReciboFactura;
 import play.Logger;
 import play.data.DynamicForm;
 import play.data.Form;
@@ -28,10 +31,20 @@ import play.mvc.Result;
 import play.mvc.Security;
 import utils.RequestVar;
 import utils.UriTrack;
+import views.html.sinPermiso;
 import views.html.recupero.recuperoRecibo.*;
 
 @Security.Authenticated(Secured.class)
 public class RecuperoRecibosController extends Controller {
+
+	/*
+	 * 1- Control pasar a Aprobado Recibo
+	 * 2- Control cargar factura-Recibo (DEEEUDA) POR FACTURA=???
+	 * 3- GENERACION DE PAGOS DESDE FACTURAS SEGUN TIPO DE PAGO
+	 * 4- Generacion automaticco de numero de recibos
+	 *
+	 * */
+
 
 	final static Form<RecuperoRecibo> reciboForm = form(RecuperoRecibo.class);
 
@@ -100,6 +113,7 @@ public class RecuperoRecibosController extends Controller {
 				return badRequest(crearRecibo.render(reciboForm));
 			}
 
+			c.estado_id = (long) Estado.RECUPERO_RECIBOS_BORRADOR;
 			c.create_date = new Date();
 			c.create_usuario_id = new Long(Usuario.getUsuarioSesion());
 			c.save();
@@ -123,6 +137,9 @@ public class RecuperoRecibosController extends Controller {
 		if(recibo  == null){
 			flash("error", "No se encuentra el recibo.");
 			return redirect(controllers.recupero.routes.RecuperoRecibosController.index()+UriTrack.get("?"));
+		}else if(recibo.estado_id != Estado.RECUPERO_RECIBOS_BORRADOR){
+			flash("error", "El Recibo no se puede editar en este Estado. Debe cambiar su estado a borrador.");
+			return redirect(request().getHeader("referer"));
 		}
 
 		return ok(editarRecibo.render(reciboForm.fill(recibo),recibo));
@@ -197,6 +214,108 @@ public class RecuperoRecibosController extends Controller {
 
 		String refererUrl = request().getHeader("referer");
 		return redirect(refererUrl);
+	}
+
+	public static Result cambiarEstado(Long idRecibo, Long idEstado) throws IOException{
+
+		Estado estado = Estado.getEstado(idEstado,Estado.TIPO_PRESUPUESTO);
+
+		RecuperoRecibo rp = RecuperoRecibo.find.byId(idRecibo);
+
+		if(rp == null){
+			flash("error", "No se encuentra el recibo");
+			return redirect(request().getHeader("referer"));
+		}
+
+
+
+		if(idEstado != null){
+
+			Boolean permiso = false;
+
+			switch ( idEstado.intValue() ) {
+		      case  Estado.RECUPERO_RECIBOS_BORRADOR:
+		    	  if(!Permiso.check("recuperoRecibosPasarBorrador")) {
+					  return ok(sinPermiso.render(request().getHeader("referer")));
+				  }
+		    	  pasarEnBorrador(rp.id);
+		    	  break;
+
+		      case Estado.RECUPERO_RECIBOS_APROBADO:
+		    	  if(!Permiso.check("recuperoRecibosPasarAprobado")) {
+					  return ok(sinPermiso.render(request().getHeader("referer")));
+				  }
+
+		    	  pasarAprobado(rp.id);
+		    	  break;
+		      case Estado.RECUPERO_RECIBOS_CANCELADO:
+		    	  if(!Permiso.check("recuperoRecibosPasarCancelado")) {
+					  return ok(sinPermiso.render(request().getHeader("referer")));
+				  }
+		    	  pasarCancelado(rp.id);
+		          break;
+		      default:
+		           break;
+		      }
+
+		}
+
+		return redirect(controllers.recupero.routes.RecuperoRecibosController.ver(rp.id)+ UriTrack.get("&"));
+	}
+
+	@CheckPermiso(key = "recuperoRecibosPasarEnBorrador")
+	public static void pasarEnBorrador(Long idRf){
+
+		RecuperoRecibo rf = Ebean.find(RecuperoRecibo.class).select("id, estado_id").setId(idRf).findUnique();
+
+		if(rf != null){
+			rf.estado_id = new Long(Estado.RECUPERO_RECIBOS_BORRADOR);
+
+			rf.save();
+			flash("success", "Operación exitosa. Estado actual: Borrador");
+		} else {
+			flash("error", "Parámetros incorrectos");
+		}
+	}
+
+	@CheckPermiso(key = "recuperoRecibosPasarAprobado")
+	public static void pasarAprobado(Long idRf){
+
+		RecuperoRecibo rf = Ebean.find(RecuperoRecibo.class).select("id, estado_id").setId(idRf).findUnique();
+
+		if(rf != null){
+
+			List<RecuperoReciboFactura> rrf = Ebean.find(RecuperoReciboFactura.class).select("id, estado_id").where().eq("recupero_recibo_id",rf.id).findList();
+			if(rrf.size() == 0 ) {
+				flash("error", "No se puede pasar a Estado APROBADO. Debe contener facturas asociadas.");
+			}else {
+
+				/// ACAAAAAAAA CREAR LOS PAGOS
+
+
+				rf.estado_id = new Long(Estado.RECUPERO_RECIBOS_APROBADO);
+				rf.save();
+
+				flash("success", "Operación exitosa. Estado actual: Aprobado");
+			}
+		} else {
+			flash("error", "Parámetros incorrectos");
+		}
+	}
+
+	@CheckPermiso(key = "recuperoRecibosPasarCancelado")
+	public static void pasarCancelado(Long idRf){
+
+		RecuperoRecibo rf = Ebean.find(RecuperoRecibo.class).select("id, estado_id").setId(idRf).findUnique();
+
+		if(rf != null){
+			rf.estado_id = new Long(Estado.RECUPERO_RECIBOS_CANCELADO);
+
+			rf.save();
+			flash("success", "Operación exitosa. Estado actual: Cancelado");
+		} else {
+			flash("error", "Parámetros incorrectos");
+		}
 	}
 
 }

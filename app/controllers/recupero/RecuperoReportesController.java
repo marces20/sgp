@@ -16,9 +16,11 @@ import java.nio.file.FileSystems;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 //import java.time.LocalDate;
 //import java.time.ZoneId;
 import java.util.List;
+import java.util.Map;
 
 import models.CuentaAnalitica;
 import models.DireccionCliente;
@@ -912,23 +914,36 @@ public class RecuperoReportesController extends Controller {
 				celda.setCellStyle(estiloMoneda);
 				total_facturado = total_facturado.add(rffi.getBase());
 
+				celda = f.createCell(4);//TIPO PAGO
+				celda.setCellValue((rpi.textoTipoPago != null)?rpi.textoTipoPago:"");
+				celda.setCellStyle(comun);
 
-				celda = f.createCell(4);//COMPROBANTE PAGO
+				celda = f.createCell(5);//COMPROBANTE PAGO
 				String comprobantePago = (rpi.numero!= null)?rpi.numero:"";
 				celda.setCellValue("X "+comprobantePago);
 				celda.setCellStyle(comun);
+
+
+
+				celda = f.createCell(6);//FECHA PAGO
+				if(rpi.fecha != null) {
+					Date fechaPagp = rpi.fecha;
+					celda.setCellValue(utils.DateUtils.formatDate(fechaPagp));
+				}
+				celda.setCellStyle(comun);
+
 
 				Date fecha = rffi.fecha;
 				//MONTO PAGO
 				if(rpi.estado_id.compareTo((long)Estado.RECUPERO_PAGO_CANCELADO) == 0){
 
-					celda = f.createCell(5);
+					celda = f.createCell(7);
 					celda.setCellValue("ANULADO");
 					celda.setCellStyle(comun);
 
 				}else if(rpi.estado_id.compareTo((long)Estado.RECUPERO_PAGO_BORRADOR) == 0){
 
-					celda = f.createCell(5);
+					celda = f.createCell(7);
 					celda.setCellValue("PEDIENTE");
 					celda.setCellStyle(comun);
 
@@ -943,7 +958,7 @@ public class RecuperoReportesController extends Controller {
 
 					fecha = rpi.fecha;
 
-					celda = f.createCell(5);
+					celda = f.createCell(7);
 					celda.setCellType(Cell.CELL_TYPE_NUMERIC);
 					celda.setCellValue(rpi.total.doubleValue());
 					celda.setCellStyle(estiloMoneda);
@@ -962,7 +977,7 @@ public class RecuperoReportesController extends Controller {
 				celda.setCellValue(utils.DateUtils.formatDate(fecha));
 				celda.setCellStyle(comun);
 
-				celda = f.createCell(6);//FINANCIADOR
+				celda = f.createCell(8);//FINANCIADOR
 				celda.setCellValue(rffi.cliente.nombre);
 				celda.setCellStyle(comun);
 				idsFacturas.add(sr.getLong("idfactura"));
@@ -1005,11 +1020,22 @@ public class RecuperoReportesController extends Controller {
 					celda = f.createCell(4);
 					celda.setCellValue("");
 					celda.setCellStyle(comun);
+
 					celda = f.createCell(5);
 					celda.setCellValue("");
 					celda.setCellStyle(comun);
 
 					celda = f.createCell(6);
+					celda.setCellValue("");
+					celda.setCellStyle(comun);
+
+					celda = f.createCell(7);
+					celda.setCellValue("");
+					celda.setCellStyle(comun);
+
+
+
+					celda = f.createCell(8);
 					celda.setCellValue(nc.recupero_factura.cliente.nombre);
 					celda.setCellStyle(comun);
 
@@ -1038,14 +1064,22 @@ public class RecuperoReportesController extends Controller {
 				celda.setCellStyle(estiloMoneda);
 				total_facturado = total_facturado.add(nc.getTotal().multiply(new BigDecimal(-1)));
 
-				celda = f.createCell(4);
-				celda.setCellValue("");
-				celda.setCellStyle(comun);
+
+
 				celda = f.createCell(5);
 				celda.setCellValue("");
 				celda.setCellStyle(comun);
 
 				celda = f.createCell(6);
+				celda.setCellValue("");
+				celda.setCellStyle(comun);
+
+				celda = f.createCell(7);
+				celda.setCellValue("");
+				celda.setCellStyle(comun);
+
+
+				celda = f.createCell(8);
 				celda.setCellValue(nc.recupero_factura.cliente.nombre);
 				celda.setCellStyle(comun);
 
@@ -1065,11 +1099,11 @@ public class RecuperoReportesController extends Controller {
 			celda.setCellValue(total_facturado.doubleValue());
 			celda.setCellStyle(estiloMoneda);
 
-			celda = f.createCell(4);
+			celda = f.createCell(7);
 			celda.setCellValue("TOTAL");
 			celda.setCellStyle(comun);
 
-			celda = f.createCell(5);
+			celda = f.createCell(8);
 			celda.setCellType(Cell.CELL_TYPE_NUMERIC);
 			celda.setCellValue(total_pagado.doubleValue());
 			celda.setCellStyle(estiloMoneda);
@@ -1077,11 +1111,11 @@ public class RecuperoReportesController extends Controller {
 			x++;
 
 			f = hoja.createRow(x);
-			celda = f.createCell(4);
+			celda = f.createCell(7);
 			celda.setCellValue("Cheque");
 			celda.setCellStyle(comun);
 
-			celda = f.createCell(5);
+			celda = f.createCell(8);
 			celda.setCellType(Cell.CELL_TYPE_NUMERIC);
 			celda.setCellValue(total_cheque.doubleValue());
 			celda.setCellStyle(estiloMoneda);
@@ -1089,11 +1123,11 @@ public class RecuperoReportesController extends Controller {
 			x++;
 
 			f = hoja.createRow(x);
-			celda = f.createCell(4);
+			celda = f.createCell(7);
 			celda.setCellValue("Efectivo");
 			celda.setCellStyle(comun);
 
-			celda = f.createCell(5);
+			celda = f.createCell(8);
 			celda.setCellType(Cell.CELL_TYPE_NUMERIC);
 			celda.setCellValue(total_efectivo.doubleValue());
 			celda.setCellStyle(estiloMoneda);
@@ -1101,11 +1135,11 @@ public class RecuperoReportesController extends Controller {
 			x++;
 
 			f = hoja.createRow(x);
-			celda = f.createCell(4);
+			celda = f.createCell(7);
 			celda.setCellValue("Deposito");
 			celda.setCellStyle(comun);
 
-			celda = f.createCell(5);
+			celda = f.createCell(8);
 			celda.setCellType(Cell.CELL_TYPE_NUMERIC);
 			celda.setCellValue(total_deposito.doubleValue());
 			celda.setCellStyle(estiloMoneda);
@@ -1337,23 +1371,35 @@ order by nc.numero
 				celda.setCellStyle(estiloMoneda);
 				total_facturado = total_facturado.add(rffi.getBase());
 
+				celda = f.createCell(4);//TIPO PAGO
+				celda.setCellValue((rpi.tipoPago != null)?rpi.tipoPago:"");
+				celda.setCellStyle(comun);
 
-				celda = f.createCell(4);//COMPROBANTE PAGO
+				celda = f.createCell(5);//COMPROBANTE PAGO
 				String comprobantePago = (rpi.numero!= null)?rpi.numero:"";
 				celda.setCellValue("X "+comprobantePago);
+				celda.setCellStyle(comun);
+
+
+
+				celda = f.createCell(6);//FECHA PAGO
+				if(rpi.fecha != null) {
+					Date fechaPagp = rpi.fecha;
+					celda.setCellValue(utils.DateUtils.formatDate(fechaPagp));
+				}
 				celda.setCellStyle(comun);
 
 				Date fecha = rffi.fecha;
 				//MONTO PAGO
 				if(rpi.estado_id.compareTo((long)Estado.RECUPERO_PAGO_CANCELADO) == 0){
 
-					celda = f.createCell(5);
+					celda = f.createCell(7);
 					celda.setCellValue("ANULADO");
 					celda.setCellStyle(comun);
 
 				}else if(rpi.estado_id.compareTo((long)Estado.RECUPERO_PAGO_BORRADOR) == 0){
 
-					celda = f.createCell(5);
+					celda = f.createCell(7);
 					celda.setCellValue("PEDIENTE");
 					celda.setCellStyle(comun);
 
@@ -1368,7 +1414,7 @@ order by nc.numero
 
 					fecha = rpi.fecha;
 
-					celda = f.createCell(5);
+					celda = f.createCell(7);
 					celda.setCellType(Cell.CELL_TYPE_NUMERIC);
 					celda.setCellValue(rpi.total.doubleValue());
 					celda.setCellStyle(estiloMoneda);
@@ -1387,7 +1433,7 @@ order by nc.numero
 				celda.setCellValue(utils.DateUtils.formatDate(fecha));
 				celda.setCellStyle(comun);
 
-				celda = f.createCell(6);//FINANCIADOR
+				celda = f.createCell(8);//FINANCIADOR
 				celda.setCellValue(rffi.cliente.nombre);
 				celda.setCellStyle(comun);
 				idsFacturas.add(sr.getLong("idfactura"));
@@ -1434,8 +1480,14 @@ order by nc.numero
 					celda = f.createCell(5);
 					celda.setCellValue("");
 					celda.setCellStyle(comun);
-
 					celda = f.createCell(6);
+					celda.setCellValue("");
+					celda.setCellStyle(comun);
+					celda = f.createCell(7);
+					celda.setCellValue("");
+					celda.setCellStyle(comun);
+
+					celda = f.createCell(8);
 					celda.setCellValue(nc.recupero_factura.cliente.nombre);
 					celda.setCellStyle(comun);
 
@@ -1470,8 +1522,14 @@ order by nc.numero
 				celda = f.createCell(5);
 				celda.setCellValue("");
 				celda.setCellStyle(comun);
-
 				celda = f.createCell(6);
+				celda.setCellValue("");
+				celda.setCellStyle(comun);
+				celda = f.createCell(7);
+				celda.setCellValue("");
+				celda.setCellStyle(comun);
+
+				celda = f.createCell(8);
 				celda.setCellValue(nc.recupero_factura.cliente.nombre);
 				celda.setCellStyle(comun);
 
@@ -1519,6 +1577,13 @@ order by nc.numero
 					celda.setCellStyle(comun);
 
 					celda = f.createCell(6);
+					celda.setCellValue("");
+					celda.setCellStyle(comun);
+					celda = f.createCell(7);
+					celda.setCellValue("");
+					celda.setCellStyle(comun);
+
+					celda = f.createCell(8);
 					celda.setCellValue(nd.recupero_factura.cliente.nombre);
 					celda.setCellStyle(comun);
 
@@ -1554,8 +1619,14 @@ order by nc.numero
 				celda = f.createCell(5);
 				celda.setCellValue("");
 				celda.setCellStyle(comun);
-
 				celda = f.createCell(6);
+				celda.setCellValue("");
+				celda.setCellStyle(comun);
+				celda = f.createCell(7);
+				celda.setCellValue("");
+				celda.setCellStyle(comun);
+
+				celda = f.createCell(8);
 				celda.setCellValue(nd.recupero_factura.cliente.nombre);
 				celda.setCellStyle(comun);
 
@@ -1575,11 +1646,11 @@ order by nc.numero
 			celda.setCellValue(total_facturado.doubleValue());
 			celda.setCellStyle(estiloMoneda);
 
-			celda = f.createCell(4);
+			celda = f.createCell(6);
 			celda.setCellValue("TOTAL");
 			celda.setCellStyle(comun);
 
-			celda = f.createCell(5);
+			celda = f.createCell(7);
 			celda.setCellType(Cell.CELL_TYPE_NUMERIC);
 			celda.setCellValue(total_pagado.doubleValue());
 			celda.setCellStyle(estiloMoneda);
@@ -1587,11 +1658,11 @@ order by nc.numero
 			x++;
 
 			f = hoja.createRow(x);
-			celda = f.createCell(4);
+			celda = f.createCell(6);
 			celda.setCellValue("Cheque");
 			celda.setCellStyle(comun);
 
-			celda = f.createCell(5);
+			celda = f.createCell(7);
 			celda.setCellType(Cell.CELL_TYPE_NUMERIC);
 			celda.setCellValue(total_cheque.doubleValue());
 			celda.setCellStyle(estiloMoneda);
@@ -1599,11 +1670,11 @@ order by nc.numero
 			x++;
 
 			f = hoja.createRow(x);
-			celda = f.createCell(4);
+			celda = f.createCell(6);
 			celda.setCellValue("Efectivo");
 			celda.setCellStyle(comun);
 
-			celda = f.createCell(5);
+			celda = f.createCell(7);
 			celda.setCellType(Cell.CELL_TYPE_NUMERIC);
 			celda.setCellValue(total_efectivo.doubleValue());
 			celda.setCellStyle(estiloMoneda);
@@ -1611,11 +1682,11 @@ order by nc.numero
 			x++;
 
 			f = hoja.createRow(x);
-			celda = f.createCell(4);
+			celda = f.createCell(6);
 			celda.setCellValue("Tranferencias");
 			celda.setCellStyle(comun);
 
-			celda = f.createCell(5);
+			celda = f.createCell(7);
 			celda.setCellType(Cell.CELL_TYPE_NUMERIC);
 			celda.setCellValue(total_deposito.doubleValue());
 			celda.setCellStyle(estiloMoneda);
@@ -1739,13 +1810,13 @@ order by nc.numero
 				 // Source HTML file
 				 String inputHTML = Play.application().getFile("conf/resources/reportes/recupero/factura.html").toString();
 				 // Generated PDF file name
-				 String outputPdf = dirTemp+"/Output.pdf";
+				 String outputPdf = dirTemp+"/Output"+id+".pdf";
 				 // System.out.println(inputHTML);
-				 String inputHTML2 = inputHTML.replace("pv", "00005");
+				 //String inputHTML2 = inputHTML.replace("@@pv@@", "00009");
 				 // System.out.println(inputHTML2);
 
 
-				 htmlToPdf(inputHTML2, outputPdf);
+				 htmlToPdf(inputHTML, outputPdf, id);
 
 				 return ok(reportePlanilla.render(outputPdf));
 
@@ -1762,33 +1833,113 @@ order by nc.numero
 	private static Document html5ParseDocument(String inputHTML) throws IOException{
 
 	    org.jsoup.nodes.Document doc;
-	    System.out.println("parsing ...");
+
 
 	    doc = Jsoup.parse(new File(inputHTML), "UTF-8");
-
 	    org.jsoup.select.Elements myImgs = doc.select(".pv");
-
 	    for (org.jsoup.nodes.Element element : myImgs) {
 	    	element.text("00005");
 	    }
 
-
-	    System.out.println("parsing done ..."    );
 	    return new W3CDom().fromJsoup(doc);
-		// return null;
-	  }
+	}
 
-	  private static void htmlToPdf(String inputHTML, String outputPdf) throws IOException {
+	private static Document html5ParseDocumentPorElemento(String inputHTML,Long facturaId) throws IOException{
 
-		 Document doc = html5ParseDocument(inputHTML);
+	    org.jsoup.nodes.Document doc;
 
-		 //doc = doc.getDocumentElement().toString().replace("pv", "00005");
+
+	    doc = Jsoup.parse(new File(inputHTML), "UTF-8");
+
+	    RecuperoFactura rf = RecuperoFactura.find.byId(facturaId);
+
+	    Map<String,String> datos = new HashMap<>();
+
+	    datos.put("pv", rf.puntoVenta.numero);
+	    datos.put("numeroFactura", rf.numero);
+	    datos.put("fecha_emision", utils.DateUtils.formatDate((rf.fecha_emision!= null)?rf.fecha_emision:rf.fecha));
+	    datos.put("fecha_desde", utils.DateUtils.formatDate(rf.fecha_desde));
+	    datos.put("fecha_hasta", utils.DateUtils.formatDate(rf.fecha_hasta));
+
+	    datos.put("cuit", rf.cliente.cuit2);
+	    datos.put("razon_social", rf.cliente.nombre);
+
+	    String direccion =  "";
+	    datos.put("direccion", direccion);
+
+	    datos.put("importe", utils.NumberUtils.moneda(rf.getTotalFacturado()) );
+	    datos.put("cae", (rf.cae!=null)? rf.cae:"" );
+	    datos.put("fechacae",utils.DateUtils.formatDate(rf.fecha_vencimiento));
+	    String lineas ="";
+
+	    for(RecuperoFacturaLinea rfl :rf.recuperoFacturaLinea) {
+
+		    lineas += "<tr>" +
+		    		"        		<td style='text-align: left'>"+rfl.producto.nombre+"</td>" +
+		    		"        		<td>"+rfl.cantidad+"</td>" +
+		    		"                <td style='text-align: right'>"+utils.NumberUtils.moneda(rfl.precio)+"</td>" +
+		    		"                <td style='text-align: right'>$ 0,00</td>" +
+		    		"                <td style='text-align: right'>$ 0,00</td>" +
+		    		"                <td style='text-align: right'>"+utils.NumberUtils.moneda(rfl.getTotal())+"</td>" +
+		    		"            </tr>";
+	    }
+
+	    datos.put("lineas",lineas);
+
+
+	    for (Map.Entry<String, String> entry : datos.entrySet()) {
+	    	Logger.debug("xxxxxxx "+entry.getKey());
+		    org.jsoup.select.Elements myImgs = doc.select("."+entry.getKey());
+
+		    for (org.jsoup.nodes.Element element : myImgs) {
+		    	//element.text(entry.getValue());
+
+		    	element.append(entry.getValue());
+		    }
+
+	    }
+
+	    return new W3CDom().fromJsoup(doc);
+	}
+
+	private static Document parseFactura(String inputHTML,Long facturaId) throws IOException {
+
+
+
+
+		Document doc = null;//html5ParseDocumentPorElemento(inputHTML,"pv",rf.puntoVenta.numero);
+		doc = null;// html5ParseDocumentPorElemento(inputHTML,"numeroFactura",rf.numero);
+
+		return doc;
+
+	}
+
+	private static void htmlToPdf(String inputHTML, String outputPdf,Long facturaId) throws IOException {
+
+		//Document doc = html5ParseDocument(inputHTML);
+
+	 	//doc = doc.getDocumentElement().toString().replace("pv", "00005");
+
+
+
+
+		/*org.jsoup.nodes.Document docTmp;
+		docTmp = Jsoup.parse(new File(inputHTML), "UTF-8");
+
+	    org.jsoup.select.Elements myImgs = docTmp.select(".pv");
+
+	    for (org.jsoup.nodes.Element element : myImgs) {
+	    	element.text("00005");
+	    }*/
+
+	    Document doc = html5ParseDocumentPorElemento(inputHTML,facturaId);
+
 
 
 
 	    String dirTemp = System.getProperty("java.io.tmpdir");
 	    String baseUri = FileSystems.getDefault()
-	              .getPath(dirTemp+"/Output.pdf")
+	              .getPath(dirTemp+"/Output"+facturaId+".pdf")
 	              .toUri()
 	              .toString();
 
@@ -1806,5 +1957,5 @@ order by nc.numero
 
 	    //System.out.println("PDF generation completed");
 	    os.close();
-	  }
+	}
 }
