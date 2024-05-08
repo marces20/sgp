@@ -1,0 +1,18 @@
+@(formularioCarga: Boolean, recuperoReciboForm: Form[models.recupero.RecuperoRecibo] = null)
+@import java.util.List
+
+@if(recuperoReciboForm.field("id").value == null || recuperoReciboForm.field("id").value == ""){
+	<p>Para cargar facturas primero debe dar de alta el recibo</p>
+} else {
+	<script>
+	$( function (){
+		$.get('@controllers.recupero.routes.RecuperoReciboFacturasController.index(recuperoReciboForm.field("id").value.toLong, formularioCarga)', function(data){
+			$('#listaLineaRecuperoReciboFactura').parent().html(data);
+		})
+	});
+	</script>
+}
+
+<div id="listaLineaRecuperoReciboFactura">
+
+</div>

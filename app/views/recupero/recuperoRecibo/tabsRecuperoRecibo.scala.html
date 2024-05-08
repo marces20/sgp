@@ -1,0 +1,17 @@
+@(formularioCarga: Boolean, recuperoReciboForm: Form[models.recupero.RecuperoRecibo] = null,recuperoRecibo:models.recupero.RecuperoRecibo = null)
+<hr />
+<div class="row">
+	<ul id="recuperoChequeTab" class="nav nav-tabs">
+		<li class="active"><a class="tabFactura" href="#contenedorFacturas" data-toggle="tab">Facturas</a></li>
+
+	</ul>
+
+	<div class="tab-content">
+
+		<div class="tab-pane active" id="contenedorFacturas">
+			@views.html.recupero.recuperoRecibo.contenidoTabFactura(formularioCarga,recuperoReciboForm)
+		</div>
+
+
+	</div>
+</div>

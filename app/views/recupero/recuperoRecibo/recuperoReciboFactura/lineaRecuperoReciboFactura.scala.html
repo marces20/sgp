@@ -1,0 +1,17 @@
+@(linea: models.recupero.RecuperoReciboFactura, editable: Boolean)
+
+<tr data-id="@linea.id">
+	  @if(editable){
+	<td class="accion-editar"><a class="btn btn-default btn-xs modificarRecuperoReciboFactura" href="@controllers.recupero.routes.RecuperoReciboFacturasController.editar(linea.id)"><i class="glyphicon glyphicon-edit"></i></a></td>
+	}
+
+	<td>@(linea.recuperoFactura.nombre)</td>
+	<td class="fechaRecuperoFactura">@if(linea.recuperoFactura.fecha != null){@(utils.DateUtils.formatDate(linea.recuperoFactura.fecha))}</td>
+	<td>@if(linea.recuperoFactura.cliente != null){@(linea.recuperoFactura.cliente.nombre)}</td>
+	<td>@if(linea.recuperoFactura.numero != null){@(linea.recuperoFactura.getNumeroFactura())}</td>
+
+	<td>@utils.NumberUtils.moneda(linea.monto, 10)</td>
+	@if(editable){
+		<td><a class="btn btn-default btn-xs eliminarRecuperoReciboFactura delete-confirm-link" href="@controllers.recupero.routes.RecuperoReciboFacturasController.eliminar(linea.id)"><i class="glyphicon glyphicon-trash icono-eliminar"></i></a></td>
+	 }
+</tr>

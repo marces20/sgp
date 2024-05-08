@@ -1,0 +1,79 @@
+@(reciboFacturaForm: Form[models.recupero.RecuperoReciboFactura])
+@import helper._
+@import utils._
+@implicitFieldConstructor = @{ FieldConstructor(simpleInput.render) }
+
+
+@views.html.tags.successError()
+
+
+<div class="row">
+	@inputText(reciboFacturaForm("recupero_recibo_id"), 'hidden -> "hidden")
+	@inputText(reciboFacturaForm("id"), 'type -> "hidden")
+
+
+		<div class="col-sm-5">
+			<label for="factura" class="control-label">Factura </label>
+			<div class="input-group @if(reciboFacturaForm.error("recupero_factura_id") != null) {has-error} else {has-required}">
+
+				@inputText(reciboFacturaForm("recuperoFactura.numero"), 'class -> "form-control", 'autofocus -> "autofocus", 'id -> "recupero_factura")
+				@inputText(reciboFacturaForm("recupero_factura_id"), 'hidden -> "hidden", 'id -> "recupero_factura_id")
+				<span class="input-group-addon">
+					<a href="#" id="searchRecuperoFacturaModal"
+							data-title="Selección de Recupero Factura"
+							data-url="@controllers.recupero.routes.RecuperoFacturasController.modalBuscar()"
+							data-height="650"
+							data-width="700"
+							data-listen="modal.seleccion.recuperoFactura.simple"
+							data-label="#recupero_factura"
+							data-field="#recupero_factura_id">
+							<i class="glyphicon glyphicon-search"></i>
+				</a>
+				</span>
+			</div>
+			@reciboFacturaForm("recupero_factura_id").error.map{ error =>
+				<div class="text-error">@error.message</div>
+			}
+		</div>
+
+
+
+
+
+	<div class="col-sm-2">
+			<label class="control-label">Monto</label>
+			<div class="form-group @if(reciboFacturaForm.error("monto") != null) {has-error} else {has-required}">
+				@inputText(reciboFacturaForm("monto"), 'class -> "form-control", 'id -> "monto")
+				@reciboFacturaForm("monto").error.map{ error =>
+					<div class="text-error">@error.message</div>
+				}
+			</div>
+		</div>
+</div>
+<div class="row form-actions">
+    <div class="col-lg-offset-4 col-lg-8">
+      <a href="" class="btn btn-default cancelar" title="Cancelar"><i class="glyphicon glyphicon-floppy-remove"></i> Cancelar</a>
+      <button type="submit" class="btn btn-default" title="Guardar Linea"><i class="glyphicon glyphicon-floppy-disk"></i> Guardar</button>
+    </div>
+</div>
+@flash().clear()
+<script>
+$( function() {
+	$("#monto,#numero").numeric_input({allowNegative: true});
+	$('#searchRecuperoFacturaModal').modalSearch();
+
+	if($("#recupero_factura").length){
+		var options = {
+				script:"/recupero/factura/suggest/",
+				varname:"",
+				json:true,
+				shownoresults:true,
+				maxresults:6,
+				callback: function (obj) {
+											$("#recupero_factura").next().val(obj.id);
+										 }
+			};
+		var as_json = new bsn.AutoSuggest('recupero_factura', options);
+	}
+});
+</script>

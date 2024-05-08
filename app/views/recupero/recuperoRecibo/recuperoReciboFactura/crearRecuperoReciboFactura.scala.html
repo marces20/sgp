@@ -1,0 +1,9 @@
+@(reciboFacturaForm: Form[models.recupero.RecuperoReciboFactura])
+@import helper._
+@import utils._
+@implicitFieldConstructor = @{ FieldConstructor(simpleInput.render) }
+
+
+ @helper.form(action = controllers.recupero.routes.RecuperoReciboFacturasController.guardar(), 'id -> "formRecuperoReciboFactura") {
+	@views.html.recupero.recuperoRecibo.recuperoReciboFactura.formRecuperoReciboFactura(reciboFacturaForm)
+}
