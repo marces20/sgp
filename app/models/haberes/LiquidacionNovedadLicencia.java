@@ -1,5 +1,8 @@
 package models.haberes;
 
+import java.util.Date;
+
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -16,6 +19,7 @@ import models.AgenteAsistenciaLicencia;
 import models.Estado;
 import models.Expediente;
 import models.Periodo;
+import models.Usuario;
 import play.data.validation.Constraints.Required;
 import play.db.ebean.Model;
 import utils.pagination.Pagination;
@@ -48,6 +52,15 @@ public class LiquidacionNovedadLicencia extends Model{
 	@JoinColumn(name = "estado_id", referencedColumnName = "id", insertable = false, updatable = false)
 	public Estado estado;
 	public Long estado_id;
+
+
+	@ManyToOne
+	@JoinColumn(name="write_user_id", referencedColumnName="id", insertable=false, updatable=false)
+	public Usuario write_user;
+	@Column(name="write_user_id")
+	public Long write_user_id;
+
+	public Date write_date;
 
 	public static Model.Finder<Long,LiquidacionNovedadLicencia> find = new Model.Finder<Long,LiquidacionNovedadLicencia>(Long.class, LiquidacionNovedadLicencia.class);
 
