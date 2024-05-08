@@ -5,7 +5,7 @@
 	<div class="row">
 		<div class="col-sm-2">
 			<div class="menu-contenido">
-			
+
 			<ul class="nav nav-pills nav-stacked">
 				<li class="titulo">Recupero</li>
 				@if(Componente.check("recuperoPlanilla")) {
@@ -17,13 +17,20 @@
 				@if(Componente.check("recuperoFactura")) {
 					<li><a href="@controllers.recupero.routes.RecuperoFacturasController.index()">Facturas</a></li>
 				}
+
+				@if(Componente.check("recuperoRecibos")) {
+					<li><a href="@controllers.recupero.routes.RecuperoRecibosController.index()">Recibos</a></li>
+				}
+
 				@if(Componente.check("recuperoPago")) {
 					<li><a href="@controllers.recupero.routes.RecuperoPagosController.index()">Pago</a></li>
 				}
+
+
 				<li class="titulo">Informes</li>
 				<li><a href="@controllers.recupero.routes.RecuperoReportesController.informeGeneral()">Informe General</a></li>
-				
-				
+
+
 			</ul>
 			</div>
 		</div>

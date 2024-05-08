@@ -1,4 +1,4 @@
-@(planillaForm: Form[models.recupero.RecuperoRecibo], planilla: models.recupero.RecuperoRecibo)
+@(recuperoReciboForm: Form[models.recupero.RecuperoRecibo], recuperoRecibo: models.recupero.RecuperoRecibo)
 @import utils._
 @import helper._
 @implicitFieldConstructor = @{ FieldConstructor(simpleInput.render) }
@@ -7,7 +7,120 @@
 }
 
 
-@views.html.recupero.mainRecupero("Vista de planilla", scripts) {
+@views.html.recupero.mainRecupero("Vista de Recibo", scripts) {
 
-asdsad
+	<div class="page-header">
+		<div class="row">
+			<div class="col-sm-7">
+				<h1>Vista de Recibo</h1>
+			</div>
+			<div class="col-sm-5">
+				<div class="dropdown pull-right">
+				 <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown">
+				 	<i class="glyphicon glyphicon-list-alt"></i>
+				    Reportes
+				    <span class="caret"></span>
+				  </button>
+				  <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
+
+
+				  </ul>
+				</div>
+
+				<div class="dropdown pull-right btn-header">
+				 <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown">
+				 	<i class="glyphicon glyphicon-cog"></i>
+				    Acciones
+				    <span class="caret"></span>
+				  </button>
+				  <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
+
+				  </ul>
+				</div>
+
+			</div>
+		</div>
+	</div>
+
+@views.html.tags.successError()
+<div class="row menu-acciones">
+	<div class="col-sm-9">
+		<a href="@controllers.recupero.routes.RecuperoRecibosController.crear()@UriTrack.get("?")"  class="btn btn-default"><i class="glyphicon glyphicon-plus-sign"></i> Nuevo</a>
+		<a href="@controllers.recupero.routes.RecuperoRecibosController.editar(recuperoRecibo.id)@UriTrack.get("&")"  class="btn btn-default"><i class="glyphicon glyphicon-edit"></i> Editar</a>
+		<a href="@controllers.recupero.routes.RecuperoRecibosController.eliminar(recuperoRecibo.id)@UriTrack.get("&")"  class="btn btn-default delete-confirm-link"><i class="glyphicon glyphicon-trash icono-eliminar"></i> Eliminar</a>
+	</div>
+	<div class="col-sm-3">
+		<a href="@UriTrack.getOnNull(controllers.recupero.routes.RecuperoRecibosController.index().absoluteURL())" class="btn btn-default"><i class="glyphicon glyphicon-list"></i></a>
+	</div>
+</div>
+	<div class="row">
+		<div class="col-sm-4">
+			<label class="control-label">Numero</label>
+			<p class="form-control-static form-control">@recuperoRecibo.getNumeroRecibo()</p>
+		</div>
+
+		<div class="col-sm-2">
+			<label class="control-label">Fecha</label>
+			<p class="form-control-static form-control">@recuperoReciboForm("fecha").value</p>
+		</div>
+
+	</div>
+
+
+	@views.html.recupero.recuperoRecibo.tabsRecuperoRecibo(false, recuperoReciboForm,recuperoRecibo)
+	<hr />
+
+	<div class="row">
+		<div class="col-sm-6">
+			@if(true){
+				<div class="panel panel-default">
+					<div class="panel-heading"><b>Detalles</b></div>
+					<div class="panel-body">
+
+						<div class="row margin-bottom-25">
+							<div class="col-sm-12">
+
+								<h4>Total: 	<b></b></h4>
+
+
+								<h4>Estado:
+									<b>@recuperoRecibo.estado.nombre</b>
+								</h4>
+							</div>
+						</div>
+
+					</div>
+				</div>
+			}
+
+		</div>
+	</div>
+
+	<div class="row">
+
+		@for(estado <- models.Estado.getSiguienteEstadoPorAprobar(recuperoRecibo.estado.orden,models.Estado.TIPO_RECUPERO_RECIBO)) {
+			@if(estado.orden <= 4) {
+				<div class="col-sm-3">
+					<a href="@controllers.recupero.routes.RecuperoRecibosController.cambiarEstado(recuperoReciboForm.field("id").value.toInt, estado.id.toLong)@UriTrack.get("&")" class="btn btn-default">
+						<i class="glyphicon glyphicon-arrow-right"></i> @estado.nombre
+					</a>
+				</div>
+
+			}
+		}
+
+		@if(recuperoRecibo.estado.id == models.Estado.RECUPERO_RECIBOS_CANCELADO) {
+			<div class="col-sm-3">
+				<a href="@controllers.recupero.routes.RecuperoRecibosController.cambiarEstado(recuperoReciboForm.field("id").value.toInt, models.Estado.RECUPERO_RECIBOS_BORRADOR)@UriTrack.get("&")" class="btn btn-default">
+					<i class="glyphicon glyphicon-arrow-right"></i> Volver a Borrador
+				</a>
+			</div>
+		}else{
+			<div class="col-sm-3">
+				<a href="@controllers.recupero.routes.RecuperoRecibosController.cambiarEstado(recuperoReciboForm.field("id").value.toInt, models.Estado.RECUPERO_RECIBOS_CANCELADO)@UriTrack.get("&")" class="btn btn-default">
+					<i class="glyphicon glyphicon-minus-sign"></i> Cancelar Recibo
+				</a>
+			</div>
+		}
+	</div>
 }

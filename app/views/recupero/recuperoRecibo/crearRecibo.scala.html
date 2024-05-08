@@ -1,4 +1,4 @@
-@(planillaForm: Form[models.recupero.RecuperoRecibo])
+@(recuperoReciboForm: Form[models.recupero.RecuperoRecibo])
 @import helper._
 
 @scripts = {
@@ -6,4 +6,25 @@
 }
 
 @views.html.recupero.mainRecupero("Crear Recibo", scripts) {
+
+	<div class="page-header">
+		<div class="row">
+			<div class="col-sm-7">
+				<h1>Crear nuevo Recibo</h1>
+			</div>
+		</div>
+	</div>
+	@if(flash.containsKey("error")) {
+		<div class="alert alert-danger">
+			@flash.get("error")
+		</div>
+    }
+
+    @helper.form(action = controllers.recupero.routes.RecuperoRecibosController.guardar()) {
+
+		@views.html.recupero.recuperoRecibo.formRecibo(recuperoReciboForm,null)
+		@views.html.recupero.recuperoRecibo.tabsRecuperoRecibo(true,recuperoReciboForm)
+
+
+	}
 }

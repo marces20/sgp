@@ -7,7 +7,18 @@
 
 }
 
+@getClassEstado(i:Estado) = @{
+	var classEstado:String = new String()
+	if(i != null && i.id == 120){
+		classEstado = "borrador"
+	}else if(i != null && i.id == 122){
+		classEstado = "cancelada"
+	}else if(i != null && i.id == 121){
+		classEstado = "autorizado"
+	}
+	classEstado
 
+}
 
 @views.html.recupero.mainRecupero("Lista de Recibos", scripts) {
 	<div class="page-header">
@@ -100,8 +111,9 @@
 					<th width="30"><input type="checkbox" name="checkAll" id="checkAll"/></th>
 					<th width="30">#</th>
 
-					<th width="80">Numero</th>
+					<th width="900">Numero</th>
 					<th width="70">Fecha</th>
+					<th width="70">Estado</th>
 
 					<th width="30">#</th>
 				</tr>
@@ -109,13 +121,13 @@
 			<tbody>
 				@for(recibo <- buscador.getList) {
 
-					<tr class="pointer" data-estado="" data-href="@controllers.recupero.routes.RecuperoRecibosController.ver(recibo.id)&@UriTrack.encode()">
-						<td><input type="checkbox" name="check_listado[]" value="@recibo.id" class="notSeleccion" id="check-@recibo.id"/></td>
+					<tr class="pointer @getClassEstado(recibo.estado)" data-estado="@recibo.estado_id" data-href="@controllers.recupero.routes.RecuperoRecibosController.ver(recibo.id)&@UriTrack.encode()">
+						<td  width="30"><input type="checkbox" name="check_listado[]" value="@recibo.id" class="notSeleccion" id="check-@recibo.id"/></td>
 						<td><a class="btn btn-default btn-xs notSeleccion" href="@controllers.recupero.routes.RecuperoRecibosController.editar(recibo.id)&@UriTrack.encode()"><i class="glyphicon glyphicon-edit"></i></a></td>
 
 						<td>@(recibo.numero)</td>
 						<td class="fecha">@if(recibo.fecha != null){@(utils.DateUtils.formatDate(recibo.fecha))}</td>
-
+						<td class="fecha">@if(recibo.estado != null){@(recibo.estado.nombre)}</td>
 
 						<td>
 							<a class="btn btn-default btn-xs delete-confirm-link notSeleccion" href="@controllers.recupero.routes.RecuperoRecibosController.eliminar(recibo.id)&@UriTrack.encode()">

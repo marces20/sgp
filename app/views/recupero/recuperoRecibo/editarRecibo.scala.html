@@ -1,4 +1,4 @@
-@(planillaForm: Form[models.recupero.RecuperoRecibo],planilla:models.recupero.RecuperoRecibo)
+@(recuperoReciboForm: Form[models.recupero.RecuperoRecibo],recuperoRecibo:models.recupero.RecuperoRecibo)
 @import helper._
 @implicitFieldConstructor = @{ FieldConstructor(simpleInput.render) }
 
@@ -7,5 +7,39 @@
 }
 
 @views.html.recupero.mainRecupero("Modificar Recibo", scripts) {
+
+	<div class="page-header">
+		<div class="row">
+			<div class="col-sm-7">
+				<h1>Editar Recibo</h1>
+			</div>
+
+
+
+		</div>
+	</div>
+	@if(flash.containsKey("error")) {
+		<div class="alert alert-danger">
+			@flash.get("error")
+		</div>
+	}
+
+	@helper.form(action = controllers.recupero.routes.RecuperoRecibosController.actualizar(recuperoRecibo.id)) {
+
+
+		@inputText(recuperoReciboForm("id"), 'hidden -> "hidden")
+		@views.html.recupero.recuperoRecibo.formRecibo(recuperoReciboForm,recuperoRecibo)
+
+		 @views.html.recupero.recuperoRecibo.tabsRecuperoRecibo(true, recuperoReciboForm)
+
+
+
+
+		<h4>Estado actual: 	<b>@recuperoRecibo.estado.nombre</b></h4>
+		<div class="row margin-bottom-25">
+
+		</div>
+
+	}
 
 }
