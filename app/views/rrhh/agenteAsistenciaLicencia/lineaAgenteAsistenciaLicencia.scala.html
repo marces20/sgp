@@ -28,7 +28,7 @@
 		<a class="btn btn-default btn-xs modificarAgenteAsistenciaLicencia" href="@controllers.rrhh.routes.AgentesAsistenciasLicenciasController.editar(linea.id)"><i class="glyphicon glyphicon-edit"></i></a>
 		</td>
 	}else{
-		<td></td>
+		<td>@linea.id</td>
 	}
 	<td>@linea.tipoLicencia.nombre</td>
 	<td>@if(linea.fpresentacion != null){@(utils.DateUtils.formatDate(linea.create_date))}</td>
