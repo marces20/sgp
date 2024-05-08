@@ -27,6 +27,9 @@ GET    /factura/eliminar     controllers.recupero.RecuperoFacturasController.eli
 GET    /factura/ver          controllers.recupero.RecuperoFacturasController.ver(id:Long)
 POST   /factura/actualizar   controllers.recupero.RecuperoFacturasController.actualizar(id:Long)
 GET    /factura/cambiarEstado	controllers.recupero.RecuperoFacturasController.cambiarEstado(idRecuperoFactura:Long, idEstado: Long)
+GET    /factura/suggest/:input		 controllers.recupero.RecuperoFacturasController.suggestFactura(input:String)
+GET    /factura/get           controllers.recupero.RecuperoFacturasController.get(id:Int ?= 0)
+GET     /factura/modalBuscar	controllers.recupero.RecuperoFacturasController.modalBuscar()
 
 GET    /factura-linea/index    controllers.recupero.RecuperoFacturaLineasController.index(id:Long ?= 0, editable:Boolean ?= false)
 GET    /factura-linea/crear    controllers.recupero.RecuperoFacturaLineasController.crear(facturaId:String)
@@ -66,6 +69,7 @@ GET    /recibo/editar       controllers.recupero.RecuperoRecibosController.edita
 GET    /recibo/eliminar     controllers.recupero.RecuperoRecibosController.eliminar(id:Long)
 GET    /recibo/ver          controllers.recupero.RecuperoRecibosController.ver(id:Long)
 POST   /recibo/actualizar   controllers.recupero.RecuperoRecibosController.actualizar(id:Long)
+GET    /recibo/cambiarEstado	controllers.recupero.RecuperoRecibosController.cambiarEstado(idRecuperoRecibo:Long, idEstado: Long)
 
 GET    /pago/cheques/crear        	controllers.recupero.RecuperoChequesController.crear(pagoId:String)
 POST   /pago/cheques/guardar      	controllers.recupero.RecuperoChequesController.guardar()
@@ -74,7 +78,12 @@ POST   /pago/cheques/actualizar    	controllers.recupero.RecuperoChequesControll
 GET    /pago/cheques/eliminar    	controllers.recupero.RecuperoChequesController.eliminar(id:Long)
 GET    /pago/cheque/index   		controllers.recupero.RecuperoChequesController.index(id:Long ?= 0, editable:Boolean ?= false)
 
-
+GET    /recibo/reciboFactura/crear        	controllers.recupero.RecuperoReciboFacturasController.crear(recuperoReciboId:String)
+POST   /recibo/reciboFactura/guardar      	controllers.recupero.RecuperoReciboFacturasController.guardar()
+GET    /recibo/reciboFactura/editar        	controllers.recupero.RecuperoReciboFacturasController.editar(id:Long)
+POST   /recibo/reciboFactura/actualizar    	controllers.recupero.RecuperoReciboFacturasController.actualizar()
+GET    /recibo/reciboFactura/eliminar    	controllers.recupero.RecuperoReciboFacturasController.eliminar(id:Long)
+GET    /recibo/reciboFactura/index   		controllers.recupero.RecuperoReciboFacturasController.index(recuperoReciboId:Long ?= 0, editable:Boolean ?= false)
 
 
 GET    /planilla        	  controllers.recupero.RecuperoPlanillasController.index()
