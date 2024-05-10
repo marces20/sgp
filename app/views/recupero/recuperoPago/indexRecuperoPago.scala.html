@@ -223,6 +223,8 @@
 					<th width="70">Fecha</th>
 					<th width="300">Cliente</th>
 					<th width="">N° Factura</th>
+					<th width="">N/C</th>
+					<th width="">N/D</th>
 					<th width="95">Total</th>
 					<th width="95">Tipo de pago</th>
 					<th width="100">Estado</th>
@@ -241,6 +243,8 @@
 					<td class="fechaRecuperoFactura">@if(rf.fecha != null){@(utils.DateUtils.formatDate(rf.fecha))}</td>
 					<td>@if(rf.cliente != null){@(rf.cliente.nombre)}</td>
 					<td>@if(rf.recuperoFactura != null){@(rf.recuperoFactura.getNumeroFactura())}</td>
+					<td>@if(rf.recupero_nota_credito_id != null){@(rf.recuperoNotaCredito.numero)}</td>
+					<td>@if(rf.recupero_nota_debito_id != null){@(rf.recuperoNotaDebito.numero)}</td>
 					<td class="total" rel="@rf.total">@(utils.NumberUtils.moneda(rf.total))</td>
 					<td class="estado">@rf.getTextoTipoPago()</td>
 					<td class="estado">
