@@ -110,7 +110,7 @@ public class RecuperoNotasCreditosController extends Controller {
 			} else {
 				RecuperoNotaCredito l = lineaForm.get();
 
-				List<RecuperoPago> rpl = RecuperoPago.find.where()
+				/*List<RecuperoPago> rpl = RecuperoPago.find.where()
 										 .eq("recupero_factura_id", l.recupero_factura_id)
 										 .findList();
 
@@ -175,7 +175,7 @@ public class RecuperoNotasCreditosController extends Controller {
 						rpx.save();
 					}
 					//---------------------------------------------------------------------------------------
-				}
+				}*/
 
 				l.create_usuario_id = new Long(Usuario.getUsuarioSesion());
 				l.create_date = new Date();

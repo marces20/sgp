@@ -109,7 +109,7 @@ public class RecuperoNotasDebitosController extends Controller {
 
 				RecuperoNotaDebito l = lineaForm.get();
 
-				List<RecuperoPago> rpl = RecuperoPago.find.where()
+				/*List<RecuperoPago> rpl = RecuperoPago.find.where()
 										 .eq("recupero_factura_id", l.recupero_factura_id)
 										 .findList();
 
@@ -125,14 +125,14 @@ public class RecuperoNotasDebitosController extends Controller {
 					pstr += rp.id+"-";
 				}
 
-				RecuperoFactura rf = RecuperoFactura.find.byId(l.recupero_factura_id);
+				RecuperoFactura rf = RecuperoFactura.find.byId(l.recupero_factura_id);*/
 
 				//if(pstr != null && rf.getTotal().add(l.getTotal()).compareTo(ttmp) > 0){
 					//flash("error", "El total de la factura excede al total de pagos relacionados. Modifique primero los pagos. Pagos: "+pstr);
 					//return ok(crearLineaNotaDebito.render(lineaForm));
 				//}
 
-				if(rpl.size() > 1){//SI HAY MAS DE UN SOLO PAGO LE RESTO A LA PARCIAL
+				/*if(rpl.size() > 1){//SI HAY MAS DE UN SOLO PAGO LE RESTO A LA PARCIAL
 
 
 					RecuperoPago rpx = RecuperoPago.find.where()
@@ -172,14 +172,7 @@ public class RecuperoNotasDebitosController extends Controller {
 					RecuperoPago rpOld = rpl.get(0);
 					rpOld.pago_principal_id = rp.id;
 					rpOld.save();
-
-
-
-
-
-
-
-				}
+				}*/
 
 				l.create_usuario_id = new Long(Usuario.getUsuarioSesion());
 				l.create_date = new Date();

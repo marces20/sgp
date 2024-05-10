@@ -244,6 +244,11 @@ public class RecuperoFacturasController extends Controller {
 			return redirect(request().getHeader("referer"));
 		}
 
+		if(rp.recupero_tipo_pago_id == null){
+			flash("error", "Debe cargar un Tipo de Pago.");
+			return redirect(request().getHeader("referer"));
+		}
+
 		if((rp.recuperoFacturaLinea.isEmpty()) && (idEstado != Estado.RECUPERO_FACTURA_CANCELADO && idEstado != Estado.RECUPERO_FACTURA_BORRADOR)){
 			flash("error", "No se puede modificar el estado si no contiene lineas de productos.");
 			return redirect(request().getHeader("referer"));
