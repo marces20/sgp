@@ -51,6 +51,16 @@ public class RecuperoRecibo extends Model {
 	public Date create_date;
 
 	@ManyToOne
+	@JoinColumn(name="write_usuario_id", referencedColumnName="id", insertable=false, updatable=false)
+	public Usuario write_usuario;
+	@Column(name="write_usuario_id")
+	public Long write_usuario_id;
+
+
+	@Formats.DateTime(pattern="yyyy-MM-dd HH:mm:ss")
+	public Date write_date;
+
+	@ManyToOne
 	@JoinColumn(name="estado_id", referencedColumnName="id", insertable=false, updatable=false)
 	public Estado estado;
 	@Column(name="estado_id")

@@ -51,6 +51,15 @@ public class RecuperoReciboFactura  extends Model {
 	@Required(message="Requiere monto")
 	public BigDecimal monto;
 
+	@DecimalComa(value="")
+	public BigDecimal saldo;
+
+	public BigDecimal getSaldo(){
+		if (saldo == null)
+			return new BigDecimal(0);
+		return saldo;
+	}
+
 	@ManyToOne
 	@JoinColumn(name="create_usuario_id", referencedColumnName="id", insertable=false, updatable=false)
 	public Usuario create_usuario;

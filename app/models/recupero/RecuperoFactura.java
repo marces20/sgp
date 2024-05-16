@@ -172,7 +172,6 @@ public class RecuperoFactura extends Model {
 		return getBase();
 	}
 
-
 	@Formula(select = "_d${ta}.total_pagado", join = "LEFT OUTER JOIN (select p.recupero_factura_id, COALESCE(sum(p.total),0) as total_pagado FROM recupero_pagos p WHERE p.estado_id = "+Estado.RECUPERO_PAGO_PAGADO+" GROUP BY p.recupero_factura_id) as _d${ta} on _d${ta}.recupero_factura_id = ${ta}.id")
 	public BigDecimal total_pagado;
 
@@ -188,6 +187,14 @@ public class RecuperoFactura extends Model {
 			return getTotal();
 		return  getTotal().subtract(total_pagado);
 	}
+
+	/*@Formula(select = "_de${ta}.deuda", join = "left outer join (select id, round(sum(total_deuda::numeric),2) as deuda from informe_totales_recupero group by id) as _de${ta} on _de${ta}.id = ${ta}.id")
+	public BigDecimal deuda;
+	public BigDecimal getDeuda(){
+		if (deuda == null)
+			return new BigDecimal(0);
+		return deuda;
+	}*/
 
 	@OneToMany()
 	public List<RecuperoFacturaLinea> recuperoFacturaLinea;
