@@ -252,6 +252,13 @@ public class RecuperoRecibosController extends Controller {
 		    	  if(!Permiso.check("recuperoRecibosPasarCancelado")) {
 					  return ok(sinPermiso.render(request().getHeader("referer")));
 				  }
+
+		    	  List<RecuperoPago> rf = Ebean.find(RecuperoPago.class).select("id, estado_id").where().eq("recupero_recibo_id", idRecibo).findList();
+		    	  if(rf.size() > 0) {
+		    		  	flash("error", "No se puede cancelar. Existen pagos asociados.");
+		  				return redirect(request().getHeader("referer"));
+		    	  }
+
 		    	  pasarCancelado(rp.id);
 		          break;
 		      default:
@@ -285,18 +292,20 @@ public class RecuperoRecibosController extends Controller {
 
 		if(rf != null){
 
-			List<RecuperoReciboFactura> rrf = Ebean.find(RecuperoReciboFactura.class).select("id, estado_id").where().eq("recupero_recibo_id",rf.id).findList();
-			if(rrf.size() == 0 ) {
+			List<RecuperoReciboFactura> rrfl = Ebean.find(RecuperoReciboFactura.class).select("id, estado_id,recupero_factura_id,monto").where().eq("recupero_recibo_id",rf.id).findList();
+			if(rrfl.size() == 0 ) {
 				flash("error", "No se puede pasar a Estado APROBADO. Debe contener facturas asociadas.");
 			}else {
 
-				/// ACAAAAAAAA CREAR LOS PAGOS
+					/// ACAAAAAAAA CREAR LOS PAGOS
 
+					rf.write_date = new Date();
+					rf.write_usuario_id = new Long(Usuario.getUsuarioSesion());
+					rf.estado_id = new Long(Estado.RECUPERO_RECIBOS_APROBADO);
+					rf.save();
 
-				rf.estado_id = new Long(Estado.RECUPERO_RECIBOS_APROBADO);
-				rf.save();
+					flash("success", "Operación exitosa. Estado actual: Aprobado");
 
-				flash("success", "Operación exitosa. Estado actual: Aprobado");
 			}
 		} else {
 			flash("error", "Parámetros incorrectos");
