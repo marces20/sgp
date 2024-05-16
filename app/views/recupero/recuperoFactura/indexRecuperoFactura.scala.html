@@ -205,11 +205,12 @@
 		<table id="listaRecuperoFacturas" class="table table-striped table-bordered">
 			<thead>
 				 <tr style="background: #FFFFFF;">
-			        <td colspan="7">Mostrando @buscador.getDisplayXtoYofZ(" a "," de ") resultado(s). </td>
+			        <td colspan="6">Mostrando @buscador.getDisplayXtoYofZ(" a "," de ") resultado(s). </td>
 			        <td><b>Total:</b> <span class="baseFooter"></span></td>
 			        <td><b>Total:</b> <span class="ncFooter"></span></td>
 			        <td><b>Total:</b> <span class="ndFooter"></span></td>
 			        <td><b>Total:</b> <span class="totalFooter"></span></td>
+			        <td><b>Total:</b> <span class="deudaFooter"></span></td>
 			        <td colspan="1">&nbsp</td>
 		        </tr>
 				<tr>
@@ -224,6 +225,7 @@
 					<th width="95">N/C</th>
 					<th width="95">N/D</th>
 					<th width="95">Total</th>
+					<th width="95">Saldo</th>
 					<th width="100">Estado</th>
 					<th width="30">#</th>
 				</tr>
@@ -243,6 +245,7 @@
 					<td class="nc" rel="@rf.getTotalNotaCredito()">@(utils.NumberUtils.moneda(rf.getTotalNotaCredito()))</td>
 					<td class="nd" rel="@rf.getTotalNotaDebito()">@(utils.NumberUtils.moneda(rf.getTotalNotaDebito()))</td>
 					<td class="total" rel="@rf.getTotal()">@(utils.NumberUtils.moneda(rf.getTotal()))</td>
+					<td class="deuda" rel="@rf.getSaldoPendiente()">@(utils.NumberUtils.moneda(rf.getSaldoPendiente()))</td>
 					<td class="estado">@if(rf.estado != null){
 					    @(rf.estado.nombre)
 						@if(rf.getPorcentajePagado().compareTo(java.math.BigDecimal.ZERO) != 0) {
@@ -260,11 +263,12 @@
 	        </tbody>
 	        <tfoot>
 		        <tr>
-			        <td colspan="7">&nbsp</td>
+			        <td colspan="6">&nbsp</td>
 			        <td><b>Total:</b> <span class="baseFooter"></span></td>
 			        <td><b>Total:</b> <span class="ncFooter"></span></td>
 			        <td><b>Total:</b> <span class="ndFooter"></span></td>
 			        <td><b>Total:</b> <span class="totalFooter"></span></td>
+			        <td><b>Total:</b> <span class="deudaFooter"></span></td>
 			        <td colspan="1">&nbsp</td>
 		        </tr>
 	        </tfoot>
