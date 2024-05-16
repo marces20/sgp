@@ -112,6 +112,12 @@ private static final long serialVersionUID = 1L;
 	public Long write_usuario_id;
 
 	@ManyToOne
+	@JoinColumn(name="recupero_recibo_id", referencedColumnName="id", insertable=false, updatable=false)
+	public RecuperoRecibo recuperoRecibo;
+	@Column(name="recupero_recibo_id")
+	public Long recupero_recibo_id;
+
+	@ManyToOne
 	@JoinColumn(name="periodo_id", referencedColumnName="id", insertable=false, updatable=false)
 	public Periodo periodo;
 	public Integer periodo_id;
@@ -236,6 +242,7 @@ private static final long serialVersionUID = 1L;
        									.fetch("cliente")
        									.fetch("recuperoNotaCredito")
        									.fetch("recuperoNotaDebito")
+       									.fetch("recuperoRecibo")
        				 					.where();
 
        	if(!numero_factura.isEmpty()) {
