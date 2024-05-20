@@ -80,7 +80,7 @@ public class RecuperoReciboFactura  extends Model {
 			p.setOrderDefault("DESC");
 			p.setSortByDefault("id");
 
-			ExpressionList<RecuperoReciboFactura> e = find.where();
+			ExpressionList<RecuperoReciboFactura> e = find.where().eq("recupero_recibo_id", recuperoReciboId);
 
 
 
