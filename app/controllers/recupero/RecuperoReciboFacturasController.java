@@ -29,9 +29,9 @@ public class RecuperoReciboFacturasController extends Controller {
 
 		Pagination<RecuperoReciboFactura> lineas = RecuperoReciboFactura.page(recuperoReciboId);
 
-		RecuperoReciboFactura rf = RecuperoReciboFactura.find.byId(recuperoReciboId);
 
-		return ok(indexRecuperoReciboFactura.render(lineas, editable,rf));
+
+		return ok(indexRecuperoReciboFactura.render(lineas, editable));
 	}
 
 	public static Result crear(String recuperoReciboId) {
