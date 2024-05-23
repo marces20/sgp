@@ -276,6 +276,7 @@ public class NovedadesAccionesController extends Controller {
 							.eq("puesto_laboral_id", puesto.id)
 							.eq("periodo_inicio_id", periodoId)
 							.eq("periodo_hasta_id", periodoId)
+							.eq("liquidacion_tipo_id", tipoId)
 							.findUnique();
 
 					if (novedadExiste != null) {
