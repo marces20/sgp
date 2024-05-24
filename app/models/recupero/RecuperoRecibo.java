@@ -1,6 +1,7 @@
 package models.recupero;
 
 import java.util.Date;
+import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -9,6 +10,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import com.avaje.ebean.ExpressionList;
@@ -72,9 +74,13 @@ public class RecuperoRecibo extends Model {
 	@Required(message="Seleccion punto venta")
 	public Integer puntoventa_id;
 
+	@OneToMany()
+	public List<RecuperoReciboFactura> recuperoReciboFactura;
+
 	public String getNumeroRecibo(){
 		String puntoventa = (puntoventa_id != null)?puntoVenta.numero:"";
-		return "X"+puntoventa+"-"+numero;
+		//return "X"+puntoventa+"-"+numero;
+		return "X"+numero;
 	}
 
 
