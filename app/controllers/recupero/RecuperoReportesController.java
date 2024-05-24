@@ -1928,7 +1928,7 @@ order by nc.numero
 		    		"        		<td>"+utils.NumberUtils.moneda(rfl.recuperoFactura.getTotal()) +"</td>" +
 		    		"               <td>"+utils.NumberUtils.moneda(rfl.monto) +"</td>" +
 
-		    		"               <td>"+utils.NumberUtils.moneda(rfl.recuperoFactura.getSaldoPendiente().subtract(rfl.monto))+"</td>" +
+		    		"               <td>"+utils.NumberUtils.moneda(rfl.recuperoFactura.getTotal().subtract(rfl.monto))+"</td>" +
 		    		"            </tr>";
 	    }
 
