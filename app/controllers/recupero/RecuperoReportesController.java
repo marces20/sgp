@@ -1925,7 +1925,7 @@ order by nc.numero
 
 		    lineas += "<tr>" +
 		    		"        		<td style='text-align: left'>"+rfl.recuperoFactura.getNumeroFactura()+"</td>" +
-		    		"        		<td>"+utils.NumberUtils.moneda(rfl.recuperoFactura.getTotal()) +"</td>" +
+		    		"        		<td>"+utils.NumberUtils.moneda(rfl.recuperoFactura.getBase()) +"</td>" +
 		    		"               <td>"+utils.NumberUtils.moneda(rfl.monto) +"</td>" +
 
 		    		"               <td>"+utils.NumberUtils.moneda(rfl.recuperoFactura.getTotal().subtract(rfl.monto))+"</td>" +
