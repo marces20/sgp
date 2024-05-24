@@ -30,6 +30,7 @@
 			<tr>
 				<th>Numero</th>
 				<th>Cliente</th>
+				<th>Saldo</th>
 			</tr>
 		</thead>
 		<tbody>
@@ -38,6 +39,7 @@
 	<tr data-id="@factura.id" class="modalSeleccionRecuperoFactura">
 		<td> @factura.getNumeroFactura()</td>
 		<td> @factura.cliente.nombre</td>
+		<td> @utils.NumberUtils.moneda(factura.getSaldoPendiente(), 10)</td>
 	</tr>
     }
     </tbody>

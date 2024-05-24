@@ -125,7 +125,7 @@
 						<td  width="30"><input type="checkbox" name="check_listado[]" value="@recibo.id" class="notSeleccion" id="check-@recibo.id"/></td>
 						<td><a class="btn btn-default btn-xs notSeleccion" href="@controllers.recupero.routes.RecuperoRecibosController.editar(recibo.id)&@UriTrack.encode()"><i class="glyphicon glyphicon-edit"></i></a></td>
 
-						<td>@(recibo.numero)</td>
+						<td>@(recibo.getNumeroRecibo())</td>
 						<td class="fecha">@if(recibo.fecha != null){@(utils.DateUtils.formatDate(recibo.fecha))}</td>
 						<td class="fecha">@if(recibo.estado != null){@(recibo.estado.nombre)}</td>
 
