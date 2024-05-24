@@ -33,6 +33,8 @@ import models.recupero.RecuperoNotaCredito;
 import models.recupero.RecuperoNotaDebito;
 import models.recupero.RecuperoPago;
 import models.recupero.RecuperoPlanilla;
+import models.recupero.RecuperoRecibo;
+import models.recupero.RecuperoReciboFactura;
 
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Cell;
@@ -1801,6 +1803,35 @@ order by nc.numero
 		return ids;
 	}
 
+	public static Result imprimirReciboNuevo(Long id) {
+
+		try {
+			// id = new Long(29809);
+
+			 String dirTemp = System.getProperty("java.io.tmpdir");
+
+			 // Source HTML file
+			 String inputHTML = Play.application().getFile("conf/resources/reportes/recupero/recibo.html").toString();
+			 // Generated PDF file name
+			 String outputPdf = dirTemp+"/recibo_"+id+".pdf";
+			 // System.out.println(inputHTML);
+			 //String inputHTML2 = inputHTML.replace("@@pv@@", "00009");
+			 // System.out.println(inputHTML2);
+
+
+			 htmlToPdf(inputHTML, outputPdf, id,"recibo");
+
+			 return ok(reportePlanilla.render(outputPdf));
+
+		} catch (Exception e) {
+		  // TODO Auto-generated catch block
+		      e.printStackTrace();
+		}
+
+		return ok(reportePlanilla.render(null));
+	}
+
+
 	public static Result imprimirFacturaAfip(Long id) {
 
 			 try {
@@ -1816,7 +1847,7 @@ order by nc.numero
 				 // System.out.println(inputHTML2);
 
 
-				 htmlToPdf(inputHTML, outputPdf, id);
+				 htmlToPdf(inputHTML, outputPdf, id,"factura");
 
 				 return ok(reportePlanilla.render(outputPdf));
 
@@ -1830,7 +1861,7 @@ order by nc.numero
 		return ok(reportePlanilla.render(null));
 	}
 
-	private static Document html5ParseDocument(String inputHTML) throws IOException{
+	/*private static Document html5ParseDocument(String inputHTML) throws IOException{
 
 	    org.jsoup.nodes.Document doc;
 
@@ -1839,6 +1870,66 @@ order by nc.numero
 	    org.jsoup.select.Elements myImgs = doc.select(".pv");
 	    for (org.jsoup.nodes.Element element : myImgs) {
 	    	element.text("00005");
+	    }
+
+	    return new W3CDom().fromJsoup(doc);
+	}*/
+
+	private static Document html5ParseDocumentPorElementoRecibo(String inputHTML,Long id) throws IOException{
+
+	    org.jsoup.nodes.Document doc;
+
+
+	    doc = Jsoup.parse(new File(inputHTML), "UTF-8");
+
+	    RecuperoRecibo rf = RecuperoRecibo.find.byId(id);
+
+	    Map<String,String> datos = new HashMap<>();
+
+	    datos.put("pv", rf.getNumeroRecibo());
+	    datos.put("numeroFactura","");
+	    datos.put("fecha_emision", utils.DateUtils.formatDate((rf.fecha!= null)?rf.fecha:rf.fecha));
+	    datos.put("fecha_desde", utils.DateUtils.formatDate(rf.fecha));
+	    datos.put("fecha_hasta", utils.DateUtils.formatDate(rf.fecha));
+
+	    List<RecuperoReciboFactura> rdlxr = rf.recuperoReciboFactura;
+	    datos.put("cuit", rdlxr.get(0).recuperoFactura.cliente.cuit2);
+	    datos.put("razon_social", rdlxr.get(0).recuperoFactura.cliente.nombre);
+
+
+	    String direccion =  "";
+	    datos.put("direccion", direccion);
+
+	    //datos.put("importe", utils.NumberUtils.moneda(rf.getTotalFacturado()) );
+	    //datos.put("cae", (rf.cae!=null)? rf.cae:"" );
+	    //datos.put("fechacae",utils.DateUtils.formatDate(rf.fecha_vencimiento));
+
+	    String lineas ="";
+
+	    for(RecuperoReciboFactura rfl :rdlxr) {
+
+		    lineas += "<tr>" +
+		    		"        		<td style='text-align: left'>"+rfl.recuperoFactura.getNumeroFactura()+"</td>" +
+		    		"        		<td>"+utils.NumberUtils.moneda(rfl.recuperoFactura.getBase()) +"</td>" +
+		    		"               <td>"+utils.NumberUtils.moneda(rfl.monto) +"</td>" +
+
+		    		"               <td>"+utils.NumberUtils.moneda(rfl.recuperoFactura.getSaldoPendiente())+"</td>" +
+		    		"            </tr>";
+	    }
+
+	    datos.put("lineas",lineas);
+
+
+	    for (Map.Entry<String, String> entry : datos.entrySet()) {
+	    	Logger.debug("xxxxxxx "+entry.getKey());
+		    org.jsoup.select.Elements myImgs = doc.select("."+entry.getKey());
+
+		    for (org.jsoup.nodes.Element element : myImgs) {
+		    	//element.text(entry.getValue());
+
+		    	element.append(entry.getValue());
+		    }
+
 	    }
 
 	    return new W3CDom().fromJsoup(doc);
@@ -1902,7 +1993,7 @@ order by nc.numero
 	    return new W3CDom().fromJsoup(doc);
 	}
 
-	private static Document parseFactura(String inputHTML,Long facturaId) throws IOException {
+	/*private static Document parseFactura(String inputHTML,Long facturaId) throws IOException {
 
 
 
@@ -1912,9 +2003,9 @@ order by nc.numero
 
 		return doc;
 
-	}
+	}*/
 
-	private static void htmlToPdf(String inputHTML, String outputPdf,Long facturaId) throws IOException {
+	private static void htmlToPdf(String inputHTML, String outputPdf,Long facturaId,String tipo) throws IOException {
 
 		//Document doc = html5ParseDocument(inputHTML);
 
@@ -1932,14 +2023,22 @@ order by nc.numero
 	    	element.text("00005");
 	    }*/
 
-	    Document doc = html5ParseDocumentPorElemento(inputHTML,facturaId);
+		Document doc = null;
+
+
+		if(tipo =="factura") {
+			 doc = html5ParseDocumentPorElemento(inputHTML,facturaId);
+		}else if(tipo =="recibo") {
+			doc = html5ParseDocumentPorElementoRecibo(inputHTML,facturaId);
+		}
+
 
 
 
 
 	    String dirTemp = System.getProperty("java.io.tmpdir");
 	    String baseUri = FileSystems.getDefault()
-	              .getPath(dirTemp+"/Output"+facturaId+".pdf")
+	              .getPath(dirTemp+"/"+tipo+"_"+facturaId+".pdf")
 	              .toUri()
 	              .toString();
 
