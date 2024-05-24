@@ -1,5 +1,6 @@
 package models.recupero;
 
+import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 
@@ -14,6 +15,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import com.avaje.ebean.ExpressionList;
+import com.avaje.ebean.annotation.Formula;
 
 import models.Estado;
 import models.PuntoVenta;
@@ -79,8 +81,15 @@ public class RecuperoRecibo extends Model {
 
 	public String getNumeroRecibo(){
 		String puntoventa = (puntoventa_id != null)?puntoVenta.numero:"";
-		//return "X"+puntoventa+"-"+numero;
-		return "X"+numero;
+		return "X"+puntoventa+"-"+numero;
+	}
+
+	@Formula(select = "_c${ta}.total", join = "left outer join (select recupero_recibo_id, round(sum(monto)::numeric,2) as total from recupero_recibo_facturas group by recupero_recibo_id) as _c${ta} on _c${ta}.recupero_recibo_id = ${ta}.id")
+	public BigDecimal total;//Base
+	public BigDecimal getTotal(){
+		if (total == null)
+			return new BigDecimal(0);
+		return total;
 	}
 
 

@@ -3,6 +3,7 @@ package controllers.recupero;
 import static play.data.Form.form;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.persistence.PersistenceException;
@@ -11,6 +12,7 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 
 import controllers.Secured;
 import models.recupero.Cheque;
+import models.recupero.RecuperoFactura;
 import models.recupero.RecuperoReciboFactura;
 import play.data.Form;
 import play.libs.Json;
@@ -52,7 +54,34 @@ public class RecuperoReciboFacturasController extends Controller {
 				flash("error", "Error en formulario "+lineaForm.errors());
 				return ok(crearRecuperoReciboFactura.render(lineaForm));
 			} else {
+
+
 				RecuperoReciboFactura l = lineaForm.get();
+
+
+				RecuperoFactura rf = RecuperoFactura.find.byId(l.recupero_factura_id);
+
+				List<RecuperoReciboFactura> ll = RecuperoReciboFactura.find.where().eq("recupero_recibo_id", l.recupero_recibo_id).findList();
+
+				if(ll.size() > 0) {
+					if(ll.get(0).recuperoFactura.cliente_id.compareTo(rf.cliente_id) != 0) {
+						flash("error", "No se puede cargar la factura. Existe una factura con otro cliente cargada.");
+						return ok(crearRecuperoReciboFactura.render(lineaForm));
+					}
+				}
+
+				List<RecuperoReciboFactura> ll2 = RecuperoReciboFactura.find.where().eq("recupero_factura_id", l.recupero_factura_id).findList();
+				if(ll2.size() > 0) {
+					flash("error", "No se puede cargar la factura. Ya existe una linea con esta factura cargada.");
+					return ok(crearRecuperoReciboFactura.render(lineaForm));
+				}
+
+				if(l.monto.compareTo(rf.getSaldoPendiente()) > 0) {
+					flash("error", "El monto es superior al Saldo Pendiente de la factura.");
+					return ok(crearRecuperoReciboFactura.render(lineaForm));
+				}
+
+
 
 				l.save();
 				flash("success", "El registro se almacenó correctamente.");
@@ -88,6 +117,29 @@ public class RecuperoReciboFacturasController extends Controller {
 				return ok(editarRecuperoReciboFactura.render(lineaForm));
 			} else {
 				RecuperoReciboFactura l = lineaForm.get();
+
+				RecuperoFactura rf = RecuperoFactura.find.byId(l.recupero_factura_id);
+
+				List<RecuperoReciboFactura> ll = RecuperoReciboFactura.find.where().eq("recupero_recibo_id", l.recupero_recibo_id).ne("id",l.id).findList();
+				if(ll.size() > 0) {
+					if(ll.get(0).recuperoFactura.cliente_id.compareTo(rf.cliente_id) == 0) {
+						flash("error", "No se puede cargar la factura. Existe una factura con otro cliente cargada.");
+						return ok(editarRecuperoReciboFactura.render(lineaForm));
+					}
+				}
+
+				List<RecuperoReciboFactura> ll2 = RecuperoReciboFactura.find.where().eq("recupero_factura_id", l.recupero_factura_id).ne("id",l.id).findList();
+				if(ll2.size() > 0) {
+					flash("error", "No se puede cargar la factura. Ya existe una linea con esta factura cargada.");
+					return ok(editarRecuperoReciboFactura.render(lineaForm));
+				}
+
+
+				if(l.monto.compareTo(rf.getSaldoPendiente()) > 0) {
+					flash("error", "El monto es superior al Saldo Pendiente de la factura.");
+					return ok(editarRecuperoReciboFactura.render(lineaForm));
+				}
+
 				l.update(l.id);
 			}
 		} catch (Exception e){

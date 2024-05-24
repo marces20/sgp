@@ -1885,16 +1885,22 @@ order by nc.numero
 	    RecuperoRecibo rf = RecuperoRecibo.find.byId(id);
 
 	    Map<String,String> datos = new HashMap<>();
-
-	    datos.put("pv", rf.getNumeroRecibo());
-	    datos.put("numeroFactura","");
+	    String puntoventa = (rf.puntoventa_id != null)?rf.puntoVenta.numero:"";
+	    datos.put("pv",puntoventa );
+	    datos.put("numeroFactura",rf.numero);
 	    datos.put("fecha_emision", utils.DateUtils.formatDate((rf.fecha!= null)?rf.fecha:rf.fecha));
 	    datos.put("fecha_desde", utils.DateUtils.formatDate(rf.fecha));
 	    datos.put("fecha_hasta", utils.DateUtils.formatDate(rf.fecha));
+	    datos.put("importe", utils.NumberUtils.moneda(rf.getTotal()));
+	    datos.put("monto_letras", NumeroALetra.convertNumberToLetter(String.valueOf(rf.getTotal())));
+
+
 
 	    List<RecuperoReciboFactura> rdlxr = rf.recuperoReciboFactura;
 	    datos.put("cuit", rdlxr.get(0).recuperoFactura.cliente.cuit2);
 	    datos.put("razon_social", rdlxr.get(0).recuperoFactura.cliente.nombre);
+
+
 
 
 	    String direccion =  "";
@@ -1910,10 +1916,10 @@ order by nc.numero
 
 		    lineas += "<tr>" +
 		    		"        		<td style='text-align: left'>"+rfl.recuperoFactura.getNumeroFactura()+"</td>" +
-		    		"        		<td>"+utils.NumberUtils.moneda(rfl.recuperoFactura.getBase()) +"</td>" +
+		    		"        		<td>"+utils.NumberUtils.moneda(rfl.recuperoFactura.getTotal()) +"</td>" +
 		    		"               <td>"+utils.NumberUtils.moneda(rfl.monto) +"</td>" +
 
-		    		"               <td>"+utils.NumberUtils.moneda(rfl.recuperoFactura.getSaldoPendiente())+"</td>" +
+		    		"               <td>"+utils.NumberUtils.moneda(rfl.recuperoFactura.getSaldoPendiente().subtract(rfl.monto))+"</td>" +
 		    		"            </tr>";
 	    }
 
