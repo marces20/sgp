@@ -1966,6 +1966,9 @@ order by nc.numero
 	    datos.put("fecha_emision", utils.DateUtils.formatDate((rf.fecha_emision!= null)?rf.fecha_emision:rf.fecha));
 	    datos.put("fecha_desde", utils.DateUtils.formatDate(rf.fecha_desde));
 	    datos.put("fecha_hasta", utils.DateUtils.formatDate(rf.fecha_hasta));
+	    datos.put("tipo_pago",((rf.recupero_tipo_pago_id != null)?rf.recuperoTipoPago.nombre:"Contado"));
+
+
 
 	    datos.put("cuit", rf.cliente.cuit2);
 	    datos.put("razon_social", rf.cliente.nombre);
