@@ -150,8 +150,8 @@
                      <h1>FACTURA</h1>
 
                      <div style="text-align: left;margin-left:25px;padding-bottom:15px;">
-                         <b>Punto de Venta:</b> <span class="pv"></span> &nbsp;&nbsp;&nbsp;<b>Comp. Nro: </b>00000902<br>
-                         <b>Fecha de Emisión:</b>  14/04/2023<br>
+                         <b>Punto de Venta:</b> <span class="pv"></span> &nbsp;&nbsp;&nbsp;<b>Comp. Nro: </b><span class="numeroFactura"></span><br>
+                         <b>Fecha de Emisión:</b>  <span class="fecha_emision"></span><br>
                          <b>CUIT:</b> 30-71222430-0<br>
                          <b>Ing. Brutos:</b> 30-71222430-0<br>
                          <b>Inicio de Actividad:</b> 01/01/2013<br>
@@ -165,18 +165,16 @@
              <span style="font-size: 50px">C</span>
          </div>
          <div class="border_div" style="font-weight:bold;padding-left:25px;padding-top:5px;padding-bottom:5px">
-             Período Facturado&nbsp;&nbsp;&nbsp; Desde:
-14/04/2023&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Hasta:
- 14/04/2023
+             Período Facturado&nbsp;&nbsp;&nbsp; Desde: <span class="fecha_desde"></span> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Hasta: <span class="fecha_hasta"></span>
          </div>
          <div class="border_div info_factura">
              <table style="width: 100%">
                  <tbody><tr>
                      <td style="width: 30%;padding-left:25px;">
-                         <b>CUIT:</b> 33563188699<br>
+                         <b>CUIT:</b><span class="cuit"></span><br>
                      </td>
                      <td style="width: 70%;;padding-left:25px;">
-                         <b>Razón Social:</b> I P S  Misiones - IPS<br>
+                         <b>Razón Social:</b> <span class="razon_social"></span><br>
                      </td>
                  </tr>
 
@@ -191,7 +189,7 @@
                      </td>
                      <td style="width: 50%;;padding-left:25px;">
 
-                         <b>Domicilio:</b> bolivar  2152 PDAS 3300<br>
+                         <b>Domicilio:</b><span class="direccion"></span><br>
                      </td>
                  </tr>
              </tbody></table>
@@ -200,7 +198,7 @@
 
 <div style="text-align: right; border: 1px solid;padding: 10px;height:20px;">
 
-        <h2 style="margin:  0px;">Importe Total: $ 6.085.860,09</h2>
+        <h2 style="margin:  0px;">Importe Total:<span class="importe"></span></h2>
 
 
 </div>
@@ -215,10 +213,10 @@
 
             <table style="width: 100%;">
                 <tbody><tr>
-                    <td><b>CAE Nº: </b></td><td>73150259953294</td>
+                    <td><b>CAE Nº: </b></td><td><span class="cae"></span></td>
                 </tr>
                 <tr>
-                    <td><b>Fecha de Vt. de CAE:</b></td> <td>24/04/2023</td>
+                    <td><b>Fecha de Vt. de CAE:</b></td> <td><span class="fechacae"></span></td>
                 </tr>
             </tbody></table>
 
@@ -230,7 +228,7 @@
     <table class="table_prestaciones" style="width: 100%;text-align: center;padding-bottom:250px;;" cellspacing="2" cellpadding="2">
         <thead style="background-color: #BDBDBD;">
             <tr>
-            <th style="border: 1px solid;width:350px;">Producto / Servicio</th>
+            	<th style="border: 1px solid;width:350px;">Producto / Servicio</th>
                 <th style="border: 1px solid;width:20px;">Cantidad</th>
                 <th style="border: 1px solid;">Precio Unit.</th>
                 <th style="border: 1px solid;">% Bonif.</th>
@@ -238,22 +236,12 @@
                 <th style="border: 1px solid;">SubTotal</th>
             </tr>
         </thead>
-        <tbody>
-        <tr>	<td style="text-align: left">Prestaciones correspondientes a v/afiliados de IPS. Expte. Nº 3823/2023.-</td>	<td>1</td>
-                <td style="text-align: right">$ 6.085.860,09</td>
-                <td style="text-align: right">0,00</td>
-                <td style="text-align: right">$ 0,00</td>
-                <td style="text-align: right">$ 6.085.860,09</td>
-            </tr>
-              <script type="text/php">
-            // record total number of pages for the section
+        	<tbody class="lineas">
 
-            if(!isset($GLOBALS[$PAGE_COUNT] ))$GLOBALS[$PAGE_COUNT] = 0;
-            $GLOBALS[$PAGE_COUNT] += 6085860.09 ;
-        </script>
 
-						</tbody>
-					</table>
+
+			</tbody>
+		</table>
                     <div class="page_break"></div>
          <header>
          <table class="border_main cabecera_principal" style="width: 100%;">
@@ -272,8 +260,8 @@
                      <h1>FACTURA</h1>
 
                      <div style="text-align: left;margin-left:25px;padding-bottom:15px;">
-                         <b>Punto de Venta:</b> 00007 &nbsp;&nbsp;&nbsp;<b>Comp. Nro: </b>00000902<br>
-                         <b>Fecha de Emisión:</b>  14/04/2023<br>
+                         <b>Punto de Venta:</b> <span class="pv"></span> &nbsp;&nbsp;&nbsp;<b>Comp. Nro: </b><span class="numeroFactura"></span><br>
+                         <b>Fecha de Emisión:</b>  <span class="fecha_emision"></span><br>
                          <b>CUIT:</b> 30-71222430-0<br>
                          <b>Ing. Brutos:</b> 30-71222430-0<br>
                          <b>Inicio de Actividad:</b> 01/01/2013<br>
@@ -287,18 +275,16 @@
              <span style="font-size: 50px">C</span>
          </div>
          <div class="border_div" style="font-weight:bold;padding-left:25px;padding-top:5px;padding-bottom:5px">
-             Período Facturado&nbsp;&nbsp;&nbsp; Desde:
-14/04/2023&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Hasta:
- 14/04/2023
+             Período Facturado&nbsp;&nbsp;&nbsp; Desde: <span class="fecha_desde"></span> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Hasta: <span class="fecha_hasta"></span>
          </div>
          <div class="border_div info_factura">
              <table style="width: 100%">
                  <tbody><tr>
                      <td style="width: 30%;padding-left:25px;">
-                         <b>CUIT:</b> 33563188699<br>
+                         <b>CUIT:</b><span class="cuit"></span><br>
                      </td>
                      <td style="width: 70%;;padding-left:25px;">
-                         <b>Razón Social:</b> I P S  Misiones - IPS<br>
+                         <b>Razón Social:</b> <span class="razon_social"></span><br>
                      </td>
                  </tr>
 
@@ -313,7 +299,7 @@
                      </td>
                      <td style="width: 50%;;padding-left:25px;">
 
-                         <b>Domicilio:</b> bolivar  2152 PDAS 3300<br>
+                         <b>Domicilio:</b><span class="direccion"></span><br>
                      </td>
                  </tr>
              </tbody></table>
@@ -321,32 +307,22 @@
      </header>
 
     <table class="table_prestaciones" style="width: 100%;text-align: center;padding-bottom:250px;;" cellspacing="2" cellpadding="2">
-        <thead style="background-color: #BDBDBD;">
-            <tr>
-            <th style="border: 1px solid;width:350px;">Producto / Servicio</th>
-                <th style="border: 1px solid;width:20px;">Cantidad</th>
-                <th style="border: 1px solid;">Precio Unit.</th>
-                <th style="border: 1px solid;">% Bonif.</th>
-                <th style="border: 1px solid;">Imp. Bonif</th>
-                <th style="border: 1px solid;">SubTotal</th>
-            </tr>
-        </thead>
-        <tbody>
-        <tr>	<td style="text-align: left">Prestaciones correspondientes a v/afiliados de IPS. Expte. Nº 3823/2023.-</td>	<td>1</td>
-                <td style="text-align: right">$ 6.085.860,09</td>
-                <td style="text-align: right">0,00</td>
-                <td style="text-align: right">$ 0,00</td>
-                <td style="text-align: right">$ 6.085.860,09</td>
-            </tr>
-              <script type="text/php">
-            // record total number of pages for the section
+        	<thead style="background-color: #BDBDBD;">
+	            <tr>
+	            <th style="border: 1px solid;width:350px;">Producto / Servicio</th>
+	                <th style="border: 1px solid;width:20px;">Cantidad</th>
+	                <th style="border: 1px solid;">Precio Unit.</th>
+	                <th style="border: 1px solid;">% Bonif.</th>
+	                <th style="border: 1px solid;">Imp. Bonif</th>
+	                <th style="border: 1px solid;">SubTotal</th>
+	            </tr>
+	        </thead>
+	        <tbody class="lineas">
 
-            if(!isset($GLOBALS[$PAGE_COUNT] ))$GLOBALS[$PAGE_COUNT] = 0;
-            $GLOBALS[$PAGE_COUNT] += 6085860.09 ;
-        </script>
 
-						</tbody>
-					</table>
+
+			</tbody>
+		</table>
                     <div class="page_break"></div>
          <header>
          <table class="border_main cabecera_principal" style="width: 100%;">
@@ -365,8 +341,8 @@
                      <h1>FACTURA</h1>
 
                      <div style="text-align: left;margin-left:25px;padding-bottom:15px;">
-                         <b>Punto de Venta:</b> 00007 &nbsp;&nbsp;&nbsp;<b>Comp. Nro: </b>00000902<br>
-                         <b>Fecha de Emisión:</b>  14/04/2023<br>
+                         <b>Punto de Venta:</b> <span class="pv"></span> &nbsp;&nbsp;&nbsp;<b>Comp. Nro: </b><span class="numeroFactura"></span><br>
+                         <b>Fecha de Emisión:</b>  <span class="fecha_emision"></span><br>
                          <b>CUIT:</b> 30-71222430-0<br>
                          <b>Ing. Brutos:</b> 30-71222430-0<br>
                          <b>Inicio de Actividad:</b> 01/01/2013<br>
@@ -380,18 +356,16 @@
              <span style="font-size: 50px">C</span>
          </div>
          <div class="border_div" style="font-weight:bold;padding-left:25px;padding-top:5px;padding-bottom:5px">
-             Período Facturado&nbsp;&nbsp;&nbsp; Desde:
-14/04/2023&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Hasta:
- 14/04/2023
+             Período Facturado&nbsp;&nbsp;&nbsp; Desde: <span class="fecha_desde"></span> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Hasta: <span class="fecha_hasta"></span>
          </div>
          <div class="border_div info_factura">
              <table style="width: 100%">
                  <tbody><tr>
                      <td style="width: 30%;padding-left:25px;">
-                         <b>CUIT:</b> 33563188699<br>
+                         <b>CUIT:</b><span class="cuit"></span><br>
                      </td>
                      <td style="width: 70%;;padding-left:25px;">
-                         <b>Razón Social:</b> I P S  Misiones - IPS<br>
+                         <b>Razón Social:</b> <span class="razon_social"></span><br>
                      </td>
                  </tr>
 
@@ -406,40 +380,30 @@
                      </td>
                      <td style="width: 50%;;padding-left:25px;">
 
-                         <b>Domicilio:</b> bolivar  2152 PDAS 3300<br>
+                         <b>Domicilio:</b><span class="direccion"></span><br>
                      </td>
                  </tr>
              </tbody></table>
          </div>
      </header>
 
-    <table class="table_prestaciones" style="width: 100%;text-align: center;padding-bottom:250px;;" cellspacing="2" cellpadding="2">
-        <thead style="background-color: #BDBDBD;">
-            <tr>
-            <th style="border: 1px solid;width:350px;">Producto / Servicio</th>
-                <th style="border: 1px solid;width:20px;">Cantidad</th>
-                <th style="border: 1px solid;">Precio Unit.</th>
-                <th style="border: 1px solid;">% Bonif.</th>
-                <th style="border: 1px solid;">Imp. Bonif</th>
-                <th style="border: 1px solid;">SubTotal</th>
-            </tr>
-        </thead>
-        <tbody>
-        <tr>	<td style="text-align: left">Prestaciones correspondientes a v/afiliados de IPS. Expte. Nº 3823/2023.-</td>	<td>1</td>
-                <td style="text-align: right">$ 6.085.860,09</td>
-                <td style="text-align: right">0,00</td>
-                <td style="text-align: right">$ 0,00</td>
-                <td style="text-align: right">$ 6.085.860,09</td>
-            </tr>
-              <script type="text/php">
-            // record total number of pages for the section
+   	 <table class="table_prestaciones" style="width: 100%;text-align: center;padding-bottom:250px;;" cellspacing="2" cellpadding="2">
+	        <thead style="background-color: #BDBDBD;">
+	            <tr>
+	            <th style="border: 1px solid;width:350px;">Producto / Servicio</th>
+	                <th style="border: 1px solid;width:20px;">Cantidad</th>
+	                <th style="border: 1px solid;">Precio Unit.</th>
+	                <th style="border: 1px solid;">% Bonif.</th>
+	                <th style="border: 1px solid;">Imp. Bonif</th>
+	                <th style="border: 1px solid;">SubTotal</th>
+	            </tr>
+	        </thead>
+		        <tbody class="lineas">
 
-            if(!isset($GLOBALS[$PAGE_COUNT] ))$GLOBALS[$PAGE_COUNT] = 0;
-            $GLOBALS[$PAGE_COUNT] += 6085860.09 ;
-        </script>
 
-						</tbody>
-					</table>
+
+				</tbody>
+		</table>
 
 
 
