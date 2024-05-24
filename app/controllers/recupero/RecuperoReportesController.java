@@ -1805,6 +1805,13 @@ order by nc.numero
 
 	public static Result imprimirReciboNuevo(Long id) {
 
+		RecuperoRecibo rf = RecuperoRecibo.find.byId(id);
+
+		 if(rf.estado_id == Estado.RECUPERO_RECIBOS_BORRADOR ) {
+			 flash("error", "El recibo no puede estar en estado Borrador.");
+			 return ok(reportePlanilla.render(null));
+		 }
+
 		try {
 			// id = new Long(29809);
 
@@ -1826,9 +1833,11 @@ order by nc.numero
 		} catch (Exception e) {
 		  // TODO Auto-generated catch block
 		      e.printStackTrace();
+		      flash("error", "No se puede generar el reporte. "+e);
+				 return ok(reportePlanilla.render(null));
 		}
 
-		return ok(reportePlanilla.render(null));
+		//return ok(reportePlanilla.render(null));
 	}
 
 
