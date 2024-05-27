@@ -54,6 +54,16 @@
 				<div class="text-error">@error.message</div>
 			}
 		</div>
+
+		<div class="col-sm-2">
+			<label class="control-label">Fecha Transferencia</label>
+			<div class="form-group @if(recuperoReciboForm.error("fecha_transferencia")  != null) {has-error}else{has-required}">
+				@inputText(recuperoReciboForm("fecha_transferencia"),'class -> "form-control date", 'autocomplete -> "off")
+			</div>
+			@recuperoReciboForm("fecha_transferencia").error.map{ error =>
+				<div class="text-error">@error.message</div>
+			}
+		</div>
 	</div>
 
 	<script>
