@@ -44,6 +44,10 @@ public class RecuperoRecibo extends Model {
 	@Formats .DateTime(pattern="dd/MM/yyyy")
 	public Date fecha;
 
+	@Required(message="Debe escribir una fecha")
+	@Formats .DateTime(pattern="dd/MM/yyyy")
+	public Date fecha_transferencia;
+
 	@ManyToOne
 	@JoinColumn(name="create_user_id", referencedColumnName="id", insertable=false, updatable=false)
 	public Usuario create_usuario;
