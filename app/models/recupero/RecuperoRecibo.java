@@ -14,7 +14,10 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import com.avaje.ebean.Ebean;
 import com.avaje.ebean.ExpressionList;
+import com.avaje.ebean.SqlQuery;
+import com.avaje.ebean.SqlRow;
 import com.avaje.ebean.annotation.Formula;
 
 import models.Estado;
@@ -26,6 +29,7 @@ import play.data.validation.Constraints.Required;
 import play.db.ebean.Model;
 import play.db.ebean.Model.Finder;
 import utils.DateUtils;
+import utils.NumberUtils;
 import utils.pagination.Pagination;
 
 @Entity
@@ -37,7 +41,7 @@ public class RecuperoRecibo extends Model {
 	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="recupero_recibos_id_seq")
 	public Long id;
 
-	@Required(message="Debe escribir un numero")
+	//@Required(message="Debe escribir un numero")
 	public String numero;
 
 	@Required(message="Debe escribir una fecha")
@@ -135,6 +139,4 @@ public class RecuperoRecibo extends Model {
 			p.setExpressionList(e);
 			return p;
 	}
-
-
 }
