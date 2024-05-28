@@ -28,13 +28,13 @@
 			      <i class="input-group-addon" style="display:none"></i>
 			    </span>
 			    <span class="input-group-btn">
-					@inputText(recuperoReciboForm("numero"), 'class -> "form-control",'id -> "numero")
+					@inputText(recuperoReciboForm("numero"), 'class -> "form-control",'id -> "numero", 'disabled -> "disabled")
 				</span>
 
 			</div>
-				@recuperoReciboForm("numero").error.map{ error =>
+				<!-- @recuperoReciboForm("numero").error.map{ error =>
 					<div class="text-error">@error.message</div>
-				}
+				} -->
 				@recuperoReciboForm("puntoventa_id").error.map{ error =>
 					<div class="text-error">@error.message</div>
 				}
