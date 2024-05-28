@@ -1900,6 +1900,7 @@ order by nc.numero
 	    datos.put("fecha_emision", utils.DateUtils.formatDate((rf.fecha!= null)?rf.fecha:rf.fecha));
 	    datos.put("fecha_desde", utils.DateUtils.formatDate(rf.fecha));
 	    datos.put("fecha_hasta", utils.DateUtils.formatDate(rf.fecha));
+	    datos.put("fecha_transferencia", utils.DateUtils.formatDate(rf.fecha_transferencia));
 	    datos.put("importe", utils.NumberUtils.moneda(rf.getTotal()));
 	    datos.put("monto_letras", NumeroALetra.convertNumberToLetter(String.valueOf(rf.getTotal())));
 
