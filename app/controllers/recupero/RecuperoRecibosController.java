@@ -11,6 +11,8 @@ import java.util.Map;
 import javax.persistence.PersistenceException;
 
 import com.avaje.ebean.Ebean;
+import com.avaje.ebean.SqlQuery;
+import com.avaje.ebean.SqlRow;
 
 import controllers.Secured;
 import controllers.auth.CheckPermiso;
@@ -29,6 +31,7 @@ import play.data.Form;
 import play.mvc.Controller;
 import play.mvc.Result;
 import play.mvc.Security;
+import utils.NumberUtils;
 import utils.RequestVar;
 import utils.UriTrack;
 import views.html.sinPermiso;
@@ -105,14 +108,15 @@ public class RecuperoRecibosController extends Controller {
 
 			RecuperoRecibo c = reciboForm.get();
 
-			List<RecuperoRecibo> cx = RecuperoRecibo.find.where()
+			/*List<RecuperoRecibo> cx = RecuperoRecibo.find.where()
 					   .eq("numero",c.numero).findList();
 
 			if(cx.size() > 0) {
 				flash("error", "Ya existe este numero de recibo cargado.");
 				return badRequest(crearRecibo.render(reciboForm));
-			}
+			}*/
 
+			c.numero = "00000000";
 			c.estado_id = (long) Estado.RECUPERO_RECIBOS_BORRADOR;
 			c.create_date = new Date();
 			c.create_usuario_id = new Long(Usuario.getUsuarioSesion());
@@ -246,7 +250,28 @@ public class RecuperoRecibosController extends Controller {
 					  return ok(sinPermiso.render(request().getHeader("referer")));
 				  }
 
-		    	  pasarAprobado(rp.id);
+		    	  List<RecuperoReciboFactura> rrfl = Ebean.find(RecuperoReciboFactura.class).select("id, estado_id,recupero_factura_id,monto").where().eq("recupero_recibo_id",rp.id).findList();
+				  if(rrfl.size() == 0 ) {
+					  flash("error", "No se puede pasar a Estado APROBADO. Debe contener facturas asociadas.");
+					  return redirect(request().getHeader("referer"));
+				  }
+
+		    	  String numeroRecibo = "";
+
+					try {
+						String sql = "select max(numero)+1 as numero from recupero_recibos where puntoventa_id = :puntoventa_id";
+				    	SqlQuery sqlQuery = Ebean.createSqlQuery(sql)
+								.setParameter("puntoventa_id", rp.puntoventa_id);
+				    	SqlRow  row = sqlQuery.findUnique();
+
+				    	numeroRecibo = NumberUtils.agregarCerosAlaIzquierda(row.getInteger("numero"),8);
+
+					}catch (Exception e) {
+						flash("error", "No se puede obtener el numero de recibo.");
+						return redirect(request().getHeader("referer"));
+					}
+
+		    	  pasarAprobado(rp.id,numeroRecibo);
 		    	  break;
 		      case Estado.RECUPERO_RECIBOS_CANCELADO:
 		    	  if(!Permiso.check("recuperoRecibosPasarCancelado")) {
@@ -286,19 +311,15 @@ public class RecuperoRecibosController extends Controller {
 	}
 
 	@CheckPermiso(key = "recuperoRecibosPasarAprobado")
-	public static void pasarAprobado(Long idRf){
+	public static void pasarAprobado(Long idRf,String numeroRecibo){
 
 		RecuperoRecibo rf = Ebean.find(RecuperoRecibo.class).select("id, estado_id").setId(idRf).findUnique();
 
 		if(rf != null){
 
-			List<RecuperoReciboFactura> rrfl = Ebean.find(RecuperoReciboFactura.class).select("id, estado_id,recupero_factura_id,monto").where().eq("recupero_recibo_id",rf.id).findList();
-			if(rrfl.size() == 0 ) {
-				flash("error", "No se puede pasar a Estado APROBADO. Debe contener facturas asociadas.");
-			}else {
 
-					/// ACAAAAAAAA CREAR LOS PAGOS
 
+					rf.numero = numeroRecibo;
 					rf.write_date = new Date();
 					rf.write_usuario_id = new Long(Usuario.getUsuarioSesion());
 					rf.estado_id = new Long(Estado.RECUPERO_RECIBOS_APROBADO);
@@ -306,7 +327,7 @@ public class RecuperoRecibosController extends Controller {
 
 					flash("success", "Operación exitosa. Estado actual: Aprobado");
 
-			}
+
 		} else {
 			flash("error", "Parámetros incorrectos");
 		}
