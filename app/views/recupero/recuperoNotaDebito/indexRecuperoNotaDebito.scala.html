@@ -6,7 +6,9 @@
 
 
 		@if(rf.estado_id == models.Estado.RECUPERO_FACTURA_APROBADO) {
+			@if(Permiso.check("recuperoNotasEditar")) {
 			<a class="btn btn-default btn-xs" href="#" id="nuevoNotaDebito"><i class="glyphicon glyphicon-plus"></i> Nuevo</a>
+			}
 		}
 		</div>
 		<div class="panel-body">
