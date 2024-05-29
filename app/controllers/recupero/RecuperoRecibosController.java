@@ -278,11 +278,6 @@ public class RecuperoRecibosController extends Controller {
 					  return ok(sinPermiso.render(request().getHeader("referer")));
 				  }
 
-		    	  List<RecuperoPago> rf = Ebean.find(RecuperoPago.class).select("id, estado_id").where().eq("recupero_recibo_id", idRecibo).findList();
-		    	  if(rf.size() > 0) {
-		    		  	flash("error", "No se puede cancelar. Existen pagos asociados.");
-		  				return redirect(request().getHeader("referer"));
-		    	  }
 
 		    	  pasarCancelado(rp.id);
 		          break;
@@ -339,6 +334,16 @@ public class RecuperoRecibosController extends Controller {
 		RecuperoRecibo rf = Ebean.find(RecuperoRecibo.class).select("id, estado_id").setId(idRf).findUnique();
 
 		if(rf != null){
+
+			List<RecuperoPago> rp = Ebean.find(RecuperoPago.class).select("id, estado_id").where().eq("recupero_recibo_id", rf.id).findList();
+
+			for(RecuperoPago rpx :rp) {
+				rpx.estado_id = (long) Estado.RECUPERO_PAGO_CANCELADO;
+				rpx.save();
+			}
+
+
+
 			rf.estado_id = new Long(Estado.RECUPERO_RECIBOS_CANCELADO);
 
 			rf.save();
