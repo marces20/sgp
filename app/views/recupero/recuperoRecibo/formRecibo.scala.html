@@ -64,6 +64,27 @@
 				<div class="text-error">@error.message</div>
 			}
 		</div>
+		<div class="col-sm-2">
+			<label for="expediente" class="control-label">Planilla</label>
+			<div class="input-group @if(recuperoReciboForm.error("planilla_id") != null) {has-error}else{has-required}">
+				@inputText(recuperoReciboForm("planilla.recuperoPlanillaEjercicio"),'class -> "form-control", 'id -> "planilla")
+				@inputText(recuperoReciboForm("planilla_id"),'hidden -> "hidden", 'id -> "planilla_id")
+
+				<span class="input-group-addon">
+				<a href="#"
+				id="searchPlanilla" data-title="Selección de Planilla"
+				data-url="@controllers.recupero.routes.RecuperoPlanillasController.modalBuscar()"
+				data-height="650" data-width="700"
+				data-listen="modal.seleccion.planilla.simple"
+				data-label="#planilla"
+				data-field="#planilla_id">
+				<i class="glyphicon glyphicon-search"></i></a></span>
+
+			</div>
+			@recuperoReciboForm("planilla_id").error.map{ error =>
+					<div class="text-error">@error.message</div>
+				}
+		</div>
 	</div>
 
 	<script>

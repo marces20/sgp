@@ -70,6 +70,10 @@
 			<label class="control-label">Fecha Transferencia</label>
 			<p class="form-control-static form-control">@recuperoReciboForm("fecha_transferencia").value</p>
 		</div>
+		<div class="col-sm-2">
+			<label class="control-label">Planilla</label>
+			<p class="form-control-static form-control">@if(recuperoRecibo.planilla != null){@(recuperoRecibo.planilla.getRecuperoPlanillaEjercicio())}</p>
+		</div>
 
 	</div>
 
