@@ -341,7 +341,7 @@ private static final long serialVersionUID = 1L;
 
 		String sql = "SELECT SUM(total) as total " +
 				"FROM recupero_pagos pr " +
-				"WHERE estado_id = :estado "+where;
+				"WHERE p.recupero_nota_debito_id is null and p.recupero_nota_credito_id is null and estado_id = :estado "+where;
 
 		SqlQuery s = Ebean.createSqlQuery(sql);
 
