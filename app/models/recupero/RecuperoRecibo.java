@@ -79,6 +79,13 @@ public class RecuperoRecibo extends Model {
 	public Long estado_id;
 
 	@ManyToOne
+	@JoinColumn(name="planilla_id", referencedColumnName="id", insertable=false, updatable=false)
+	public RecuperoPlanilla planilla;
+	@Column(name="planilla_id")
+	@Required(message="Debe seleccionar una planilla")
+	public Long planilla_id;
+
+	@ManyToOne
 	@JoinColumn(name="puntoventa_id", referencedColumnName="id", insertable=false, updatable=false)
 	public PuntoVenta puntoVenta;
 	@Required(message="Seleccion punto venta")
