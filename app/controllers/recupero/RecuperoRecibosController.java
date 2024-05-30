@@ -259,7 +259,7 @@ public class RecuperoRecibosController extends Controller {
 		    	  String numeroRecibo = "";
 
 					try {
-						String sql = "select max(numero)+1 as numero from recupero_recibos where puntoventa_id = :puntoventa_id";
+						String sql = "select  (max(CAST(numero as integer ))+1) as numero from recupero_recibos where puntoventa_id = :puntoventa_id";
 				    	SqlQuery sqlQuery = Ebean.createSqlQuery(sql)
 								.setParameter("puntoventa_id", rp.puntoventa_id);
 				    	SqlRow  row = sqlQuery.findUnique();
