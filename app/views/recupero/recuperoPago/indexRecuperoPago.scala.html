@@ -156,6 +156,13 @@
 					</label>
 				</div>
 			</div>
+			<div class="col-sm-2">
+				<div class="form-group">
+					<label for="nombre" class="control-label">Numero Recibo
+					@inputText(formBuscador("numero_recibo"), 'class -> "form-control", 'autofocus -> "autofocus")
+					</label>
+				</div>
+			</div>
 
 			<div class="col-sm-2" >
 				<label class="control-label">Tipo de pago</label>
@@ -211,7 +218,7 @@
 		<table id="listaRecuperoFacturas" class="table table-striped table-bordered">
 			<thead>
 				 <tr style="background: #FFFFFF;">
-			        <td colspan="7">Mostrando @buscador.getDisplayXtoYofZ(" a "," de ") resultado(s). </td>
+			        <td colspan="10">Mostrando @buscador.getDisplayXtoYofZ(" a "," de ") resultado(s). </td>
 			        <td><b>Total:</b> <span class="totalFooter"></span></td>
 			        <td colspan="3">&nbsp</td>
 		        </tr>
@@ -222,7 +229,9 @@
 					<th width="80">Planilla</th>
 					<th width="70">Fecha</th>
 					<th width="300">Cliente</th>
+
 					<th width="">N° Factura</th>
+					<th width="">N° Recibo</th>
 					<th width="">N/C</th>
 					<th width="">N/D</th>
 					<th width="95">Total</th>
@@ -243,6 +252,7 @@
 					<td class="fechaRecuperoFactura">@if(rf.fecha != null){@(utils.DateUtils.formatDate(rf.fecha))}</td>
 					<td>@if(rf.cliente != null){@(rf.cliente.nombre)}</td>
 					<td>@if(rf.recuperoFactura != null){@(rf.recuperoFactura.getNumeroFactura())}</td>
+					<td>@if(rf.recuperoRecibo != null){@(rf.recuperoRecibo.getNumeroRecibo())}</td>
 					<td>@if(rf.recupero_nota_credito_id != null){@(rf.recuperoNotaCredito.numero)}</td>
 					<td>@if(rf.recupero_nota_debito_id != null){@(rf.recuperoNotaDebito.numero)}</td>
 					<td class="total" rel="@rf.total">@(utils.NumberUtils.moneda(rf.total))</td>
@@ -266,7 +276,7 @@
 	        </tbody>
 	        <tfoot>
 		        <tr>
-			        <td colspan="7">&nbsp</td>
+			        <td colspan="10">&nbsp</td>
 			        <td><b>Total:</b> <span class="totalFooter"></span></td>
 			        <td colspan="3">&nbsp</td>
 		        </tr>
