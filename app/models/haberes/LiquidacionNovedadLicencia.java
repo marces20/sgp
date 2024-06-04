@@ -95,6 +95,8 @@ public class LiquidacionNovedadLicencia extends Model{
 		if(!residente.isEmpty()){
     		if(residente.compareToIgnoreCase("SI") == 0){
     			e.isNotNull("agenteAsistenciaLicencia.agente.tipo_residencia_id");
+    		}else if(residente.compareToIgnoreCase("NO") == 0){
+    			e.isNull("agenteAsistenciaLicencia.agente.tipo_residencia_id");
     		}
 		}
 
