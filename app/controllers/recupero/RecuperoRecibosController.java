@@ -296,6 +296,14 @@ public class RecuperoRecibosController extends Controller {
 		RecuperoRecibo rf = Ebean.find(RecuperoRecibo.class).select("id, estado_id").setId(idRf).findUnique();
 
 		if(rf != null){
+
+			List<RecuperoPago> rp = Ebean.find(RecuperoPago.class).select("id, estado_id").where().eq("recupero_recibo_id", rf.id).findList();
+
+			for(RecuperoPago rpx :rp) {
+
+				rpx.delete();
+			}
+
 			rf.estado_id = new Long(Estado.RECUPERO_RECIBOS_BORRADOR);
 
 			rf.save();
