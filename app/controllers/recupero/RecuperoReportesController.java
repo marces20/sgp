@@ -869,7 +869,8 @@ public class RecuperoReportesController extends Controller {
 		    			 "OR (rp.fecha BETWEEN :date_start AND :date_stop " +
 		    			 "AND (rp.estado_id =:estadoPagado OR rp.estado_id =:estadoCancelado))) " +
 		    			 "AND (rp.parcializada <> true OR rp.parcializada is null)  " +
-		    			 "AND rf.puntoventa_id = :puntoventa_id "+
+		    			 "AND rf.puntoventa_id = :puntoventa_id  "+
+		    			 "(AND rp.recupero_nota_credito_id is null AND rp.recupero_nota_debito_id is null) "+
 		    			 "ORDER BY rf.serie,rf.numero ASC ";
 
 			List<SqlRow> s = Ebean.createSqlQuery(sql)
@@ -1311,7 +1312,7 @@ order by nc.numero
 		    String sql = "SELECT rf.id idfactura,rp.id idpago " +
 		    			 "FROM recupero_facturas rf "+
 		    			 "INNER JOIN recupero_pagos rp ON rf.id = rp.recupero_factura_id "+
-		    			 "WHERE rf.planilla_id = :planilla_id OR rp.planilla_id = :planilla_id and rp.recupero_nota_debito_id is null and rp.recupero_nota_credito_id is null  " +
+		    			 "WHERE (rf.planilla_id = :planilla_id OR rp.planilla_id = :planilla_id ) and rp.recupero_nota_debito_id is null and rp.recupero_nota_credito_id is null  " +
 		    			 "ORDER BY rf.serie,rf.numero ASC ";
 
 			List<SqlRow> s = Ebean.createSqlQuery(sql)
