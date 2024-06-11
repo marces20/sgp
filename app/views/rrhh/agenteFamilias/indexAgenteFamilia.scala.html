@@ -2,18 +2,18 @@
 @import models.auth._
 
 <div id="listaAgenteFamilia" class="contenedorPaginador ajaxPaginador">
-		
+
 	<div class="panel panel-default">
 		<div class="panel-heading"><b>Familiares</b>
 			@if(editable && Permiso.check("crearAgenteHijo")){
-			<a class="btn btn-default btn-xs" href="#" id="nuevoAgenteFamilia"><i class="glyphicon glyphicon-plus"></i> Nuevo</a>	 	
+			<a class="btn btn-default btn-xs" href="#" id="nuevoAgenteFamilia"><i class="glyphicon glyphicon-plus"></i> Nuevo</a>
 			}
 		</div>
 		<div class="panel-body">
-		
+
 	@if(paginador.getTotalRowCount == 0) {
         <p id="mensajeSinResultadosFamilia" class="well"><i class="glyphicon glyphicon-info-sign"></i> No hay familiares cargados.</p>
-    } 
+    }
 
 	<table id="listaDeAgenteFamilia" class="table table-striped table-bordered  @if(paginador.getTotalRowCount() <= 0){hide}">
 		<thead>
@@ -27,11 +27,12 @@
 					<th>Nivel Estudio</th>
 					<th>Estado Estudio</th>
 					<th>Tipo Familiar</th>
+					<th>Asignacion</th>
 					<th>Presentacion</th>
 				@if(editable && Permiso.check("eliminarAgenteHijo")){
 					<th></th>
 				}
-			<tr>	
+			<tr>
 		</thead>
 		<tbody>
 		@for(linea <- paginador.getList) {
@@ -41,7 +42,7 @@
 	</table>
 
 
-		
+
 			<div class="pagination pull-right">
 			    @views.html.helpers.paginador(paginador, controllers.rrhh.routes.AgentesFamiliasController.index())
 			</div>
@@ -52,23 +53,23 @@
 
 <script>
 $( function(){
-	 
-	 
+
+
 	var contenedor = $("#listaAgenteFamilia");
-						     
+
 	contenedor.on('click', '#nuevoAgenteFamilia', function(){
 		urlContenidoModal = '/rrhh/agente-familia/crear?agenteId='+$('#agenteId').val();
 		mostrarModal(urlContenidoModal);
 		return false;
 	});
-	
+
 	contenedor.on('click', '.modificarAgenteFamilia', function(){
 		lineaParaEditar = $(this).closest('tr');
 		var modal = mostrarModal($(this).attr('href'));
-		modal.dialog('option', 'title', 'Editar familiares');	
+		modal.dialog('option', 'title', 'Editar familiares');
 		return false;
 	});
-	
+
 	contenedor.on('click', '.eliminarAgenteFamilia', function(){
 		var mensaje = "¿Confirma que desea eliminar el registro?";
 		if(confirm(mensaje)){
@@ -84,7 +85,7 @@ $( function(){
 		}
 		return false;
 	});
-	
+
 	function mostrarModal(url){
 		modalCargaAgenteFamilia = $('<div></div>').dialog({
 			resizable: false,
@@ -102,12 +103,12 @@ $( function(){
 		    	modalCargaAgenteFamilia.dialog('destroy');
 			}
 		  });
-		
+
 		modalCargaAgenteFamilia.on('click', '.cancelar', function(){
 			modalCargaAgenteFamilia.dialog('destroy');
 			return false;
 		});
-		
+
 		modalCargaAgenteFamilia.on('submit', function(e){
 			var href = $(e.target).attr('action');
 			var data = $(e.target).serialize();
@@ -117,24 +118,24 @@ $( function(){
 					$('#mensajeSinResultadosFamilia').remove();
 					$('#listaDeAgenteFamilia').removeClass('hide');
 					modalCargaAgenteFamilia.dialog( "destroy" );
-					/*aca va funcion Actualizar cuadrito*/				
+					/*aca va funcion Actualizar cuadrito*/
 				} else if(resultado.success && resultado.modificar){
 					$(lineaParaEditar).replaceWith(resultado.html);
 					modalCargaAgenteFamilia.dialog( "destroy" );
 					/*aca va funcion Actualizar cuadrito*/
-					
+
 				} else {
 					modalCargaAgenteFamilia.html(resultado);
 				}
 			});
 			return false;
 		});
-		
-		
+
+
 		return modalCargaAgenteFamilia;
 	}
-	
-	
+
+
 	contenedor.find('form').on('submit', function(){
 		var url = $(this).attr("action");
 		var query = $(this).serialize();

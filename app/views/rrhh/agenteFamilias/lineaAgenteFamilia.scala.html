@@ -14,8 +14,9 @@
 		<td>@if(linea.estudioNivel != null){ @linea.estudioNivel.nombre }</td>
 		<td>@if(linea.estudioEstado != null) { @linea.estudioEstado.nombre }</td>
 		<td>@if(linea.tipoFamiliar != null) { @linea.tipoFamiliar.nombre }</td>
+		<td>@if(linea.asignacion_familiar != null && linea.asignacion_familiar == true) { SI }else{NO}</td>
 		<td>@if(linea.fpresentacion != null) {@(utils.DateUtils.formatDate(linea.fpresentacion))}</td>
-		
+
 	@if(editable && Permiso.check("eliminarAgenteHijo")){
 		<td><a class="btn btn-default btn-xs delete-confirm-link eliminarAgenteFamilia" href="@controllers.rrhh.routes.AgentesFamiliasController.eliminar(linea.id)"><i class="glyphicon glyphicon-trash icono-eliminar"></i></a></td>
 	}

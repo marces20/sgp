@@ -1,6 +1,6 @@
 @(lineaForm: Form[AgenteFamilia])
 @import helper._
-@implicitFieldConstructor = @{ FieldConstructor(simpleInput.render) } 
+@implicitFieldConstructor = @{ FieldConstructor(simpleInput.render) }
 
 @if(flash.containsKey("error")) {
 	<div class="alert alert-danger">
@@ -10,15 +10,14 @@
 
 <div class="row">
 	@inputText(lineaForm("agente_id"), 'type -> "hidden")
-	<div class="col-sm-3">
-	</div>
+
 	<div class="col-sm-6">
 		<div class="form-group @if(lineaForm.error("tipo_familia_id") != null) {has-error}else{has-required}">
 			<label for="@lineaForm("tipo_familia_id")" class="control-label">Tipo Familiar</label>
-			@select(lineaForm("tipo_familia_id"), 
-			TipoFamiliar.find.all().map { p => p.id.toString -> p.nombre}, 
-			'class -> "form-control select", '_default -> "Seleccionar"), 
-			
+			@select(lineaForm("tipo_familia_id"),
+			TipoFamiliar.find.all().map { p => p.id.toString -> p.nombre},
+			'class -> "form-control select", '_default -> "Seleccionar"),
+
 			@lineaForm("tipo_familia_id").error.map{ error =>
 				<div class="text-error">@error.message</div>
 			}
@@ -26,16 +25,38 @@
 	</div>
 	<div class="col-sm-3">
 		<div class="form-group">
-			<label for="inputFpresentacion" class="control-label">Fecha Presentacion</label> 
+			<label for="inputFpresentacion" class="control-label">Fecha Presentacion</label>
 			@inputText(lineaForm("fpresentacion"), 'class -> "form-control", 'id -> "fpresentacion")
 		</div>
 	</div>
-	 
-</div>	
+	<div class="col-sm-2 @if(lineaForm.error("asignacion_familiar") != null) {has-error}else{has-required}">
+		<b>Asignacion Familiar</b>
+		<div class="row">
+			<div class="col-sm-3">
+				<div class="radio">
+					<label class="control-label">
+						@inputRadioGroup(lineaForm("asignacion_familiar"), options = Seq("true"->"Si"))
+					</label>
+				</div>
+			</div>
+			<div class="col-sm-9">
+				<div class="radio">
+					<label class="control-label">
+						@inputRadioGroup(lineaForm("asignacion_familiar"),options = Seq("false"->"No"))
+					</label>
+				</div>
+			</div>
+		</div>
+		@lineaForm("asignacion_familiar").error.map{ error =>
+			<div class="text-error">@error.message</div>
+		}
+	</div>
+
+</div>
 <div class="row">
 	<div class="col-sm-4">
 		<div class="form-group @if(lineaForm.error("nombre") != null) {has-error}else{has-required}">
-			<label for="inputNombre" class="control-label">Apellido y Nombre</label> 
+			<label for="inputNombre" class="control-label">Apellido y Nombre</label>
 			@inputText(lineaForm("nombre"), 'class -> "form-control")
 			@lineaForm("nombre").error.map{ error =>
 				<div class="text-error">@error.message</div>
@@ -44,7 +65,7 @@
 	</div>
 	<div class="col-sm-2">
 		<div class="form-group @if(lineaForm.error("dni") != null) {has-error}else{has-required}">
-			<label for="inputDni" class="control-label">Documento</label> 
+			<label for="inputDni" class="control-label">Documento</label>
 			@inputText(lineaForm("dni"), 'class -> "form-control", 'id -> "dni_familia")
 			@lineaForm("dni").error.map{ error =>
 				<div class="text-error">@error.message</div>
@@ -53,7 +74,7 @@
 	</div>
 	<div class="col-sm-2">
 		<div class="form-group @if(lineaForm.error("fnacimiento") != null) {has-error}else{has-required}">
-			<label for="inputFnacimiento" class="control-label">Nacimiento</label> 
+			<label for="inputFnacimiento" class="control-label">Nacimiento</label>
 			@inputText(lineaForm("fnacimiento"), 'class -> "form-control", 'id -> "fnacimiento")
 			@lineaForm("fnacimiento").error.map{ error =>
 				<div class="text-error">@error.message</div>
@@ -63,7 +84,7 @@
 	<div class="col-sm-2">
 		<div class="form-group @if(lineaForm.error("sexo") != null) {has-error}else{has-required}">
 			<label for="@lineaForm("sexo")" class="control-label">Sexo</label>
-			@select(lineaForm("sexo"), options("male"->"Masculino","famele"->"Femenino"), 
+			@select(lineaForm("sexo"), options("male"->"Masculino","famele"->"Femenino"),
 			'class -> "form-control select", '_default -> "Seleccionar")
 			@lineaForm("sexo").error.map{ error =>
 				<div class="text-error">@error.message</div>
@@ -75,14 +96,14 @@
 		<div class="row">
 			<div class="col-sm-3">
 				<div class="radio">
-					<label class="control-label"> 
+					<label class="control-label">
 						@inputRadioGroup(lineaForm("vive"), options = Seq("true"->"Si"))
 					</label>
 				</div>
 			</div>
 			<div class="col-sm-9">
 				<div class="radio">
-					<label class="control-label"> 
+					<label class="control-label">
 						@inputRadioGroup(lineaForm("vive"),options = Seq("false"->"No"))
 					</label>
 				</div>
@@ -91,13 +112,13 @@
 		@lineaForm("vive").error.map{ error =>
 			<div class="text-error">@error.message</div>
 		}
-	</div> 
+	</div>
 </div>
 
 <div class="row">
 	<div class="col-sm-4">
 		<div class="form-group">
-			<label for="inputCodigoConvivencia" class="control-label">Codigo Convivencia</label> 
+			<label for="inputCodigoConvivencia" class="control-label">Codigo Convivencia</label>
 			@inputText(lineaForm("cod_convivencia"), 'class -> "form-control")
 			@lineaForm("cod_convivencia").error.map{ error =>
 				<div class="text-error">@error.message</div>
@@ -106,7 +127,7 @@
 	</div>
 	<div class="col-sm-4">
 		<div class="form-group">
-			<label for="inputCodigoActividad" class="control-label">Codigo Actividad</label> 
+			<label for="inputCodigoActividad" class="control-label">Codigo Actividad</label>
 			@inputText(lineaForm("cod_actividad"), 'class -> "form-control")
 			@lineaForm("cod_actividad").error.map{ error =>
 				<div class="text-error">@error.message</div>
@@ -116,75 +137,75 @@
 	<div class="col-sm-4">
 		<div class="form-group @if(lineaForm.error("estado_civil_id") != null) {has-error}else{has-required}">
 			<label for="@lineaForm("estado_civil_id")" class="control-label">Estado Civil</label>
-			@select(lineaForm("estado_civil_id"), 
-			EstadoCivil.find.all().map { p => p.id.toString -> p.nombre}, 
+			@select(lineaForm("estado_civil_id"),
+			EstadoCivil.find.all().map { p => p.id.toString -> p.nombre},
 			'class -> "form-control select", '_default -> "Seleccionar")
-			
+
 			@lineaForm("estado_civil_id").error.map{ error =>
 				<div class="text-error">@error.message</div>
 			}
 		</div>
 	</div>
-</div>	
+</div>
 <div class="row">
-	
+
 </div>
 <div class="row">
 	<div class="col-sm-3">
 		<div class="form-group @if(lineaForm.error("estudio_nivel_id") != null) {has-error}">
 			<label for="@lineaForm("estudio_nivel_id")" class="control-label">Estudio Nivel</label>
-			@select(lineaForm("estudio_nivel_id"), 
-			EstudioNivel.find.orderBy("orden asc").findList().map { p => p.id.toString -> p.nombre}, 
+			@select(lineaForm("estudio_nivel_id"),
+			EstudioNivel.find.orderBy("orden asc").findList().map { p => p.id.toString -> p.nombre},
 			'class -> "form-control select", '_default -> "Seleccionar")
-			
+
 			@lineaForm("estudio_nivel_id").error.map{ error =>
 				<div class="text-error">@error.message</div>
 			}
 		</div>
 	</div>
-	
+
 	<div class="col-sm-3">
 		<div class="form-group @if(lineaForm.error("estudio_estado_id") != null) {has-error}">
 			<label for="@lineaForm("estudio_estado_id")" class="control-label">Estudio Estado</label>
-			@select(lineaForm("estudio_estado_id"), 
-			EstudioEstado.find.all().map { p => p.id.toString -> p.nombre}, 
+			@select(lineaForm("estudio_estado_id"),
+			EstudioEstado.find.all().map { p => p.id.toString -> p.nombre},
 			'class -> "form-control select", '_default -> "Seleccionar")
-			
+
 			@lineaForm("estudio_estado_id").error.map{ error =>
 				<div class="text-error">@error.message</div>
 			}
 		</div>
 	</div>
-	
+
 	<div class="col-sm-3">
 		<div class="form-group">
-			<label for="inputFinicioCAr" class="control-label">Inicio Certificado</label> 
+			<label for="inputFinicioCAr" class="control-label">Inicio Certificado</label>
 			@inputText(lineaForm("finicio_certificado_ar"), 'class -> "form-control", 'id -> "finicio_certificado_ar")
 		</div>
 	</div>
 	<div class="col-sm-3">
 		<div class="form-group">
-			<label for="inputFfinCAr" class="control-label">Fin Certificado</label> 
+			<label for="inputFfinCAr" class="control-label">Fin Certificado</label>
 			@inputText(lineaForm("ffin_certificado_ar"), 'class -> "form-control", 'id -> "ffin_certificado_ar")
 		</div>
 	</div>
-	
-	
-</div>	
-<div class="row">	
+
+
+</div>
+<div class="row">
 	<div class="col-sm-2 @if(lineaForm.error("discapacidad") != null) {has-error}else{has-required}">
 		<b>¿Discapacidad?</b>
 		<div class="row">
 			<div class="col-sm-3">
 				<div class="radio">
-					<label class="control-label"> 
+					<label class="control-label">
 						@inputRadioGroup(lineaForm("discapacidad"), options = Seq("true"->"Si"))
 					</label>
 				</div>
 			</div>
 			<div class="col-sm-9">
 				<div class="radio">
-					<label class="control-label"> 
+					<label class="control-label">
 						@inputRadioGroup(lineaForm("discapacidad"),options = Seq("false"->"No"))
 					</label>
 				</div>
@@ -193,16 +214,16 @@
 		@lineaForm("discapacidad").error.map{ error =>
 			<div class="text-error">@error.message</div>
 		}
-	</div> 
+	</div>
 	<div class="col-sm-2">
 		<div class="form-group">
-			<label for="inputNombre" class="control-label">Nivel Discapacidad %</label> 
+			<label for="inputNombre" class="control-label">Nivel Discapacidad %</label>
 			@inputText(lineaForm("discapacidad_nivel"), 'class -> "form-control",'id->"discapacidadNivel")
 		</div>
 	</div>
 	<div class="col-sm-2">
 		<div class="form-group">
-			<label for="inputFfinCAr" class="control-label">Fecha Fin Discapacidad</label> 
+			<label for="inputFfinCAr" class="control-label">Fecha Fin Discapacidad</label>
 			@inputText(lineaForm("f_discapacidad"), 'class -> "form-control", 'id -> "f_discapacidad")
 		</div>
 	</div>
@@ -211,14 +232,14 @@
 		<div class="row">
 			<div class="col-sm-3">
 				<div class="radio">
-					<label class="control-label"> 
+					<label class="control-label">
 						@inputRadioGroup(lineaForm("adoptado"), options = Seq("true"->"Si"))
 					</label>
 				</div>
 			</div>
 			<div class="col-sm-9">
 				<div class="radio">
-					<label class="control-label"> 
+					<label class="control-label">
 						@inputRadioGroup(lineaForm("adoptado"),options = Seq("false"->"No"))
 					</label>
 				</div>
@@ -227,20 +248,20 @@
 		@lineaForm("discapacidad").error.map{ error =>
 			<div class="text-error">@error.message</div>
 		}
-	</div> 
+	</div>
 	<div class="col-sm-4 @if(lineaForm.error("carga_en_conyugue") != null) {has-error}else{has-required}">
 		<b>¿Cargado en Conyugue?</b>
 		<div class="row">
 			<div class="col-sm-3">
 				<div class="radio">
-					<label class="control-label"> 
+					<label class="control-label">
 						@inputRadioGroup(lineaForm("carga_en_conyugue"), options = Seq("true"->"Si"))
 					</label>
 				</div>
 			</div>
 			<div class="col-sm-9">
 				<div class="radio">
-					<label class="control-label"> 
+					<label class="control-label">
 						@inputRadioGroup(lineaForm("carga_en_conyugue"),options = Seq("false"->"No"))
 					</label>
 				</div>
@@ -249,12 +270,12 @@
 		@lineaForm("carga_en_conyugue").error.map{ error =>
 			<div class="text-error">@error.message</div>
 		}
-	</div> 
+	</div>
 </div>
 
 <div class="row form-actions">
     <div class="col-lg-offset-4 col-lg-8">
-      <button type="submit" class="btn btn-default"><i class="glyphicon glyphicon-floppy-disk"></i>Guardar</button>	
+      <button type="submit" class="btn btn-default"><i class="glyphicon glyphicon-floppy-disk"></i>Guardar</button>
       <a href="" class="btn btn-default cancelar"><i class="glyphicon glyphicon-floppy-remove"></i>Cancelar</a>
     </div>
 </div>
@@ -262,11 +283,11 @@
 $( function(){
 	$("#discapacidadNivel").numeric_input();
 	$("#discapacidadNivel").mask("99");
-	
+
 	$("#dni_familia").mask("99999999");
 	$("#fnacimiento,#f_discapacidad,#fpresentacion,#finicio_certificado_ar,#ffin_certificado_ar").mask("99/99/9999");
 });
-</script>	
+</script>
 
 
 @flash().clear()
