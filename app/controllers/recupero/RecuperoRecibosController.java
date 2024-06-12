@@ -258,7 +258,7 @@ public class RecuperoRecibosController extends Controller {
 
 		    	  String numeroRecibo = "";
 
-					/*try {
+					try {
 						String sql = "select  (max(CAST(numero as integer ))+1) as numero from recupero_recibos where puntoventa_id = :puntoventa_id";
 				    	SqlQuery sqlQuery = Ebean.createSqlQuery(sql)
 								.setParameter("puntoventa_id", rp.puntoventa_id);
@@ -269,7 +269,8 @@ public class RecuperoRecibosController extends Controller {
 					}catch (Exception e) {
 						flash("error", "No se puede obtener el numero de recibo.");
 						return redirect(request().getHeader("referer"));
-					}*/
+					}
+
 
 		    	  pasarAprobado(rp.id,numeroRecibo);
 		    	  break;
