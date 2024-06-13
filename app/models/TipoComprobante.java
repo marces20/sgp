@@ -13,6 +13,10 @@ import play.db.ebean.Model;
 @Table(name = "tipo_comprobantes")
 public class TipoComprobante extends Model{
 
+	public static final int FACTURA = 1;
+	public static final int NOTA_CREDITO = 2;
+	public static final int NOTA_DEBITO = 3;
+
 	private static final long serialVersionUID = 1L;
 
 	@Id
