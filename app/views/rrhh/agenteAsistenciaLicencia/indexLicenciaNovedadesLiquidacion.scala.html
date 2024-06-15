@@ -275,6 +275,7 @@
 					<th>Tipo Relacion</th>
 					<th>Residente</th>
 					<th>Estado</th>
+					<th>Usuario</th>
 
 				</tr>
 			</thead>
@@ -306,6 +307,7 @@
 					</td>
 					<td>@if(linea.agenteAsistenciaLicencia.agente.tipo_residencia_id != null){SI}else{NO}</td>
 					<td>@if(linea.estado_id != null){@linea.estado.nombre}</td>
+					<td>@if(linea.write_user_id != null){@linea.write_user.nombre}</td>
 
 				</tr>
 
