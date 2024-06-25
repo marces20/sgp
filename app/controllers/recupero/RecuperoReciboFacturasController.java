@@ -63,14 +63,14 @@ public class RecuperoReciboFacturasController extends Controller {
 
 				List<RecuperoReciboFactura> ll = RecuperoReciboFactura.find.where().eq("recupero_recibo_id", l.recupero_recibo_id).findList();
 
-				if(ll.size() > 0) {
+				/*if(ll.size() > 0) {
 					if(ll.get(0).recuperoFactura.cliente_id.compareTo(rf.cliente_id) != 0) {
 						flash("error", "No se puede cargar la factura. Existe una factura con otro cliente cargada.");
 						return ok(crearRecuperoReciboFactura.render(lineaForm));
 					}
-				}
+				}*/
 
-				List<RecuperoReciboFactura> ll2 = RecuperoReciboFactura.find.where().eq("recupero_factura_id", l.recupero_factura_id).findList();
+				List<RecuperoReciboFactura> ll2 = RecuperoReciboFactura.find.where().eq("recupero_factura_id", l.recupero_factura_id).eq("recupero_recibo_id", l.recupero_recibo_id).findList();
 				if(ll2.size() > 0) {
 					flash("error", "No se puede cargar la factura. Ya existe una linea con esta factura cargada.");
 					return ok(crearRecuperoReciboFactura.render(lineaForm));
@@ -128,7 +128,7 @@ public class RecuperoReciboFacturasController extends Controller {
 					}
 				}
 
-				List<RecuperoReciboFactura> ll2 = RecuperoReciboFactura.find.where().eq("recupero_factura_id", l.recupero_factura_id).ne("id",l.id).findList();
+				List<RecuperoReciboFactura> ll2 = RecuperoReciboFactura.find.where().eq("recupero_factura_id", l.recupero_factura_id).eq("recupero_recibo_id", l.recupero_recibo_id).ne("id",l.id).findList();
 				if(ll2.size() > 0) {
 					flash("error", "No se puede cargar la factura. Ya existe una linea con esta factura cargada.");
 					return ok(editarRecuperoReciboFactura.render(lineaForm));
