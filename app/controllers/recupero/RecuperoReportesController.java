@@ -1423,11 +1423,15 @@ order by nc.numero
 					celda.setCellStyle(estiloMoneda);
 					total_pagado = total_pagado.add(rpi.total);
 
-					if(rpi.tipoPago.compareToIgnoreCase("efectivo") == 0){
-						total_efectivo = total_efectivo.add(rpi.total);
-					}else if(rpi.tipoPago.compareToIgnoreCase("cheque") == 0){
-						total_cheque = total_cheque.add(rpi.total);
-					}else if(rpi.tipoPago.compareToIgnoreCase("transferencia") == 0){
+					if(rpi.tipoPago != null){
+						if(rpi.tipoPago.compareToIgnoreCase("efectivo") == 0){
+							total_efectivo = total_efectivo.add(rpi.total);
+						}else if(rpi.tipoPago.compareToIgnoreCase("cheque") == 0){
+							total_cheque = total_cheque.add(rpi.total);
+						}else if(rpi.tipoPago.compareToIgnoreCase("transferencia") == 0){
+							total_deposito = total_deposito.add(rpi.total);
+						}
+					}else {
 						total_deposito = total_deposito.add(rpi.total);
 					}
 				}
