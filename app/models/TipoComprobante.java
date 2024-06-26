@@ -13,9 +13,10 @@ import play.db.ebean.Model;
 @Table(name = "tipo_comprobantes")
 public class TipoComprobante extends Model{
 
-	public static final int FACTURA = 1;
-	public static final int NOTA_CREDITO = 2;
-	public static final int NOTA_DEBITO = 3;
+	public static final int FACTURA = 11;
+	public static final int NOTA_DEBITO = 12;
+	public static final int NOTA_CREDITO = 13;
+
 
 	private static final long serialVersionUID = 1L;
 
@@ -24,6 +25,8 @@ public class TipoComprobante extends Model{
 	public Long id;
 	@Required(message="Debe escribir un nombre")
 	public String nombre;
+
+	public String numero_afip;
 
 	public static Model.Finder<Long,TipoComprobante> find = new Model.Finder<Long,TipoComprobante>(Long.class, TipoComprobante.class);
 }

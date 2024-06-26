@@ -59,7 +59,7 @@ public class RecuperoFactura extends Model {
 	public Date fecha;
 
 	public String serie;
-	@Required(message="Debe escribir un numero")
+	//@Required(message="Debe escribir un numero")
 	public String numero;
 	public String nombre;
 	public String nota;
