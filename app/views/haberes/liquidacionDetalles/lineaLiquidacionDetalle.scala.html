@@ -10,13 +10,8 @@
 		</td>
 
 
-	<td>@detalle.liquidacionConcepto.codigo - @detalle.liquidacionConcepto.denominacion
-		@if(detalle.liquidacionConcepto.id == 810 || detalle.liquidacionConcepto.id == 826){
-			@if(detalle.periodo_id != null){
-				- (@detalle.periodo.nombre)
-			}
+	<td>@detalle.liquidacionConcepto.codigo - @detalle.getDenominacionConceptoPeriodo()
 
-		}
 	</td>
 	<td align="center">@utils.NumberUtils.formatNumber(detalle.cantidad.doubleValue())</td>
 	<td align="center">
