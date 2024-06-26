@@ -28,6 +28,8 @@ public class LiquidacionConcepto extends Model{
 	public static final long SEGURO_DE_SEPELIO = 7;
 	public static final long SEGURO_DE_SEPELIO_AJUSTE = 206;
 	public static final long JUBILACION = 5;
+	public static final long DIFERENCIAL_VACACIONES = 810;
+	public static final long AJUSTE_DIFERENCIAL_VACACIONES = 826;
 	public static final long OB = 4;
 
 	@Id

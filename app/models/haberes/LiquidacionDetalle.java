@@ -64,6 +64,16 @@ public class LiquidacionDetalle  extends Model{
 	public Novedad liquidacionNovedad;
 	public Long liquidacion_novedad_id;
 
+	public String getDenominacionConceptoPeriodo(){
+		String ret = liquidacionConcepto.denominacion;
+		if(liquidacionConcepto.id.compareTo(LiquidacionConcepto.DIFERENCIAL_VACACIONES) == 0 || liquidacionConcepto.id.compareTo(LiquidacionConcepto.AJUSTE_DIFERENCIAL_VACACIONES) == 0 ){
+			if(periodo_id != null){
+				ret += " - ("+ (periodo.nombre)+")";
+			}
+		}
+
+		return ret;
+	}
 
 	public BigDecimal getTotal(){
 		return cantidad.multiply(importe).setScale(2, BigDecimal.ROUND_HALF_UP);
