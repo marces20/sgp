@@ -250,15 +250,15 @@ public class RecuperoRecibosController extends Controller {
 					  return ok(sinPermiso.render(request().getHeader("referer")));
 				  }
 
-		    	  List<RecuperoReciboFactura> rrfl = Ebean.find(RecuperoReciboFactura.class).select("id, estado_id,recupero_factura_id,monto").where().eq("recupero_recibo_id",rp.id).findList();
+		    	 /* List<RecuperoReciboFactura> rrfl = Ebean.find(RecuperoReciboFactura.class).select("id, estado_id,recupero_factura_id,monto").where().eq("recupero_recibo_id",rp.id).findList();
 				  if(rrfl.size() == 0 ) {
 					  flash("error", "No se puede pasar a Estado APROBADO. Debe contener facturas asociadas.");
 					  return redirect(request().getHeader("referer"));
-				  }
+				  }*/
 
 		    	  String numeroRecibo = "";
 
-					try {
+		    	  try {
 						String sql = "select  (max(CAST(numero as integer ))+1) as numero from recupero_recibos where puntoventa_id = :puntoventa_id";
 				    	SqlQuery sqlQuery = Ebean.createSqlQuery(sql)
 								.setParameter("puntoventa_id", rp.puntoventa_id);

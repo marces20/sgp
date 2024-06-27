@@ -230,7 +230,8 @@ private static final long serialVersionUID = 1L;
 											    String cliente_tipo_id,
 											    String puntoventa_id,
 											    String deposito,
-											    String planilla_id) {
+											    String planilla_id,
+											    String numero_recibo) {
     	Pagination<RecuperoPago> p = new Pagination<RecuperoPago>();
     	p.setOrderDefault("DESC");
     	p.setSortByDefault("id");
@@ -247,6 +248,10 @@ private static final long serialVersionUID = 1L;
 
        	if(!numero_factura.isEmpty()) {
     		e.ilike("recuperoFactura.numero", "%"+numero_factura+"%");
+    	}
+
+    	if(!numero_recibo.isEmpty()) {
+    		e.ilike("recuperoRecibo.numero", "%"+numero_recibo+"%");
     	}
 
     	if(!nombre.isEmpty()) {
