@@ -66,21 +66,23 @@ public class RecuperoPagosController extends Controller {
 											  		RequestVar.get("cliente_tipo_id"),
 											  		RequestVar.get("puntoventa_id"),
 											  		RequestVar.get("deposito_id"),
-											  		RequestVar.get("planilla_id")
+											  		RequestVar.get("planilla_id"),
+											  		RequestVar.get("numero_recibo")
+
 												  ),d));
 	}
-	
+
 	@CheckPermiso(key = "recuperoPagosVer")
 	public static Result ver(Long id) {
 		RecuperoPago p = RecuperoPago.find.byId(id);
 		if(p != null){
 			Logger.debug("zzzzzzzzzz "+p.controlPermisoDeposito());
-			
+
 			if(!p.controlPermisoDeposito()) {
 				flash("error", "La institucion de la planilla no corresponde a su institucion asignada.");
 				return redirect(controllers.recupero.routes.RecuperoPagosController.index()+UriTrack.get("?"));
 			}
-			
+
 			Form<RecuperoPago> recuperoPagoForm = form(RecuperoPago.class).fill(p);
 			return ok(verRecuperoPago.render(recuperoPagoForm, p));
 		}else{
@@ -88,42 +90,42 @@ public class RecuperoPagosController extends Controller {
 			return redirect(controllers.recupero.routes.RecuperoPagosController.index()+UriTrack.get("?"));
 		}
 	}
-	
+
 	@CheckPermiso(key = "recuperoPagosCrear")
 	public static Result crear() {
-		
+
 		Map<String,String> p = new HashMap<String, String>();
 		p.put("nombre","RPAG");
 		Form<RecuperoPago> recuperoPagoForm = form(RecuperoPago.class).bind(p);
 		recuperoPagoForm.discardErrors();
-		
+
 		return ok(crearRecuperoPago.render(recuperoPagoForm));
 	}
-	
+
 	@CheckPermiso(key = "recuperoFacturasCrear")
 	public static Result guardar() {
-		
+
 		Form<RecuperoPago> recuperoPagoForm = form(RecuperoPago.class).bindFromRequest();
 		Form<Cheque> chequeForm = form(Cheque.class).bindFromRequest();
-		
-		
+
+
 		if(recuperoPagoForm.hasErrors()) {
 			flash("error", "Error en formulario");
 			return badRequest(crearRecuperoPago.render(recuperoPagoForm));
 		}
-		
+
 		try {
 			RecuperoPago c = recuperoPagoForm.get();
-			
+
 			/*if(!c.controlPermisoDeposito()) {
 				flash("error", "La institucion de la planilla no corresponde a su institucion asignada.");
 				return badRequest(crearRecuperoPago.render(recuperoPagoForm));
 			}*/
-			
+
 			c.create_date = new Date();
 			c.create_usuario_id = new Long(Usuario.getUsuarioSesion());
 			c.save();
-			
+
 			flash("success", "El pago se ha creado");
 			return redirect( controllers.recupero.routes.RecuperoPagosController.ver(recuperoPagoForm.get().id)+UriTrack.get("&") );
 		} catch (PersistenceException pe) {
@@ -132,11 +134,11 @@ public class RecuperoPagosController extends Controller {
 			return badRequest(crearRecuperoPago.render(recuperoPagoForm));
 		}
 	}
-	
+
 	@CheckPermiso(key = "recuperoPagosModificar")
 	public static Result editar(Long id) {
 		RecuperoPago rp = RecuperoPago.find.byId(id);
-		
+
 		if(rp  == null){
 			flash("error", "No se encuentra el pago .");
 			return redirect(controllers.recupero.routes.RecuperoPagosController.index()+UriTrack.get("?"));
@@ -150,26 +152,26 @@ public class RecuperoPagosController extends Controller {
 
 		return ok(editarRecuperoPago.render(recuperoPagoForm.fill(rp),rp));
 	}
-	
+
 	@CheckPermiso(key = "recuperoPagosModificar")
 	public static Result actualizar(Long id){
-		
+
 		Form<RecuperoPago> recuperoPagoForm = form(RecuperoPago.class).bindFromRequest();
-		
+
 		RecuperoPago rp = Ebean.find(RecuperoPago.class, id);
-		
+
 		if(recuperoPagoForm.hasErrors()) {
 			flash("error", "Error en formulario"+recuperoPagoForm.errors());
 			return badRequest(editarRecuperoPago.render(recuperoPagoForm,rp));
 		}
-		
+
 		try {
 			RecuperoPago c = recuperoPagoForm.get();
-			
+
 			if(c.pago_principal_id != null){
-				
+
 				List<RecuperoPago> rpp3 = RecuperoPago.find.where().eq("recupero_factura_id", c.recupero_factura_id).ne("id", c.id).findList();
-				
+
 				BigDecimal montoPagoPrincipal = new BigDecimal(0);
 				BigDecimal montosPagosParcializados = new BigDecimal(0);
 				for(RecuperoPago x :rpp3){
@@ -182,8 +184,8 @@ public class RecuperoPagosController extends Controller {
 				Logger.debug("montoPagoPrincipal: "+montoPagoPrincipal);
 				Logger.debug("montosPagosParcializados: "+montosPagosParcializados);
 				Logger.debug("montosPagosParcializados: "+montosPagosParcializados);
-				
-				
+
+
 				if(montosPagosParcializados.add(c.total).compareTo(montoPagoPrincipal) > 0) {
 					flash("error", "La suma de los pagos parcializados excede el monto del pago principal.");
 					return badRequest(editarRecuperoPago.render(recuperoPagoForm,rp));
@@ -195,13 +197,13 @@ public class RecuperoPagosController extends Controller {
 					return badRequest(editarRecuperoPago.render(recuperoPagoForm,rp));
 				}
 			}
-			
-			
+
+
 			/*if(!c.controlPermisoDeposito()) {
 				flash("error", "La institucion de la planilla no corresponde a su institucion asignada.");
 				return badRequest(editarRecuperoPago.render(recuperoPagoForm,rp));
 			}*/
-			
+
 			c.estado_id = rp.estado_id;
 			c.write_date = new Date();
 			c.write_usuario_id = new Long(Usuario.getUsuarioSesion());
@@ -214,25 +216,25 @@ public class RecuperoPagosController extends Controller {
 			return badRequest(editarRecuperoPago.render(recuperoPagoForm,rp));
 		}
 	}
-	
+
 	@CheckPermiso(key = "recuperoPagosEliminar")
 	public static Result eliminar(Long id) {
-		
+
 		RecuperoPago rp = Ebean.find(RecuperoPago.class).select("id, estado_id,pago_principal_id").setId(id).findUnique();
-		
+
 		if(rp == null){
 			flash("error", "No se encuentra el pago.");
 			return redirect(controllers.recupero.routes.RecuperoPagosController.index()+UriTrack.get("?"));
 		}
-		
+
 		List<RecuperoPago> rpp = RecuperoPago.find.where().eq("pago_principal_id", rp.id).findList();
 		if(rpp.size() > 0){
 			flash("error", "No se puede eliminar el pago porque tiene pago parciales.");
 		}
-		
+
 		if(rp.estado_id == Estado.RECUPERO_PAGO_BORRADOR || rp.estado_id == Estado.RECUPERO_PAGO_CANCELADO){
 			try {
-				
+
 				if(rp.pago_principal_id != null){
 					List<RecuperoPago> rpp3 = RecuperoPago.find.where().eq("pago_principal_id", rp.pago_principal_id).ne("id", rp.id).findList();
 					if(rpp3.size() == 0){
@@ -241,8 +243,8 @@ public class RecuperoPagosController extends Controller {
 						update.execute();
 					}
 				}
-				
-				
+
+
 				rp.delete();
 				flash("success", "Se ha eliminado el pago");
 				return redirect(UriTrack.decode());
@@ -257,22 +259,22 @@ public class RecuperoPagosController extends Controller {
 		String refererUrl = request().getHeader("referer");
 		return redirect(refererUrl);
 	}
-	
+
 
 	public static Result crearPagoParcial(Long id) {
 		RecuperoPago pago = RecuperoPago.find.byId(id);
-		
+
 		if((pago.estado_id != Estado.RECUPERO_PAGO_BORRADOR)){
 			flash("error", "No se puede crear un pago parcial desde este pago. Debe cambiar su estado a borrador");
 			return redirect(request().getHeader("referer"));
 		}
 
 		try {
-			
+
 			RecuperoPago rp = new RecuperoPago();
-			
+
 			Long idNew = rp.parcializar(id);
-			
+
 			if(idNew != -1 && idNew != 0){
 				flash("success", "Se ha parcializado el pago.");
 				return redirect(controllers.recupero.routes.RecuperoPagosController.editar(idNew)+UriTrack.get("&"));
@@ -281,8 +283,8 @@ public class RecuperoPagosController extends Controller {
 				String refererUrl = request().getHeader("referer");
 				return redirect(refererUrl);
 			}
-			
-			
+
+
 			/*RecuperoPago pago2 = (RecuperoPago) pago._ebean_createCopy();
 			pago2.setId(null);
 			pago2.total = null;
@@ -290,15 +292,15 @@ public class RecuperoPagosController extends Controller {
 			pago2.pago_principal_id = id;
 			pago2.parcializada = false;
 			pago2.save();
-			
-			
-			
+
+
+
 			SqlUpdate update = Ebean.createSqlUpdate("UPDATE recupero_pagos set parcializada = true where id = :id  ");
 			update.setParameter("id", id);
 			update.execute();
-			
+
 			flash("success", "Se creado el pago parcial");*/
-			
+
 			//Form<RecuperoPago> recuperoPagoForm = form(RecuperoPago.class).fill(pago2);
 			//return ok(verRecuperoPago.render(recuperoPagoForm, pago2));
 			//return redirect(controllers.recupero.routes.RecuperoPagosController.ver(pago2.id));
@@ -310,9 +312,9 @@ public class RecuperoPagosController extends Controller {
 
 		return redirect(request().getHeader("referer"));
 	}
-	
-	
-	
+
+
+
 	public static Result cambiarEstado(Long idPago, Long idEstado) throws IOException{
 		Estado estado = Estado.getEstado(idEstado,Estado.TIPO_PRESUPUESTO);
 
@@ -322,17 +324,17 @@ public class RecuperoPagosController extends Controller {
 			flash("error", "No se encuentra el pago");
 			return redirect(request().getHeader("referer"));
 		}
-		
+
 		if(!rp.controlPermisoDeposito()) {
 			flash("error", "La institucion de la planilla no corresponde a su institucion asignada.");
 			return badRequest(controllers.recupero.routes.RecuperoFacturasController.index()+UriTrack.get("?"));
 		}
 
-		
+
 		if(idEstado != null){
-			
+
 			Boolean permiso = false;
-			
+
 			switch ( idEstado.intValue() ) {
 		      case  Estado.RECUPERO_PAGO_BORRADOR:
 		    	  if(!Permiso.check("recuperoPagosPasarBorrador")) {
@@ -348,7 +350,7 @@ public class RecuperoPagosController extends Controller {
 					 flash("error", "Debe indicar un tipo de pago");
 					 break;
 				  }
-				  
+
 				  if(rp.planilla_id == null) {
 						 flash("error", "Debe indicar una planilla");
 						 break;
@@ -358,37 +360,37 @@ public class RecuperoPagosController extends Controller {
 					 flash("error", "Debe cargar datos del cheque");
 					 break;
 				  }
-				  
+
 		    	  pasarEnCurso(rp.id);
-		    	  break;       
+		    	  break;
 		      case Estado.RECUPERO_PAGO_PAGADO:
 		    	  if(!Permiso.check("recuperoPagosPasarPagado")) {
 					  return ok(sinPermiso.render(request().getHeader("referer")));
 				  }
-		    	  
-		    	  pasarPagado(rp.id); 
+
+		    	  pasarPagado(rp.id);
 		    	  break;
 		      case Estado.RECUPERO_PAGO_CANCELADO:
 		    	  if(!Permiso.check("recuperoPagosPasarCancelado")) {
 					  return ok(sinPermiso.render(request().getHeader("referer")));
 				  }
-		    	  pasarCancelado(rp.id);   
+		    	  pasarCancelado(rp.id);
 		          break;
 		      default:
 		           break;
 		      }
-			  
-		}	 
-		
+
+		}
+
 		return redirect(controllers.recupero.routes.RecuperoPagosController.ver(rp.id)+ UriTrack.get("&"));
 	}
-	
+
 	@CheckPermiso(key = "recuperoPagosPasarEnBorrador")
 	public static void pasarEnBorrador(Long idRf){
-		
+
 		RecuperoPago rf = Ebean.find(RecuperoPago.class).select("id, estado_id,write_date,write_usuario_id").setId(idRf).findUnique();
-		
-		if(rf != null){			
+
+		if(rf != null){
 			rf.estado_id = new Long(Estado.RECUPERO_PAGO_BORRADOR);
 			rf.write_date = new Date();
 			rf.write_usuario_id = new Long(Usuario.getUsuarioSesion());
@@ -398,13 +400,13 @@ public class RecuperoPagosController extends Controller {
 			flash("error", "Parámetros incorrectos");
 		}
 	}
-	
+
 	@CheckPermiso(key = "recuperoPagosPasarEnCurso")
 	public static void pasarEnCurso(Long idRf){
-		
+
 		RecuperoPago rf = Ebean.find(RecuperoPago.class).select("id, estado_id,write_date,write_usuario_id").setId(idRf).findUnique();
 
-		if(rf != null){			
+		if(rf != null){
 			rf.estado_id = new Long(Estado.RECUPERO_PAGO_ENCURSO);
 			rf.write_date = new Date();
 			rf.write_usuario_id = new Long(Usuario.getUsuarioSesion());
@@ -414,16 +416,16 @@ public class RecuperoPagosController extends Controller {
 			flash("error", "Parámetros incorrectos");
 		}
 	}
-	
+
 	@CheckPermiso(key = "recuperoPagosPasarPagado")
 	public static void pasarPagado(Long idRf){
 		boolean error = false;
 		RecuperoPago rf = RecuperoPago.find.byId(idRf);
-		
+
 		if(rf.pago_principal_id != null){
-			
+
 			List<RecuperoPago> rpp3 = RecuperoPago.find.where().eq("recupero_factura_id", rf.recupero_factura_id).ne("id", rf.id).findList();
-			
+
 			BigDecimal montoPagoPrincipal = new BigDecimal(0);
 			BigDecimal montosPagosParcializados = new BigDecimal(0);
 			for(RecuperoPago x :rpp3){
@@ -436,8 +438,8 @@ public class RecuperoPagosController extends Controller {
 			Logger.debug("montoPagoPrincipal: "+montoPagoPrincipal);
 			Logger.debug("montosPagosParcializados: "+montosPagosParcializados);
 			Logger.debug("montosPagosParcializados: "+montosPagosParcializados);
-			
-			
+
+
 			if(montosPagosParcializados.add(rf.total).compareTo(montoPagoPrincipal) > 0) {
 				flash("error", "La suma de los pagos parcializados excede el monto del pago principal.");
 				error = true;
@@ -449,11 +451,11 @@ public class RecuperoPagosController extends Controller {
 				error = true;
 			}
 		}
-		
-		
-		
+
+
+
 		if(!error) {
-			if(rf != null){			
+			if(rf != null){
 				rf.estado_id = new Long(Estado.RECUPERO_PAGO_PAGADO);
 				rf.write_date = new Date();
 				rf.write_usuario_id = new Long(Usuario.getUsuarioSesion());
@@ -464,16 +466,16 @@ public class RecuperoPagosController extends Controller {
 			}
 		}
 	}
-	
+
 	@CheckPermiso(key = "recuperoPagosPasarCancelado")
 	public static void pasarCancelado(Long idRf){
-		
+
 		RecuperoPago rf = Ebean.find(RecuperoPago.class).select("id, estado_id,write_date,write_usuario_id").setId(idRf).findUnique();
-		
+
 		boolean certificacionOk = true;
 		String error = "";
-		
-		if(rf != null && certificacionOk){			
+
+		if(rf != null && certificacionOk){
 			rf.estado_id = new Long(Estado.RECUPERO_PAGO_CANCELADO);
 			rf.write_date = new Date();
 			rf.write_usuario_id = new Long(Usuario.getUsuarioSesion());
@@ -482,5 +484,5 @@ public class RecuperoPagosController extends Controller {
 		} else {
 			flash("error", "Parámetros incorrectos. "+error);
 		}
-	}	
+	}
 }
