@@ -91,6 +91,12 @@
 			<label class="control-label">Fecha factura</label>
 			<p class="form-control-static form-control">@recuperoFacturaForm("fecha").value</p>
 		</div>
+		<div class="col-sm-2">
+			<div class="form-group">
+				<label for="periodo" class="control-label">Periodo</label>
+				<p class="form-control-static form-control">@recuperoFacturaForm.field("periodo.nombre").value</p>
+			</div>
+		</div>
 	</div>
 
 	@views.html.recupero.recuperoFactura.tabsRecuperoFactura(false, recuperoFacturaForm,recuperoFactura)

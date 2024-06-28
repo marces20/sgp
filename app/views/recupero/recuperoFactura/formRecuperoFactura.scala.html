@@ -130,4 +130,26 @@
 				<div class="text-error">@error.message</div>
 			}
 		</div>
+		<div class="col-sm-2">
+			<div class="form-group">
+				<label for="periodo" class="control-label">Periodo</label>
+				<div class="input-group">
+					@inputText(recuperoFacturaForm("periodo.nombre"), 'class -> "form-control", 'id -> "periodo")
+					@inputText(recuperoFacturaForm("periodo_id"),'hidden -> "hidden", 'id -> "periodo_id")
+					<span class="input-group-addon">
+						<a href="#" class="searchModal"
+									id="searchPeriodo"
+									data-title="Selección de Periodo"
+									data-url="@controllers.contabilidad.routes.PeriodosController.modalBuscar()"
+									data-height="650"
+									data-width="700"
+									data-listen="modal.seleccion.periodo.simple"
+									data-label="#periodo"
+									data-field="#periodo_id">
+							<i class="glyphicon glyphicon-search"></i>
+						</a>
+					</span>
+				</div>
+			</div>
+		</div>
 	</div>
