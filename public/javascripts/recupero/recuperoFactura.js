@@ -1,5 +1,5 @@
 $( function () {
-	$('#searchCliente,#searchPlanilla,#searchDeposito').modalSearch();
+	$('#searchCliente,#searchPlanilla,#searchDeposito,#searchPeriodo').modalSearch();
 	$("#numero_factura").mask("99999999");
 	$('#searchPacienteCarga').click( function() {
 		var url = $(this).attr("data-url");
@@ -32,6 +32,7 @@ $( function () {
 		dialogoPasarBorrador = crearDialogoGeneral(url);
 		dialogoPasarBorrador.dialog({title: "Reporte Planilla Diaria"});
 	});
+
 
 	$('#reporteRecuperoFacturaExcel').click( function() { //abrir modal para mostrar mensaje informe rentas
 		var url = $(this).attr("data-url");
