@@ -5,15 +5,25 @@
 
 	<!-- <td class="accion-editar"><a class="btn btn-default btn-xs modificarNotaCredito" href="@controllers.recupero.routes.RecuperoNotasCreditosController.editar(linea.id)"><i class="glyphicon glyphicon-edit"></i></a></td>
 	  -->
+	<td>@if(linea.numero != null){@(linea.numero)}</td>
+
+	<td>@if(linea.cae != null){@(linea.cae)}</td>
+	<td>@if(linea.fecha_vencimiento != null){@(utils.DateUtils.formatDate(linea.fecha_vencimiento))}</td>
+
 	<td>@if(linea.planilla != null){@(linea.planilla.getRecuperoPlanillaEjercicio())}</td>
 	<td>@if(linea.fecha != null){@(utils.DateUtils.formatDate(linea.fecha))}</td>
 	<td>@linea.producto.nombre</td>
-	<td>@linea.udm.nombre</td>
+
 	<td>@linea.cantidad</td>
 	<td>@utils.NumberUtils.moneda(linea.precio, 2)</td>
 	<td>@utils.NumberUtils.moneda(linea.getTotal(),2)</td>
 
 	<td>
+		@if(linea.cae != null && !linea.cae.isEmpty()) {
+			<a class="btn btn-default btn-xs notSeleccion notaDebitoCredito" data-url="@controllers.recupero.routes.RecuperoReportesController.notaCredito(linea.id)">
+				<i class="glyphicon glyphicon-list-alt"></i>
+			</a>
+		}
 		@if(Permiso.check("recuperoNotasEliminar")) {
 			<a class="btn btn-default btn-xs eliminarNotaCredito delete-confirm-link" href="@controllers.recupero.routes.RecuperoNotasCreditosController.eliminar(linea.id)">
 			<i class="glyphicon glyphicon-trash icono-eliminar"></i></a>
@@ -21,3 +31,37 @@
 	</td>
 
 </tr>
+
+<script>
+$( function(){
+	$('.notaDebitoCredito').click( function() {
+
+		var url = $(this).attr("data-url");
+		var dialogo = $('<div></div>');
+
+		dialogo.dialog({
+			title: "Notas",
+	    	resizable: false,
+			autoOpen: true,
+			modal: true,
+			height: 250,
+			width:750,
+	        buttons: {
+		          Cerrar: function() {
+		            $( this ).dialog( "destroy" );
+		          }
+		    },
+	    	close: function(event, ui ){
+	    		$(this).dialog( "destroy" );
+	    	},
+		    open: function( event, ui ) {
+				$.post(url,  function(data){
+					dialogo.html(data);
+				});
+		    }
+	    });
+	});
+
+
+});
+</script>
