@@ -18,6 +18,7 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import controllers.Secured;
 import controllers.auth.CheckPermiso;
 import models.Estado;
+import models.Periodo;
 import models.Producto;
 import models.Usuario;
 import models.auth.Permiso;
@@ -113,7 +114,7 @@ public class RecuperoFacturasController extends Controller {
 				return badRequest(crearRecuperoFactura.render(recuperoFacturaForm));
 			}
 
-			List<RecuperoFactura> cx = RecuperoFactura.find.where()
+			/*List<RecuperoFactura> cx = RecuperoFactura.find.where()
 									   .eq("numero",c.numero)
 									   .eq("puntoventa_id", c.puntoventa_id)
 									   .eq("serie",c.serie).findList();
@@ -121,6 +122,16 @@ public class RecuperoFacturasController extends Controller {
 			if(cx.size() > 0) {
 				flash("error", "Ya existe este numero de factura cargada.");
 				return badRequest(crearRecuperoFactura.render(recuperoFacturaForm));
+			}*/
+
+			Periodo periodo = Periodo.getPeriodoByDate(c.fecha);
+			c.fecha_desde = periodo.date_start;
+			c.fecha_hasta = periodo.date_stop;
+
+			if(c.periodo_id != null) {
+				periodo = Periodo.find.byId(c.periodo_id.longValue());
+				c.fecha_desde = periodo.date_start;
+				c.fecha_hasta = periodo.date_stop;
 			}
 
 			c.create_date = new Date();
@@ -174,7 +185,7 @@ public class RecuperoFacturasController extends Controller {
 				return badRequest(editarRecuperoFactura.render(recuperoFacturaForm,rp));
 			}
 
-			List<RecuperoFactura> cx = RecuperoFactura.find.where()
+			/*List<RecuperoFactura> cx = RecuperoFactura.find.where()
 					   .eq("numero",c.numero)
 					   .eq("puntoventa_id", c.puntoventa_id)
 					   .eq("serie",c.serie).ne("id", c.id).findList();
@@ -182,6 +193,16 @@ public class RecuperoFacturasController extends Controller {
 			if(cx.size() > 0) {
 				flash("error", "Ya existe este numero de factura cargada.");
 				return badRequest(editarRecuperoFactura.render(recuperoFacturaForm,rp));
+			}*/
+
+			Periodo periodo = Periodo.getPeriodoByDate(c.fecha);
+			c.fecha_desde = periodo.date_start;
+			c.fecha_hasta = periodo.date_stop;
+
+			if(c.periodo_id != null) {
+				periodo = Periodo.find.byId(c.periodo_id.longValue());
+				c.fecha_desde = periodo.date_start;
+				c.fecha_hasta = periodo.date_stop;
 			}
 
 			c.estado_id = rp.estado_id;
