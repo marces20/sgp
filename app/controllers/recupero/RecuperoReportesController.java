@@ -13,7 +13,9 @@ import java.io.Writer;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.nio.file.FileSystems;
+import java.nio.file.Files;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
@@ -22,9 +24,14 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.xml.bind.DatatypeConverter;
+
+import models.ClienteTipo;
 import models.CuentaAnalitica;
 import models.DireccionCliente;
 import models.Estado;
+import models.Periodo;
+import models.TipoComprobante;
 import models.recupero.Cheque;
 import models.recupero.InformeTotal;
 import models.recupero.RecuperoFactura;
@@ -49,6 +56,8 @@ import org.w3c.dom.Document;
 
 import com.avaje.ebean.Ebean;
 import com.avaje.ebean.SqlRow;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.openhtmltopdf.pdfboxout.PdfRendererBuilder;
 
 import play.Logger;
@@ -68,6 +77,21 @@ import views.html.recupero.recuperoFactura.modalPlanilla;
 import views.html.recupero.recuperoPlanilla.reportePlanilla;
 import views.html.recupero.informes.*;
 import controllers.Secured;
+
+import com.google.zxing.BarcodeFormat;
+import com.google.zxing.EncodeHintType;
+import com.google.zxing.MultiFormatWriter;
+import com.google.zxing.WriterException;
+import com.google.zxing.client.j2se.MatrixToImageConfig;
+import com.google.zxing.client.j2se.MatrixToImageWriter;
+import com.google.zxing.common.BitMatrix;
+import com.google.zxing.qrcode.QRCodeWriter;
+import com.google.zxing.qrcode.decoder.ErrorCorrectionLevel;
+import java.io.File;
+import java.nio.ByteBuffer;
+import java.nio.CharBuffer;
+import java.nio.charset.Charset;
+import java.nio.charset.CharsetEncoder;
 
 @Security.Authenticated(Secured.class)
 public class RecuperoReportesController extends Controller {
@@ -1846,16 +1870,17 @@ order by nc.numero
 	}
 
 
+
 	public static Result imprimirFacturaAfip(Long id) {
 
 			 try {
-
+				 RecuperoFactura rf = RecuperoFactura.find.byId(id);
 				 String dirTemp = System.getProperty("java.io.tmpdir");
 
 				 // Source HTML file
 				 String inputHTML = Play.application().getFile("conf/resources/reportes/recupero/factura.html").toString();
 				 // Generated PDF file name
-				 String outputPdf = dirTemp+"/Output"+id+".pdf";
+				 String outputPdf = dirTemp+"/factura-"+rf.puntoVenta.numero+rf.numero+".pdf";
 				 // System.out.println(inputHTML);
 				 //String inputHTML2 = inputHTML.replace("@@pv@@", "00009");
 				 // System.out.println(inputHTML2);
@@ -1875,19 +1900,108 @@ order by nc.numero
 		return ok(reportePlanilla.render(null));
 	}
 
-	/*private static Document html5ParseDocument(String inputHTML) throws IOException{
+	public static Result notaDebito(Long id) {
 
-	    org.jsoup.nodes.Document doc;
+		try {
+			 RecuperoNotaDebito rf = RecuperoNotaDebito.find.byId(id);
+			 String dirTemp = System.getProperty("java.io.tmpdir");
+
+			 // Source HTML file
+			 String inputHTML = Play.application().getFile("conf/resources/reportes/recupero/nd.html").toString();
+			 // Generated PDF file name
+			 String outputPdf = dirTemp+"/nota-debito-"+rf.recupero_factura.puntoVenta.numero+rf.numero+".pdf";
+			 // System.out.println(inputHTML);
+			 //String inputHTML2 = inputHTML.replace("@@pv@@", "00009");
+			 // System.out.println(inputHTML2);
 
 
-	    doc = Jsoup.parse(new File(inputHTML), "UTF-8");
-	    org.jsoup.select.Elements myImgs = doc.select(".pv");
+			 htmlToPdf(inputHTML, outputPdf, id,"notadebito");
+
+			 return ok(reportePlanilla.render(outputPdf));
+
+		} catch (Exception e) {
+		  // TODO Auto-generated catch block
+		      e.printStackTrace();
+		}
+
+
+
+		return ok(reportePlanilla.render(null));
+	}
+
+	public static Result notaCredito(Long id) {
+
+		try {
+			RecuperoNotaCredito rf = RecuperoNotaCredito.find.byId(id);
+			 String dirTemp = System.getProperty("java.io.tmpdir");
+			 String inputHTML = Play.application().getFile("conf/resources/reportes/recupero/nc.html").toString();
+			 String outputPdf = dirTemp+"/nota-credito-"+rf.recupero_factura.puntoVenta.numero+rf.numero+".pdf";
+			 htmlToPdf(inputHTML, outputPdf, id,"notacredito");
+			 return ok(reportePlanilla.render(outputPdf));
+
+		} catch (Exception e) {
+		      e.printStackTrace();
+		}
+		return ok(reportePlanilla.render(null));
+	}
+
+
+	private static void htmlToPdf(String inputHTML, String outputPdf,Long facturaId,String tipo) throws Exception,IOException {
+
+		//Document doc = html5ParseDocument(inputHTML);
+
+	 	//doc = doc.getDocumentElement().toString().replace("pv", "00005");
+
+
+
+
+		/*org.jsoup.nodes.Document docTmp;
+		docTmp = Jsoup.parse(new File(inputHTML), "UTF-8");
+
+	    org.jsoup.select.Elements myImgs = docTmp.select(".pv");
+
 	    for (org.jsoup.nodes.Element element : myImgs) {
 	    	element.text("00005");
-	    }
+	    }*/
 
-	    return new W3CDom().fromJsoup(doc);
-	}*/
+		Document doc = null;
+
+
+		if(tipo =="factura") {
+			 doc = html5ParseDocumentPorElemento(inputHTML,facturaId);
+		}else if(tipo =="recibo") {
+			doc = html5ParseDocumentPorElementoRecibo(inputHTML,facturaId);
+		}else if(tipo =="notacredito") {
+			doc = html5ParseDocumentPorElementoNotaCredito(inputHTML,facturaId);
+		}else if(tipo =="notadebito") {
+			doc = html5ParseDocumentPorElementoNotaDebito(inputHTML,facturaId);
+		}
+
+
+
+
+
+	    String dirTemp = System.getProperty("java.io.tmpdir");
+	    String baseUri = FileSystems.getDefault()
+	              .getPath(dirTemp+"/"+tipo+"_"+facturaId+".pdf")
+	              .toUri()
+	              .toString();
+
+
+	    OutputStream os = new FileOutputStream(outputPdf);
+
+	    PdfRendererBuilder builder = new PdfRendererBuilder();
+	    builder.withUri(outputPdf);
+	    builder.toStream(os);
+	    // using absolute path here
+	    //builder.useFont(new File("F:\\knpcode\\Java\\Java Programs\\PDF using Java\\PDFBox\\Gabriola.ttf"),"Gabriola");
+	    builder.withW3cDocument(doc, baseUri);
+	    //builder.useUriResolver(new MyResolver());
+	    builder.run();
+
+	    //System.out.println("PDF generation completed");
+	    os.close();
+	}
 
 	private static Document html5ParseDocumentPorElementoRecibo(String inputHTML,Long id) throws IOException{
 
@@ -1958,7 +2072,7 @@ order by nc.numero
 	    return new W3CDom().fromJsoup(doc);
 	}
 
-	private static Document html5ParseDocumentPorElemento(String inputHTML,Long facturaId) throws IOException{
+	private static Document html5ParseDocumentPorElemento(String inputHTML,Long facturaId) throws IOException,Exception{
 
 	    org.jsoup.nodes.Document doc;
 
@@ -1971,7 +2085,7 @@ order by nc.numero
 
 	    datos.put("pv", rf.puntoVenta.numero);
 	    datos.put("numeroFactura", rf.numero);
-	    datos.put("fecha_emision", utils.DateUtils.formatDate((rf.fecha_emision!= null)?rf.fecha_emision:rf.fecha));
+	    datos.put("fecha_emision", utils.DateUtils.formatDate(rf.fecha));
 	    datos.put("fecha_desde", utils.DateUtils.formatDate(rf.fecha_desde));
 	    datos.put("fecha_hasta", utils.DateUtils.formatDate(rf.fecha_hasta));
 	    datos.put("tipo_pago",((rf.recupero_tipo_pago_id != null)?rf.recuperoTipoPago.nombre:"Contado"));
@@ -2003,6 +2117,9 @@ order by nc.numero
 
 	    datos.put("lineas",lineas);
 
+	    String qrBase =  generarJsonQr(rf.id,rf.fecha,rf.puntoVenta.numero,TipoComprobante.FACTURA,rf.numero,rf.getBase().doubleValue(),rf.cliente.getTipoDocAfip(),rf.cliente.getDocAfip(),rf.cae);
+	    String qr ="<img height='185' width='185' src='data:image/png;base64,"+qrBase+"'>";
+	    datos.put("qr",qr);
 
 	    for (Map.Entry<String, String> entry : datos.entrySet()) {
 	    	Logger.debug("xxxxxxx "+entry.getKey());
@@ -2019,68 +2136,221 @@ order by nc.numero
 	    return new W3CDom().fromJsoup(doc);
 	}
 
-	/*private static Document parseFactura(String inputHTML,Long facturaId) throws IOException {
+	private static Document html5ParseDocumentPorElementoNotaCredito(String inputHTML,Long id) throws IOException,Exception{
+
+	    org.jsoup.nodes.Document doc;
+
+
+	    doc = Jsoup.parse(new File(inputHTML), "UTF-8");
 
 
 
-
-		Document doc = null;//html5ParseDocumentPorElemento(inputHTML,"pv",rf.puntoVenta.numero);
-		doc = null;// html5ParseDocumentPorElemento(inputHTML,"numeroFactura",rf.numero);
-
-		return doc;
-
-	}*/
-
-	private static void htmlToPdf(String inputHTML, String outputPdf,Long facturaId,String tipo) throws IOException {
-
-		//Document doc = html5ParseDocument(inputHTML);
-
-	 	//doc = doc.getDocumentElement().toString().replace("pv", "00005");
+	    RecuperoNotaCredito rd = RecuperoNotaCredito.find.byId(id);
 
 
+	    RecuperoFactura rf = RecuperoFactura.find.byId(rd.recupero_factura_id);
 
+	    Map<String,String> datos = new HashMap<>();
 
-		/*org.jsoup.nodes.Document docTmp;
-		docTmp = Jsoup.parse(new File(inputHTML), "UTF-8");
+	    datos.put("pv", rf.puntoVenta.numero);
+	    datos.put("numeroFactura", rd.numero);
+	    datos.put("fc", rf.getNumeroFactura());
 
-	    org.jsoup.select.Elements myImgs = docTmp.select(".pv");
+	    datos.put("fecha_emision", utils.DateUtils.formatDate(rd.fecha));
 
-	    for (org.jsoup.nodes.Element element : myImgs) {
-	    	element.text("00005");
-	    }*/
+	    Periodo periodo = Periodo.getPeriodoByDate(rd.fecha);
+		datos.put("fecha_desde", utils.DateUtils.formatDate(periodo.date_start));
+	    datos.put("fecha_hasta", utils.DateUtils.formatDate(periodo.date_stop));
 
-		Document doc = null;
-
-
-		if(tipo =="factura") {
-			 doc = html5ParseDocumentPorElemento(inputHTML,facturaId);
-		}else if(tipo =="recibo") {
-			doc = html5ParseDocumentPorElementoRecibo(inputHTML,facturaId);
-		}
+	    datos.put("tipo_pago",((rf.recupero_tipo_pago_id != null)?rf.recuperoTipoPago.nombre:"Contado"));
 
 
 
+	    datos.put("cuit", rf.cliente.cuit2);
+	    datos.put("razon_social", rf.cliente.nombre);
+
+	    String direccion =  "";
+	    datos.put("direccion", direccion);
+
+	    datos.put("importe", utils.NumberUtils.moneda(rd.getTotal()) );
+
+	    datos.put("cae", (rd.cae!=null)? rd.cae:"" );
+	    datos.put("fechacae",utils.DateUtils.formatDate(rd.fecha_vencimiento));
+	    String lineas ="";
 
 
-	    String dirTemp = System.getProperty("java.io.tmpdir");
-	    String baseUri = FileSystems.getDefault()
-	              .getPath(dirTemp+"/"+tipo+"_"+facturaId+".pdf")
-	              .toUri()
-	              .toString();
+		    lineas += "<tr>" +
+		    		"        		<td style='text-align: left'>"+rd.producto.nombre+"</td>" +
+		    		"        		<td>"+rd.cantidad+"</td>" +
+		    		"                <td style='text-align: right'>"+utils.NumberUtils.moneda(rd.precio)+"</td>" +
+		    		"                <td style='text-align: right'>$ 0,00</td>" +
+		    		"                <td style='text-align: right'>$ 0,00</td>" +
+		    		"                <td style='text-align: right'>"+utils.NumberUtils.moneda(rd.getTotal())+"</td>" +
+		    		"            </tr>";
 
 
-	    OutputStream os = new FileOutputStream(outputPdf);
+	    datos.put("lineas",lineas);
 
-	    PdfRendererBuilder builder = new PdfRendererBuilder();
-	    builder.withUri(outputPdf);
-	    builder.toStream(os);
-	    // using absolute path here
-	    //builder.useFont(new File("F:\\knpcode\\Java\\Java Programs\\PDF using Java\\PDFBox\\Gabriola.ttf"),"Gabriola");
-	    builder.withW3cDocument(doc, baseUri);
-	    //builder.useUriResolver(new MyResolver());
-	    builder.run();
+	    String qrBase =  generarJsonQr(rd.id,rd.fecha,rf.puntoVenta.numero,TipoComprobante.NOTA_CREDITO,rd.numero,rd.getTotal().doubleValue(),rf.cliente.getTipoDocAfip(),rf.cliente.getDocAfip(),rd.cae);
+	    String qr ="<img height='185' width='185' src='data:image/png;base64,"+qrBase+"'>";
+	    datos.put("qr",qr);
 
-	    //System.out.println("PDF generation completed");
-	    os.close();
+
+	    for (Map.Entry<String, String> entry : datos.entrySet()) {
+	    	Logger.debug("xxxxxxx "+entry.getKey());
+		    org.jsoup.select.Elements myImgs = doc.select("."+entry.getKey());
+
+		    for (org.jsoup.nodes.Element element : myImgs) {
+		    	//element.text(entry.getValue());
+
+		    	element.append(entry.getValue());
+		    }
+
+	    }
+
+	    return new W3CDom().fromJsoup(doc);
 	}
+
+	private static Document html5ParseDocumentPorElementoNotaDebito(String inputHTML,Long id) throws IOException,Exception{
+
+	    org.jsoup.nodes.Document doc;
+
+	    doc = Jsoup.parse(new File(inputHTML), "UTF-8");
+
+	    RecuperoNotaDebito rd = RecuperoNotaDebito.find.byId(id);
+
+	    RecuperoFactura rf = RecuperoFactura.find.byId(rd.recupero_factura_id);
+
+	    Map<String,String> datos = new HashMap<>();
+
+	    datos.put("pv", rf.puntoVenta.numero);
+	    datos.put("numeroFactura", rd.numero);
+	    datos.put("fc", rf.getNumeroFactura());
+
+	    datos.put("fecha_emision", utils.DateUtils.formatDate(rd.fecha));
+
+	    Periodo periodo = Periodo.getPeriodoByDate(rd.fecha);
+		datos.put("fecha_desde", utils.DateUtils.formatDate(periodo.date_start));
+	    datos.put("fecha_hasta", utils.DateUtils.formatDate(periodo.date_stop));
+
+	    datos.put("tipo_pago",((rf.recupero_tipo_pago_id != null)?rf.recuperoTipoPago.nombre:"Contado"));
+
+	    datos.put("cuit", rf.cliente.cuit2);
+	    datos.put("razon_social", rf.cliente.nombre);
+
+	    String direccion =  "";
+	    datos.put("direccion", direccion);
+
+	    datos.put("importe", utils.NumberUtils.moneda(rd.getTotal()) );
+
+	    datos.put("cae", (rd.cae!=null)? rd.cae:"" );
+	    datos.put("fechacae",utils.DateUtils.formatDate(rd.fecha_vencimiento));
+	    String lineas ="";
+
+
+		    lineas += "<tr>" +
+		    		"        		<td style='text-align: left'>"+rd.producto.nombre+"</td>" +
+		    		"        		<td>"+rd.cantidad+"</td>" +
+		    		"                <td style='text-align: right'>"+utils.NumberUtils.moneda(rd.precio)+"</td>" +
+		    		"                <td style='text-align: right'>$ 0,00</td>" +
+		    		"                <td style='text-align: right'>$ 0,00</td>" +
+		    		"                <td style='text-align: right'>"+utils.NumberUtils.moneda(rd.getTotal())+"</td>" +
+		    		"            </tr>";
+
+
+	    datos.put("lineas",lineas);
+
+	    String qrBase =  generarJsonQr(rd.id,rd.fecha,rf.puntoVenta.numero,TipoComprobante.NOTA_DEBITO,rd.numero,rd.getTotal().doubleValue(),rf.cliente.getTipoDocAfip(),rf.cliente.getDocAfip(),rd.cae);
+	    String qr ="<img height='185' width='185' src='data:image/png;base64,"+qrBase+"'>";
+	    datos.put("qr",qr);
+
+
+
+	    for (Map.Entry<String, String> entry : datos.entrySet()) {
+	    	Logger.debug("xxxxxxx "+entry.getKey());
+		    org.jsoup.select.Elements myImgs = doc.select("."+entry.getKey());
+
+		    for (org.jsoup.nodes.Element element : myImgs) {
+		    	//element.text(entry.getValue());
+
+		    	element.append(entry.getValue());
+		    }
+	    }
+
+	    return new W3CDom().fromJsoup(doc);
+	}
+
+
+	public static String generarJsonQr(Long id,Date fecha,String puntoVenta,int tipoComprobante,String nroCmp,double importe,int docTipo,Long doc,String cae) throws Exception {
+
+
+
+		//ObjectNode restJs = Json.newObject();
+		Map<String, Object> restJs = new HashMap<>();
+		restJs.put("ver", 1);
+		restJs.put("fecha", utils.DateUtils.formatDate(fecha, "yyyy-MM-dd"));//XXXXXXXXXXXX
+		restJs.put("cuit", new Long("30712224300"));
+		restJs.put("ptoVta", new Integer(puntoVenta));
+		restJs.put("tipoCmp", tipoComprobante);
+		restJs.put("nroCmp", new Integer(nroCmp));
+		restJs.put("importe", importe);
+		restJs.put("moneda", "PES");
+		restJs.put("ctz", 1);
+		restJs.put("tipoDocRec", docTipo);
+		restJs.put("nroDocRec", doc);
+		restJs.put("tipoCodAut", "E");
+		restJs.put("codAut", new Long(cae));
+
+		ObjectMapper mapper = new ObjectMapper();
+
+		JsonNode node = mapper.convertValue(restJs, JsonNode.class);
+
+
+		byte[] bytes = node.toString().getBytes();
+
+		String base64Encoded = DatatypeConverter.printBase64Binary(bytes);
+	    System.out.println("Encoded Json---------------:\n"+node.toString());
+	    System.out.println(base64Encoded + "\n");
+
+
+		String url= "https://www.afip.gob.ar/fe/qr/?p="+base64Encoded;
+
+		String ret = generateQR(url, 185,185);
+
+		return ret;
+
+
+
+		//{"ver":1,"fecha":"2020-10-13","cuit":30000000007,"ptoVta":10,"tipoCmp":1,"nroCmp":94,"importe":12100,"moneda":"DOL","ctz":65,"tipoDocRec":80,"nroDocRec":20000000001,"tipoCodAut":"E","codAut":70417054367476}
+	}
+
+
+	public static String generateQR(String text, int h, int w) throws Exception
+    {
+		String dirTemp = System.getProperty("java.io.tmpdir");
+		File file = new File(dirTemp+"/qr1.png");
+
+	   Charset charset = Charset.forName("ISO-8859-1");
+       CharsetEncoder encoder = charset.newEncoder();
+       byte[] b = null;
+       ByteBuffer bb = encoder.encode(CharBuffer.wrap(text));
+       b = bb.array();
+       String data = new String(b, "ISO-8859-1");
+
+       BitMatrix matrix = null;
+       QRCodeWriter writer = new QRCodeWriter();
+       matrix = writer.encode(data, com.google.zxing.BarcodeFormat.QR_CODE, w, h);
+       MatrixToImageWriter.writeToFile(matrix, "png", file);
+
+
+      // BitMatrix matrix = new MultiFormatWriter().encode(new String(data.getBytes(charset), charset), BarcodeFormat.QR_CODE, w, h);
+       //  MatrixToImageWriter.writeToFile(matrix, path.substring(path.lastIndexOf('.') + 1), new File(path));
+
+       byte[] fileContent = Files.readAllBytes(file.toPath());
+       String ret =  Base64.getEncoder().encodeToString(fileContent);
+
+      // OutputStream out = new FileOutputStream(file);
+       return ret;
+    }
+
 }
