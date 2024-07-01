@@ -79,6 +79,9 @@ public class RecuperoNotaDebito extends Model{
 	@Required(message="Seleccion Planilla")
 	public Integer planilla_id;
 
+	public String cae;
+	public Date fecha_vencimiento;
+
 	public BigDecimal getTotal(){
 		return cantidad.multiply(precio).setScale(2, RoundingMode.HALF_UP);
 	}
