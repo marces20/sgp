@@ -828,9 +828,9 @@ public class AgentesAsistenciasLicenciasController extends Controller {
 			return ok(result);
 		}
 
-		List<LiquidacionNovedadLicencia> lnl = LiquidacionNovedadLicencia.find.where().in("id", nSeleccionados).ne("estado_id", Estado.LIQUIDACION_LICENCIAS_NOVEDADES_CONTROLADO).findList();
+		List<LiquidacionNovedadLicencia> lnl = LiquidacionNovedadLicencia.find.where().in("id", nSeleccionados).eq("estado_id", Estado.LIQUIDACION_LICENCIAS_NOVEDADES_APROBADO).findList();
 		if(lnl.size() > 0) {
-			flash("error", "Solo puede modificar novedades con licencias en estado Controlado.");
+			flash("error", "No se puede modificar novedades con licencias en estado Aprobado.");
 			result.put("success",false);
 			result.put("html", modalPasarABorradorNovedadLicencia.render(d).toString());
 			return ok(result);
