@@ -23,30 +23,30 @@ import play.data.validation.Constraints.Required;
 import play.db.ebean.Model;
 import utils.pagination.Pagination;
 
-@Entity 
+@Entity
 @Table(name = "clientes")
 public class Cliente extends Model {
 	private static final long serialVersionUID = 1L;
-	
-	@Id  
+
+	@Id
 	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="clientes_id_seq")
 	public Long id;
 	@Required(message="Nombre requerido")
 	public String nombre;
-	
-	
+
+
 	@ManyToOne
 	@JoinColumn(name="cliente_tipo_id", referencedColumnName="id", insertable=false, updatable=false)
-	public ClienteTipo tipo; 
+	public ClienteTipo tipo;
 	@Required(message="Tipo Cliente requerido")
 	@Column(name="cliente_tipo_id")
 	public Long cliente_tipo_id;
-	
+
 	@Formats .DateTime(pattern="dd/MM/yyyy")
 	public Date fnacimiento;
 	public String sexo;
-	
-	
+
+
 	public String cuit2;
 	//@Required(message="DNI requerido")
 	public Integer dni;
@@ -55,37 +55,37 @@ public class Cliente extends Model {
 	public String referencia_2;
 	public String id_paciente_rismi;
 	public String nafiliado;
-	
+
 	public Boolean activo = false;
 	public Boolean profe = false;
-	
+
 	@ManyToOne
 	@JoinColumn(name="obrasocial_id", referencedColumnName="id", insertable=false, updatable=false)
-	public Obrasocial obrasocial; 
+	public Obrasocial obrasocial;
 	@Column(name="obrasocial_id")
 	public Long obrasocial_id;
-	
+
 	@ManyToOne
 	@JoinColumn(name="create_usuario_id", referencedColumnName="id", insertable=false, updatable=false)
-	public Usuario create_usuario; 
+	public Usuario create_usuario;
 	@Column(name="create_usuario_id")
 	public Long create_usuario_id;
-	 
-	public Date create_date; 
-	public Date write_date; 
-	
+
+	public Date create_date;
+	public Date write_date;
+
 	@ManyToOne
 	@JoinColumn(name="write_usuario_id", referencedColumnName="id", insertable=false, updatable=false)
-	public Usuario write_usuario; 
+	public Usuario write_usuario;
 	@Column(name="write_usuario_id")
 	public Long write_usuario_id;
-	
+
 	@Valid
 	@OneToMany(cascade=CascadeType.PERSIST)
 	public List<DireccionCliente> direcciones;
-	
+
 	public static Finder<Long,Cliente> find = new Finder<Long,Cliente>(Long.class, Cliente.class);
-	
+
 	public List<Cliente> getDataSuggest(String input,Integer limit){
 		List<Cliente> e = find.where()
 				.disjunction()
@@ -93,46 +93,83 @@ public class Cliente extends Model {
 				.ilike("id_paciente_rismi", "%"+input+"%")
 				.endJunction()
 				.setMaxRows(limit).orderBy("nombre")
-				.findList();  
-		 
+				.findList();
+
 		return e;
 	}
-	
+
 	public static Pagination<Cliente> page(String nombre,
 										   String idPaciente,
 										   String dni,
 										   String cuit,
 										   String cliente_tipo_id
-										   ) {    	
+										   ) {
     	Pagination<Cliente> p = new Pagination<Cliente>();
     	p.setOrderDefault("ASC");
     	p.setSortByDefault("nombre");
-    	
+
     	ExpressionList<Cliente> e = find.where();
     	if(!nombre.isEmpty()){
     		e.ilike("nombre", "%" + nombre + "%");
-    	}	
-    	
+    	}
+
     	if(!cliente_tipo_id.isEmpty()){
     		e.eq("cliente_tipo_id", Integer.parseInt(cliente_tipo_id));
-    	}	
-    	
+    	}
+
     	if(!dni.isEmpty()){
     		e.eq("dni",  Integer.parseInt(dni));
     	}
-    	
+
     	if(!cuit.isEmpty()){
     		e.ilike("cuit2", "%" + cuit + "%");
-    	}	
+    	}
     	if(!idPaciente.isEmpty()){
     		e.ilike("id_paciente_rismi", "%" + idPaciente + "%");
-    	}	
-    	
+    	}
+
     	p.setExpressionList(e);
-    	
+
     	return p;
     }
-	
+
+	public int getTipoDocAfip() {
+		int docTipo = 80;
+		Long doc = null;
+
+		if(this.cliente_tipo_id.compareTo(ClienteTipo.EXTRANJEROS) == 0 || this.cliente_tipo_id.compareTo(ClienteTipo.EXTRANJEROS_SIN_RESIDENCIA) == 0) {
+			docTipo = 91;
+		}
+
+		if(this.cie != null && !this.cie.isEmpty()) {
+
+			docTipo = 91;
+		}else if(this.cuit2 != null && !this.cuit2.isEmpty()) {
+			doc = new Long(this.cuit2);
+		}else if(this.dni != null) {
+			docTipo = 96;
+		}
+
+		return docTipo;
+
+	}
+
+	public Long getDocAfip() {
+
+		Long doc = null;
+
+		if(this.cie != null && !this.cie.isEmpty()) {
+			doc = new Long(this.cie);
+		}else if(this.cuit2 != null && !this.cuit2.isEmpty()) {
+			doc = new Long(this.cuit2);
+		}else if(this.dni != null) {
+			doc = new Long(this.dni);
+		}
+
+		return doc;
+
+	}
+
 	public int getEdad(){
 		int edad = -1;
 		if(fnacimiento != null){
@@ -152,7 +189,7 @@ public class Cliente extends Model {
 	        //Regresa la edad en base a la fecha de nacimiento
 	        return año;
 		}
-		
+
 		return edad;
 	}
 }
