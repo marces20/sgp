@@ -111,7 +111,8 @@ GET    /facturas/imprimir-factura       controllers.recupero.RecuperoReportesCon
 GET    /facturas/imprimir-factura-afip       controllers.recupero.RecuperoReportesController.imprimirFacturaAfip(id:Long)
 GET    /pagos/imprimir-recibo           controllers.recupero.RecuperoReportesController.imprimirRecibo(id:Long)
 GET    /recibos/imprimir-recibos      controllers.recupero.RecuperoReportesController.imprimirReciboNuevo(id:Long)
-
+POST    /recibos/imprimir-nota-credito      controllers.recupero.RecuperoReportesController.notaCredito(id:Long)
+POST    /recibos/imprimir-nota-debito      controllers.recupero.RecuperoReportesController.notaDebito(id:Long)
 
 GET    	/reportesPlanilla/modalPlanilla   		controllers.recupero.RecuperoReportesController.modalPlanilla()
 POST    /reportesPlanilla/imprimirPlanilla   	controllers.recupero.RecuperoReportesController.informePlanilla()
