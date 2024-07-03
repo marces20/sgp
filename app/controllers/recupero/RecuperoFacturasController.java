@@ -12,6 +12,7 @@ import java.util.Map;
 import javax.persistence.PersistenceException;
 
 import com.avaje.ebean.Ebean;
+import com.avaje.ebean.ExpressionList;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
@@ -26,6 +27,8 @@ import models.recupero.RecuperoFactura;
 import play.Logger;
 import play.data.DynamicForm;
 import play.data.Form;
+import play.db.ebean.Model;
+import play.db.ebean.Model.Finder;
 import play.libs.Json;
 import play.mvc.Controller;
 import play.mvc.Result;
@@ -421,6 +424,34 @@ public class RecuperoFacturasController extends Controller {
     	p.setSortByDefault("id");
 
     	p.setExpressionList(RecuperoFactura.find.fetch("cliente", "nombre").fetch("puntoVenta", "numero").where().eq("estado_id",Estado.RECUPERO_FACTURA_APROBADO).ilike("numero", "%" + RequestVar.get("numero") + "%"));
+		return ok( modalBusquedaRecuperoFactura.render(p, form().bindFromRequest()) );
+	}
+
+	public static Result modalBuscarSoloSaldo() {
+    	Pagination<RecuperoFactura> p = new Pagination<RecuperoFactura>();
+    	p.setOrderDefault("DESC");
+    	p.setSortByDefault("id");
+
+    	Model.Finder<Long,RecuperoFactura> find = new Finder<Long,RecuperoFactura>(Long.class, RecuperoFactura.class);
+
+    	ExpressionList<RecuperoFactura> e = find
+				.fetch("cliente", "nombre")
+				.fetch("puntoVenta", "numero")
+				.where();
+
+    	e.eq("estado_id",Estado.RECUPERO_FACTURA_APROBADO);
+
+    	if(!RequestVar.get("numero").isEmpty()) {
+    		e.ilike("numero", "%" + RequestVar.get("numero") + "%");
+    	}
+
+    	Logger.debug("zzzzzzzzzzzzzzzz "+RequestVar.get("puntoventa_id"));
+
+    	if(!RequestVar.get("puntoventa_id").isEmpty()) {
+    		e.eq("puntoventa_id", Integer.parseInt(RequestVar.get("puntoventa_id")));
+    	}
+
+    	p.setExpressionList(e);
 		return ok( modalBusquedaRecuperoFactura.render(p, form().bindFromRequest()) );
 	}
 
