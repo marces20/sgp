@@ -113,7 +113,8 @@ public class RecuperoRecibo extends Model {
 	public static Pagination<RecuperoRecibo> page(String numero,
 													String expediente_id,
 													String fecha_desde,
-													String fecha_hasta){
+													String fecha_hasta,
+													String puntoventa_id){
 
 			Pagination<RecuperoRecibo> p = new Pagination<RecuperoRecibo>();
 			p.setOrderDefault("DESC");
@@ -124,6 +125,11 @@ public class RecuperoRecibo extends Model {
 			if(!numero.isEmpty()) {
 				e.eq("numero",  Integer.parseInt(numero));
 			}
+
+			if(!puntoventa_id.isEmpty()) {
+				e.eq("puntoventa_id",  Integer.parseInt(puntoventa_id));
+			}
+
 
 			if(!fecha_desde.isEmpty()){
 				Date fd = DateUtils.formatDate(fecha_desde, "dd/MM/yyyy");
