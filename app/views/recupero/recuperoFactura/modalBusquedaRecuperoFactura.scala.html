@@ -61,7 +61,13 @@ $( function(){
 		var id = $(this).attr('data-id');
 
 		$.get(url+"?id="+id, function(data){
+			var inputId = $("#monto");
+			inputId.val(data.monto);
+
+
 			$(document).trigger("modal.seleccion.recuperoFactura.simple", data);
+
+
 		});
 	});
 
