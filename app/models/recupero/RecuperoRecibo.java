@@ -141,13 +141,13 @@ public class RecuperoRecibo extends Model {
 				e.le("fecha", fh);
 			}
 
-			/*if(!Permiso.check("verTodoRecupero")){
+			if(!Permiso.check("verTodoRecupero")){
 				if(Usuario.getUsurioSesion().organigrama != null && Usuario.getUsurioSesion().organigrama.deposito != null){
-					e.eq("deposito_id", Usuario.getUsurioSesion().organigrama.deposito_id.intValue());
+					e.eq("planilla.deposito_id", Usuario.getUsurioSesion().organigrama.deposito_id.intValue());
 				}else{
-					e.isNull("deposito_id");
+					e.isNull("planilla.deposito_id");
 				}
-			}*/
+			}
 
 			p.setExpressionList(e);
 			return p;
