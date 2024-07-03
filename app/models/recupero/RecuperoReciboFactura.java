@@ -70,7 +70,7 @@ public class RecuperoReciboFactura  extends Model {
 	@Formats.DateTime(pattern="yyyy-MM-dd HH:mm:ss")
 	public Date create_date;
 
-
+	public String descripcion;
 
 	public static Model.Finder<Long,RecuperoReciboFactura> find = new Finder<Long,RecuperoReciboFactura>(Long.class, RecuperoReciboFactura.class);
 
