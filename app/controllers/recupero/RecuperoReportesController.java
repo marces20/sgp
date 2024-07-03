@@ -2032,7 +2032,7 @@ order by nc.numero
 
 
 
-	    String direccion =  "";
+	    String direccion = rdlxr.get(0).recuperoFactura.cliente.getFirstDireccion();
 	    datos.put("direccion", direccion);
 
 	    //datos.put("importe", utils.NumberUtils.moneda(rf.getTotalFacturado()) );
