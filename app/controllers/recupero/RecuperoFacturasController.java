@@ -439,6 +439,7 @@ public class RecuperoFacturasController extends Controller {
 			restJs.put("id", factura.id);
 			restJs.put("nombre", factura.getNumeroFactura());
 			restJs.put("cliente", factura.cliente.nombre);
+			restJs.put("monto", factura.getSaldoPendiente());
 		}
 		nodo.add(restJs);
 		return ok(restJs);
