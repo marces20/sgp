@@ -21,6 +21,7 @@ import controllers.auth.CheckPermiso;
 import models.Estado;
 import models.Periodo;
 import models.Producto;
+import models.PuntoVenta;
 import models.Usuario;
 import models.auth.Permiso;
 import models.recupero.RecuperoFactura;
@@ -445,7 +446,7 @@ public class RecuperoFacturasController extends Controller {
     		e.ilike("numero", "%" + RequestVar.get("numero") + "%");
     	}
 
-    	Logger.debug("zzzzzzzzzzzzzzzz "+RequestVar.get("puntoventa_id"));
+
 
     	if(!RequestVar.get("puntoventa_id").isEmpty()) {
     		e.eq("puntoventa_id", Integer.parseInt(RequestVar.get("puntoventa_id")));
