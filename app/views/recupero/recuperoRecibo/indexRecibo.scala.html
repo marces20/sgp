@@ -54,6 +54,13 @@
 		<form action="" id="formSearchPlanillas" method="GET">
 
 		<div class="row">
+			<div class="col-sm-2">
+				<label class="control-label">Punto Venta</label>
+				<div class="">
+				@select(formBuscador("puntoventa_id"),
+				PuntoVenta.find.all().map { p => p.id.toString -> p.numero}, 'class -> "form-control select", '_default -> "Seleccionar")
+				</div>
+			</div>
 
 			<div class="col-sm-2">
 				<div class="form-group">
@@ -63,13 +70,7 @@
 				</div>
 			</div>
 
-			<div class="col-sm-2">
-				<label class="control-label">Punto Venta</label>
-				<div class="">
-				@select(formBuscador("puntoventa_id"),
-				PuntoVenta.find.all().map { p => p.id.toString -> p.numero}, 'class -> "form-control select", '_default -> "Seleccionar")
-				</div>
-			</div>
+
 
 
 
