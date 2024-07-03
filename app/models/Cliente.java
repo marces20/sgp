@@ -192,4 +192,23 @@ public class Cliente extends Model {
 
 		return edad;
 	}
+
+	public String getFirstDireccion(){
+    	String direccion = "";
+
+    	List<DireccionCliente> listaDireccionProveedor = DireccionCliente.find.where().eq("cliente_id", id).findList();
+    	if(listaDireccionProveedor.size() > 0){
+    		DireccionCliente dp = listaDireccionProveedor.get(0);
+	    	if(dp != null){
+	    		String calle = (dp.calle != null)?dp.calle:"";
+	    		String numero = (dp.numero != null)?dp.numero:"";
+	    		String localidad = (dp.localidad != null)?dp.localidad.nombre:"";
+	    		String provincia = (dp.localidad != null && dp.localidad.provincia != null)?dp.localidad.provincia.nombre:"";
+	    		String pais = (dp.localidad != null && dp.localidad.provincia != null && dp.localidad.provincia.pais != null)?dp.localidad.provincia.pais.nombre:"";
+	    		direccion = calle+" "+numero+" - "+localidad+" - "+provincia+" - "+pais;
+	    	}
+    	}
+    	return direccion;
+    }
+
 }
