@@ -3,9 +3,14 @@
 @implicitFieldConstructor = @{ FieldConstructor(simpleInput.render) }
 
 <div id="modalBusquedaRecuperoFactura" class="contenedorPaginador ajaxPaginador">
-<form action="@controllers.recupero.routes.RecuperoFacturasController.modalBuscar()" method="GET">
+<form action="@controllers.recupero.routes.RecuperoFacturasController.modalBuscarSoloSaldo()" method="GET">
 	<div class="row">
-		<div class="col-sm-6">
+		<div class="col-sm-2">
+			<label class="control-label">Pto Venta</label>
+			@select(formBuscador("puntoventa_id"),PuntoVenta.find.all().map { p => p.id.toString -> p.numero},
+						'class -> "form-control select", '_default -> "Seleccionar")
+		</div>
+		<div class="col-sm-4">
 			<label class="control-label">Numero</label>
 			@inputText(formBuscador("numero"), 'class -> "form-control", 'autofocus -> "autofocus")
 
@@ -17,7 +22,7 @@
 		</div>
 	</div>
 </form>
-
+<hr>
 @if(buscador.getTotalRowCount == 0) {
 	<div class="well">
 	    <em>No se encuentran Facturas</em>
