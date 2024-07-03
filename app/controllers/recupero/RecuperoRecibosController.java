@@ -41,10 +41,12 @@ import views.html.recupero.recuperoRecibo.*;
 public class RecuperoRecibosController extends Controller {
 
 	/*
-	 * 1- Control pasar a Aprobado Recibo
-	 * 2- Control cargar factura-Recibo (DEEEUDA) POR FACTURA=???
-	 * 3- GENERACION DE PAGOS DESDE FACTURAS SEGUN TIPO DE PAGO
-	 * 4- Generacion automaticco de numero de recibos
+	 * 1- qr
+	 * 2- numero con 0 de recibos
+	 * 3- reporte NC
+	 * 4- reporte ND
+	 * 5- fecha CAE en factura
+	 * 6- periodo en factura
 	 *
 	 * */
 
@@ -64,7 +66,8 @@ public class RecuperoRecibosController extends Controller {
 												  		RequestVar.get("numero"),
 												  		RequestVar.get("expediente_id"),
 												  		RequestVar.get("fecha_desde"),
-												  		RequestVar.get("fecha_hasta")
+												  		RequestVar.get("fecha_hasta"),
+												  		RequestVar.get("puntoventa_id")
 												  		),d));
 	}
 
