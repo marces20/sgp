@@ -63,6 +63,14 @@
 				</div>
 			</div>
 
+			<div class="col-sm-2">
+				<label class="control-label">Punto Venta</label>
+				<div class="">
+				@select(formBuscador("puntoventa_id"),
+				PuntoVenta.find.all().map { p => p.id.toString -> p.numero}, 'class -> "form-control select", '_default -> "Seleccionar")
+				</div>
+			</div>
+
 
 
 			<div class="col-sm-2 input-group">
@@ -105,7 +113,7 @@
 		<table id="listaPlanillas" class="table table-striped table-bordered">
 			<thead>
 				<tr style="background: #FFFFFF;">
-			        <td colspan="6">Mostrando @buscador.getDisplayXtoYofZ(" a "," de ") resultado(s). </td>
+			        <td colspan="7">Mostrando @buscador.getDisplayXtoYofZ(" a "," de ") resultado(s). </td>
 			    </tr>
 				<tr>
 					<th width="30"><input type="checkbox" name="checkAll" id="checkAll"/></th>
@@ -116,6 +124,7 @@
 					<th width="70">Fecha Transf.</th>
 					<th width="70">Planilla</th>
 					<th width="70">Estado</th>
+					<th width="170">Usuario</th>
 
 					<th width="30">#</th>
 				</tr>
@@ -132,6 +141,7 @@
 						<td class="fecha">@if(recibo.fecha_transferencia != null){@(utils.DateUtils.formatDate(recibo.fecha_transferencia))}</td>
 						<td class="">@if(recibo.planilla != null){@(recibo.planilla.getRecuperoPlanillaEjercicio())}</td>
 						<td class="">@if(recibo.estado != null){@(recibo.estado.nombre)}</td>
+						<td class="">@if(recibo.write_usuario != null){@(recibo.write_usuario.nombre)}</td>
 
 						<td>
 							<a class="btn btn-default btn-xs delete-confirm-link notSeleccion" href="@controllers.recupero.routes.RecuperoRecibosController.eliminar(recibo.id)&@UriTrack.encode()">
@@ -144,7 +154,7 @@
 	        </tbody>
 	        <tfoot>
 		        <tr>
-			        <td colspan="6">&nbsp</td>
+			        <td colspan="7">&nbsp</td>
 
 		        </tr>
 	        </tfoot>
