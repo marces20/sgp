@@ -41,14 +41,22 @@
 
 
 	<div class="col-sm-2">
-			<label class="control-label">Monto</label>
-			<div class="form-group @if(reciboFacturaForm.error("monto") != null) {has-error} else {has-required}">
-				@inputText(reciboFacturaForm("monto"), 'class -> "form-control", 'id -> "monto")
-				@reciboFacturaForm("monto").error.map{ error =>
-					<div class="text-error">@error.message</div>
-				}
-			</div>
+		<label class="control-label">Monto</label>
+		<div class="form-group @if(reciboFacturaForm.error("monto") != null) {has-error} else {has-required}">
+			@inputText(reciboFacturaForm("monto"), 'class -> "form-control", 'id -> "monto")
+			@reciboFacturaForm("monto").error.map{ error =>
+				<div class="text-error">@error.message</div>
+			}
 		</div>
+	</div>
+</div>
+<div class="row">
+	<div class="col-sm-7">
+		<div class="form-group ">
+			<label for="inputNombre" class="control-label">Descripción</label>
+			@textarea(reciboFacturaForm("descripcion"), 'class -> "form-control", 'id -> "descripcion", 'rows -> "5")
+		</div>
+	</div>
 </div>
 <div class="row form-actions">
     <div class="col-lg-offset-4 col-lg-8">
