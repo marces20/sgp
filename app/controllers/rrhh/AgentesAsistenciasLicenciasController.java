@@ -364,16 +364,52 @@ public class AgentesAsistenciasLicenciasController extends Controller {
 			return ok(modalPasarPreAprobado.render(d));
 		}
 
+		if(lSeleccionados.size() != 1) {
+			flash("error", "Seleccione una licencia a la vez.");
+			return ok(modalPasarPreAprobado.render(d));
+		}
+
 		if(d.hasErrors())
 			return ok(modalPasarPreAprobado.render(d));
 
 		ObjectNode result = Json.newObject();
 		try {
-			Integer count = AgenteAsistenciaLicencia.modificarEstadoMasivo(Estado.AGENTE_LICENCIA_PREAPROBADO, lSeleccionados);
-			result.put("success", true);
-			flash("success", "Se actualizaron " + count + " registros de "+ lSeleccionados.size() +" seleccionados.");
-			result.put("html", modalPasarPreAprobado.render(d).toString());
-			return ok(result);
+
+			List<AgenteAsistenciaLicencia> ll = AgenteAsistenciaLicencia.find.where().in("id", lSeleccionados).findList();
+			boolean error= false;
+			String errorStr= "";
+			Integer count = 0;
+			Map<Long,Integer> mapDiasPorEjercicio = AgenteAsistenciaLicencia.getDiasLicenciaReglamentariaPorEjercicio(ll.get(0).agente_id);
+
+			for(AgenteAsistenciaLicencia llx : ll) {
+
+				int diasEjercicio = mapDiasPorEjercicio.get(llx.ejercicio_id);
+				int diasDispo = llx.getDiasDisponiblesSinEsteId(diasEjercicio);
+
+				int saldo = diasDispo-llx.getDiasEntreFechas();
+
+				Logger.debug("diasEjercicio: "+diasEjercicio);
+				Logger.debug("diasDispo: "+diasDispo);
+				Logger.debug("saldo: "+saldo);
+
+				if(saldo >= 0) {
+
+				}else {
+					error= true;
+					errorStr += "Excede el limite de Dias disponibles para el ejercicio "+llx.ejercicio.nombre+". Dias Disponibles:"+diasDispo;
+				}
+			}
+
+			if(!error) {
+				count = AgenteAsistenciaLicencia.modificarEstadoMasivo(Estado.AGENTE_LICENCIA_PREAPROBADO, lSeleccionados);
+				result.put("success", true);
+				flash("success", "Se actualizaron " + count + " registros de "+ lSeleccionados.size() +" seleccionados.");
+				result.put("html", modalPasarPreAprobado.render(d).toString());
+				return ok(result);
+			}else {
+				flash("error", errorStr);
+				return ok(modalPasarPreAprobado.render(d));
+			}
 		} catch (Exception e){
 			flash("error", "No se puede modificar los registros.");
 			return ok(modalPasarPreAprobado.render(d));
@@ -399,6 +435,11 @@ public class AgentesAsistenciasLicenciasController extends Controller {
 			return ok(modalPasarAprobado.render(d));
 		}
 
+		if(lSeleccionados.size() != 1) {
+			flash("error", "Seleccione una licencia a la vez.");
+			return ok(modalPasarAprobado.render(d));
+		}
+
 		if(!soloBorrador(lSeleccionados) && !soloPreaprobado(lSeleccionados)) {
 			flash("error", "Solo se puede modificar registros en estado en borrador o preaprobado.");
 			return ok(modalPasarAprobado.render(d));
@@ -412,25 +453,53 @@ public class AgentesAsistenciasLicenciasController extends Controller {
 
 		ObjectNode result = Json.newObject();
 		try {
-			Integer count = AgenteAsistenciaLicencia.modificarEstadoMasivo(Estado.AGENTE_LICENCIA_APROBADO, lSeleccionados);
+
 
 			List<AgenteAsistenciaLicencia> ll = AgenteAsistenciaLicencia.find.where().in("id", lSeleccionados).findList();
 
 			Logger.debug("0000000000  "+ll.size());
-
+			boolean error= false;
+			String errorStr= "";
+			Integer count = 0;
+			Map<Long,Integer> mapDiasPorEjercicio = AgenteAsistenciaLicencia.getDiasLicenciaReglamentariaPorEjercicio(ll.get(0).agente_id);
 			for(AgenteAsistenciaLicencia llx : ll) {
 
-				Logger.debug("aaaaaaaaaaaaaa111111111");
+				int diasEjercicio = mapDiasPorEjercicio.get(llx.ejercicio_id);
+				int diasDispo = llx.getDiasDisponiblesSinEsteId(diasEjercicio);
 
-				llx.dias = llx.getDiasEntreFechas();
-				llx.save();
+				int saldo = diasDispo-llx.getDiasEntreFechas();
 
-				Logger.debug("11111111111111111");
+				Logger.debug("diasEjercicio: "+diasEjercicio);
+				Logger.debug("diasDispo: "+diasDispo);
+				Logger.debug("saldo: "+saldo);
 
-				if(llx.tipo_licencia_id.compareTo(new Long(5)) == 0) {
-					Logger.debug("222222222222");
-					AgenteAsistenciaLicencia.setDiasPorPeriodos(llx.id.intValue());
+				if(saldo >= 0) {
+
+				}else {
+					error= true;
+					errorStr += "Excede el limite de Dias disponibles para el ejercicio "+llx.ejercicio.nombre+". Dias Disponibles:"+diasDispo;
 				}
+			}
+
+			if(!error) {
+
+				count = AgenteAsistenciaLicencia.modificarEstadoMasivo(Estado.AGENTE_LICENCIA_APROBADO, lSeleccionados);
+
+				for(AgenteAsistenciaLicencia llx : ll) {
+
+					Logger.debug("aaaaaaaaaaaaaa111111111");
+					llx.dias = llx.getDiasEntreFechas();
+					llx.save();
+
+					if(llx.tipo_licencia_id.compareTo(new Long(5)) == 0) {
+						Logger.debug("222222222222");
+						AgenteAsistenciaLicencia.setDiasPorPeriodos(llx.id.intValue());
+					}
+
+				}
+			}else {
+				flash("error", errorStr);
+				return ok(modalPasarAprobado.render(d));
 			}
 
 			result.put("success", true);
