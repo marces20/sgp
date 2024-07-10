@@ -314,6 +314,45 @@ public class AgenteAsistenciaLicencia extends Model{
 		return getDiasDisponibles(getDiasTotales());
 	}
 
+	public int getDiasDisponiblesSinEsteId(Integer diasTotales){
+		int ret  = 0;
+
+		try {
+			if(diasTotales != null && diasTotales != 0){
+			//if(tipoLicencia.dias != null && tipoLicencia.dias != 0){
+				//int diasTotales =  tipoLicencia.dias;
+
+
+				List<AgenteAsistenciaLicencia> laall = AgenteAsistenciaLicencia.find.where()
+													   .eq("agente_id", agente_id)
+													   .eq("tipo_licencia_id", tipo_licencia_id)
+													   .eq("ejercicio_id", ejercicio_id)
+													   .ne("id", id)
+													   .disjunction()
+													   .eq("estado_id", Estado.AGENTE_LICENCIA_APROBADO)
+													   .eq("estado_id", Estado.AGENTE_LICENCIA_PREAPROBADO)
+													   .endJunction()
+													   .findList();
+
+				for(AgenteAsistenciaLicencia ax :laall){
+					ret += ax.getDiasEntreFechas();
+				}
+
+				ret = diasTotales - ret;
+			}else{
+				ret = 0;
+			}
+
+
+
+		}catch (Exception e) {
+			Logger.error("Error duplicar: "+e);
+        } finally {
+        }
+
+		return ret;
+	}
+
 	public int getDiasDisponibles(Integer diasTotales){
 		int ret  = 0;
 
