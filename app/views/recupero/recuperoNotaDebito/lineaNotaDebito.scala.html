@@ -27,6 +27,11 @@
 			<a class="btn btn-default btn-xs eliminarNotaDebito delete-confirm-link" href="@controllers.recupero.routes.RecuperoNotasDebitosController.eliminar(linea.id)">
 			<i class="glyphicon glyphicon-trash icono-eliminar"></i></a>
 		}
+		@if(Usuario.getUsuarioSesion() == 1  && (linea.cae == null || linea.cae.isEmpty())){
+			<a href="@controllers.recupero.routes.RecuperoFacturasController.correrNota(linea.id,TipoComprobante.NOTA_DEBITO)" class="btn btn-default">
+				<i class="glyphicon glyphicon-minus-sign"></i>
+			</a>
+		}
 	</td>
 
 </tr>

@@ -205,7 +205,7 @@
 		<table id="listaRecuperoFacturas" class="table table-striped table-bordered">
 			<thead>
 				 <tr style="background: #FFFFFF;">
-			        <td colspan="6">Mostrando @buscador.getDisplayXtoYofZ(" a "," de ") resultado(s). </td>
+			        <td colspan="8">Mostrando @buscador.getDisplayXtoYofZ(" a "," de ") resultado(s). </td>
 			        <td><b>Total:</b> <span class="baseFooter"></span></td>
 			        <td><b>Total:</b> <span class="ncFooter"></span></td>
 			        <td><b>Total:</b> <span class="ndFooter"></span></td>
@@ -221,6 +221,7 @@
 					<th width="70">Fecha</th>
 					<th width="300">Cliente</th>
 					<th width="100">N° Factura</th>
+					<th width="100">CAE</th>
 					<th width="95">Base</th>
 					<th width="95">N/C</th>
 					<th width="95">N/D</th>
@@ -241,6 +242,7 @@
 					<td class="fechaRecuperoFactura">@if(rf.fecha != null){@(utils.DateUtils.formatDate(rf.fecha))}</td>
 					<td>@if(rf.cliente != null){@(rf.cliente.nombre)}</td>
 					<td>@if(rf.numero != null){@(rf.getNumeroFactura())}</td>
+					<td>@if(rf.cae != null && !rf.cae.isEmpty()){@(rf.cae)}</td>
 					<td class="base" rel="@rf.getBase()">@(utils.NumberUtils.moneda(rf.getBase()))</td>
 					<td class="nc" rel="@rf.getTotalNotaCredito()">@(utils.NumberUtils.moneda(rf.getTotalNotaCredito()))</td>
 					<td class="nd" rel="@rf.getTotalNotaDebito()">@(utils.NumberUtils.moneda(rf.getTotalNotaDebito()))</td>
@@ -263,7 +265,7 @@
 	        </tbody>
 	        <tfoot>
 		        <tr>
-			        <td colspan="6">&nbsp</td>
+			        <td colspan="8">&nbsp</td>
 			        <td><b>Total:</b> <span class="baseFooter"></span></td>
 			        <td><b>Total:</b> <span class="ncFooter"></span></td>
 			        <td><b>Total:</b> <span class="ndFooter"></span></td>

@@ -33,7 +33,7 @@ GET     /factura/modalBuscar	controllers.recupero.RecuperoFacturasController.mod
 GET     /factura/modalBuscarSoloSaldo	controllers.recupero.RecuperoFacturasController.modalBuscarSoloSaldo()
 GET    /factura/correrFacturaAfip 		controllers.recupero.RecuperoFacturasController.correrFacturaAfip(id:Long)
 GET    /factura/getUltimoComprobante 		controllers.recupero.RecuperoFacturasController.getUltimoComprobante(id:Long)
-
+GET    /factura/correrNota 		controllers.recupero.RecuperoFacturasController.correrNota(id:Long,tipoComprobante:Int ?= 0)
 
 GET    /factura-linea/index    controllers.recupero.RecuperoFacturaLineasController.index(id:Long ?= 0, editable:Boolean ?= false)
 GET    /factura-linea/crear    controllers.recupero.RecuperoFacturaLineasController.crear(facturaId:String)

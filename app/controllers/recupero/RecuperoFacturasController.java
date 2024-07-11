@@ -27,6 +27,8 @@ import models.TipoComprobante;
 import models.Usuario;
 import models.auth.Permiso;
 import models.recupero.RecuperoFactura;
+import models.recupero.RecuperoNotaCredito;
+import models.recupero.RecuperoNotaDebito;
 import play.Logger;
 import play.data.DynamicForm;
 import play.data.Form;
@@ -499,19 +501,77 @@ public class RecuperoFacturasController extends Controller {
 	}
 
 	public static Result correrFacturaAfip(Long idFactura) throws IOException{
-		try {
-			AfipController ac = new AfipController();
-			ObjectNode ret = ac.setComprobante(idFactura,TipoComprobante.FACTURA);
+		if (play.Play.isProd()) {
+			try {
+				AfipController ac = new AfipController();
+				ObjectNode ret = ac.setComprobante(idFactura,TipoComprobante.FACTURA);
 
-			if(ret.get("success").asText().compareTo("true")  == 0) {
-				flash("success", "CAEE: "+ret.get("cae").asText());
-			}else {
-				flash("error", "error: "+ret.get("error").asText());
+				if(ret.get("success").asText().compareTo("true")  == 0) {
+					flash("success", "CAEE: "+ret.get("cae").asText());
+				}else {
+					flash("error", "error: "+ret.get("error").asText());
+				}
+			}catch (Exception e) {
+				flash("error", "error: "+e);
 			}
-		}catch (Exception e) {
-			// TODO: handle exception
+		}else {
+			flash("error", "error: NO ES PRODUCCION");
 		}
 
+
 		return redirect(controllers.recupero.routes.RecuperoFacturasController.ver(idFactura)+ UriTrack.get("&"));
+	}
+
+	public static Result correrNota(Long idNota,int tipoComprobante) throws IOException{
+
+		if (play.Play.isProd()) {
+			try {
+				AfipController ac = new AfipController();
+				ObjectNode ret = null;
+				if(tipoComprobante == TipoComprobante.NOTA_CREDITO) {
+
+					RecuperoNotaCredito rc = RecuperoNotaCredito.find.byId(idNota);
+
+					if(rc.recupero_factura.cae != null && !rc.recupero_factura.cae.isEmpty()) {
+						ret = ac.setComprobante(idNota,TipoComprobante.NOTA_CREDITO);
+						if(ret.get("success").asText().compareTo("true")  == 0) {
+							flash("success", "CAEE: "+ret.get("cae").asText());
+						}else if(ret.get("error") != null){
+							flash("error", "error: "+ret.get("error").asText());
+						}
+					}else {
+						flash("error", "error: La factura no tiene cae asignado");
+					}
+
+					return redirect(controllers.recupero.routes.RecuperoFacturasController.ver(rc.recupero_factura.id)+ UriTrack.get("&"));
+				}else if(tipoComprobante == TipoComprobante.NOTA_DEBITO) {
+
+					RecuperoNotaDebito rd = RecuperoNotaDebito.find.byId(idNota);
+					if(rd.recupero_factura.cae != null && !rd.recupero_factura.cae.isEmpty()) {
+						ret = ac.setComprobante(idNota,TipoComprobante.NOTA_DEBITO);
+						if(ret.get("success").asText().compareTo("true")  == 0) {
+							flash("success", "CAEE: "+ret.get("cae").asText());
+						}else if(ret.get("error") != null){
+							flash("error", "error: "+ret.get("error").asText());
+						}
+					}else {
+
+						flash("error", "error: La factura no tiene cae asignado");
+					}
+
+					return redirect(controllers.recupero.routes.RecuperoFacturasController.ver(rd.recupero_factura.id)+ UriTrack.get("&"));
+				}
+
+
+
+			}catch (Exception e) {
+				flash("error", "error: "+e);
+			}
+		}else {
+			flash("error", "error: NO ES PRODUCCION");
+		}
+
+
+		return redirect(controllers.recupero.routes.RecuperoFacturasController.index());
 	}
 }
