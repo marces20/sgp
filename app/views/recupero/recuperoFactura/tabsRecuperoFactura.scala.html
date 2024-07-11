@@ -1,4 +1,7 @@
 @(formularioCarga: Boolean, recuperoFacturaForm: Form[models.recupero.RecuperoFactura] = null,factura:models.recupero.RecuperoFactura = null)
+@import utils._
+@import helper._
+@implicitFieldConstructor = @{ FieldConstructor(simpleInput.render) }
 <hr />
 <div class="row">
 	<ul id="recuperoFacturaTab" class="nav nav-tabs">
@@ -42,4 +45,63 @@
 		}
 
 	</div>
+	<div class="col-sm-6">
+		<div class="panel panel-default">
+		<div class="panel-heading"><b>Acciones</b></div>
+		<div class="panel-body">
+
+			<div class="row margin-bottom-25">
+
+						<div class="col-sm-12">
+							<div class="row">
+								@for(estado <- models.Estado.getSiguienteEstadoPorAprobar(factura.estado.orden,models.Estado.TIPO_RECUPERO_FACTURA)) {
+									@if(estado.orden <= 4) {
+										<div class="col-sm-3">
+											<a href="@controllers.recupero.routes.RecuperoFacturasController.cambiarEstado(recuperoFacturaForm.field("id").value.toInt, estado.id.toLong)@UriTrack.get("&")" class="btn btn-default">
+												<i class="glyphicon glyphicon-arrow-right"></i> @estado.nombre
+											</a>
+										</div>
+
+									}
+								}
+
+								@if(factura.estado.id == models.Estado.RECUPERO_FACTURA_CANCELADO) {
+									<div class="col-sm-3">
+										<a href="@controllers.recupero.routes.RecuperoFacturasController.cambiarEstado(recuperoFacturaForm.field("id").value.toInt, models.Estado.RECUPERO_FACTURA_BORRADOR)@UriTrack.get("&")" class="btn btn-default">
+											<i class="glyphicon glyphicon-arrow-right"></i> Volver a Borrador
+										</a>
+									</div>
+								}else{
+									<div class="col-sm-3">
+									</div>
+
+									<div class="col-sm-3">
+										<a href="@controllers.recupero.routes.RecuperoFacturasController.cambiarEstado(recuperoFacturaForm.field("id").value.toInt, models.Estado.RECUPERO_FACTURA_CANCELADO)@UriTrack.get("&")" class="btn btn-default">
+											<i class="glyphicon glyphicon-minus-sign"></i> Anular Factura
+										</a>
+									</div>
+								}
+							</div>
+							@if(Usuario.getUsuarioSesion() == 1 && factura.estado.id == models.Estado.RECUPERO_FACTURA_APROBADO){
+								<div class="row">
+									<div class="col-sm-3">
+										<a href="@controllers.recupero.routes.RecuperoFacturasController.correrFacturaAfip(recuperoFacturaForm.field("id").value.toLong)" class="btn btn-default">
+											<i class="glyphicon glyphicon-minus-sign"></i> Correr Factura AFIP
+										</a>
+									</div>
+									<div class="col-sm-3">
+										<a href="@controllers.recupero.routes.RecuperoFacturasController.correrFacturaAfip(recuperoFacturaForm.field("id").value.toLong)" class="btn btn-default">
+											<i class="glyphicon glyphicon-minus-sign"></i> ultimo numero
+										</a>
+									</div>
+								</div>
+							}
+						</div>
+					</div>
+
+				</div>
+			</div>
+
+		</div>
+
 </div>

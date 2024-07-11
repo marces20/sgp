@@ -17,11 +17,13 @@ import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
 import controllers.Secured;
+import controllers.afip.AfipController;
 import controllers.auth.CheckPermiso;
 import models.Estado;
 import models.Periodo;
 import models.Producto;
 import models.PuntoVenta;
+import models.TipoComprobante;
 import models.Usuario;
 import models.auth.Permiso;
 import models.recupero.RecuperoFactura;
@@ -475,5 +477,41 @@ public class RecuperoFacturasController extends Controller {
 		}
 		nodo.add(restJs);
 		return ok(restJs);
+	}
+
+	public static Result getUltimoComprobante(Long idFactura) throws IOException{
+		try {
+			RecuperoFactura factura = RecuperoFactura.find.fetch("cliente", "nombre").fetch("puntoVenta", "numero").where().eq("id", idFactura).findUnique();
+
+			AfipController ac = new AfipController();
+			ObjectNode ret = ac.getUltimoComprobanteNew(new Integer(factura.puntoVenta.numero),TipoComprobante.FACTURA);
+
+			if(ret.get("success").asText().compareTo("true")  == 0) {
+				flash("data", "data: "+ret.get("data").asText());
+			}else {
+				flash("error", "error: ");
+			}
+		}catch (Exception e) {
+			// TODO: handle exception
+		}
+
+		return redirect(controllers.recupero.routes.RecuperoFacturasController.index()+ UriTrack.get("&"));
+	}
+
+	public static Result correrFacturaAfip(Long idFactura) throws IOException{
+		try {
+			AfipController ac = new AfipController();
+			ObjectNode ret = ac.setComprobante(idFactura,TipoComprobante.FACTURA);
+
+			if(ret.get("success").asText().compareTo("true")  == 0) {
+				flash("success", "CAEE: "+ret.get("cae").asText());
+			}else {
+				flash("error", "error: "+ret.get("error").asText());
+			}
+		}catch (Exception e) {
+			// TODO: handle exception
+		}
+
+		return redirect(controllers.recupero.routes.RecuperoFacturasController.ver(idFactura)+ UriTrack.get("&"));
 	}
 }

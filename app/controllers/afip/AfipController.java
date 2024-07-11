@@ -820,7 +820,7 @@ public class AfipController {
 		            }
 
 
-
+			        String cae = "";
 			        for(FECAEDetResponse xx : datos2.getFECAESolicitarResult().getFeDetResp().getFECAEDetResponse()) {
 
 			        	Logger.debug("==============CAAAAAAAAAEEEEEEEEEEEEE111============= "+datos2.getFECAESolicitarResult().getFeDetResp().getFECAEDetResponse());
@@ -828,7 +828,7 @@ public class AfipController {
 
 			        	if(xx.getCAE() != null) {
 			        		Logger.debug("==============CAAAAAAAAAEEEEEEEEEEEEE222============= "+xx.getCAE());
-
+			        		cae = xx.getCAE() ;
 			        		if(cbteTipo == TipoComprobante.NOTA_CREDITO) {
 			        			rc.cae = xx.getCAE();
 			    				rc.numero = utils.NumberUtils.agregarCerosAlaIzquierda(CbteNro.intValue(), 8);
@@ -858,6 +858,7 @@ public class AfipController {
 
 			        Logger.debug("setComprobante pasa");
 			        restJs.put("data", datos2.toString());
+			        restJs.put("cae", cae);
 			        restJs.put("success", true);
 				}
 

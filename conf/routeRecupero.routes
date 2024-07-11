@@ -31,6 +31,9 @@ GET    /factura/suggest/:input		 controllers.recupero.RecuperoFacturasController
 GET    /factura/get           controllers.recupero.RecuperoFacturasController.get(id:Int ?= 0)
 GET     /factura/modalBuscar	controllers.recupero.RecuperoFacturasController.modalBuscar()
 GET     /factura/modalBuscarSoloSaldo	controllers.recupero.RecuperoFacturasController.modalBuscarSoloSaldo()
+GET    /factura/correrFacturaAfip 		controllers.recupero.RecuperoFacturasController.correrFacturaAfip(id:Long)
+GET    /factura/getUltimoComprobante 		controllers.recupero.RecuperoFacturasController.getUltimoComprobante(id:Long)
+
 
 GET    /factura-linea/index    controllers.recupero.RecuperoFacturaLineasController.index(id:Long ?= 0, editable:Boolean ?= false)
 GET    /factura-linea/crear    controllers.recupero.RecuperoFacturaLineasController.crear(facturaId:String)
@@ -85,7 +88,6 @@ GET    /recibo/reciboFactura/editar        	controllers.recupero.RecuperoReciboF
 POST   /recibo/reciboFactura/actualizar    	controllers.recupero.RecuperoReciboFacturasController.actualizar()
 GET    /recibo/reciboFactura/eliminar    	controllers.recupero.RecuperoReciboFacturasController.eliminar(id:Long)
 GET    /recibo/reciboFactura/index   		controllers.recupero.RecuperoReciboFacturasController.index(recuperoReciboId:Long ?= 0, editable:Boolean ?= false)
-
 
 GET    /planilla        	  controllers.recupero.RecuperoPlanillasController.index()
 GET    /planilla/crear        controllers.recupero.RecuperoPlanillasController.crear()
