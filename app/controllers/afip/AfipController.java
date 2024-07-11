@@ -897,8 +897,8 @@ public class AfipController {
 		//Create request and params, including Auth
 		FEAuthRequest auth = new FEAuthRequest();
 		auth.setCuit(Long.parseLong("30712224300"));
-		auth.setToken("PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiIHN0YW5kYWxvbmU9InllcyI/Pgo8c3NvIHZlcnNpb249IjIuMCI+CiAgICA8aWQgc3JjPSJDTj13c2FhLCBPPUFGSVAsIEM9QVIsIFNFUklBTE5VTUJFUj1DVUlUIDMzNjkzNDUwMjM5IiBkc3Q9IkNOPXdzZmUsIE89QUZJUCwgQz1BUiIgdW5pcXVlX2lkPSIzMDM4OTcwOTQwIiBnZW5fdGltZT0iMTcxNzU4OTc0NiIgZXhwX3RpbWU9IjE3MTc2MzMwMDYiLz4KICAgIDxvcGVyYXRpb24gdHlwZT0ibG9naW4iIHZhbHVlPSJncmFudGVkIj4KICAgICAgICA8bG9naW4gZW50aXR5PSIzMzY5MzQ1MDIzOSIgc2VydmljZT0id3NmZSIgdWlkPSJTRVJJQUxOVU1CRVI9Q1VJVCAzMDcxMjIyNDMwMCwgQ049cGFycXVlc2FsdWQiIGF1dGhtZXRob2Q9ImNtcyIgcmVnbWV0aG9kPSIyMiI+CiAgICAgICAgICAgIDxyZWxhdGlvbnM+CiAgICAgICAgICAgICAgICA8cmVsYXRpb24ga2V5PSIzMDcxMjIyNDMwMCIgcmVsdHlwZT0iNCIvPgogICAgICAgICAgICA8L3JlbGF0aW9ucz4KICAgICAgICA8L2xvZ2luPgogICAgPC9vcGVyYXRpb24+Cjwvc3NvPgo=");
-		auth.setSign("JvND4DsQ3dF7jD4PvM2rEoHJJoZg07w6MBPF8CjM4MgjDeS2qSZjtb174JZ3FpYg8CnWKIBzsIJ446bMHg7r1OGLcoH444TH5nd0h0HCdCu/6fanFjkvm3pcnAXo54LmKXULZEojtmuV89RPpAPM8reLl3Uh8v2bw41YLp/EbKs=");
+		auth.setToken("");
+		auth.setSign("");
 		//auth.setCuit(Long.parseLong(tra.getCuit()));
 		//auth.setToken(tra.getToken());
 		//auth.setSign(tra.getSign());
@@ -935,10 +935,7 @@ public class AfipController {
 				+ "<soap:Body>";
 		String soapFooter = "</soap:Body></soap:Envelope>";
 		//"<FECompUltimoAutorizado xmlns=\"http://ar.gov.afip.dif.FEV1/\">
-		//<Auth><Token>PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiIHN0YW5kYWxvbmU9InllcyI/Pgo8c3NvIHZlcnNpb249IjIuMCI+CiAgICA8aWQgc3JjPSJDTj13c2FhaG9tbywgTz1BRklQLCBDPUFSLCBTRVJJQUxOVU1CRVI9Q1VJVCAzMzY5
-		//MzQ1MDIzOSIgZHN0PSJDTj13c2ZlLCBPPUFGSVAsIEM9QVIiIHVuaXF1ZV9pZD0iMzczMTgxNDA3OCIgZ2VuX3RpbWU9IjE2NTIxMDIwODgiIGV4cF90aW1lPSIxNjUyMTQ1MzQ4Ii8+CiAgICA8b3BlcmF0aW9uIHR5cGU9ImxvZ2luIiB2YWx1ZT0iZ3JhbnRlZ
-		//CI+CiAgICAgICAgPGxvZ2luIGVudGl0eT0iMzM2OTM0NTAyMzkiIHNlcnZpY2U9IndzZmUiIHVpZD0iU0VSSUFMTlVNQkVSPUNVSVQgMjAyNDc3ODEwMzAsIENOPXBhcnF1ZXNhbHVkIiBhdXRobWV0aG9kPSJjbXMiIHJlZ21ldGhvZD0iMjIiPgogICAgICAgIC
-		//AgICA8cmVsYXRpb25zPgogICAgICAgICAgICAgICAgPHJlbGF0aW9uIGtleT0iMjAzMDE3NjY3MDAiIHJlbHR5cGU9IjQiLz4KICAgICAgICAgICAgPC9yZWxhdGlvbnM+CiAgICAgICAgPC9sb2dpbj4KICAgIDwvb3BlcmF0aW9uPgo8L3Nzbz4K</Token>
+		//<Auth><Token></Token>
 		//<Sign></Sign><Cuit>20301766700</Cuit></Auth><PtoVta>1</PtoVta><CbteTipo>1</CbteTipo></FECompUltimoAutorizado>";
 		Logger.debug("xxxxxxxxxxx");
 			Logger.debug("xxxxxxxxx "+sw.toString().replace("<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>", ""));
