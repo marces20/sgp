@@ -41,11 +41,7 @@ import views.html.recupero.recuperoRecibo.*;
 public class RecuperoRecibosController extends Controller {
 
 	/*
-	 * 1- qr
-	 * 2- numero con 0 de recibos
-	 * 3- reporte NC
-	 * 4- reporte ND
-	 * 5- fecha CAE en factura
+
 	 * 6- periodo en factura
 	 *
 	 * */
@@ -176,6 +172,7 @@ public class RecuperoRecibosController extends Controller {
 				flash("error", "Ya existe ese numero de recibo");
 				return badRequest(editarRecibo.render(reciboForm,recibo));
 			}else{
+
 				c.update();
 			}
 
@@ -262,13 +259,18 @@ public class RecuperoRecibosController extends Controller {
 		    	  String numeroRecibo = "";
 
 		    	  try {
-						String sql = "select  (max(CAST(numero as integer ))+1) as numero from recupero_recibos where puntoventa_id = :puntoventa_id";
-				    	SqlQuery sqlQuery = Ebean.createSqlQuery(sql)
-								.setParameter("puntoventa_id", rp.puntoventa_id);
-				    	SqlRow  row = sqlQuery.findUnique();
+		    		  	if(rp.numero.compareTo("00000000") == 0) {
 
-				    	numeroRecibo = NumberUtils.agregarCerosAlaIzquierda(row.getInteger("numero"),8);
+							String sql = "select  (max(CAST(numero as integer ))+1) as numero from recupero_recibos where puntoventa_id = :puntoventa_id";
+					    	SqlQuery sqlQuery = Ebean.createSqlQuery(sql)
+									.setParameter("puntoventa_id", rp.puntoventa_id);
+					    	SqlRow  row = sqlQuery.findUnique();
 
+					    	numeroRecibo = NumberUtils.agregarCerosAlaIzquierda(row.getInteger("numero"),8);
+
+						}else {
+							numeroRecibo = rp.numero;
+						}
 					}catch (Exception e) {
 						flash("error", "No se puede obtener el numero de recibo.");
 						return redirect(request().getHeader("referer"));
@@ -352,6 +354,11 @@ public class RecuperoRecibosController extends Controller {
 			for(RecuperoPago rpx :rp) {
 				rpx.estado_id = (long) Estado.RECUPERO_PAGO_CANCELADO;
 				rpx.save();
+
+				rpx.estado_id = (long) Estado.RECUPERO_PAGO_BORRADOR;
+				rpx.save();
+
+				rpx.delete();
 			}
 
 
