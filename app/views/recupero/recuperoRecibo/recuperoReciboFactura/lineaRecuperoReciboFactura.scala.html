@@ -12,6 +12,7 @@
 	<td>@utils.NumberUtils.moneda(linea.recuperoFactura.getTotal(), 10)</td>
 	<td>@utils.NumberUtils.moneda(linea.monto, 10)</td>
 	<td>@utils.NumberUtils.moneda(linea.getSaldo(), 10)</td>
+	<td>@if(linea.descripcion != null && !linea.descripcion.isEmpty()){@linea.descripcion}</td>
 	@if(editable){
 		<td><a class="btn btn-default btn-xs eliminarRecuperoReciboFactura delete-confirm-link" href="@controllers.recupero.routes.RecuperoReciboFacturasController.eliminar(linea.id)"><i class="glyphicon glyphicon-trash icono-eliminar"></i></a></td>
 	 }
