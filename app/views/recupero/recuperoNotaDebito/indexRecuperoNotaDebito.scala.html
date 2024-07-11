@@ -8,7 +8,12 @@
 
 		@if(rf.estado_id == models.Estado.RECUPERO_FACTURA_APROBADO) {
 			@if(Permiso.check("recuperoNotasEditar")) {
-			<a class="btn btn-default btn-xs" href="#" id="nuevoNotaDebito"><i class="glyphicon glyphicon-plus"></i> Nuevo</a>
+
+				@if(rf.cae != null && !rf.cae.isEmpty()){
+					<a class="btn btn-default btn-xs" href="#" id="nuevoNotaDebito"><i class="glyphicon glyphicon-plus"></i> Nuevo</a>
+				}else{
+					(La Factura no tiene un CAE asigna aun.)
+				}
 			}
 		}
 		</div>
