@@ -487,7 +487,7 @@ public class RecuperoFacturasController extends Controller {
 			ObjectNode ret = ac.getUltimoComprobanteNew(new Integer(factura.puntoVenta.numero),TipoComprobante.FACTURA);
 
 			if(ret.get("success").asText().compareTo("true")  == 0) {
-				flash("data", "data: "+ret.get("data").asText());
+				flash("success", "data: "+ret.get("data").asText());
 			}else {
 				flash("error", "error: ");
 			}
@@ -495,7 +495,7 @@ public class RecuperoFacturasController extends Controller {
 			// TODO: handle exception
 		}
 
-		return redirect(controllers.recupero.routes.RecuperoFacturasController.index()+ UriTrack.get("&"));
+		return redirect(controllers.recupero.routes.RecuperoFacturasController.ver(idFactura)+ UriTrack.get("&"));
 	}
 
 	public static Result correrFacturaAfip(Long idFactura) throws IOException{

@@ -9,10 +9,15 @@
 @views.html.recupero.mainRecupero("Vista de factura", scripts) {
 	<div class="page-header">
 		<div class="row">
-			<div class="col-sm-7">
+			<div class="col-sm-4">
 				<h1>Vista de factura</h1>
 			</div>
-			<div class="col-sm-5">
+			<div class="col-sm-4">
+				@if(recuperoFactura.cae != null && !recuperoFactura.cae.isEmpty()){
+					<h1 style="color: green;font-weight: bold;font-size: 25px;">CAE: @recuperoFactura.cae</h1>
+				}
+			</div>
+			<div class="col-sm-4">
 				<div class="dropdown pull-right">
 				 <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown">
 				 	<i class="glyphicon glyphicon-list-alt"></i>
