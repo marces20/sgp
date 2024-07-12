@@ -310,6 +310,12 @@ public class RecuperoRecibosController extends Controller {
 				rpx.delete();
 			}
 
+			List<RecuperoReciboFactura> rpf = Ebean.find(RecuperoReciboFactura.class).select("id, estado_id").where().eq("recupero_recibo_id", rf.id).findList();
+
+			for(RecuperoReciboFactura rpxf :rpf) {
+				rpxf.delete();
+			}
+
 			rf.estado_id = new Long(Estado.RECUPERO_RECIBOS_BORRADOR);
 
 			rf.save();
