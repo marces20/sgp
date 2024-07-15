@@ -2030,6 +2030,13 @@ order by nc.numero
 	    datos.put("razon_social", rdlxr.get(0).recuperoFactura.cliente.nombre);
 
 
+	    if(rf.estado_id.compareTo((long) Estado.RECUPERO_RECIBOS_CANCELADO) == 0) {
+	    	String anulado = "<div id='cancelado'><div style='text-align: center; color:grey;padding: 10px;height:20px;'><h2 style='margin:0px; font-size: 60px;'>ANULADO</h2></div></div>";
+	    	datos.put("anuladosspan", anulado);
+	    }
+
+
+
 
 
 	    String direccion = rdlxr.get(0).recuperoFactura.cliente.getFirstDireccion();
@@ -2042,6 +2049,7 @@ order by nc.numero
 	    String lineas ="";
 
 	    for(RecuperoReciboFactura rfl :rdlxr) {
+	    	String desc = (rfl.descripcion != null)?rfl.descripcion:"";
 
 		    lineas += "<tr>" +
 		    		"        		<td style='text-align: left'>"+rfl.recuperoFactura.getNumeroFactura()+"</td>" +
@@ -2049,8 +2057,8 @@ order by nc.numero
 		    		"        		<td>"+utils.NumberUtils.moneda(rfl.recuperoFactura.getTotalNotaCredito()) +"</td>" +
 		    		"        		<td>"+utils.NumberUtils.moneda(rfl.recuperoFactura.getTotalNotaDebito()) +"</td>" +
 		    		"               <td>"+utils.NumberUtils.moneda(rfl.monto) +"</td>" +
-
 		    		"               <td>"+utils.NumberUtils.moneda(rfl.recuperoFactura.getTotal().subtract(rfl.monto))+"</td>" +
+		    		"               <td>"+desc+"</td>" +
 		    		"            </tr>";
 	    }
 
