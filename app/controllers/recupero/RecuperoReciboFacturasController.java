@@ -13,6 +13,7 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import controllers.Secured;
 import models.recupero.Cheque;
 import models.recupero.RecuperoFactura;
+import models.recupero.RecuperoRecibo;
 import models.recupero.RecuperoReciboFactura;
 import play.data.Form;
 import play.libs.Json;
@@ -81,6 +82,10 @@ public class RecuperoReciboFacturasController extends Controller {
 					return ok(crearRecuperoReciboFactura.render(lineaForm));
 				}
 
+				RecuperoRecibo rr = RecuperoRecibo.find.byId(l.recupero_recibo_id);
+				rr.cliente_id = rf.cliente_id.intValue();
+				rr.save();
+
 
 
 				l.save();
@@ -139,6 +144,10 @@ public class RecuperoReciboFacturasController extends Controller {
 					flash("error", "El monto es superior al Saldo Pendiente de la factura.");
 					return ok(editarRecuperoReciboFactura.render(lineaForm));
 				}
+
+				RecuperoRecibo rr = RecuperoRecibo.find.byId(l.recupero_recibo_id);
+				rr.cliente_id = rf.cliente_id.intValue();
+				rr.save();
 
 				l.update(l.id);
 			}
