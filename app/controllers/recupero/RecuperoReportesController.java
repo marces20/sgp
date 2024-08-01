@@ -2113,8 +2113,10 @@ order by nc.numero
 
 	    for(RecuperoFacturaLinea rfl :rf.recuperoFacturaLinea) {
 
+	    	String prod = (rfl.nota != null && !rfl.nota.isEmpty())?rfl.producto.nombre+"-"+rfl.nota: rfl.producto.nombre;
+
 		    lineas += "<tr>" +
-		    		"        		<td style='text-align: left'>"+rfl.producto.nombre+"</td>" +
+		    		"        		<td style='text-align: left'>"+prod+"</td>" +
 		    		"        		<td>"+rfl.cantidad+"</td>" +
 		    		"                <td style='text-align: right'>"+utils.NumberUtils.moneda(rfl.precio)+"</td>" +
 		    		"                <td style='text-align: right'>$ 0,00</td>" +
