@@ -120,12 +120,13 @@
 					<th width="30"><input type="checkbox" name="checkAll" id="checkAll"/></th>
 					<th width="30">#</th>
 
-					<th width="900">Numero</th>
+					<th width="140">Numero</th>
+					<th width="900">Cliente</th>
 					<th width="70">Fecha</th>
 					<th width="70">Fecha Transf.</th>
 					<th width="70">Planilla</th>
 					<th width="70">Estado</th>
-					<th width="170">Usuario</th>
+					<th width="190">Usuario</th>
 
 					<th width="30">#</th>
 				</tr>
@@ -138,6 +139,7 @@
 						<td><a class="btn btn-default btn-xs notSeleccion" href="@controllers.recupero.routes.RecuperoRecibosController.editar(recibo.id)&@UriTrack.encode()"><i class="glyphicon glyphicon-edit"></i></a></td>
 
 						<td>@(recibo.getNumeroRecibo())</td>
+						<td>@if(recibo.cliente != null){@recibo.cliente.nombre}</td>
 						<td class="fecha">@if(recibo.fecha != null){@(utils.DateUtils.formatDate(recibo.fecha))}</td>
 						<td class="fecha">@if(recibo.fecha_transferencia != null){@(utils.DateUtils.formatDate(recibo.fecha_transferencia))}</td>
 						<td class="">@if(recibo.planilla != null){@(recibo.planilla.getRecuperoPlanillaEjercicio())}</td>
