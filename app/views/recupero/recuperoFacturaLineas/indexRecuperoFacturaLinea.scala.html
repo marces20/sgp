@@ -4,7 +4,7 @@
 <p>
 	<b>Productos</b>
 	@if(editable){
-	<a class="btn btn-default btn-xs" href="#" id="nuevoProducto"><i class="glyphicon glyphicon-plus"></i> Nuevo</a>	 	
+	<a class="btn btn-default btn-xs" href="#" id="nuevoProducto"><i class="glyphicon glyphicon-plus"></i> Nuevo</a>
 	}
 </p>
 
@@ -16,6 +16,7 @@
 			}
 			<th>Codigo</th>
 			<th>Producto</th>
+			<th>Nota</th>
 			<!-- <th>Cuenta analitica</th> -->
 			<th>UDM</th>
 			<th>Cantidad</th>
@@ -24,7 +25,7 @@
 			@if(editable){
 				<th></th>
 			}
-		<tr>	
+		<tr>
 	</thead>
 	<tbody>
 	@for(linea <- paginador.getList) {
@@ -33,7 +34,7 @@
 	</tbody>
 </table>
 
-<div class="pagination pull-right">		
+<div class="pagination pull-right">
     @views.html.helpers.paginador(paginador, controllers.recupero.routes.RecuperoFacturaLineasController.index())
 </div>
 </div>
@@ -43,23 +44,23 @@ $( function(){
 	/**
 	 * Ventana de carga linea de productos en ordenes
 	 */
-	 
+
 	var contenedor = $("#listaLineaProductos");
 
 	contenedor.on('click', '#nuevoProducto', function(){
 		urlContenidoModal = '/recupero/factura-linea/crear?facturaId='+$('#recuperoFacturaId').val();
-							
+
 		mostrarModal(urlContenidoModal);
 		return false;
 	});
-	
+
 	contenedor.on('click', '.modificarProducto', function(){
 		lineaParaEditar = $(this).closest('tr');
 		var modal = mostrarModal($(this).attr('href'));
-		modal.dialog('option', 'title', 'Editar producto');	
+		modal.dialog('option', 'title', 'Editar producto');
 		return false;
 	});
-	
+
 	contenedor.on('click', '.eliminarProducto', function(){
 		var mensaje = "¿Confirma que desea eliminar el registro?";
 		if(confirm(mensaje)){
@@ -75,8 +76,8 @@ $( function(){
 		}
 		return false;
 	});
-	
-	
+
+
 	function mostrarModal(url){
 		modalCargaProductos = $('<div></div>').dialog({
 			resizable: false,
@@ -93,12 +94,12 @@ $( function(){
 		    	modalCargaProductos.dialog('destroy');
 			}
 		  });
-		
+
 		modalCargaProductos.on('click', '.cancelar', function(){
 			modalCargaProductos.dialog('destroy');
 			return false;
 		});
-		
+
 		modalCargaProductos.on('submit', function(e){
 			var href = $(e.target).attr('action');
 			var data = $(e.target).serialize();
@@ -115,12 +116,12 @@ $( function(){
 			});
 			return false;
 		});
-		
-		
+
+
 		return modalCargaProductos;
 	}
-	
-	
+
+
 	contenedor.find('form').on('submit', function(){
 		var url = $(this).attr("action");
 		var query = $(this).serialize();

@@ -6,8 +6,9 @@
 	}
 	<td>@if(linea.producto != null && linea.producto.codigo_ips != null ){@linea.producto.codigo_ips}</td>
 	<td>@linea.producto.nombre</td>
+	<td>@linea.nota</td>
 	<!-- <td class="cuentaAnaliticaEnLinea">@if(linea.cuentaAnalitica == null){No asociada} else {@linea.cuentaAnalitica.codigo @linea.cuentaAnalitica.nombre}</td> -->
-	<td>@linea.udm.nombre</td>
+	<!--<td>@linea.udm.nombre</td>-->
 	<td>@linea.cantidad</td>
 	<td>@utils.NumberUtils.moneda(linea.precio, 2)</td>
 	<td>@utils.NumberUtils.moneda(linea.getTotal(), 2)</td>
