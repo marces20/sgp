@@ -20,6 +20,7 @@ import com.avaje.ebean.SqlQuery;
 import com.avaje.ebean.SqlRow;
 import com.avaje.ebean.annotation.Formula;
 
+import models.Cliente;
 import models.Estado;
 import models.PuntoVenta;
 import models.Usuario;
@@ -91,6 +92,11 @@ public class RecuperoRecibo extends Model {
 	@Required(message="Seleccion punto venta")
 	public Integer puntoventa_id;
 
+	@ManyToOne
+	@JoinColumn(name="cliente_id", referencedColumnName="id", insertable=false, updatable=false)
+	public Cliente cliente;
+	public Integer cliente_id;
+
 	@OneToMany()
 	public List<RecuperoReciboFactura> recuperoReciboFactura;
 
@@ -114,7 +120,8 @@ public class RecuperoRecibo extends Model {
 													String expediente_id,
 													String fecha_desde,
 													String fecha_hasta,
-													String puntoventa_id){
+													String puntoventa_id,
+													String cliente_id){
 
 			Pagination<RecuperoRecibo> p = new Pagination<RecuperoRecibo>();
 			p.setOrderDefault("DESC");
@@ -123,11 +130,16 @@ public class RecuperoRecibo extends Model {
 			ExpressionList<RecuperoRecibo> e = find.where();
 
 			if(!numero.isEmpty()) {
-				e.eq("numero",  Integer.parseInt(numero));
+
+				e.ilike("numero", "%"+numero+"%");
 			}
 
 			if(!puntoventa_id.isEmpty()) {
 				e.eq("puntoventa_id",  Integer.parseInt(puntoventa_id));
+			}
+
+			if(!cliente_id.isEmpty()) {
+				e.eq("cliente_id",  Integer.parseInt(cliente_id));
 			}
 
 
@@ -152,6 +164,26 @@ public class RecuperoRecibo extends Model {
 			p.setExpressionList(e);
 			return p;
 	}
+
+	public static void actualizarCliente() {
+		List<RecuperoRecibo> rr = RecuperoRecibo.find.all();
+		for(RecuperoRecibo rrx :rr) {
+			if(rrx.recuperoReciboFactura.size() > 0) {
+				rrx.cliente_id = rrx.recuperoReciboFactura.get(0).recuperoFactura.cliente_id.intValue();
+				rrx.save();
+			}
+		}
+	}
+
+
+
+
+
+
+
+
+
+
 
 
 }
