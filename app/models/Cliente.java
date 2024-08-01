@@ -80,6 +80,11 @@ public class Cliente extends Model {
 	@Column(name="write_usuario_id")
 	public Long write_usuario_id;
 
+	@ManyToOne
+	@JoinColumn(name="condicioniva_id", referencedColumnName="id", insertable=false, updatable=false)
+	public CondicionIva condicionIva;
+	public Integer condicioniva_id;
+
 	@Valid
 	@OneToMany(cascade=CascadeType.PERSIST)
 	public List<DireccionCliente> direcciones;
