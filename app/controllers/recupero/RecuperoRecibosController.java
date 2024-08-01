@@ -63,7 +63,8 @@ public class RecuperoRecibosController extends Controller {
 												  		RequestVar.get("expediente_id"),
 												  		RequestVar.get("fecha_desde"),
 												  		RequestVar.get("fecha_hasta"),
-												  		RequestVar.get("puntoventa_id")
+												  		RequestVar.get("puntoventa_id"),
+												  		RequestVar.get("cliente_id")
 												  		),d));
 	}
 
