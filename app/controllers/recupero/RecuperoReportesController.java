@@ -2105,7 +2105,9 @@ order by nc.numero
 	    datos.put("cuit", rf.cliente.cuit2);
 	    datos.put("razon_social", rf.cliente.nombre);
 
-	    String direccion =  "";
+	    String iva = (rf.cliente.condicionIva != null)?rf.cliente.condicionIva.descripcion:"IVA Responsable Inscripto";
+	    datos.put("ivaa", iva);
+	    String direccion = rf.cliente.getFirstDireccion();
 	    datos.put("direccion", direccion);
 
 	    datos.put("importe", utils.NumberUtils.moneda(rf.getTotalFacturado()) );
@@ -2181,7 +2183,9 @@ order by nc.numero
 	    datos.put("cuit", rf.cliente.cuit2);
 	    datos.put("razon_social", rf.cliente.nombre);
 
-	    String direccion =  "";
+	    String iva = (rf.cliente.condicionIva != null)?rf.cliente.condicionIva.descripcion:"IVA Responsable Inscripto";
+	    datos.put("ivaa", iva);
+	    String direccion = rf.cliente.getFirstDireccion();
 	    datos.put("direccion", direccion);
 
 	    datos.put("importe", utils.NumberUtils.moneda(rd.getTotal()) );
@@ -2250,7 +2254,9 @@ order by nc.numero
 	    datos.put("cuit", rf.cliente.cuit2);
 	    datos.put("razon_social", rf.cliente.nombre);
 
-	    String direccion =  "";
+	    String iva = (rf.cliente.condicionIva != null)?rf.cliente.condicionIva.descripcion:"IVA Responsable Inscripto";
+	    datos.put("ivaa", iva);
+	    String direccion = rf.cliente.getFirstDireccion();
 	    datos.put("direccion", direccion);
 
 	    datos.put("importe", utils.NumberUtils.moneda(rd.getTotal()) );
