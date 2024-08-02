@@ -2037,6 +2037,8 @@ order by nc.numero
 
 
 
+	    String iva = (rf.cliente.condicionIva != null)?rf.cliente.condicionIva.descripcion:"IVA Responsable Inscripto";
+	    datos.put("ivaa", iva);
 
 
 	    String direccion = rdlxr.get(0).recuperoFactura.cliente.getFirstDireccion();
