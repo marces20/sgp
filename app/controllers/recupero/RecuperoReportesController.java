@@ -28,6 +28,7 @@ import javax.xml.bind.DatatypeConverter;
 
 import models.ClienteTipo;
 import models.CuentaAnalitica;
+import models.Deposito;
 import models.DireccionCliente;
 import models.Estado;
 import models.Periodo;
@@ -2098,7 +2099,14 @@ order by nc.numero
 	    datos.put("fecha_emision", utils.DateUtils.formatDate(rf.fecha));
 	    datos.put("fecha_desde", utils.DateUtils.formatDate(rf.fecha_desde));
 	    datos.put("fecha_hasta", utils.DateUtils.formatDate(rf.fecha_hasta));
-	    datos.put("tipo_pago",((rf.recupero_tipo_pago_id != null)?rf.recuperoTipoPago.nombre:"Contado"));
+
+	    String recupero_tipo_pago = (rf.recupero_tipo_pago_id != null)?rf.recuperoTipoPago.nombre:"Contado";
+
+	    if(recupero_tipo_pago.compareToIgnoreCase("cuenta corriente") ==  0 && rf.puntoVenta.deposito_id.intValue() == Deposito.LACMI) {
+	    	recupero_tipo_pago = "Otras";
+	    }
+
+	    datos.put("tipo_pago",recupero_tipo_pago);
 
 
 
