@@ -21,7 +21,7 @@ $(function(){
 
  <div class="row">
 	@inputText(lineaForm("recupero_factura_id"), 'type -> "hidden")
-	<div class="col-sm-3">
+	<!-- <div class="col-sm-3">
 	 	<label class="control-label">Numero</label>
 		<div class="input-group @if(lineaForm.error("numero") != null) {has-error}else{has-required}">
 		    <span class="input-group-btn">
@@ -29,7 +29,30 @@ $(function(){
 		      @inputText(lineaForm("numero"), 'class -> "form-control",'id->"numero_nc")
 		    </span>
 	  	</div>
+	</div> -->
+	<div class="col-sm-3">
+	 	<label class="control-label">Numero</label>
+		<div class="input-group @if( lineaForm.error("puntoventa_id") != null) {has-error}else{has-required}">
+
+		    <span class="input-group-btn">
+		      @select(lineaForm("puntoventa_id"),PuntoVenta.find.all().map { p => p.id.toString -> p.numero},
+				'class -> "form-control select", '_default -> "Seleccionar")
+		      <i class="input-group-addon" style="display:none"></i>
+		    </span>
+		    <span class="input-group-btn">
+		    <i class="input-group-addon" style="display:none"></i>
+		      @inputText(lineaForm("numero"), 'class -> "form-control",'id->"numero_factura",'disabled->"disabled")
+		    </span>
+
+	  	</div>
+	  	 	@lineaForm("puntoventa_id").error.map{ error =>
+				<div class="text-error">@error.message</div>
+			}
+
 	</div>
+
+
+
 	<div class="col-sm-2">
 		<label class="control-label">Fecha</label>
 		<div class="form-group @if(lineaForm.error("fecha")  != null) {has-error}else{has-required}">

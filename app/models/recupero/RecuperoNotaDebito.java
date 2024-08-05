@@ -14,6 +14,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 import models.Producto;
+import models.PuntoVenta;
 import models.Udm;
 import models.Usuario;
 import play.data.format.Formats;
@@ -70,7 +71,7 @@ public class RecuperoNotaDebito extends Model{
 	@Formats .DateTime(pattern="dd/MM/yyyy")
 	public Date fecha;
 
-	@Required(message="Debe escribir un numero")
+	//@Required(message="Debe escribir un numero")
 	public String numero;
 
 	@ManyToOne
@@ -79,11 +80,23 @@ public class RecuperoNotaDebito extends Model{
 	@Required(message="Seleccion Planilla")
 	public Integer planilla_id;
 
+	@ManyToOne
+	@JoinColumn(name="puntoventa_id", referencedColumnName="id", insertable=false, updatable=false)
+	public PuntoVenta puntoVenta;
+	@Required(message="Seleccion punto venta")
+	public Integer puntoventa_id;
+
 	public String cae;
 	public Date fecha_vencimiento;
 
 	public BigDecimal getTotal(){
 		return cantidad.multiply(precio).setScale(2, RoundingMode.HALF_UP);
+	}
+
+	public String getNumero(){
+		String puntoventa = (puntoventa_id != null)?puntoVenta.numero:"";
+		String nn = (numero != null)?numero:"";
+		return puntoventa+"-"+nn;
 	}
 
 	public static Model.Finder<Long,RecuperoNotaDebito> find = new Finder<Long,RecuperoNotaDebito>(Long.class, RecuperoNotaDebito.class);

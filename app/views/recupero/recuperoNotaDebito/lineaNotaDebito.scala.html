@@ -5,7 +5,7 @@
 
 	<!-- <td class="accion-editar"><a class="btn btn-default btn-xs modificarNotaCredito" href="@controllers.recupero.routes.RecuperoNotasCreditosController.editar(linea.id)"><i class="glyphicon glyphicon-edit"></i></a></td>
 	  -->
-	<td>@if(linea.numero != null){@(linea.numero)}</td>
+	<td>@if(linea.getNumero() != null){@(linea.getNumero())}</td>
 	<td>@if(linea.cae != null){@(linea.cae)}</td>
 	<td>@if(linea.fecha_vencimiento != null){@(utils.DateUtils.formatDate(linea.fecha_vencimiento))}</td>
 
