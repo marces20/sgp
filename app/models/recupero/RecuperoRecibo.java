@@ -175,6 +175,24 @@ public class RecuperoRecibo extends Model {
 		}
 	}
 
+	public static void actualizarNCND() {
+		List<RecuperoNotaCredito> rr = RecuperoNotaCredito.find.all();
+		for(RecuperoNotaCredito rrx :rr) {
+
+				rrx.puntoventa_id = rrx.recupero_factura.puntoventa_id.intValue();
+				rrx.save();
+
+		}
+
+		List<RecuperoNotaDebito> rrd = RecuperoNotaDebito.find.all();
+		for(RecuperoNotaDebito rrxd :rrd) {
+
+				rrxd.puntoventa_id = rrxd.recupero_factura.puntoventa_id.intValue();
+				rrxd.save();
+
+		}
+	}
+
 
 
 
