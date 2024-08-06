@@ -9,6 +9,10 @@ import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
 import java.math.BigDecimal;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -303,7 +307,7 @@ public class OrdenesProvisionController extends Controller {
 		 * .eq("numero", ordenProvision.numero)
 		 * .eq("ejercicio_id", ordenProvision.ejercicio_id)
 		 * .ne("id",ordenProvision.id).findList();
-		 * 
+		 *
 		 * if(op.size() > 0) {
 		 * flash("error",
 		 * "Ya existe una orden de provisión con el número <b>"+op.get(0).
@@ -576,7 +580,7 @@ public class OrdenesProvisionController extends Controller {
 	}
 
 	@CheckPermiso(key = "anulacionRecepcionProductosCrear")
-	public static Result anularProductosPediente() {
+	public static Result anularProductosPediente() throws SQLException {
 
 		DynamicForm d = form().bindFromRequest();
 		d.discardErrors();
@@ -610,12 +614,18 @@ public class OrdenesProvisionController extends Controller {
 			return ok(modalAnularProductosPedientes.render(d, ordenId, fx));
 
 		ObjectNode result = Json.newObject();
+		Connection conn = null;
+	    PreparedStatement stmt = null;
+
 		Ebean.beginTransaction();
+
+
 
 		try {
 			int count = 0;
 			int total = 0;
 
+		    int x = 0;
 			// OrdenProvision op = OrdenProvision.find.byId(ordenId);
 			List<OrdenProvisionLineas> lop = OrdenProvisionLineas.getQuery(op.orden_compra_id)
 					.where().in("orden_linea_id", lineasAnulacioneSeleccionadosSeleccionados).findList();
@@ -625,6 +635,22 @@ public class OrdenesProvisionController extends Controller {
 			if (sc.size() > 0) {
 				f = true;
 			}
+
+			conn = play.db.DB.getConnection();
+
+			stmt = conn.prepareStatement("alter table ordenes disable trigger actualiza_total_orden");
+		    x = stmt.executeUpdate();
+		    stmt.close();
+
+			stmt = conn.prepareStatement("alter table orden_lineas_ajustes disable trigger actualiza_total_orden");
+		    x = stmt.executeUpdate();
+		    stmt.close();
+
+		    stmt = conn.prepareStatement("alter table orden_lineas_ajustes disable trigger after_insert_update_delete");
+		    x = stmt.executeUpdate();
+		    stmt.close();
+
+
 
 			for (OrdenProvisionLineas ox : lop) {
 				if (ox.getPendiente().compareTo(BigDecimal.ZERO) > 0) {
@@ -641,9 +667,9 @@ public class OrdenesProvisionController extends Controller {
 						List<SqlRow> s = OrdenLinea.getCantidadDisponiblePorClientes(ox.orden_linea_id);
 
 						if (s.size() > 0) {
-							List<SqlRow> x = OrdenLinea.getCantidadDisponiblePorClientes(ox.orden_linea_id);
-							if (x.size() > 0) {
-								for (SqlRow xs : x) {
+							List<SqlRow> xx = OrdenLinea.getCantidadDisponiblePorClientes(ox.orden_linea_id);
+							if (xx.size() > 0) {
+								for (SqlRow xs : xx) {
 									OrdenLineaAnulacionCliente olac = new OrdenLineaAnulacionCliente();
 									olac.cantidad = xs.getBigDecimal("cantidad");
 									olac.cliente_id = xs.getLong("cliente_id");
@@ -658,17 +684,56 @@ public class OrdenesProvisionController extends Controller {
 				total++;
 			}
 
+
+
+
 			Ebean.commitTransaction();
+
+			stmt = conn.prepareStatement("alter table orden_lineas_ajustes enable trigger actualiza_total_orden");
+		    x = stmt.executeUpdate();
+		    stmt.close();
+		    stmt = conn.prepareStatement("alter table orden_lineas_ajustes enable trigger after_insert_update_delete");
+		    x = stmt.executeUpdate();
+		    stmt.close();
+		    stmt = conn.prepareStatement("alter table ordenes enable trigger actualiza_total_orden");
+		    x = stmt.executeUpdate();
+		    stmt.close();
+
+			stmt = conn.prepareStatement("select actualiza_totales_ordenes_ordenes(null)");
+		    stmt.execute();
+		    stmt.close();
+
+		    stmt = conn.prepareStatement("select actualiza_totales_ordenes_recepcionados(null)");
+		    stmt.execute();
+		    stmt.close();
+
+
 			result.put("success", true);
 			flash("success", "Se actualizaron " + count + " registros de " + total + " seleccionados.");
 			result.put("html", modalAnularProductosPedientes.render(d, ordenId, fx).toString());
 			return ok(result);
 		} catch (Exception e) {
+
 			Ebean.rollbackTransaction();
+
 			flash("error", "No se puede modificar los registros.");
 			return ok(modalAnularProductosPedientes.render(d, ordenId, fx));
 		} finally {
 			Ebean.endTransaction();
+
+		    if (stmt != null)
+		          try {
+		            stmt.close();
+		          } catch (Exception e) {
+		          }
+
+		        if (conn != null)
+		          try {
+		            conn.close();
+		          } catch (Exception e) {
+		          }
+
+
 		}
 	}
 
