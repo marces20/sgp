@@ -12,9 +12,11 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
+import com.avaje.ebean.Expr;
 import com.avaje.ebean.ExpressionList;
 
 import models.Deposito;
+import models.Ejercicio;
 import models.Expediente;
 import models.PuntoVenta;
 import models.Usuario;
@@ -127,11 +129,14 @@ public class RecuperoPlanilla extends Model {
 
 	public List<RecuperoPlanilla> getDataSuggest(String input,Integer limit){
 
-		ExpressionList<RecuperoPlanilla> e= find.where();
+		ExpressionList<RecuperoPlanilla> e= find.fetch("expediente").where();
+		Integer[] aa = {new Integer(1),new Integer(2),new Integer(3),new Integer(4),new Integer(5),new Integer(6),
+				new Integer(7),new Integer(8),new Integer(9),new Integer(10),new Integer(11),new Integer(12),new Integer(13),new Integer(14)};
 
 		List<RecuperoPlanilla> l = e.eq("numero", Integer.parseInt(input))
-							 .setMaxRows(limit).orderBy("numero")
-							 .findList();
+									.not(Expr.in("expediente.ejercicio_id",aa))
+								.setMaxRows(limit).orderBy("numero")
+								.findList();
 
 		return l;
 	}
