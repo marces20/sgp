@@ -433,7 +433,7 @@ public class LiquidacionMesesReportesController extends Controller  {
 				for(LiquidacionDetalle ld : lp.liquidacionDetalle){
 
 					//if(ld.liquidacion_concepto_id.compareTo(new Long(648)) == 0 || ld.liquidacion_concepto_id.compareTo(new Long(642)) == 0 || ld.liquidacion_concepto_id.compareTo(new Long(584)) == 0 || ld.liquidacion_concepto_id.compareTo(new Long(591)) == 0 || ld.liquidacion_concepto_id.compareTo(new Long(548)) == 0 || ld.liquidacion_concepto_id.compareTo(new Long(562)) == 0){
-					if(ld.liquidacionConcepto.reporte_ganancias || ld.liquidacionConcepto.liquidacion_concepto_clasificacion_id.compareTo(new Integer(9)) == 0 || ld.liquidacionConcepto.liquidacion_concepto_clasificacion_id.compareTo(new Integer(12)) == 0) {
+					if(ld.liquidacionConcepto.reporte_ganancias || ld.liquidacionConcepto.liquidacion_concepto_clasificacion_id.compareTo(new Integer(9)) == 0 || ld.liquidacionConcepto.liquidacion_concepto_clasificacion_id.compareTo(new Integer(13)) == 0) {
 						data = "";
 						/*if(ld.liquidacion_concepto_id.compareTo(new Long(548)) == 0){
 
