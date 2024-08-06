@@ -230,7 +230,7 @@ public class LiquidacionPuesto extends Model {
 
   @Formula(
       select = "_ga${ta}.tiene_ganancia",
-      join = "left outer join (select liquidacion_puesto_id, CASE WHEN count(*)=0 THEN false WHEN count(*)>0 THEN true ELSE false END as tiene_ganancia from liquidacion_detalles ld inner join liquidacion_conceptos lc on ld.liquidacion_concepto_id = lc.id inner join liquidacion_concepto_clasificaciones lcc on lc.liquidacion_concepto_clasificacion_id = lcc.id  where lcc.id in(9) or lc.id in(584) group by liquidacion_puesto_id) as _ga${ta} on _ga${ta}.liquidacion_puesto_id = ${ta}.id")
+      join = "left outer join (select liquidacion_puesto_id, CASE WHEN count(*)=0 THEN false WHEN count(*)>0 THEN true ELSE false END as tiene_ganancia from liquidacion_detalles ld inner join liquidacion_conceptos lc on ld.liquidacion_concepto_id = lc.id inner join liquidacion_concepto_clasificaciones lcc on lc.liquidacion_concepto_clasificacion_id = lcc.id  where lcc.id in(9,12) group by liquidacion_puesto_id) as _ga${ta} on _ga${ta}.liquidacion_puesto_id = ${ta}.id")
   public Boolean tiene_ganancia;
 
   public boolean getTieneGanancia() {
@@ -550,7 +550,7 @@ public class LiquidacionPuesto extends Model {
         Logger.debug("es: " + l.contains(x));
 
         if (l.contains(x)) {
-
+        	Logger.debug("esssssssssssssssssssss: " );
 
           eu = new EmailUtilis();
           eu.setFrom("liquidaciones@parquesaludmnes.org.ar");
@@ -563,7 +563,7 @@ public class LiquidacionPuesto extends Model {
         }
 
         Logger.debug("entra recibo mail:" + x);
-        LiquidacionPuesto.enviarMailReciboByLiquidacionPuestoId(rs.getString("email"), rs.getLong("id"), "LIQUIDACION_PUESTO AUTOMATICO");
+        //LiquidacionPuesto.enviarMailReciboByLiquidacionPuestoId(rs.getString("email"), rs.getLong("id"), "LIQUIDACION_PUESTO AUTOMATICO");
         Logger.debug("sale recibo mail");
 
         x++;
