@@ -474,7 +474,14 @@ public class LiquidacionMesesReportesController extends Controller  {
 								return ok(modalDatosAfipGanancias.render(null,d));
 							}
 						}
-						data +=  Strings.padEnd(DateUtils.formatDate(lp.liquidacionMes.fecha_pago),10,'0');//fecha emision
+
+						 if(ld.liquidacionConcepto.id.compareTo(new Long(591)) == 0) {//codigo 62
+							data +=  Strings.padEnd("30/07/2023",10,'0');//fecha emision
+						}else {
+							data +=  Strings.padEnd(DateUtils.formatDate(lp.liquidacionMes.fecha_pago),10,'0');//fecha emision
+						}
+
+
 						data += Strings.padStart(lp.id.toString(), 16, '0');//numero comprobante
 
 						String importeComprobante = new DecimalFormat("###.##").format(BigDecimal.ZERO);
@@ -491,7 +498,14 @@ public class LiquidacionMesesReportesController extends Controller  {
 							return ok(modalDatosAfipGanancias.render(null,d));
 						}
 
-						data +=  Strings.padEnd(DateUtils.formatDate(lp.liquidacionMes.fecha_pago),10,'0');//fecha emision retencion
+						if(ld.liquidacionConcepto.id.compareTo(new Long(584)) == 0) {// codigo 61
+							data +=  Strings.padEnd("30/12/2023",10,'0');//fecha emision retencion
+						}else if(ld.liquidacionConcepto.id.compareTo(new Long(591)) == 0) {//codigo 62
+							data +=  Strings.padEnd("30/07/2023",10,'0');//fecha emision retencion
+						}else {
+							data +=  Strings.padEnd(DateUtils.formatDate(lp.liquidacionMes.fecha_pago),10,'0');//fecha emision retencion
+						}
+
 						data += Strings.padEnd("01", 2, '0');//codigo condicion
 						data += Strings.padEnd("0", 1, '0');//codigo retencion practicada
 
