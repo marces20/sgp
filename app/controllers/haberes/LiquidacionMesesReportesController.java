@@ -446,10 +446,13 @@ public class LiquidacionMesesReportesController extends Controller  {
 
 
 						if(ld.liquidacionConcepto.id.compareTo(new Long(584)) == 0) {// codigo 61
-							data += Strings.padEnd("61", 2, '0');
+
 							if(importeRet.compareTo(BigDecimal.ZERO) < 0){
 								importeRet = importeRet.multiply(new BigDecimal(-1));
 								baseCalculo = importeRet;
+								data += Strings.padEnd("62", 2, '0');
+							}else {
+								data += Strings.padEnd("61", 2, '0');
 							}
 
 						}else if(ld.liquidacionConcepto.id.compareTo(new Long(591)) == 0) {//codigo 62
