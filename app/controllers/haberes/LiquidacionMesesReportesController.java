@@ -501,7 +501,7 @@ public class LiquidacionMesesReportesController extends Controller  {
 						if(ld.liquidacionConcepto.id.compareTo(new Long(584)) == 0) {// codigo 61
 							data +=  Strings.padEnd("30/12/2023",10,'0');//fecha emision retencion
 						}else if(ld.liquidacionConcepto.id.compareTo(new Long(591)) == 0) {//codigo 62
-							data +=  Strings.padEnd("30/07/2024",10,'0');//fecha emision retencion
+							data +=  Strings.padEnd("30/12/2023",10,'0');//fecha emision retencion
 						}else {
 							data +=  Strings.padEnd(DateUtils.formatDate(lp.liquidacionMes.fecha_pago),10,'0');//fecha emision retencion
 						}
