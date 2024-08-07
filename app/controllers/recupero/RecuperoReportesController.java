@@ -1848,13 +1848,17 @@ order by nc.numero
 			 String dirTemp = System.getProperty("java.io.tmpdir");
 
 			 // Source HTML file
-			 String inputHTML = Play.application().getFile("conf/resources/reportes/recupero/recibo.html").toString();
+			 String inputHTML = null;
+			 if(rf.recuperoReciboFactura.size() < 30) {
+				 inputHTML = Play.application().getFile("conf/resources/reportes/recupero/recibo2.html").toString();
+			 }else if(rf.recuperoReciboFactura.size() > 30 && rf.recuperoReciboFactura.size() < 60 ) {
+				 inputHTML = Play.application().getFile("conf/resources/reportes/recupero/recibo3.html").toString();
+			 }else if(rf.recuperoReciboFactura.size() > 60 && rf.recuperoReciboFactura.size() < 90 ) {
+				 inputHTML = Play.application().getFile("conf/resources/reportes/recupero/recibo4.html").toString();
+			 }
+
 			 // Generated PDF file name
 			 String outputPdf = dirTemp+"/recibo_"+id+".pdf";
-			 // System.out.println(inputHTML);
-			 //String inputHTML2 = inputHTML.replace("@@pv@@", "00009");
-			 // System.out.println(inputHTML2);
-
 
 			 htmlToPdf(inputHTML, outputPdf, id,"recibo");
 
@@ -2045,27 +2049,72 @@ order by nc.numero
 	    String direccion = rdlxr.get(0).recuperoFactura.cliente.getFirstDireccion();
 	    datos.put("direccion", direccion);
 
-	    //datos.put("importe", utils.NumberUtils.moneda(rf.getTotalFacturado()) );
-	    //datos.put("cae", (rf.cae!=null)? rf.cae:"" );
-	    //datos.put("fechacae",utils.DateUtils.formatDate(rf.fecha_vencimiento));
 
-	    String lineas ="";
+	    if(rdlxr.size() < 30) {// siiiiiii tengo 30 lineas nomas
 
-	    for(RecuperoReciboFactura rfl :rdlxr) {
-	    	String desc = (rfl.descripcion != null)?rfl.descripcion:"";
+	    	String lineas ="";
+	 	    for(RecuperoReciboFactura rfl :rdlxr) {
+	 	    	String desc = (rfl.descripcion != null)?rfl.descripcion:"";
 
-		    lineas += "<tr>" +
-		    		"        		<td style='text-align: left'>"+rfl.recuperoFactura.getNumeroFactura()+"</td>" +
-		    		"        		<td>"+utils.NumberUtils.moneda(rfl.recuperoFactura.getBase()) +"</td>" +
-		    		"        		<td>"+utils.NumberUtils.moneda(rfl.recuperoFactura.getTotalNotaCredito()) +"</td>" +
-		    		"        		<td>"+utils.NumberUtils.moneda(rfl.recuperoFactura.getTotalNotaDebito()) +"</td>" +
-		    		"               <td>"+utils.NumberUtils.moneda(rfl.monto) +"</td>" +
-		    		"               <td>"+utils.NumberUtils.moneda(rfl.recuperoFactura.getTotal().subtract(rfl.monto))+"</td>" +
-		    		"               <td>"+desc+"</td>" +
-		    		"            </tr>";
-	    }
+	 		    lineas += "<tr>" +
+	 		    		"        		<td style='text-align: center'>"+rfl.recuperoFactura.getNumeroFactura()+"</td>" +
+	 		    		"        		<td>"+utils.NumberUtils.moneda(rfl.recuperoFactura.getBase()) +"</td>" +
+	 		    		"        		<td>"+utils.NumberUtils.moneda(rfl.recuperoFactura.getTotalNotaCredito()) +"</td>" +
+	 		    		"        		<td>"+utils.NumberUtils.moneda(rfl.recuperoFactura.getTotalNotaDebito()) +"</td>" +
+	 		    		"               <td>"+utils.NumberUtils.moneda(rfl.monto) +"</td>" +
+	 		    		"               <td>"+utils.NumberUtils.moneda(rfl.recuperoFactura.getTotal().subtract(rfl.monto))+"</td>" +
+	 		    		"               <td>"+desc+"</td>" +
+	 		    		"            </tr>";
+	 	    }
 
-	    datos.put("lineas",lineas);
+	 	    datos.put("lineas",lineas);
+
+		 }else if(rdlxr.size() > 30 && rdlxr.size() < 60 ) {
+
+			 List<RecuperoReciboFactura> first = new ArrayList<>(rdlxr.subList(0, 29));
+			 List<RecuperoReciboFactura> second = new ArrayList<>(rdlxr.subList(30,rdlxr.size()));
+			 String lineas1 ="";
+			 for(RecuperoReciboFactura rfl :first) {
+		 	    	String desc = (rfl.descripcion != null)?rfl.descripcion:"";
+
+		 		    lineas1 += "<tr>" +
+		 		    		"        		<td style='text-align: center'>"+rfl.recuperoFactura.getNumeroFactura()+"</td>" +
+		 		    		"        		<td>"+utils.NumberUtils.moneda(rfl.recuperoFactura.getBase()) +"</td>" +
+		 		    		"        		<td>"+utils.NumberUtils.moneda(rfl.recuperoFactura.getTotalNotaCredito()) +"</td>" +
+		 		    		"        		<td>"+utils.NumberUtils.moneda(rfl.recuperoFactura.getTotalNotaDebito()) +"</td>" +
+		 		    		"               <td>"+utils.NumberUtils.moneda(rfl.monto) +"</td>" +
+		 		    		"               <td>"+utils.NumberUtils.moneda(rfl.recuperoFactura.getTotal().subtract(rfl.monto))+"</td>" +
+		 		    		"               <td>"+desc+"</td>" +
+		 		    		"            </tr>";
+		 	  }
+
+		 	  datos.put("lineas1",lineas1);
+
+		 	 String lineas2 ="";
+			 for(RecuperoReciboFactura rfl :second) {
+		 	    	String desc = (rfl.descripcion != null)?rfl.descripcion:"";
+
+		 		    lineas2 += "<tr>" +
+		 		    		"        		<td style='text-align: center'>"+rfl.recuperoFactura.getNumeroFactura()+"</td>" +
+		 		    		"        		<td>"+utils.NumberUtils.moneda(rfl.recuperoFactura.getBase()) +"</td>" +
+		 		    		"        		<td>"+utils.NumberUtils.moneda(rfl.recuperoFactura.getTotalNotaCredito()) +"</td>" +
+		 		    		"        		<td>"+utils.NumberUtils.moneda(rfl.recuperoFactura.getTotalNotaDebito()) +"</td>" +
+		 		    		"               <td>"+utils.NumberUtils.moneda(rfl.monto) +"</td>" +
+		 		    		"               <td>"+utils.NumberUtils.moneda(rfl.recuperoFactura.getTotal().subtract(rfl.monto))+"</td>" +
+		 		    		"               <td>"+desc+"</td>" +
+		 		    		"            </tr>";
+		 	  }
+
+		 	  datos.put("lineas2",lineas2);
+
+
+
+		 }else if(rdlxr.size() > 60 && rdlxr.size() < 90 ) {
+			 inputHTML = Play.application().getFile("conf/resources/reportes/recupero/recibo4.html").toString();
+		 }
+
+
+
 
 
 	    for (Map.Entry<String, String> entry : datos.entrySet()) {
