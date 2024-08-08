@@ -25,6 +25,7 @@ import models.Estado;
 import models.PuntoVenta;
 import models.Usuario;
 import models.auth.Permiso;
+import play.Logger;
 import play.data.format.Formats;
 import play.data.validation.Constraints.Required;
 import play.db.ebean.Model;
@@ -176,19 +177,25 @@ public class RecuperoRecibo extends Model {
 	}
 
 	public static void actualizarNCND() {
-		List<RecuperoNotaCredito> rr = RecuperoNotaCredito.find.all();
-		for(RecuperoNotaCredito rrx :rr) {
 
-				rrx.puntoventa_id = rrx.recupero_factura.puntoventa_id.intValue();
-				rrx.save();
+		List<RecuperoNotaCredito> rr = RecuperoNotaCredito.find.all();
+
+		Logger.debug("errro setComprobante 22222222222222222 "+rr.size());
+
+		for(RecuperoNotaCredito rrx :rr) {
+				if(rrx.puntoventa_id == null) {
+					rrx.puntoventa_id = rrx.recupero_factura.puntoventa_id.intValue();
+					rrx.save();
+				}
 
 		}
 
 		List<RecuperoNotaDebito> rrd = RecuperoNotaDebito.find.all();
 		for(RecuperoNotaDebito rrxd :rrd) {
-
+			if(rrxd.puntoventa_id == null) {
 				rrxd.puntoventa_id = rrxd.recupero_factura.puntoventa_id.intValue();
 				rrxd.save();
+			}
 
 		}
 	}
