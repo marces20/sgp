@@ -1914,7 +1914,7 @@ order by nc.numero
 			 // Source HTML file
 			 String inputHTML = Play.application().getFile("conf/resources/reportes/recupero/nd.html").toString();
 			 // Generated PDF file name
-			 String outputPdf = dirTemp+"/nota-debito-"+rf.recupero_factura.puntoVenta.numero+rf.numero+".pdf";
+			 String outputPdf = dirTemp+"/nota-debito-"+rf.puntoVenta.numero+rf.numero+".pdf";
 			 // System.out.println(inputHTML);
 			 //String inputHTML2 = inputHTML.replace("@@pv@@", "00009");
 			 // System.out.println(inputHTML2);
@@ -1940,7 +1940,7 @@ order by nc.numero
 			RecuperoNotaCredito rf = RecuperoNotaCredito.find.byId(id);
 			 String dirTemp = System.getProperty("java.io.tmpdir");
 			 String inputHTML = Play.application().getFile("conf/resources/reportes/recupero/nc.html").toString();
-			 String outputPdf = dirTemp+"/nota-credito-"+rf.recupero_factura.puntoVenta.numero+rf.numero+".pdf";
+			 String outputPdf = dirTemp+"/nota-credito-"+rf.puntoVenta.numero+rf.numero+".pdf";
 			 htmlToPdf(inputHTML, outputPdf, id,"notacredito");
 			 return ok(reportePlanilla.render(outputPdf));
 

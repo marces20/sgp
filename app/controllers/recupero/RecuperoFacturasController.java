@@ -524,7 +524,7 @@ public class RecuperoFacturasController extends Controller {
 
 	public static Result correrNota(Long idNota,int tipoComprobante) throws IOException{
 
-		if (play.Play.isProd()) {
+		if (true) {
 			try {
 				AfipController ac = new AfipController();
 				ObjectNode ret = null;
@@ -532,16 +532,16 @@ public class RecuperoFacturasController extends Controller {
 
 					RecuperoNotaCredito rc = RecuperoNotaCredito.find.byId(idNota);
 
-					if(rc.recupero_factura.cae != null && !rc.recupero_factura.cae.isEmpty()) {
+					//if(rc.recupero_factura.cae != null && !rc.recupero_factura.cae.isEmpty()) {
 						ret = ac.setComprobante(idNota,TipoComprobante.NOTA_CREDITO);
 						if(ret.get("success").asText().compareTo("true")  == 0) {
 							flash("success", "CAEE: "+ret.get("cae").asText());
 						}else if(ret.get("error") != null){
 							flash("error", "error: "+ret.get("error").asText());
 						}
-					}else {
-						flash("error", "error: La factura no tiene cae asignado");
-					}
+					//}else {
+						//	flash("error", "error: La factura no tiene cae asignado");
+						//}
 
 					return redirect(controllers.recupero.routes.RecuperoFacturasController.ver(rc.recupero_factura.id)+ UriTrack.get("&"));
 				}else if(tipoComprobante == TipoComprobante.NOTA_DEBITO) {
