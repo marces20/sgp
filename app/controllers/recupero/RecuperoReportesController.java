@@ -2074,8 +2074,11 @@ order by nc.numero
 			 List<RecuperoReciboFactura> first = new ArrayList<>(rdlxr.subList(0, 29));
 			 List<RecuperoReciboFactura> second = new ArrayList<>(rdlxr.subList(30,rdlxr.size()));
 			 String lineas1 ="";
+			 BigDecimal total1 = new BigDecimal(0);
+
 			 for(RecuperoReciboFactura rfl :first) {
 		 	    	String desc = (rfl.descripcion != null)?rfl.descripcion:"";
+		 	    	total1 = total1.add(rfl.recuperoFactura.getBase());
 
 		 		    lineas1 += "<tr>" +
 		 		    		"        		<td style='text-align: center'>"+rfl.recuperoFactura.getNumeroFactura()+"</td>" +
@@ -2087,12 +2090,14 @@ order by nc.numero
 		 		    		"               <td>"+desc+"</td>" +
 		 		    		"            </tr>";
 		 	  }
-
+			  datos.put("total1",utils.NumberUtils.moneda(total1));
 		 	  datos.put("lineas1",lineas1);
 
 		 	 String lineas2 ="";
+		 	BigDecimal total2 = new BigDecimal(0);
 			 for(RecuperoReciboFactura rfl :second) {
 		 	    	String desc = (rfl.descripcion != null)?rfl.descripcion:"";
+		 	    	total2 = total2.add(rfl.recuperoFactura.getBase());
 
 		 		    lineas2 += "<tr>" +
 		 		    		"        		<td style='text-align: center'>"+rfl.recuperoFactura.getNumeroFactura()+"</td>" +
@@ -2104,13 +2109,72 @@ order by nc.numero
 		 		    		"               <td>"+desc+"</td>" +
 		 		    		"            </tr>";
 		 	  }
-
-		 	  datos.put("lineas2",lineas2);
+			 datos.put("total2",utils.NumberUtils.moneda(total2));
+		 	 datos.put("lineas2",lineas2);
 
 
 
 		 }else if(rdlxr.size() > 60 && rdlxr.size() < 90 ) {
-			 inputHTML = Play.application().getFile("conf/resources/reportes/recupero/recibo4.html").toString();
+
+			 List<RecuperoReciboFactura> first = new ArrayList<>(rdlxr.subList(0, 29));
+			 List<RecuperoReciboFactura> second = new ArrayList<>(rdlxr.subList(30,59));
+			 List<RecuperoReciboFactura> tres = new ArrayList<>(rdlxr.subList(60,rdlxr.size()));
+			 String lineas1 ="";
+			 BigDecimal total1 = new BigDecimal(0);
+			 for(RecuperoReciboFactura rfl :first) {
+		 	    	String desc = (rfl.descripcion != null)?rfl.descripcion:"";
+		 	    	total1 = total1.add(rfl.recuperoFactura.getBase());
+		 		    lineas1 += "<tr>" +
+		 		    		"        		<td style='text-align: center'>"+rfl.recuperoFactura.getNumeroFactura()+"</td>" +
+		 		    		"        		<td>"+utils.NumberUtils.moneda(rfl.recuperoFactura.getBase()) +"</td>" +
+		 		    		"        		<td>"+utils.NumberUtils.moneda(rfl.recuperoFactura.getTotalNotaCredito()) +"</td>" +
+		 		    		"        		<td>"+utils.NumberUtils.moneda(rfl.recuperoFactura.getTotalNotaDebito()) +"</td>" +
+		 		    		"               <td>"+utils.NumberUtils.moneda(rfl.monto) +"</td>" +
+		 		    		"               <td>"+utils.NumberUtils.moneda(rfl.recuperoFactura.getTotal().subtract(rfl.monto))+"</td>" +
+		 		    		"               <td>"+desc+"</td>" +
+		 		    		"            </tr>";
+
+		 	  }
+
+		 	  datos.put("lineas1",lineas1);
+		 	 datos.put("total1",utils.NumberUtils.moneda(total1));
+
+		 	 String lineas2 ="";
+		 	 BigDecimal total2 = new BigDecimal(0);
+			 for(RecuperoReciboFactura rfl :second) {
+		 	    	String desc = (rfl.descripcion != null)?rfl.descripcion:"";
+		 	    	total2 = total2.add(rfl.recuperoFactura.getBase());
+		 		    lineas2 += "<tr>" +
+		 		    		"        		<td style='text-align: center'>"+rfl.recuperoFactura.getNumeroFactura()+"</td>" +
+		 		    		"        		<td>"+utils.NumberUtils.moneda(rfl.recuperoFactura.getBase()) +"</td>" +
+		 		    		"        		<td>"+utils.NumberUtils.moneda(rfl.recuperoFactura.getTotalNotaCredito()) +"</td>" +
+		 		    		"        		<td>"+utils.NumberUtils.moneda(rfl.recuperoFactura.getTotalNotaDebito()) +"</td>" +
+		 		    		"               <td>"+utils.NumberUtils.moneda(rfl.monto) +"</td>" +
+		 		    		"               <td>"+utils.NumberUtils.moneda(rfl.recuperoFactura.getTotal().subtract(rfl.monto))+"</td>" +
+		 		    		"               <td>"+desc+"</td>" +
+		 		    		"            </tr>";
+		 	  }
+
+		 	 datos.put("lineas2",lineas2);
+		 	 datos.put("total2",utils.NumberUtils.moneda(total2));
+
+		 	 String lineas3 ="";
+		 	 BigDecimal total3 = new BigDecimal(0);
+			 for(RecuperoReciboFactura rfl :tres) {
+		 	    	String desc = (rfl.descripcion != null)?rfl.descripcion:"";
+		 	    	total3 = total3.add(rfl.recuperoFactura.getBase());
+		 		    lineas3 += "<tr>" +
+		 		    		"        		<td style='text-align: center'>"+rfl.recuperoFactura.getNumeroFactura()+"</td>" +
+		 		    		"        		<td>"+utils.NumberUtils.moneda(rfl.recuperoFactura.getBase()) +"</td>" +
+		 		    		"        		<td>"+utils.NumberUtils.moneda(rfl.recuperoFactura.getTotalNotaCredito()) +"</td>" +
+		 		    		"        		<td>"+utils.NumberUtils.moneda(rfl.recuperoFactura.getTotalNotaDebito()) +"</td>" +
+		 		    		"               <td>"+utils.NumberUtils.moneda(rfl.monto) +"</td>" +
+		 		    		"               <td>"+utils.NumberUtils.moneda(rfl.recuperoFactura.getTotal().subtract(rfl.monto))+"</td>" +
+		 		    		"               <td>"+desc+"</td>" +
+		 		    		"            </tr>";
+		 	  }
+			 datos.put("total3",utils.NumberUtils.moneda(total3));
+		 	 datos.put("lineas3",lineas3);
 		 }
 
 
