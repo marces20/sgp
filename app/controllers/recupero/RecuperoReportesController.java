@@ -2223,7 +2223,7 @@ order by nc.numero
 
 	    Map<String,String> datos = new HashMap<>();
 
-	    datos.put("pv", rf.puntoVenta.numero);
+	    datos.put("pv", rd.puntoVenta.numero);
 	    datos.put("numeroFactura", rd.numero);
 	    datos.put("fc", rf.getNumeroFactura());
 
@@ -2296,7 +2296,7 @@ order by nc.numero
 
 	    Map<String,String> datos = new HashMap<>();
 
-	    datos.put("pv", rf.puntoVenta.numero);
+	    datos.put("pv", rd.puntoVenta.numero);
 	    datos.put("numeroFactura", rd.numero);
 	    datos.put("fc", rf.getNumeroFactura());
 
