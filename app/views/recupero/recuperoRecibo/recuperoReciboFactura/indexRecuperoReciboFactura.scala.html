@@ -11,7 +11,9 @@
 			@if(paginador.getTotalRowCount == 0) {
         		<p id="mensajeSinResultados" class="well"><i class="glyphicon glyphicon-info-sign"></i> No hay Facturas</p>
     		}
-
+			@if(paginador.getTotalRowCount() > 0) {
+				Mostrando @paginador.getDisplayXtoYofZ(" a "," de ") resultado(s).
+			}
 
 			<table id="listaReciboFacturaTabla" class="table table-striped table-bordered">
 				<thead>
