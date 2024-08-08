@@ -7,7 +7,9 @@
 	<a class="btn btn-default btn-xs" href="#" id="nuevoProducto"><i class="glyphicon glyphicon-plus"></i> Nuevo</a>
 	}
 </p>
-
+@if(paginador.getTotalRowCount() > 0) {
+	Mostrando @paginador.getDisplayXtoYofZ(" a "," de ") resultado(s).
+}
 <table id="listaDeProductos" class="table table-striped table-bordered">
 	<thead>
 		<tr>
