@@ -524,7 +524,7 @@ public class RecuperoFacturasController extends Controller {
 
 	public static Result correrNota(Long idNota,int tipoComprobante) throws IOException{
 
-		if (true) {
+		if (play.Play.isProd()) {
 			try {
 				AfipController ac = new AfipController();
 				ObjectNode ret = null;
