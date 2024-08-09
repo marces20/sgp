@@ -106,6 +106,7 @@ POST    /compras/linea-orden-cliente/eliminarAjax   controllers.compras.OrdenesL
 POST 	/ordenCompra/reporte/cuadroComparativoPrecios 		controllers.compras.OrdenesReportesController.cuadroComparativoPrecios()
 POST 	/ordenCompra/reporte/exportacionDatos 				controllers.compras.OrdenesReportesController.exportacionDatos()
 POST 	/ordenCompra/reporte/exportacionDatosConLineas		controllers.compras.OrdenesReportesController.exportacionDatosConLineas()
+POST 	/ordenCompra/reporte/exportacionDatosAuditoria		controllers.compras.OrdenesReportesController.exportacionDatosAuditoria()
 POST 	/ordenCompra/reporte/cuadroSugerenciaAdjudicacion 	controllers.compras.OrdenesReportesController.cuadroSugerenciaAdjudicación()
 POST 	/ordenCompra/reporte/controlDolar 					controllers.compras.OrdenesReportesController.controlDolar()
 GET     /ordenCompra/reporte/reporteCertificacionPaciente   controllers.compras.OrdenesReportesController.reporteCertificacionPaciente(id:Long)
