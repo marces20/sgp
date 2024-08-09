@@ -547,17 +547,17 @@ public class RecuperoFacturasController extends Controller {
 				}else if(tipoComprobante == TipoComprobante.NOTA_DEBITO) {
 
 					RecuperoNotaDebito rd = RecuperoNotaDebito.find.byId(idNota);
-					if(rd.recupero_factura.cae != null && !rd.recupero_factura.cae.isEmpty()) {
+					//if(rd.recupero_factura.cae != null && !rd.recupero_factura.cae.isEmpty()) {
 						ret = ac.setComprobante(idNota,TipoComprobante.NOTA_DEBITO);
 						if(ret.get("success").asText().compareTo("true")  == 0) {
 							flash("success", "CAEE: "+ret.get("cae").asText());
 						}else if(ret.get("error") != null){
 							flash("error", "error: "+ret.get("error").asText());
 						}
-					}else {
+						//}else {
 
-						flash("error", "error: La factura no tiene cae asignado");
-					}
+						//	flash("error", "error: La factura no tiene cae asignado");
+						//}
 
 					return redirect(controllers.recupero.routes.RecuperoFacturasController.ver(rd.recupero_factura.id)+ UriTrack.get("&"));
 				}
