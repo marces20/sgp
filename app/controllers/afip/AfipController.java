@@ -434,6 +434,9 @@ public class AfipController {
 		FEAuthRequest auth = null;
 
 		Logger.debug("xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx1 ");
+		Logger.debug("Cache.get(\"tokekafip\") "+Cache.get("tokekafip"));
+		Logger.debug("Cache.get(\"singafip\") "+Cache.get("singafip"));
+		Logger.debug("Cache.get(\"exptime\") "+Cache.get("exptime"));
 		if(Cache.get("tokekafip") == null || Cache.get("singafip") == null) {
 
 			login();
@@ -490,7 +493,7 @@ public class AfipController {
 			auth.setToken(Cache.get("tokekafip").toString());
 			auth.setSign(Cache.get("singafip").toString());*/
 
-
+			System.out.println("-----------getFECompUltimoAutorizadoResult-------------");
 
 			FECompUltimoAutorizado request = new FECompUltimoAutorizado();
 			request.setAuth(auth);
@@ -530,6 +533,7 @@ public class AfipController {
 	        System.out.println("-----------------------------------");
 	        System.out.println("Valor: "+datos.getFECompUltimoAutorizadoResult().getErrors());
 
+	        boolean erro = false;
 	        if(datos.getFECompUltimoAutorizadoResult().getErrors() != null) {
 	        	String errores = "";
 		        for(Err a : datos.getFECompUltimoAutorizadoResult().getErrors().getErr()) {
@@ -537,13 +541,17 @@ public class AfipController {
 		        	System.out.println("a.getMsg();: "+a.getMsg());
 		        }
 		        restJs.put("error", errores);
+		        throw new Exception();
 	        }
+
+
+
 	        Logger.debug("getUltimoComprobanteNew pasa");
 	        restJs.put("data", datos.getFECompUltimoAutorizadoResult().getCbteNro());
 	        restJs.put("success", true);
 		}catch (Exception e) {
 			e.printStackTrace();
-
+			Logger.debug("errorrrr ennn GETT ULTIMO COMPROBANTEEEEE");
 			EmailUtilis eu = new EmailUtilis();
 	        eu.setSubject("ERROR AFIJ getUltimoComprobanteNew ");
 	        eu.setHtmlMsg("Titulo: "+e);
@@ -590,6 +598,8 @@ public class AfipController {
 			String fechaHasta = null;
 			RecuperoNotaDebito rd = null;
 			RecuperoNotaCredito rc = null;
+			Integer ptoVta = null;
+
 
 			if(cbteTipo == TipoComprobante.NOTA_CREDITO) {
 				rc = RecuperoNotaCredito.find.byId(id);
@@ -599,6 +609,7 @@ public class AfipController {
 				periodo = Periodo.getPeriodoByDate(rc.fecha);//xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 				fechaDesde = DateUtils.formatDate(periodo.date_start,"yyyyMMdd");
 				fechaHasta = DateUtils.formatDate(periodo.date_stop,"yyyyMMdd");
+				ptoVta = new Integer(rc.puntoVenta.numero);
 			}else if(cbteTipo == TipoComprobante.NOTA_DEBITO) {
 				rd = RecuperoNotaDebito.find.byId(id);
 				importe = rd.getTotal().doubleValue();
@@ -607,6 +618,7 @@ public class AfipController {
 				periodo = Periodo.getPeriodoByDate(rd.fecha);//xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 				fechaDesde = DateUtils.formatDate(periodo.date_start,"yyyyMMdd");
 				fechaHasta = DateUtils.formatDate(periodo.date_stop,"yyyyMMdd");
+				ptoVta = new Integer(rd.puntoVenta.numero);
 			}else {
 				idFactura = id;
 			}
@@ -620,7 +632,7 @@ public class AfipController {
 				periodo = Periodo.getPeriodoByDate(rf.fecha);//xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 				fechaDesde = DateUtils.formatDate(periodo.date_start,"yyyyMMdd");
 				fechaHasta = DateUtils.formatDate(periodo.date_stop,"yyyyMMdd");
-
+				ptoVta = new Integer(rf.puntoVenta.numero);
 			}
 
 
@@ -648,7 +660,7 @@ public class AfipController {
 					docTipo = 96;
 				}
 
-				Integer ptoVta = new Integer(rf.puntoVenta.numero);
+
 
 
 
@@ -748,7 +760,7 @@ public class AfipController {
 
 					if(cbteTipo == TipoComprobante.NOTA_CREDITO || cbteTipo == TipoComprobante.NOTA_DEBITO) {
 				        CbteAsoc cbteAsoc = new CbteAsoc();
-				        cbteAsoc.setPtoVta(ptoVta);
+				        cbteAsoc.setPtoVta(new Integer(rf.puntoVenta.numero));
 				        cbteAsoc.setNro(new Integer(rf.numero));
 				        cbteAsoc.setTipo(TipoComprobante.FACTURA);
 				        //cbteAsoc.setCuit(value);
