@@ -2041,8 +2041,8 @@ order by nc.numero
 
 
 	    List<RecuperoReciboFactura> rdlxr = rf.recuperoReciboFactura;
-	    datos.put("cuit", rdlxr.get(0).recuperoFactura.cliente.cuit2);
-	    datos.put("razon_social", rdlxr.get(0).recuperoFactura.cliente.nombre);
+	    datos.put("cuit", rf.cliente.cuit2);
+	    datos.put("razon_social", rf.cliente.nombre);
 
 
 	    if(rf.estado_id.compareTo((long) Estado.RECUPERO_RECIBOS_CANCELADO) == 0) {
