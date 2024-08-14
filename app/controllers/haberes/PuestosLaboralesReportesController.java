@@ -99,7 +99,7 @@ public class PuestosLaboralesReportesController extends Controller  {
 			String sql = "";
 
 			sql = " select * from query_649_2024 where puesto_laboral_id = :id ";
-			nombreArchivo = dirTemp+"/formulario649-2023.xls";
+			nombreArchivo = dirTemp+"/formulario649-2024.xls";
 
 
 			SqlRow s = Ebean.createSqlQuery(sql).setParameter("id", id).findUnique();
@@ -114,7 +114,7 @@ public class PuestosLaboralesReportesController extends Controller  {
 
 			File archivo = new File(nombreArchivo);
 			if(archivo.exists()) archivo.delete();
-			FileInputStream file = new FileInputStream(Play.application().getFile("conf/resources/reportes/ganancias/formulario649-2023.xls"));
+			FileInputStream file = new FileInputStream(Play.application().getFile("conf/resources/reportes/ganancias/formulario649-2024.xls"));
 
 			Workbook libro = new HSSFWorkbook(file);
 			FileOutputStream archivoTmp = new FileOutputStream(archivo);
