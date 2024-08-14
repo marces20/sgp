@@ -1851,9 +1851,9 @@ order by nc.numero
 			 String inputHTML = null;
 			 if(rf.recuperoReciboFactura.size() < 30) {
 				 inputHTML = Play.application().getFile("conf/resources/reportes/recupero/recibo2.html").toString();
-			 }else if(rf.recuperoReciboFactura.size() > 30 && rf.recuperoReciboFactura.size() < 60 ) {
+			 }else if(rf.recuperoReciboFactura.size() >= 30 && rf.recuperoReciboFactura.size() < 60 ) {
 				 inputHTML = Play.application().getFile("conf/resources/reportes/recupero/recibo3.html").toString();
-			 }else if(rf.recuperoReciboFactura.size() > 60 && rf.recuperoReciboFactura.size() < 90 ) {
+			 }else if(rf.recuperoReciboFactura.size() >= 60 && rf.recuperoReciboFactura.size() <= 90 ) {
 				 inputHTML = Play.application().getFile("conf/resources/reportes/recupero/recibo4.html").toString();
 			 }
 
@@ -1883,7 +1883,17 @@ order by nc.numero
 				 String dirTemp = System.getProperty("java.io.tmpdir");
 
 				 // Source HTML file
-				 String inputHTML = Play.application().getFile("conf/resources/reportes/recupero/factura.html").toString();
+				 String inputHTML = null;
+				 if(rf.recuperoFacturaLinea.size() < 25) {
+					 inputHTML = Play.application().getFile("conf/resources/reportes/recupero/factura.html").toString();
+				 }else if(rf.recuperoFacturaLinea.size() >= 25 && rf.recuperoFacturaLinea.size() < 50 ) {
+					 inputHTML = Play.application().getFile("conf/resources/reportes/recupero/factura1.html").toString();
+				 }else if(rf.recuperoFacturaLinea.size() >= 50 && rf.recuperoFacturaLinea.size() <= 75 ) {
+					 inputHTML = Play.application().getFile("conf/resources/reportes/recupero/factura2.html").toString();
+				 }
+
+
+
 				 // Generated PDF file name
 				 String outputPdf = dirTemp+"/factura-"+rf.puntoVenta.numero+rf.numero+".pdf";
 				 // System.out.println(inputHTML);
@@ -2069,7 +2079,7 @@ order by nc.numero
 
 	 	    datos.put("lineas",lineas);
 
-		 }else if(rdlxr.size() > 30 && rdlxr.size() < 60 ) {
+		 }else if(rdlxr.size() >= 30 && rdlxr.size() < 60 ) {
 
 			 List<RecuperoReciboFactura> first = new ArrayList<>(rdlxr.subList(0, 29));
 			 List<RecuperoReciboFactura> second = new ArrayList<>(rdlxr.subList(30,rdlxr.size()));
@@ -2114,7 +2124,7 @@ order by nc.numero
 
 
 
-		 }else if(rdlxr.size() > 60 && rdlxr.size() < 90 ) {
+		 }else if(rdlxr.size() >= 60 && rdlxr.size() <= 90 ) {
 
 			 List<RecuperoReciboFactura> first = new ArrayList<>(rdlxr.subList(0, 29));
 			 List<RecuperoReciboFactura> second = new ArrayList<>(rdlxr.subList(30,59));
@@ -2136,7 +2146,7 @@ order by nc.numero
 
 		 	  }
 
-		 	  datos.put("lineas1",lineas1);
+		 	 datos.put("lineas1",lineas1);
 		 	 datos.put("total1",utils.NumberUtils.moneda(total1));
 
 		 	 String lineas2 ="";
@@ -2234,26 +2244,123 @@ order by nc.numero
 	    datos.put("importe", utils.NumberUtils.moneda(rf.getTotalFacturado()) );
 	    datos.put("cae", (rf.cae!=null)? rf.cae:"" );
 	    datos.put("fechacae",utils.DateUtils.formatDate(rf.fecha_vencimiento));
-	    String lineas ="";
 
-	    for(RecuperoFacturaLinea rfl :rf.recuperoFacturaLinea) {
+	    if(rf.recuperoFacturaLinea.size() < 25) {
 
-	    	String prod = (rfl.nota != null && !rfl.nota.isEmpty())?rfl.producto.nombre+"-"+rfl.nota: rfl.producto.nombre;
+		    String lineas ="";
 
-		    lineas += "<tr>" +
-		    		"        		<td style='text-align: left'>"+prod+"</td>" +
-		    		"        		<td>"+rfl.cantidad+"</td>" +
-		    		"                <td style='text-align: right'>"+utils.NumberUtils.moneda(rfl.precio)+"</td>" +
-		    		"                <td style='text-align: right'>$ 0,00</td>" +
-		    		"                <td style='text-align: right'>$ 0,00</td>" +
-		    		"                <td style='text-align: right'>"+utils.NumberUtils.moneda(rfl.getTotal())+"</td>" +
-		    		"            </tr>";
+		    for(RecuperoFacturaLinea rfl :rf.recuperoFacturaLinea) {
+
+		    	String prod = (rfl.nota != null && !rfl.nota.isEmpty())?rfl.producto.nombre+"-"+rfl.nota: rfl.producto.nombre;
+
+			    lineas += "<tr>" +
+			    		"        		<td style='text-align: left'>"+prod+"</td>" +
+			    		"        		<td>"+rfl.cantidad+"</td>" +
+			    		"                <td style='text-align: center;'>"+utils.NumberUtils.moneda(rfl.precio)+"</td>" +
+			      		"                <td style='text-align: center;'>"+utils.NumberUtils.moneda(rfl.getTotal())+"</td>" +
+			    		"            </tr>";
+		    }
+
+		    datos.put("lineas",lineas);
+	    }else if(rf.recuperoFacturaLinea.size() >= 25 && rf.recuperoFacturaLinea.size() < 50 ) {
+	    	 List<RecuperoFacturaLinea> first = new ArrayList<>(rf.recuperoFacturaLinea.subList(0, 24));
+			 List<RecuperoFacturaLinea> second = new ArrayList<>(rf.recuperoFacturaLinea.subList(25,rf.recuperoFacturaLinea.size()));
+
+			 	String lineas ="";
+			 	BigDecimal total1 = new BigDecimal(0);
+
+			    for(RecuperoFacturaLinea rfl :first) {
+
+			    	String prod = (rfl.nota != null && !rfl.nota.isEmpty())?rfl.producto.nombre+"-"+rfl.nota: rfl.producto.nombre;
+			    	total1 = total1.add(rfl.getTotal());
+				    lineas += "<tr>" +
+				    		"<td style='text-align: left'>"+prod+"</td>" +
+				    		"<td>"+rfl.cantidad+"</td>" +
+				    		"<td style='text-align: center;'>"+utils.NumberUtils.moneda(rfl.precio)+"</td>" +
+				    		"<td style='text-align: center;'>"+utils.NumberUtils.moneda(rfl.getTotal())+"</td>" +
+				    		"</tr>";
+			    }
+
+			    datos.put("lineas",lineas);
+			    datos.put("total1",utils.NumberUtils.moneda(total1));
+
+			    String lineas2 ="";
+
+			    for(RecuperoFacturaLinea rfl :second) {
+
+			    	String prod = (rfl.nota != null && !rfl.nota.isEmpty())?rfl.producto.nombre+"-"+rfl.nota: rfl.producto.nombre;
+
+				    lineas2 += "<tr>" +
+				    		"<td style='text-align: left'>"+prod+"</td>" +
+				    		"<td>"+rfl.cantidad+"</td>" +
+				    		"<td style='text-align: center;'>"+utils.NumberUtils.moneda(rfl.precio)+"</td>" +
+				    	  	"<td style='text-align: center;'>"+utils.NumberUtils.moneda(rfl.getTotal())+"</td>" +
+				    		"</tr>";
+			    }
+
+			    datos.put("lineas2",lineas2);
+
+
+	    }else if(rf.recuperoFacturaLinea.size() >= 50 && rf.recuperoFacturaLinea.size() <= 75 ) {
+	    		List<RecuperoFacturaLinea> first = new ArrayList<>(rf.recuperoFacturaLinea.subList(0, 24));
+	    		List<RecuperoFacturaLinea> second = new ArrayList<>(rf.recuperoFacturaLinea.subList(25,49));
+	    		List<RecuperoFacturaLinea> tres = new ArrayList<>(rf.recuperoFacturaLinea.subList(50,rf.recuperoFacturaLinea.size()));
+
+			 	String lineas ="";
+			 	BigDecimal total1 = new BigDecimal(0);
+
+			    for(RecuperoFacturaLinea rfl :first) {
+
+			    	String prod = (rfl.nota != null && !rfl.nota.isEmpty())?rfl.producto.nombre+"-"+rfl.nota: rfl.producto.nombre;
+			    	total1 = total1.add(rfl.getTotal());
+				    lineas += "<tr>" +
+				    		"        		<td style='text-align: left'>"+prod+"</td>" +
+				    		"        		<td>"+rfl.cantidad+"</td>" +
+				    		"               <td style='text-align: center;'>"+utils.NumberUtils.moneda(rfl.precio)+"</td>" +
+				    		"               <td style='text-align: center;'>"+utils.NumberUtils.moneda(rfl.getTotal())+"</td>" +
+				    		"            </tr>";
+			    }
+
+			    datos.put("lineas",lineas);
+			    datos.put("total1",utils.NumberUtils.moneda(total1));
+
+			    String lineas2 ="";
+			    BigDecimal total2 = new BigDecimal(0);
+			    for(RecuperoFacturaLinea rfl :second) {
+
+			    	String prod = (rfl.nota != null && !rfl.nota.isEmpty())?rfl.producto.nombre+"-"+rfl.nota: rfl.producto.nombre;
+			    	total2 = total2.add(rfl.getTotal());
+				    lineas2 += "<tr>" +
+				    		"        		<td style='text-align: left'>"+prod+"</td>" +
+				    		"        		<td>"+rfl.cantidad+"</td>" +
+				    		"                <td style='text-align: center;'>"+utils.NumberUtils.moneda(rfl.precio)+"</td>" +
+				    		"                <td style='text-align: center;'>"+utils.NumberUtils.moneda(rfl.getTotal())+"</td>" +
+				    		"            </tr>";
+			    }
+
+			    datos.put("lineas2",lineas2);
+			    datos.put("total2",utils.NumberUtils.moneda(total2));
+
+			    String lineas3 ="";
+
+			    for(RecuperoFacturaLinea rfl :tres) {
+
+			    	String prod = (rfl.nota != null && !rfl.nota.isEmpty())?rfl.producto.nombre+"-"+rfl.nota: rfl.producto.nombre;
+
+				    lineas3 += "<tr>" +
+				    		"        		<td style='text-align: left'>"+prod+"</td>" +
+				    		"        		<td>"+rfl.cantidad+"</td>" +
+				    		"               <td style='text-align: center;'>"+utils.NumberUtils.moneda(rfl.precio)+"</td>" +
+				    		"               <td style='text-align: center;'>"+utils.NumberUtils.moneda(rfl.getTotal())+"</td>" +
+				    		"            </tr>";
+			    }
+
+			    datos.put("lineas3",lineas3);
 	    }
 
-	    datos.put("lineas",lineas);
 
 	    String qrBase =  generarJsonQr(rf.id,rf.fecha,rf.puntoVenta.numero,TipoComprobante.FACTURA,rf.numero,rf.getBase().doubleValue(),rf.cliente.getTipoDocAfip(),rf.cliente.getDocAfip(),rf.cae);
-	    String qr ="<img height='185' width='185' src='data:image/png;base64,"+qrBase+"'>";
+	    String qr ="<img height='140' width='140'  src='data:image/png;base64,"+qrBase+"'>";
 	    datos.put("qr",qr);
 
 	    for (Map.Entry<String, String> entry : datos.entrySet()) {
@@ -2329,7 +2436,7 @@ order by nc.numero
 	    datos.put("lineas",lineas);
 
 	    String qrBase =  generarJsonQr(rd.id,rd.fecha,rf.puntoVenta.numero,TipoComprobante.NOTA_CREDITO,rd.numero,rd.getTotal().doubleValue(),rf.cliente.getTipoDocAfip(),rf.cliente.getDocAfip(),rd.cae);
-	    String qr ="<img height='185' width='185' src='data:image/png;base64,"+qrBase+"'>";
+	    String qr ="<img height='140' width='140' src='data:image/png;base64,"+qrBase+"'>";
 	    datos.put("qr",qr);
 
 
@@ -2400,7 +2507,7 @@ order by nc.numero
 	    datos.put("lineas",lineas);
 
 	    String qrBase =  generarJsonQr(rd.id,rd.fecha,rf.puntoVenta.numero,TipoComprobante.NOTA_DEBITO,rd.numero,rd.getTotal().doubleValue(),rf.cliente.getTipoDocAfip(),rf.cliente.getDocAfip(),rd.cae);
-	    String qr ="<img height='185' width='185' src='data:image/png;base64,"+qrBase+"'>";
+	    String qr ="<img height='140' width='140' src='data:image/png;base64,"+qrBase+"'>";
 	    datos.put("qr",qr);
 
 
@@ -2454,7 +2561,7 @@ order by nc.numero
 
 		String url= "https://www.afip.gob.ar/fe/qr/?p="+base64Encoded;
 
-		String ret = generateQR(url, 185,185);
+		String ret = generateQR(url, 140,140);
 
 		return ret;
 
