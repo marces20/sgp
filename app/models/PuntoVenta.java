@@ -1,5 +1,8 @@
 package models;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -8,6 +11,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import models.auth.Permiso;
 import play.data.validation.Constraints.Required;
 import play.db.ebean.Model;
 import play.db.ebean.Model.Finder;
@@ -37,4 +41,29 @@ public class PuntoVenta extends Model {
 	public boolean habilitado;
 
 	public static Finder<Long,PuntoVenta> find = new Finder<Long,PuntoVenta>(Long.class, PuntoVenta.class);
+
+	public static List<PuntoVenta> getPuntoVentaPermisos(){
+
+		if(Usuario.getUsuarioSesion().equals(83)){//GRaciela traid
+			List<Integer> ids = new ArrayList<Integer>();
+			ids.add(9);
+			ids.add(13);
+			return find.where().in("id", ids).orderBy("numero asc").findList();
+		}else {
+
+
+			if(Permiso.check("verTodosPuntoVenta")){
+				return find.orderBy("numero asc").findList();
+			}else {
+				Integer deptoId = 0;
+				List<Integer> l = null;
+				if( Usuario.getUsurioSesion().organigrama_id != null){
+					deptoId = Usuario.getUsurioSesion().organigrama.deposito.id.intValue();
+					return find.where().eq("deposito_id", deptoId).orderBy("numero asc").findList();
+				}
+			}
+		}
+		return find.where().eq("deposito_id", 0).orderBy("numero asc").findList();
+
+	}
 }
