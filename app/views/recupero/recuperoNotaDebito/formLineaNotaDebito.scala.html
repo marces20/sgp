@@ -36,7 +36,7 @@ $(function(){
 		<div class="input-group @if( lineaForm.error("puntoventa_id") != null) {has-error}else{has-required}">
 
 		    <span class="input-group-btn">
-		     @select(recuperoFacturaForm("puntoventa_id"),
+		     @select(lineaForm("puntoventa_id"),
 			      PuntoVenta.getPuntoVentaPermisos().map { p => p.id.toString -> (p.numero  +" ("+p.deposito.sigla+")")},
 					'class -> "form-control select", '_default -> "Seleccionar")
 		      <i class="input-group-addon" style="display:none"></i>
