@@ -11,6 +11,8 @@ import java.util.Map;
 
 import javax.persistence.PersistenceException;
 
+import org.apache.http.impl.cookie.DateUtils;
+
 import com.avaje.ebean.Ebean;
 import com.avaje.ebean.ExpressionList;
 import com.fasterxml.jackson.databind.node.ArrayNode;
@@ -98,6 +100,13 @@ public class RecuperoFacturasController extends Controller {
 
 		Map<String,String> p = new HashMap<String, String>();
 		p.put("nombre","RFAC");
+		Date d = new Date();
+		p.put("fecha",DateUtils.formatDate(d,"dd/MM/yyyy"));
+		if(Usuario.getUsuarioSesion().equals(83)){//GRaciela traid
+			p.put("planilla.recuperoPlanillaEjercicio","154");
+			p.put("planilla_id","4735");
+		}
+
 		Form<RecuperoFactura> recuperoFacturaForm = form(RecuperoFactura.class).bind(p);
 		recuperoFacturaForm.discardErrors();
 
@@ -501,7 +510,7 @@ public class RecuperoFacturasController extends Controller {
 	}
 
 	public static Result correrFacturaAfip(Long idFactura) throws IOException{
-		if (play.Play.isProd()) {
+		//if (play.Play.isProd()) {
 			try {
 				AfipController ac = new AfipController();
 				ObjectNode ret = ac.setComprobante(idFactura,TipoComprobante.FACTURA);
@@ -514,9 +523,9 @@ public class RecuperoFacturasController extends Controller {
 			}catch (Exception e) {
 				flash("error", "error: "+e);
 			}
-		}else {
+		/*}else {
 			flash("error", "error: NO ES PRODUCCION");
-		}
+		}*/
 
 
 		return redirect(controllers.recupero.routes.RecuperoFacturasController.ver(idFactura)+ UriTrack.get("&"));
@@ -524,7 +533,7 @@ public class RecuperoFacturasController extends Controller {
 
 	public static Result correrNota(Long idNota,int tipoComprobante) throws IOException{
 
-		if (play.Play.isProd()) {
+		//if (play.Play.isProd()) {
 			try {
 				AfipController ac = new AfipController();
 				ObjectNode ret = null;
@@ -567,9 +576,9 @@ public class RecuperoFacturasController extends Controller {
 			}catch (Exception e) {
 				flash("error", "error: "+e);
 			}
-		}else {
+		/*}else {
 			flash("error", "error: NO ES PRODUCCION");
-		}
+		}*/
 
 
 		return redirect(controllers.recupero.routes.RecuperoFacturasController.index());
