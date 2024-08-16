@@ -49,11 +49,15 @@
 			      @select(recuperoFacturaForm("serie"), options("C"->"C"), 'id -> "serie",'class -> "form-control select")
 			      <i class="input-group-addon" style="display:none"></i>
 			    </span>
+
 			    <span class="input-group-btn">
-			      @select(recuperoFacturaForm("puntoventa_id"),PuntoVenta.find.all().map { p => p.id.toString -> p.numero},
+
+			      @select(recuperoFacturaForm("puntoventa_id"),
+			      PuntoVenta.getPuntoVentaPermisos().map { p => p.id.toString -> (p.numero  +" ("+p.deposito.sigla+")")},
 					'class -> "form-control select", '_default -> "Seleccionar")
 			      <i class="input-group-addon" style="display:none"></i>
 			    </span>
+
 			    <span class="input-group-btn">
 			    <i class="input-group-addon" style="display:none"></i>
 			      @inputText(recuperoFacturaForm("numero"), 'class -> "form-control",'id->"numero_factura")
