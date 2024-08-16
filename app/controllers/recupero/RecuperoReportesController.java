@@ -2225,8 +2225,9 @@ order by nc.numero
 
 	    String recupero_tipo_pago = (rf.recupero_tipo_pago_id != null)?rf.recuperoTipoPago.nombre:"Contado";
 
-	    if(recupero_tipo_pago.compareToIgnoreCase("cuenta corriente") ==  0 && rf.puntoVenta.deposito_id.intValue() == Deposito.LACMI) {
-	    	recupero_tipo_pago = "Otras";
+	    //if(recupero_tipo_pago.compareToIgnoreCase("cuenta corriente") ==  0 && rf.puntoVenta.deposito_id.intValue() == Deposito.LACMI) {
+	    if(recupero_tipo_pago.compareToIgnoreCase("cuenta corriente") ==  0) {
+	    	recupero_tipo_pago = "Otra";
 	    }
 
 	    datos.put("tipo_pago",recupero_tipo_pago);
