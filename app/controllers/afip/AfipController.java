@@ -175,7 +175,7 @@ public class AfipController {
 
 		Files.copy(in, archivo.toPath(), StandardCopyOption.REPLACE_EXISTING);
 
-		byte [] LoginTicketRequest_xml_cms = create_cms(archivo.getAbsolutePath(), "parquesalud", "parquesalud", dstDN, "wsfe", new Long(60000));
+		byte [] LoginTicketRequest_xml_cms = create_cms(archivo.getAbsolutePath(), "parquesalud", "parquesalud", dstDN, "wsfe", new Long(82800000));
 
 		//byte [] LoginTicketRequest_xml_cms = create_cms(p12file, p12pass, signer, dstDN, service, TicketTime);
 
@@ -283,14 +283,14 @@ public class AfipController {
 			// Create a keystore using keys from the pkcs#12 p12file
 			KeyStore ks = KeyStore.getInstance("pkcs12");
 
-			Logger.debug("2222  "+p12file);
+			//Logger.debug("2222  "+p12file);
 
 			FileInputStream p12stream = new FileInputStream ( p12file ) ;
 
 			ks.load(p12stream, p12pass.toCharArray());
 			p12stream.close();
 
-			Logger.debug("333333333  "+p12pass.toCharArray());
+			//Logger.debug("333333333  "+p12pass.toCharArray());
 
 
 			// Get Certificate & Private key from KeyStore
@@ -298,10 +298,10 @@ public class AfipController {
 
 
 
-			Logger.debug("4444  "+ks.size());
-			Logger.debug("4444bbbbbbb  "+pKey);
+			//Logger.debug("4444  "+ks.size());
+			//Logger.debug("4444bbbbbbb  "+pKey);
 			pCertificate = (X509Certificate)ks.getCertificate(signer);
-			Logger.debug("5555  "+pCertificate);
+			//Logger.debug("5555  "+pCertificate);
 			SignerDN = pCertificate.getSubjectDN().toString();
 
 			// Create a list of Certificates to include in the final CMS
@@ -409,7 +409,9 @@ public class AfipController {
 		XMLGregorianCalendar XMLGenTime = javax.xml.datatype.DatatypeFactory.newInstance().newXMLGregorianCalendar(gentime);
 		XMLGregorianCalendar XMLExpTime = javax.xml.datatype.DatatypeFactory.newInstance().newXMLGregorianCalendar(exptime);
 
-
+		System.out.println("XMLGenTime: " + XMLGenTime);
+		System.out.println("XMLExpTime: " + XMLExpTime);
+		System.out.println("exptime: " + Cache.get("exptime"));
 
 		LoginTicketRequest_xml = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>"
 						+"<loginTicketRequest version=\"1.0\">"
@@ -437,15 +439,15 @@ public class AfipController {
 		Logger.debug("Cache.get(\"tokekafip\") "+Cache.get("tokekafip"));
 		Logger.debug("Cache.get(\"singafip\") "+Cache.get("singafip"));
 		Logger.debug("Cache.get(\"exptime\") "+Cache.get("exptime"));
-		if(Cache.get("tokekafip") == null || Cache.get("singafip") == null) {
 
+		if(Cache.get("tokekafip") == null || Cache.get("singafip") == null) {
 			login();
 		}else if(Cache.get("exptime") != null) {
 
 			Date ex = (Date) Cache.get("exptime");
 			Date now = new Date();
 			Logger.debug(" Cache.get  "+Cache.get("exptime"));
-			Logger.debug("Snow  "+now);
+			Logger.debug("NOW  "+now);
 
 			if(ex.compareTo(now) <= 0) {
 				Logger.debug("SEEE EXPIROO EL TOKEN  ");
@@ -602,6 +604,7 @@ public class AfipController {
 
 
 			if(cbteTipo == TipoComprobante.NOTA_CREDITO) {
+				System.out.println("==========NOTAAA CREDITOO==================");
 				rc = RecuperoNotaCredito.find.byId(id);
 				importe = rc.getTotal().doubleValue();
 				idFactura = rc.recupero_factura_id;
@@ -611,6 +614,7 @@ public class AfipController {
 				fechaHasta = DateUtils.formatDate(periodo.date_stop,"yyyyMMdd");
 				ptoVta = new Integer(rc.puntoVenta.numero);
 			}else if(cbteTipo == TipoComprobante.NOTA_DEBITO) {
+				System.out.println("==========NOTAAA DEBITOO==================");
 				rd = RecuperoNotaDebito.find.byId(id);
 				importe = rd.getTotal().doubleValue();
 				idFactura = rd.recupero_factura_id;
@@ -627,6 +631,7 @@ public class AfipController {
 			RecuperoFactura rf = RecuperoFactura.find.byId(idFactura);
 
 			if(cbteTipo == TipoComprobante.FACTURA) {
+				System.out.println("==========NOTAAA FACTURAAA==================");
 				importe = rf.getBase().doubleValue();
 				fecha = DateUtils.formatDate(rf.fecha,"yyyyMMdd");
 				periodo = Periodo.getPeriodoByDate(rf.fecha);//xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
@@ -826,7 +831,7 @@ public class AfipController {
 		            	String errores = "";
 		    	        for(Err ax : datos2.getFECAESolicitarResult().getErrors().getErr()) {
 		    	        	errores += ax.getMsg()+" - ";
-		    	        	Logger.debug("a.getMsg();: "+ax.getMsg());
+		    	        	Logger.debug("eeeeeeeerrrrrrrrrrrrroooooooo a.getMsg();: "+ax.getMsg());
 				        }
 				        restJs.put("error", errores);
 		            }
@@ -1316,6 +1321,15 @@ public class AfipController {
 		return result;
 	}
 
+
+	public int crearComprobantesAutomaticos() {
+
+		//RecuperoFactura rf = RecuperoFactura.find.where().eq("estado_id",1)
+
+
+
+		return 1;
+	}
 
 
 
