@@ -1,3 +1,4 @@
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -5,9 +6,12 @@ import java.util.Date;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
+import javax.xml.datatype.DatatypeConfigurationException;
+
 import org.apache.commons.mail.EmailException;
 
 import akka.actor.Cancellable;
+import controllers.afip.AfipController;
 import jobs.DeudasInformesMails;
 import models.InventarioRismi;
 import models.haberes.LiquidacionMes;
@@ -30,6 +34,8 @@ public class Global extends GlobalSettings {
   private Cancellable jobMailDeuda;
   // private Cancellable jobMailDeuda2;
   private Cancellable jobMailDeuda3;
+  private Cancellable authAfip;
+  private Cancellable comprobanteAfip;
   // private Cancellable jobActualizarVistasMaterizalizadas;
 
   @Override
@@ -39,6 +45,82 @@ public class Global extends GlobalSettings {
     if (play.Play.isProd()) {
 
       Logger.info("--------------------Application has started");
+
+   // JOBS COMPROBANTE AFIP
+      /*Long timeDelayCOMPROBANTEAFIP = null;
+      int timeGapBetweenMemoryLogsInMinutesCOMPROBANTEAFIP = 1;
+
+
+      timeDelayCOMPROBANTEAFIP = getTimeDelay(0, 5, Calendar.AM, 0, 0, 0);// ACTUALIZAR INVENTARIO
+
+
+      Logger.info("Cron Job COMPROBANTE AFIP ---- " + timeDelayCOMPROBANTEAFIP);
+
+
+      comprobanteAfip = Akka.system()
+          .scheduler()
+          .schedule(Duration.create(timeDelayCOMPROBANTEAFIP, TimeUnit.MILLISECONDS),Duration.create(timeGapBetweenMemoryLogsInMinutesCOMPROBANTEAFIP, TimeUnit.MINUTES),
+
+              new Runnable() {
+                @Override
+                public void run() {
+                  System.out.println("Cron Job COMPROBANTE AFIP");
+                  try {
+                	  	AfipController a = new AfipController();
+                	  	a.getAuth();
+
+
+                  } catch (EmailException | IOException | DatatypeConfigurationException e) {
+                    e.printStackTrace();
+                  }
+                }
+              },
+              Akka.system().dispatcher());*/
+      // ------------------- FIN JOBS COMPROBANTE AFIP
+
+      // JOBS AUTH AFIP
+      Long timeDelayAUTHAFIP = null;
+      int timeGapBetweenMemoryLogsInMinutesAUTHAFIP = 12;
+
+
+      timeDelayAUTHAFIP = getTimeDelay(0, 5, Calendar.AM, 0, 0, 0);// ACTUALIZAR INVENTARIO
+
+
+      Logger.info("Cron Job AUTH AFIP ---- " + timeDelayAUTHAFIP);
+
+
+      authAfip = Akka.system()
+          .scheduler()
+          .schedule(Duration.create(timeDelayAUTHAFIP, TimeUnit.MILLISECONDS),Duration.create(timeGapBetweenMemoryLogsInMinutesAUTHAFIP, TimeUnit.HOURS),
+
+              new Runnable() {
+                @Override
+                public void run() {
+                  System.out.println("Cron Job AUTH AFIP");
+                  try {
+                	  	AfipController a = new AfipController();
+              			a.getAuth();
+
+              			 Calendar calendar2 = Calendar.getInstance();
+                         calendar2.setTime(new Date());
+
+              			EmailUtilis eu = new EmailUtilis();
+                        eu.setSubject("LOGUEO AFIP JOBS " + calendar2.get(Calendar.DAY_OF_WEEK));
+                        eu.setHtmlMsg("LOGUEO AFIP JOBS:" + calendar2.get(Calendar.DAY_OF_WEEK));
+                        eu.setFrom("marces2000@gmail.com");
+
+                        List<String> adds = new ArrayList<>();
+                        adds.add("marces2000@gmail.com");
+                        eu.setAdds(adds);
+                        eu.enviar();
+
+                  } catch (EmailException | IOException | DatatypeConfigurationException e) {
+                    e.printStackTrace();
+                  }
+                }
+              },
+              Akka.system().dispatcher());
+      // ------------------- FIN JOBS AUTH AFIP
 
       // JOBS ACTUALIZAR INVENTARIO
       Long timeDelayFromAppStartToLogFirstLogInMs = null;
@@ -61,7 +143,7 @@ public class Global extends GlobalSettings {
                 public void run() {
                   System.out.println("Cron Job");
                   try {
-                	LiquidacionMes.actualizarVistaMaterializadaPuestosLaborales();  
+                	LiquidacionMes.actualizarVistaMaterializadaPuestosLaborales();
                     InventarioRismi.actualizarInventarioRismi();
                   } catch (EmailException e) {
                     e.printStackTrace();
@@ -199,14 +281,14 @@ public class Global extends GlobalSettings {
 
       /*
        * timeDelayFromAppStartToLogFirstLogInMs = getTimeDelay(0,6,Calendar.AM,6,0,0);//MAIL DEUDA 6AM
-       * 
+       *
        * System.out.println("Cron Job   MAIL INFORME DEUDA ---- "+timeDelayFromAppStartToLogFirstLogInMs);
        * jobMailDeuda2 = Akka.system().scheduler().schedule(
        * Duration.create(timeDelayFromAppStartToLogFirstLogInMs, TimeUnit.MILLISECONDS),
        * Duration.create(timeGapBetweenMemoryLogsInMinutes, TimeUnit.DAYS),
-       * 
+       *
        * new Runnable() {
-       * 
+       *
        * @Override
        * public void run() {
        * Logger.info("Cron Job de MAIL INFORME DEUDA");
@@ -226,9 +308,9 @@ public class Global extends GlobalSettings {
       /*
        * jobActualizarVistasMaterizalizadas = Akka.system().scheduler().schedule(
        * Duration.Zero(), Duration.create(5, TimeUnit.MINUTES),
-       * 
+       *
        * new Runnable() {
-       * 
+       *
        * @Override
        * public void run() {
        * System.out.println("Cron Job de VISTAS MATERIZALIZADAS");
@@ -288,7 +370,8 @@ public class Global extends GlobalSettings {
     jobMailDeuda3.cancel();
     // jobActualizarVistasMaterizalizadas.cancel();
     jobHistorialDeuda.cancel();
-
+    authAfip.cancel();
+    comprobanteAfip.cancel();
     super.onStop(app);
   }
 }
