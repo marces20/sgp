@@ -2072,7 +2072,7 @@ order by nc.numero
 	 		    		"        		<td>"+utils.NumberUtils.moneda(rfl.recuperoFactura.getTotalNotaCredito()) +"</td>" +
 	 		    		"        		<td>"+utils.NumberUtils.moneda(rfl.recuperoFactura.getTotalNotaDebito()) +"</td>" +
 	 		    		"               <td>"+utils.NumberUtils.moneda(rfl.monto) +"</td>" +
-	 		    		"               <td>"+utils.NumberUtils.moneda(rfl.recuperoFactura.getTotal().subtract(rfl.monto))+"</td>" +
+	 		    		"               <td>"+utils.NumberUtils.moneda(rfl.recuperoFactura.getSaldoPendiente())+"</td>" +
 	 		    		"               <td>"+desc+"</td>" +
 	 		    		"            </tr>";
 	 	    }
@@ -2096,7 +2096,7 @@ order by nc.numero
 		 		    		"        		<td>"+utils.NumberUtils.moneda(rfl.recuperoFactura.getTotalNotaCredito()) +"</td>" +
 		 		    		"        		<td>"+utils.NumberUtils.moneda(rfl.recuperoFactura.getTotalNotaDebito()) +"</td>" +
 		 		    		"               <td>"+utils.NumberUtils.moneda(rfl.monto) +"</td>" +
-		 		    		"               <td>"+utils.NumberUtils.moneda(rfl.recuperoFactura.getTotal().subtract(rfl.monto))+"</td>" +
+		 		    		"               <td>"+utils.NumberUtils.moneda(rfl.recuperoFactura.getSaldoPendiente())+"</td>" +
 		 		    		"               <td>"+desc+"</td>" +
 		 		    		"            </tr>";
 		 	  }
@@ -2115,7 +2115,7 @@ order by nc.numero
 		 		    		"        		<td>"+utils.NumberUtils.moneda(rfl.recuperoFactura.getTotalNotaCredito()) +"</td>" +
 		 		    		"        		<td>"+utils.NumberUtils.moneda(rfl.recuperoFactura.getTotalNotaDebito()) +"</td>" +
 		 		    		"               <td>"+utils.NumberUtils.moneda(rfl.monto) +"</td>" +
-		 		    		"               <td>"+utils.NumberUtils.moneda(rfl.recuperoFactura.getTotal().subtract(rfl.monto))+"</td>" +
+		 		    		"               <td>"+utils.NumberUtils.moneda(rfl.recuperoFactura.getSaldoPendiente())+"</td>" +
 		 		    		"               <td>"+desc+"</td>" +
 		 		    		"            </tr>";
 		 	  }
@@ -2140,7 +2140,7 @@ order by nc.numero
 		 		    		"        		<td>"+utils.NumberUtils.moneda(rfl.recuperoFactura.getTotalNotaCredito()) +"</td>" +
 		 		    		"        		<td>"+utils.NumberUtils.moneda(rfl.recuperoFactura.getTotalNotaDebito()) +"</td>" +
 		 		    		"               <td>"+utils.NumberUtils.moneda(rfl.monto) +"</td>" +
-		 		    		"               <td>"+utils.NumberUtils.moneda(rfl.recuperoFactura.getTotal().subtract(rfl.monto))+"</td>" +
+		 		    		"               <td>"+utils.NumberUtils.moneda(rfl.recuperoFactura.getSaldoPendiente())+"</td>" +
 		 		    		"               <td>"+desc+"</td>" +
 		 		    		"            </tr>";
 
@@ -2160,7 +2160,7 @@ order by nc.numero
 		 		    		"        		<td>"+utils.NumberUtils.moneda(rfl.recuperoFactura.getTotalNotaCredito()) +"</td>" +
 		 		    		"        		<td>"+utils.NumberUtils.moneda(rfl.recuperoFactura.getTotalNotaDebito()) +"</td>" +
 		 		    		"               <td>"+utils.NumberUtils.moneda(rfl.monto) +"</td>" +
-		 		    		"               <td>"+utils.NumberUtils.moneda(rfl.recuperoFactura.getTotal().subtract(rfl.monto))+"</td>" +
+		 		    		"               <td>"+utils.NumberUtils.moneda(rfl.recuperoFactura.getSaldoPendiente())+"</td>" +
 		 		    		"               <td>"+desc+"</td>" +
 		 		    		"            </tr>";
 		 	  }
@@ -2179,7 +2179,7 @@ order by nc.numero
 		 		    		"        		<td>"+utils.NumberUtils.moneda(rfl.recuperoFactura.getTotalNotaCredito()) +"</td>" +
 		 		    		"        		<td>"+utils.NumberUtils.moneda(rfl.recuperoFactura.getTotalNotaDebito()) +"</td>" +
 		 		    		"               <td>"+utils.NumberUtils.moneda(rfl.monto) +"</td>" +
-		 		    		"               <td>"+utils.NumberUtils.moneda(rfl.recuperoFactura.getTotal().subtract(rfl.monto))+"</td>" +
+		 		    		"               <td>"+utils.NumberUtils.moneda(rfl.recuperoFactura.getSaldoPendiente())+"</td>" +
 		 		    		"               <td>"+desc+"</td>" +
 		 		    		"            </tr>";
 		 	  }
