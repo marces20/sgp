@@ -2048,6 +2048,7 @@ public class PuestosLaboralesReportesController extends Controller  {
 					" 	prov.id provincia, " +
 					" 	prov.macro_id provincia_macro, " +
 					" 	loc.nombre localidad, " +
+					" 	loc.sucursal_macro_id sucursal_macro_id, " +
 					"   a.calle calle, " +
 					"   a.numero calle_numero, " +
 					" 	CAST(l.numero AS text) legajo, " +
@@ -2074,11 +2075,15 @@ public class PuestosLaboralesReportesController extends Controller  {
 
 				if(nuevo) {
 
+					if(s.getInteger("sucursal_macro_id") != null ){
+						cadena.add(StringUtils.cortarString(s.getInteger("sucursal_macro_id").toString(), 3)+"\t");
+					}else {
+						//sucursal	3	numerico
+						cadena.add(StringUtils.cortarString("14", 3)+"\t");
+					}
 
 
 
-					//sucursal	3	numerico
-					cadena.add(StringUtils.cortarString("1", 3)+"\t");
 
 					//apellido	32	texto
 					cadena.add(StringUtils.cortarString(s.getString("apellido"), 32)+"\t");
