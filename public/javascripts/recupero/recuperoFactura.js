@@ -1,5 +1,5 @@
 $( function () {
-	$('#searchCliente,#searchPlanilla,#searchDeposito,#searchPeriodo').modalSearch();
+	$('#searchCliente,#searchPlanilla,#searchDeposito,#searchPeriodo,#searchUsuario').modalSearch();
 	$("#numero_factura").mask("99999999");
 	$('#searchPacienteCarga').click( function() {
 		var url = $(this).attr("data-url");
