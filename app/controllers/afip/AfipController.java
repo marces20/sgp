@@ -80,6 +80,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
 import models.ClienteTipo;
+import models.Estado;
 import models.Periodo;
 import models.TipoComprobante;
 import models.recupero.RecuperoFactura;
@@ -90,6 +91,7 @@ import play.Play;
 import play.cache.Cache;
 import utils.DateUtils;
 import utils.EmailUtilis;
+import utils.UriTrack;
 import utils.afip.wsfe.wsdl.*;
 
 import org.dom4j.Document;
@@ -1322,16 +1324,143 @@ public class AfipController {
 	}
 
 
-	public int crearComprobantesAutomaticos() {
+	public int crearComprobantesAutomaticos() throws IOException {
 
-		//RecuperoFactura rf = RecuperoFactura.find.where().eq("estado_id",1)
+		if (play.Play.isProd()) {
+		Logger.debug("rrrrrrrrrrrrrrrrrrr1 "+Cache.get("corriendo_afip"));
+			if(Cache.get("corriendo_afip") == null || Cache.get("corriendo_afip") == "false" ) {
+				Logger.debug("rrrrrrrrrrrrrrrrrrr2 ");
+				Cache.set("corriendo_afip","true");
+				List<RecuperoFactura> rf = RecuperoFactura.find.fetch("puntoVenta").where()
+											.eq("estado_id",Estado.RECUPERO_FACTURA_APROBADO)
+											.eq("puntoVenta.tipo_facturacion", "ws")
+											.eq("puntoVenta.habilitado", true)
+											.disjunction()
+											.isNull("cae")
+											.eq("cae", "")
+											.endJunction()
+											.findList();
 
+				if(rf.size() > 0) {
+					for(RecuperoFactura rfx :rf) {
+						correrFacturaAfip(rfx.id);
+						//Logger.debug("xxxxxxxxxxxx "+rfx.id);
+					}
+				}
 
+				List<RecuperoNotaCredito> rc = RecuperoNotaCredito.find.fetch("recupero_factura").fetch("puntoVenta").where()
+						.eq("recupero_factura.estado_id",Estado.RECUPERO_FACTURA_APROBADO)
+						.eq("puntoVenta.tipo_facturacion", "ws")
+						.eq("puntoVenta.habilitado", true)
+						.disjunction()
+						.isNull("cae")
+						.eq("cae", "")
+						.endJunction()
+						.findList();
+
+				if(rc.size() > 0) {
+					for(RecuperoNotaCredito rfx :rc) {
+						correrNota(rfx.id,TipoComprobante.NOTA_CREDITO);
+						//Logger.debug("xxxxxxxxxxxx22 "+rfx.id);
+					}
+				}
+
+				List<RecuperoNotaDebito> rd = RecuperoNotaDebito.find.fetch("recupero_factura").fetch("puntoVenta").where()
+						.eq("recupero_factura.estado_id",Estado.RECUPERO_FACTURA_APROBADO)
+						.eq("puntoVenta.tipo_facturacion", "ws")
+						.eq("puntoVenta.habilitado", true)
+						.disjunction()
+						.isNull("cae")
+						.eq("cae", "")
+						.endJunction()
+						.findList();
+
+				if(rc.size() > 0) {
+					for(RecuperoNotaDebito rfx :rd) {
+						correrNota(rfx.id,TipoComprobante.NOTA_DEBITO);
+						//Logger.debug("xxxxxxxxxxxx33 "+rfx.id);
+					}
+				}
+				Cache.set("corriendo_afip","false");
+			}else {
+				Cache.set("corriendo_afip","false");
+			}
+		}
 
 		return 1;
 	}
 
+	public static void correrFacturaAfip(Long idFactura) throws IOException{
+		if (play.Play.isProd()) {
+			try {
+				AfipController ac = new AfipController();
+				ObjectNode ret = ac.setComprobante(idFactura,TipoComprobante.FACTURA);
 
+				if(ret.get("success").asText().compareTo("true")  == 0) {
+					//success
+				}else {
+					//error
+					//flash("error", "error: "+ret.get("error").asText());
+				}
+			}catch (Exception e) {
+				//error
+				//flash("error", "error: "+e);
+			}
+		}else {
+			//error
+			//flash("error", "error: NO ES PRODUCCION");
+		}
+	}
+
+	public static void correrNota(Long idNota,int tipoComprobante) throws IOException{
+
+		if (play.Play.isProd()) {
+			try {
+				AfipController ac = new AfipController();
+				ObjectNode ret = null;
+				if(tipoComprobante == TipoComprobante.NOTA_CREDITO) {
+
+					//RecuperoNotaCredito rc = RecuperoNotaCredito.find.byId(idNota);
+
+					//if(rc.recupero_factura.cae != null && !rc.recupero_factura.cae.isEmpty()) {
+						ret = ac.setComprobante(idNota,TipoComprobante.NOTA_CREDITO);
+						if(ret.get("success").asText().compareTo("true")  == 0) {
+							//flash("success", "CAEE: "+ret.get("cae").asText());
+						}else if(ret.get("error") != null){
+							//flash("error", "error: "+ret.get("error").asText());
+						}
+					//}else {
+						//	flash("error", "error: La factura no tiene cae asignado");
+						//}
+
+
+				}else if(tipoComprobante == TipoComprobante.NOTA_DEBITO) {
+
+					//RecuperoNotaDebito rd = RecuperoNotaDebito.find.byId(idNota);
+					//if(rd.recupero_factura.cae != null && !rd.recupero_factura.cae.isEmpty()) {
+						ret = ac.setComprobante(idNota,TipoComprobante.NOTA_DEBITO);
+						if(ret.get("success").asText().compareTo("true")  == 0) {
+							//flash("success", "CAEE: "+ret.get("cae").asText());
+						}else if(ret.get("error") != null){
+							//flash("error", "error: "+ret.get("error").asText());
+						}
+						//}else {
+
+						//	flash("error", "error: La factura no tiene cae asignado");
+						//}
+
+
+				}
+
+
+
+			}catch (Exception e) {
+				//flash("error", "error: "+e);
+			}
+		}else {
+			//flash("error", "error: NO ES PRODUCCION");
+		}
+	}
 
 
 	/*
