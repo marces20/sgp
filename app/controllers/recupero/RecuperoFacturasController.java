@@ -73,7 +73,8 @@ public class RecuperoFacturasController extends Controller {
 												  		RequestVar.get("btnFiltro[4]"),//pagada
 												  		RequestVar.get("puntoventa_id"),
 												  		RequestVar.get("planilla_id"),
-												  		RequestVar.get("deposito_id")
+												  		RequestVar.get("deposito_id"),
+												  		RequestVar.get("create_usuario_id")
 												  		  ),d));
 	}
 
