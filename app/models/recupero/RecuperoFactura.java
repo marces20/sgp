@@ -225,7 +225,7 @@ public class RecuperoFactura extends Model {
 												   String deposito) {
     	Pagination<RecuperoFactura> p = new Pagination<RecuperoFactura>();
     	p.setOrderDefault("DESC");
-    	p.setSortByDefault("id");
+    	p.setSortByDefault("numero");
 
     	ExpressionList<RecuperoFactura> e = find
     										.fetch("planilla")
