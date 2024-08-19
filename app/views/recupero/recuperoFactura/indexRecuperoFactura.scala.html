@@ -178,6 +178,24 @@
 				</div>
 			</div>
 			<div class="col-sm-2">
+					<label class="control-label">Usuario
+						<div class="input-group">
+							@inputText(formBuscador("create_usuario_id"), 'hidden -> "hidden", 'id -> "create_usuario_id")
+							@inputText(formBuscador("create_usuario"), 'name -> "", 'class -> "form-control", 'id -> "create_usuario")
+							<span class="input-group-addon">
+							<a href="#" id="searchUsuario"
+										data-title="Selección de responsables"
+										data-url="@controllers.administracion.routes.UsuariosController.modalBuscar()"
+										data-height="650"
+										data-width="700"
+										data-listen="modal.seleccion.usuario.simple"
+										data-label="#create_usuario"
+										data-field="#create_usuario_id">
+							<i class="glyphicon glyphicon-search"></i></a></span>
+						</div>
+					</label>
+				</div>
+			<div class="col-sm-2">
 				<div class="form-group">
 				<label for="nombre" class="control-label">&nbsp;</label>
 				<button  class="form-control btn btn-primary">Buscar</button>
@@ -228,6 +246,7 @@
 					<th width="95">Total</th>
 					<th width="95">Saldo</th>
 					<th width="100">Estado</th>
+					<th width="">Usuario</th>
 					<th width="30">#</th>
 				</tr>
 			</thead>
@@ -254,6 +273,7 @@
 							<br/>Pagado @rf.getPorcentajePagado()%
 						}
 					}</td>
+					<td class="" >@if(rf.create_usuario != null){@rf.create_usuario.nombre}</td>
 					<td>
 						<a class="btn btn-default btn-xs delete-confirm-link notSeleccion" href="@controllers.recupero.routes.RecuperoFacturasController.eliminar(rf.id)&@UriTrack.encode()">
 							<i class="glyphicon glyphicon-trash icono-eliminar"></i>
