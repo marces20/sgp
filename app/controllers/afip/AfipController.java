@@ -551,6 +551,18 @@ public class AfipController {
 		        	errores += a.getMsg()+" - ";
 		        	System.out.println("a.getMsg();: "+a.getMsg());
 		        }
+
+		        EmailUtilis eu = new EmailUtilis();
+		        eu.setSubject("ERROR AFIJ getUltimoComprobanteNew ");
+		        eu.setHtmlMsg("Titulo errores: "+errores);
+		        eu.setFrom("marces2000@gmail.com");
+
+		        List<String> adds = new ArrayList<>();
+		        adds.add("marces2000@gmail.com");
+		        eu.setAdds(adds);
+		        eu.enviar();
+
+
 		        restJs.put("error", errores);
 		        throw new Exception();
 	        }
@@ -901,7 +913,7 @@ public class AfipController {
 			Cache.set("tokekafip",null);
 		}
 
-		Logger.debug("termina setComprobante 4444444444444444444444444444444444 ");
+		Logger.debug("termina setComprobante 4444444444444444444444444444444444 "+restJs.toString());
 
 
 		return restJs;
