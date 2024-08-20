@@ -65,7 +65,7 @@ public class Global extends GlobalSettings {
               new Runnable() {
                 @Override
                 public void run() {
-                  System.out.println("Cron Job COMPROBANTE AFIP");
+                  System.out.println("Cron Job COMPROBANTE AFIP "+new Date());
                   try {
 
                 	  	List<Usuario> u = Usuario.find.where().eq("nombre","Administrator").findList();
