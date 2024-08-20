@@ -130,17 +130,8 @@ public class AfipController {
 
 		String LoginTicketResponse = null;
 
-		//System.setProperty("http.proxyHost", "");
-		//System.setProperty("http.proxyPort", "80");
-		Logger.debug("111111111111111");
 		// Read config from phile
 		Properties config = new Properties();
-
-		//try {
-		//	config.load(new FileInputStream("./wsaa_client.properties"));
-		//} catch (Exception e) {
-		//	e.printStackTrace();
-		//}
 
 		String endpoint ="https://wsaa.afip.gov.ar/ws/services/LoginCms"; //config.getProperty("endpoint","http://wsaahomo.afip.gov.ar/ws/services/LoginCms");
 		//wsdl_testing = 'https://wsaahomo.afip.gov.ar/ws/services/LoginCms?WSDL'
@@ -174,9 +165,16 @@ public class AfipController {
 		InputStream in = Play.application().resourceAsStream("resources/PARQUESALUD_53794c62e26a1a54.p12");
 
 		String dirTemp = System.getProperty("java.io.tmpdir");
-		File archivo = new File(dirTemp+"/PARQUESALUD_53794c62e26a1a54.p12");
 
-		Files.copy(in, archivo.toPath(), StandardCopyOption.REPLACE_EXISTING);
+
+		File archivo = new File("/home/administrador/PARQUESALUD_53794c62e26a1a54.p12");
+
+
+		Files.copy(in, archivo.toPath(), StandardCopyOption.COPY_ATTRIBUTES.REPLACE_EXISTING);
+		archivo.setExecutable(true);
+		archivo.setReadable(true);
+		archivo.setWritable(true);
+
 
 		byte [] LoginTicketRequest_xml_cms = create_cms(archivo.getAbsolutePath(), "parquesalud", "parquesalud", dstDN, "wsfe", new Long(82800000));
 
@@ -285,6 +283,7 @@ public class AfipController {
 		//
 		// Manage Keys & Certificates
 		//
+		Logger.debug("aaaaaaaaaaa  ");
 		try {
 			// Create a keystore using keys from the pkcs#12 p12file
 			KeyStore ks = KeyStore.getInstance("pkcs12");
@@ -295,9 +294,6 @@ public class AfipController {
 
 			ks.load(p12stream, p12pass.toCharArray());
 			p12stream.close();
-
-			//Logger.debug("333333333  "+p12pass.toCharArray());
-
 
 			// Get Certificate & Private key from KeyStore
 			pKey = (PrivateKey) ks.getKey(signer, p12pass.toCharArray());
@@ -321,6 +317,7 @@ public class AfipController {
 			cstore = CertStore.getInstance("Collection", new CollectionCertStoreParameters (certList), "BC");
 		}
 		catch (Exception e) {
+			Logger.debug("xxxxxxxxxxxxx77  "+e);
 			Cache.set("tokekafip",null);
 			e.printStackTrace();
 			EmailUtilis eu = new EmailUtilis();
@@ -333,7 +330,7 @@ public class AfipController {
 	        eu.setAdds(adds);
 	        eu.enviar();
 		}
-
+		Logger.debug("xxxxxxxxxxxxxffff  ");
 		//
 		// Create XML Message
 		//
@@ -343,6 +340,7 @@ public class AfipController {
 			LoginTicketRequest_xml = create_LoginTicketRequest(SignerDN, dstDN, service, TicketTime);
 
 		}catch (Exception e) {
+			Logger.debug("xxxxxxxxxxxxx88  "+e);
 			Cache.set("tokekafip",null);
 			e.printStackTrace();
 			EmailUtilis eu = new EmailUtilis();
@@ -433,7 +431,7 @@ public class AfipController {
 			+"<service>" + service + "</service>"
 			+"</loginTicketRequest>";
 
-		//System.out.println("TRA: " + LoginTicketRequest_xml);
+		System.out.println("TRA: " + LoginTicketRequest_xml);
 
 		return (LoginTicketRequest_xml);
 	}
@@ -449,9 +447,10 @@ public class AfipController {
 		Logger.debug("Cache.get(\"exptime\") "+Cache.get("exptime"));
 
 		if(Cache.get("tokekafip") == null || Cache.get("singafip") == null) {
+			Logger.debug("xxxxxxxxxxxxx1 ");
 			login();
 		}else if(Cache.get("exptime") != null) {
-
+			Logger.debug("xxxxxxxxxxxxx2 ");
 			Date ex = (Date) Cache.get("exptime");
 			Date now = new Date();
 			Logger.debug(" Cache.get  "+Cache.get("exptime"));
@@ -462,11 +461,12 @@ public class AfipController {
 				login();
 			}
 		}else {
+			Logger.debug("xxxxxxxxxxxxx3 ");
 			login();
 		}
 
 		//login();
-
+		Logger.debug("xxxxxxxxxxxxx4 ");
 
 		auth = new FEAuthRequest();
 		auth.setCuit(Long.parseLong("30712224300"));
@@ -504,7 +504,7 @@ public class AfipController {
 			auth.setToken(Cache.get("tokekafip").toString());
 			auth.setSign(Cache.get("singafip").toString());*/
 
-			System.out.println("-----------getFECompUltimoAutorizadoResult-------------");
+			System.out.println("-----------getFECompUltimoAutorizadoResult authauthauth-------------"+auth.toString());
 
 			FECompUltimoAutorizado request = new FECompUltimoAutorizado();
 			request.setAuth(auth);
@@ -564,7 +564,7 @@ public class AfipController {
 
 
 		        restJs.put("error", errores);
-		        throw new Exception();
+		        //throw new Exception();
 	        }
 
 
@@ -713,7 +713,11 @@ public class AfipController {
 					ObjectNode cc = a.getUltimoComprobanteNew(ptoVta,cbteTipo);
 					Long CbteNro = null;
 
+					if(cc.get("error") != null) {
 
+						restJs.put("error", cc.get("error"));
+						return restJs;
+					}
 
 
 					if(cc.get("success").asText().compareTo("true") == 0) {
@@ -1433,6 +1437,8 @@ public class AfipController {
 					RecuperoAfipMovimiento ram = new RecuperoAfipMovimiento(null,idFactura.intValue(), null,null,TipoComprobante.FACTURA,ret.get("cae").asText(),"FACTURA","",new Date());
 					ram.save();
 				}else {
+					RecuperoAfipMovimiento ram = new RecuperoAfipMovimiento(null,idFactura.intValue(), null,null,TipoComprobante.FACTURA,null,"FACTURA ERROR",ret.get("error").asText(),new Date());
+					ram.save();
 					//error
 					//flash("error", "error: "+ret.get("error").asText());
 				}
@@ -1464,6 +1470,8 @@ public class AfipController {
 							ram.save();
 						}else if(ret.get("error") != null){
 							//flash("error", "error: "+ret.get("error").asText());
+							RecuperoAfipMovimiento ram = new RecuperoAfipMovimiento(null, null,idNota.intValue(),null,TipoComprobante.NOTA_CREDITO,null,"NOTA CREDITO ERROR",ret.get("error").asText(),new Date());
+							ram.save();
 						}
 					//}else {
 						//	flash("error", "error: La factura no tiene cae asignado");
@@ -1477,10 +1485,12 @@ public class AfipController {
 						ret = ac.setComprobante(idNota,TipoComprobante.NOTA_DEBITO);
 						if(ret.get("success").asText().compareTo("true")  == 0) {
 							//flash("success", "CAEE: "+ret.get("cae").asText());
-							RecuperoAfipMovimiento ram = new RecuperoAfipMovimiento(null,null,null, idNota.intValue(),TipoComprobante.NOTA_DEBITO,ret.get("cae").asText(),"FACTURA","",new Date());
+							RecuperoAfipMovimiento ram = new RecuperoAfipMovimiento(null,null,null, idNota.intValue(),TipoComprobante.NOTA_DEBITO,ret.get("cae").asText(),"NOTA_DEBITO","",new Date());
 							ram.save();
 						}else if(ret.get("error") != null){
 							//flash("error", "error: "+ret.get("error").asText());
+							RecuperoAfipMovimiento ram = new RecuperoAfipMovimiento(null,null,null, idNota.intValue(),TipoComprobante.NOTA_DEBITO,null,"NOTA_DEBITO ERROR",ret.get("error").asText(),new Date());
+							ram.save();
 						}
 						//}else {
 
