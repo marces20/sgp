@@ -222,10 +222,11 @@ public class RecuperoFactura extends Model {
 												   String filtroPagado,
 												   String puntoventa_id,
 												   String planilla_id,
-												   String deposito) {
+												   String deposito,
+												   String create_usuario_id) {
     	Pagination<RecuperoFactura> p = new Pagination<RecuperoFactura>();
     	p.setOrderDefault("DESC");
-    	p.setSortByDefault("numero");
+    	p.setSortByDefault("id");
 
     	ExpressionList<RecuperoFactura> e = find
     										.fetch("planilla")
@@ -237,6 +238,11 @@ public class RecuperoFactura extends Model {
     	if(!planilla_id.isEmpty()) {
     		e.eq("planilla_id", Integer.parseInt(planilla_id));
     	}
+
+    	if(!create_usuario_id.isEmpty()) {
+    		e.eq("create_usuario_id", Integer.parseInt(create_usuario_id));
+    	}
+
 
     	if(!nombre.isEmpty()) {
     		e.ilike("nombre", "%"+nombre+"%");
