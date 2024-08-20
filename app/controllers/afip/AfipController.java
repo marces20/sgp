@@ -83,6 +83,7 @@ import models.ClienteTipo;
 import models.Estado;
 import models.Periodo;
 import models.TipoComprobante;
+import models.recupero.RecuperoAfipMovimiento;
 import models.recupero.RecuperoFactura;
 import models.recupero.RecuperoNotaCredito;
 import models.recupero.RecuperoNotaDebito;
@@ -193,6 +194,7 @@ public class AfipController {
 			System.out.println("xxxxxxxxxx: " + LoginTicketResponse);
 
 		} catch (Exception e) {
+			Cache.set("tokekafip",null);
 			e.printStackTrace();
 		}
 
@@ -216,6 +218,7 @@ public class AfipController {
 
 
 		} catch (Exception e) {
+			Cache.set("tokekafip",null);
 			//System.out.println("tcaaaaaaaaaaaaaaaaaajetttttttttttttttttaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
 			System.out.println(e);
 		}
@@ -248,6 +251,7 @@ public class AfipController {
 
 
 		} catch (Exception e) {
+			Cache.set("tokekafip",null);
 			e.printStackTrace();
 			Logger.debug("ExceptionExceptionExceptionExceptionExceptionException:  "+e);
 
@@ -317,6 +321,7 @@ public class AfipController {
 			cstore = CertStore.getInstance("Collection", new CollectionCertStoreParameters (certList), "BC");
 		}
 		catch (Exception e) {
+			Cache.set("tokekafip",null);
 			e.printStackTrace();
 			EmailUtilis eu = new EmailUtilis();
 	        eu.setSubject("ERROR LOGUEO AFIJ 1- create_cms ");
@@ -338,6 +343,7 @@ public class AfipController {
 			LoginTicketRequest_xml = create_LoginTicketRequest(SignerDN, dstDN, service, TicketTime);
 
 		}catch (Exception e) {
+			Cache.set("tokekafip",null);
 			e.printStackTrace();
 			EmailUtilis eu = new EmailUtilis();
 	        eu.setSubject("ERROR LOGUEO AFIJ 2- create_cms ");
@@ -374,7 +380,7 @@ public class AfipController {
 		}
 		catch (Exception e) {
 			e.printStackTrace();
-
+			Cache.set("tokekafip",null);
 			EmailUtilis eu = new EmailUtilis();
 	        eu.setSubject("ERROR LOGUEO AFIJ 3- create_cms ");
 	        eu.setHtmlMsg("Titulo: "+e);
@@ -487,6 +493,7 @@ public class AfipController {
 
 		}catch (Exception e) {
 			// TODO: handle exception
+			Cache.set("tokekafip",null);
 		}
 
 
@@ -555,6 +562,7 @@ public class AfipController {
 	        restJs.put("success", true);
 		}catch (Exception e) {
 			e.printStackTrace();
+			Cache.set("tokekafip",null);
 			Logger.debug("errorrrr ennn GETT ULTIMO COMPROBANTEEEEE");
 			EmailUtilis eu = new EmailUtilis();
 	        eu.setSubject("ERROR AFIJ getUltimoComprobanteNew ");
@@ -588,6 +596,7 @@ public class AfipController {
 
 		}catch (Exception e) {
 			Logger.debug("errro setComprobante 1 "+e);
+			Cache.set("tokekafip",null);
 		}
 
 		try {
@@ -836,6 +845,8 @@ public class AfipController {
 		    	        	Logger.debug("eeeeeeeerrrrrrrrrrrrroooooooo a.getMsg();: "+ax.getMsg());
 				        }
 				        restJs.put("error", errores);
+				        RecuperoAfipMovimiento ram = new RecuperoAfipMovimiento(null,idFactura.intValue(),null, null,cbteTipo,null,"ERROR",errores,new Date());
+						ram.save();
 		            }
 
 
@@ -887,6 +898,7 @@ public class AfipController {
 
 		}catch (Exception e) {
 			Logger.debug("errro setComprobante 333333333333333333333333333333333333 "+e);
+			Cache.set("tokekafip",null);
 		}
 
 		Logger.debug("termina setComprobante 4444444444444444444444444444444444 ");
@@ -1397,7 +1409,8 @@ public class AfipController {
 				ObjectNode ret = ac.setComprobante(idFactura,TipoComprobante.FACTURA);
 
 				if(ret.get("success").asText().compareTo("true")  == 0) {
-					//success
+					RecuperoAfipMovimiento ram = new RecuperoAfipMovimiento(null,idFactura.intValue(), null,null,TipoComprobante.FACTURA,ret.get("cae").asText(),"FACTURA","",new Date());
+					ram.save();
 				}else {
 					//error
 					//flash("error", "error: "+ret.get("error").asText());
@@ -1426,6 +1439,8 @@ public class AfipController {
 						ret = ac.setComprobante(idNota,TipoComprobante.NOTA_CREDITO);
 						if(ret.get("success").asText().compareTo("true")  == 0) {
 							//flash("success", "CAEE: "+ret.get("cae").asText());
+							RecuperoAfipMovimiento ram = new RecuperoAfipMovimiento(null,null, idNota.intValue(),null,TipoComprobante.NOTA_CREDITO,ret.get("cae").asText(),"NOTA CREDITO","",new Date());
+							ram.save();
 						}else if(ret.get("error") != null){
 							//flash("error", "error: "+ret.get("error").asText());
 						}
@@ -1441,6 +1456,8 @@ public class AfipController {
 						ret = ac.setComprobante(idNota,TipoComprobante.NOTA_DEBITO);
 						if(ret.get("success").asText().compareTo("true")  == 0) {
 							//flash("success", "CAEE: "+ret.get("cae").asText());
+							RecuperoAfipMovimiento ram = new RecuperoAfipMovimiento(null,null,null, idNota.intValue(),TipoComprobante.NOTA_DEBITO,ret.get("cae").asText(),"FACTURA","",new Date());
+							ram.save();
 						}else if(ret.get("error") != null){
 							//flash("error", "error: "+ret.get("error").asText());
 						}
