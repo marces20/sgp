@@ -1339,7 +1339,7 @@ public class AfipController {
 	public int crearComprobantesAutomaticos() throws IOException {
 
 		if (play.Play.isProd()) {
-		Logger.debug("rrrrrrrrrrrrrrrrrrr1 "+Cache.get("corriendo_afip"));
+			Logger.debug("Cache.get(\"corriendo_afip\")----> "+Cache.get("corriendo_afip"));
 			if(Cache.get("corriendo_afip") == null || Cache.get("corriendo_afip") == "false" ) {
 				Logger.debug("rrrrrrrrrrrrrrrrrrr2 ");
 				Cache.set("corriendo_afip","true");

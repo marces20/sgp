@@ -14,6 +14,7 @@ import akka.actor.Cancellable;
 import controllers.afip.AfipController;
 import jobs.DeudasInformesMails;
 import models.InventarioRismi;
+import models.Usuario;
 import models.haberes.LiquidacionMes;
 import models.informes.HistorialDeudaProveedores;
 import play.Application;
@@ -47,7 +48,7 @@ public class Global extends GlobalSettings {
       Logger.info("--------------------Application has started");
 
    // JOBS COMPROBANTE AFIP
-      /*Long timeDelayCOMPROBANTEAFIP = null;
+      Long timeDelayCOMPROBANTEAFIP = null;
       int timeGapBetweenMemoryLogsInMinutesCOMPROBANTEAFIP = 1;
 
 
@@ -59,23 +60,26 @@ public class Global extends GlobalSettings {
 
       comprobanteAfip = Akka.system()
           .scheduler()
-          .schedule(Duration.create(timeDelayCOMPROBANTEAFIP, TimeUnit.MILLISECONDS),Duration.create(timeGapBetweenMemoryLogsInMinutesCOMPROBANTEAFIP, TimeUnit.MINUTES),
+          .schedule(Duration.create(new Long(60000), TimeUnit.MILLISECONDS),Duration.create(timeGapBetweenMemoryLogsInMinutesCOMPROBANTEAFIP, TimeUnit.MINUTES),
 
               new Runnable() {
                 @Override
                 public void run() {
                   System.out.println("Cron Job COMPROBANTE AFIP");
                   try {
-                	  	AfipController a = new AfipController();
-                	  	a.getAuth();
 
+                	  	List<Usuario> u = Usuario.find.where().eq("nombre","Administrator").findList();
+                	  	if(u.size() > 0) {
+                	  		AfipController a = new AfipController();
+                	  		a.crearComprobantesAutomaticos();
+                	  	}
 
-                  } catch (EmailException | IOException | DatatypeConfigurationException e) {
+                  } catch ( IOException e) {
                     e.printStackTrace();
                   }
                 }
               },
-              Akka.system().dispatcher());*/
+              Akka.system().dispatcher());
       // ------------------- FIN JOBS COMPROBANTE AFIP
 
       // JOBS AUTH AFIP
