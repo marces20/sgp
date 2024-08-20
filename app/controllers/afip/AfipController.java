@@ -1405,7 +1405,7 @@ public class AfipController {
 						.endJunction()
 						.findList();
 
-				if(rc.size() > 0) {
+				if(rd.size() > 0) {
 					Logger.debug("HAY NC AFIP PARA CORRER "+rc.size());
 					for(RecuperoNotaDebito rfx :rd) {
 						correrNota(rfx.id,TipoComprobante.NOTA_DEBITO);
