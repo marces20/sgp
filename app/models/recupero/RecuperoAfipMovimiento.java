@@ -18,11 +18,11 @@ import play.db.ebean.Model.Finder;
 import utils.pagination.Pagination;
 
 @Entity
-@Table(name = "recupero_afip_movimientos_id_seq")
+@Table(name = "recupero_afip_movimientos")
 public class RecuperoAfipMovimiento extends Model {
 
 	@Id
-	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="recupero_facturas_id_seq")
+	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="recupero_afip_movimientos_id_seq")
 	public Long id;
 
 	public String comprobante_id;

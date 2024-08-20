@@ -60,7 +60,8 @@ public class Global extends GlobalSettings {
 
       comprobanteAfip = Akka.system()
           .scheduler()
-          .schedule(Duration.create(new Long(60000), TimeUnit.MILLISECONDS),Duration.create(timeGapBetweenMemoryLogsInMinutesCOMPROBANTEAFIP, TimeUnit.MINUTES),
+          .schedule(Duration.Zero(),
+        		    Duration.create(timeGapBetweenMemoryLogsInMinutesCOMPROBANTEAFIP, TimeUnit.MINUTES),
 
               new Runnable() {
                 @Override
