@@ -1354,10 +1354,13 @@ public class AfipController {
 											.findList();
 
 				if(rf.size() > 0) {
+					Logger.debug("HAY FACTURAS AFIP PARA CORRER "+rf.size());
 					for(RecuperoFactura rfx :rf) {
 						correrFacturaAfip(rfx.id);
 						//Logger.debug("xxxxxxxxxxxx "+rfx.id);
 					}
+				}else {
+					Logger.debug("NO HAY FACTURAS AFIP PARA CORRER ");
 				}
 
 				List<RecuperoNotaCredito> rc = RecuperoNotaCredito.find.fetch("recupero_factura").fetch("puntoVenta").where()
@@ -1371,10 +1374,13 @@ public class AfipController {
 						.findList();
 
 				if(rc.size() > 0) {
+					Logger.debug("HAY NC AFIP PARA CORRER "+rc.size());
 					for(RecuperoNotaCredito rfx :rc) {
 						correrNota(rfx.id,TipoComprobante.NOTA_CREDITO);
 						//Logger.debug("xxxxxxxxxxxx22 "+rfx.id);
 					}
+				}else {
+					Logger.debug("NO HAY NC AFIP PARA CORRER ");
 				}
 
 				List<RecuperoNotaDebito> rd = RecuperoNotaDebito.find.fetch("recupero_factura").fetch("puntoVenta").where()
@@ -1388,10 +1394,13 @@ public class AfipController {
 						.findList();
 
 				if(rc.size() > 0) {
+					Logger.debug("HAY NC AFIP PARA CORRER "+rc.size());
 					for(RecuperoNotaDebito rfx :rd) {
 						correrNota(rfx.id,TipoComprobante.NOTA_DEBITO);
 						//Logger.debug("xxxxxxxxxxxx33 "+rfx.id);
 					}
+				}else {
+					Logger.debug("NO HAY ND AFIP PARA CORRER ");
 				}
 				Cache.set("corriendo_afip","false");
 			}else {
