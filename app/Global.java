@@ -79,10 +79,10 @@ public class Global extends GlobalSettings {
 
 
                   try {
-                	    System.out.println("================================================ ");
+                	    /*System.out.println("================================================ ");
                         AfipController a = new AfipController();
               		    a.getUltimoComprobanteNew( new Integer(11),TipoComprobante.FACTURA);
-              		    System.out.println("================================================ ");
+              		    System.out.println("================================================ ");*/
 
                 	  	List<Usuario> u = Usuario.find.where().eq("nombre","Administrator").findList();
                 	  	if(u.size() > 0) {
@@ -90,7 +90,7 @@ public class Global extends GlobalSettings {
                 	  		ab.crearComprobantesAutomaticos();
                 	  	}
 
-                  } catch ( IOException | XPathExpressionException | JAXBException | SOAPException | ParserConfigurationException | XMLStreamException | SAXException | TransformerException | EmailException e) {
+                  } catch ( IOException e) {
                     e.printStackTrace();
                   }
                 }
