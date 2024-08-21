@@ -6,14 +6,22 @@ import java.util.Date;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
+import javax.xml.bind.JAXBException;
 import javax.xml.datatype.DatatypeConfigurationException;
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.soap.SOAPException;
+import javax.xml.stream.XMLStreamException;
+import javax.xml.transform.TransformerException;
+import javax.xml.xpath.XPathExpressionException;
 
 import org.apache.commons.mail.EmailException;
+import org.xml.sax.SAXException;
 
 import akka.actor.Cancellable;
 import controllers.afip.AfipController;
 import jobs.DeudasInformesMails;
 import models.InventarioRismi;
+import models.TipoComprobante;
 import models.Usuario;
 import models.haberes.LiquidacionMes;
 import models.informes.HistorialDeudaProveedores;
@@ -67,15 +75,22 @@ public class Global extends GlobalSettings {
                 @Override
                 public void run() {
                   System.out.println("Cron Job COMPROBANTE AFIP "+new Date());
+
+
+
                   try {
+                	    System.out.println("================================================ ");
+                        AfipController a = new AfipController();
+              		    a.getUltimoComprobanteNew( new Integer(11),TipoComprobante.FACTURA);
+              		    System.out.println("================================================ ");
 
                 	  	List<Usuario> u = Usuario.find.where().eq("nombre","Administrator").findList();
                 	  	if(u.size() > 0) {
-                	  		AfipController a = new AfipController();
-                	  		a.crearComprobantesAutomaticos();
+                	  		AfipController ab = new AfipController();
+                	  		ab.crearComprobantesAutomaticos();
                 	  	}
 
-                  } catch ( IOException e) {
+                  } catch ( IOException | XPathExpressionException | JAXBException | SOAPException | ParserConfigurationException | XMLStreamException | SAXException | TransformerException | EmailException e) {
                     e.printStackTrace();
                   }
                 }

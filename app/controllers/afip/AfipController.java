@@ -165,15 +165,22 @@ public class AfipController {
 		InputStream in = Play.application().resourceAsStream("resources/PARQUESALUD_53794c62e26a1a54.p12");
 
 		String dirTemp = System.getProperty("java.io.tmpdir");
+		File archivo = null;
+		if (play.Play.isProd()) {
+			dirTemp ="/home/administrador";
+			archivo = new File(dirTemp+"/PARQUESALUD_53794c62e26a1a54.p12");
+			/*Files.copy(in, archivo.toPath(), StandardCopyOption.COPY_ATTRIBUTES.REPLACE_EXISTING);
+			archivo.setExecutable(true);
+			archivo.setReadable(true);
+			archivo.setWritable(true);*/
 
-
-		File archivo = new File("/home/administrador/PARQUESALUD_53794c62e26a1a54.p12");
-
-
-		Files.copy(in, archivo.toPath(), StandardCopyOption.COPY_ATTRIBUTES.REPLACE_EXISTING);
-		archivo.setExecutable(true);
-		archivo.setReadable(true);
-		archivo.setWritable(true);
+		}else {
+			archivo = new File(dirTemp+"/PARQUESALUD_53794c62e26a1a54.p12");
+			Files.copy(in, archivo.toPath(), StandardCopyOption.COPY_ATTRIBUTES.REPLACE_EXISTING);
+			archivo.setExecutable(true);
+			archivo.setReadable(true);
+			archivo.setWritable(true);
+		}
 
 
 		byte [] LoginTicketRequest_xml_cms = create_cms(archivo.getAbsolutePath(), "parquesalud", "parquesalud", dstDN, "wsfe", new Long(82800000));
