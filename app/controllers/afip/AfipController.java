@@ -167,7 +167,7 @@ public class AfipController {
 		String dirTemp = System.getProperty("java.io.tmpdir");
 		File archivo = null;
 		if (play.Play.isProd()) {
-			dirTemp ="/home/administrador";
+			dirTemp ="/home/administrador/";
 			archivo = new File(dirTemp+"/PARQUESALUD_53794c62e26a1a54.p12");
 			/*Files.copy(in, archivo.toPath(), StandardCopyOption.COPY_ATTRIBUTES.REPLACE_EXISTING);
 			archivo.setExecutable(true);
@@ -719,8 +719,10 @@ public class AfipController {
 					AfipController a = new AfipController();
 					ObjectNode cc = a.getUltimoComprobanteNew(ptoVta,cbteTipo);
 					Long CbteNro = null;
+					System.out.println("===============22222222222222222222cc.get(\"error\") ======================");
+					if(cc.get("error") != null && !cc.get("error").asText().isEmpty() ) {
 
-					if(cc.get("error") != null) {
+						System.out.println("===============22222222222222222222cc.get(\"error\") ======================"+cc.get("error"));
 
 						restJs.put("error", cc.get("error"));
 						return restJs;
