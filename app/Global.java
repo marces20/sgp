@@ -28,6 +28,7 @@ import models.informes.HistorialDeudaProveedores;
 import play.Application;
 import play.GlobalSettings;
 import play.Logger;
+import play.cache.Cache;
 import play.data.format.Formatters;
 import play.libs.Akka;
 import scala.concurrent.duration.Duration;
@@ -57,7 +58,7 @@ public class Global extends GlobalSettings {
 
    // JOBS COMPROBANTE AFIP
       Long timeDelayCOMPROBANTEAFIP = null;
-      int timeGapBetweenMemoryLogsInMinutesCOMPROBANTEAFIP = 1;
+      int timeGapBetweenMemoryLogsInMinutesCOMPROBANTEAFIP = 2;
 
 
       timeDelayCOMPROBANTEAFIP = getTimeDelay(0, 5, Calendar.AM, 0, 0, 0);// ACTUALIZAR INVENTARIO
@@ -100,7 +101,7 @@ public class Global extends GlobalSettings {
 
       // JOBS AUTH AFIP
       Long timeDelayAUTHAFIP = null;
-      int timeGapBetweenMemoryLogsInMinutesAUTHAFIP = 12;
+      int timeGapBetweenMemoryLogsInMinutesAUTHAFIP = 6;
 
 
       timeDelayAUTHAFIP = getTimeDelay(0, 5, Calendar.AM, 0, 0, 0);// ACTUALIZAR INVENTARIO
@@ -118,6 +119,7 @@ public class Global extends GlobalSettings {
                 public void run() {
                   System.out.println("Cron Job AUTH AFIP");
                   try {
+                	  	Cache.set("tokekafip",null);
                 	  	AfipController a = new AfipController();
               			a.getAuth();
 
