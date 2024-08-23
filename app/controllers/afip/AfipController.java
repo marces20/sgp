@@ -183,7 +183,7 @@ public class AfipController {
 		}
 
 
-		byte [] LoginTicketRequest_xml_cms = create_cms(archivo.getAbsolutePath(), "parquesalud", "parquesalud", dstDN, "wsfe", new Long(82800000));
+		byte [] LoginTicketRequest_xml_cms = create_cms(archivo.getAbsolutePath(), "parquesalud", "parquesalud", dstDN, "wsfe", new Long(28800000));
 
 		//byte [] LoginTicketRequest_xml_cms = create_cms(p12file, p12pass, signer, dstDN, service, TicketTime);
 
@@ -259,7 +259,10 @@ public class AfipController {
 			Cache.set("tokekafip",null);
 			e.printStackTrace();
 			Logger.debug("ExceptionExceptionExceptionExceptionExceptionException:  "+e);
-
+			String errores = "ERROR LOGUEO AFIJ - invoke_wsaa "+e;
+			RecuperoAfipMovimiento ram = new RecuperoAfipMovimiento(null,null,null, null,null,null,"ERROR",errores,new Date());
+			ram.save();
+			/*
 			EmailUtilis eu = new EmailUtilis();
 	        eu.setSubject("ERROR LOGUEO AFIJ invoke_wsaa");
 	        eu.setHtmlMsg("Titulo: "+e);
@@ -268,7 +271,7 @@ public class AfipController {
 	        List<String> adds = new ArrayList<>();
 	        adds.add("marces2000@gmail.com");
 	        eu.setAdds(adds);
-	        eu.enviar();
+	        eu.enviar();*/
 
 		}
 
@@ -327,6 +330,11 @@ public class AfipController {
 			Logger.debug("xxxxxxxxxxxxx77  "+e);
 			Cache.set("tokekafip",null);
 			e.printStackTrace();
+			String errores = "ERROR LOGUEO AFIJ 1- create_cms "+e;
+			RecuperoAfipMovimiento ram = new RecuperoAfipMovimiento(null,null,null, null,null,null,"ERROR",errores,new Date());
+			ram.save();
+
+			/*
 			EmailUtilis eu = new EmailUtilis();
 	        eu.setSubject("ERROR LOGUEO AFIJ 1- create_cms ");
 	        eu.setHtmlMsg("Titulo: "+e);
@@ -335,7 +343,8 @@ public class AfipController {
 	        List<String> adds = new ArrayList<>();
 	        adds.add("marces2000@gmail.com");
 	        eu.setAdds(adds);
-	        eu.enviar();
+	        eu.enviar();*/
+
 		}
 		Logger.debug("xxxxxxxxxxxxxffff  ");
 		//
@@ -350,7 +359,10 @@ public class AfipController {
 			Logger.debug("xxxxxxxxxxxxx88  "+e);
 			Cache.set("tokekafip",null);
 			e.printStackTrace();
-			EmailUtilis eu = new EmailUtilis();
+			String errores = "ERROR LOGUEO AFIJ 2- create_cms "+e;
+			RecuperoAfipMovimiento ram = new RecuperoAfipMovimiento(null,null,null, null,null,null,"ERROR",errores,new Date());
+			ram.save();
+			/*EmailUtilis eu = new EmailUtilis();
 	        eu.setSubject("ERROR LOGUEO AFIJ 2- create_cms ");
 	        eu.setHtmlMsg("Titulo: "+e);
 	        eu.setFrom("marces2000@gmail.com");
@@ -358,7 +370,7 @@ public class AfipController {
 	        List<String> adds = new ArrayList<>();
 	        adds.add("marces2000@gmail.com");
 	        eu.setAdds(adds);
-	        eu.enviar();
+	        eu.enviar();*/
 		}
 
 		//
@@ -386,7 +398,10 @@ public class AfipController {
 		catch (Exception e) {
 			e.printStackTrace();
 			Cache.set("tokekafip",null);
-			EmailUtilis eu = new EmailUtilis();
+			String errores = "ERROR LOGUEO AFIJ 3- create_cms "+e;
+			RecuperoAfipMovimiento ram = new RecuperoAfipMovimiento(null,null,null, null,null,null,"ERROR",errores,new Date());
+			ram.save();
+			/*EmailUtilis eu = new EmailUtilis();
 	        eu.setSubject("ERROR LOGUEO AFIJ 3- create_cms ");
 	        eu.setHtmlMsg("Titulo: "+e);
 	        eu.setFrom("marces2000@gmail.com");
@@ -394,7 +409,7 @@ public class AfipController {
 	        List<String> adds = new ArrayList<>();
 	        adds.add("marces2000@gmail.com");
 	        eu.setAdds(adds);
-	        eu.enviar();
+	        eu.enviar();*/
 		}
 
 		return (asn1_cms);
@@ -559,7 +574,11 @@ public class AfipController {
 		        	System.out.println("a.getMsg();: "+a.getMsg());
 		        }
 
-		        EmailUtilis eu = new EmailUtilis();
+
+				RecuperoAfipMovimiento ram = new RecuperoAfipMovimiento(null,null,null, null,null,null,"ERROR","getUltimoComprobanteNew: "+errores,new Date());
+				ram.save();
+
+		        /*EmailUtilis eu = new EmailUtilis();
 		        eu.setSubject("ERROR AFIJ getUltimoComprobanteNew ");
 		        eu.setHtmlMsg("Titulo errores: "+errores);
 		        eu.setFrom("marces2000@gmail.com");
@@ -567,7 +586,7 @@ public class AfipController {
 		        List<String> adds = new ArrayList<>();
 		        adds.add("marces2000@gmail.com");
 		        eu.setAdds(adds);
-		        eu.enviar();
+		        eu.enviar();*/
 
 
 		        restJs.put("error", errores);
@@ -583,7 +602,12 @@ public class AfipController {
 			e.printStackTrace();
 			Cache.set("tokekafip",null);
 			Logger.debug("errorrrr ennn GETT ULTIMO COMPROBANTEEEEE");
-			EmailUtilis eu = new EmailUtilis();
+
+			String errores = "ERROR LOGUEO AFIJ - getUltimoComprobanteNew "+e;
+			RecuperoAfipMovimiento ram = new RecuperoAfipMovimiento(null,null,null, null,null,null,"ERROR",errores,new Date());
+			ram.save();
+
+			/*EmailUtilis eu = new EmailUtilis();
 	        eu.setSubject("ERROR AFIJ getUltimoComprobanteNew ");
 	        eu.setHtmlMsg("Titulo: "+e);
 	        eu.setFrom("marces2000@gmail.com");
@@ -591,7 +615,7 @@ public class AfipController {
 	        List<String> adds = new ArrayList<>();
 	        adds.add("marces2000@gmail.com");
 	        eu.setAdds(adds);
-	        eu.enviar();
+	        eu.enviar();*/
 		}
 
 
@@ -631,6 +655,7 @@ public class AfipController {
 			RecuperoNotaDebito rd = null;
 			RecuperoNotaCredito rc = null;
 			Integer ptoVta = null;
+			String cae = "";
 
 
 			if(cbteTipo == TipoComprobante.NOTA_CREDITO) {
@@ -872,49 +897,51 @@ public class AfipController {
 				        restJs.put("error", errores);
 				        RecuperoAfipMovimiento ram = new RecuperoAfipMovimiento(null,idFactura.intValue(),null, null,cbteTipo,null,"ERROR",errores,new Date());
 						ram.save();
+
+		            }else {
+
+
+
+				        for(FECAEDetResponse xx : datos2.getFECAESolicitarResult().getFeDetResp().getFECAEDetResponse()) {
+
+				        	Logger.debug("==============CAAAAAAAAAEEEEEEEEEEEEE111============= "+datos2.getFECAESolicitarResult().getFeDetResp().getFECAEDetResponse());
+
+
+				        	if(xx.getCAE() != null) {
+				        		Logger.debug("==============CAAAAAAAAAEEEEEEEEEEEEE222============= "+xx.getCAE());
+				        		cae = xx.getCAE() ;
+				        		if(cbteTipo == TipoComprobante.NOTA_CREDITO) {
+				        			rc.cae = xx.getCAE();
+				    				rc.numero = utils.NumberUtils.agregarCerosAlaIzquierda(CbteNro.intValue(), 8);
+				    				rc.fecha_vencimiento =utils.DateUtils.formatDate(xx.getCAEFchVto(), "yyyyMMdd");
+				    				rc.save();
+
+				    			}else if(cbteTipo == TipoComprobante.NOTA_DEBITO) {
+				    				rd.cae = xx.getCAE();
+				    				rd.numero = utils.NumberUtils.agregarCerosAlaIzquierda(CbteNro.intValue(), 8);
+				    				rd.fecha_vencimiento =utils.DateUtils.formatDate(xx.getCAEFchVto(), "yyyyMMdd");
+				    				rd.save();
+
+				    			}else {
+				    				rf.cae = xx.getCAE();
+					        		rf.numero = utils.NumberUtils.agregarCerosAlaIzquierda(CbteNro.intValue(), 8);
+					        		rf.fecha_vencimiento =utils.DateUtils.formatDate(xx.getCAEFchVto(), "yyyyMMdd");
+					        		rf.save();
+				    			}
+				        	}
+
+				        	Logger.debug("==============CAAAAAAAAAEEEEEEEEEEEEE333=============");
+				        }
+
+				        Logger.debug("datos2datos2datos2datos2datos2 "+datos2.toString());
+				        Logger.debug("setComprobante pasa");
+				        restJs.put("data", datos2.toString());
+				        restJs.put("cae", cae);
+				        restJs.put("success", true);
 		            }
 
 
-			        String cae = "";
-			        for(FECAEDetResponse xx : datos2.getFECAESolicitarResult().getFeDetResp().getFECAEDetResponse()) {
 
-			        	Logger.debug("==============CAAAAAAAAAEEEEEEEEEEEEE111============= "+datos2.getFECAESolicitarResult().getFeDetResp().getFECAEDetResponse());
-
-
-			        	if(xx.getCAE() != null) {
-			        		Logger.debug("==============CAAAAAAAAAEEEEEEEEEEEEE222============= "+xx.getCAE());
-			        		cae = xx.getCAE() ;
-			        		if(cbteTipo == TipoComprobante.NOTA_CREDITO) {
-			        			rc.cae = xx.getCAE();
-			    				rc.numero = utils.NumberUtils.agregarCerosAlaIzquierda(CbteNro.intValue(), 8);
-			    				rc.fecha_vencimiento =utils.DateUtils.formatDate(xx.getCAEFchVto(), "yyyyMMdd");
-			    				rc.save();
-
-			    			}else if(cbteTipo == TipoComprobante.NOTA_DEBITO) {
-			    				rd.cae = xx.getCAE();
-			    				rd.numero = utils.NumberUtils.agregarCerosAlaIzquierda(CbteNro.intValue(), 8);
-			    				rd.fecha_vencimiento =utils.DateUtils.formatDate(xx.getCAEFchVto(), "yyyyMMdd");
-			    				rd.save();
-
-			    			}else {
-			    				rf.cae = xx.getCAE();
-				        		rf.numero = utils.NumberUtils.agregarCerosAlaIzquierda(CbteNro.intValue(), 8);
-				        		rf.fecha_vencimiento =utils.DateUtils.formatDate(xx.getCAEFchVto(), "yyyyMMdd");
-				        		rf.save();
-			    			}
-			        	}
-
-			        	Logger.debug("==============CAAAAAAAAAEEEEEEEEEEEEE333=============");
-			        }
-
-			        Logger.debug("datos2datos2datos2datos2datos2 "+datos2.toString());
-
-
-
-			        Logger.debug("setComprobante pasa");
-			        restJs.put("data", datos2.toString());
-			        restJs.put("cae", cae);
-			        restJs.put("success", true);
 				}
 
 
@@ -1368,7 +1395,8 @@ public class AfipController {
 			if(Cache.get("corriendo_afip") == null || Cache.get("corriendo_afip") == "false" ) {
 				Logger.debug("rrrrrrrrrrrrrrrrrrr2 ");
 				Cache.set("corriendo_afip","true");
-				List<RecuperoFactura> rf = RecuperoFactura.find.fetch("puntoVenta").where()
+				List<RecuperoFactura> rf = RecuperoFactura.find.select("id")
+											 .fetch("puntoVenta").where()
 											.eq("estado_id",Estado.RECUPERO_FACTURA_APROBADO)
 											.eq("puntoVenta.tipo_facturacion", "ws")
 											.eq("puntoVenta.habilitado", true)
@@ -1388,7 +1416,8 @@ public class AfipController {
 					Logger.debug("NO HAY FACTURAS AFIP PARA CORRER ");
 				}
 
-				List<RecuperoNotaCredito> rc = RecuperoNotaCredito.find.fetch("recupero_factura").fetch("puntoVenta").where()
+				List<RecuperoNotaCredito> rc = RecuperoNotaCredito.find.select("id")
+						.fetch("recupero_factura").fetch("puntoVenta").where()
 						.eq("recupero_factura.estado_id",Estado.RECUPERO_FACTURA_APROBADO)
 						.eq("puntoVenta.tipo_facturacion", "ws")
 						.eq("puntoVenta.habilitado", true)
@@ -1408,7 +1437,7 @@ public class AfipController {
 					Logger.debug("NO HAY NC AFIP PARA CORRER ");
 				}
 
-				List<RecuperoNotaDebito> rd = RecuperoNotaDebito.find.fetch("recupero_factura").fetch("puntoVenta").where()
+				List<RecuperoNotaDebito> rd = RecuperoNotaDebito.find.select("id").fetch("recupero_factura").fetch("puntoVenta").where()
 						.eq("recupero_factura.estado_id",Estado.RECUPERO_FACTURA_APROBADO)
 						.eq("puntoVenta.tipo_facturacion", "ws")
 						.eq("puntoVenta.habilitado", true)
