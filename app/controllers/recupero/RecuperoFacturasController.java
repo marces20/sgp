@@ -31,6 +31,7 @@ import models.auth.Permiso;
 import models.recupero.RecuperoFactura;
 import models.recupero.RecuperoNotaCredito;
 import models.recupero.RecuperoNotaDebito;
+import models.recupero.RecuperoPlanilla;
 import play.Logger;
 import play.data.DynamicForm;
 import play.data.Form;
@@ -132,15 +133,16 @@ public class RecuperoFacturasController extends Controller {
 				return badRequest(crearRecuperoFactura.render(recuperoFacturaForm));
 			}
 
-			/*List<RecuperoFactura> cx = RecuperoFactura.find.where()
+			List<RecuperoFactura> cx = RecuperoFactura.find.where()
 									   .eq("numero",c.numero)
 									   .eq("puntoventa_id", c.puntoventa_id)
+									   .ne("puntoVenta.tipo_facturacion", "ws")
 									   .eq("serie",c.serie).findList();
 
 			if(cx.size() > 0) {
 				flash("error", "Ya existe este numero de factura cargada.");
 				return badRequest(crearRecuperoFactura.render(recuperoFacturaForm));
-			}*/
+			}
 
 			Periodo periodo = Periodo.getPeriodoByDate(c.fecha);
 			c.fecha_desde = periodo.date_start;
@@ -203,15 +205,17 @@ public class RecuperoFacturasController extends Controller {
 				return badRequest(editarRecuperoFactura.render(recuperoFacturaForm,rp));
 			}
 
-			/*List<RecuperoFactura> cx = RecuperoFactura.find.where()
+			List<RecuperoFactura> cx = RecuperoFactura.find.where()
 					   .eq("numero",c.numero)
 					   .eq("puntoventa_id", c.puntoventa_id)
-					   .eq("serie",c.serie).ne("id", c.id).findList();
+					   .ne("puntoVenta.tipo_facturacion", "ws")
+					   .eq("serie",c.serie)
+					   .ne("id", c.id).findList();
 
 			if(cx.size() > 0) {
 				flash("error", "Ya existe este numero de factura cargada.");
 				return badRequest(editarRecuperoFactura.render(recuperoFacturaForm,rp));
-			}*/
+			}
 
 			Periodo periodo = Periodo.getPeriodoByDate(c.fecha);
 			c.fecha_desde = periodo.date_start;
@@ -373,20 +377,33 @@ public class RecuperoFacturasController extends Controller {
 	@CheckPermiso(key = "recuperoFacturasPasarAprobado")
 	public static void pasarAprobado(Long idRf){
 
-		RecuperoFactura rf = Ebean.find(RecuperoFactura.class).select("id, estado_id,write_date,write_usuario_id").setId(idRf).findUnique();
+		RecuperoFactura rf = Ebean.find(RecuperoFactura.class).setId(idRf).findUnique();
+
+
+
 
 		if(rf != null){
-
 			if(rf.recupero_tipo_pago_id == null){
 				flash("error", "Debe cargar un Tipo de Pago.");
 
 			}else {
+				/*boolean error = false;
+				if(rf.puntoVenta.tipo_facturacion.compareToIgnoreCase("ws")== 0) {
+					RecuperoPlanilla rp = RecuperoPlanilla.getPlanilla(rf.puntoVenta.deposito_id, rf.fecha);
+					if(rp != null) {
+						rf.planilla_id = rp.id.intValue();
+					}else {
+						error = true;
+						flash("error", "No se puede determinar la Planilla para el punto de venta y la fecha de la factura.");
+					}
+				}*/
 
 				rf.estado_id = new Long(Estado.RECUPERO_FACTURA_APROBADO);
 				rf.write_date = new Date();
 				rf.write_usuario_id = new Long(Usuario.getUsuarioSesion());
 				rf.save();
 				flash("success", "Operación exitosa. Estado actual: Aprobado");
+
 			}
 		} else {
 			flash("error", "Parámetros incorrectos");
