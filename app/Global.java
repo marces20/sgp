@@ -58,7 +58,7 @@ public class Global extends GlobalSettings {
 
    // JOBS COMPROBANTE AFIP
       Long timeDelayCOMPROBANTEAFIP = null;
-      int timeGapBetweenMemoryLogsInMinutesCOMPROBANTEAFIP = 2;
+      int timeGapBetweenMemoryLogsInMinutesCOMPROBANTEAFIP = 1;
 
 
       timeDelayCOMPROBANTEAFIP = getTimeDelay(0, 5, Calendar.AM, 0, 0, 0);// ACTUALIZAR INVENTARIO
