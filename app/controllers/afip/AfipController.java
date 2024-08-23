@@ -1395,8 +1395,9 @@ public class AfipController {
 			if(Cache.get("corriendo_afip") == null || Cache.get("corriendo_afip") == "false" ) {
 				Logger.debug("rrrrrrrrrrrrrrrrrrr2 ");
 				Cache.set("corriendo_afip","true");
-				List<RecuperoFactura> rf = RecuperoFactura.find.select("id")
-											 .fetch("puntoVenta").where()
+				List<RecuperoFactura> rf = RecuperoFactura.find.select("id,cae,estado_id")
+											 .fetch("puntoVenta","tipo_facturacion,habilitado")
+											 .where()
 											.eq("estado_id",Estado.RECUPERO_FACTURA_APROBADO)
 											.eq("puntoVenta.tipo_facturacion", "ws")
 											.eq("puntoVenta.habilitado", true)
@@ -1416,8 +1417,10 @@ public class AfipController {
 					Logger.debug("NO HAY FACTURAS AFIP PARA CORRER ");
 				}
 
-				List<RecuperoNotaCredito> rc = RecuperoNotaCredito.find.select("id")
-						.fetch("recupero_factura").fetch("puntoVenta").where()
+				List<RecuperoNotaCredito> rc = RecuperoNotaCredito.find.select("id,cae")
+						.fetch("recupero_factura","estado_id")
+						.fetch("puntoVenta","tipo_facturacion,habilitado")
+						.where()
 						.eq("recupero_factura.estado_id",Estado.RECUPERO_FACTURA_APROBADO)
 						.eq("puntoVenta.tipo_facturacion", "ws")
 						.eq("puntoVenta.habilitado", true)
@@ -1437,7 +1440,10 @@ public class AfipController {
 					Logger.debug("NO HAY NC AFIP PARA CORRER ");
 				}
 
-				List<RecuperoNotaDebito> rd = RecuperoNotaDebito.find.select("id").fetch("recupero_factura").fetch("puntoVenta").where()
+				List<RecuperoNotaDebito> rd = RecuperoNotaDebito.find.select("id,cae")
+						.fetch("recupero_factura","estado_id")
+						.fetch("puntoVenta","tipo_facturacion,habilitado")
+						.where()
 						.eq("recupero_factura.estado_id",Estado.RECUPERO_FACTURA_APROBADO)
 						.eq("puntoVenta.tipo_facturacion", "ws")
 						.eq("puntoVenta.habilitado", true)
