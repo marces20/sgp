@@ -12,6 +12,7 @@ import javax.persistence.PersistenceException;
 
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
+import models.ClienteTipo;
 import models.Estado;
 import models.Factura;
 import models.Usuario;
@@ -102,13 +103,13 @@ public class RecuperoNotasCreditosController extends Controller {
 
 	public static Result guardar() {
 		Form<RecuperoNotaCredito> lineaForm = form(RecuperoNotaCredito.class).bindFromRequest();
-
+		RecuperoNotaCredito l = lineaForm.get();
 		try {
 			if(lineaForm.hasErrors()) {
 				flash("error", "Error en formulario "+lineaForm.errors());
 				return ok(crearLineaNotaCredito.render(lineaForm));
 			} else {
-				RecuperoNotaCredito l = lineaForm.get();
+
 
 				/*List<RecuperoPago> rpl = RecuperoPago.find.where()
 										 .eq("recupero_factura_id", l.recupero_factura_id)
@@ -177,10 +178,24 @@ public class RecuperoNotasCreditosController extends Controller {
 					//---------------------------------------------------------------------------------------
 				}*/
 
-				l.create_usuario_id = new Long(Usuario.getUsuarioSesion());
-				l.create_date = new Date();
-				l.save();
-				flash("success", "El registro se almacenó correctamente.");
+				boolean error = false;
+
+				Date d = RecuperoFactura.getLastDateByPunto(l.puntoventa_id);
+
+				if(d != null) {
+					if(d.compareTo(l.fecha) > 0) {
+						flash("error", "Debe seleccionar una fecha mayor. Ya existe fecha mayores en comprobantes para este punto de venta. ");
+						return ok(crearLineaNotaCredito.render(lineaForm));
+					}
+				}
+
+				if(!error) {
+					l.create_usuario_id = new Long(Usuario.getUsuarioSesion());
+					l.create_date = new Date();
+					l.save();
+					flash("success", "El registro se almacenó correctamente.");
+				}
+
 			}
 		} catch (Exception e){
 			play.Logger.error("excepcion", e);

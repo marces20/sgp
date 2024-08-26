@@ -14,6 +14,7 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 
 import controllers.Secured;
 import controllers.auth.CheckPermiso;
+import models.ClienteTipo;
 import models.Estado;
 import models.Usuario;
 import models.recupero.RecuperoFactura;
@@ -174,10 +175,23 @@ public class RecuperoNotasDebitosController extends Controller {
 					rpOld.save();
 				}*/
 
-				l.create_usuario_id = new Long(Usuario.getUsuarioSesion());
-				l.create_date = new Date();
-				l.save();
-				flash("success", "El registro se almacenó correctamente.");
+				boolean error = false;
+
+				Date d = RecuperoFactura.getLastDateByPunto(l.puntoventa_id);
+
+				if(d != null) {
+					if(d.compareTo(l.fecha) > 0) {
+						flash("error", "Debe seleccionar una fecha mayor. Ya existe fecha mayores en comprobantes para este punto de venta. ");
+						error = true;
+					}
+				}
+
+				if(!error) {
+					l.create_usuario_id = new Long(Usuario.getUsuarioSesion());
+					l.create_date = new Date();
+					l.save();
+					flash("success", "El registro se almacenó correctamente.");
+				}
 			}
 		} catch (Exception e){
 			play.Logger.error("excepcion", e);
