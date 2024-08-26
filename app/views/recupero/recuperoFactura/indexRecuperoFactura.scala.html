@@ -293,9 +293,14 @@
 					}</td>
 					<td class="" >@if(rf.create_usuario != null){@rf.create_usuario.nombre}</td>
 					<td>
-						<a class="btn btn-default btn-xs delete-confirm-link notSeleccion" href="@controllers.recupero.routes.RecuperoFacturasController.eliminar(rf.id)&@UriTrack.encode()">
+						<!--  <a class="btn btn-default btn-xs delete-confirm-link notSeleccion" href="@controllers.recupero.routes.RecuperoFacturasController.eliminar(rf.id)&@UriTrack.encode()">
 							<i class="glyphicon glyphicon-trash icono-eliminar"></i>
+						</a>-->
+						@if(rf.cae != null){
+						<a role="menuitem" class="imprimirFacturaAfip btn btn-default btn-xs notSeleccion " tabindex="-1" href="#" data-url="@controllers.recupero.routes.RecuperoReportesController.imprimirFacturaAfip(rf.id)">
+							<i class="glyphicon glyphicon-list-alt"></i>
 						</a>
+						}
 					</td>
 				</tr>
              }
