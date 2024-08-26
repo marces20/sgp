@@ -21,11 +21,13 @@ import models.recupero.RecuperoFacturaLinea;
 import models.recupero.RecuperoNotaCredito;
 import models.recupero.RecuperoPago;
 import play.Logger;
+import play.data.DynamicForm;
 import play.data.Form;
 import play.libs.Json;
 import play.mvc.Controller;
 import play.mvc.Result;
 import play.mvc.Security;
+import utils.RequestVar;
 import utils.pagination.Pagination;
 import views.html.recupero.recuperoNotaCredito.*;
 import controllers.Secured;
@@ -36,9 +38,26 @@ public class RecuperoNotasCreditosController extends Controller {
 
 	final static Form<RecuperoNotaCredito> lineaForm = form(RecuperoNotaCredito.class);
 
+	public static Result indexGeneral() {
+		DynamicForm d = form().bindFromRequest();
+
+		Pagination<RecuperoNotaCredito> lineas = RecuperoNotaCredito.page(null,
+				RequestVar.get("numero"),
+				RequestVar.get("puntoventa_id"),
+				RequestVar.get("cliente_id"),
+				RequestVar.get("fecha_desde"),
+			  	RequestVar.get("fecha_hasta"),
+			  	RequestVar.get("planilla_id"),
+			  	RequestVar.get("create_usuario_id"));
+
+		//RecuperoFactura rf = RecuperoFactura.find.byId(facturaId);
+
+		return ok(indexRecuperoGeneralNotaCredito.render(lineas,d));
+	}
+
 	public static Result index(Long facturaId, Boolean editable) {
 
-		Pagination<RecuperoNotaCredito> lineas = RecuperoNotaCredito.page(facturaId);
+		Pagination<RecuperoNotaCredito> lineas = RecuperoNotaCredito.page(facturaId,"","","","","","","");
 
 		RecuperoFactura rf = RecuperoFactura.find.byId(facturaId);
 

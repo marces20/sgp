@@ -17,6 +17,12 @@
 				@if(Componente.check("recuperoFactura")) {
 					<li><a href="@controllers.recupero.routes.RecuperoFacturasController.index()">Facturas</a></li>
 				}
+				@if(Componente.check("recuperoFactura")) {
+					<li><a href="@controllers.recupero.routes.RecuperoNotasCreditosController.indexGeneral()">Notas Creditos</a></li>
+				}
+				@if(Componente.check("recuperoFactura")) {
+					<li><a href="@controllers.recupero.routes.RecuperoNotasDebitosController.indexGeneral()">Notas Debitos</a></li>
+				}
 
 				@if(Componente.check("recuperoRecibos")) {
 					<li><a href="@controllers.recupero.routes.RecuperoRecibosController.index()">Recibos</a></li>

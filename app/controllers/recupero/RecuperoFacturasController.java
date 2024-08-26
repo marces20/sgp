@@ -21,6 +21,7 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import controllers.Secured;
 import controllers.afip.AfipController;
 import controllers.auth.CheckPermiso;
+import models.ClienteTipo;
 import models.Estado;
 import models.Periodo;
 import models.Producto;
@@ -75,7 +76,10 @@ public class RecuperoFacturasController extends Controller {
 												  		RequestVar.get("puntoventa_id"),
 												  		RequestVar.get("planilla_id"),
 												  		RequestVar.get("deposito_id"),
-												  		RequestVar.get("create_usuario_id")
+												  		RequestVar.get("create_usuario_id"),
+												  		RequestVar.get("numero_nc"),
+												  		RequestVar.get("numero_nd")
+
 												  		  ),d));
 	}
 
@@ -379,34 +383,46 @@ public class RecuperoFacturasController extends Controller {
 
 		RecuperoFactura rf = Ebean.find(RecuperoFactura.class).setId(idRf).findUnique();
 
+		boolean error = false;
 
+		if(rf == null){
+			flash("error", "Parámetros incorrectos");
+			error = true;
+		}else {
 
-
-		if(rf != null){
 			if(rf.recupero_tipo_pago_id == null){
 				flash("error", "Debe cargar un Tipo de Pago.");
-
-			}else {
-				/*boolean error = false;
-				if(rf.puntoVenta.tipo_facturacion.compareToIgnoreCase("ws")== 0) {
-					RecuperoPlanilla rp = RecuperoPlanilla.getPlanilla(rf.puntoVenta.deposito_id, rf.fecha);
-					if(rp != null) {
-						rf.planilla_id = rp.id.intValue();
-					}else {
-						error = true;
-						flash("error", "No se puede determinar la Planilla para el punto de venta y la fecha de la factura.");
-					}
-				}*/
-
-				rf.estado_id = new Long(Estado.RECUPERO_FACTURA_APROBADO);
-				rf.write_date = new Date();
-				rf.write_usuario_id = new Long(Usuario.getUsuarioSesion());
-				rf.save();
-				flash("success", "Operación exitosa. Estado actual: Aprobado");
-
+				error = true;
 			}
-		} else {
-			flash("error", "Parámetros incorrectos");
+
+			if(rf.cliente.cliente_tipo_id.compareTo(ClienteTipo.EXTRANJEROS) == 0 || rf.cliente.cliente_tipo_id.compareTo(ClienteTipo.EXTRANJEROS_SIN_RESIDENCIA) == 0) {
+				if(rf.cliente.cie == null || rf.cliente.cie.isEmpty()) {
+					flash("error", "El cliente EXTRANJERO debe tener cargado un CIE.");
+					error = true;
+				}
+			}else {
+				if(rf.cliente.cuit2 == null && rf.cliente.dni == null) {
+					flash("error", "Debe ingresar un CUIT o un DNI en el cliente.");
+					error = true;
+				}
+			}
+
+			Date d = RecuperoFactura.getLastDateByPunto(rf.puntoventa_id);
+
+			if(d != null) {
+				if(d.compareTo(rf.fecha) > 0) {
+					flash("error", "Debe seleccionar una fecha mayor. Ya existe fecha mayores en comprobantes para este punto de venta. ");
+					error = true;
+				}
+			}
+		}
+
+		if(!error) {
+			rf.estado_id = new Long(Estado.RECUPERO_FACTURA_APROBADO);
+			rf.write_date = new Date();
+			rf.write_usuario_id = new Long(Usuario.getUsuarioSesion());
+			rf.save();
+			flash("success", "Operación exitosa. Estado actual: Aprobado");
 		}
 	}
 
@@ -528,7 +544,7 @@ public class RecuperoFacturasController extends Controller {
 	}
 
 	public static Result correrFacturaAfip(Long idFactura) throws IOException{
-		//if (play.Play.isProd()) {
+		if (play.Play.isProd()) {
 			try {
 				AfipController ac = new AfipController();
 				ObjectNode ret = ac.setComprobante(idFactura,TipoComprobante.FACTURA);
@@ -541,9 +557,9 @@ public class RecuperoFacturasController extends Controller {
 			}catch (Exception e) {
 				flash("error", "error: "+e);
 			}
-		/*}else {
+		}else {
 			flash("error", "error: NO ES PRODUCCION");
-		}*/
+		}
 
 
 		return redirect(controllers.recupero.routes.RecuperoFacturasController.ver(idFactura)+ UriTrack.get("&"));
@@ -551,7 +567,7 @@ public class RecuperoFacturasController extends Controller {
 
 	public static Result correrNota(Long idNota,int tipoComprobante) throws IOException{
 
-		//if (play.Play.isProd()) {
+		if (play.Play.isProd()) {
 			try {
 				AfipController ac = new AfipController();
 				ObjectNode ret = null;
@@ -594,9 +610,9 @@ public class RecuperoFacturasController extends Controller {
 			}catch (Exception e) {
 				flash("error", "error: "+e);
 			}
-		/*}else {
+		}else {
 			flash("error", "error: NO ES PRODUCCION");
-		}*/
+		}
 
 
 		return redirect(controllers.recupero.routes.RecuperoFacturasController.index());

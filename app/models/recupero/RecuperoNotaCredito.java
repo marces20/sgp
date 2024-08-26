@@ -13,14 +13,19 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import com.avaje.ebean.ExpressionList;
+
 import models.Producto;
 import models.PuntoVenta;
 import models.Udm;
 import models.Usuario;
+import models.auth.Permiso;
 import play.data.format.Formats;
 import play.data.validation.Constraints.Required;
 import play.db.ebean.Model;
 import play.db.ebean.Model.Finder;
+import utils.DateUtils;
+import utils.RequestVar;
 import utils.formatters.DecimalComa;
 import utils.pagination.Pagination;
 
@@ -101,12 +106,61 @@ public class RecuperoNotaCredito extends Model{
 
 	public static Model.Finder<Long,RecuperoNotaCredito> find = new Finder<Long,RecuperoNotaCredito>(Long.class, RecuperoNotaCredito.class);
 
-	public static Pagination<RecuperoNotaCredito> page(Long recuperoFacturaId) {
+	public static Pagination<RecuperoNotaCredito> page(Long recuperoFacturaId,
+			String numero,
+			String puntoventa_id,
+			String cliente_id,
+			String fecha_desde,
+			String fecha_hasta,
+		  	String planilla_id,
+		  	String create_usuario_id) {
     	Pagination<RecuperoNotaCredito> p = new Pagination<RecuperoNotaCredito>();
-    	p.setOrderDefault("ASC");
-    	p.setSortByDefault("producto.nombre");
+    	p.setOrderDefault("DESC");
+    	p.setSortByDefault("numero");
 
-    	p.setExpressionList(find.fetch("producto").where().eq("recupero_factura_id", recuperoFacturaId));
+    	ExpressionList<RecuperoNotaCredito> e = find.fetch("producto").where();
+
+    	if(recuperoFacturaId != null) {
+    		e.eq("recupero_factura_id", recuperoFacturaId);
+    	}
+    	if(!planilla_id.isEmpty()) {
+    		e.eq("planilla_id", Integer.parseInt(planilla_id));
+    	}
+    	if(!numero.isEmpty()) {
+    		e.ilike("numero", "%"+numero+"%");
+    	}
+    	if(!cliente_id.isEmpty()) {
+    		e.eq("cliente_id", Integer.parseInt(cliente_id));
+    	}
+    	if(!puntoventa_id.isEmpty()) {
+    		e.eq("puntoventa_id", Integer.parseInt(puntoventa_id));
+    	}
+		if(!fecha_desde.isEmpty()){
+    		Date fd = DateUtils.formatDate(fecha_desde, "dd/MM/yyyy");
+    		e.ge("fecha", fd);
+    	}
+		if(!fecha_hasta.isEmpty()){
+    		Date fh = DateUtils.formatDate(fecha_hasta, "dd/MM/yyyy");
+    		e.le("fecha", fh);
+    	}
+		if(!create_usuario_id.isEmpty()) {
+    		e.eq("create_usuario_id", Integer.parseInt(create_usuario_id));
+    	}
+
+		if(!Permiso.check("verTodoRecupero")){
+    		if(Usuario.getUsurioSesion().organigrama != null && Usuario.getUsurioSesion().organigrama.deposito != null){
+    			e.eq("planilla.deposito_id", Usuario.getUsurioSesion().organigrama.deposito_id.intValue());
+    		}else{
+    			e.isNull("planilla.deposito_id");
+    		}
+    	}
+
+
+    	if(p.parcheCountAllFormula)
+
+    		p.setTotalRowCount(e.findList().size());
+
+    	p.setExpressionList(e);
     	return p;
 	}
 

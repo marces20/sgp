@@ -48,6 +48,7 @@ GET    /nota-credito-linea/editar   	controllers.recupero.RecuperoNotasCreditosC
 POST   /nota-credito-linea/guardar  	controllers.recupero.RecuperoNotasCreditosController.guardar()
 POST   /nota-credito-linea/actualizar  	controllers.recupero.RecuperoNotasCreditosController.actualizar()
 GET    /nota-credito-linea/eliminar    	controllers.recupero.RecuperoNotasCreditosController.eliminar(id:Long)
+GET    /nota-credito-linea/indexGeneral    	controllers.recupero.RecuperoNotasCreditosController.indexGeneral()
 
 GET    /nota-debito-linea/index    	controllers.recupero.RecuperoNotasDebitosController.index(id:Long ?= 0, editable:Boolean ?= false)
 GET    /nota-debito-linea/crear    	controllers.recupero.RecuperoNotasDebitosController.crear(facturaId:String)
@@ -55,6 +56,7 @@ GET    /nota-debito-linea/editar   	controllers.recupero.RecuperoNotasDebitosCon
 POST   /nota-debito-linea/guardar  	controllers.recupero.RecuperoNotasDebitosController.guardar()
 POST   /nota-debito-linea/actualizar  	controllers.recupero.RecuperoNotasDebitosController.actualizar()
 GET    /nota-debito-linea/eliminar    	controllers.recupero.RecuperoNotasDebitosController.eliminar(id:Long)
+GET    /nota-debito-linea/indexGeneral    	controllers.recupero.RecuperoNotasDebitosController.indexGeneral()
 
 GET    /pago        	   	controllers.recupero.RecuperoPagosController.index()
 GET    /pago/crear        	controllers.recupero.RecuperoPagosController.crear()

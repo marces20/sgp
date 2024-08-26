@@ -20,6 +20,7 @@ import models.CondicionVenta;
 import models.Estado;
 import models.Expediente;
 import models.Orden;
+import models.OrdenLinea;
 import models.Periodo;
 import models.Producto;
 import models.PuntoVenta;
@@ -27,7 +28,10 @@ import models.TipoResidencia;
 import models.Usuario;
 import models.auth.Permiso;
 
+import com.avaje.ebean.Ebean;
 import com.avaje.ebean.ExpressionList;
+import com.avaje.ebean.SqlQuery;
+import com.avaje.ebean.SqlRow;
 import com.avaje.ebean.annotation.Formula;
 
 import play.Logger;
@@ -200,6 +204,12 @@ public class RecuperoFactura extends Model {
 	public List<RecuperoFacturaLinea> recuperoFacturaLinea;
 
 	@OneToMany
+	public List<RecuperoNotaCredito> recuperoNotaCredito;
+
+	@OneToMany
+	public List<RecuperoNotaDebito> recuperoNotaDebito;
+
+	@OneToMany
 	@JoinColumn(name="recupero_factura_id", referencedColumnName="id", insertable=false, updatable=false)
 	public List<RecuperoPago> pagos;
 
@@ -223,7 +233,10 @@ public class RecuperoFactura extends Model {
 												   String puntoventa_id,
 												   String planilla_id,
 												   String deposito,
-												   String create_usuario_id) {
+												   String create_usuario_id,
+												   String numero_nc,
+												   String numero_nd
+												   ) {
     	Pagination<RecuperoFactura> p = new Pagination<RecuperoFactura>();
     	p.setOrderDefault("DESC");
     	p.setSortByDefault("id");
@@ -243,6 +256,13 @@ public class RecuperoFactura extends Model {
     		e.eq("create_usuario_id", Integer.parseInt(create_usuario_id));
     	}
 
+    	if(!numero_nc.isEmpty()) {
+    		e.ilike("recuperoNotaCredito.numero", "%"+numero_nc+"%");
+    	}
+
+    	if(!numero_nd.isEmpty()) {
+    		e.ilike("recuperoNotaDebito.numero", "%"+numero_nd+"%");
+    	}
 
     	if(!nombre.isEmpty()) {
     		e.ilike("nombre", "%"+nombre+"%");
@@ -335,6 +355,37 @@ public class RecuperoFactura extends Model {
 		List<RecuperoFactura>	r =	l.setMaxRows(limit).orderBy("id desc").findList();
 
 		return r;
+	}
+
+	public static Date getLastDateByPunto(Integer puntoVenta) {
+
+		Date ret = null;
+		String sql = "select fecha from ";
+		 sql += "( ";
+		 		sql += "select fecha from recupero_facturas rf ";
+				sql += "inner join punto_ventas pv on pv.id = rf.puntoventa_id ";
+				sql += "where rf.cae is not null and pv.tipo_facturacion = 'ws' and pv.id = :puntoVenta ";
+				sql += "union ";
+				sql += "select fecha from recupero_notas_creditos nc ";
+				sql += "inner join punto_ventas pv on pv.id = nc.puntoventa_id ";
+				sql += "where nc.cae is not null and pv.tipo_facturacion = 'ws' and pv.id = :puntoVenta ";
+				sql += "union ";
+				sql += "select fecha from recupero_notas_creditos nd ";
+				sql += "inner join punto_ventas pv on pv.id = nd.puntoventa_id ";
+				sql += "where nd.cae is not null and pv.tipo_facturacion = 'ws' and pv.id = :puntoVenta ";
+				sql += ") as comprobantes ";
+				sql += "order by fecha desc limit 1 ";
+
+		SqlQuery sqlQuery = Ebean.createSqlQuery(sql);
+		sqlQuery.setParameter("puntoVenta", puntoVenta);
+
+		SqlRow  row = sqlQuery.findUnique();
+		if(row != null) {
+			ret = row.getDate("fecha");
+		}
+
+		return ret;
+
 	}
 
 }
