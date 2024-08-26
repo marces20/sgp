@@ -178,7 +178,7 @@ public class RecuperoReportesController extends Controller {
 							celda.setCellStyle(comun);
 							break;
 						case 2:
-							celda.setCellValue(rpx.numero);
+							celda.setCellValue(rpx.getNumeroFactura());
 							celda.setCellStyle(comun);
 							break;
 						case 3:
