@@ -89,7 +89,63 @@ $( function () {
 	    });
 	});
 
-	$('#imprimirFacturaAfip').click( function() { //abrir modal para mostrar mensaje informe rentas
+	$('.notaDebito').click( function() {
+
+		var url = $(this).attr("data-url");
+		var dialogo = $('<div></div>');
+
+		dialogo.dialog({
+			title: "Notas",
+	    	resizable: false,
+			autoOpen: true,
+			modal: true,
+			height: 250,
+			width:750,
+	        buttons: {
+		          Cerrar: function() {
+		            $( this ).dialog( "destroy" );
+		          }
+		    },
+	    	close: function(event, ui ){
+	    		$(this).dialog( "destroy" );
+	    	},
+		    open: function( event, ui ) {
+				$.post(url,  function(data){
+					dialogo.html(data);
+				});
+		    }
+	    });
+	});
+
+	$('.notaCredito').click( function() {
+
+		var url = $(this).attr("data-url");
+		var dialogo = $('<div></div>');
+
+		dialogo.dialog({
+			title: "Notas",
+	    	resizable: false,
+			autoOpen: true,
+			modal: true,
+			height: 250,
+			width:750,
+	        buttons: {
+		          Cerrar: function() {
+		            $( this ).dialog( "destroy" );
+		          }
+		    },
+	    	close: function(event, ui ){
+	    		$(this).dialog( "destroy" );
+	    	},
+		    open: function( event, ui ) {
+				$.post(url,  function(data){
+					dialogo.html(data);
+				});
+		    }
+	    });
+	});
+
+	$('.imprimirFacturaAfip').click( function() { //abrir modal para mostrar mensaje informe rentas
 
 		var url = $(this).attr("data-url");
 		var dialogo = $('<div></div>');
