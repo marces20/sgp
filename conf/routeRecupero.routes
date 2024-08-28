@@ -125,4 +125,5 @@ GET    	/reportesPlanilla/modalPlanilla   		controllers.recupero.RecuperoReporte
 POST    /reportesPlanilla/imprimirPlanilla   	controllers.recupero.RecuperoReportesController.informePlanilla()
 
 POST    /reportesPlanilla/imprimirDesdePlanilla   	controllers.recupero.RecuperoReportesController.informeDesdePlanilla(idPlanilla:Long ?= 0)
+POST    /reportesPlanilla/informePlanillaPagos   	controllers.recupero.RecuperoReportesController.informePlanillaPagos(idPlanilla:Long ?= 0)
 #-----------------------------FIN MODULO RECUPERO ---------------------------------
