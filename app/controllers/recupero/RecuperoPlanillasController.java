@@ -84,7 +84,7 @@ public class RecuperoPlanillasController  extends Controller {
 			List<RecuperoNotaCredito> nc = RecuperoNotaCredito.find.where().eq("planilla_id", id).findList();
 			List<RecuperoNotaDebito> nd = RecuperoNotaDebito.find.where().eq("planilla_id", id).findList();
 
-			List<RecuperoPago> pa = RecuperoPago.find.where().eq("planilla_id", id).eq("RecuperoFactura.recupero_tipo_pago_id", 2).findList();
+			List<RecuperoPago> pa = RecuperoPago.find.where().eq("planilla_id", id).eq("recuperoFactura.recupero_tipo_pago_id", 2).findList();
 
 
 			return ok(verPlanilla.render(planillaForm, p,rf,nc,nd,pa));
