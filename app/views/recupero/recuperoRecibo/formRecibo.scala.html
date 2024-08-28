@@ -24,7 +24,7 @@
 			<div class="input-group @if(recuperoReciboForm.error("nombre") != null) {has-error}else{has-required}">
 				<span class="input-group-btn">
 			      @select(recuperoReciboForm("puntoventa_id"),PuntoVenta.find.all().map { p => p.id.toString -> p.numero},
-					'class -> "form-control select", '_default -> "Seleccionar")
+					'class -> "form-control select", '_default -> "Seleccionar",'id -> "puntoventa_id")
 			      <i class="input-group-addon" style="display:none"></i>
 			    </span>
 			    <span class="input-group-btn">
@@ -40,15 +40,10 @@
 				}
 		</div>
 
-
-
-
-
-
 		<div class="col-sm-2">
 			<label class="control-label">Fecha</label>
 			<div class="form-group @if(recuperoReciboForm.error("fecha")  != null) {has-error}else{has-required}">
-				@inputText(recuperoReciboForm("fecha"),'class -> "form-control date", 'autocomplete -> "off")
+				@inputText(recuperoReciboForm("fecha"),'class -> "form-control date", 'autocomplete -> "off",'id->"fecha")
 			</div>
 			@recuperoReciboForm("fecha").error.map{ error =>
 				<div class="text-error">@error.message</div>
@@ -87,8 +82,23 @@
 		</div>
 	</div>
 
-	<script>
+<script>
 	$( function() {
 		$("#numero").mask("99999999");
+		$('#puntoventa_id').change( function() {
+			var url  = '@controllers.recupero.routes.RecuperoPlanillasController.getPlanillaByFecha()';
+			var puntoventa_id = $('#puntoventa_id option:selected').val();
+			var data = "puntoventa_id="+puntoventa_id+'&'+$('#fecha').serialize();
+
+			$.get(url, data, function(data){
+
+				if(data.success) {
+					$('#planilla').val(data.numero)
+					$('#planilla_id').val(data.idPlanilla)
+				} else {
+					alert("No se puede determinar el numero de Planilla");
+				}
+			});
+		});
 	});
 </script>
