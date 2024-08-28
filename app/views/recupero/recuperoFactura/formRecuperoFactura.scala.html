@@ -54,7 +54,7 @@
 
 			      @select(recuperoFacturaForm("puntoventa_id"),
 			      PuntoVenta.getPuntoVentaPermisos().map { p => p.id.toString -> (p.numero  +" ("+p.deposito.sigla+")")},
-					'class -> "form-control select", '_default -> "Seleccionar")
+					'class -> "form-control select", '_default -> "Seleccionar",'id -> "puntoventa_id")
 			      <i class="input-group-addon" style="display:none"></i>
 			    </span>
 
@@ -128,7 +128,7 @@
 		<div class="col-sm-2">
 			<label class="control-label">Fecha factura</label>
 			<div class="form-group @if(recuperoFacturaForm.error("fecha")  != null) {has-error}else{has-required}">
-				@inputText(recuperoFacturaForm("fecha"),'class -> "form-control date", 'autocomplete -> "off")
+				@inputText(recuperoFacturaForm("fecha"),'class -> "form-control date", 'autocomplete -> "off",'id-> "fecha")
 			</div>
 			@recuperoFacturaForm("fecha").error.map{ error =>
 				<div class="text-error">@error.message</div>
@@ -157,3 +157,23 @@
 			</div>
 		</div>
 	</div>
+<script>
+$( function() {
+
+	$('#puntoventa_id').change( function() {
+		var url  = '@controllers.recupero.routes.RecuperoPlanillasController.getPlanillaByFecha()';
+		var puntoventa_id = $('#puntoventa_id option:selected').val();
+		var data = "puntoventa_id="+puntoventa_id+'&'+$('#fecha').serialize();
+
+		$.get(url, data, function(data){
+
+			if(data.success) {
+				$('#planilla').val(data.numero)
+				$('#planilla_id').val(data.idPlanilla)
+			} else {
+				alert("No se puede determinar el numero de Planilla");
+			}
+		});
+	});
+});
+</script>
