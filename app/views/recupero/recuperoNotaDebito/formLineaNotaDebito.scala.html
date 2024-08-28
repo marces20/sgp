@@ -38,7 +38,7 @@ $(function(){
 		    <span class="input-group-btn">
 		     @select(lineaForm("puntoventa_id"),
 			      PuntoVenta.getPuntoVentaPermisos().map { p => p.id.toString -> (p.numero  +" ("+p.deposito.sigla+")")},
-					'class -> "form-control select", '_default -> "Seleccionar")
+					'class -> "form-control select", '_default -> "Seleccionar",'id->"puntoventa_id")
 		      <i class="input-group-addon" style="display:none"></i>
 		    </span>
 		    <span class="input-group-btn">
@@ -110,7 +110,7 @@ $(function(){
 			@lineaForm("udm_id").error.map{ error => <div class="text-error">@error.message</div> }
 		</div>
 	</div>
-	<div class="col-sm-2">
+	<div class="col-sm-3">
 		<label for="planilla" class="control-label">Planilla</label>
 		<div class="input-group @if(lineaForm.error("planilla_id") != null) {has-error}else{has-required}">
 			@inputText(lineaForm("planilla.recuperoPlanillaEjercicio"),'class -> "form-control", 'id -> "planilla")
@@ -142,6 +142,23 @@ $(function(){
 
 <script>
 $( function(){
+
+	$('#puntoventa_id').change( function() {
+		var url  = '@controllers.recupero.routes.RecuperoPlanillasController.getPlanillaByFecha()';
+		var puntoventa_id = $('#puntoventa_id option:selected').val();
+		var data = "puntoventa_id="+puntoventa_id+'&'+$('#fecha_nc').serialize();
+
+		$.get(url, data, function(data){
+
+			if(data.success) {
+				$('#planilla').val(data.numero)
+				$('#planilla_id').val(data.idPlanilla)
+			} else {
+				alert("No se puede determinar el numero de Planilla");
+			}
+		});
+	});
+
 	if($("#planilla").length){
 		var options = {
 				script:"/recupero/suggestRecuperoPlanilla/",
