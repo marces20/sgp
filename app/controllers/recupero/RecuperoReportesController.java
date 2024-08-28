@@ -1266,6 +1266,168 @@ public class RecuperoReportesController extends Controller {
 		return ok(modalPlanilla.render(null,d));
 	}
 
+	public static Result informePlanillaPagos(Long idPlanilla) {
+		DynamicForm d = form().bindFromRequest();
+		String dirTemp = System.getProperty("java.io.tmpdir");
+
+
+
+
+		if(idPlanilla == null){
+			flash("error", "No se encuentra la planilla");
+			return ok(reportePlanilla.render(null));
+		}
+
+		try {
+			File archivo = new File(dirTemp+"/planilla.xls");
+			if(archivo.exists()) archivo.delete();
+			FileInputStream file = new FileInputStream(Play.application().getFile("conf/resources/reportes/recupero/planilla-pagos.xls"));
+
+			Workbook libro = new HSSFWorkbook(file);
+			FileOutputStream archivoTmp = new FileOutputStream(archivo);
+			Sheet hoja = libro.getSheetAt(0);
+			Cell celda;
+
+			CellStyle style = libro.createCellStyle();
+			Font defaultFont = libro.createFont();
+		    defaultFont.setFontHeightInPoints((short)8);
+		    style.setFont(defaultFont);
+			style.setDataFormat(libro.createDataFormat().getFormat("$ #,##0.00"));
+
+			CellStyle comun = libro.createCellStyle();
+			comun.setDataFormat((short) 10);
+			comun.setVerticalAlignment(CellStyle.VERTICAL_CENTER);
+			comun.setAlignment(CellStyle.ALIGN_CENTER);
+			comun.setBorderRight(CellStyle.BORDER_THIN);
+			comun.setBorderLeft(CellStyle.BORDER_THIN);
+			comun.setBorderTop(CellStyle.BORDER_THIN);
+			comun.setBorderBottom(CellStyle.BORDER_THIN);
+			comun.setWrapText(true);
+			Font font2 = libro.createFont();
+	        font2.setFontHeightInPoints((short) 10);
+	        comun.setFont(font2);
+
+			CellStyle estiloMoneda = libro.createCellStyle();
+			estiloMoneda.setDataFormat((short) 10);
+			estiloMoneda.setVerticalAlignment(CellStyle.VERTICAL_CENTER);
+			estiloMoneda.setAlignment(CellStyle.ALIGN_CENTER);
+			estiloMoneda.setBorderRight(CellStyle.BORDER_THIN);
+			estiloMoneda.setBorderLeft(CellStyle.BORDER_THIN);
+			estiloMoneda.setBorderTop(CellStyle.BORDER_THIN);
+			estiloMoneda.setBorderBottom(CellStyle.BORDER_THIN);
+			estiloMoneda.setDataFormat(libro.createDataFormat().getFormat("$ #,##0.00"));
+		    estiloMoneda.setFont(font2);
+
+		    Integer n = 1;
+
+			Row f;
+
+			RecuperoPlanilla rp = RecuperoPlanilla.find.byId(idPlanilla);
+
+			f = hoja.createRow(3);
+			celda = f.createCell(3);
+			celda.setCellValue("EXPEDIENTE: "+rp.expediente.getInstitucionExpedienteEjercicio());
+			celda.setCellStyle(comun);
+
+			f = hoja.createRow(4);
+			celda = f.createCell(3);
+			celda.setCellValue("PLANILLA N°"+rp.numero);
+			celda.setCellStyle(comun);
+
+			f = hoja.createRow(5);
+			celda = f.createCell(3);
+			celda.setCellValue("FECHA: "+utils.DateUtils.formatDate(rp.fecha));
+			celda.setCellStyle(comun);
+
+			List<RecuperoPago> pagos = RecuperoPago.find.where().eq("planilla_id",idPlanilla).findList();
+			int x =8;
+
+			for(RecuperoPago sr : pagos){
+				f = hoja.createRow(x);
+
+				celda = f.createCell(0);
+				celda.setCellValue(n.toString());
+				celda.setCellStyle(comun);
+
+				celda = f.createCell(1);
+				celda.setCellValue(utils.DateUtils.formatDate(sr.fecha));
+				celda.setCellStyle(comun);
+
+				celda = f.createCell(2);
+				celda.setCellValue(sr.recuperoFactura.getNumeroFactura());
+				celda.setCellStyle(comun);
+
+				celda = f.createCell(3);
+				celda.setCellValue("");
+				celda.setCellStyle(comun);
+
+				celda = f.createCell(4);
+				celda.setCellType(Cell.CELL_TYPE_NUMERIC);
+				celda.setCellValue(sr.total.doubleValue());
+				celda.setCellStyle(estiloMoneda);
+
+				celda = f.createCell(5);
+				celda.setCellValue(sr.recuperoFactura.cliente.nombre);
+				celda.setCellStyle(comun);
+
+
+				x++;
+				n++;
+			}
+
+			List<RecuperoNotaDebito> nd = RecuperoNotaDebito.find.where().eq("planilla_id",idPlanilla).findList();
+
+			for(RecuperoNotaDebito sr : nd){
+				f = hoja.createRow(x);
+
+				celda = f.createCell(0);
+				celda.setCellValue(n.toString());
+				celda.setCellStyle(comun);
+
+				celda = f.createCell(1);
+				celda.setCellValue(utils.DateUtils.formatDate(sr.fecha));
+				celda.setCellStyle(comun);
+
+				celda = f.createCell(2);
+				celda.setCellValue(sr.recupero_factura.getNumeroFactura());
+				celda.setCellStyle(comun);
+
+				celda = f.createCell(3);
+				celda.setCellValue(sr.getNumero());
+				celda.setCellStyle(comun);
+
+				celda = f.createCell(4);
+				celda.setCellType(Cell.CELL_TYPE_NUMERIC);
+				celda.setCellValue(sr.getTotal().doubleValue());
+				celda.setCellStyle(estiloMoneda);
+
+				celda = f.createCell(5);
+				celda.setCellValue(sr.recupero_factura.cliente.nombre);
+				celda.setCellStyle(comun);
+
+
+				x++;
+				n++;
+			}
+
+			libro.write(archivoTmp);
+
+
+			Writer out = new BufferedWriter(new OutputStreamWriter(archivoTmp, "UTF8"));
+			out.flush();
+			out.close();
+
+			return ok(reportePlanilla.render(archivo.getPath()));
+
+
+		} catch (IOException e) {
+		    e.printStackTrace();
+		}
+		flash("error", "No se puede generar el reporte.");
+		return ok(reportePlanilla.render(null));
+	}
+
+
 	public static Result informeDesdePlanilla(Long idPlanilla) {
 		DynamicForm d = form().bindFromRequest();
 		String dirTemp = System.getProperty("java.io.tmpdir");
