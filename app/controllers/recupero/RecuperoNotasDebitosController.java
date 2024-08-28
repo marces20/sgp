@@ -27,6 +27,7 @@ import play.libs.Json;
 import play.mvc.Controller;
 import play.mvc.Result;
 import play.mvc.Security;
+import utils.DateUtils;
 import utils.RequestVar;
 import utils.pagination.Pagination;
 import views.html.recupero.recuperoNotaDebito.*;
@@ -66,6 +67,10 @@ public class RecuperoNotasDebitosController extends Controller {
 		Map<String,String> b = new HashMap<String, String>();
 		b.put("recupero_factura_id", facturaId);
 		b.put("udm_id","1");
+
+		Date d = new Date();
+		b.put("fecha",DateUtils.formatDate(d,"dd/MM/yyyy"));
+
 		Form<RecuperoNotaDebito> linea = form(RecuperoNotaDebito.class).bind(b);
 		linea.discardErrors();
 		return ok(crearLineaNotaDebito.render(linea));
