@@ -2,6 +2,7 @@ package controllers.recupero;
 
 import static play.data.Form.form;
 
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -16,9 +17,12 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 
 import models.Estado;
 import models.Expediente;
+import models.PuntoVenta;
 import models.Usuario;
 import models.recupero.Presupuesto;
 import models.recupero.RecuperoFactura;
+import models.recupero.RecuperoNotaCredito;
+import models.recupero.RecuperoNotaDebito;
 import models.recupero.RecuperoPago;
 import models.recupero.RecuperoPlanilla;
 import play.Logger;
@@ -28,6 +32,7 @@ import play.libs.Json;
 import play.mvc.Controller;
 import play.mvc.Result;
 import play.mvc.Security;
+import utils.DateUtils;
 import utils.RequestVar;
 import utils.UriTrack;
 import utils.pagination.Pagination;
@@ -73,7 +78,16 @@ public class RecuperoPlanillasController  extends Controller {
 			}
 
 			Form<RecuperoPlanilla> planillaForm = form(RecuperoPlanilla.class).fill(p);
-			return ok(verPlanilla.render(planillaForm, p));
+
+
+			List<RecuperoFactura> rf = RecuperoFactura.find.where().eq("planilla_id", id).findList();
+			List<RecuperoNotaCredito> nc = RecuperoNotaCredito.find.where().eq("planilla_id", id).findList();
+			List<RecuperoNotaDebito> nd = RecuperoNotaDebito.find.where().eq("planilla_id", id).findList();
+
+			List<RecuperoPago> pa = RecuperoPago.find.where().eq("planilla_id", id).eq("RecuperoFactura.recupero_tipo_pago_id", 2).findList();
+
+
+			return ok(verPlanilla.render(planillaForm, p,rf,nc,nd,pa));
 		}else{
 			flash("error", "No se encuentra la planilla.");
 			return redirect(controllers.recupero.routes.RecuperoPlanillasController.index()+UriTrack.get("?"));
@@ -299,5 +313,51 @@ public class RecuperoPlanillasController  extends Controller {
 
     	p.setExpressionList(e);
 		return ok( modalBusquedaRecuperoPlanilla.render(p, form().bindFromRequest()) );
+	}
+
+	public static Result getPlanillaByFecha() {
+
+		ObjectNode obj = Json.newObject();
+		ArrayNode nodo = obj.arrayNode();
+		ObjectNode restJs = Json.newObject();
+
+		if(!RequestVar.get("puntoventa_id").isEmpty() && !RequestVar.get("fecha").isEmpty()) {
+			Long puntoventa_id = new Long(RequestVar.get("puntoventa_id"));
+
+			String ff = RequestVar.get("fecha");
+			Date fecha = DateUtils.formatDate(ff, "dd/MM/yyyy");
+
+			List<RecuperoPlanilla> rp=null;
+
+			PuntoVenta pv = PuntoVenta.find.byId(puntoventa_id);
+
+			for (int i = 0; i < 5; i++) {
+
+				rp = RecuperoPlanilla.find.where().eq("deposito_id", pv.deposito_id).eq("fecha", fecha).findList();
+
+				if(rp.size() > 0) {
+					restJs.put("success", true);
+					restJs.put("idPlanilla", rp.get(0).id);
+					restJs.put("numero",rp.get(0).getRecuperoPlanillaEjercicio());
+					nodo.add(restJs);
+					return ok(restJs);
+				}else {
+					Calendar calendar = Calendar.getInstance();
+					calendar.setTime(fecha);
+					calendar.add(Calendar.DAY_OF_WEEK, -1);
+					Date fechaMenosUno = calendar.getTime();
+					fecha = fechaMenosUno;
+				}
+
+				Logger.debug("getPlanilla FECHA22: "+fecha.toString());
+			}
+		}
+
+		restJs.put("error", true);
+		restJs.put("message", "No se puede seleccionar la Planilla");
+
+
+		nodo.add(restJs);
+		return ok(restJs);
 	}
 }

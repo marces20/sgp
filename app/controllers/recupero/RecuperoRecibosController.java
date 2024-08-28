@@ -31,6 +31,7 @@ import play.data.Form;
 import play.mvc.Controller;
 import play.mvc.Result;
 import play.mvc.Security;
+import utils.DateUtils;
 import utils.NumberUtils;
 import utils.RequestVar;
 import utils.UriTrack;
@@ -87,6 +88,8 @@ public class RecuperoRecibosController extends Controller {
 	public static Result crear() {
 
 		Map<String,String> p = new HashMap<String, String>();
+		Date d = new Date();
+		p.put("fecha",DateUtils.formatDate(d,"dd/MM/yyyy"));
 
 		Form<RecuperoRecibo> reciboForm = form(RecuperoRecibo.class).bind(p);
 		reciboForm.discardErrors();

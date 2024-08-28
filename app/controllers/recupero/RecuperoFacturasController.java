@@ -108,10 +108,10 @@ public class RecuperoFacturasController extends Controller {
 		p.put("nombre","RFAC");
 		Date d = new Date();
 		p.put("fecha",DateUtils.formatDate(d,"dd/MM/yyyy"));
-		if(Usuario.getUsuarioSesion().equals(83)){//GRaciela traid
+		/*if(Usuario.getUsuarioSesion().equals(83)){//GRaciela traid
 			p.put("planilla.recuperoPlanillaEjercicio","154");
 			p.put("planilla_id","4735");
-		}
+		}*/
 
 		Form<RecuperoFactura> recuperoFacturaForm = form(RecuperoFactura.class).bind(p);
 		recuperoFacturaForm.discardErrors();
