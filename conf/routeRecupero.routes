@@ -100,6 +100,8 @@ GET    /planilla/ver          controllers.recupero.RecuperoPlanillasController.v
 POST   /planilla/actualizar   controllers.recupero.RecuperoPlanillasController.actualizar(id:Long)
 GET    /planilla/modalBuscar  controllers.recupero.RecuperoPlanillasController.modalBuscar()
 GET    /planilla/get          controllers.recupero.RecuperoPlanillasController.get(id:Int ?= 0)
+GET    /planilla/getPlanillaByFecha          controllers.recupero.RecuperoPlanillasController.getPlanillaByFecha()
+
 GET    /suggestRecuperoPlanilla/:input	controllers.recupero.RecuperoPlanillasController.suggestRecuperoPlanilla(input: String)
 
 GET    /reporte/presupuesto 			controllers.recupero.PresupuestosReportesController.presupuesto(id:Long,extrajero:Boolean ?=false)
