@@ -94,6 +94,8 @@ public class RecuperoNotaCredito extends Model{
 	public String cae;
 	public Date fecha_vencimiento;
 
+	public String nota;
+
 	public BigDecimal getTotal(){
 		return cantidad.multiply(precio).setScale(2, RoundingMode.HALF_UP);
 	}
