@@ -118,9 +118,14 @@ public class RecuperoNotaDebito extends Model{
 
 		Pagination<RecuperoNotaDebito> p = new Pagination<RecuperoNotaDebito>();
     	p.setOrderDefault("DESC");
-    	p.setSortByDefault("numero");
+    	p.setSortByDefault("fecha");
 
-    	ExpressionList<RecuperoNotaDebito> e = find.fetch("producto").where();
+    	ExpressionList<RecuperoNotaDebito> e = find.fetch("recupero_factura")
+												.fetch("puntoVenta")
+												.fetch("planilla")
+												.fetch("create_usuario")
+												.fetch("udm")
+												.fetch("producto").where();
 
     	if(recuperoFacturaId != null) {
     		e.eq("recupero_factura_id", recuperoFacturaId);
@@ -133,7 +138,7 @@ public class RecuperoNotaDebito extends Model{
     		e.ilike("numero", "%"+numero+"%");
     	}
     	if(!cliente_id.isEmpty()) {
-    		e.eq("cliente_id", Integer.parseInt(cliente_id));
+    		e.eq("recupero_factura.cliente_id", Integer.parseInt(cliente_id));
     	}
     	if(!puntoventa_id.isEmpty()) {
     		e.eq("puntoventa_id", Integer.parseInt(puntoventa_id));
