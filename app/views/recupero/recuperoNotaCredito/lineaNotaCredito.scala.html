@@ -17,7 +17,7 @@
 	<td>@linea.cantidad</td>
 	<td>@utils.NumberUtils.moneda(linea.precio, 2)</td>
 	<td>@utils.NumberUtils.moneda(linea.getTotal(),2)</td>
-
+	<td>@linea.nota</td>
 	<td>
 		@if(linea.cae != null && !linea.cae.isEmpty()) {
 			<a class="btn btn-default btn-xs notSeleccion notaCredito" data-url="@controllers.recupero.routes.RecuperoReportesController.notaCredito(linea.id)">

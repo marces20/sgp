@@ -186,11 +186,12 @@
 					<th width="129">N° NC</th>
 					<th width="80">CAE</th>
 					<th width="70">Fecha CAE</th>
-					<th width="300">Planilla</th>
+					<th width="50">Planilla</th>
 					<th width="100">Fecha</th>
 					<th width="95">Total</th>
 
 					<th width="120">Usuario</th>
+					<th  width="50">Nota</th>
 					<th width="30"></th>
 				</tr>
 			</thead>
@@ -205,6 +206,7 @@
 						<td>@if(linea.fecha != null){@(utils.DateUtils.formatDate(linea.fecha))}</td>
 						<td>@utils.NumberUtils.moneda(linea.getTotal(),2)</td>
 						<td>@if(linea.create_usuario != null){@(linea.create_usuario.nombre)}</td>
+						<td>@linea.nota</td>
 						<td>
 							@if(linea.cae != null && !linea.cae.isEmpty()) {
 								<a class="btn btn-default btn-xs notSeleccion notaCredito" data-url="@controllers.recupero.routes.RecuperoReportesController.notaCredito(linea.id)">
