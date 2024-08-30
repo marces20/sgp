@@ -313,7 +313,13 @@ private static final long serialVersionUID = 1L;
     	}
 
     	if(!Permiso.check("verTodoRecupero")){
-    		if(Usuario.getUsurioSesion().organigrama != null && Usuario.getUsurioSesion().organigrama.deposito != null){
+    		if(Usuario.getUsurioSesion().organigrama.id.equals(new Integer(178))){
+
+    			e = e.conjunction();
+    			e = e.eq("recuperoFactura.puntoventa_id", 14);
+    			e = e.endJunction();
+
+    		}else if(Usuario.getUsurioSesion().organigrama != null && Usuario.getUsurioSesion().organigrama.deposito != null){
     			e = e.disjunction();
 
     			e = e.conjunction();

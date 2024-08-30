@@ -316,7 +316,9 @@ public class RecuperoFactura extends Model {
     	}
 
     	if(!Permiso.check("verTodoRecupero")){
-    		if(Usuario.getUsurioSesion().organigrama != null && Usuario.getUsurioSesion().organigrama.deposito != null){
+    		if(Usuario.getUsurioSesion().organigrama.id.equals(new Integer(178))){//INSTITUTO GENETICA HUMANA
+    			e.eq("puntoventa_id", 14);
+    		}else if(Usuario.getUsurioSesion().organigrama != null && Usuario.getUsurioSesion().organigrama.deposito != null){
     			e.eq("planilla.deposito_id", Usuario.getUsurioSesion().organigrama.deposito_id.intValue());
     		}else{
     			e.isNull("planilla.deposito_id");
