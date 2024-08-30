@@ -454,6 +454,10 @@ public class ClientesController extends Controller {
 							error = true;
 							errorStr += "Debe ingresar una REFERENCIA para este tipo de cliente EXTRANJEROS.";
 						}
+						if(p.cie == null || p.cie.isEmpty()){
+							error = true;
+							errorStr += "Debe ingresar una CIE para este tipo de cliente EXTRANJEROS.";
+						}
 						if(p.id_paciente_rismi == null || p.id_paciente_rismi.isEmpty()){
 							error = true;
 							errorStr += "Debe ingresar un ID PACIENTE para este tipo de cliente.";
