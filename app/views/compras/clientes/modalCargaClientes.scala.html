@@ -52,7 +52,16 @@
 			}
 		</div>
 	</div>
-	<div class="col-sm-6">
+	<div class="col-sm-3">
+		<div class="form-group">
+			<label for="dni" class="control-label">CIE</label>
+			@inputText(clienteForm("cie"), 'class -> "form-control", 'id -> "cie")
+			@clienteForm("cie").error.map{ error =>
+				<div class="text-error">@error.message</div>
+			}
+		</div>
+	</div>
+	<div class="col-sm-3">
 		<label for="servicio" class="control-label">Obra Social</label>
 		<div class="input-group">
 			@inputText(clienteForm("obrasocial.nombre"),'class -> "form-control", 'id -> "obrasocial", 'autocomplete -> "off")
