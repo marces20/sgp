@@ -72,16 +72,18 @@
 								}else{
 									<div class="col-sm-3">
 									</div>
-
+									@if(Usuario.getUsuarioSesion() == 1){
 									<div class="col-sm-3">
 										<a href="@controllers.recupero.routes.RecuperoFacturasController.cambiarEstado(recuperoFacturaForm.field("id").value.toInt, models.Estado.RECUPERO_FACTURA_CANCELADO)@UriTrack.get("&")" class="btn btn-default">
 											<i class="glyphicon glyphicon-minus-sign"></i> Anular Factura
 										</a>
 									</div>
+									}
 								}
 							</div>
 							@if(Usuario.getUsuarioSesion() == 1 && factura.estado.id == models.Estado.RECUPERO_FACTURA_APROBADO){
 							<hr>
+
 								<div class="row">
 									@if(factura.cae == null || factura.cae.isEmpty()){
 										<div class="col-sm-3">
