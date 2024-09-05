@@ -128,6 +128,7 @@ public class AfipController {
 		//name es singer y el password lo q se genera
 
 
+
 		String LoginTicketResponse = null;
 
 		// Read config from phile
@@ -162,20 +163,20 @@ public class AfipController {
 
 		// Create LoginTicketRequest_xml_cms
 
-		InputStream in = Play.application().resourceAsStream("resources/PARQUESALUD_53794c62e26a1a54.p12");
+		InputStream in = Play.application().resourceAsStream("resources/PARQUESALUD_3b136ff81224f993.p12");
 
 		String dirTemp = System.getProperty("java.io.tmpdir");
 		File archivo = null;
 		if (play.Play.isProd()) {
 			dirTemp ="/home/administrador/";
-			archivo = new File(dirTemp+"/PARQUESALUD_53794c62e26a1a54.p12");
+			archivo = new File(dirTemp+"/PARQUESALUD_3b136ff81224f993.p12");
 			/*Files.copy(in, archivo.toPath(), StandardCopyOption.COPY_ATTRIBUTES.REPLACE_EXISTING);
 			archivo.setExecutable(true);
 			archivo.setReadable(true);
 			archivo.setWritable(true);*/
 
 		}else {
-			archivo = new File(dirTemp+"/PARQUESALUD_53794c62e26a1a54.p12");
+			archivo = new File(dirTemp+"/PARQUESALUD_3b136ff81224f993.p12");
 			Files.copy(in, archivo.toPath(), StandardCopyOption.COPY_ATTRIBUTES.REPLACE_EXISTING);
 			archivo.setExecutable(true);
 			archivo.setReadable(true);
