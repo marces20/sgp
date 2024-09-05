@@ -139,6 +139,11 @@ public class Balance extends Model {
 	public Pago pago;
 	public Integer pago_id;
 
+	@ManyToOne
+	@JoinColumn(name="puntoventa_id", referencedColumnName="id", insertable=false, updatable=false)
+	public PuntoVenta puntoVenta;
+	public Integer puntoventa_id;
+
 	public static Finder<Long,Balance> find = new Finder<Long,Balance>(Long.class, Balance.class);
 
 	public static Pagination<Balance> page(String cuentaPropiaId,
