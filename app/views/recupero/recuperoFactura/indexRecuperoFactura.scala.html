@@ -258,11 +258,11 @@
 					<th width="300">Cliente</th>
 					<th width="100">N° Factura</th>
 					<th width="100">CAE</th>
-					<th width="95">Base</th>
-					<th width="95">N/C</th>
-					<th width="95">N/D</th>
-					<th width="95">Total</th>
-					<th width="95">Saldo</th>
+					<th width="95" align="center">Base</th>
+					<th width="95" align="center">N/C</th>
+					<th width="95" align="center">N/D</th>
+					<th width="95" align="center">Total</th>
+					<th width="95" align="center">Saldo</th>
 					<th width="100">Estado</th>
 					<th width="">Usuario</th>
 					<th width="30">#</th>
@@ -280,15 +280,17 @@
 					<td>@if(rf.cliente != null){@(rf.cliente.nombre)}</td>
 					<td>@if(rf.numero != null){@(rf.getNumeroFactura())}</td>
 					<td>@if(rf.cae != null && !rf.cae.isEmpty()){@(rf.cae)}</td>
-					<td class="base" rel="@rf.getBase()">@(utils.NumberUtils.moneda(rf.getBase()))</td>
-					<td class="nc" rel="@rf.getTotalNotaCredito()">@(utils.NumberUtils.moneda(rf.getTotalNotaCredito()))</td>
-					<td class="nd" rel="@rf.getTotalNotaDebito()">@(utils.NumberUtils.moneda(rf.getTotalNotaDebito()))</td>
-					<td class="total" rel="@rf.getTotal()">@(utils.NumberUtils.moneda(rf.getTotal()))</td>
-					<td class="deuda" rel="@rf.getSaldoPendiente()">@(utils.NumberUtils.moneda(rf.getSaldoPendiente()))</td>
-					<td class="estado">@if(rf.estado != null){
+					<td class="base" rel="@rf.getBase()" align="center">@(utils.NumberUtils.moneda(rf.getBase()))</td>
+					<td class="nc" rel="@rf.getTotalNotaCredito()"  align="center">@(utils.NumberUtils.moneda(rf.getTotalNotaCredito()))</td>
+					<td class="nd" rel="@rf.getTotalNotaDebito()"  align="center">@(utils.NumberUtils.moneda(rf.getTotalNotaDebito()))</td>
+					<td class="total" rel="@rf.getTotal()"  align="center">@(utils.NumberUtils.moneda(rf.getTotal()))</td>
+					<td class="deuda" rel="@rf.getSaldoPendiente()"  align="center">@(utils.NumberUtils.moneda(rf.getSaldoPendiente()))</td>
+					<td class="estado" align="center">@if(rf.estado != null){
 					    @(rf.estado.nombre)
 						@if(rf.getPorcentajePagado().compareTo(java.math.BigDecimal.ZERO) != 0) {
 							<br/>Pagado @rf.getPorcentajePagado()%
+						}else{
+							<br/>0.00%
 						}
 					}</td>
 					<td class="" >@if(rf.create_usuario != null){@rf.create_usuario.nombre}</td>

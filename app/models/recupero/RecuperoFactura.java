@@ -180,7 +180,7 @@ public class RecuperoFactura extends Model {
 	public BigDecimal total_pagado;
 
 	public BigDecimal getPagado(){
-		if (total_pagado == null)
+		if (total_pagado == null || total_pagado.compareTo(BigDecimal.ZERO) == 0)
 			return new BigDecimal(0);
 
 		return  total_pagado.subtract(getTotalNotaCredito()).add(getTotalNotaDebito());
@@ -188,10 +188,10 @@ public class RecuperoFactura extends Model {
 
 
 	public BigDecimal getPorcentajePagado () {
-		if(total_pagado == null)
+		if(total_pagado == null || total_pagado.compareTo(BigDecimal.ZERO) == 0 || getTotal().compareTo(BigDecimal.ZERO) == 0)
 			return new BigDecimal(0);
 
-		return getPagado().subtract(getTotalNotaCredito()).add(getTotalNotaDebito()).multiply(new BigDecimal(100)).divide(base, 2, java.math.RoundingMode.HALF_UP);
+		return getPagado().multiply(new BigDecimal(100)).divide(getTotal(), 2, java.math.RoundingMode.HALF_UP);
 	}
 
 	public BigDecimal getSaldoPendiente(){
