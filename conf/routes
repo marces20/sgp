@@ -1064,6 +1064,15 @@ GET     /haberes/prestaFacil/enviarArchivo         			controllers.haberes.Presta
 GET     /haberes/controlGuardiaAgente	         			controllers.haberes.ControlHaberes.controlGuardiasPorAgentePorPeriodo()
 
 
+GET     /haberes/liquidacionEmbargo       			controllers.haberes.LiquidacionEmbargosController.index()
+GET     /haberes/liquidacionEmbargo/crear        	controllers.haberes.LiquidacionEmbargosController.crear()
+POST    /haberes/liquidacionEmbargo/guardar      	controllers.haberes.LiquidacionEmbargosController.guardar()
+GET     /haberes/liquidacionEmbargo/editar       	controllers.haberes.LiquidacionEmbargosController.editar(id:Long)
+GET     /haberes/liquidacionEmbargo/eliminar     	controllers.haberes.LiquidacionEmbargosController.eliminar(id:Long)
+POST    /haberes/liquidacionEmbargo/actualizar   	controllers.haberes.LiquidacionEmbargosController.actualizar()
+GET     /haberes/liquidacionEmbargo/ver        		controllers.haberes.LiquidacionEmbargosController.ver(id:Long)
+GET     /haberes/liquidacionEmbargo/cambiarEstado	controllers.haberes.LiquidacionEmbargosController.cambiarEstado(idEmbargo:Long, idEstado: Long)
+
 #-----------------------------FIN MODULO HABERES ---------------------------------
 
 
