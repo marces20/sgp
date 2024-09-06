@@ -1,0 +1,12 @@
+@(lcForm: Form[models.haberes.LiquidacionEmbargo],lc:models.haberes.LiquidacionEmbargo)
+@import helper._
+@import utils._
+@import models.auth._
+@scripts = {
+	<script src="@routes.Assets.at("javascripts/haberes/puestosLaborales.js")" type="text/javascript"></script>
+}
+
+@implicitFieldConstructor = @{ FieldConstructor(simpleInput.render) }
+
+@views.html.haberes.mainHaberes("Vista Embargo",scripts) {
+}
