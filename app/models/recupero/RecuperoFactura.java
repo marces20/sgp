@@ -179,17 +179,25 @@ public class RecuperoFactura extends Model {
 	@Formula(select = "_d${ta}.total_pagado", join = "LEFT OUTER JOIN (select p.recupero_factura_id, COALESCE(sum(p.total),0) as total_pagado FROM recupero_pagos p WHERE p.recupero_nota_debito_id is null and p.recupero_nota_credito_id is null and  p.estado_id = "+Estado.RECUPERO_PAGO_PAGADO+" GROUP BY p.recupero_factura_id) as _d${ta} on _d${ta}.recupero_factura_id = ${ta}.id")
 	public BigDecimal total_pagado;
 
+	public BigDecimal getPagado(){
+		if (total_pagado == null)
+			return new BigDecimal(0);
+
+		return  total_pagado.subtract(getTotalNotaCredito()).add(getTotalNotaDebito());
+	}
+
+
 	public BigDecimal getPorcentajePagado () {
 		if(total_pagado == null)
 			return new BigDecimal(0);
 
-		return total_pagado.multiply(new BigDecimal(100)).divide(base, 2, java.math.RoundingMode.HALF_UP);
+		return getPagado().subtract(getTotalNotaCredito()).add(getTotalNotaDebito()).multiply(new BigDecimal(100)).divide(base, 2, java.math.RoundingMode.HALF_UP);
 	}
 
 	public BigDecimal getSaldoPendiente(){
-		if (total_pagado == null)
-			return getTotal();
-		return  getTotal().subtract(total_pagado);
+
+
+		return  getTotal().subtract(getPagado());
 	}
 
 	/*@Formula(select = "_de${ta}.deuda", join = "left outer join (select id, round(sum(total_deuda::numeric),2) as deuda from informe_totales_recupero group by id) as _de${ta} on _de${ta}.id = ${ta}.id")
