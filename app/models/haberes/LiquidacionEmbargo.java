@@ -70,7 +70,7 @@ public class LiquidacionEmbargo  extends Model{
 
 	public static Model.Finder<Long,LiquidacionEmbargo> find = new Finder<Long,LiquidacionEmbargo>(Long.class, LiquidacionEmbargo.class);
 
-	public static Pagination<LiquidacionEmbargo> page(Long LiquidacionEmbargo) {
+	public static Pagination<LiquidacionEmbargo> page(String puesto_laboral_id) {
     	Pagination<LiquidacionEmbargo> p = new Pagination<LiquidacionEmbargo>();
     	p.setPageSize(5000000);
     	p.setOrderDefault("DESC");
