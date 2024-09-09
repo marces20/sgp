@@ -89,6 +89,7 @@ pa:List[models.recupero.RecuperoPago]
 			<tr>
 				<th>FECHA</th>
 				<th>N° COMPROBANTE</th>
+				<th>N° RECIBO</th>
 				<th>MONTO</th>
 				<th>TIPO PAGO</th>
 				<th>FINANCIADOR</th>
@@ -102,6 +103,7 @@ pa:List[models.recupero.RecuperoPago]
 
 					<td>@if(rfx.fecha != null){@(utils.DateUtils.formatDate(rfx.fecha))}</td>
 					<td>@if(rfx.numero != null){@(rfx.getNumeroFactura())}</td>
+					<td></td>
 					<td>@(utils.NumberUtils.moneda(rfx.getBase()))</td>
 					<td>@if(rfx.recuperoTipoPago != null){@(rfx.recuperoTipoPago.nombre)}</td>
 					<td>@if(rfx.cliente != null){@(rfx.cliente.nombre)}</td>
@@ -115,6 +117,7 @@ pa:List[models.recupero.RecuperoPago]
 
 					<td>@if(rfx.fecha != null){@(utils.DateUtils.formatDate(rfx.fecha))}</td>
 					<td>@if(rfx.numero != null){@(rfx.getNumero())}</td>
+					<td></td>
 					<td>@(utils.NumberUtils.moneda(rfx.getTotal()))</td>
 					<td></td>
 					<td>@if(rfx.recupero_factura.cliente != null){@(rfx.recupero_factura.cliente.nombre)}</td>
@@ -128,6 +131,7 @@ pa:List[models.recupero.RecuperoPago]
 
 					<td>@if(rfx.fecha != null){@(utils.DateUtils.formatDate(rfx.fecha))}</td>
 					<td>@if(rfx.numero != null){@(rfx.getNumero())}</td>
+					<td></td>
 					<td>@(utils.NumberUtils.moneda(rfx.getTotal()))</td>
 					<td></td>
 					<td>@if(rfx.recupero_factura.cliente != null){@(rfx.recupero_factura.cliente.nombre)}</td>
@@ -141,6 +145,7 @@ pa:List[models.recupero.RecuperoPago]
 
 					<td>@if(rfx.fecha != null){@(utils.DateUtils.formatDate(rfx.fecha))}</td>
 					<td>@if(rfx.recuperoFactura != null){@(rfx.recuperoFactura.getNumeroFactura())}</td>
+					<td>@if(rfx.recuperoRecibo != null){@(rfx.recuperoRecibo.getNumeroRecibo())}</td>
 					<td>@(utils.NumberUtils.moneda(rfx.total))</td>
 					<td></td>
 					<td>@if(rfx.recuperoFactura.cliente != null){@(rfx.recuperoFactura.cliente.nombre)}</td>
