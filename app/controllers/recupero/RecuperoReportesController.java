@@ -1339,7 +1339,7 @@ public class RecuperoReportesController extends Controller {
 			celda.setCellValue("FECHA: "+utils.DateUtils.formatDate(rp.fecha));
 			celda.setCellStyle(comun);
 
-			List<RecuperoPago> pagos = RecuperoPago.find.where().eq("planilla_id",idPlanilla).findList();
+			List<RecuperoPago> pagos = RecuperoPago.find.where().isNull("recupero_nota_debito_id").isNull("recupero_nota_credito_id").eq("planilla_id",idPlanilla).findList();
 			int x =8;
 			BigDecimal total = new BigDecimal(0);
 
