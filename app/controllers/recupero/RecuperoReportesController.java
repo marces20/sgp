@@ -1341,6 +1341,7 @@ public class RecuperoReportesController extends Controller {
 
 			List<RecuperoPago> pagos = RecuperoPago.find.where().eq("planilla_id",idPlanilla).findList();
 			int x =8;
+			BigDecimal total = new BigDecimal(0);
 
 			for(RecuperoPago sr : pagos){
 				f = hoja.createRow(x);
@@ -1358,7 +1359,7 @@ public class RecuperoReportesController extends Controller {
 				celda.setCellStyle(comun);
 
 				celda = f.createCell(3);
-				celda.setCellValue("");
+				celda.setCellValue( (sr.recuperoRecibo != null)? sr.recuperoRecibo.getNumeroRecibo():"");
 				celda.setCellStyle(comun);
 
 				celda = f.createCell(4);
@@ -1370,6 +1371,7 @@ public class RecuperoReportesController extends Controller {
 				celda.setCellValue(sr.recuperoFactura.cliente.nombre);
 				celda.setCellStyle(comun);
 
+				total = total.add(sr.total);
 
 				x++;
 				n++;
@@ -1405,10 +1407,21 @@ public class RecuperoReportesController extends Controller {
 				celda.setCellValue(sr.recupero_factura.cliente.nombre);
 				celda.setCellStyle(comun);
 
+				total = total.add(sr.getTotal());
 
 				x++;
 				n++;
 			}
+
+			f = hoja.createRow(x);
+			celda = f.createCell(3);
+			celda.setCellValue("TOTAL");
+			celda.setCellStyle(comun);
+
+			celda = f.createCell(4);
+			celda.setCellType(Cell.CELL_TYPE_NUMERIC);
+			celda.setCellValue(total.doubleValue());
+			celda.setCellStyle(estiloMoneda);
 
 			libro.write(archivoTmp);
 
