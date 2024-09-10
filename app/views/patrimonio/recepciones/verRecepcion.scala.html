@@ -2,7 +2,7 @@
 @import helper._
 @import models.auth._
 @import utils._
-@implicitFieldConstructor = @{ FieldConstructor(simpleInput.render) } 
+@implicitFieldConstructor = @{ FieldConstructor(simpleInput.render) }
 @scripts = {
 	<script src="@routes.Assets.at("javascripts/patrimonio/recepciones.js")" type="text/javascript"></script>
 }
@@ -22,32 +22,39 @@
 			    <span class="caret"></span>
 			  </button>
 			  <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
-			  	<li><a id="cargarRemitosMasivos" href="#" data-url="@controllers.patrimonio.routes.RecepcionesController.modalCargarRemitosMasivos(recepcion.id)">Cargar Remitos Masivos</a></li>
+
+			  	@if( !(recepcion.acta != null && !Permiso.check("recepcionesCrearRemitoConActa"))){
+			  		<li><a id="cargarRemitosMasivos" href="#" data-url="@controllers.patrimonio.routes.RecepcionesController.modalCargarRemitosMasivos(recepcion.id)">Cargar Remitos Masivos</a></li>
+			  	}
 			  </ul>
 			</div>
 			<div class="pull-right btn-header">
+				@if( !(recepcion.acta != null && !Permiso.check("recepcionesCrearRemitoConActa"))){
 				<a href="@controllers.patrimonio.routes.RemitosController.crear(recepcion.id)" class="btn btn-default"><i class="glyphicon glyphicon-plus-sign"></i> Crear remito</a>
+				}
 			</div>
 			}
-		</div>	
+		</div>
 	</div>
-	
+
 <ol class="breadcrumb">
   <li><a href="@controllers.patrimonio.routes.OrdenesProvisionController.ver(recepcion.ordenProvision.id)">Orden de provisión @recepcion.ordenProvision.numero</a></li>
   <li class="active">Recepción @recepcion.numero</li>
 </ol>
 
-	
-	
+
+
 	@views.html.tags.successError()
 
 <div class="row menu-acciones">
 	<div class="col-sm-4">
-		@if(Permiso.check("recepcionesCrear")) {
-		<a href="@controllers.patrimonio.routes.RecepcionesController.editar(recepcion.id)@UriTrack.get("&")"  class="btn btn-default"><i class="glyphicon glyphicon-edit"></i> Editar</a>
-		}
-		@if(Permiso.check("recepcionesEliminar")) {
-		<a href="@controllers.patrimonio.routes.RecepcionesController.eliminar(recepcion.id)@UriTrack.get("&")"  class="btn btn-default delete-confirm-link"><i class="glyphicon glyphicon-trash icono-eliminar"></i> Eliminar</a>
+		@if( !(recepcion.acta != null && !Permiso.check("recepcionesCrearRemitoConActa"))){
+			@if(Permiso.check("recepcionesCrear")) {
+			<a href="@controllers.patrimonio.routes.RecepcionesController.editar(recepcion.id)@UriTrack.get("&")"  class="btn btn-default"><i class="glyphicon glyphicon-edit"></i> Editar</a>
+			}
+			@if(Permiso.check("recepcionesEliminar")) {
+			<a href="@controllers.patrimonio.routes.RecepcionesController.eliminar(recepcion.id)@UriTrack.get("&")"  class="btn btn-default delete-confirm-link"><i class="glyphicon glyphicon-trash icono-eliminar"></i> Eliminar</a>
+			}
 		}
 	</div>
 	<div class="col-sm-5">
@@ -57,10 +64,10 @@
 	</div>
 	<div class="col-sm-3">
 		<a href="@UriTrack.getOnNull(controllers.patrimonio.routes.RecepcionesController.index().absoluteURL())" class="btn btn-default"><i class="glyphicon glyphicon-list"></i></a>
-		
+
        @if(paginadorFicha.getLista().size() > 1){
-		
-              	
+
+
 		<div class="btn-group">
 			@if(paginadorFicha.hasPrev()) {
 				<a  role="group" href="@controllers.patrimonio.routes.RecepcionesController.ver(paginadorFicha.prev().toLong)@UriTrack.get("&")" class="btn btn-default"><i class="glyphicon glyphicon-chevron-left"></i></a>
@@ -68,40 +75,40 @@
 			<p style="padding-top: 3px" href=""  role="group" class="btn btn-default">@paginadorFicha.posicionActual() de @paginadorFicha.getLista().size()</p>
 			@if(paginadorFicha.hasNext()) {
 				<a  role="group" href="@controllers.patrimonio.routes.RecepcionesController.ver(paginadorFicha.next().toLong)@UriTrack.get("&")" class="btn btn-default"><i class="glyphicon glyphicon-chevron-right"></i></a>
-			}  
+			}
 		</div>
 		}
 	</div>
 </div>
 
-	
+
 
 	<div class="row">
 		<div class="col-sm-2">
 			<label class="control-label">Número</label>
 			<p class="form-control-static form-control">@recepcion.numero</p>
 		</div>
-		
+
 		<div class="col-sm-2">
-			<label class="control-label">Orden de provisión</label> 
+			<label class="control-label">Orden de provisión</label>
 			<p class="form-control-static form-control" style="height: 25px; overflow: hidden;">@recepcion.ordenProvision.numero</p>
 		</div>
-		
+
 		<div class="col-sm-2">
-			<label class="control-label">Acta</label> 
+			<label class="control-label">Acta</label>
 			<p class="form-control-static form-control" style="height: 25px; overflow: hidden;">@if(recepcion.acta != null) { @recepcion.acta.numero }</p>
 		</div>
-		
+
 		<div class="col-sm-2">
-			<label class="control-label">Fecha</label> 
+			<label class="control-label">Fecha</label>
 			<p class="form-control-static form-control" style="height: 25px; overflow: hidden;">@(DateUtils.formatDate(recepcion.create_date))</p>
 		</div>
-		
+
 		<div class="col-sm-3">
-			<label class="control-label">Proveedor</label> 
+			<label class="control-label">Proveedor</label>
 			<p class="form-control-static form-control" style="height: 25px; overflow: hidden;">@recepcion.ordenProvision.ordenCompra.proveedor.nombre</p>
 		</div>
-		
+
 	</div>
 
 	<div class="row">
@@ -110,7 +117,7 @@
 			<p class="form-control-static form-control">@utils.NumberUtils.moneda(recepcion.total)</p>
 		</div>
 	</div>
-	
+
 <hr />
 
 	<ul id="ordenTab" class="nav nav-tabs">
@@ -120,11 +127,11 @@
 
 	<div class="tab-content">
 		<div id="contenedorRemitos" class="tab-pane active">
-		
+
 		</div>
 	</div>
-	
-	
+
+
 	<script>
 	$( function(){
 		var urlRemitos = $('#listaRemitos').attr("data-href");
@@ -133,6 +140,6 @@
 		});
 	});
 	</script>
-	
-	
+
+
 }
