@@ -103,6 +103,19 @@
 				<p class="form-control-static form-control">@recuperoFacturaForm.field("periodo.nombre").value</p>
 			</div>
 		</div>
+		<div class="col-sm-2">
+			<label class="control-label">Forma de pago </label>
+			<p class="form-control-static form-control">
+			@recuperoFacturaForm("tipoPago").value match {
+				    	case "efectivo" => {Efectivo}
+						case "cheque" => {Cheque}
+						case "tarjeta" => {Tarjeta}
+						case "transferencia" => {Transferencia}
+				    	case _ => {}
+					}
+
+			</p>
+		</div>
 	</div>
 
 	@views.html.recupero.recuperoFactura.tabsRecuperoFactura(false, recuperoFacturaForm,recuperoFactura)
