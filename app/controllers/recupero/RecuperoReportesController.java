@@ -2409,15 +2409,22 @@ order by nc.numero
 
 	    datos.put("tipo_pago",recupero_tipo_pago);
 
+	    if(rf.cliente.cie != null && !rf.cliente.cie.isEmpty()) {
+	    	datos.put("cuittitulo", "CIE:");
+	    	datos.put("cuit", rf.cliente.cie);
+	    	datos.put("direccion", "Paraguay");
+	    }else {
+	    	datos.put("cuittitulo", "CUIT:");
+	    	datos.put("cuit", rf.cliente.cuit2);
+	    	String direccion = rf.cliente.getFirstDireccion();
+	 	    datos.put("direccion", direccion);
+	    }
 
-
-	    datos.put("cuit", rf.cliente.cuit2);
 	    datos.put("razon_social", rf.cliente.nombre);
 
 	    String iva = (rf.cliente.condicionIva != null)?rf.cliente.condicionIva.descripcion:"IVA Responsable Inscripto";
 	    datos.put("ivaa", iva);
-	    String direccion = rf.cliente.getFirstDireccion();
-	    datos.put("direccion", direccion);
+
 
 	    datos.put("importe", utils.NumberUtils.moneda(rf.getTotalFacturado()) );
 	    datos.put("cae", (rf.cae!=null)? rf.cae:"" );
@@ -2584,15 +2591,23 @@ order by nc.numero
 
 	    datos.put("tipo_pago",((rf.recupero_tipo_pago_id != null)?rf.recuperoTipoPago.nombre:"Contado"));
 
+	    if(rf.cliente.cie != null && !rf.cliente.cie.isEmpty()) {
+	    	datos.put("cuittitulo", "CIE:");
+	    	datos.put("cuit", rf.cliente.cie);
+	    	datos.put("direccion", "Paraguay");
+	    }else {
+	    	datos.put("cuittitulo", "CUIT:");
+	    	datos.put("cuit", rf.cliente.cuit2);
+	    	String direccion = rf.cliente.getFirstDireccion();
+	 	    datos.put("direccion", direccion);
+	    }
 
 
-	    datos.put("cuit", rf.cliente.cuit2);
 	    datos.put("razon_social", rf.cliente.nombre);
 
 	    String iva = (rf.cliente.condicionIva != null)?rf.cliente.condicionIva.descripcion:"IVA Responsable Inscripto";
 	    datos.put("ivaa", iva);
-	    String direccion = rf.cliente.getFirstDireccion();
-	    datos.put("direccion", direccion);
+
 
 	    datos.put("importe", utils.NumberUtils.moneda(rd.getTotal()) );
 
@@ -2657,13 +2672,22 @@ order by nc.numero
 
 	    datos.put("tipo_pago",((rf.recupero_tipo_pago_id != null)?rf.recuperoTipoPago.nombre:"Contado"));
 
-	    datos.put("cuit", rf.cliente.cuit2);
+
+	    if(rf.cliente.cie != null && !rf.cliente.cie.isEmpty()) {
+	    	datos.put("cuittitulo", "CIE:");
+	    	datos.put("cuit", rf.cliente.cie);
+	    	datos.put("direccion", "Paraguay");
+	    }else {
+	    	datos.put("cuittitulo", "CUIT:");
+	    	datos.put("cuit", rf.cliente.cuit2);
+	    	String direccion = rf.cliente.getFirstDireccion();
+	 	    datos.put("direccion", direccion);
+	    }
+
 	    datos.put("razon_social", rf.cliente.nombre);
 
 	    String iva = (rf.cliente.condicionIva != null)?rf.cliente.condicionIva.descripcion:"IVA Responsable Inscripto";
 	    datos.put("ivaa", iva);
-	    String direccion = rf.cliente.getFirstDireccion();
-	    datos.put("direccion", direccion);
 
 	    datos.put("importe", utils.NumberUtils.moneda(rd.getTotal()) );
 
