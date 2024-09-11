@@ -132,6 +132,14 @@ public class RecuperoFacturasController extends Controller {
 		try {
 			RecuperoFactura c = recuperoFacturaForm.get();
 
+			if(c.recupero_tipo_pago_id.compareTo(new Long(1)) == 0 && (c.tipoPago == null || c.tipoPago.isEmpty())) {
+
+				recuperoFacturaForm.reject("tipoPago","Debe seleccionar una forma de pago.");
+
+				flash("error", "Debe seleccionar una forma de pago si el tipo es CONTADO.");
+				return badRequest(crearRecuperoFactura.render(recuperoFacturaForm));
+			}
+
 			if(!c.controlPermisoDeposito()) {
 				flash("error", "La institucion de la planilla no corresponde a su institucion asignada.");
 				return badRequest(crearRecuperoFactura.render(recuperoFacturaForm));
@@ -204,6 +212,14 @@ public class RecuperoFacturasController extends Controller {
 		try {
 			RecuperoFactura c = recuperoFacturaForm.get();
 
+			if(c.recupero_tipo_pago_id.compareTo(new Long(1)) == 0 && (c.tipoPago == null || c.tipoPago.isEmpty())) {
+
+				recuperoFacturaForm.reject("tipoPago","Debe seleccionar una forma de pago.");
+
+				flash("error", "Debe seleccionar una forma de pago si el tipo es CONTADO.");
+				return badRequest(editarRecuperoFactura.render(recuperoFacturaForm,rp));
+			}
+
 			if(!c.controlPermisoDeposito()) {
 				flash("error", "La institucion de la planilla no corresponde a su institucion asignada.");
 				return badRequest(editarRecuperoFactura.render(recuperoFacturaForm,rp));
@@ -235,6 +251,7 @@ public class RecuperoFacturasController extends Controller {
 			c.write_date = new Date();
 			c.write_usuario_id = new Long(Usuario.getUsuarioSesion());
 			c.update();
+
 			flash("success", "La factura se ha actualizado");
 			return redirect( controllers.recupero.routes.RecuperoFacturasController.ver(recuperoFacturaForm.get().id) + UriTrack.get("&") );
 		} catch (PersistenceException pe){
