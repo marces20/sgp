@@ -548,6 +548,7 @@ public class CertificacionesServiciosController extends Controller {
 				flash("success", "Operación exitosa. Estado actual: No Certificada");
 
 			} catch (Exception e) {
+				OrdenProvision.enableTriggers();
 				flash("error", "No se pudo cambiar el estado. "+e);
 			}finally {
 			      if (stmt != null)

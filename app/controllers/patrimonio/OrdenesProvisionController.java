@@ -687,7 +687,6 @@ public class OrdenesProvisionController extends Controller {
 
 
 
-			Ebean.commitTransaction();
 
 			stmt = conn.prepareStatement("alter table orden_lineas_ajustes enable trigger actualiza_total_orden");
 		    x = stmt.executeUpdate();
@@ -707,6 +706,9 @@ public class OrdenesProvisionController extends Controller {
 		    stmt.execute();
 		    stmt.close();
 
+		    Ebean.commitTransaction();
+
+
 
 			result.put("success", true);
 			flash("success", "Se actualizaron " + count + " registros de " + total + " seleccionados.");
@@ -715,7 +717,7 @@ public class OrdenesProvisionController extends Controller {
 		} catch (Exception e) {
 
 			Ebean.rollbackTransaction();
-
+			OrdenProvision.enableTriggers();
 			flash("error", "No se puede modificar los registros.");
 			return ok(modalAnularProductosPedientes.render(d, ordenId, fx));
 		} finally {
