@@ -21,6 +21,7 @@ import akka.actor.Cancellable;
 import controllers.afip.AfipController;
 import jobs.DeudasInformesMails;
 import models.InventarioRismi;
+import models.OrdenProvision;
 import models.TipoComprobante;
 import models.Usuario;
 import models.haberes.LiquidacionMes;
@@ -46,6 +47,7 @@ public class Global extends GlobalSettings {
   private Cancellable jobMailDeuda3;
   private Cancellable authAfip;
   private Cancellable comprobanteAfip;
+  private Cancellable enableTriggers;
   // private Cancellable jobActualizarVistasMaterizalizadas;
 
   @Override
@@ -56,7 +58,35 @@ public class Global extends GlobalSettings {
 
       Logger.info("--------------------Application has started");
 
-   // JOBS COMPROBANTE AFIP
+      // JOBS ENABLETRIGGRES
+      Long timeDelayENABLETRIGGRES = null;
+      int timeGapBetweenMemoryLogsInMinutesENABLETRIGGRES = 30;
+      timeDelayENABLETRIGGRES = getTimeDelay(0, 5, Calendar.AM, 0, 0, 0);// ACTUALIZAR INVENTARIO
+      comprobanteAfip = Akka.system()
+              .scheduler()
+              .schedule(Duration.Zero(),
+            		    Duration.create(timeGapBetweenMemoryLogsInMinutesENABLETRIGGRES, TimeUnit.MINUTES),
+
+                  new Runnable() {
+                    @Override
+                    public void run() {
+                      System.out.println("Cron Job ENABLETRIGGRES "+new Date());
+
+
+
+                      try {
+                    	  OrdenProvision.enableTriggers();
+
+
+                      } catch (Exception e ) {
+
+                      }
+                    }
+                  },
+                  Akka.system().dispatcher());
+
+
+      // JOBS COMPROBANTE AFIP
       Long timeDelayCOMPROBANTEAFIP = null;
       int timeGapBetweenMemoryLogsInMinutesCOMPROBANTEAFIP = 1;
 
@@ -101,7 +131,7 @@ public class Global extends GlobalSettings {
 
       // JOBS AUTH AFIP
       Long timeDelayAUTHAFIP = null;
-      int timeGapBetweenMemoryLogsInMinutesAUTHAFIP = 6;
+      int timeGapBetweenMemoryLogsInMinutesAUTHAFIP = 12;
 
 
       timeDelayAUTHAFIP = getTimeDelay(0, 5, Calendar.AM, 0, 0, 0);// ACTUALIZAR INVENTARIO
@@ -394,6 +424,7 @@ public class Global extends GlobalSettings {
     jobHistorialDeuda.cancel();
     authAfip.cancel();
     comprobanteAfip.cancel();
+    enableTriggers.cancel();
     super.onStop(app);
   }
 }
