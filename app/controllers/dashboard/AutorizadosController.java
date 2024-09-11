@@ -2050,8 +2050,10 @@ public class AutorizadosController extends Controller {
 				celda.setCellStyle(estiloMoneda);
 				total = total.add(al.getTotal());
 
+				String depo = (al.ordenProvision.ordenCompra.deposito != null)?al.ordenProvision.ordenCompra.deposito.nombre:"";
+
 				celda = f.createCell(3);
-				celda.setCellValue(al.expediente.descripcion);
+				celda.setCellValue(al.expediente.descripcion +" - "+ depo);
 				celda.setCellStyle(comun);
 
 				String af = "";
