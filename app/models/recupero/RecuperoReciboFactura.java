@@ -60,6 +60,9 @@ public class RecuperoReciboFactura  extends Model {
 		return saldo;
 	}
 
+	@Required(message="Requiere Forma de Pago")
+	public String tipo_pago;
+
 	@ManyToOne
 	@JoinColumn(name="create_usuario_id", referencedColumnName="id", insertable=false, updatable=false)
 	public Usuario create_usuario;

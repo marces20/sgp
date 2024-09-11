@@ -158,9 +158,9 @@
 		</div>
 		<div class="col-sm-2">
 			<label class="control-label">Forma de pago</label>
-			<div class="form-group @if(recuperoFacturaForm.error("tipoPago")  != null) {has-error}else{has-required}">
-				@select(recuperoFacturaForm("tipoPago"),options(""->"Seleccionar", "efectivo"->"Efectivo","cheque"->"Cheque","tarjeta"->"Tarjeta","transferencia"->"Transferencia"), 'class -> "form-control select", 'id -> "tipoPago")
-				@recuperoFacturaForm("tipoPago").error.map{ error =>
+			<div class="form-group @if(recuperoFacturaForm.error("tipo_pago")  != null) {has-error}else{has-required}">
+				@select(recuperoFacturaForm("tipo_pago"),options(""->"Seleccionar", "efectivo"->"Efectivo","cheque"->"Cheque","tarjeta"->"Tarjeta","transferencia"->"Transferencia"), 'class -> "form-control select", 'id -> "tipoPago")
+				@recuperoFacturaForm("tipo_pago").error.map{ error =>
 					<div class="text-error">@error.message</div>
 				}
 			</div>

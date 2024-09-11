@@ -132,7 +132,7 @@ public class RecuperoFacturasController extends Controller {
 		try {
 			RecuperoFactura c = recuperoFacturaForm.get();
 
-			if(c.recupero_tipo_pago_id.compareTo(new Long(1)) == 0 && (c.tipoPago == null || c.tipoPago.isEmpty())) {
+			if(c.recupero_tipo_pago_id.compareTo(new Long(1)) == 0 && (c.tipo_pago == null || c.tipo_pago.isEmpty())) {
 
 				recuperoFacturaForm.reject("tipoPago","Debe seleccionar una forma de pago.");
 
@@ -212,7 +212,7 @@ public class RecuperoFacturasController extends Controller {
 		try {
 			RecuperoFactura c = recuperoFacturaForm.get();
 
-			if(c.recupero_tipo_pago_id.compareTo(new Long(1)) == 0 && (c.tipoPago == null || c.tipoPago.isEmpty())) {
+			if(c.recupero_tipo_pago_id.compareTo(new Long(1)) == 0 && (c.tipo_pago == null || c.tipo_pago.isEmpty())) {
 
 				recuperoFacturaForm.reject("tipoPago","Debe seleccionar una forma de pago.");
 

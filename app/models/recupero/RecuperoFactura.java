@@ -67,6 +67,7 @@ public class RecuperoFactura extends Model {
 	public String numero;
 	public String nombre;
 	public String nota;
+	public String tipo_pago;
 
 	@ManyToOne
 	@JoinColumn(name="estado_id", referencedColumnName="id", insertable=false, updatable=false)
