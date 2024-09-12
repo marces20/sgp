@@ -2002,7 +2002,11 @@ public class AutorizadosController extends Controller {
 			Autorizado a = Autorizado.find.byId(id);
 			Logger.debug("-------" + id);
 			Logger.debug("----dddd---" + a);
-			List<AutorizadoLinea> lineas = AutorizadoLinea.find.where().eq("autorizado_id", a.id).order("proveedor_id")
+			List<AutorizadoLinea> lineas = AutorizadoLinea.find
+					.fetch("expediente")
+					.fetch("proveedor")
+					.fetch("ordenProvision")
+					.where().eq("autorizado_id", a.id).order("proveedor_id")
 					.findList();
 			String cuenta2 = "";
 			String cuenta1 = "";
@@ -2050,11 +2054,9 @@ public class AutorizadosController extends Controller {
 				celda.setCellStyle(estiloMoneda);
 				total = total.add(al.getTotal());
 
-				String depo = (al.ordenProvision.ordenCompra.deposito != null)?al.ordenProvision.ordenCompra.deposito.nombre:"";
 
-				celda = f.createCell(3);
-				celda.setCellValue(al.expediente.descripcion +" - "+ depo);
-				celda.setCellStyle(comun);
+
+
 
 				String af = "";
 
@@ -2063,16 +2065,17 @@ public class AutorizadosController extends Controller {
 				}
 
 				String p = "";
+				String periodo = "";
 
 				if (al.ordenProvision != null) {
 					Long or = al.ordenProvision.ordenCompra.orden_rubro_id;
 					if (al.autorizadoLineaActa != null && al.autorizadoLineaActa.size() > 0) {
 						for (AutorizadoLineaActa ax : al.autorizadoLineaActa) {
 							if (ax.actaRecepcion != null) {
+								periodo = (ax.actaRecepcion.periodo != null)?ax.actaRecepcion.periodo.nombre:"";
 								af += ax.actaRecepcion.getNombre() + " - ";
 								if (or.compareTo(new Long(2)) == 0 || or.compareTo(new Long(6)) == 0) {
-									Map<Integer, Map<String, String>> pacientes = ActaRecepcion
-											.getPacientes(ax.actaRecepcion.id);
+									Map<Integer, Map<String, String>> pacientes = ActaRecepcion.getPacientes(ax.actaRecepcion.id);
 									for (Map<String, String> xd : pacientes.values()) {
 										p += xd.get("nombre") + " - ";
 									}
@@ -2082,6 +2085,15 @@ public class AutorizadosController extends Controller {
 						}
 					}
 				}
+				String depo = "";
+				if(al.ordenProvision != null && al.ordenProvision.ordenCompra != null) {
+					depo = (al.ordenProvision.ordenCompra.deposito != null)?al.ordenProvision.ordenCompra.deposito.nombre:"";
+				}
+
+
+				celda = f.createCell(3);
+				celda.setCellValue(al.expediente.descripcion +" - "+ depo+" - "+periodo);
+				celda.setCellStyle(comun);
 
 				celda = f.createCell(4);
 				celda.setCellValue(af);
