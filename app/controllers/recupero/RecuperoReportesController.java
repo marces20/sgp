@@ -2257,7 +2257,11 @@ order by nc.numero
 		 }else if(rdlxr.size() >= 30 && rdlxr.size() < 60 ) {
 
 			 List<RecuperoReciboFactura> first = new ArrayList<>(rdlxr.subList(0, 29));
-			 List<RecuperoReciboFactura> second = new ArrayList<>(rdlxr.subList(30,rdlxr.size()));
+			 List<RecuperoReciboFactura> second = new ArrayList<>(rdlxr.subList(29,rdlxr.size()));
+
+			 Logger.debug("xxxxxxxxxxxxxxxxxxxxxxx "+rdlxr.size());
+
+
 			 String lineas1 ="";
 			 BigDecimal total1 = new BigDecimal(0);
 
@@ -2302,8 +2306,8 @@ order by nc.numero
 		 }else if(rdlxr.size() >= 60 && rdlxr.size() <= 90 ) {
 
 			 List<RecuperoReciboFactura> first = new ArrayList<>(rdlxr.subList(0, 29));
-			 List<RecuperoReciboFactura> second = new ArrayList<>(rdlxr.subList(30,59));
-			 List<RecuperoReciboFactura> tres = new ArrayList<>(rdlxr.subList(60,rdlxr.size()));
+			 List<RecuperoReciboFactura> second = new ArrayList<>(rdlxr.subList(29,59));
+			 List<RecuperoReciboFactura> tres = new ArrayList<>(rdlxr.subList(59,rdlxr.size()));
 			 String lineas1 ="";
 			 BigDecimal total1 = new BigDecimal(0);
 			 for(RecuperoReciboFactura rfl :first) {
@@ -2449,7 +2453,7 @@ order by nc.numero
 		    datos.put("lineas",lineas);
 	    }else if(rf.recuperoFacturaLinea.size() >= 25 && rf.recuperoFacturaLinea.size() < 50 ) {
 	    	 List<RecuperoFacturaLinea> first = new ArrayList<>(rf.recuperoFacturaLinea.subList(0, 24));
-			 List<RecuperoFacturaLinea> second = new ArrayList<>(rf.recuperoFacturaLinea.subList(25,rf.recuperoFacturaLinea.size()));
+			 List<RecuperoFacturaLinea> second = new ArrayList<>(rf.recuperoFacturaLinea.subList(24,rf.recuperoFacturaLinea.size()));
 
 			 	String lineas ="";
 			 	BigDecimal total1 = new BigDecimal(0);
@@ -2488,8 +2492,8 @@ order by nc.numero
 
 	    }else if(rf.recuperoFacturaLinea.size() >= 50 && rf.recuperoFacturaLinea.size() <= 75 ) {
 	    		List<RecuperoFacturaLinea> first = new ArrayList<>(rf.recuperoFacturaLinea.subList(0, 24));
-	    		List<RecuperoFacturaLinea> second = new ArrayList<>(rf.recuperoFacturaLinea.subList(25,49));
-	    		List<RecuperoFacturaLinea> tres = new ArrayList<>(rf.recuperoFacturaLinea.subList(50,rf.recuperoFacturaLinea.size()));
+	    		List<RecuperoFacturaLinea> second = new ArrayList<>(rf.recuperoFacturaLinea.subList(24,49));
+	    		List<RecuperoFacturaLinea> tres = new ArrayList<>(rf.recuperoFacturaLinea.subList(49,rf.recuperoFacturaLinea.size()));
 
 			 	String lineas ="";
 			 	BigDecimal total1 = new BigDecimal(0);
