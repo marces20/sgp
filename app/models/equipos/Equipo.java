@@ -1,5 +1,7 @@
 package models.equipos;
 
+import java.util.List;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -12,6 +14,7 @@ import com.avaje.ebean.ExpressionList;
 
 import models.Estado;
 import models.Organigrama;
+import models.haberes.CentroCosto;
 import models.haberes.LiquidacionDetalle;
 import models.haberes.LiquidacionMes;
 import play.data.validation.Constraints.Required;
@@ -43,12 +46,11 @@ public class Equipo extends Model{
 	@ManyToOne
 	@JoinColumn(name="estado_id", referencedColumnName="id", insertable=false, updatable=false)
 	public Estado estado;
-	@Required(message="Debe escribir un estado")
 	public Long estado_id;
 
 	public static Model.Finder<Long,Equipo> find = new Finder<Long,Equipo>(Long.class, Equipo.class);
 
-	public static Pagination<Equipo> page(Long liquidacionPuestoId) {
+	public static Pagination<Equipo> page(String serial) {
     	Pagination<Equipo> p = new Pagination<Equipo>();
     	p.setOrderDefault("DESC");
     	p.setSortByDefault("id");
@@ -60,6 +62,13 @@ public class Equipo extends Model{
     	return p;
 	}
 
+	public List<Equipo> getDataSuggest(String input,Integer limit){
+		List<Equipo> l = find.where()
+				.ilike("nombre", "%"+input+"%")
+				.setMaxRows(limit).orderBy("nombre")
+			    .findList();
 
+		return l;
+	}
 
 }
