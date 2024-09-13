@@ -1,0 +1,56 @@
+@(lcForm: Form[models.equipos.Equipo],lc:models.equipos.Equipo)
+@import helper._
+@import utils._
+@scripts = {
+	<script src="@routes.Assets.at("javascripts/haberes/centroCosto.js")" type="text/javascript"></script>
+}
+@implicitFieldConstructor = @{ FieldConstructor(simpleInput.render) }
+
+@views.html.equipo.mainEquipos("Vista Equipo",scripts) {
+	<div class="page-header">
+		<div class="row">
+			<div class="col-sm-7">
+				<h1>Vista Equipo</h1>
+			</div>
+			<div class="col-sm-5">
+
+			</div>
+		</div>
+	</div>
+
+	<div class="row menu-acciones">
+		<div class="col-sm-10">
+			<a href="@controllers.equipo.routes.EquipoController.crear()"  class="btn btn-default"><i class="glyphicon glyphicon-plus-sign"></i> Nuevo Equipo</a>
+			<a href="@controllers.equipo.routes.EquipoController.editar(lc.id)@UriTrack.get("&")"  class="btn btn-default"><i class="glyphicon glyphicon-edit"></i> Editar</a>
+			<a href="@controllers.equipo.routes.EquipoController.eliminar(lc.id)@UriTrack.get("&")"  class="btn btn-default delete-confirm-link"><i class="glyphicon glyphicon-trash icono-eliminar"></i> Eliminar</a>
+		</div>
+		<div class="col-sm-2">
+			<a href="@UriTrack.getOnNull(controllers.equipo.routes.EquipoController.index().absoluteURL())" class="btn btn-default"><i class="glyphicon glyphicon-list"></i></a>
+		</div>
+	</div>
+
+	<input type="hidden" id="equipoId" name="equipoId" value="@lc.id"/>
+	<div class="row">
+
+		 <div class="col-sm-3">
+			<div class="form-group">
+				<label class="control-label">Nombre</label>
+				<p class="form-control-static form-control">@lcForm.field("nombre").value</p>
+			</div>
+		</div>
+		<div class="col-sm-5">
+			<div class="form-group">
+				<label class="control-label">Descripcion</label>
+				<p class="form-control-static form-control">@lcForm.field("descripcion").value</p>
+			</div>
+		</div>
+
+	</div>
+	<div class="row">
+		<div class="col-sm-8">
+			<label class="control-label">Departamento/Servicio</label>
+			<p class="form-control-static form-control">@if(lc.organigrama_id != null){  @lcForm.field("organigrama.nombre").value}</p>
+		</div>
+
+	</div>
+}

@@ -1,0 +1,18 @@
+@(equipoForm: Form[models.equipos.Equipo])
+@import helper._
+
+@views.html.equipo.mainEquipos("Crear Equipo") {
+
+	<div class="page-header">
+		<div class="row">
+			<div class="col-sm-10">
+				<h1>Crear nuevo Equipo</h1>
+			</div>
+		</div>
+	</div>
+	@views.html.tags.successError()
+
+    @helper.form(action = controllers.equipo.routes.EquipoController.guardar()) {
+		@views.html.equipo.equipo.formEquipo(equipoForm)
+	}
+}
