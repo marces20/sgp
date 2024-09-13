@@ -44,6 +44,8 @@ private static final long serialVersionUID = 1L;
 	public static final Integer	ACTA_MOVIMIENTO = 25;
 	public static final Integer TIPO_LIQUIDACION_LICENCIAS_NOVEDADES = 26;
 	public static final Integer TIPO_RECUPERO_RECIBO = 27;
+	public static final Integer TIPO_LIQUIDACION_EMBARGO = 28;
+	public static final Integer TIPO_EQUIPO = 29;
 
 	public static final int SOLICITUD_ESTADO_BORRADOR = 1;
 	public static final int SOLICITUD_ESTADO_ENCURSO = 2;
@@ -192,6 +194,16 @@ private static final long serialVersionUID = 1L;
 	public static final int RECUPERO_RECIBOS_BORRADOR = 120;
 	public static final int RECUPERO_RECIBOS_APROBADO = 121;
 	public static final int RECUPERO_RECIBOS_CANCELADO = 122;
+
+	public static final int LIQUIDACION_EMBARGO_BORRADOR = 125;
+	public static final int LIQUIDACION_EMBARGO_APROBADO = 126;
+	public static final int LIQUIDACION_EMBARGO_CANCELADO = 127;
+
+	public static final int EQUIPO_BORRADOR = 128;
+	public static final int EQUIPO_FUNCIONANDO = 129;
+	public static final int EQUIPO_REPARACION = 130;
+	public static final int EQUIPO_APAGADO = 131;
+
 
 	//ULTIMOOOO ID ES 124
 
