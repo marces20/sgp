@@ -9,6 +9,7 @@
 -> /patrimonio   	routePatrimonio.Routes
 -> /recupero    	routeRecupero.Routes
 -> /informes    	routeInformes.Routes
+-> /equipo    		routeEquipo.Routes
 
 GET    /                    controllers.Application.index()
 #GET   /reporte             controllers.Reportes.index()
