@@ -18,11 +18,11 @@ import com.avaje.ebean.SqlRow;
 import play.cache.Cache;
 import play.db.ebean.Model;
 
-@Entity 
+@Entity
 @Table(name = "auth_modulos")
 public class Modulo extends Model {
 	private static final long serialVersionUID = 1L;
-	
+
 	public static final Integer COMPRAS = 1;
 	public static final Integer CONTABILIDAD = 2;
 	public static final Integer RRHH = 3;
@@ -36,14 +36,15 @@ public class Modulo extends Model {
 	public static final Integer HABERES = 11;
 	public static final Integer RECUPERO = 12;
 	public static final Integer INFORMES = 13;
-	
-	@Id  
+	public static final Integer EQUIPOS = 14;
+
+	@Id
 	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="auth_modulos_id_seq")
 	public Integer id;
 	public String nombre;
-	
+
 	public static Model.Finder<Long,Modulo> find = new Finder<Long,Modulo>(Long.class, Modulo.class);
-	
+
 	public static HashSet<Integer> getModulosConPermisoAsignado(){
 		HashSet<Integer> permisos = new HashSet<>();
 	    String sql = "select m.id modulo " +
@@ -52,15 +53,15 @@ public class Modulo extends Model {
 	    			 "inner join auth_componentes c on c.id = p.componente_id " +
 	    			 "inner join auth_modulos m on m.id = c.modulo_id " +
 	    			 "where usuario_id = :usuario_id";
-	    
+
 	    List<SqlRow> rows = Ebean.createSqlQuery(sql).setParameter("usuario_id", Usuario.getUsuarioSesion()).findList();
-	    
+
 	    for (SqlRow row : rows) {
 			permisos.add(row.getInteger("modulo"));
 		}
 	    return permisos;
 	}
-	
+
 	public static Boolean check(Integer modulo) {
 		Integer usuario = Usuario.getUsuarioSesion();
 		HashSet<Integer> permisos = null;
