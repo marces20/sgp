@@ -134,7 +134,7 @@ public class RecuperoFacturasController extends Controller {
 
 			if(c.recupero_tipo_pago_id.compareTo(new Long(1)) == 0 && (c.tipo_pago == null || c.tipo_pago.isEmpty())) {
 
-				recuperoFacturaForm.reject("tipoPago","Debe seleccionar una forma de pago.");
+				recuperoFacturaForm.reject("tipo_pago","Debe seleccionar una forma de pago.");
 
 				flash("error", "Debe seleccionar una forma de pago si el tipo es CONTADO.");
 				return badRequest(crearRecuperoFactura.render(recuperoFacturaForm));
@@ -157,10 +157,10 @@ public class RecuperoFacturasController extends Controller {
 			}
 
 			Periodo periodo = Periodo.getPeriodoByDate(c.fecha);
-			c.fecha_desde = periodo.date_start;
-			c.fecha_hasta = periodo.date_stop;
+			//c.fecha_desde = periodo.date_start;
+			//c.fecha_hasta = periodo.date_stop;
 
-			if(c.periodo_id != null) {
+			if(c.periodo_id != null && c.fecha_desde != null && c.fecha_hasta != null) {
 				periodo = Periodo.find.byId(c.periodo_id.longValue());
 				c.fecha_desde = periodo.date_start;
 				c.fecha_hasta = periodo.date_stop;
@@ -238,10 +238,10 @@ public class RecuperoFacturasController extends Controller {
 			}
 
 			Periodo periodo = Periodo.getPeriodoByDate(c.fecha);
-			c.fecha_desde = periodo.date_start;
-			c.fecha_hasta = periodo.date_stop;
+			//c.fecha_desde = periodo.date_start;
+			//c.fecha_hasta = periodo.date_stop;
 
-			if(c.periodo_id != null) {
+			if(c.periodo_id != null && c.fecha_desde != null && c.fecha_hasta != null) {
 				periodo = Periodo.find.byId(c.periodo_id.longValue());
 				c.fecha_desde = periodo.date_start;
 				c.fecha_hasta = periodo.date_stop;
