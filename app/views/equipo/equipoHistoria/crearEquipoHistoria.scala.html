@@ -1,0 +1,8 @@
+@(historiaForm: Form[models.equipos.EquipoHistoria])
+@import helper._
+@implicitFieldConstructor = @{ FieldConstructor(simpleInput.render) }
+
+@helper.form(action = controllers.equipo.routes.EquipoHistoriaController.guardar()) {
+	@views.html.equipo.equipoHistoria.formEquipoHistoria(historiaForm)
+
+}

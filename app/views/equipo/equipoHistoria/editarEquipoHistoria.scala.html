@@ -1,0 +1,10 @@
+@(historiaForm: Form[models.equipos.EquipoHistoria])
+@import helper._
+@implicitFieldConstructor = @{ FieldConstructor(simpleInput.render) }
+
+@helper.form(action = controllers.equipo.routes.EquipoHistoriaController.actualizar()) {
+	@views.html.equipo.equipoHistoria.formEquipoHistoria(historiaForm)
+	@inputText(historiaForm("id"), 'hidden -> "hidden")
+
+
+}

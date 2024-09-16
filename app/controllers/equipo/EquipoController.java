@@ -3,6 +3,7 @@ package controllers.equipo;
 import static play.data.Form.form;
 
 import java.io.IOException;
+import java.util.Date;
 
 import javax.persistence.PersistenceException;
 
@@ -12,8 +13,11 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 
 import controllers.auth.CheckPermiso;
 import models.Estado;
+import models.Usuario;
+import models.auth.Permiso;
 import models.equipos.Equipo;
 import models.haberes.CentroCosto;
+import models.recupero.RecuperoFactura;
 import play.data.DynamicForm;
 import play.data.Form;
 import play.libs.Json;
@@ -22,6 +26,7 @@ import play.mvc.Result;
 import utils.RequestVar;
 import utils.UriTrack;
 import utils.pagination.Pagination;
+import views.html.sinPermiso;
 import views.html.equipo.equipo.*;
 
 public class EquipoController extends Controller {
@@ -78,7 +83,7 @@ public class EquipoController extends Controller {
 	@CheckPermiso(key = "equipoEditar")
 	public static Result editar(Long id) {
 		Equipo lc = Ebean.find(Equipo.class, id);
-		return ok(editarEquipo.render(equipoForm.fill(lc)));
+		return ok(editarEquipo.render(equipoForm.fill(lc),lc));
 	}
 
 	@CheckPermiso(key = "equipoEditar")
@@ -87,12 +92,13 @@ public class EquipoController extends Controller {
 		Form<Equipo> equipoForm = form(Equipo.class).bindFromRequest();
 
 		try {
+			Equipo lc = equipoForm.get();
 
 			if(equipoForm.hasErrors()) {
 				flash("error", "Error en formulario");
-				return badRequest(editarEquipo.render(equipoForm));
+				return badRequest(editarEquipo.render(equipoForm,lc));
 			} else {
-				Equipo lc = equipoForm.get();
+
 				//b.write_date = new Date();
 				//b.write_usuario_id = new Long(Usuario.getUsuarioSesion());
 				lc.update();
@@ -103,7 +109,7 @@ public class EquipoController extends Controller {
 		} catch (PersistenceException pe){
 			play.Logger.error("excepcion", pe);
 			flash("error", "No se ha podido almacenar el equipo");
-			return badRequest(editarEquipo.render(equipoForm));
+			return badRequest(editarEquipo.render(equipoForm,null));
 		}
 	}
 
@@ -178,5 +184,117 @@ public class EquipoController extends Controller {
     	p.setSortByDefault("id");
     	p.setExpressionList(Equipo.find.where().ilike("nombre", "%" + RequestVar.get("nombre") + "%"));
 		return ok(modalBusquedaEquipo.render(p, form().bindFromRequest()) );
+	}
+
+	public static Result cambiarEstado(Long idEquipo, Long idEstado) throws IOException{
+		Estado estado = Estado.getEstado(idEstado,Estado.TIPO_EQUIPO);
+
+		Equipo rp = Equipo.find.byId(idEquipo);
+
+
+		if(rp == null){
+			flash("error", "No se encuentra el equipo");
+			return redirect(request().getHeader("referer"));
+		}
+
+
+
+		if(idEstado != null){
+
+			Boolean permiso = false;
+
+			switch ( idEstado.intValue() ) {
+		      case  Estado.EQUIPO_BORRADOR:
+		    	  if(!Permiso.check("equipoPasarEnBorrador")) {
+					  return ok(sinPermiso.render(request().getHeader("referer")));
+				  }
+
+		    	  pasarEnBorrador(rp.id);
+		    	  break;
+		      case Estado.EQUIPO_FUNCIONANDO:
+		    	  if(!Permiso.check("equipoPasarFuncionando")) {
+					  return ok(sinPermiso.render(request().getHeader("referer")));
+				  }
+
+		    	  pasarFuncionando(rp.id);
+		    	  break;
+		      case Estado.EQUIPO_REPARACION:
+		    	  if(!Permiso.check("equipoPasarReparacion")) {
+					  return ok(sinPermiso.render(request().getHeader("referer")));
+				  }
+
+		    	  pasarReparacion(rp.id);
+		    	  break;
+		      case Estado.EQUIPO_APAGADO:
+		    	  if(!Permiso.check("equipoPasarApagado")) {
+					  return ok(sinPermiso.render(request().getHeader("referer")));
+				  }
+
+
+		    	  pasarApagado(rp.id);
+		          break;
+		      default:
+		           break;
+		      }
+
+		}
+
+		return redirect(controllers.equipo.routes.EquipoController.ver(rp.id)+ UriTrack.get("&"));
+	}
+
+	@CheckPermiso(key = "equipoPasarApagado")
+	public static void pasarApagado(Long idRf){
+
+		Equipo rf = Ebean.find(Equipo.class).select("id, estado_id").setId(idRf).findUnique();
+
+		if(rf != null){
+			rf.estado_id = new Long(Estado.EQUIPO_APAGADO);
+			rf.save();
+			flash("success", "Operación exitosa. Estado actual: Apagado");
+		} else {
+			flash("error", "Parámetros incorrectos");
+		}
+	}
+
+	@CheckPermiso(key = "equipoPasarReparacion")
+	public static void pasarReparacion(Long idRf){
+
+		Equipo rf = Ebean.find(Equipo.class).select("id, estado_id").setId(idRf).findUnique();
+
+		if(rf != null){
+			rf.estado_id = new Long(Estado.EQUIPO_REPARACION);
+			rf.save();
+			flash("success", "Operación exitosa. Estado actual: Reparacion");
+		} else {
+			flash("error", "Parámetros incorrectos");
+		}
+	}
+
+	@CheckPermiso(key = "equipoPasarFuncionando")
+	public static void pasarFuncionando(Long idRf){
+
+		Equipo rf = Ebean.find(Equipo.class).select("id, estado_id").setId(idRf).findUnique();
+
+		if(rf != null){
+			rf.estado_id = new Long(Estado.EQUIPO_FUNCIONANDO);
+			rf.save();
+			flash("success", "Operación exitosa. Estado actual: Funcionando");
+		} else {
+			flash("error", "Parámetros incorrectos");
+		}
+	}
+
+	@CheckPermiso(key = "equipoPasarEnBorrador")
+	public static void pasarEnBorrador(Long idRf){
+
+		Equipo rf = Ebean.find(Equipo.class).select("id, estado_id").setId(idRf).findUnique();
+
+		if(rf != null){
+			rf.estado_id = new Long(Estado.EQUIPO_BORRADOR);
+			rf.save();
+			flash("success", "Operación exitosa. Estado actual: En Borrador");
+		} else {
+			flash("error", "Parámetros incorrectos");
+		}
 	}
 }

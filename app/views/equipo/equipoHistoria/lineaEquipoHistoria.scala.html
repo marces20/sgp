@@ -1,0 +1,22 @@
+@(historia: models.equipos.EquipoHistoria, editable: Boolean)
+<tr data-id="@historia.id">
+
+		<td class="accion-editar">
+			@if(editable){
+				<a class="btn btn-default btn-xs modificarEquipoHistoria" href="@controllers.equipo.routes.EquipoHistoriaController.editar(historia.id)">
+				<i class="glyphicon glyphicon-edit"></i></a>
+			}
+		</td>
+
+	<td>@if(historia.fecha != null){@(utils.DateUtils.formatDate(historia.fecha))}</td>
+	<td>@historia.descripcion</td>
+	<td class="" >@if(historia.createUser != null){@historia.createUser.nombre}</td>
+	<td></td>
+
+	<td>
+	@if(editable){
+		<a class="btn btn-default btn-xs eliminarEquipoHistoria" href="@controllers.equipo.routes.EquipoHistoriaController.eliminar(historia.id)"><i class="glyphicon glyphicon-trash icono-eliminar"></i></a>
+	}
+	</td>
+
+</tr>

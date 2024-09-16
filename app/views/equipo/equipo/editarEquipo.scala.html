@@ -1,4 +1,4 @@
-@(equipoForm: Form[models.equipos.Equipo])
+@(equipoForm: Form[models.equipos.Equipo],equipo:models.equipos.Equipo = null)
 @import helper._
 @implicitFieldConstructor = @{ FieldConstructor(simpleInput.render) }
 
@@ -20,6 +20,7 @@
 	@helper.form(action = controllers.equipo.routes.EquipoController.actualizar()) {
 		@inputText(equipoForm("id"), 'hidden -> "hidden")
 		@views.html.equipo.equipo.formEquipo(equipoForm)
+		@views.html.equipo.equipo.tabsEquipo(true, equipoForm)
 	}
 
 }
