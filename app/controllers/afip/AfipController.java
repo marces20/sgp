@@ -685,6 +685,8 @@ public class AfipController {
 
 
 			RecuperoFactura rf = RecuperoFactura.find.byId(idFactura);
+			Logger.debug("==============CAAAAAAAAAEEEEEEEEEEEEE222=============000000 "+rf.numero );
+
 
 			if(cbteTipo == TipoComprobante.FACTURA) {
 				System.out.println("==========NOTAAA FACTURAAA==================");
@@ -702,7 +704,7 @@ public class AfipController {
 			}
 
 
-
+			Logger.debug("==============CAAAAAAAAAEEEEEEEEEEEEE222=============01111 "+rf.numero );
 
 
 			if(rf != null) {
@@ -728,7 +730,7 @@ public class AfipController {
 
 
 
-
+				Logger.debug("==============CAAAAAAAAAEEEEEEEEEEEEE222=============022222 "+rf.numero );
 
 
 				System.out.println("==============err===============================");
@@ -857,7 +859,7 @@ public class AfipController {
 
 
 
-
+			        Logger.debug("==============CAAAAAAAAAEEEEEEEEEEEEE222=============03333 "+rf.numero );
 
 
 
@@ -893,7 +895,7 @@ public class AfipController {
 			        Unmarshaller jaxbUnmarshaller2 = jaxbContext2.createUnmarshaller();
 
 			        FECAESolicitarResponse datos2 = (FECAESolicitarResponse) jaxbUnmarshaller2.unmarshal(finalreader2);
-
+			        Logger.debug("==============CAAAAAAAAAEEEEEEEEEEEEE222=============055555 "+rf.numero );
 			        if(datos2.getFECAESolicitarResult().getErrors() != null) {
 		            	String errores = "";
 		    	        for(Err ax : datos2.getFECAESolicitarResult().getErrors().getErr()) {
@@ -906,15 +908,15 @@ public class AfipController {
 
 		            }else {
 
-
+		            	Logger.debug("==============CAAAAAAAAAEEEEEEEEEEEEE222=============055555 "+rf.numero );
 
 				        for(FECAEDetResponse xx : datos2.getFECAESolicitarResult().getFeDetResp().getFECAEDetResponse()) {
 
 				        	Logger.debug("==============CAAAAAAAAAEEEEEEEEEEEEE111============= "+datos2.getFECAESolicitarResult().getFeDetResp().getFECAEDetResponse());
 
 
-				        	if(xx.getCAE() != null) {
-				        		Logger.debug("==============CAAAAAAAAAEEEEEEEEEEEEE222============= "+xx.getCAE());
+				        	if(xx.getCAE() != null && !xx.getCAE().isEmpty()) {
+
 				        		cae = xx.getCAE() ;
 				        		if(cbteTipo == TipoComprobante.NOTA_CREDITO) {
 				        			rc.cae = xx.getCAE();
@@ -934,16 +936,26 @@ public class AfipController {
 					        		rf.fecha_vencimiento =utils.DateUtils.formatDate(xx.getCAEFchVto(), "yyyyMMdd");
 					        		rf.save();
 				    			}
+				        		restJs.put("data", datos2.toString());
+						        restJs.put("cae", cae);
+						        restJs.put("success", true);
+				        	}else {
+				        		 String Msg= "";
+				        		 for(Obs obs : xx.getObservaciones().getObs()) {
+				        			 Msg += obs.getMsg();
+				        		 }
+				        		 restJs.put("error", Msg);
+
+				        		RecuperoAfipMovimiento ram = new RecuperoAfipMovimiento(null,idFactura.intValue(),null, null,cbteTipo,null,"ERROR",Msg,new Date());
+								ram.save();
 				        	}
 
-				        	Logger.debug("==============CAAAAAAAAAEEEEEEEEEEEEE333=============");
 				        }
 
+				        Logger.debug("==============CAAAAAAAAAEEEEEEEEEEEEE222=============0066666 "+rf.numero );
 				        Logger.debug("datos2datos2datos2datos2datos2 "+datos2.toString());
 				        Logger.debug("setComprobante pasa");
-				        restJs.put("data", datos2.toString());
-				        restJs.put("cae", cae);
-				        restJs.put("success", true);
+
 		            }
 
 
