@@ -691,8 +691,13 @@ public class AfipController {
 				importe = rf.getBase().doubleValue();
 				fecha = DateUtils.formatDate(rf.fecha,"yyyyMMdd");
 				periodo = Periodo.getPeriodoByDate(rf.fecha);//xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-				fechaDesde = DateUtils.formatDate(periodo.date_start,"yyyyMMdd");
-				fechaHasta = DateUtils.formatDate(periodo.date_stop,"yyyyMMdd");
+				if(rf.fecha_desde != null && rf.fecha_hasta != null) {
+					fechaDesde = DateUtils.formatDate(rf.fecha_desde,"yyyyMMdd");
+					fechaHasta = DateUtils.formatDate(rf.fecha_hasta,"yyyyMMdd");
+				}else {
+					fechaDesde = DateUtils.formatDate(periodo.date_start,"yyyyMMdd");
+					fechaHasta = DateUtils.formatDate(periodo.date_stop,"yyyyMMdd");
+				}
 				ptoVta = new Integer(rf.puntoVenta.numero);
 			}
 

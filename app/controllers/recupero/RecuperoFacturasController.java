@@ -241,6 +241,12 @@ public class RecuperoFacturasController extends Controller {
 			//c.fecha_desde = periodo.date_start;
 			//c.fecha_hasta = periodo.date_stop;
 
+			String fechaDesde = DateUtils.formatDate(c.fecha_desde,"yyyyMMdd");
+			String fechaHasta = DateUtils.formatDate(c.fecha_hasta,"yyyyMMdd");
+
+			Logger.debug(" ------------- "+fechaDesde);
+			Logger.debug(" ------------- "+fechaHasta);
+
 			if(c.periodo_id != null && c.fecha_desde != null && c.fecha_hasta != null) {
 				periodo = Periodo.find.byId(c.periodo_id.longValue());
 				c.fecha_desde = periodo.date_start;
