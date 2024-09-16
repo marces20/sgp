@@ -908,7 +908,7 @@ public class AfipController {
 
 		            }else {
 
-		            	Logger.debug("==============CAAAAAAAAAEEEEEEEEEEEEE222=============055555 "+rf.numero );
+ 		            	boolean er= false;
 
 				        for(FECAEDetResponse xx : datos2.getFECAESolicitarResult().getFeDetResp().getFECAEDetResponse()) {
 
@@ -936,24 +936,26 @@ public class AfipController {
 					        		rf.fecha_vencimiento =utils.DateUtils.formatDate(xx.getCAEFchVto(), "yyyyMMdd");
 					        		rf.save();
 				    			}
-				        		restJs.put("data", datos2.toString());
-						        restJs.put("cae", cae);
-						        restJs.put("success", true);
+
 				        	}else {
 				        		 String Msg= "";
 				        		 for(Obs obs : xx.getObservaciones().getObs()) {
 				        			 Msg += obs.getMsg();
 				        		 }
 				        		 restJs.put("error", Msg);
+				        		 er= true;
 
 				        		RecuperoAfipMovimiento ram = new RecuperoAfipMovimiento(null,idFactura.intValue(),null, null,cbteTipo,null,"ERROR",Msg,new Date());
 								ram.save();
 				        	}
 
 				        }
-
-				        Logger.debug("==============CAAAAAAAAAEEEEEEEEEEEEE222=============0066666 "+rf.numero );
-				        Logger.debug("datos2datos2datos2datos2datos2 "+datos2.toString());
+				        if(!er) {
+				        	restJs.put("data", datos2.toString());
+					        restJs.put("cae", cae);
+					        restJs.put("success", true);
+				        }
+ 				        Logger.debug("datos2datos2datos2datos2datos2 "+datos2.toString());
 				        Logger.debug("setComprobante pasa");
 
 		            }
