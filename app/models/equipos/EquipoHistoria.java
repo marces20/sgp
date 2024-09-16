@@ -32,13 +32,14 @@ public class EquipoHistoria extends Model{
 	@ManyToOne
 	@JoinColumn(name="equipo_id", referencedColumnName="id", insertable=false, updatable=false)
 	public Equipo equipo;
-	@Required(message="Debe tener un equipoo asociada")
+	@Required(message="Debe tener un equipo asociada")
 	public Long equipo_id;
 
+	@Required(message="Debe tener una descripcion")
 	public String descripcion;
 
 	@Formats .DateTime(pattern="dd/MM/yyyy")
-	public Date fecha_certificacion;
+	public Date fecha;
 
 	@ManyToOne
 	@JoinColumn(name="create_user", referencedColumnName="id", insertable=false, updatable=false)
