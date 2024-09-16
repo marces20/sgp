@@ -937,7 +937,7 @@ POST   /haberes/liquidacionPuesto/pasarCanceladoMasivo   	controllers.haberes.Li
 
 GET     /haberes/liquidacion-detalle/index       	controllers.haberes.LiquidacionDetallesController.index(id:Long ?= 0, editable:Boolean ?= false)
 GET     /haberes/liquidacion-detalle/crear         	controllers.haberes.LiquidacionDetallesController.crear(liquidacionPuestoId:String)
-GET     /haberes/liquidacion-d20301766700etalle/editar         controllers.haberes.LiquidacionDetallesController.editar(id:Long)
+GET     /haberes/liquidacion-detalle/editar         controllers.haberes.LiquidacionDetallesController.editar(id:Long)
 POST    /haberes/liquidacion-detalle/guardar        controllers.haberes.LiquidacionDetallesController.guardar()
 POST    /haberes/liquidacion-detalle/actualizar     controllers.haberes.LiquidacionDetallesController.actualizar()
 GET     /haberes/liquidacion-detalle/eliminar       controllers.haberes.LiquidacionDetallesController.eliminar(id:Long)
