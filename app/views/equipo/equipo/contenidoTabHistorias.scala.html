@@ -1,0 +1,18 @@
+@(formularioCarga: Boolean, equipoForm: Form[models.equipos.Equipo] = null)
+@import java.util.List
+
+@if(equipoForm.field("id").value == null || equipoForm.field("id").value == ""){
+	<p>Para cargar productos primero debe dar de alta el Equipo</p>
+} else {
+	<script>
+	$( function (){
+		$.get('@controllers.equipo.routes.EquipoHistoriaController.index(equipoForm.field("id").value.toLong, formularioCarga)', function(data){
+			$('#listaEquipoHistoria').parent().html(data);
+		})
+	});
+	</script>
+}
+
+<div id="listaEquipoHistoria">
+
+</div>
