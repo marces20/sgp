@@ -16,3 +16,10 @@ GET     /equipo-historia/editar         controllers.equipo.EquipoHistoriaControl
 POST    /equipo-historia/guardar        controllers.equipo.EquipoHistoriaController.guardar()
 POST    /equipo-historia/actualizar     controllers.equipo.EquipoHistoriaController.actualizar()
 GET     /equipo-historia/eliminar       controllers.equipo.EquipoHistoriaController.eliminar(id:Long)
+
+GET     /equipo-incidencia/index          controllers.equipo.EquipoIncidenciaController.index(id:Long ?= 0, editable:Boolean ?= false)
+GET     /equipo-incidencia/crear          controllers.equipo.EquipoIncidenciaController.crear(equipoId:String)
+GET     /equipo-incidencia/editar         controllers.equipo.EquipoIncidenciaController.editar(id:Long)
+POST    /equipo-incidencia/guardar        controllers.equipo.EquipoIncidenciaController.guardar()
+POST    /equipo-incidencia/actualizar     controllers.equipo.EquipoIncidenciaController.actualizar()
+GET     /equipo-incidencia/eliminar       controllers.equipo.EquipoIncidenciaController.eliminar(id:Long)
