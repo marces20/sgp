@@ -54,7 +54,7 @@ public class EquipoHistoria extends Model{
 
 	public static Pagination<EquipoHistoria> page(Long equipoId) {
     	Pagination<EquipoHistoria> p = new Pagination<EquipoHistoria>();
-    	p.setPageSize(5000000);
+    	p.setPageSize(25);
     	p.setOrderDefault("DESC");
     	p.setSortByDefault("id");
 
