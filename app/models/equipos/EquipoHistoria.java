@@ -39,6 +39,7 @@ public class EquipoHistoria extends Model{
 	public String descripcion;
 
 	@Formats .DateTime(pattern="dd/MM/yyyy")
+	@Required(message="Debe tener una fecha")
 	public Date fecha;
 
 	@ManyToOne
