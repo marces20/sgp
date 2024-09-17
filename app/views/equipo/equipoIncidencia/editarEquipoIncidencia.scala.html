@@ -1,0 +1,10 @@
+@(incidenciaForm: Form[models.equipos.EquipoIncidencia])
+@import helper._
+@implicitFieldConstructor = @{ FieldConstructor(simpleInput.render) }
+
+@helper.form(action = controllers.equipo.routes.EquipoIncidenciaController.actualizar()) {
+	@views.html.equipo.equipoIncidencia.formEquipoIncidencia(incidenciaForm)
+	@inputText(incidenciaForm("id"), 'hidden -> "hidden")
+
+
+}

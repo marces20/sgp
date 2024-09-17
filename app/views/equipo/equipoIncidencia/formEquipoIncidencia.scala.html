@@ -1,0 +1,68 @@
+@(lineaForm: Form[models.equipos.EquipoIncidencia])
+@import helper._
+@import utils._
+@implicitFieldConstructor = @{ FieldConstructor(simpleInput.render) }
+
+<script src="@routes.Assets.at("plugins/jquery.numeric_input.min.js")" type="text/javascript"></script>
+
+
+@if(flash.containsKey("error")) {
+	<div class="alert alert-danger">
+		<i class="glyphicon glyphicon-remove-sign"></i> @flash.get("error")
+	</div>
+}
+<script>
+$(function(){
+	$('.searchModal').modalSearch();
+	$("#fecha").mask("99/99/9999");
+});
+</script>
+
+<div class="row">
+	@inputText(lineaForm("equipo_id"), 'type -> "hidden")
+
+	<div class="col-sm-2">
+		<label class="control-label">Fecha</label>
+		<div class="form-group @if(lineaForm.error("fecha")  != null) {has-error}else{has-required}">
+			@inputText(lineaForm("fecha"),'class -> "form-control date", 'id->"fecha")
+		</div>
+		@lineaForm("fecha").error.map{ error =>
+			<div class="text-error">@error.message</div>
+		}
+	</div>
+
+	<div class="col-sm-10">
+		<label for="cuenta" class="control-label">Descripcion</label>
+		<div class="input-group">
+			@textarea(lineaForm("descripcion"), 'class -> "form-control", 'id -> "nota", 'rows -> "1",'cols -> "500")
+		</div>
+		@lineaForm("descripcion").error.map{ error =>
+			<div class="text-error">@error.message</div>
+		}
+	</div>
+</div>
+<div>
+	<div class="col-sm-2">
+		<div class="form-group @if(lineaForm.error("tipo_incidencia_id") != null) {has-error}">
+			<label for="tipo_pago" class="control-label">Tipo Incidencia</label>
+
+			@select(lineaForm("tipo_incidencia_id"),models.equipos.TipoIncidencia.find.all().map { p => p.id.toString -> p.nombre}, 'class -> "form-control select", '_default -> "Seleccionar")
+			@lineaForm("tipo_incidencia_id").error.map{ error =>
+				<div class="text-error">@error.message</div>
+			}
+		</div>
+	</div>
+
+</div>
+<div class="row form-actions">
+    <div class="col-lg-offset-4 col-lg-8">
+    	<a href="" class="btn btn-default cancelar"><i class="glyphicon glyphicon-floppy-remove"></i>Cancelar</a>
+      <button type="submit" class="btn btn-default"><i class="glyphicon glyphicon-floppy-disk"></i>Guardar</button>
+
+    </div>
+</div>
+<script>
+$( function(){
+
+});
+</script>
