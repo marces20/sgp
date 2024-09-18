@@ -180,14 +180,15 @@ public class RecuperoFactura extends Model {
 		return getBase();
 	}
 
-	@Formula(select = "_d${ta}.total_pagado", join = "LEFT OUTER JOIN (select p.recupero_factura_id, COALESCE(sum(p.total),0) as total_pagado FROM recupero_pagos p WHERE p.recupero_nota_debito_id is null and p.recupero_nota_credito_id is null and  p.estado_id = "+Estado.RECUPERO_PAGO_PAGADO+" GROUP BY p.recupero_factura_id) as _d${ta} on _d${ta}.recupero_factura_id = ${ta}.id")
+	@Formula(select = "_d${ta}.total_pagado", join = "LEFT OUTER JOIN (select p.recupero_factura_id, COALESCE(sum(p.total),0) as total_pagado "
+			+ "FROM recupero_pagos p WHERE p.recupero_nota_debito_id is null and p.recupero_nota_credito_id is null and  p.estado_id = "+Estado.RECUPERO_PAGO_PAGADO+" GROUP BY p.recupero_factura_id) as _d${ta} on _d${ta}.recupero_factura_id = ${ta}.id")
 	public BigDecimal total_pagado;
 
 	public BigDecimal getPagado(){
 		if (total_pagado == null || total_pagado.compareTo(BigDecimal.ZERO) == 0)
 			return new BigDecimal(0);
-
-		return  total_pagado.subtract(getTotalNotaCredito()).add(getTotalNotaDebito());
+		return  total_pagado;
+		//return  total_pagado.subtract(getTotalNotaCredito()).subtract(getTotalNotaDebito());
 	}
 
 
