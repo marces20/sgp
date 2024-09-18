@@ -121,7 +121,10 @@ public class RecuperoFactura extends Model {
 	public String cae;
 	public Date fecha_vencimiento;
 	public Date fecha_emision;
+
+	@Formats .DateTime(pattern="dd/MM/yyyy")
 	public Date fecha_desde;
+	@Formats .DateTime(pattern="dd/MM/yyyy")
 	public Date fecha_hasta;
 
 	@ManyToOne
