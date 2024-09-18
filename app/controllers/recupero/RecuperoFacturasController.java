@@ -567,7 +567,7 @@ public class RecuperoFacturasController extends Controller {
 	}
 
 	public static Result correrFacturaAfip(Long idFactura) throws IOException{
-		if (play.Play.isProd()) {
+		//if (play.Play.isProd()) {
 			try {
 				AfipController ac = new AfipController();
 				ObjectNode ret = ac.setComprobante(idFactura,TipoComprobante.FACTURA);
@@ -580,9 +580,9 @@ public class RecuperoFacturasController extends Controller {
 			}catch (Exception e) {
 				flash("error", "error: "+e);
 			}
-		}else {
+		/*}else {
 			flash("error", "error: NO ES PRODUCCION");
-		}
+		}*/
 
 
 		return redirect(controllers.recupero.routes.RecuperoFacturasController.ver(idFactura)+ UriTrack.get("&"));
