@@ -44,7 +44,11 @@ public class EquipoController extends Controller {
 		return ok(
 				indexEquipo.render(
 						Equipo.page(
-								 RequestVar.get("serial")
+								 RequestVar.get("serial"),
+								 RequestVar.get("btnFiltro[0]"),//borrador
+							  		RequestVar.get("btnFiltro[1]"),//funcionando
+							  		RequestVar.get("btnFiltro[2]"),//reparacion
+							  		RequestVar.get("btnFiltro[3]") //apagado
 								 ),
 								 d));
 	}
