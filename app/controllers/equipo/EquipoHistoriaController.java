@@ -9,6 +9,7 @@ import javax.persistence.PersistenceException;
 
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
+import controllers.auth.CheckPermiso;
 import models.equipos.EquipoHistoria;
 import play.data.Form;
 import play.libs.Json;
@@ -28,6 +29,7 @@ public class EquipoHistoriaController extends Controller {
 		return ok(indexEquipoHistoria.render(historia, editable));
 	}
 
+	@CheckPermiso(key = "equipoHistoriaCrear")
 	public static Result crear(String equipoId) {
 		flash().clear();
 		Map<String,String> b = new HashMap<String, String>();
@@ -38,6 +40,7 @@ public class EquipoHistoriaController extends Controller {
 		return ok(crearEquipoHistoria.render(linea));
 	}
 
+	@CheckPermiso(key = "equipoHistoriaCrear")
 	public static Result guardar() {
 		Form<EquipoHistoria> historiaForm = form(EquipoHistoria.class).bindFromRequest();
 
@@ -69,12 +72,14 @@ public class EquipoHistoriaController extends Controller {
 		return ok(restJs);
 	}
 
+	@CheckPermiso(key = "equipoHistoriaEditar")
 	public static Result editar(Long id) {
 		flash().clear();
 		EquipoHistoria historia = EquipoHistoria.find.byId(id);
 		return ok(editarEquipoHistoria.render(historiaForm.fill(historia)));
 	}
 
+	@CheckPermiso(key = "equipoHistoriaEditar")
 	public static Result actualizar() {
 
 		Form<EquipoHistoria> historiaForm = form(EquipoHistoria.class).bindFromRequest();
@@ -104,6 +109,7 @@ public class EquipoHistoriaController extends Controller {
 		return ok(restJs);
 	}
 
+	@CheckPermiso(key = "equipoHistoriaEliminar")
 	public static Result eliminar(Long id) {
 		ObjectNode restJs = Json.newObject();
 

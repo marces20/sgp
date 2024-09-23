@@ -9,6 +9,9 @@ import javax.persistence.PersistenceException;
 
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
+import controllers.auth.CheckPermiso;
+import models.Estado;
+import models.Usuario;
 import models.equipos.EquipoIncidencia;
 import play.data.Form;
 import play.libs.Json;
@@ -28,6 +31,7 @@ public class EquipoIncidenciaController extends Controller {
 		return ok(indexEquipoIncidencia.render(historia, editable));
 	}
 
+	@CheckPermiso(key = "equipoIncidenciaCrear")
 	public static Result crear(String equipoId) {
 		flash().clear();
 		Map<String,String> b = new HashMap<String, String>();
@@ -38,6 +42,7 @@ public class EquipoIncidenciaController extends Controller {
 		return ok(crearEquipoIncidencia.render(linea));
 	}
 
+	@CheckPermiso(key = "equipoIncidenciaCrear")
 	public static Result guardar() {
 		Form<EquipoIncidencia> incidenciaForm = form(EquipoIncidencia.class).bindFromRequest();
 
@@ -48,7 +53,8 @@ public class EquipoIncidenciaController extends Controller {
 				return ok(crearEquipoIncidencia.render(incidenciaForm));
 			} else {
 				EquipoIncidencia f = incidenciaForm.get();
-				//f.create_usuario_id = new Long(Usuario.getUsuarioSesion());
+				f.create_user = new Long(Usuario.getUsuarioSesion());
+				f.estado_id = (long) Estado.EQUIPO_INCIDENCIA_ABIERTO;
 				//f.create_date = new Date();
 				f.save();
 
@@ -69,12 +75,14 @@ public class EquipoIncidenciaController extends Controller {
 		return ok(restJs);
 	}
 
+	@CheckPermiso(key = "equipoIncidenciaEditar")
 	public static Result editar(Long id) {
 		flash().clear();
 		EquipoIncidencia incidencia = EquipoIncidencia.find.byId(id);
 		return ok(editarEquipoIncidencia.render(incidenciaForm.fill(incidencia)));
 	}
 
+	@CheckPermiso(key = "equipoIncidenciaEditar")
 	public static Result actualizar() {
 
 		Form<EquipoIncidencia> incidenciaForm = form(EquipoIncidencia.class).bindFromRequest();
@@ -104,6 +112,7 @@ public class EquipoIncidenciaController extends Controller {
 		return ok(restJs);
 	}
 
+	@CheckPermiso(key = "equipoIncidenciaEliminar")
 	public static Result eliminar(Long id) {
 		ObjectNode restJs = Json.newObject();
 
