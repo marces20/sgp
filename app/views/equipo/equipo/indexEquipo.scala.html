@@ -4,6 +4,20 @@
 @import models.auth._
 
 @implicitFieldConstructor = @{ FieldConstructor(simpleInput.render) }
+
+@getClassEstado(i:Estado) = @{
+	var classEstado:String = new String()
+	if(i != null && i.id == 128){
+		classEstado = "borrador"
+	}else if(i != null && i.id == 131){
+		classEstado = "cancelada"
+	}else if(i != null && i.id == 129){
+		classEstado = "autorizado"
+	}
+	classEstado
+
+}
+
 @views.html.equipo.mainEquipos("Lista Equipos") {
 
 <div class="page-header">
@@ -23,6 +37,28 @@
 
 	<div id="actions">
 		<form action="" method="GET">
+			<div class="row">
+			<div class="col-sm-8 filtrosEstados" id="filtrosEstados">
+			 	<div class="btn-group">
+				  <button type="button" id="btn-filtro-borrador" rel="borrador" class="btn btn-default btn-filtros"><i class="glyphicon glyphicon-pencil"></i><br>Borrador
+				 	@checkbox(formBuscador("btnFiltro[0]"), 'hidden -> "hidden")
+				  </button>
+
+				  <button type="button" id="btn-filtro-aprobado" rel="aprobado" class="btn btn-default btn-filtros"><i class="glyphicon glyphicon-ok"></i><br>Funcionando
+				  	@checkbox(formBuscador("btnFiltro[1]"), 'hidden -> "hidden")
+				  </button>
+
+				  <button type="button" id="btn-filtro-aprobado" rel="aprobado" class="btn btn-default btn-filtros"><i class="glyphicon glyphicon-wrench"></i><br>Reparacion
+				  	@checkbox(formBuscador("btnFiltro[2]"), 'hidden -> "hidden")
+				  </button>
+
+				  <button type="button" id="btn-filtro-cancelado" rel="cancelado" class="btn btn-default btn-filtros"><i class="glyphicon glyphicon-minus-sign"></i><br>Apagado
+				  	@checkbox(formBuscador("btnFiltro[3]"), 'hidden -> "hidden")
+				  </button>
+
+				</div>
+			</div>
+		</div>
 			<div class="row">
 				<div class="col-sm-3">
 					<div class="form-group">
@@ -63,12 +99,14 @@
 					</th>
 					<th width="30">#</th>
 					<th>Nombre</th>
+					<th width="30" align="center">Incidencias</th>
+					<th width="100" align="center">Estado</th>
 					<th width="30">#</th>
 				</tr>
 			</thead>
 			<tbody>
 			@for(lc <- buscador.getList) {
-				<tr class="pointer" data-href="@controllers.equipo.routes.EquipoController.ver(lc.id)&@UriTrack.encode()">
+				<tr class="pointer @getClassEstado(lc.estado)"  data-href="@controllers.equipo.routes.EquipoController.ver(lc.id)&@UriTrack.encode()">
 					<td><input type="checkbox" name="check_listado[]" value="@lc.id" class="notSeleccion" id="check-@lc.id"/></td>
 					<td>
 						@if(Permiso.check("equipoEditar")) {
@@ -78,6 +116,8 @@
 						}
 					</td>
 					<td>@(lc.nombre)</td>
+					<td style="text-align: center;">@(lc.getIncidencias())</td>
+					<td style="text-align: center;">@(lc.estado.nombre)</td>
 					<td>
 						@if(Permiso.check("equipoEliminar")) {
 						<a class="btn btn-default btn-xs delete-confirm-link notSeleccion" href="@controllers.equipo.routes.EquipoController.eliminar(lc.id)&@UriTrack.encode()">
