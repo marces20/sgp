@@ -46,6 +46,7 @@ private static final long serialVersionUID = 1L;
 	public static final Integer TIPO_RECUPERO_RECIBO = 27;
 	public static final Integer TIPO_LIQUIDACION_EMBARGO = 28;
 	public static final Integer TIPO_EQUIPO = 29;
+	public static final Integer TIPO_EQUIPO_INCIDENCIA = 30;
 
 	public static final int SOLICITUD_ESTADO_BORRADOR = 1;
 	public static final int SOLICITUD_ESTADO_ENCURSO = 2;
@@ -203,6 +204,9 @@ private static final long serialVersionUID = 1L;
 	public static final int EQUIPO_FUNCIONANDO = 129;
 	public static final int EQUIPO_REPARACION = 130;
 	public static final int EQUIPO_APAGADO = 131;
+
+	public static final int EQUIPO_INCIDENCIA_ABIERTO = 132;
+	public static final int EQUIPO_INCIDENCIA_CERRADO = 133;
 
 
 	//ULTIMOOOO ID ES 124
