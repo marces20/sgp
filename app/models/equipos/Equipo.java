@@ -1,5 +1,6 @@
 package models.equipos;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 import javax.persistence.Entity;
@@ -11,6 +12,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 import com.avaje.ebean.ExpressionList;
+import com.avaje.ebean.annotation.Formula;
 
 import models.Estado;
 import models.Organigrama;
@@ -48,14 +50,50 @@ public class Equipo extends Model{
 	public Estado estado;
 	public Long estado_id;
 
+	@Formula(select = "_c${ta}.base", join = "left outer join (select equipo_id, count(*) as base from equipo_incidencias group by equipo_id) as _c${ta} on _c${ta}.equipo_id = ${ta}.id")
+	public Integer incidencias;//Base
+	public Integer getIncidencias(){
+		if (incidencias == null)
+			return new Integer(0);
+		return incidencias;
+	}
+
 	public static Model.Finder<Long,Equipo> find = new Finder<Long,Equipo>(Long.class, Equipo.class);
 
-	public static Pagination<Equipo> page(String serial) {
+	public static Pagination<Equipo> page(String serial,
+				String filtroBorrador,
+			   String filtroFuncionado,
+			   String filtroReparacion,
+			   String filtroApagado) {
     	Pagination<Equipo> p = new Pagination<Equipo>();
     	p.setOrderDefault("DESC");
     	p.setSortByDefault("id");
 
     	ExpressionList<Equipo> e = find.where();
+
+    	if(!filtroBorrador.isEmpty() || !filtroFuncionado.isEmpty() || !filtroReparacion.isEmpty() || !filtroApagado.isEmpty()) {
+    		e = e.disjunction();
+
+
+	   		if(!filtroBorrador.isEmpty()){
+	   			 e = e.eq("estado_id", Estado.EQUIPO_BORRADOR);
+	   		}
+
+	   		if(!filtroFuncionado.isEmpty()){
+	   			 e = e.eq("estado_id", Estado.EQUIPO_FUNCIONANDO);
+	   		}
+
+	   		if(!filtroReparacion.isEmpty()){
+	   			 e = e.eq("estado_id", Estado.EQUIPO_REPARACION);
+	   		}
+
+	   		if(!filtroApagado.isEmpty()){
+	   			 e = e.eq("estado_id", Estado.EQUIPO_APAGADO);
+	   		}
+
+	   		e = e.endJunction();
+    		p.parcheCountAllFormula = true;
+    	}
 
     	p.setExpressionList(e);
 
