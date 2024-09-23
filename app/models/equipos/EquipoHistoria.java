@@ -48,6 +48,7 @@ public class EquipoHistoria extends Model{
 	@Column(name="create_user")
 	public Long create_user;
 
+	@Formats .DateTime(pattern="dd/MM/yyyy")
 	public Date create_date;
 
 	public static Model.Finder<Long,EquipoHistoria> find = new Finder<Long,EquipoHistoria>(Long.class, EquipoHistoria.class);
