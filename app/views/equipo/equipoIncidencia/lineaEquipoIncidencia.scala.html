@@ -1,12 +1,16 @@
 @(incidencia: models.equipos.EquipoIncidencia, editable: Boolean)
+@import helper._
+@import utils._
+@import models.auth._
+
 <tr data-id="@incidencia.id">
 
-		<td class="accion-editar">
-			@if(editable){
-				<a class="btn btn-default btn-xs modificarEquipoHistoria" href="@controllers.equipo.routes.EquipoIncidenciaController.editar(incidencia.id)">
-				<i class="glyphicon glyphicon-edit"></i></a>
-			}
-		</td>
+	<td class="accion-editar">
+		@if(editable && Permiso.check("equipoIncidenciaEditar")){
+			<a class="btn btn-default btn-xs modificarEquipoHistoria" href="@controllers.equipo.routes.EquipoIncidenciaController.editar(incidencia.id)">
+			<i class="glyphicon glyphicon-edit"></i></a>
+		}
+	</td>
 
 	<td>@if(incidencia.fecha != null){@(utils.DateUtils.formatDate(incidencia.fecha))}</td>
 	<td>@incidencia.descripcion</td>
@@ -14,9 +18,9 @@
 	<td></td>
 
 	<td>
-	@if(editable){
-		<a class="btn btn-default btn-xs eliminar" href="@controllers.equipo.routes.EquipoIncidenciaController.eliminar(incidencia.id)"><i class="glyphicon glyphicon-trash icono-eliminar"></i></a>
-	}
+		@if(editable && Permiso.check("equipoIncidenciaEliminar")){
+			<a class="btn btn-default btn-xs eliminar" href="@controllers.equipo.routes.EquipoIncidenciaController.eliminar(incidencia.id)"><i class="glyphicon glyphicon-trash icono-eliminar"></i></a>
+		}
 	</td>
 
 </tr>

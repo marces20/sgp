@@ -17,12 +17,13 @@
 			@views.html.equipo.equipo.contenidoTabHistorias(formularioCarga, equipoForm)
 		</div>
 		<div class="tab-pane" id="contenedorIncidencias">
-
+			@views.html.equipo.equipo.contenidoTabIncidencias(formularioCarga, equipoForm)
 		</div>
 
 	</div>
 </div>
 @if(!formularioCarga){
+<hr />
 <div class="row">
 
 	<div class="col-sm-6">
@@ -30,45 +31,45 @@
 		<div class="panel-heading"><b>Acciones</b></div>
 		<div class="panel-body">
 
-			<div class="row margin-bottom-25">
+				<div class="row margin-bottom-25">
 
-						<div class="col-sm-12">
-							<div class="row">
-								@for(estado <- models.Estado.getSiguienteEstadoPorAprobar(equipo.estado.orden,models.Estado.TIPO_EQUIPO)) {
-									@if(estado.orden <= 4) {
-										<div class="col-sm-3">
-											<a href="@controllers.equipo.routes.EquipoController.cambiarEstado(equipoForm.field("id").value.toInt, estado.id.toLong)@UriTrack.get("&")" class="btn btn-default">
-												<i class="glyphicon glyphicon-arrow-right"></i> @estado.nombre
-											</a>
-										</div>
-
-									}
-								}
-
-								@if(equipo.estado.id == models.Estado.EQUIPO_APAGADO) {
+					<div class="col-sm-12">
+						<div class="row">
+							@for(estado <- models.Estado.getSiguienteEstadoPorAprobar(equipo.estado.orden,models.Estado.TIPO_EQUIPO)) {
+								@if(estado.orden <= 4) {
 									<div class="col-sm-3">
-										<a href="@controllers.equipo.routes.EquipoController.cambiarEstado(equipoForm.field("id").value.toInt, models.Estado.EQUIPO_BORRADOR)@UriTrack.get("&")" class="btn btn-default">
-											<i class="glyphicon glyphicon-arrow-right"></i> Volver a Borrador
-										</a>
-									</div>
-								}else{
-									<div class="col-sm-3">
-									</div>
-
-									<div class="col-sm-3">
-										<a href="@controllers.equipo.routes.EquipoController.cambiarEstado(equipoForm.field("id").value.toInt, models.Estado.EQUIPO_APAGADO)@UriTrack.get("&")" class="btn btn-default">
-											<i class="glyphicon glyphicon-minus-sign"></i> Apagado
+										<a href="@controllers.equipo.routes.EquipoController.cambiarEstado(equipoForm.field("id").value.toInt, estado.id.toLong)@UriTrack.get("&")" class="btn btn-default">
+											<i class="glyphicon glyphicon-arrow-right"></i> @estado.nombre
 										</a>
 									</div>
 
 								}
-							</div>
+							}
 
+							@if(equipo.estado.id == models.Estado.EQUIPO_APAGADO) {
+								<div class="col-sm-3">
+									<a href="@controllers.equipo.routes.EquipoController.cambiarEstado(equipoForm.field("id").value.toInt, models.Estado.EQUIPO_BORRADOR)@UriTrack.get("&")" class="btn btn-default">
+										<i class="glyphicon glyphicon-arrow-right"></i> Volver a Borrador
+									</a>
+								</div>
+							}else{
+								<div class="col-sm-3">
+								</div>
+
+								<div class="col-sm-3">
+									<a href="@controllers.equipo.routes.EquipoController.cambiarEstado(equipoForm.field("id").value.toInt, models.Estado.EQUIPO_APAGADO)@UriTrack.get("&")" class="btn btn-default">
+										<i class="glyphicon glyphicon-minus-sign"></i> Apagado
+									</a>
+								</div>
+
+							}
 						</div>
-					</div>
 
+					</div>
 				</div>
+
 			</div>
 		</div>
+	</div>
 </div>
 }

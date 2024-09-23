@@ -7,7 +7,7 @@
 
 	<p>
 
-		@if(editable && Permiso.check("equipoIncidenciaAgregar")){
+		@if(editable && Permiso.check("equipoIncidenciaCrear")){
 			<a class="btn btn-default btn-xs" href="#" id="nuevoEquipoIncidencia"><i class="glyphicon glyphicon-plus"></i> Nuevo</a>
 		}
 	</p>
@@ -74,7 +74,7 @@ $( function(){
 	function mostrarModal(url){
 		modalCargaProductos = $('<div></div>').dialog({
 			resizable: false,
-		    title: "Cargar Historia",
+		    title: "Cargar Incidencia",
 		    height: 400,
 		    width: 750,
 		    modal: true,
