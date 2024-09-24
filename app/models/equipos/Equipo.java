@@ -36,6 +36,9 @@ public class Equipo extends Model{
 	@Required(message="Debe escribir un nombre")
 	public String nombre;
 
+	@Required(message="Debe escribir un serie")
+	public String serie;
+
 	@Required(message="Debe escribir una descripcion")
 	public String descripcion;
 

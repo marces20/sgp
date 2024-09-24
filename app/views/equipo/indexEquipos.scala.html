@@ -1,3 +1,167 @@
 @views.html.equipo.mainEquipos("Equipos") {
 
+<div class="row">
+		<div class="col-sm-5">
+   	 		<!-- PIE CHART -->
+            <div class="card card-danger">
+              <div class="card-header">
+                <h3 class="card-title">Estado Equipos</h3>
+
+                <div class="card-tools">
+
+                </div>
+              </div>
+              <div class="card-body">
+                <canvas id="pieChart3" style="height:230px; min-height:230px"></canvas>
+              </div>
+              <!-- /.card-body -->
+            </div>
+            <!-- /.card -->
+
+		<div class="card card-info">
+
+            <div class="card-body p-0">
+              <table class="table table-bordered">
+                <thead>
+
+                </thead>
+                <tbody>
+				  <tr>
+                    <td><b>Funcionando</b></td>
+                    <td align="center">50</td>
+                  </tr>
+                  <tr>
+                    <td><b>Reparando</b></td>
+                    <td align="center">5</td>
+                  </tr>
+                  <tr>
+                    <td><b>Apagado</b></td>
+                   	<td align="center">3</td>
+                  </tr>
+
+
+                </tbody>
+              </table>
+            </div>
+            <!-- /.card-body -->
+          </div>
+            <!-- /.card-body -->
+
+
+      </div>
+
+      <div class="col-sm-5">
+   	 		<!-- PIE CHART -->
+            <div class="card card-danger">
+              <div class="card-header">
+                <h3 class="card-title">Incidencias</h3>
+
+                <div class="card-tools">
+
+                </div>
+              </div>
+              <div class="card-body">
+                <canvas id="pieChart4" style="height:230px; min-height:230px"></canvas>
+              </div>
+              <!-- /.card-body -->
+            </div>
+            <!-- /.card -->
+
+		<div class="card card-info">
+
+            <div class="card-body p-0">
+              <table class="table table-bordered">
+                <thead>
+
+                </thead>
+                <tbody>
+				  <tr>
+                    <td><b>Baja</b></td>
+                    <td align="center">20</td>
+                  </tr>
+                  <tr>
+                    <td><b>Media</b></td>
+                    <td align="center">35</td>
+                  </tr>
+                  <tr>
+                    <td><b>Alta</b></td>
+                   	<td align="center">10</td>
+                  </tr>
+
+
+                </tbody>
+              </table>
+            </div>
+            <!-- /.card-body -->
+          </div>
+            <!-- /.card-body -->
+
+
+      </div>
+</div>
+
+
+<script>
+var pieOptions = {
+		maintainAspectRatio : false,
+			responsive : true,
+	}
+
+setDataEstadoEquipos();
+setDataIncidencias();
+
+function setDataEstadoEquipos(){
+	var data  = [50,5,3];
+	var donutData3        = {
+		      labels: [
+		          'Funcionando',
+		          'Reparando',
+		          'Apagado'
+		      ],
+		      datasets: [
+		        {
+		          data: data,
+		          backgroundColor : ['#00a65a','#f56954','#9b9b9b'],
+		        }
+		      ]
+		    }
+    var pieChartCanvas3 = $('#pieChart3').get(0).getContext('2d')
+    var pieData3       = donutData3;
+
+    var pieChart3 = new Chart(pieChartCanvas3, {
+      type: 'doughnut',
+      data: pieData3,
+      options: pieOptions
+    })
+}
+
+function setDataIncidencias(){
+	var data  = [20,35,10];
+	var donutData3        = {
+		      labels: [
+		          'Baja',
+		          'Media',
+		          'Alta'
+		      ],
+		      datasets: [
+		        {
+		          data: data,
+		          backgroundColor : ['#3b83bd','#ffff00','#f56954'],
+		        }
+		      ]
+		    }
+    var pieChartCanvas3 = $('#pieChart4').get(0).getContext('2d')
+    var pieData4       = donutData3;
+
+    var pieChart4 = new Chart(pieChartCanvas3, {
+      type: 'doughnut',
+      data: pieData4,
+      options: pieOptions
+    })
+}
+
+
+
+</script>
+
 }
