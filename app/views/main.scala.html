@@ -122,6 +122,10 @@
 				<li><a class="navbar-brand @getClassEstadoActive("recupero")" href="@controllers.informes.routes.IndexController.index()">Informes Gerenciales</a></li>
 			}
 
+			@if(Modulo.check(Modulo.EQUIPOS)) {
+				<li><a class="navbar-brand @getClassEstadoActive("equipo")" href="@controllers.equipo.routes.IndexController.index()">Equipos</a></li>
+			}
+
 
 
 
