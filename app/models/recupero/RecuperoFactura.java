@@ -188,7 +188,7 @@ public class RecuperoFactura extends Model {
 		if (total_pagado == null || total_pagado.compareTo(BigDecimal.ZERO) == 0)
 			return new BigDecimal(0);
 		if(recupero_tipo_pago_id.equals(new Long(1))) {
-			return  total_pagado.subtract(getTotalNotaCredito()).subtract(getTotalNotaDebito());
+			return  total_pagado.subtract(getTotalNotaCredito()).add(getTotalNotaDebito());
 		}else {
 			return  total_pagado;
 		}
