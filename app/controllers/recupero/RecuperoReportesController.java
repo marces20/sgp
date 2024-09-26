@@ -2205,7 +2205,8 @@ order by nc.numero
 	    Map<String,String> datos = new HashMap<>();
 	    String puntoventa = (rf.puntoventa_id != null)?rf.puntoVenta.numero:"";
 	    datos.put("pv",puntoventa );
-	    datos.put("pvdireccion", rf.puntoVenta.deposito.direccion);
+	    datos.put("pvdireccion", (rf.puntoVenta.deposito.direccion != null)? rf.puntoVenta.deposito.direccion:"");
+	    datos.put("fantasia",    (rf.puntoVenta.deposito.fantasia != null)? rf.puntoVenta.deposito.fantasia:"");
 	    datos.put("numeroFactura",rf.numero);
 	    datos.put("fecha_emision", utils.DateUtils.formatDate((rf.fecha!= null)?rf.fecha:rf.fecha));
 	    datos.put("fecha_desde", utils.DateUtils.formatDate(rf.fecha));
@@ -2398,7 +2399,8 @@ order by nc.numero
 	    Map<String,String> datos = new HashMap<>();
 
 	    datos.put("pv", rf.puntoVenta.numero);
-	    datos.put("pvdireccion", rf.puntoVenta.deposito.direccion);
+	    datos.put("pvdireccion", (rf.puntoVenta.deposito.direccion != null)? rf.puntoVenta.deposito.direccion:"");
+	    datos.put("fantasia",    (rf.puntoVenta.deposito.fantasia != null)? rf.puntoVenta.deposito.fantasia:"");
 	    datos.put("numeroFactura", rf.numero);
 	    datos.put("fecha_emision", utils.DateUtils.formatDate(rf.fecha));
 	    datos.put("fecha_desde", utils.DateUtils.formatDate(rf.fecha_desde));
@@ -2586,7 +2588,8 @@ order by nc.numero
 	    Map<String,String> datos = new HashMap<>();
 
 	    datos.put("pv", rd.puntoVenta.numero);
-	    datos.put("pvdireccion", rf.puntoVenta.deposito.direccion);
+	    datos.put("pvdireccion", (rf.puntoVenta.deposito.direccion != null)? rf.puntoVenta.deposito.direccion:"");
+	    datos.put("fantasia",    (rf.puntoVenta.deposito.fantasia != null)? rf.puntoVenta.deposito.fantasia:"");
 	    datos.put("numeroFactura", rd.numero);
 	    datos.put("fc", rf.getNumeroFactura());
 
@@ -2668,7 +2671,8 @@ order by nc.numero
 	    Map<String,String> datos = new HashMap<>();
 
 	    datos.put("pv", rd.puntoVenta.numero);
-	    datos.put("pvdireccion", rf.puntoVenta.deposito.direccion);
+	    datos.put("pvdireccion", (rf.puntoVenta.deposito.direccion != null)? rf.puntoVenta.deposito.direccion:"");
+	    datos.put("fantasia",    (rf.puntoVenta.deposito.fantasia != null)? rf.puntoVenta.deposito.fantasia:"");
 	    datos.put("numeroFactura", rd.numero);
 	    datos.put("fc", rf.getNumeroFactura());
 
