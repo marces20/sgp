@@ -100,6 +100,7 @@
 					<th width="30">#</th>
 					<th>Serie</th>
 					<th>Nombre</th>
+					<th>N° Inventario</th>
 					<th>Lugar</th>
 					<th width="30" align="center">Incidencias</th>
 					<th width="100" align="center">Estado</th>
@@ -119,6 +120,7 @@
 					</td>
 					<td>@(lc.serie)</td>
 					<td>@(lc.nombre)</td>
+					<td>@if(lc.numero_inventario != null){@lc.numero_inventario}</td>
 					<td>@(lc.organigrama.nombre)</td>
 					<td style="text-align: center;">@(lc.getIncidencias())</td>
 					<td style="text-align: center;">@(lc.estado.nombre)</td>

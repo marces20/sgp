@@ -42,6 +42,8 @@ public class Equipo extends Model{
 	@Required(message="Debe escribir una descripcion")
 	public String descripcion;
 
+	public String numero_inventario;
+
 	@ManyToOne
 	@JoinColumn(name="organigrama_id", referencedColumnName="id", insertable=false, updatable=false)
 	public Organigrama organigrama;

@@ -27,6 +27,15 @@
 				}
 			</div>
 		</div>
+		<div class="col-sm-2">
+			<div class="form-group">
+				<label for="inputDenominacion" class="control-label">N° Inventario</label>
+				@inputText(equipoForm("numero_inventario"), 'class -> "form-control")
+				@equipoForm("numero_inventario").error.map{ error =>
+					<div class="text-error">@error.message</div>
+				}
+			</div>
+		</div>
 
 		<div class="col-sm-3">
 			<div class="form-group @if(equipoForm.error("nombre") != null) {has-error}else{has-required}">
