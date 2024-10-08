@@ -2,7 +2,7 @@ $( function(){
 
 	$("#fechax").mask("99/99/9999");
 
-	$('#searchOrganigrama,#searchAgente,#searchProfesion,#searchTipoResidencia,#searchEscalaLaboral,#searchEspecialidad,#searchPeriodo,#searchPeriodoModal').modalSearch();
+	$('#searchOrganigrama,#searchPuesto,#searchAgente,#searchProfesion,#searchTipoResidencia,#searchEscalaLaboral,#searchEspecialidad,#searchPeriodo,#searchPeriodoModal').modalSearch();
 	$('#filtrosEstados button').click( function() {
 		var checkbox = $(this).find(':checkbox');
 		checkbox.is(':checked') ? checkbox.removeAttr('checked') : checkbox.attr('checked', 'checked');
