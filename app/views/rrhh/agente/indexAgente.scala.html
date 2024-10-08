@@ -233,14 +233,14 @@
 						<label for="inputPuesto" class="control-label">Puesto</label>
 						<div class="input-group">
 
-							@inputText(formBuscador("puesto.nombre"),'class -> "form-control",'id -> "puesto")
+							@inputText(formBuscador("puesto.nombre"),'class -> "form-control",'id -> "puesto_nombre")
 							@inputText(formBuscador("puesto_id"),'hidden -> "hidden",'id -> "puesto_id")
 							<span class="input-group-addon">
 			                	<a href="#" id="searchPuesto" data-title="Selección de Puesto"
 			                				data-url="@controllers.rrhh.routes.PuestosController.modalBuscar()"
 			                				data-height="650" data-width="700"
 			                				data-listen="modal.seleccion.puesto.simple"
-			                				data-label="#puesto" data-field="#puesto_id" /> <i class="glyphicon glyphicon-search"></i></a>
+			                				data-label="#puesto_nombre" data-field="#puesto_id" /> <i class="glyphicon glyphicon-search"></i></a>
 			                </span>
 						</div>
 
