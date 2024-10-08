@@ -395,12 +395,14 @@ public class AgenteAsistenciaLicencia extends Model{
 
 		TreeMap<String, Map<String, Integer[]>> sorted = new TreeMap<>(Collections.reverseOrder());
 		Map<String, Map<String, Integer[]>> ret = new HashMap<String, Map<String, Integer[]>>();
-		try {
+
 				List<AgenteAsistenciaLicencia> laall = AgenteAsistenciaLicencia.find
 													   .fetch("agente")
 													   .where()
 													   .eq("agente_id", agente_id)
 													   .eq("estado_id", Estado.AGENTE_LICENCIA_APROBADO)
+
+													   .ne("ejercicio_id", 6)
 													   .orderBy("ejercicio_id")
 													   .findList();
 
@@ -471,10 +473,7 @@ public class AgenteAsistenciaLicencia extends Model{
 				sorted.putAll(ret);
 
 
-		}catch (Exception e) {
-			Logger.error("Error duplicar: "+e);
-        } finally {
-        }
+
 
 		return sorted;
 	}

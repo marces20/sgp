@@ -292,7 +292,8 @@ public class Agente extends Model{
 										  String fingreso_hasta,
 										  String especialidad_id,
 										  String fcud_desde,
-										  String fcud_hasta
+										  String fcud_hasta,
+										  String puesto_id
 										  ) {
     	Pagination<Agente> p = new Pagination<Agente>();
     	p.setOrderDefault("ASC");
@@ -353,6 +354,10 @@ public class Agente extends Model{
     		}else{
     			e.eq("activo", false);
     		}
+    	}
+
+    	if(!puesto_id.isEmpty()){
+    		e.eq("puesto_id", Integer.parseInt(puesto_id));
     	}
 
     	if(!residente.isEmpty()){
