@@ -10,12 +10,15 @@ import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
 import java.math.BigDecimal;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 import javax.persistence.PersistenceException;
 
@@ -627,14 +630,40 @@ public class AgentesAsistenciasLicenciasController extends Controller {
 
 	}
 
-	public static Result getListaLicenciasEnFecha(){
+	public static Result getListaLicenciasEnFecha() throws ParseException{
 		DynamicForm d = form().bindFromRequest();
 		AgenteAsistenciaLicencia aal = new AgenteAsistenciaLicencia();
 
-		if(RequestVar.get("desde").isEmpty() ||  RequestVar.get("desde").isEmpty()){
-			flash("error", "Seleccione un fecha correcta.");
+		if(RequestVar.get("desde").isEmpty() &&  RequestVar.get("hasta").isEmpty()) {
+			flash("error", "Seleccione una fecha.");
+			return ok(listadoLicenciasEnFecha.render(null,d));
+		}
+
+		if((!RequestVar.get("desde").isEmpty() &&  RequestVar.get("hasta").isEmpty()) || (RequestVar.get("desde").isEmpty() &&  !RequestVar.get("hasta").isEmpty())) {
+			flash("error", "Seleccione una fecha correcta.");
 			return ok(listadoLicenciasEnFecha.render(null,d));
     	}
+
+		 String pattern = "dd/MM/yyyy";
+	        SimpleDateFormat sdf = new SimpleDateFormat(pattern);
+
+		Date desde = sdf.parse(RequestVar.get("desde"));
+		Date hasta = sdf.parse(RequestVar.get("hasta"));
+		Logger.debug("-------------- "+desde );
+		Logger.debug("-------------- "+hasta );
+
+		long dias =  (hasta.getTime() - desde.getTime());
+
+		long diass = TimeUnit.DAYS.convert(dias, TimeUnit.MILLISECONDS);
+
+		if(diass >  60) {
+			flash("error", "El rango de fecha debe ser inferior a 60 dias " );
+			return ok(listadoLicenciasEnFecha.render(null,d));
+		}
+
+
+
+		flash("error", "El rango de fecha debe ser inferior a 60 dias "+diass);
 
 		return ok(listadoLicenciasEnFecha.render(aal.getDiasLicenciasEnFecha(RequestVar.get("desde"),
 																			 RequestVar.get("hasta"),
