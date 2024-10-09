@@ -275,7 +275,7 @@ public class OrdenesProvisionController extends Controller {
 		return ok();
 	}
 
-	@CheckPermiso(key = "ordenesProvisionCrear")
+	@CheckPermiso(key = "ordenesProvisionEditar")
 	public static Result editar(Long id) {
 		OrdenProvision op = OrdenProvision.find.byId(id);
 
@@ -290,7 +290,7 @@ public class OrdenesProvisionController extends Controller {
 		return ok(editarOrdenProvision.render(oForm.fill(op)));
 	}
 
-	@CheckPermiso(key = "ordenesProvisionCrear")
+	@CheckPermiso(key = "ordenesProvisionEditar")
 	public static Result actualizar() {
 
 		Form<OrdenProvision> opForm = form(OrdenProvision.class).bindFromRequest();
