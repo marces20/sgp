@@ -688,26 +688,9 @@ public class OrdenesProvisionController extends Controller {
 
 
 
-			stmt = conn.prepareStatement("alter table orden_lineas_ajustes enable trigger actualiza_total_orden");
-		    x = stmt.executeUpdate();
-		    stmt.close();
-		    stmt = conn.prepareStatement("alter table orden_lineas_ajustes enable trigger after_insert_update_delete");
-		    x = stmt.executeUpdate();
-		    stmt.close();
-		    stmt = conn.prepareStatement("alter table ordenes enable trigger actualiza_total_orden");
-		    x = stmt.executeUpdate();
-		    stmt.close();
-
-			stmt = conn.prepareStatement("select actualiza_totales_ordenes_ordenes(null)");
-		    stmt.execute();
-		    stmt.close();
-
-		    stmt = conn.prepareStatement("select actualiza_totales_ordenes_recepcionados(null)");
-		    stmt.execute();
-		    stmt.close();
 
 		    Ebean.commitTransaction();
-
+		    Logger.debug("666666666");
 
 
 			result.put("success", true);
@@ -722,6 +705,27 @@ public class OrdenesProvisionController extends Controller {
 			return ok(modalAnularProductosPedientes.render(d, ordenId, fx));
 		} finally {
 			Ebean.endTransaction();
+
+			Logger.debug("11111111111111111");
+			stmt = conn.prepareStatement("alter table orden_lineas_ajustes enable trigger actualiza_total_orden");
+		    stmt.executeUpdate();
+		    stmt.close();
+		    Logger.debug("22222222222");
+		    stmt = conn.prepareStatement("alter table orden_lineas_ajustes enable trigger after_insert_update_delete");
+		    stmt.executeUpdate();
+		    stmt.close();
+		    Logger.debug("333333333333");
+		    stmt = conn.prepareStatement("alter table ordenes enable trigger actualiza_total_orden");
+		    stmt.executeUpdate();
+		    stmt.close();
+		    Logger.debug("4444444444");
+			stmt = conn.prepareStatement("select actualiza_totales_ordenes_ordenes(null)");
+		    stmt.execute();
+		    stmt.close();
+		    Logger.debug("5555555555555");
+		    stmt = conn.prepareStatement("select actualiza_totales_ordenes_recepcionados(null)");
+		    stmt.execute();
+		    stmt.close();
 
 		    if (stmt != null)
 		          try {
