@@ -614,7 +614,8 @@ public class AgenteAsistenciaLicencia extends Model{
 
 		String sql = "select n.carga_horaria as carga_horaria,n.escala as escala,  a.id as agenteId, a.dni as dni,a.cuit as cuit,a.apellido as apellido,al.finicio as finicio,al.ffin as ffin,tl.nombre as tipoLicencia, "+
 					 "o.nombre as organigrama,p.nombre as profesion,a.tipo_relacion_laboral as tipo_relacion_laboral,pu.nombre as puesto, "+
-					 "e.nombre as estado,e.id as idestado,al.nota as nota,tl.habiles as tipotipoLicencia, get_dias_entre_fechas(al.finicio,al.ffin,tl.habiles,tl.habiles) as dias "+
+					 "e.nombre as estado,e.id as idestado,al.nota as nota,tl.habiles as tipotipoLicencia, "+
+					 "al.dias as dias " +// "get_dias_entre_fechas(al.finicio,al.ffin,tl.habiles,tl.habiles) as dias "+
 					 "from agentes a "+
 					 "inner join agente_asistencia_licencias al on al.agente_id = a.id "+
 					 "inner join tipo_licencias tl on tl.id = al.tipo_licencia_id "+
