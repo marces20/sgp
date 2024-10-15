@@ -14,15 +14,17 @@ import com.avaje.ebean.ExpressionList;
 
 import models.Estado;
 import models.Periodo;
+import models.Proveedor;
 import models.TipoEmbargo;
 import models.Usuario;
+import play.data.format.Formats;
 import play.data.validation.Constraints.Required;
 import play.db.ebean.Model;
 import play.db.ebean.Model.Finder;
 import utils.pagination.Pagination;
 
 @Entity
-@Table(name = "liquidacion_detalles")
+@Table(name = "liquidacion_embargos")
 public class LiquidacionEmbargo  extends Model{
 
 	private static final long serialVersionUID = 1L;
@@ -36,20 +38,13 @@ public class LiquidacionEmbargo  extends Model{
 	@Required(message = "Requiere un puesto laboral")
 	public Long puesto_laboral_id;
 
-	@ManyToOne
-	@JoinColumn(name="periodo_inicio_id", referencedColumnName="id", insertable=false, updatable=false)
-	public Periodo periodoInicio;
-	public Long periodo_inicio_id;
+	@Formats.DateTime(pattern = "dd/MM/yyyy")
+	@Required(message = "Requiere fecha inicio")
+	public Date fecha_inicio;
 
-	@ManyToOne
-	@JoinColumn(name="periodo_fin_id", referencedColumnName="id", insertable=false, updatable=false)
-	public Periodo periodoFin;
-	public Long periodo_fin_id;
-
-	@ManyToOne
-	@JoinColumn(name="periodo_id", referencedColumnName="id", insertable=false, updatable=false)
-	public Periodo periodo;
-	public Long periodo_id;
+	@Formats.DateTime(pattern = "dd/MM/yyyy")
+	@Required(message = "Requiere fecha fin")
+	public Date fecha_fin;
 
 	@ManyToOne
 	@JoinColumn(name = "estado_id", referencedColumnName = "id", insertable = false, updatable = false)
@@ -66,7 +61,14 @@ public class LiquidacionEmbargo  extends Model{
 	@ManyToOne
 	@JoinColumn(name="tipo_embargo_id", referencedColumnName="id", insertable=false, updatable=false)
 	public TipoEmbargo tipoEmbargo;
+	@Required(message = "Requiere tipo embargo")
 	public Long tipo_embargo_id;
+
+	@ManyToOne
+	@JoinColumn(name="proveedor_id", referencedColumnName="id", insertable=false, updatable=false)
+	public Proveedor proveedor;
+	@Required(message="Requiere contraparte")
+	public Integer proveedor_id;//Proveedor X
 
 	public static Model.Finder<Long,LiquidacionEmbargo> find = new Finder<Long,LiquidacionEmbargo>(Long.class, LiquidacionEmbargo.class);
 
