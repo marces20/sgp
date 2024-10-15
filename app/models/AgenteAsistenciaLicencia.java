@@ -641,7 +641,20 @@ public class AgenteAsistenciaLicencia extends Model{
 		return s;
 	}
 
+/*
+ * AgenteAsistenciaLicencia aa = new AgenteAsistenciaLicencia();
 
+		List<AgenteAsistenciaLicencia> aav  = aa.find.where().le("id", 57324).isNull("dias").findList();
+
+		for (AgenteAsistenciaLicencia ax :aav) {
+
+			int di = ax.getDiasEntreFechas();
+			ax.dias= di;
+			ax.save();
+			Logger.debug("dddddddddddddddddddd "+ ax.id);
+		}
+
+ * */
 
 
 }
