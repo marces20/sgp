@@ -1,6 +1,18 @@
-@(puestoForm: Form[models.haberes.LiquidacionEmbargo])
+@(baseForm: Form[models.haberes.LiquidacionEmbargo])
 @import helper._
 
-@views.html.haberes.mainHaberes("Crear Embargo") {
+@views.html.haberes.mainHaberes("Crear Retencion") {
 
+	<div class="page-header">
+		<div class="row">
+			<div class="col-sm-10">
+				<h1>Crear nueva retencion</h1>
+			</div>
+		</div>
+	</div>
+	@views.html.tags.successError()
+
+    @helper.form(action = controllers.haberes.routes.LiquidacionEmbargosController.guardar()) {
+		@views.html.haberes.liquidacionEmbargos.formLiquidacionEmbargo(baseForm)
+	}
 }

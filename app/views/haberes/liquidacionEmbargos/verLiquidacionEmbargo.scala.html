@@ -8,5 +8,63 @@
 
 @implicitFieldConstructor = @{ FieldConstructor(simpleInput.render) }
 
-@views.html.haberes.mainHaberes("Vista Embargo",scripts) {
+@views.html.haberes.mainHaberes("Vista Retenciones",scripts) {
+
+	<div class="page-header">
+		<div class="row">
+			<div class="col-sm-10">
+				<h1>Vista Retenciones</h1>
+			</div>
+			<div class="col-sm-2">
+				 <a href="@controllers.haberes.routes.LiquidacionEmbargosController.crear()"  class="btn btn-default"><i class="glyphicon glyphicon-plus-sign"></i> Nueva Retencion</a>
+			</div>
+		</div>
+	</div>
+	@views.html.tags.successError()
+	<div class="row menu-acciones">
+		<div class="col-sm-9">
+			<a href="@controllers.haberes.routes.LiquidacionEmbargosController.editar(lc.id)@UriTrack.get("&")"  class="btn btn-default"><i class="glyphicon glyphicon-edit"></i> Editar</a>
+			<a href="@controllers.haberes.routes.LiquidacionEmbargosController.eliminar(lc.id)@UriTrack.get("&")"  class="btn btn-default delete-confirm-link"><i class="glyphicon glyphicon-trash icono-eliminar"></i> Eliminar</a>
+		</div>
+		<div class="col-sm-3">
+			<a href="@UriTrack.getOnNull(controllers.haberes.routes.LiquidacionEmbargosController.index().absoluteURL())" class="btn btn-default"><i class="glyphicon glyphicon-list"></i></a>
+		</div>
+	</div>
+
+	<input type="hidden" id="liquidacionEmbargoId" name="liquidacionEmbargoId" value="@lc.id"/>
+	<div class="row">
+		<div class="col-sm-4">
+			<div class="form-group">
+				<label class="control-label">Puesto Laboral</label>
+				<p class="form-control-static form-control">@lcForm.field("puestoLaboral.legajo.agente.apellido").value</p>
+			</div>
+		</div>
+		<div class="col-sm-4">
+			<div class="form-group">
+				<label class="control-label">Contraparte</label>
+				<p class="form-control-static form-control">@lcForm.field("proveedor.nombre").value</p>
+			</div>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-sm-2">
+			<div class="form-group">
+				<label for="fecha_factura" class="control-label">Fecha Inicio</label>
+				<p class="form-control-static form-control">@lcForm.field("fecha_inicio").value</p>
+			</div>
+		</div>
+
+		<div class="col-sm-2">
+			<div class="form-group">
+				<label for="fecha_factura" class="control-label">Fecha Fina</label>
+				<p class="form-control-static form-control">@lcForm.field("fecha_fin").value</p>
+			</div>
+		</div>
+		<div class="col-sm-2">
+			<div class="form-group">
+				<label class="control-label">Tipo Cuenta</label>
+				<p class="form-control-static form-control">@lcForm.field("tipoEmbargo.nombre").value</p>
+			</div>
+		</div>
+
 }

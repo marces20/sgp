@@ -1,7 +1,24 @@
-@(puestoForm: Form[models.haberes.LiquidacionEmbargo])
+@(baseForm: Form[models.haberes.LiquidacionEmbargo])
 @import helper._
 @implicitFieldConstructor = @{ FieldConstructor(simpleInput.render) }
 
-@views.html.haberes.mainHaberes("Modificar Embargo") {
+@views.html.haberes.mainHaberes("Modificar Retencion") {
+
+	<div class="page-header">
+		<div class="row">
+			<div class="col-sm-10">
+				<h1>Editar Retencion</h1>
+			</div>
+
+			<div class="col-sm-2">
+			</div>
+		</div>
+	</div>
+
+	@views.html.tags.successError()
+	@helper.form(action = controllers.haberes.routes.LiquidacionEmbargosController.actualizar()) {
+		@inputText(baseForm("id"), 'hidden -> "hidden")
+		@views.html.haberes.liquidacionEmbargos.formLiquidacionEmbargo(baseForm)
+	}
 
 }
