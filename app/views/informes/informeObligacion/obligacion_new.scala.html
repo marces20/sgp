@@ -84,6 +84,7 @@
 
 					@{totalPorcentajeTmp=new java.math.BigDecimal(0)}
 					@{totalPorcentaje=new java.math.BigDecimal(0)}
+
 					@for(valuep <- p) {
 						<td  align="center"><a style="cursor: pointer;" data-url="@controllers.informes.routes.InformeMensualController.getObligacionPorOrganigramaPorRubroPorPeriodo(key,key2, valuep.id)"
 						class="infoObligaciones" >@utils.NumberUtils.monedaSinDecimales(value2.get(valuep.nombre))</a></td>
@@ -113,10 +114,18 @@
 
 							@if(totales.containsKey(valuep.nombre)){
 
-								@{totaltmp = totales.get(valuep.nombre)}
+
+									@{totaltmp = totales.get(valuep.nombre)}
+
+
 
 								@if(value2.get(valuep.nombre) != null){
-									@{totaltmp  = totaltmp.add(value2.get(valuep.nombre))}
+									@if(totaltmp != null){
+
+										@{totaltmp  = totaltmp.add(value2.get(valuep.nombre))}
+									}else{
+										@{totaltmp  = new java.math.BigDecimal(0)}
+									}
 								}
 
 
