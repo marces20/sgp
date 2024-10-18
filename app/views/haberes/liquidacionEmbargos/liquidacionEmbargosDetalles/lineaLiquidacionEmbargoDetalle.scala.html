@@ -1,0 +1,21 @@
+@(detalle: models.haberes.LiquidacionEmbargoDetalle, editable: Boolean)
+
+
+<tr data-id="@detalle.id">
+
+	<td class="accion-editar">
+		@if(editable){
+			<a class="btn btn-default btn-xs modificarLiquidacionEmbargoDetalle" href="@controllers.haberes.routes.LiquidacionEmbargosDetallesController.editar(detalle.id)">
+			<i class="glyphicon glyphicon-edit"></i></a>
+		}
+	</td>
+	<td align="center">@utils.NumberUtils.formatNumber(detalle.importe.doubleValue())</td>
+	<td align="center">@detalle.periodo.nombre</td>
+	<td align="center">@detalle.liquidacionTipo.nombre</td>
+	<td>
+	@if(editable){
+		<a class="btn btn-default btn-xs eliminarLiquidacionEmbargoDetalle" href="@controllers.haberes.routes.LiquidacionEmbargosDetallesController.eliminar(detalle.id)"><i class="glyphicon glyphicon-trash icono-eliminar"></i></a>
+	}
+	</td>
+
+</tr>
