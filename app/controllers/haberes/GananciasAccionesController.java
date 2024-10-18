@@ -585,24 +585,36 @@ public class GananciasAccionesController extends Controller {
 			for (int c = 0; c < ingresosAportes.getLength(); c++) {
 				Element g = (Element) ingresosAportes.item(c);
 
+				String obraSoc = XPath.selectText("obraSoc", g).toString();
+				String segSoc = XPath.selectText("segSoc", g).toString();
+				String sind = XPath.selectText("sind", g).toString();
+				String ganBrut = XPath.selectText("ganBrut", g).toString();
+				String retGan = XPath.selectText("retGan", g).toString();
+				String retribNoHab = XPath.selectText("retribNoHab", g).toString();
+				String ajuste = XPath.selectText("ajuste", g).toString();
 				String exeNoAlc = XPath.selectText("exeNoAlc", g).toString();
 				String sac = XPath.selectText("sac", g).toString();
+				String horasExtGr = XPath.selectText("horasExtGr", g).toString();
+				String horasExtEx = XPath.selectText("horasExtEx", g).toString();
+				String matDid = XPath.selectText("matDid", g).toString();
 				String gastosMovViat = XPath.selectText("gastosMovViat", g).toString();
+
+
 				cargarIngresosAportes(
 						idEmpEnt,
 						Integer.parseInt(g.getAttribute("mes")),
-						new BigDecimal(XPath.selectText("obraSoc", g).toString()),
-						new BigDecimal(XPath.selectText("segSoc", g).toString()),
-						new BigDecimal(XPath.selectText("sind", g).toString()),
-						new BigDecimal(XPath.selectText("ganBrut", g).toString()),
-						new BigDecimal(XPath.selectText("retGan", g).toString()),
-						new BigDecimal(XPath.selectText("retribNoHab", g).toString()),
-						new BigDecimal(XPath.selectText("ajuste", g).toString()),
+						(obraSoc.isEmpty()) ? null : new BigDecimal(obraSoc),
+						(segSoc.isEmpty()) ? null : new BigDecimal(segSoc),
+						(sind.isEmpty()) ? null : new BigDecimal(sind),
+						(ganBrut.isEmpty()) ? null : new BigDecimal(ganBrut),
+						(retGan.isEmpty()) ? null : new BigDecimal(retGan),
+						(retribNoHab.isEmpty()) ? null : new BigDecimal(retribNoHab),
+						(ajuste.isEmpty()) ? null : new BigDecimal(ajuste),
 						(exeNoAlc.isEmpty()) ? null : new BigDecimal(exeNoAlc),
 						(sac.isEmpty()) ? null : new BigDecimal(sac),
-						new BigDecimal(XPath.selectText("horasExtGr", g).toString()),
-						new BigDecimal(XPath.selectText("horasExtEx", g).toString()),
-						new BigDecimal(XPath.selectText("matDid", g).toString()),
+						(horasExtGr.isEmpty()) ? null : new BigDecimal(horasExtGr),
+						(horasExtEx.isEmpty()) ? null : new BigDecimal(horasExtEx),
+						(matDid.isEmpty()) ? null : new BigDecimal(matDid),
 						(gastosMovViat.isEmpty()) ? null : new BigDecimal(gastosMovViat));
 			}
 
