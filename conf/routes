@@ -1074,6 +1074,13 @@ POST    /haberes/liquidacionEmbargo/actualizar   	controllers.haberes.Liquidacio
 GET     /haberes/liquidacionEmbargo/ver        		controllers.haberes.LiquidacionEmbargosController.ver(id:Long)
 GET     /haberes/liquidacionEmbargo/cambiarEstado	controllers.haberes.LiquidacionEmbargosController.cambiarEstado(idEmbargo:Long, idEstado: Long)
 
+GET     /haberes/liquidacionEmbargoDetalle/index       		controllers.haberes.LiquidacionEmbargosDetallesController.index(id:Long ?= 0, editable:Boolean ?= false)
+GET     /haberes/liquidacionEmbargoDetalle/crear         	controllers.haberes.LiquidacionEmbargosDetallesController.crear(liquidacionEmbargoId:String)
+GET     /haberes/liquidacionEmbargoDetalle/editar         	controllers.haberes.LiquidacionEmbargosDetallesController.editar(id:Long)
+POST    /haberes/liquidacionEmbargoDetalle/guardar        	controllers.haberes.LiquidacionEmbargosDetallesController.guardar()
+POST    /haberes/liquidacionEmbargoDetalle/actualizar     	controllers.haberes.LiquidacionEmbargosDetallesController.actualizar()
+GET     /haberes/liquidacionEmbargoDetalle/eliminar       	controllers.haberes.LiquidacionEmbargosDetallesController.eliminar(id:Long)
+
 #-----------------------------FIN MODULO HABERES ---------------------------------
 
 
