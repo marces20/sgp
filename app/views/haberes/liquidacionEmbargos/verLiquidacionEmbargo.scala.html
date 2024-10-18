@@ -66,5 +66,37 @@
 				<p class="form-control-static form-control">@lcForm.field("tipoEmbargo.nombre").value</p>
 			</div>
 		</div>
+	</div>
+
+	@views.html.haberes.liquidacionEmbargos.tabsLiquidacionEmbargo(false,lcForm)
+
+	<div class="row margin-bottom-25">
+		@for(estado <- models.Estado.getSiguienteEstadoPorAprobar(lc.estado.orden,models.Estado.TIPO_LIQUIDACION_EMBARGO)) {
+			@if(estado.orden <= 4) {
+				<div class="col-sm-3">
+					<a href="@controllers.haberes.routes.LiquidacionEmbargosController.cambiarEstado(lcForm.field("id").value.toInt, estado.id.toLong)@UriTrack.get("&")" class="btn btn-default">
+						<i class="glyphicon glyphicon-arrow-right"></i> @estado.nombre
+					</a>
+				</div>
+
+			}
+		}
+		@if(lc.estado.id == models.Estado.LIQUIDACION_EMBARGO_CANCELADO) {
+			<div class="col-sm-3">
+				<a href="@controllers.haberes.routes.LiquidacionEmbargosController.cambiarEstado(lcForm.field("id").value.toInt, models.Estado.LIQUIDACION_PUESTOS_BORRADOR)@UriTrack.get("&")" class="btn btn-default">
+					<i class="glyphicon glyphicon-arrow-right"></i> Volver a Borrador
+				</a>
+			</div>
+		}else{
+			<div class="col-sm-3">
+				<a href="@controllers.haberes.routes.LiquidacionEmbargosController.cambiarEstado(lcForm.field("id").value.toInt, models.Estado.LIQUIDACION_PUESTOS_CANCELADO)@UriTrack.get("&")" class="btn btn-default">
+					<i class="glyphicon glyphicon-minus-sign"></i> Cancelar Retencion
+				</a>
+			</div>
+		}
+
+
+	</div>
+
 
 }

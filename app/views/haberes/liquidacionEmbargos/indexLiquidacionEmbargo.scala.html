@@ -13,11 +13,11 @@
 
 	var classEstado:String = new String()
 
-	if(i.estado != null && i.estado.id == 52){
+	if(i.estado != null && i.estado.id == 125){
 		classEstado = "borrador"
-	}else if(i.estado != null && i.estado.id == 54){
+	}else if(i.estado != null && i.estado.id == 127){
 		classEstado = "cancelada"
-	}else if(i.estado != null && i.estado.id == 53){
+	}else if(i.estado != null && i.estado.id == 126){
 		classEstado = "autorizado"
 	}
 
@@ -114,7 +114,12 @@
 					</div>
 				</div>
 
-
+				<div class="col-sm-2">
+					<label class="control-label">
+						C/M
+						@select(formBuscador("cm"),options(""->"","SI"->"SI","NO"->"NO"), 'class -> "form-control select")
+					</label>
+				</div>
 
 
 			</div>
