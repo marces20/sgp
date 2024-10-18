@@ -72,13 +72,51 @@ public class LiquidacionEmbargo  extends Model{
 
 	public static Model.Finder<Long,LiquidacionEmbargo> find = new Finder<Long,LiquidacionEmbargo>(Long.class, LiquidacionEmbargo.class);
 
-	public static Pagination<LiquidacionEmbargo> page(String puesto_laboral_id) {
+	public static Pagination<LiquidacionEmbargo> page(String puesto_laboral_id,
+													  String btnFiltro0, // borrador
+												      String btnFiltro1, // preaprobado
+												      String btnFiltro2,
+												      String cm) {
+
     	Pagination<LiquidacionEmbargo> p = new Pagination<LiquidacionEmbargo>();
-    	p.setPageSize(5000000);
+
     	p.setOrderDefault("DESC");
     	p.setSortByDefault("id");
 
-    	ExpressionList<LiquidacionEmbargo> e = find.where();
+    	ExpressionList<LiquidacionEmbargo> e = find
+    			.fetch("estado", "id, nombre")
+    			.fetch("proveedor", "nombre")
+    	        .fetch("puestoLaboral.legajo.agente", "apellido")
+    	        .where();
+
+    	if (!puesto_laboral_id.isEmpty()) {
+    		e.eq("puestoLaboral.id", Integer.parseInt(puesto_laboral_id));
+    	}
+
+    	if (!cm.isEmpty()) {
+	      if (cm.compareToIgnoreCase("SI") == 0) {
+	        e.eq("puestoLaboral.convenio_ministerio", true);
+	      } else {
+	        e.eq("puestoLaboral.convenio_ministerio", false);
+	      }
+	    }
+
+    	if (!btnFiltro0.isEmpty() || !btnFiltro1.isEmpty() || !btnFiltro2.isEmpty()  ) {
+    	      e = e.disjunction();
+    	      if (!btnFiltro0.isEmpty()) {
+    	        e = e.eq("estado_id", Estado.LIQUIDACION_EMBARGO_BORRADOR);
+    	      }
+    	      if (!btnFiltro1.isEmpty()) {
+    	        e = e.eq("estado_id", Estado.LIQUIDACION_EMBARGO_APROBADO);
+    	      }
+    	      if (!btnFiltro2.isEmpty()) {
+    	        e = e.eq("estado_id", Estado.LIQUIDACION_EMBARGO_CANCELADO);
+    	      }
+
+
+    	      e = e.endJunction();
+    	    }
+
     	p.setExpressionList(e);
 
     	return p;
