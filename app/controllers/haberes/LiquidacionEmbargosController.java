@@ -35,7 +35,12 @@ public class LiquidacionEmbargosController extends Controller {
 		DynamicForm d = form().bindFromRequest();
 
 		return ok(indexLiquidacionEmbargo.render(LiquidacionEmbargo.page(
-																RequestVar.get("puesto_laboral_id")
+																RequestVar.get("puesto_laboral_id"),
+																RequestVar.get("btnFiltro[0]"),//
+																RequestVar.get("btnFiltro[1]"),//
+																RequestVar.get("btnFiltro[2]"),
+																RequestVar.get("cm")
+
 																),d));
 
 	}
