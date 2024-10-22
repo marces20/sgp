@@ -9,6 +9,7 @@
 			<i class="glyphicon glyphicon-edit"></i></a>
 		}
 	</td>
+	<td align="center">@if(detalle.liquidacionConcepto != null){@detalle.liquidacionConcepto.denominacion}</td>
 	<td align="center">@utils.NumberUtils.formatNumber(detalle.importe.doubleValue())</td>
 	<td align="center">@detalle.periodo.nombre</td>
 	<td align="center">@detalle.liquidacionTipo.nombre</td>

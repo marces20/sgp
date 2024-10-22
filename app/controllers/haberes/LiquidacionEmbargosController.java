@@ -46,7 +46,8 @@ public class LiquidacionEmbargosController extends Controller {
 																RequestVar.get("btnFiltro[0]"),//
 																RequestVar.get("btnFiltro[1]"),//
 																RequestVar.get("btnFiltro[2]"),
-																RequestVar.get("cm")
+																RequestVar.get("cm"),
+																RequestVar.get("tipo_embargo_id")
 
 																),d));
 

@@ -20,6 +20,28 @@ $(function(){
 <div class="row">
 	@inputText(detalleForm("liquidacion_embargo_id"), 'type -> "hidden")
 
+	<div class="col-sm-3">
+		<label for="concepto_nombre" class="control-label">Concepto</label>
+		<div class="input-group @if(detalleForm.error("liquidacion_concepto_id") != null) {has-error} else {has-required}">
+			@inputText(detalleForm("liquidacionConcepto.denominacion"), 'class -> "form-control",  'id -> "liquidacion_concepto_modal")
+			@inputText(detalleForm("liquidacion_concepto_id"), 'hidden -> "hidden", 'id -> "liquidacion_concepto_id_modal")
+			<span class="input-group-addon">
+				<a href="#" class="searchModal" id="searchProductoModal"
+							data-title="Selección de Concepto"
+							data-url="@controllers.haberes.routes.LiquidacionConceptosController.modalBuscar()"
+							data-height="650"
+							data-width="700"
+							data-listen="modal.seleccion.concepto.simple"
+							data-label="#liquidacion_concepto_modal"
+							data-field="#liquidacion_concepto_id_modal">
+							<i class="glyphicon glyphicon-search"></i>
+				</a>
+			</span>
+		</div>
+		@detalleForm("liquidacion_concepto_id").error.map{ error =>
+			<div class="text-error">@error.message</div>
+		}
+	</div>
 
 	<div class="col-sm-3">
 		<label class="control-label">Importe</label>
@@ -73,3 +95,6 @@ $(function(){
 	    </div>
 	</div>
 </div>
+<script>
+
+</script>

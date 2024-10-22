@@ -120,7 +120,12 @@
 						@select(formBuscador("cm"),options(""->"","SI"->"SI","NO"->"NO"), 'class -> "form-control select")
 					</label>
 				</div>
-
+				<div class="col-sm-2">
+					<div class="form-group">
+						<label class="control-label">Tipo Cuenta</label>
+						@select(formBuscador("tipo_embargo_id"),TipoEmbargo.find.all().map { p => p.id.toString -> p.nombre}, 'class -> "form-control select", '_default -> "Seleccionar")
+					</div>
+				</div>
 
 			</div>
 			<div class="row">
