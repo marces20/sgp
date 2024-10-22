@@ -1,5 +1,6 @@
 package models.haberes;
 
+import java.math.BigDecimal;
 import java.util.Date;
 
 import javax.persistence.Entity;
@@ -21,6 +22,7 @@ import play.data.format.Formats;
 import play.data.validation.Constraints.Required;
 import play.db.ebean.Model;
 import play.db.ebean.Model.Finder;
+import utils.formatters.DecimalComa;
 import utils.pagination.Pagination;
 
 @Entity
@@ -43,7 +45,6 @@ public class LiquidacionEmbargo  extends Model{
 	public Date fecha_inicio;
 
 	@Formats.DateTime(pattern = "dd/MM/yyyy")
-	@Required(message = "Requiere fecha fin")
 	public Date fecha_fin;
 
 	@ManyToOne
@@ -70,6 +71,10 @@ public class LiquidacionEmbargo  extends Model{
 	@Required(message="Requiere contraparte")
 	public Integer proveedor_id;//Proveedor X
 
+	@DecimalComa(value="")
+	@Required(message="Debe tener un importe")
+	public BigDecimal importe;
+
 	public static Model.Finder<Long,LiquidacionEmbargo> find = new Finder<Long,LiquidacionEmbargo>(Long.class, LiquidacionEmbargo.class);
 
 	public static Pagination<LiquidacionEmbargo> page(String puesto_laboral_id,
@@ -80,8 +85,8 @@ public class LiquidacionEmbargo  extends Model{
 
     	Pagination<LiquidacionEmbargo> p = new Pagination<LiquidacionEmbargo>();
 
-    	p.setOrderDefault("DESC");
-    	p.setSortByDefault("id");
+    	p.setOrderDefault("ASC");
+    	p.setSortByDefault("puestoLaboral.legajo.agente.apellido");
 
     	ExpressionList<LiquidacionEmbargo> e = find
     			.fetch("estado", "id, nombre")
