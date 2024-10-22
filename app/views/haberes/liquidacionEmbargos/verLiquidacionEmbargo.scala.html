@@ -39,10 +39,11 @@
 				<p class="form-control-static form-control">@lcForm.field("puestoLaboral.legajo.agente.apellido").value</p>
 			</div>
 		</div>
-		<div class="col-sm-4">
+		<div class="col-sm-8">
 			<div class="form-group">
 				<label class="control-label">Contraparte</label>
-				<p class="form-control-static form-control">@lcForm.field("proveedor.nombre").value</p>
+				<p class="form-control-static form-control">@lcForm.field("proveedor.nombre").value -
+				@if(lc.proveedor.getCuentaBancaria() != null){CUENTA: @lc.proveedor.getCuentaBancaria().numero_cuenta - CBU: @lc.proveedor.getCuentaBancaria().cbu}else{NO TIENE CUENTA CARGADA!!}</p>
 			</div>
 		</div>
 	</div>
