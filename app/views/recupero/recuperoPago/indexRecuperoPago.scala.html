@@ -146,7 +146,7 @@
 				<label class="control-label">Punto Venta</label>
 				<div class="">
 				@select(formBuscador("puntoventa_id"),
-				PuntoVenta.find.all().map { p => p.id.toString -> p.numero}, 'class -> "form-control select", '_default -> "Seleccionar")
+				PuntoVenta.getPuntoVentaPermisos().map { p => p.id.toString -> p.numero}, 'class -> "form-control select", '_default -> "Seleccionar")
 				</div>
 			</div>
 			<div class="col-sm-2">

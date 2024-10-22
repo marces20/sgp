@@ -23,7 +23,7 @@
 			<label class="control-label">Numero</label>
 			<div class="input-group @if(recuperoReciboForm.error("nombre") != null) {has-error}else{has-required}">
 				<span class="input-group-btn">
-			      @select(recuperoReciboForm("puntoventa_id"),PuntoVenta.find.all().map { p => p.id.toString -> p.numero},
+			      @select(recuperoReciboForm("puntoventa_id"),PuntoVenta.getPuntoVentaPermisos().map { p => p.id.toString -> p.numero},
 					'class -> "form-control select", '_default -> "Seleccionar",'id -> "puntoventa_id")
 			      <i class="input-group-addon" style="display:none"></i>
 			    </span>

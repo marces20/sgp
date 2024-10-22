@@ -1,6 +1,6 @@
 @(url: String = null,formBuscador: DynamicForm)
 @import helper._
-@implicitFieldConstructor = @{ FieldConstructor(simpleInput.render) } 
+@implicitFieldConstructor = @{ FieldConstructor(simpleInput.render) }
 
 @if(url) {
 	<div class="panel panel-default">
@@ -9,27 +9,27 @@
 	    	Descargar archivo PLANILLA DIARIA</a>
 		</div>
 	</div>
-	
-	
+
+
 }else{
 
 	@helper.form(action = controllers.recupero.routes.RecuperoReportesController.informePlanilla(), 'id -> "formPlanilla") {
 		@views.html.tags.successError()
 		<div class="row">
 			<div class="col-sm-3">
-				<label class="control-label">Punto Venta</label> 
+				<label class="control-label">Punto Venta</label>
 				<div class="input-group">
-			  
+
 					<span class="input-group-btn">
-				      @select(formBuscador("puntoventa_id"),PuntoVenta.find.all().map { p => p.id.toString -> p.numero}, 
+				      @select(formBuscador("puntoventa_id"),PuntoVenta.getPuntoVentaPermisos().map { p => p.id.toString -> p.numero},
 						'class -> "form-control select", '_default -> "Seleccionar", 'id -> "puntoventa_id")
 				      <i class="input-group-addon" style="display:none"></i>
 				    </span>
-			    </div> 
-			</div>   
+			    </div>
+			</div>
 			<div class="col-sm-3">
 				<div class="form-group">
-					<label for="inputFechaPago" class="control-label">Fecha Desde</label> 
+					<label for="inputFechaPago" class="control-label">Fecha Desde</label>
 					@inputText(formBuscador("fecha_desde"), 'class -> "form-control", 'id -> "fecha_desde", 'autofocus -> "autofocus")
 				</div>
 					@formBuscador("fecha_desde").error.map{ error =>
@@ -38,28 +38,28 @@
 			</div>
 			<div class="col-sm-3">
 				<div class="form-group">
-					<label for="inputFechaPago" class="control-label">Fecha Hasta</label> 
+					<label for="inputFechaPago" class="control-label">Fecha Hasta</label>
 					@inputText(formBuscador("fecha_hasta"), 'class -> "form-control", 'id -> "fecha_hasta", 'autofocus -> "autofocus")
 				</div>
 					@formBuscador("fecha_hasta").error.map{ error =>
 						<div class="text-error">@error.message</div>
 					}
 			</div>
-			
+
 		</div>
-		<div class="row">	
+		<div class="row">
 			<div class="col-sm-5"><br />
 				<button type="submit" class="btn btn-default" title="Buscar"><i class="glyphicon glyphicon-floppy-disk"></i> Buscar</button>
 			</div>
-		</div>	
-	}	
+		</div>
+	}
 }
 
 @flash().clear()
 <script>
  $( function () {
 	 $('#fecha_hasta,#fecha_desde').mask("99/99/9999");
-	 
-	 
+
+
  });
 </script>
