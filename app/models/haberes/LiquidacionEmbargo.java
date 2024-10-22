@@ -72,7 +72,6 @@ public class LiquidacionEmbargo  extends Model{
 	public Integer proveedor_id;//Proveedor X
 
 	@DecimalComa(value="")
-	@Required(message="Debe tener un importe")
 	public BigDecimal importe;
 
 	public static Model.Finder<Long,LiquidacionEmbargo> find = new Finder<Long,LiquidacionEmbargo>(Long.class, LiquidacionEmbargo.class);
@@ -81,7 +80,8 @@ public class LiquidacionEmbargo  extends Model{
 													  String btnFiltro0, // borrador
 												      String btnFiltro1, // preaprobado
 												      String btnFiltro2,
-												      String cm) {
+												      String cm,
+												      String tipo_embargo_id) {
 
     	Pagination<LiquidacionEmbargo> p = new Pagination<LiquidacionEmbargo>();
 
@@ -96,6 +96,10 @@ public class LiquidacionEmbargo  extends Model{
 
     	if (!puesto_laboral_id.isEmpty()) {
     		e.eq("puestoLaboral.id", Integer.parseInt(puesto_laboral_id));
+    	}
+
+    	if (!tipo_embargo_id.isEmpty()) {
+    		e.eq("tipo_embargo_id", Integer.parseInt(tipo_embargo_id));
     	}
 
     	if (!cm.isEmpty()) {

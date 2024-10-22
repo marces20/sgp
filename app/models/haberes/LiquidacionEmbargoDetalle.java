@@ -48,6 +48,12 @@ public class LiquidacionEmbargoDetalle  extends Model{
 	@Required(message = "Requiere un tipo de liquidacion")
 	public Integer liquidacion_tipo_id;
 
+	@ManyToOne
+	@JoinColumn(name="liquidacion_concepto_id", referencedColumnName="id", insertable=false, updatable=false)
+	public LiquidacionConcepto liquidacionConcepto;
+	@Required(message="Debe tener una Liquidacion asociada")
+	public Long liquidacion_concepto_id;
+
 
 	public static Model.Finder<Long,LiquidacionEmbargoDetalle> find = new Finder<Long,LiquidacionEmbargoDetalle>(Long.class, LiquidacionEmbargoDetalle.class);
 
