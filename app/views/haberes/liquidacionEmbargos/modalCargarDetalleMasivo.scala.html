@@ -1,0 +1,26 @@
+@(formBuscador: DynamicForm)
+@import helper._
+@implicitFieldConstructor = @{ FieldConstructor(simpleInput.render) }
+
+@helper.form(action = controllers.haberes.routes.LiquidacionEmbargosController.cargarDetalleMasivo(), 'id -> "formCargarDetalleMasivo") {
+
+	@views.html.tags.successError()
+
+	<div class="row">
+		<div class="col-sm-3">
+
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-sm-5"><br />
+			<button type="submit" class="btn btn-default" title="Agregar Orden de Pago"><i class="glyphicon glyphicon-arrow-right"></i> Cargar detalles</button>
+		</div>
+	</div>
+
+}
+<script>
+$( function(){
+
+});
+</script>
+@flash().clear()
