@@ -153,6 +153,17 @@ public class Proveedor extends Model {
 		return l;
 	}
 
+    public CuentaBancaria getCuentaBancaria(){
+	    CuentaBancaria cc = null;
+		for (CuentaBancaria cuenta : this.cuenta) {
+			if(cuenta.predeterminada && cuenta.estado_id == Estado.CUENTA_BANCARIA_ESTADO_APROBADO) {
+				 cc = cuenta;
+			}
+		}
+
+		return cc;
+    }
+
     public ProveedorAtributo getLastAtributo(){
     	ProveedorAtributo l = ProveedorAtributo.find.where()
 				.eq("proveedor_id", id)
