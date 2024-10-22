@@ -3,23 +3,30 @@ package controllers.haberes;
 import static play.data.Form.form;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import javax.persistence.PersistenceException;
 
 import com.avaje.ebean.Ebean;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 
 import controllers.auth.CheckPermiso;
 import models.Estado;
+import models.Factura;
 import models.auth.Permiso;
 import models.haberes.LiquidacionEmbargo;
 import play.data.DynamicForm;
 import play.data.Form;
+import play.libs.Json;
 import play.mvc.Controller;
 import play.mvc.Result;
+import utils.DateUtils;
 import utils.RequestVar;
 import utils.UriTrack;
 import views.html.sinPermiso;
+import views.html.contabilidad.facturas.acciones.modalCargarFechaOrdenPago;
 import views.html.haberes.liquidacionEmbargos.*;
 
 public class LiquidacionEmbargosController extends Controller {
@@ -225,5 +232,65 @@ public class LiquidacionEmbargosController extends Controller {
 		}
 
 	}
+	@CheckPermiso(key = "liquidacionEmbargoCargarDetalleMasivo")
+	public static Result modalCargarDetalleMasivo() {
+		return ok(modalCargarDetalleMasivo.render(form().bindFromRequest()));
+	}
 
+	@CheckPermiso(key = "liquidacionEmbargoCargarDetalleMasivo")
+	public static Result cargarDetalleMasivo() {
+		DynamicForm d = form().bindFromRequest();
+		d.discardErrors();
+
+		List<Integer> facturasSeleccionados = getSeleccionados();
+
+		if(facturasSeleccionados.isEmpty()) {
+			flash("error", "Seleccione al menos una retencion.");
+			return ok(modalCargarDetalleMasivo.render(d));
+		}
+
+		//if(!soloBorrador(facturasSeleccionados)) {
+		//	flash("error", "Solo se puede modificar registros en estado borrador.");
+		//	return ok(modalCargarDetalleMasivo.render(d));
+		//}
+
+		Date fechaOrdenPago = DateUtils.formatDate(request().body().asFormUrlEncoded().get("fecha_orden_pago_modal")[0], "dd/MM/yyyy");
+		if(fechaOrdenPago == null){
+			flash("error", "Seleccione una fecha de orden de pago .");
+			return ok(modalCargarFechaOrdenPago.render(d));
+		}
+
+
+		if(d.hasErrors())
+			return ok(modalCargarDetalleMasivo.render(d));
+
+		ObjectNode result = Json.newObject();
+		try {
+			Integer count = Factura.CargarFechaOrdenPagoMasivo(fechaOrdenPago, facturasSeleccionados);
+			result.put("success", true);
+			flash("success", "Se actualizaron " + count + " registros de "+ facturasSeleccionados.size() +" seleccionados.");
+			result.put("html", modalCargarDetalleMasivo.render(d).toString());
+			return ok(result);
+		} catch (Exception e){
+			flash("error", "No se puede modificar los registros.");
+			return ok(modalCargarDetalleMasivo.render(d));
+		}
+
+	}
+
+	public static List<Integer> getSeleccionados(){
+		String[] checks = null;
+		try {
+			checks = request().body().asFormUrlEncoded().get("check_listado[]");
+		} catch (NullPointerException e) {
+		}
+
+		List<Integer> ids = new ArrayList<Integer>();
+		if(checks != null) {
+			for (String id : checks) {
+				ids.add(Integer.valueOf(id));
+			}
+		}
+		return ids;
+	}
 }
