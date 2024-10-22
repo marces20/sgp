@@ -56,7 +56,7 @@
 		    	<span class="caret"></span>
 		  	</button>
 			<ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
-
+				<li role="presentation"><a role="menuitem" id="accionCargarDetalleMasivo" tabindex="-1" href="#" data-url="@controllers.haberes.routes.LiquidacionEmbargosController.modalCargarDetalleMasivo()">Cargar Detalles</a></li>
 			</ul>
 		</div>
 
@@ -158,6 +158,8 @@
 					<th>Contraparte</th>
 					<th>Fecha Inicio</th>
 					<th>Fecha Fin</th>
+					<th>Tipo</th>
+					<th>Importe Tope</th>
 					<th>Estado</th>
 					<th>#</th>
 				</tr>
@@ -177,6 +179,8 @@
 				 	<td>@(lc.proveedor.nombre)</td>
 				 	<td class="">@if(lc.fecha_inicio != null){@(utils.DateUtils.formatDate(lc.fecha_inicio))}</td>
 					<td class="">@if(lc.fecha_fin != null){@(utils.DateUtils.formatDate(lc.fecha_fin))}</td>
+					<td>@(lc.tipoEmbargo.nombre)</td>
+					<td>@if(lc.importe != null){@utils.NumberUtils.moneda(lc.importe)}</td>
 					<td class="estado" align="center">@(lc.estado.nombre)</td>
 				 </tr>
 			 }

@@ -78,11 +78,17 @@ $( function(){ $('.searchModal').modalSearch();})
 
 		<div class="col-sm-2">
 			<div class="form-group @if(baseForm.error("fecha_fin") != null) {has-error}">
-				<label for="fecha_factura" class="control-label">Fecha Fina</label>
+				<label for="fecha_factura" class="control-label">Fecha Fin</label>
 				@inputText(baseForm("fecha_fin"),'class -> "form-control date", 'id -> "fecha_fin")
 				@baseForm("fecha_fin").error.map{ error =>
 					<div class="text-error">@error.message</div>
 				}
+			</div>
+		</div>
+		<div class="col-sm-2">
+		<label class="control-label">Importe Tope</label>
+			<div class="form-group">
+				@inputText(baseForm("importe"), 'class -> "form-control", 'id -> "importe")
 			</div>
 		</div>
 		<div class="col-sm-2">
