@@ -2,21 +2,35 @@ package controllers.haberes;
 
 import static play.data.Form.form;
 
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 import javax.persistence.PersistenceException;
 
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.CellStyle;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
+
 import com.avaje.ebean.Ebean;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
 import controllers.auth.CheckPermiso;
+import models.Agente;
+import models.AgenteNovedad;
+import models.AgenteRul;
 import models.Estado;
 import models.Factura;
 import models.auth.Permiso;
 import models.haberes.LiquidacionEmbargo;
+import models.haberes.LiquidacionEmbargoDetalle;
 import play.data.DynamicForm;
 import play.data.Form;
 import play.libs.Json;
@@ -28,6 +42,7 @@ import utils.UriTrack;
 import views.html.sinPermiso;
 import views.html.contabilidad.facturas.acciones.modalCargarFechaOrdenPago;
 import views.html.haberes.liquidacionEmbargos.*;
+import views.html.rrhh.agente.modales.modalDatosAgente;
 
 public class LiquidacionEmbargosController extends Controller {
 
@@ -278,6 +293,169 @@ public class LiquidacionEmbargosController extends Controller {
 		}
 
 	}
+
+	public static Result reporteDetalle() {
+		DynamicForm d = form().bindFromRequest();
+		String error = "";
+		Boolean hayError = false;
+		String dirTemp = System.getProperty("java.io.tmpdir");
+		File archivo = new File(dirTemp+"/listado_retenciones.xls");
+
+
+		List<Integer> reteIds = getSeleccionados();
+
+		if(reteIds.size() <= 0){
+			flash("error", "Debe seleccionar un Agente.");
+			return ok(modalDatosAgente.render(null,d));
+		}
+
+		try {
+
+			if(archivo.exists()) archivo.delete();
+			archivo.createNewFile();
+
+			Workbook libro = new HSSFWorkbook();
+			FileOutputStream archivoTmp = new FileOutputStream(archivo);
+
+			CellStyle comun = libro.createCellStyle();
+			comun.setBorderRight(CellStyle.BORDER_THIN);
+			comun.setBorderLeft(CellStyle.BORDER_THIN);
+			comun.setBorderTop(CellStyle.BORDER_THIN);
+			comun.setBorderBottom(CellStyle.BORDER_THIN);
+
+			CellStyle estiloMoneda = libro.createCellStyle();
+			estiloMoneda.setDataFormat((short) 7);
+			estiloMoneda.setBorderRight(CellStyle.BORDER_THIN);
+			estiloMoneda.setBorderLeft(CellStyle.BORDER_THIN);
+			estiloMoneda.setBorderTop(CellStyle.BORDER_THIN);
+			estiloMoneda.setBorderBottom(CellStyle.BORDER_THIN);
+
+			Sheet hoja = libro.createSheet("Seguro de Sepelio");
+			List<LiquidacionEmbargoDetalle> ld = LiquidacionEmbargoDetalle.find
+					.fetch("liquidacionEmbargo")
+					.fetch("liquidacionEmbargo.estado", "id, nombre")
+					.fetch("liquidacionEmbargo.proveedor", "nombre")
+			        .fetch("liquidacionEmbargo.puestoLaboral.legajo.agente", "apellido")
+					.where().in("liquidacion_embargo_id", reteIds).orderBy("liquidacionEmbargo.puestoLaboral.legajo.agente.apellido asc")
+						.findList();
+
+
+			if(ld.size() > 0){
+				int x = 0;
+				Row fila = hoja.createRow(x);
+				Cell celda0 = fila.createCell(0);
+				celda0 = fila.createCell(0);
+				celda0.setCellValue("Nombre");
+				celda0.setCellStyle(comun);
+
+				celda0 = fila.createCell(1);
+				celda0.setCellValue("Cuit");
+				celda0.setCellStyle(comun);
+
+				celda0 = fila.createCell(2);
+				celda0.setCellValue("Tipo Retencion");
+				celda0.setCellStyle(comun);
+
+				celda0 = fila.createCell(3);
+				celda0.setCellValue("Nombre Oficio");
+				celda0.setCellStyle(comun);
+
+				celda0 = fila.createCell(4);
+				celda0.setCellValue("CBU Oficio");
+				celda0.setCellStyle(comun);
+
+				celda0 = fila.createCell(5);
+				celda0.setCellValue("Cuenta Oficio");
+				celda0.setCellStyle(comun);
+
+				celda0 = fila.createCell(6);
+				celda0.setCellValue("Concepto");
+				celda0.setCellStyle(comun);
+
+				celda0 = fila.createCell(7);
+				celda0.setCellValue("Periodo");
+				celda0.setCellStyle(comun);
+
+				celda0 = fila.createCell(8);
+				celda0.setCellValue("Tipo Liquidacion");
+				celda0.setCellStyle(comun);
+
+				celda0 = fila.createCell(9);
+				celda0.setCellValue("importe");
+				celda0.setCellStyle(comun);
+
+
+				x++;
+
+
+				BigDecimal total =  new BigDecimal(0);
+				BigDecimal totalHaberes =  new BigDecimal(0);
+
+
+				for (LiquidacionEmbargoDetalle l: ld) {
+
+					System.out.println(l.liquidacionEmbargo.puestoLaboral.legajo.agente.apellido);
+					fila = hoja.createRow(x);
+					celda0 = fila.createCell(0);
+					celda0.setCellValue(l.liquidacionEmbargo.puestoLaboral.legajo.agente.apellido);
+					celda0.setCellStyle(comun);
+
+					celda0 = fila.createCell(1);
+					celda0.setCellValue(l.liquidacionEmbargo.puestoLaboral.legajo.agente.cuit);
+					celda0.setCellStyle(comun);
+
+					celda0 = fila.createCell(2);
+					celda0.setCellValue(l.liquidacionEmbargo.tipoEmbargo.nombre);
+					celda0.setCellStyle(comun);
+
+					celda0 = fila.createCell(3);
+					celda0.setCellValue(l.liquidacionEmbargo.proveedor.nombre);
+					celda0.setCellStyle(comun);
+
+					celda0 = fila.createCell(4);
+					celda0.setCellValue(l.liquidacionEmbargo.proveedor.getCuentaBancaria().cbu);
+					celda0.setCellStyle(comun);
+
+ 					celda0 = fila.createCell(5);
+					celda0.setCellValue(l.liquidacionEmbargo.proveedor.getCuentaBancaria().numero_cuenta);
+					celda0.setCellStyle(comun);
+
+					celda0 = fila.createCell(6);
+					celda0.setCellValue(l.liquidacionConcepto.denominacion);
+					celda0.setCellStyle(comun);
+
+					celda0 = fila.createCell(7);
+					celda0.setCellValue(l.periodo.nombre);
+					celda0.setCellStyle(comun);
+
+					celda0 = fila.createCell(8);
+					celda0.setCellValue(l.liquidacionTipo.nombre);
+					celda0.setCellStyle(comun);
+
+					celda0 = fila.createCell(9);
+					celda0.setCellType(Cell.CELL_TYPE_NUMERIC);
+					celda0.setCellValue(l.importe.doubleValue());
+					celda0.setCellStyle(comun);
+
+
+
+
+					x++;
+
+				}
+
+
+			}
+
+			libro.write(archivoTmp);
+		} catch (IOException e) {
+			e.printStackTrace();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return ok(modalDatosAgente.render(archivo.getPath(),d));
+	}
+
 
 	public static List<Integer> getSeleccionados(){
 		String[] checks = null;
