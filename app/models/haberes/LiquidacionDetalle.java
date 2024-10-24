@@ -64,6 +64,11 @@ public class LiquidacionDetalle  extends Model{
 	public Novedad liquidacionNovedad;
 	public Long liquidacion_novedad_id;
 
+	@ManyToOne
+	@JoinColumn(name="liquidacion_embargo_detalle_id", referencedColumnName="id", insertable=false, updatable=false)
+	public Novedad liquidacionEmbargoDetalle;
+	public Long liquidacion_embargo_detalle_id;
+
 	public String getDenominacionConceptoPeriodo(){
 		String ret = liquidacionConcepto.denominacion;
 		if(liquidacionConcepto.id.compareTo(LiquidacionConcepto.DIFERENCIAL_VACACIONES) == 0 || liquidacionConcepto.id.compareTo(LiquidacionConcepto.AJUSTE_DIFERENCIAL_VACACIONES) == 0 ){
