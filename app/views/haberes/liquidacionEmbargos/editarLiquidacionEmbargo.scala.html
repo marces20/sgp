@@ -18,7 +18,7 @@
 	@views.html.tags.successError()
 	@helper.form(action = controllers.haberes.routes.LiquidacionEmbargosController.actualizar()) {
 		@inputText(baseForm("id"), 'hidden -> "hidden")
-		@views.html.haberes.liquidacionEmbargos.formLiquidacionEmbargo(baseForm)
+		@views.html.haberes.liquidacionEmbargos.formLiquidacionEmbargo(baseForm,false)
 		@views.html.haberes.liquidacionEmbargos.tabsLiquidacionEmbargo(true,baseForm)
 	}
 

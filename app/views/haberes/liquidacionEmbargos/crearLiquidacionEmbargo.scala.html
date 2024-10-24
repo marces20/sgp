@@ -13,6 +13,6 @@
 	@views.html.tags.successError()
 
     @helper.form(action = controllers.haberes.routes.LiquidacionEmbargosController.guardar()) {
-		@views.html.haberes.liquidacionEmbargos.formLiquidacionEmbargo(baseForm)
+		@views.html.haberes.liquidacionEmbargos.formLiquidacionEmbargo(baseForm,true)
 	}
 }

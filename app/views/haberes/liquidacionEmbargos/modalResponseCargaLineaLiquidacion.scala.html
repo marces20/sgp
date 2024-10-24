@@ -1,0 +1,12 @@
+@(info: String = null,formBuscador: DynamicForm)
+@import helper._
+@implicitFieldConstructor = @{ FieldConstructor(simpleInput.render) }
+@views.html.tags.successError()
+@if(info) {
+	<div class="panel panel-default">
+		<div class="panel-body">
+			<p>{{@info}}</p>
+		</div>
+	</div>
+}
+@flash().clear()

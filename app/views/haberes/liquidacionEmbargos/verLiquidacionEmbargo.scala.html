@@ -90,13 +90,13 @@
 		}
 		@if(lc.estado.id == models.Estado.LIQUIDACION_EMBARGO_CANCELADO) {
 			<div class="col-sm-3">
-				<a href="@controllers.haberes.routes.LiquidacionEmbargosController.cambiarEstado(lcForm.field("id").value.toInt, models.Estado.LIQUIDACION_PUESTOS_BORRADOR)@UriTrack.get("&")" class="btn btn-default">
+				<a href="@controllers.haberes.routes.LiquidacionEmbargosController.cambiarEstado(lcForm.field("id").value.toInt, models.Estado.LIQUIDACION_EMBARGO_BORRADOR)@UriTrack.get("&")" class="btn btn-default">
 					<i class="glyphicon glyphicon-arrow-right"></i> Volver a Borrador
 				</a>
 			</div>
 		}else{
 			<div class="col-sm-3">
-				<a href="@controllers.haberes.routes.LiquidacionEmbargosController.cambiarEstado(lcForm.field("id").value.toInt, models.Estado.LIQUIDACION_PUESTOS_CANCELADO)@UriTrack.get("&")" class="btn btn-default">
+				<a href="@controllers.haberes.routes.LiquidacionEmbargosController.cambiarEstado(lcForm.field("id").value.toInt, models.Estado.LIQUIDACION_EMBARGO_CANCELADO)@UriTrack.get("&")" class="btn btn-default">
 					<i class="glyphicon glyphicon-minus-sign"></i> Cancelar Retencion
 				</a>
 			</div>
