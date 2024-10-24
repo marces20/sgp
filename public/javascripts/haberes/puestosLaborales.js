@@ -329,6 +329,36 @@ $( function(){
 		return $("input[name='check_listado[]']").serialize();
 	}
 
+
+
+	$('#modalcrearLineaLiquidacion').click( function() {
+		var url = $(this).attr("data-url");
+		var dialogo = $('<div></div>');
+
+		dialogo.dialog({
+			title: "Datos Detalles",
+	    	resizable: false,
+			autoOpen: true,
+			modal: true,
+			height: 250,
+			width:750,
+	        buttons: {
+		          Cerrar: function() {
+		            $( this ).dialog( "destroy" );
+		          }
+		    },
+	    	close: function(event, ui ){
+	    		$(this).dialog( "destroy" );
+	    	},
+		    open: function( event, ui ) {
+				$.post(url, getCheckSeleccionados(), function(data){
+					dialogo.html(data);
+				});
+		    }
+	    });
+	});
+
+
 	$('#modalDetalle').click( function() {
 		var url = $(this).attr("data-url");
 		var dialogo = $('<div></div>');
