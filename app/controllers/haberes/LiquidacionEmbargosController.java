@@ -29,8 +29,12 @@ import models.AgenteRul;
 import models.Estado;
 import models.Factura;
 import models.auth.Permiso;
+import models.haberes.LiquidacionDetalle;
 import models.haberes.LiquidacionEmbargo;
 import models.haberes.LiquidacionEmbargoDetalle;
+import models.haberes.LiquidacionPuesto;
+import models.haberes.PuestoLaboral;
+import play.Logger;
 import play.data.DynamicForm;
 import play.data.Form;
 import play.libs.Json;
@@ -42,6 +46,7 @@ import utils.UriTrack;
 import views.html.sinPermiso;
 import views.html.contabilidad.facturas.acciones.modalCargarFechaOrdenPago;
 import views.html.haberes.liquidacionEmbargos.*;
+import views.html.haberes.puestosLaborales.acciones.modalPasarABorrador;
 import views.html.rrhh.agente.modales.modalDatosAgente;
 
 public class LiquidacionEmbargosController extends Controller {
@@ -294,6 +299,93 @@ public class LiquidacionEmbargosController extends Controller {
 
 	}
 
+	public static Boolean soloAprobados(List<Integer> pSeleccionados) {
+		return LiquidacionEmbargo.find.where().ne("estado_id", Estado.LIQUIDACION_EMBARGO_APROBADO).in("id", pSeleccionados).findRowCount() == 0;
+	}
+
+	public static Result crearLineaLiquidacion() {
+		DynamicForm d = form().bindFromRequest();
+		String error = "";
+		Boolean hayError = false;
+
+		List<Integer> reteIds = getSeleccionados();
+
+
+		if(reteIds.size() <= 0){
+			flash("error", "Debe seleccionar una Retencion.");
+			return ok(modalResponseCargaLineaLiquidacion.render(null,d));
+		}
+
+		if(!soloAprobados(reteIds)) {
+			flash("error", "Solo se puede cargar registros en estado aprobados.");
+			return ok(modalResponseCargaLineaLiquidacion.render(null,d));
+		}
+
+		int x = 0;
+
+		try {
+
+			List<LiquidacionEmbargoDetalle> ld = LiquidacionEmbargoDetalle.find
+					.fetch("liquidacionEmbargo")
+					.fetch("liquidacionEmbargo.estado", "id, nombre")
+					.fetch("liquidacionEmbargo.proveedor", "nombre")
+			        .fetch("liquidacionEmbargo.puestoLaboral.legajo.agente", "apellido")
+					.where()
+					.in("liquidacion_embargo_id", reteIds)
+					.eq("liquidacionEmbargo.estado.id",Estado.LIQUIDACION_EMBARGO_APROBADO)
+
+					.orderBy("liquidacionEmbargo.puestoLaboral.legajo.agente.apellido asc")
+					.findList();
+
+			for (LiquidacionEmbargoDetalle l: ld) {
+
+				LiquidacionPuesto lp = LiquidacionPuesto.find.select("id, puestoLaboral.legajo.agente.organigrama_id")
+										.fetch("liquidacionMes","liquidacion_tipo_id,periodo_id")
+										.fetch("puestoLaboral","id")
+										.fetch("puestoLaboral.legajo.agente","organigrama_id")
+										.where()
+										.eq("liquidacionMes.liquidacion_tipo_id",l.liquidacion_tipo_id)
+										.eq("liquidacionMes.periodo_id",l.periodo_id)
+										.eq("puestoLaboral.id", l.liquidacionEmbargo.puesto_laboral_id)
+										.eq("estado_id",Estado.LIQUIDACION_PUESTOS_BORRADOR)
+										.findUnique();
+
+				Logger.debug("111111111111 "+lp);
+
+				if(lp != null) {
+					LiquidacionDetalle ldelete = LiquidacionDetalle.find.where().eq("liquidacion_embargo_detalle_id", l.id).findUnique();
+
+					if(ldelete != null) {
+						ldelete.delete();
+					}
+
+					LiquidacionDetalle ldx = new  LiquidacionDetalle();
+					ldx.liquidacion_puesto_id = lp.id;
+
+					ldx.liquidacion_concepto_id= l.liquidacion_concepto_id;
+					ldx.cantidad=new BigDecimal(1);
+					ldx.importe= l.importe;
+					ldx.periodo_id=l.periodo_id.longValue();
+					ldx.organigrama_id = lp.puestoLaboral.legajo.agente.organigrama_id;
+					ldx.liquidacion_embargo_detalle_id= l.id;
+					ldx.save();
+					x ++;
+				}else {
+
+				}
+
+			}
+
+			String ret = "Se insertaron "+x+" detalles";
+
+			return ok(modalResponseCargaLineaLiquidacion.render(ret,d));
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return ok(modalResponseCargaLineaLiquidacion.render(null,d));
+	}
+
 	public static Result reporteDetalle() {
 		DynamicForm d = form().bindFromRequest();
 		String error = "";
@@ -305,7 +397,7 @@ public class LiquidacionEmbargosController extends Controller {
 		List<Integer> reteIds = getSeleccionados();
 
 		if(reteIds.size() <= 0){
-			flash("error", "Debe seleccionar un Agente.");
+			flash("error", "Debe seleccionar una Retencion.");
 			return ok(modalDatosAgente.render(null,d));
 		}
 
