@@ -53,17 +53,21 @@ public class PuntoVenta extends Model {
 
 
 			if(Permiso.check("verTodosPuntoVenta")){
-				return find.orderBy("numero asc").findList();
+				if(Permiso.check("verTodosComodinPuntoVenta")){
+					return find.orderBy("numero asc").findList();
+				}else {
+					return find.where().eq("comodin", false).orderBy("numero asc").findList();
+				}
 			}else {
 				Integer deptoId = 0;
 				List<Integer> l = null;
 				if( Usuario.getUsurioSesion().organigrama_id != null){
 					deptoId = Usuario.getUsurioSesion().organigrama.deposito.id.intValue();
-					return find.where().eq("deposito_id", deptoId).orderBy("numero asc").findList();
+					return find.where().eq("comodin", false).eq("deposito_id", deptoId).orderBy("numero asc").findList();
 				}
 			}
 		}
-		return find.where().eq("deposito_id", 0).orderBy("numero asc").findList();
+		return find.where().eq("deposito_id", 0).eq("comodin", false).orderBy("numero asc").findList();
 
 	}
 }
