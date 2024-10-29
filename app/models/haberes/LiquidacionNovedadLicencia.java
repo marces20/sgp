@@ -20,6 +20,7 @@ import models.Estado;
 import models.Expediente;
 import models.Periodo;
 import models.Usuario;
+import models.auth.Permiso;
 import play.data.validation.Constraints.Required;
 import play.db.ebean.Model;
 import utils.pagination.Pagination;
@@ -92,6 +93,14 @@ public class LiquidacionNovedadLicencia extends Model{
 													   fetch("agenteAsistenciaLicencia.agente","apellido,dni,cuit,tipo_relacion_laboral,activo,organigrama_id,tipo_residencia_id").
 													   fetch("agenteAsistenciaLicencia.agente.organigrama","nombre").
 													   where();
+		if(!Permiso.check("verTodoAgentes")){
+    		if(Usuario.getUsurioSesion().organigrama != null){
+				e.eq("agenteAsistenciaLicencia.agente.organigrama_id", Usuario.getUsurioSesion().organigrama.id);
+			}else {
+				e.eq("agenteAsistenciaLicencia.agente.organigrama_id", 0);
+			}
+		}
+
 		if(!residente.isEmpty()){
     		if(residente.compareToIgnoreCase("SI") == 0){
     			e.isNotNull("agenteAsistenciaLicencia.agente.tipo_residencia_id");
