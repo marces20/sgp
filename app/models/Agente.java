@@ -19,6 +19,7 @@ import javax.persistence.PostLoad;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
+import models.auth.Permiso;
 import models.haberes.Legajo;
 import play.data.format.Formats;
 import play.data.validation.Constraints.Required;
@@ -305,6 +306,15 @@ public class Agente extends Model{
     							   .fetch("puesto","nombre")
     							   .fetch("especialidad","nombre")
     							   .where();
+
+    	if(!Permiso.check("verTodoAgentes")){
+    		if(Usuario.getUsurioSesion().organigrama != null){
+				e.eq("organigrama_id", Usuario.getUsurioSesion().organigrama.id);
+			}else {
+				e.eq("organigrama_id", 0);
+			}
+		}
+
     	if(!btnFiltro0.isEmpty() || !btnFiltro1.isEmpty() || !btnFiltro2.isEmpty() || !btnFiltro3.isEmpty()|| !btnFiltro4.isEmpty()){
     		e = e.disjunction();
 			if(!btnFiltro0.isEmpty()){
