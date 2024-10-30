@@ -93,7 +93,10 @@ public class InformeTotal extends Model {
     	p.setOrderDefault("ASC");
     	p.setSortByDefault("fecha");
 
-    	ExpressionList<InformeTotal> e = find.fetch("expediente").fetch("periodo").fetch("cliente").where();
+    	ExpressionList<InformeTotal> e = find
+
+    			.fetch("deposito","nombre")
+    			.fetch("cliente","nombre").where();
 
     	if(!cliente.isEmpty()) {
     		e.eq("cliente_id", Integer.parseInt(cliente));
