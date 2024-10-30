@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
@@ -26,12 +27,16 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
+import models.CuentaBancaria;
 import models.Estado;
+import models.Pago;
+import models.Proveedor;
 import models.haberes.LiquidacionDetalle;
 import models.haberes.LiquidacionMes;
 import models.haberes.LiquidacionPuesto;
 import models.haberes.LiquidacionTipo;
 import models.haberes.PuestoLaboral;
+import play.Logger;
 import play.mvc.Controller;
 import play.mvc.Result;
 import scala.math.BigInt;
@@ -46,8 +51,297 @@ import com.avaje.ebean.SqlRow;
 import com.google.common.base.Strings;
 
 import controllers.auth.CheckPermiso;
+import de.mhus.lib.core.logging.Log;
 
 public class LiquidacionAccionesController extends Controller {
+
+	@CheckPermiso(key = "liquidacionMesExportBanco")
+	public static Result exportEmbargos(Long liquidacionId,Boolean externo) throws IOException {
+
+		String dirTemp = System.getProperty("java.io.tmpdir");
+		String newLine = System.getProperty("line.separator");
+		Boolean hayError = false;
+
+		int random_int = (int)Math.floor(Math.random()*(10000-0+1)+0);
+		File archivo = new File(dirTemp + "/embargo_banco_macro_"+random_int+".txt");
+		File errorOPG = new File(dirTemp+"/mensaje_embargo.txt");
+		Writer out = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(archivo), Charset.forName( "UTF8")));
+		Writer outError = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(errorOPG), Charset.forName( "UTF8")));
+
+		try {
+
+			List<LiquidacionDetalle> liquidacionDetalle = LiquidacionDetalle.find
+					.fetch("liquidacionPuesto.puestoLaboral")
+	    			.fetch("liquidacionPuesto.puestoLaboral.legajo")
+	    			.fetch("liquidacionPuesto.puestoLaboral.legajo.agente")
+					.where()
+					.in("liquidacionPuesto.liquidacion_mes_id",liquidacionId)
+					.eq("liquidacionPuesto.estado_id", Estado.LIQUIDACION_PUESTOS_APROBADO)
+					.isNotNull("liquidacion_embargo_detalle_id")
+					.findList();
+
+			String error = "";
+
+			int contador = 0;
+			boolean listo = false;
+
+			for(LiquidacionDetalle ld : liquidacionDetalle) {
+
+				Proveedor p  = ld.liquidacionEmbargoDetalle.liquidacionEmbargo.proveedor;
+				CuentaBancaria cb = p.getCuentaBancaria();
+				if(cb.banco_id.compareTo(new Long(1)) ==0) {
+					if(p.cuit == null) {
+						error += "El CUIT del proveedor " + p.nombre + " no se encuentra definido" + newLine;
+					}
+
+					if(!error.isEmpty()) {
+						outError.append(error);
+						hayError = true;
+					}
+
+					try {
+
+						String nombreProveedor = p.nombre;
+						//String[] split = nombreProveedor.split(",");
+
+						if(!listo){
+
+							StringBuilder sb = new StringBuilder();
+
+							for (int n = 0; n < nombreProveedor.length (); n ++){
+								char c = nombreProveedor.charAt(n);
+
+								if(!listo) {
+									listo= true;
+									if(c == 'A') {
+										c = 'Á';
+									}else if(c == 'E') {
+										c = 'É';
+									}else if(c == 'I') {
+										c = 'Í';
+									}else if(c == 'O') {
+										c = 'Ó';
+									}else if(c == 'U') {
+										c = 'O';
+									}else {
+										listo= false;
+									}
+
+								}
+								sb.append(c);
+							}
+							nombreProveedor = sb.toString();
+						}else {
+							nombreProveedor = p.nombre;
+						}
+
+						BigDecimal importe = ld.liquidacionEmbargoDetalle.importe;
+						if(importe == null || importe.compareTo(BigDecimal.ZERO) <= 0) {
+							error += "El importe del proveedor " + p.nombre + " no se encuentra definido" + newLine;
+							hayError = true;
+						}
+						Logger.debug("------------------- "+importe );
+
+
+
+						if(cb.numero_cuenta.isEmpty()) {
+							error += "El número de cuenta del agente " + p.nombre+ " no se encuentra definido."+newLine;
+							hayError = true;
+						}else if(cb.banco_id.compareTo(new Long(1)) !=0){
+							error += "El Banco de la cuenta del agente " + p.nombre+ " debe ser BANCO MACRO para pagos no externos."+newLine;
+							hayError = true;
+						}
+
+						out.append(crearLineaOPGEmbargo(cb, nombreProveedor,ld.liquidacionEmbargoDetalle.importe));
+
+					} catch (Exception e) {
+						outError.append(e.toString()+ newLine);
+						hayError = true;
+					}
+					contador ++;
+				}
+			}
+
+		}catch (Exception e) {
+			outError.append(e.toString()+ newLine);
+			hayError = true;
+		}
+
+		out.flush();
+		out.close();
+		outError.flush();
+		outError.close();
+
+
+		if (hayError) {
+			flash("error", "Existen errores en la creacion.");
+			return ok(reporteBanco.render(errorOPG.getPath()));
+		}else {
+			flash("success", "El archivo fue creado correctamente.");
+			return ok(reporteBanco.render(archivo.getPath()));
+		}
+	}
+
+	private static String crearLineaOPGEmbargo(CuentaBancaria cuenta,String nombreProveedor,BigDecimal importe){
+		String linea = "";
+		String cbu= StringUtils.cortarString(cuenta.numero_cuenta, 15);
+
+		linea += "\t";//legajo
+		linea += "\t";//cuil
+		linea += StringUtils.cortarString(nombreProveedor,64)+"\t";//apellido
+		linea += cbu+"\t";//numerocuenta
+		linea += "\t";//CBU
+		linea += importe.toString()+"\t";
+		linea += "";//comprobante
+		linea +="\r\n";
+
+		return linea;
+	}
+
+	@CheckPermiso(key = "liquidacionMesExportBanco")
+	public static Result exportEmbargosExternos(Long liquidacionId,Boolean externo) throws IOException {
+
+		String dirTemp = System.getProperty("java.io.tmpdir");
+		String newLine = System.getProperty("line.separator");
+		Boolean hayError = false;
+
+		int random_int = (int)Math.floor(Math.random()*(10000-0+1)+0);
+		File archivo = new File(dirTemp + "/embargo_banco_macro_externos_"+random_int+".txt");
+		File errorOPG = new File(dirTemp+"/mensaje_embargo.txt");
+		Writer out = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(archivo), Charset.forName( "UTF8")));
+		Writer outError = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(errorOPG), Charset.forName( "UTF8")));
+
+		try {
+
+			List<LiquidacionDetalle> liquidacionDetalle = LiquidacionDetalle.find
+					.fetch("liquidacionPuesto.puestoLaboral")
+	    			.fetch("liquidacionPuesto.puestoLaboral.legajo")
+	    			.fetch("liquidacionPuesto.puestoLaboral.legajo.agente")
+					.where()
+					.in("liquidacionPuesto.liquidacion_mes_id",liquidacionId)
+					.eq("liquidacionPuesto.estado_id", Estado.LIQUIDACION_PUESTOS_APROBADO)
+					.isNotNull("liquidacion_embargo_detalle_id")
+					.findList();
+
+			String error = "";
+
+			int contador = 0;
+			boolean listo = false;
+
+			for(LiquidacionDetalle ld : liquidacionDetalle) {
+
+				Proveedor p  = ld.liquidacionEmbargoDetalle.liquidacionEmbargo.proveedor;
+				CuentaBancaria cb = p.getCuentaBancaria();
+				if(cb.banco_id.compareTo(new Long(1)) !=0) {
+					if(p.cuit == null) {
+						error += "El CUIT del proveedor " + p.nombre + " no se encuentra definido" + newLine;
+					}
+
+					if(!error.isEmpty()) {
+						outError.append(error);
+						hayError = true;
+					}
+
+					try {
+
+						String nombreProveedor = p.nombre;
+						//String[] split = nombreProveedor.split(",");
+
+						if(!listo){
+
+							StringBuilder sb = new StringBuilder();
+
+							for (int n = 0; n < nombreProveedor.length (); n ++){
+								char c = nombreProveedor.charAt(n);
+
+								if(!listo) {
+									listo= true;
+									if(c == 'A') {
+										c = 'Á';
+									}else if(c == 'E') {
+										c = 'É';
+									}else if(c == 'I') {
+										c = 'Í';
+									}else if(c == 'O') {
+										c = 'Ó';
+									}else if(c == 'U') {
+										c = 'O';
+									}else {
+										listo= false;
+									}
+
+								}
+								sb.append(c);
+							}
+							nombreProveedor = sb.toString();
+						}else {
+							nombreProveedor = p.nombre;
+						}
+
+						BigDecimal importe = ld.liquidacionEmbargoDetalle.importe;
+						if(importe == null || importe.compareTo(BigDecimal.ZERO) <= 0) {
+							error += "El importe del proveedor " + p.nombre + " no se encuentra definido" + newLine;
+							hayError = true;
+						}
+						Logger.debug("------------------- "+importe );
+
+
+
+						if(cb.numero_cuenta.isEmpty()) {
+							outError.append("El número de cuenta del agente " + p.nombre+ " no se encuentra definido."+newLine);
+							hayError = true;
+						}else if(cb.banco_id.compareTo(new Long(1)) ==0){
+							outError.append("El Banco de la cuenta del agente " + p.nombre+ " NO debe ser BANCO MACRO para pagos no externos."+newLine);
+							hayError = true;
+						}
+
+						out.append(crearLineaOPGEmbargoExterno(cb, nombreProveedor,ld.liquidacionEmbargoDetalle.importe));
+
+					} catch (Exception e) {
+						outError.append(e.toString()+ newLine);
+						hayError = true;
+					}
+					contador ++;
+				}
+			}
+
+		}catch (Exception e) {
+			outError.append(e.toString()+ newLine);
+			hayError = true;
+		}
+
+		out.flush();
+		out.close();
+		outError.flush();
+		outError.close();
+
+
+		if (hayError) {
+			flash("error", "Existen errores en la creacion.");
+			return ok(reporteBanco.render(errorOPG.getPath()));
+		}else {
+			flash("success", "El archivo fue creado correctamente.");
+			return ok(reporteBanco.render(archivo.getPath()));
+		}
+	}
+
+	private static String crearLineaOPGEmbargoExterno(CuentaBancaria cuenta,String nombreProveedor,BigDecimal importe){
+		String linea = "";
+
+		String cbu= StringUtils.cortarString(cuenta.cbu, 22);
+		String cuitBanco = StringUtils.cortarString(cuenta.banco.cuit,11);
+
+		linea += "\t";//legajo
+		linea += cuitBanco+"\t";//cuil
+		linea += StringUtils.cortarString(nombreProveedor,64)+"\t";//apellido
+		linea += "\t";
+		linea += cbu+"\t";//CBU
+		linea += importe.toString()+"\t";
+		linea += "";//comprobante
+		linea +="\r\n";
+		return linea;
+	}
+
 
 	@CheckPermiso(key = "liquidacionMesExportBanco")
 	public static Result exportMacroSueldosLista(Boolean nuevo) {
