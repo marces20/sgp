@@ -1046,6 +1046,8 @@ GET     /haberes/liquidacionAcciones/descargarAfip   	   controllers.haberes.Liq
 GET     /haberes/liquidacionAcciones/exportIps    		   controllers.haberes.LiquidacionAccionesController.exportIps(liquidacionId:Long)
 GET     /haberes/liquidacionAcciones/descargarIps   	   controllers.haberes.LiquidacionAccionesController.descargarIps(url:String)
 GET     /haberes/liquidacionAcciones/exportDatosPorConcepto    	   controllers.haberes.LiquidacionMesesReportesController.exportDatosPorConcepto(liquidacionId:Long,conceptoId:Long)
+GET     /haberes/liquidacionAcciones/exportEmbargos    	   controllers.haberes.LiquidacionAccionesController.exportEmbargos(liquidacionId:Long,nuevo:Boolean ?= false)
+GET     /haberes/liquidacionAcciones/exportEmbargosExternos    	   controllers.haberes.LiquidacionAccionesController.exportEmbargosExternos(liquidacionId:Long,nuevo:Boolean ?= false)
 
 GET     /haberes/escalaLaboralMonto	         			controllers.haberes.EscalasLaboralesMontosController.index()
 GET     /haberes/escalaLaboralMonto/crear        		controllers.haberes.EscalasLaboralesMontosController.crear()
