@@ -155,10 +155,16 @@ public class Proveedor extends Model {
 
     public CuentaBancaria getCuentaBancaria(){
 	    CuentaBancaria cc = null;
+	    int x= 0;
 		for (CuentaBancaria cuenta : this.cuenta) {
 			if(cuenta.predeterminada && cuenta.estado_id == Estado.CUENTA_BANCARIA_ESTADO_APROBADO) {
 				 cc = cuenta;
+				 x++;
 			}
+		}
+
+		if(x > 1) {
+			return null;
 		}
 
 		return cc;
