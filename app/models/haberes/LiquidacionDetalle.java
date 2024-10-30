@@ -66,7 +66,7 @@ public class LiquidacionDetalle  extends Model{
 
 	@ManyToOne
 	@JoinColumn(name="liquidacion_embargo_detalle_id", referencedColumnName="id", insertable=false, updatable=false)
-	public Novedad liquidacionEmbargoDetalle;
+	public LiquidacionEmbargoDetalle liquidacionEmbargoDetalle;
 	public Long liquidacion_embargo_detalle_id;
 
 	public String getDenominacionConceptoPeriodo(){
