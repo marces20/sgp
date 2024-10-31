@@ -880,22 +880,28 @@ public class ProductosController extends Controller {
 			Logger.debug("-------asJson()------------ "+data.get("productoNombre"));
 		}
 
-
-
     	try{
 
 
     		//{"idfactura":"11046","cuit":30712131310,"pv_id":7,"nrofactura":"3","doc":"2856584","tipo_doc_id":"91","condiva_id":"5","condventa_id":"1","razonsocial":"ACOSTA NU\u00d1EZ, ROCIO","domicilio":"ENCARNACION - CALLE PADRE ANTONIO RIERA 2220 - B\u00ba LA PAZ","total":"72932.53","cae":"72270300226369","fecha_vencimiento":"72270300226369","fecha_emision":"72270300226369","fecha_desde":"2022-06-30","fecha_hasta":"2022-07-06",
 
+    		List<Cliente> lc = new ArrayList<Cliente>();
+
+    		if(json.get("tipo_doc_id").textValue() == "80" || json.get("tipo_doc_id").textValue() == "86") {
+
+    					lc = Cliente.find.where().eq("cuit2",json.get("doc").textValue()).findList();
+
+    		}else if(json.get("tipo_doc_id").textValue() == "96"){
+
+    			lc = Cliente.find.where().eq("dni",new Integer(json.get("doc").asText())).findList();
+
+    		}else if(json.get("tipo_doc_id").textValue() == "91"){
+
+    			lc = Cliente.find.where().eq("cie",json.get("doc").textValue()).findList();
+
+    		}
 
 
-
-    		List<Cliente> lc = Cliente.find.where()
-    							.disjunction()
-    							.eq("dni",new Integer(json.get("doc").asText()))
-    							.eq("cie",json.get("doc").textValue())
-    							.eq("cuit2",json.get("doc").textValue())
-    							.endJunction().findList();
     		Long idCLiente = null;
     		if(lc.size() > 0) {
     			idCLiente = lc.get(0).id;
