@@ -42,6 +42,7 @@ import play.mvc.Result;
 import play.mvc.Security;
 import utils.ArrayUtils;
 import utils.DateUtils;
+import utils.NumberUtils;
 import utils.RequestVar;
 import utils.UriTrack;
 import utils.pagination.PaginadorFicha;
@@ -934,7 +935,19 @@ public class ProductosController extends Controller {
     		int widht = 8 - nroFactura.length();
     		String formatted = String.format("%0" + widht + "d", Integer.valueOf(nroFactura));
 
-    		rf.numero= json.get("nrofactura").textValue();
+
+
+    		Integer nro = new Integer(json.get("nrofactura").textValue());
+
+    		Long tipo_factura = new Long(json.get("tipo_factura").asInt());
+    		if(tipo_factura.compareTo(new Long(0)) == 0) {
+    			tipo_factura = new Long(1);
+    		}else {
+    			tipo_factura = new Long(2);
+    		}
+
+    		rf.recupero_tipo_pago_id = new Long(json.get("idfactura").asInt());
+    		rf.numero= NumberUtils.agregarCerosAlaIzquierda(nro,8);
     		rf.nombre = null;//?
     		rf.nota = null;
     		rf.estado_id = (long) Estado.RECUPERO_FACTURA_BORRADOR;
