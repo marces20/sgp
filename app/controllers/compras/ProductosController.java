@@ -952,7 +952,7 @@ public class ProductosController extends Controller {
     			tipo_factura = new Long(2);
     		}
 
-    		rf.recupero_tipo_pago_id = new Long(json.get("idfactura").asInt());
+    		rf.recupero_tipo_pago_id = new Long(json.get("tipo_factura").asInt());
     		rf.numero= NumberUtils.agregarCerosAlaIzquierda(nro,8);
     		rf.nombre = null;//?
     		rf.nota = null;
