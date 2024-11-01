@@ -313,6 +313,8 @@ GET     /compras/producto/modalCargar		 controllers.compras.ProductosController.
 POST 	/compras/producto/guardarProductoDesdeModal	 controllers.compras.ProductosController.guardarProductoDesdeModal()
 
 POST     /compras/factura/cargaFacturaMaterno	controllers.compras.ProductosController.cargaFacturaMaterno()
+POST     /compras/factura/cargaNcMaterno		controllers.compras.ProductosController.cargaNcMaterno()
+POST     /compras/factura/cargaNdMaterno	controllers.compras.ProductosController.cargaNdMaterno()
 
 GET     /compras/categorias         		controllers.compras.CategoriasController.indexCategoria()
 GET     /compras/categorias/crear           controllers.compras.CategoriasController.crearCategoria()
