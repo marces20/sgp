@@ -27,6 +27,8 @@ import models.Usuario;
 import models.auth.Permiso;
 import models.recupero.RecuperoFactura;
 import models.recupero.RecuperoFacturaLinea;
+import models.recupero.RecuperoNotaCredito;
+import models.recupero.RecuperoNotaDebito;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ArrayNode;
@@ -764,6 +766,187 @@ public class ProductosController extends Controller {
     	*/
     }
 
+    public static Result cargaNdMaterno() {
+    	JsonNode json = Controller.request().body().asJson();
+    	Logger.debug("idfactura -> " + json.get("idfactura").asInt());//x
+		Logger.debug("cuit------------------------------ "+json.get("cuit").textValue());
+    	Logger.debug("razonsocial------------------------------ "+json.get("razonsocial").textValue());
+    	Logger.debug("domicilio------------------------------ "+json.get("domicilio").textValue());
+    	Logger.debug("tipo_doc_id------------------------------ "+json.get("tipo_doc_id").textValue());
+    	Logger.debug("doc------------------------------ "+json.get("doc").textValue());
+    	Logger.debug("pv_id------------------------------ "+json.get("pv_id").textValue());//x
+    	Logger.debug("nrofactura------------------------------ "+json.get("nrofactura").textValue());//x
+    	Logger.debug("condiva_id------------------------------ "+json.get("condiva_id").textValue());//x
+    	Logger.debug("condventa_id------------------------------ "+json.get("condventa_id").textValue());//x
+    	Logger.debug("total------------------------------ "+json.get("total").asDouble());
+    	Logger.debug("cae------------------------------ "+json.get("cae").textValue());//x
+    	Logger.debug("fecha_vencimiento------------------------------ "+json.get("fecha_vencimiento").textValue());//x
+    	Logger.debug("fecha_emision------------------------------ "+json.get("fecha_emision").textValue());//x
+    	Logger.debug("fecha_desde------------------------------ "+json.get("fecha_desde").textValue());//x
+    	Logger.debug("fecha_hasta------------------------------ "+json.get("fecha_hasta").textValue());//x
+    	for (JsonNode data : json.withArray("lineas")) {
+			Logger.debug("-------asJson()------------ "+data.get("productoNombre"));
+		}
+
+    	try{
+
+    		RecuperoFactura rf = RecuperoFactura.find.where().eq("id_factura_materno", json.get("factura_assoc_id").asInt()).findUnique();
+
+    		if(rf != null) {
+
+    			Long idProducto = null;
+
+    			BigDecimal precio = new BigDecimal(0);
+
+    			for (JsonNode data : json.withArray("lineas")) {
+        			Logger.debug("-------asJson()------------ "+data.get("productoNombre"));
+        			BigDecimal precioTmp = new BigDecimal(0);
+		    		List<Producto> pe =  Producto.find.where().eq("nombre",  data.get("productoNombre").textValue()).findList();
+
+					if(pe.size() > 0) {
+						idProducto = pe.get(0).id;
+					}else {
+						Producto peNew = new Producto();
+						peNew.activo =  true ;
+						peNew.nombre = data.get("productoNombre").textValue();
+						peNew.articulo_id = 3042;
+						peNew.categoria_id = 36;
+						peNew.tipo_producto_id = 2;
+						peNew.udm_id = 1;
+						peNew.codigo_rismi = null;
+						peNew.save();
+
+						idProducto = peNew.id;
+					}
+
+					precioTmp =  new BigDecimal(data.get("monto").textValue()).multiply(new BigDecimal(data.get("cantidad").textValue()));
+					precio = precio.add(precioTmp);
+    			}
+
+
+	    		RecuperoNotaDebito nc = new RecuperoNotaDebito();
+	    		Integer nro = new Integer(json.get("nrofactura").textValue());
+	    		nc.recupero_factura_id = rf.id;//nro;
+
+
+	    		nc.producto_id = idProducto;
+
+	    		nc.precio= precio;//new BigDecimal(data.get("monto").textValue());
+	    		nc.cantidad=new BigDecimal(1);//new BigDecimal(data.get("cantidad").textValue());
+
+	    		nc.udm_id= new Long(1);
+	    		nc.create_usuario_id= new Long(1);
+	    		nc.create_date= new Date();
+	    		nc.fecha = DateUtils.formatDate(json.get("fecha_desde").textValue(), "yyyy-MM-dd");
+
+	     		nc.numero= NumberUtils.agregarCerosAlaIzquierda(nro,8);
+	    		nc.puntoventa_id = 7;
+	    		nc.cae = json.get("cae").textValue();
+	    		nc.fecha_vencimiento= DateUtils.formatDate(json.get("fecha_vencimiento").textValue(), "yyyy-MM-dd");
+
+	    		nc.save();
+    		}else {
+    			return ok("NO SE ENCUENTRA LA FACTURA MATERNO");
+    		}
+
+
+    	}catch (Exception e) {
+    		return ok("ERROR ND "+e);
+		}
+    	return ok();
+
+    }
+
+    public static Result cargaNcMaterno() {
+    	JsonNode json = Controller.request().body().asJson();
+    	Logger.debug("idfactura -> " + json.get("idfactura").asInt());//x
+		Logger.debug("cuit------------------------------ "+json.get("cuit").textValue());
+    	Logger.debug("razonsocial------------------------------ "+json.get("razonsocial").textValue());
+    	Logger.debug("domicilio------------------------------ "+json.get("domicilio").textValue());
+    	Logger.debug("tipo_doc_id------------------------------ "+json.get("tipo_doc_id").textValue());
+    	Logger.debug("doc------------------------------ "+json.get("doc").textValue());
+    	Logger.debug("pv_id------------------------------ "+json.get("pv_id").textValue());//x
+    	Logger.debug("nrofactura------------------------------ "+json.get("nrofactura").textValue());//x
+    	Logger.debug("condiva_id------------------------------ "+json.get("condiva_id").textValue());//x
+    	Logger.debug("condventa_id------------------------------ "+json.get("condventa_id").textValue());//x
+    	Logger.debug("total------------------------------ "+json.get("total").asDouble());
+    	Logger.debug("cae------------------------------ "+json.get("cae").textValue());//x
+    	Logger.debug("fecha_vencimiento------------------------------ "+json.get("fecha_vencimiento").textValue());//x
+    	Logger.debug("fecha_emision------------------------------ "+json.get("fecha_emision").textValue());//x
+    	Logger.debug("fecha_desde------------------------------ "+json.get("fecha_desde").textValue());//x
+    	Logger.debug("fecha_hasta------------------------------ "+json.get("fecha_hasta").textValue());//x
+    	for (JsonNode data : json.withArray("lineas")) {
+			Logger.debug("-------asJson()------------ "+data.get("productoNombre"));
+		}
+
+    	try{
+
+    		RecuperoFactura rf = RecuperoFactura.find.where().eq("id_factura_materno", json.get("factura_assoc_id").asInt()).findUnique();
+
+    		if(rf != null) {
+
+    			Long idProducto = null;
+
+    			BigDecimal precio = new BigDecimal(0);
+
+    			for (JsonNode data : json.withArray("lineas")) {
+        			Logger.debug("-------asJson()------------ "+data.get("productoNombre"));
+        			BigDecimal precioTmp = new BigDecimal(0);
+		    		List<Producto> pe =  Producto.find.where().eq("nombre",  data.get("productoNombre").textValue()).findList();
+
+					if(pe.size() > 0) {
+						idProducto = pe.get(0).id;
+					}else {
+						Producto peNew = new Producto();
+						peNew.activo =  true ;
+						peNew.nombre = data.get("productoNombre").textValue();
+						peNew.articulo_id = 3042;
+						peNew.categoria_id = 36;
+						peNew.tipo_producto_id = 2;
+						peNew.udm_id = 1;
+						peNew.codigo_rismi = null;
+						peNew.save();
+
+						idProducto = peNew.id;
+					}
+
+					precioTmp =  new BigDecimal(data.get("monto").textValue()).multiply(new BigDecimal(data.get("cantidad").textValue()));
+					precio = precio.add(precioTmp);
+    			}
+
+
+	    		RecuperoNotaCredito nc = new RecuperoNotaCredito();
+	    		Integer nro = new Integer(json.get("nrofactura").textValue());
+	    		nc.recupero_factura_id = rf.id;//nro;
+
+
+	    		nc.producto_id = idProducto;
+
+	    		nc.precio= precio;//new BigDecimal(data.get("monto").textValue());
+	    		nc.cantidad=new BigDecimal(1);//new BigDecimal(data.get("cantidad").textValue());
+
+	    		nc.udm_id= new Long(1);
+	    		nc.create_usuario_id= new Long(1);
+	    		nc.create_date= new Date();
+	    		nc.fecha = DateUtils.formatDate(json.get("fecha_desde").textValue(), "yyyy-MM-dd");
+
+	     		nc.numero= NumberUtils.agregarCerosAlaIzquierda(nro,8);
+	    		nc.puntoventa_id = 7;
+	    		nc.cae = json.get("cae").textValue();
+	    		nc.fecha_vencimiento= DateUtils.formatDate(json.get("fecha_vencimiento").textValue(), "yyyy-MM-dd");
+
+	    		nc.save();
+    		}else {
+    			return ok("NO SE ENCUENTRA LA FACTURA MATERNO");
+    		}
+
+
+    	}catch (Exception e) {
+    		return ok("ERROR NC "+e);
+		}
+    	return ok();
+    }
+
     public static Result cargaFacturaMaterno() {
 
 
@@ -935,7 +1118,7 @@ public class ProductosController extends Controller {
     		rf.cliente_id = idCLiente;
 
     		rf.fecha = DateUtils.formatDate(json.get("fecha_desde").textValue(), "yyyy-MM-dd");
-    		rf.serie = "c";
+    		rf.serie = "C";
 
     		String nroFactura = json.get("nrofactura").textValue();
     		int widht = 8 - nroFactura.length();
