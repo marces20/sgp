@@ -806,17 +806,26 @@ public class ProductosController extends Controller {
 					if(pe.size() > 0) {
 						idProducto = pe.get(0).id;
 					}else {
-						Producto peNew = new Producto();
-						peNew.activo =  true ;
-						peNew.nombre = data.get("productoNombre").textValue();
-						peNew.articulo_id = 3042;
-						peNew.categoria_id = 36;
-						peNew.tipo_producto_id = 2;
-						peNew.udm_id = 1;
-						peNew.codigo_rismi = null;
-						peNew.save();
 
-						idProducto = peNew.id;
+						String slug = data.get("productoNombre").textValue().replace(" ", "").replace(".","").replace("-","").toUpperCase();
+						List<Producto> px = Producto.find.where().eq("slug", slug).findList();
+
+						if(px.size() > 0) {
+							idProducto = px.get(0).id;
+						}else {
+
+							Producto peNew = new Producto();
+							peNew.activo =  true ;
+							peNew.nombre = data.get("productoNombre").textValue();
+							peNew.articulo_id = 3042;
+							peNew.categoria_id = 36;
+							peNew.tipo_producto_id = 2;
+							peNew.udm_id = 1;
+							peNew.codigo_rismi = null;
+							peNew.save();
+
+							idProducto = peNew.id;
+						}
 					}
 
 					precioTmp =  new BigDecimal(data.get("monto").textValue()).multiply(new BigDecimal(data.get("cantidad").textValue()));
@@ -897,17 +906,26 @@ public class ProductosController extends Controller {
 					if(pe.size() > 0) {
 						idProducto = pe.get(0).id;
 					}else {
-						Producto peNew = new Producto();
-						peNew.activo =  true ;
-						peNew.nombre = data.get("productoNombre").textValue();
-						peNew.articulo_id = 3042;
-						peNew.categoria_id = 36;
-						peNew.tipo_producto_id = 2;
-						peNew.udm_id = 1;
-						peNew.codigo_rismi = null;
-						peNew.save();
 
-						idProducto = peNew.id;
+						String slug = data.get("productoNombre").textValue().replace(" ", "").replace(".","").replace("-","").toUpperCase();
+						List<Producto> px = Producto.find.where().eq("slug", slug).findList();
+
+						if(px.size() > 0) {
+							idProducto = px.get(0).id;
+						}else {
+
+							Producto peNew = new Producto();
+							peNew.activo =  true ;
+							peNew.nombre = data.get("productoNombre").textValue();
+							peNew.articulo_id = 3042;
+							peNew.categoria_id = 36;
+							peNew.tipo_producto_id = 2;
+							peNew.udm_id = 1;
+							peNew.codigo_rismi = null;
+							peNew.save();
+
+							idProducto = peNew.id;
+						}
 					}
 
 					precioTmp =  new BigDecimal(data.get("monto").textValue()).multiply(new BigDecimal(data.get("cantidad").textValue()));
@@ -1167,18 +1185,27 @@ public class ProductosController extends Controller {
     			if(pe.size() > 0) {
     				idProducto = pe.get(0).id;
     			}else {
-    				Producto peNew = new Producto();
-    				peNew.activo =  true ;
-    				peNew.nombre = data.get("productoNombre").textValue();
-    				peNew.articulo_id = 3042;
-    				peNew.categoria_id = 36;
-    				peNew.tipo_producto_id = 2;
-    				peNew.udm_id = 1;
-    				peNew.codigo_rismi = null;
-    				peNew.save();
 
-    				idProducto = peNew.id;
-    			}
+					String slug = data.get("productoNombre").textValue().replace(" ", "").replace(".","").replace("-","").toUpperCase();
+					List<Producto> px = Producto.find.where().eq("slug", slug).findList();
+
+					if(px.size() > 0) {
+						idProducto = px.get(0).id;
+					}else {
+
+						Producto peNew = new Producto();
+						peNew.activo =  true ;
+						peNew.nombre = data.get("productoNombre").textValue();
+						peNew.articulo_id = 3042;
+						peNew.categoria_id = 36;
+						peNew.tipo_producto_id = 2;
+						peNew.udm_id = 1;
+						peNew.codigo_rismi = null;
+						peNew.save();
+
+						idProducto = peNew.id;
+					}
+				}
 
 
 
