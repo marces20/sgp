@@ -1082,9 +1082,7 @@ public class ProductosController extends Controller {
 		}
 
 		List<RecuperoFactura> rff = RecuperoFactura.find.where()
-									.disjunction()
 									.eq("id_factura_materno", new Long(json.get("idfactura").asInt()))
-									.endJunction()
 									.findList();
 		if(rff.size()>0) {
 			return ok("ERROR - YA SE ENCUENTRA CARGA LA FACTURA: "+json.get("idfactura").asInt());
@@ -1145,20 +1143,20 @@ public class ProductosController extends Controller {
     		Integer nro = new Integer(json.get("nrofactura").textValue());
 
     		List<RecuperoFactura> rffnro = RecuperoFactura.find.where()
-					.disjunction()
 					.eq("numero", NumberUtils.agregarCerosAlaIzquierda(nro,8))
 					.eq("puntoventa_id", 7)
 					.ne("numero", "847")
 					.ne("numero", "848")
 					.ne("numero", "2529")
 					.ne("numero", "2606")
-					.endJunction().findList();
+					.findList();
 
 
     		if(rffnro.size() > 0) {
 
     			rffnro.get(0).cae = json.get("cae").textValue();
     			rffnro.get(0).fecha_vencimiento = DateUtils.formatDate(json.get("fecha_vencimiento").textValue(), "yyyy-MM-dd"); //new Date(json.get("fecha_vencimiento").textValue());
+    			rffnro.get(0).id_factura_materno = new Long(json.get("idfactura").asInt());
     			rffnro.get(0).save();
 
     		}else {
