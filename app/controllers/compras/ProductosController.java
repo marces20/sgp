@@ -1100,15 +1100,15 @@ public class ProductosController extends Controller {
 
     		if(json.get("tipo_doc_id").textValue().compareTo("80") == 0 || json.get("tipo_doc_id").textValue().compareTo("86") == 0) {
 
-    			lc = Cliente.find.where().eq("cuit2",json.get("doc").textValue()).findList();
+    			lc = Cliente.find.where().eq("cuit2",json.get("doc").textValue().replace(" ","")).findList();
 
     		}else if(json.get("tipo_doc_id").textValue().compareTo("96") == 0){
 
-    			lc = Cliente.find.where().eq("dni",new Integer(json.get("doc").asText())).findList();
+    			lc = Cliente.find.where().eq("dni",new Integer(json.get("doc").asText().replace(" ",""))).findList();
 
     		}else if(json.get("tipo_doc_id").textValue().compareTo("91") == 0){
 
-    			lc = Cliente.find.where().eq("cie",json.get("doc").textValue()).findList();
+    			lc = Cliente.find.where().eq("cie",json.get("doc").textValue().replace(" ","")).findList();
 
     		}
 
@@ -1125,14 +1125,16 @@ public class ProductosController extends Controller {
     			clnew.activo = true;
 
     			String tipo_doc_id = json.get("tipo_doc_id").textValue();
-    			clnew.cliente_tipo_id = new Long(7);
+
     			if(tipo_doc_id.compareTo("96") == 0) {
     				clnew.dni = new Integer(json.get("doc").textValue());
+    				clnew.cliente_tipo_id = new Long(7);
     			}else if(tipo_doc_id.compareTo("91") == 0) {
     				clnew.cie  = json.get("doc").textValue();
     				clnew.cliente_tipo_id = new Long(2);
     			}else if(tipo_doc_id.compareTo("80") == 0 || tipo_doc_id.compareTo("86") == 0) {
     				clnew.cuit2  = json.get("doc").textValue();
+    				clnew.cliente_tipo_id = new Long(1);
     			}
     			clnew.save();
     			idCLiente = clnew.id;
@@ -1140,99 +1142,120 @@ public class ProductosController extends Controller {
 
     		}
 
-
-    		RecuperoFactura rf = new RecuperoFactura();
-
-    		rf.cliente_id = idCLiente;
-
-    		rf.fecha = DateUtils.formatDate(json.get("fecha_desde").textValue(), "yyyy-MM-dd");
-    		rf.serie = "C";
-
-    		String nroFactura = json.get("nrofactura").textValue();
-    		int widht = 8 - nroFactura.length();
-    		String formatted = String.format("%0" + widht + "d", Integer.valueOf(nroFactura));
-
-
-
     		Integer nro = new Integer(json.get("nrofactura").textValue());
 
-    		Long tipo_factura = new Long(json.get("tipo_factura").asInt());
-    		if(tipo_factura.compareTo(new Long(0)) == 0) {
-    			tipo_factura = new Long(1);
+    		List<RecuperoFactura> rffnro = RecuperoFactura.find.where()
+					.disjunction()
+					.eq("numero", NumberUtils.agregarCerosAlaIzquierda(nro,8))
+					.eq("puntoventa_id", 7)
+					.ne("numero", "847")
+					.ne("numero", "848")
+					.ne("numero", "2529")
+					.ne("numero", "2606")
+					.endJunction().findList();
+
+
+    		if(rffnro.size() > 0) {
+
+    			rffnro.get(0).cae = json.get("cae").textValue();
+    			rffnro.get(0).fecha_vencimiento = DateUtils.formatDate(json.get("fecha_vencimiento").textValue(), "yyyy-MM-dd"); //new Date(json.get("fecha_vencimiento").textValue());
+    			rffnro.get(0).save();
+
     		}else {
-    			tipo_factura = new Long(2);
-    		}
 
-    		rf.recupero_tipo_pago_id = tipo_factura;
-    		rf.numero= NumberUtils.agregarCerosAlaIzquierda(nro,8);
-    		rf.nombre = null;//?
-    		rf.nota = null;
-    		rf.estado_id = (long) Estado.RECUPERO_FACTURA_BORRADOR;
-    		rf.periodo_id = null;
-    		rf.expediente_id = null;
-    		rf.planilla_id = null;
-    		rf.presupuesto_id = null;
-    		rf.puntoventa_id = 7;
+    			RecuperoFactura rf = new RecuperoFactura();
 
-     		rf.id_factura_materno = new Long(json.get("idfactura").asInt());
-    		rf.condicionventa_id = new Integer(json.get("condventa_id").textValue());
-    		rf.condicioniva_id = new Integer(json.get("condiva_id").textValue());
-    		rf.cae = json.get("cae").textValue();
-    		rf.fecha_vencimiento = DateUtils.formatDate(json.get("fecha_vencimiento").textValue(), "yyyy-MM-dd"); //new Date(json.get("fecha_vencimiento").textValue());
-    		rf.fecha_emision = DateUtils.formatDate(json.get("fecha_emision").textValue(), "yyyy-MM-dd"); //new Date(json.get("fecha_emision").textValue());
-    		rf.fecha_desde = DateUtils.formatDate(json.get("fecha_desde").textValue(), "yyyy-MM-dd"); //new Date(json.get("fecha_desde").textValue());
-    		rf.fecha_hasta = DateUtils.formatDate(json.get("fecha_hasta").textValue(), "yyyy-MM-dd"); //new Date(json.get("fecha_hasta").textValue());
-    		rf.create_usuario_id = new Long(1);
-    		rf.create_date = new Date();
+	    		rf.cliente_id = idCLiente;
 
-    		rf.save();
+	    		rf.fecha = DateUtils.formatDate(json.get("fecha_emision").textValue(), "yyyy-MM-dd");
+	    		rf.serie = "C";
 
-    		for (JsonNode data : json.withArray("lineas")) {
-    			Logger.debug("-------asJson()------------ "+data.get("productoNombre"));
+	    		String nroFactura = json.get("nrofactura").textValue();
+	    		int widht = 8 - nroFactura.length();
+	    		String formatted = String.format("%0" + widht + "d", Integer.valueOf(nroFactura));
 
-    			List<Producto> pe = Producto.find.where().eq("nombre",  data.get("productoNombre").textValue()).findList();
-    			Long idProducto = null;
-    			if(pe.size() > 0) {
-    				idProducto = pe.get(0).id;
-    			}else {
 
-					String slug = data.get("productoNombre").textValue().replace(" ", "").replace(".","").replace("-","").toUpperCase();
-					List<Producto> px = Producto.find.where().eq("slug", slug).findList();
 
-					if(px.size() > 0) {
-						idProducto = px.get(0).id;
-					}else {
 
-						Producto peNew = new Producto();
-						peNew.activo =  true ;
-						peNew.nombre = data.get("productoNombre").textValue();
-						peNew.articulo_id = 3042;
-						peNew.categoria_id = 36;
-						peNew.tipo_producto_id = 2;
-						peNew.udm_id = 1;
-						peNew.codigo_rismi = null;
-						peNew.save();
 
-						idProducto = peNew.id;
+	    		Long tipo_factura = new Long(json.get("tipo_factura").asInt());
+	    		if(tipo_factura.compareTo(new Long(0)) == 0) {
+	    			tipo_factura = new Long(1);
+	    		}else {
+	    			tipo_factura = new Long(2);
+	    		}
+
+	    		rf.recupero_tipo_pago_id = tipo_factura;
+	    		rf.numero= NumberUtils.agregarCerosAlaIzquierda(nro,8);
+	    		rf.nombre = null;//?
+	    		rf.nota = null;
+	    		rf.estado_id = (long) Estado.RECUPERO_FACTURA_BORRADOR;
+	    		rf.periodo_id = null;
+	    		rf.expediente_id = null;
+	    		rf.planilla_id = null;
+	    		rf.presupuesto_id = null;
+	    		rf.puntoventa_id = 7;
+
+	     		rf.id_factura_materno = new Long(json.get("idfactura").asInt());
+	    		rf.condicionventa_id = new Integer(json.get("condventa_id").textValue());
+	    		rf.condicioniva_id = new Integer(json.get("condiva_id").textValue());
+	    		rf.cae = json.get("cae").textValue();
+	    		rf.fecha_vencimiento = DateUtils.formatDate(json.get("fecha_vencimiento").textValue(), "yyyy-MM-dd"); //new Date(json.get("fecha_vencimiento").textValue());
+	    		rf.fecha_emision = DateUtils.formatDate(json.get("fecha_emision").textValue(), "yyyy-MM-dd"); //new Date(json.get("fecha_emision").textValue());
+	    		rf.fecha_desde = DateUtils.formatDate(json.get("fecha_desde").textValue(), "yyyy-MM-dd"); //new Date(json.get("fecha_desde").textValue());
+	    		rf.fecha_hasta = DateUtils.formatDate(json.get("fecha_hasta").textValue(), "yyyy-MM-dd"); //new Date(json.get("fecha_hasta").textValue());
+	    		rf.create_usuario_id = new Long(1);
+	    		rf.create_date = new Date();
+
+	    		rf.save();
+
+	    		for (JsonNode data : json.withArray("lineas")) {
+	    			Logger.debug("-------asJson()------------ "+data.get("productoNombre"));
+
+	    			List<Producto> pe = Producto.find.where().eq("nombre",  data.get("productoNombre").textValue()).findList();
+	    			Long idProducto = null;
+	    			if(pe.size() > 0) {
+	    				idProducto = pe.get(0).id;
+	    			}else {
+
+						String slug = data.get("productoNombre").textValue().replace(" ", "").replace(".","").replace("-","").toUpperCase();
+						List<Producto> px = Producto.find.where().eq("slug", slug).findList();
+
+						if(px.size() > 0) {
+							idProducto = px.get(0).id;
+						}else {
+
+							Producto peNew = new Producto();
+							peNew.activo =  true ;
+							peNew.nombre = data.get("productoNombre").textValue();
+							peNew.articulo_id = 3042;
+							peNew.categoria_id = 36;
+							peNew.tipo_producto_id = 2;
+							peNew.udm_id = 1;
+							peNew.codigo_rismi = null;
+							peNew.save();
+
+							idProducto = peNew.id;
+						}
 					}
-				}
 
 
 
 
-    			RecuperoFacturaLinea rfl = new RecuperoFacturaLinea();
-    			rfl.recupero_factura_id = rf.id;
-    			rfl.producto_id = idProducto;
-    			rfl.cuenta_analitica_id= new Long(478);
-    			rfl.cuenta_id =new Long(226);
-    			rfl.precio= new BigDecimal(data.get("monto").textValue());
-    			rfl.cantidad=new BigDecimal(data.get("cantidad").textValue());
-    			rfl.udm_id= new Long(1);
-    			rfl.create_usuario_id= new Long(1);
-    			rfl.create_date = new Date();
-    			rfl.save();
+	    			RecuperoFacturaLinea rfl = new RecuperoFacturaLinea();
+	    			rfl.recupero_factura_id = rf.id;
+	    			rfl.producto_id = idProducto;
+	    			rfl.cuenta_analitica_id= new Long(478);
+	    			rfl.cuenta_id =new Long(226);
+	    			rfl.precio= new BigDecimal(data.get("monto").textValue());
+	    			rfl.cantidad=new BigDecimal(data.get("cantidad").textValue());
+	    			rfl.udm_id= new Long(1);
+	    			rfl.create_usuario_id= new Long(1);
+	    			rfl.create_date = new Date();
+	    			rfl.save();
 
 
+	    		}
     		}
 
 
