@@ -1081,6 +1081,16 @@ public class ProductosController extends Controller {
 			Logger.debug("-------asJson()------------ "+data.get("productoNombre"));
 		}
 
+		List<RecuperoFactura> rff = RecuperoFactura.find.where()
+									.disjunction()
+									.eq("id_factura_materno", new Long(json.get("idfactura").asInt()))
+									.endJunction()
+									.findList();
+		if(rff.size()>0) {
+			return ok("ERROR - YA SE ENCUENTRA CARGA LA FACTURA: "+json.get("idfactura").asInt());
+		}
+
+
     	try{
 
 
@@ -1088,15 +1098,15 @@ public class ProductosController extends Controller {
 
     		List<Cliente> lc = new ArrayList<Cliente>();
 
-    		if(json.get("tipo_doc_id").textValue() == "80" || json.get("tipo_doc_id").textValue() == "86") {
+    		if(json.get("tipo_doc_id").textValue().compareTo("80") == 0 || json.get("tipo_doc_id").textValue().compareTo("86") == 0) {
 
-    					lc = Cliente.find.where().eq("cuit2",json.get("doc").textValue()).findList();
+    			lc = Cliente.find.where().eq("cuit2",json.get("doc").textValue()).findList();
 
-    		}else if(json.get("tipo_doc_id").textValue() == "96"){
+    		}else if(json.get("tipo_doc_id").textValue().compareTo("96") == 0){
 
     			lc = Cliente.find.where().eq("dni",new Integer(json.get("doc").asText())).findList();
 
-    		}else if(json.get("tipo_doc_id").textValue() == "91"){
+    		}else if(json.get("tipo_doc_id").textValue().compareTo("91") == 0){
 
     			lc = Cliente.find.where().eq("cie",json.get("doc").textValue()).findList();
 
