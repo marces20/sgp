@@ -791,8 +791,14 @@ public class ProductosController extends Controller {
     	try{
 
     		RecuperoFactura rf = RecuperoFactura.find.where().eq("id_factura_materno", json.get("factura_assoc_id").asInt()).findUnique();
+    		Integer nro = new Integer(json.get("nrofactura").textValue());
 
-    		if(rf != null) {
+    		List<RecuperoNotaDebito> rffnro = RecuperoNotaDebito.find.where()
+					.eq("numero", NumberUtils.agregarCerosAlaIzquierda(nro,8))
+					.eq("puntoventa_id", 7)
+					.findList();
+
+    		if(rf != null && rffnro.size() == 0) {
 
     			Long idProducto = null;
 
@@ -834,8 +840,9 @@ public class ProductosController extends Controller {
 
 
 	    		RecuperoNotaDebito nc = new RecuperoNotaDebito();
-	    		Integer nro = new Integer(json.get("nrofactura").textValue());
+
 	    		nc.recupero_factura_id = rf.id;//nro;
+	    		nc.id_nota_materno = json.get("idfactura").asInt();
 
 
 	    		nc.producto_id = idProducto;
@@ -868,6 +875,7 @@ public class ProductosController extends Controller {
 
     public static Result cargaNcMaterno() {
     	JsonNode json = Controller.request().body().asJson();
+
     	Logger.debug("idfactura -> " + json.get("idfactura").asInt());//x
 		Logger.debug("cuit------------------------------ "+json.get("cuit").textValue());
     	Logger.debug("razonsocial------------------------------ "+json.get("razonsocial").textValue());
@@ -891,8 +899,14 @@ public class ProductosController extends Controller {
     	try{
 
     		RecuperoFactura rf = RecuperoFactura.find.where().eq("id_factura_materno", json.get("factura_assoc_id").asInt()).findUnique();
+    		Integer nro = new Integer(json.get("nrofactura").textValue());
 
-    		if(rf != null) {
+    		List<RecuperoNotaCredito> rffnro = RecuperoNotaCredito.find.where()
+					.eq("numero", NumberUtils.agregarCerosAlaIzquierda(nro,8))
+					.eq("puntoventa_id", 7)
+					.findList();
+
+    		if(rf != null && rffnro.size() == 0) {
 
     			Long idProducto = null;
 
@@ -934,9 +948,9 @@ public class ProductosController extends Controller {
 
 
 	    		RecuperoNotaCredito nc = new RecuperoNotaCredito();
-	    		Integer nro = new Integer(json.get("nrofactura").textValue());
-	    		nc.recupero_factura_id = rf.id;//nro;
 
+	    		nc.recupero_factura_id = rf.id;//nro;
+	    		nc.id_nota_materno = json.get("idfactura").asInt();
 
 	    		nc.producto_id = idProducto;
 
