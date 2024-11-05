@@ -95,7 +95,7 @@ public class RecuperoNotaDebito extends Model{
 
 	public String nota;
 
-	public Long id_nota_materno;
+	public Integer id_nota_materno;
 
 
 	public BigDecimal getTotal(){

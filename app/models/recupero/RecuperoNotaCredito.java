@@ -96,7 +96,7 @@ public class RecuperoNotaCredito extends Model{
 
 	public String nota;
 
-	public Long id_nota_materno;
+	public Integer id_nota_materno;
 
 	public BigDecimal getTotal(){
 		return cantidad.multiply(precio).setScale(2, RoundingMode.HALF_UP);
