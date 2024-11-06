@@ -804,7 +804,7 @@ public class ProductosController extends Controller {
 		    	rp.textoTipoPago = "transferencia";
 		    	rp.create_usuario_id = new Long(1);;
 		    	rp.create_date = new Date();
-		    	rp.estado_id = (long) Estado.RECUPERO_PAGO_BORRADOR;
+		    	rp.estado_id = (long) Estado.RECUPERO_PAGO_PAGADO;
 
 		    	Integer nro = new Integer(json.get("nro").textValue());
 
@@ -815,11 +815,7 @@ public class ProductosController extends Controller {
 		    	rp.id_materno_pago = json.get("id").asInt();
 		    	rp.save();
 
-		    	rp.estado_id =  (long) Estado.RECUPERO_PAGO_ENCURSO;
-		    	rp.save();
 
-		    	rp.estado_id =  (long) Estado.RECUPERO_PAGO_PAGADO;
-		    	rp.save();
 
 		    	return ok("OK - SE INSERTO EL PAGO CON EL ID:"+ rp.id);
     		}else {
