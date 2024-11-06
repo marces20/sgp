@@ -29,6 +29,7 @@ import models.recupero.RecuperoFactura;
 import models.recupero.RecuperoFacturaLinea;
 import models.recupero.RecuperoNotaCredito;
 import models.recupero.RecuperoNotaDebito;
+import models.recupero.RecuperoPago;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ArrayNode;
@@ -764,6 +765,73 @@ public class ProductosController extends Controller {
     	$response = curl_exec ($handler);
     	curl_close($handler);
     	*/
+    }
+
+    public static Result cargaPagoMaterno() {
+
+    	/*{
+    	    "id": "221",
+    	    "pv_id": 7,
+    	    "nro": "1",
+    	    "cuit": "33628185889",
+    	    "factura_id": "385",
+    	    "monto": "6509.00",
+    	    "fecha": "2022-07-01"
+    	}*/
+    	JsonNode json = Controller.request().body().asJson();
+
+    	Logger.debug("id------------------------------ "+json.get("id").asInt());//x
+    	Logger.debug("pv_id------------------------------ "+json.get("pv_id").textValue());//x
+    	Logger.debug("nro------------------------------ "+json.get("nro").textValue());//x
+
+    	Logger.debug("cuit------------------------------ "+json.get("cuit").textValue());
+    	Logger.debug("factura_id------------------------------ "+json.get("factura_id").asInt());//x
+    	Logger.debug("monto------------------------------ "+json.get("monto").asDouble());//x
+    	Logger.debug("fecha------------------------------ "+json.get("fecha").textValue());//x
+
+    	try {
+
+    		RecuperoFactura rf = RecuperoFactura.find.where().eq("id_factura_materno", json.get("factura_id").asInt()).findUnique();
+
+    		if(rf != null) {
+
+		    	RecuperoPago rp = new RecuperoPago();
+		    	rp.recupero_factura_id = rf.id.intValue();
+
+		    	BigDecimal  total  = new BigDecimal(json.get("monto").textValue());
+
+		    	rp.total = total;
+		    	rp.textoTipoPago = "transferencia";
+		    	rp.create_usuario_id = new Long(1);;
+		    	rp.create_date = new Date();
+		    	rp.estado_id = (long) Estado.RECUPERO_PAGO_BORRADOR;
+
+		    	Integer nro = new Integer(json.get("nro").textValue());
+
+
+		    	rp.nota = "Pto venta Materno: "+json.get("pv_id").textValue()+"-"+NumberUtils.agregarCerosAlaIzquierda(nro,8);
+		    	rp.fecha =  DateUtils.formatDate(json.get("fecha").textValue(), "yyyy-MM-dd");;
+		    	rp.cliente_id = rf.cliente_id;
+		    	rp.id_materno_pago = json.get("id").asInt();
+		    	rp.save();
+
+		    	rp.estado_id =  (long) Estado.RECUPERO_PAGO_ENCURSO;
+		    	rp.save();
+
+		    	rp.estado_id =  (long) Estado.RECUPERO_PAGO_PAGADO;
+		    	rp.save();
+
+		    	return ok("OK - SE INSERTO EL PAGO CON EL ID:"+ rp.id);
+    		}else {
+    			return ok("ERROR - PAGO NO SE ENCUENTRA EL ID FACTURA MATERNO: "+ json.get("factura_id").asInt());
+    		}
+
+    	}catch (Exception e) {
+    		return ok("ERROR - PAGO: "+ e);
+		}
+
+
+
     }
 
     public static Result cargaNdMaterno() {
