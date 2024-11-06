@@ -64,6 +64,8 @@ private static final long serialVersionUID = 1L;
 
 	public Long pago_principal_id;
 
+	public Integer id_materno_pago;
+
 	@Required(message="Debe escribir una fecha")
 	@Formats .DateTime(pattern="dd/MM/yyyy")
 	public Date fecha;
