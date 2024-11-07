@@ -810,7 +810,7 @@ public class ProductosController extends Controller {
 
 
 		    	rp.nota = "Pto venta Materno: "+json.get("pv_id").textValue()+"-"+NumberUtils.agregarCerosAlaIzquierda(nro,8);
-		    	rp.fecha =  DateUtils.formatDate(json.get("fecha").textValue(), "yyyy-MM-dd");;
+		    	rp.fecha =  DateUtils.formatDate(json.get("fecha").textValue(), "yyyy-MM-dd");
 		    	rp.cliente_id = rf.cliente_id;
 		    	rp.id_materno_pago = json.get("id").asInt();
 		    	rp.save();
@@ -925,15 +925,15 @@ public class ProductosController extends Controller {
 	    		nc.fecha_vencimiento= DateUtils.formatDate(json.get("fecha_vencimiento").textValue(), "yyyy-MM-dd");
 
 	    		nc.save();
+	    		return ok("OK - SE INSERTO ND ");
     		}else {
-    			return ok("NO SE ENCUENTRA LA FACTURA MATERNO");
+    			return ok("ERROR ND - NO SE ENCUENTRA LA FACTURA MATERNO"+json.get("factura_assoc_id").asInt());
     		}
 
 
     	}catch (Exception e) {
-    		return ok("ERROR ND "+e);
+    		return ok("ERROR - ND:"+json.get("factura_assoc_id").asInt()+" "+e);
 		}
-    	return ok();
 
     }
 
@@ -1032,15 +1032,17 @@ public class ProductosController extends Controller {
 	    		nc.fecha_vencimiento= DateUtils.formatDate(json.get("fecha_vencimiento").textValue(), "yyyy-MM-dd");
 
 	    		nc.save();
+	    		return ok("OK - SE INSERTO NC ");
     		}else {
-    			return ok("NO SE ENCUENTRA LA FACTURA MATERNO");
+    			return ok("ERROR NC - NO SE ENCUENTRA LA FACTURA MATERNO: "+json.get("factura_assoc_id").asInt());
     		}
 
 
     	}catch (Exception e) {
-    		return ok("ERROR NC "+e);
+
+    		return ok("ERROR - NC:"+json.get("factura_assoc_id").asInt()+" "+e);
 		}
-    	return ok();
+
     }
 
     public static Result cargaFacturaMaterno() {
@@ -1334,12 +1336,14 @@ public class ProductosController extends Controller {
 	    		}
     		}
 
+    		return ok("OK - SE INSERTO FACTURA: "+json.get("idfactura").asInt());
 
 
     	}catch(Exception e){
     		Logger.debug("------------------------------ "+e);
+    		return ok("ERROR - YA SE ENCUENTRA CARGA LA FACTURA: "+json.get("idfactura").asInt()+" "+e);
     	}
 
-    	return ok();
+
 	}
 }
