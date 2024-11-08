@@ -316,6 +316,7 @@ POST     /compras/factura/cargaFacturaMaterno	controllers.compras.ProductosContr
 POST     /compras/factura/cargaNcMaterno		controllers.compras.ProductosController.cargaNcMaterno()
 POST     /compras/factura/cargaNdMaterno	controllers.compras.ProductosController.cargaNdMaterno()
 POST     /compras/factura/cargaPagoMaterno	controllers.compras.ProductosController.cargaPagoMaterno()
+POST     /compras/factura/deletePagoMaterno	controllers.compras.ProductosController.deletePagoMaterno()
 
 GET     /compras/categorias         		controllers.compras.CategoriasController.indexCategoria()
 GET     /compras/categorias/crear           controllers.compras.CategoriasController.crearCategoria()
