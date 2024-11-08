@@ -771,12 +771,13 @@ public class ProductosController extends Controller {
     	JsonNode json = Controller.request().body().asJson();
 
     	Logger.debug("id------------------------------ "+json.get("id").asInt());//x
+    	Logger.debug("nota------------------------------ "+json.get("nota").textValue());//x
     	RecuperoPago rpp = RecuperoPago.find.where().eq("id_materno_pago", json.get("id").asInt()).findUnique();
 		if(rpp == null) {
 			return ok("ERROR - DELETE PAGO MATERNO: "+ json.get("id").asInt()+" NO SE ENCUENTRA INSERTADO");
 		}else {
 			rpp.estado_id = (long) Estado.RECUPERO_PAGO_CANCELADO;
-			rpp.nota = rpp.nota + " - BORRADO DESDE MATERNO:";
+			rpp.nota = rpp.nota + " - BORRADO DESDE MATERNO:"+json.get("nota").textValue();
 			rpp.write_date = new Date();
 			rpp.save();
 			return ok("OK -DELETE PAGO MATERNO: "+ json.get("id").asInt());
