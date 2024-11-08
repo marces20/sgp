@@ -777,6 +777,7 @@ public class ProductosController extends Controller {
 		}else {
 			rpp.estado_id = (long) Estado.RECUPERO_PAGO_CANCELADO;
 			rpp.nota = rpp.nota + " - BORRADO DESDE MATERNO:";
+			rpp.write_date = new Date();
 			rpp.save();
 			return ok("OK -DELETE PAGO MATERNO: "+ json.get("id").asInt());
 		}
