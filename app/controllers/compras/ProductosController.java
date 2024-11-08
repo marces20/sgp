@@ -767,6 +767,21 @@ public class ProductosController extends Controller {
     	*/
     }
 
+    public static Result deletePagoMaterno() {
+    	JsonNode json = Controller.request().body().asJson();
+
+    	Logger.debug("id------------------------------ "+json.get("id").asInt());//x
+    	RecuperoPago rpp = RecuperoPago.find.where().eq("id_materno_pago", json.get("id").asInt()).findUnique();
+		if(rpp == null) {
+			return ok("ERROR - DELETE PAGO MATERNO: "+ json.get("id").asInt()+" NO SE ENCUENTRA INSERTADO");
+		}else {
+			rpp.estado_id = (long) Estado.RECUPERO_PAGO_CANCELADO;
+			rpp.nota = rpp.nota + " - BORRADO DESDE MATERNO:";
+			rpp.save();
+			return ok("OK -DELETE PAGO MATERNO: "+ json.get("id").asInt());
+		}
+    }
+
     public static Result cargaPagoMaterno() {
 
     	/*{
@@ -790,6 +805,11 @@ public class ProductosController extends Controller {
     	Logger.debug("fecha------------------------------ "+json.get("fecha").textValue());//x
 
     	try {
+    		RecuperoPago rpp = RecuperoPago.find.where().eq("id_materno_pago", json.get("id").asInt()).findUnique();
+    		if(rpp != null) {
+    			return ok("ERROR - PAGO MATERNO: "+ json.get("id").asInt()+" YA SE ENCUENTRA INSERTADO");
+    		}
+
 
     		RecuperoFactura rf = RecuperoFactura.find.where().eq("id_factura_materno", json.get("factura_id").asInt()).findUnique();
 
@@ -809,7 +829,7 @@ public class ProductosController extends Controller {
 		    	Integer nro = new Integer(json.get("nro").textValue());
 
 
-		    	rp.nota = "Pto venta Materno: "+json.get("pv_id").textValue()+"-"+NumberUtils.agregarCerosAlaIzquierda(nro,8);
+		    	rp.nota = "Pto venta Materno: 0007-"+NumberUtils.agregarCerosAlaIzquierda(nro,8);
 		    	rp.fecha =  DateUtils.formatDate(json.get("fecha").textValue(), "yyyy-MM-dd");
 		    	rp.cliente_id = rf.cliente_id;
 		    	rp.id_materno_pago = json.get("id").asInt();
