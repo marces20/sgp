@@ -151,9 +151,9 @@ public class AgenteAsistenciaLicencia extends Model{
 			int YEARHASTAHOY = calendarHoy.get(Calendar.YEAR) - calendar.get(Calendar.YEAR);
 
 
-			if(calendar.get(Calendar.MONTH) > 6) { // INGRESO despues de julio
+			if(calendar.get(Calendar.MONTH) > 6) { // INGRESO despues de julio INCLUSIVEEE .. osea 31/07
 				YEAR = calendar.get(Calendar.YEAR)+1;
-			}else {// INGRESO antes de julio
+			}else {// INGRESO antes de julio... INCLUSIVEEE .. osea 31/07
 
 			}
 
