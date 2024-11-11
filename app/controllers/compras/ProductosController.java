@@ -939,7 +939,7 @@ public class ProductosController extends Controller {
 	    		nc.udm_id= new Long(1);
 	    		nc.create_usuario_id= new Long(1);
 	    		nc.create_date= new Date();
-	    		nc.fecha = DateUtils.formatDate(json.get("fecha_desde").textValue(), "yyyy-MM-dd");
+	    		nc.fecha = DateUtils.formatDate(json.get("fecha_emision").textValue(), "yyyy-MM-dd");
 
 	     		nc.numero= NumberUtils.agregarCerosAlaIzquierda(nro,8);
 	    		nc.puntoventa_id = 7;
@@ -1046,7 +1046,7 @@ public class ProductosController extends Controller {
 	    		nc.udm_id= new Long(1);
 	    		nc.create_usuario_id= new Long(1);
 	    		nc.create_date= new Date();
-	    		nc.fecha = DateUtils.formatDate(json.get("fecha_desde").textValue(), "yyyy-MM-dd");
+	    		nc.fecha = DateUtils.formatDate(json.get("fecha_emision").textValue(), "yyyy-MM-dd");
 
 	     		nc.numero= NumberUtils.agregarCerosAlaIzquierda(nro,8);
 	    		nc.puntoventa_id = 7;
