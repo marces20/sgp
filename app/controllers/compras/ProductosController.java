@@ -807,7 +807,7 @@ public class ProductosController extends Controller {
     	Logger.debug("fecha------------------------------ "+json.get("fecha").textValue());//x
 
     	try {
-    		RecuperoPago rpp = RecuperoPago.find.where().eq("id_materno_pago", json.get("id").asInt()).findUnique();
+    		RecuperoPago rpp = RecuperoPago.find.where().eq("id_materno_pago", json.get("id").asInt()).eq("estado_id", Estado.RECUPERO_PAGO_PAGADO).findUnique();
     		if(rpp != null) {
     			return ok("ERROR - PAGO MATERNO: "+ json.get("id").asInt()+" YA SE ENCUENTRA INSERTADO");
     		}
