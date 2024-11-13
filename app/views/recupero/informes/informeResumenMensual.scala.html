@@ -1,0 +1,153 @@
+@(p:List[models.Periodo],orx:java.util.Map[Integer,String],ret: java.util.Map[String,java.util.Map[String,java.util.Map[String,java.math.BigDecimal]]])
+@import helper._
+@implicitFieldConstructor = @{ FieldConstructor(simpleInput.render) }
+@import utils._
+@import java.math.BigDecimal;var total=new java.math.BigDecimal(0);var totaltmp=new java.math.BigDecimal(0);var tmpT=new java.math.BigDecimal(0);var totaltmp2=new java.math.BigDecimal(0);var totalPorcentaje=new java.math.BigDecimal(0);var totalPorcentajeTmp=new java.math.BigDecimal(0);
+@import java.util.HashMap;var totales=new java.util.HashMap[String,java.math.BigDecimal];var totalesTmp=new java.util.HashMap[String,java.math.BigDecimal];var ordenRubroTmp=new java.util.HashMap[String,java.util.HashMap[String,java.math.BigDecimal]];
+
+@replace(i:String) = @{
+	var ret:String = new String()
+
+	ret = i.replace("AAA", "")
+	ret
+}
+
+@scripts = {
+	<script src="@routes.Assets.at("javascripts/recupero/recuperoFactura.js")" type="text/javascript"></script>
+}
+@views.html.informes.mainInformes(title = "Informe Resumen Facturacion Mensual", scripts) {
+
+<div class="page-header">
+	<div class="row">
+		<div class="col-sm-4">
+			<h1>Informe Resumen Facturación Mensual </h1>
+		</div>
+
+		<div class="col-sm-4">
+			<h2> <b style="color: red;">SUJETO A REVISION</b></h2>
+		</div>
+
+	</div>
+</div>
+
+<table class="table table-bordered">
+	@for((key,value) <- ret) {
+
+			<tr>
+
+				<td colspan="15" align="center">
+					<span style="font-size: 20px;font-weight: bold;">@replace(key)</span>
+					@if(replace(key) == "PARQUE DE LA SALUD"){
+						<img src="/assets/images/logo-solo.png" width="250" height="200"/>
+					}
+					@if(key == "HOSPITAL ESCUELA DE AGUDOS"){
+						<img src="/assets/images/logo-hearm.png" width="200" height="200"/>
+					}
+					@if(key == "HOSPITAL FATIMA"){
+						<img src="/assets/images/logo-fatima.jpeg" width="200" height="200"/>
+					}
+					@if(key == "HOSPITAL MATERNO NEONATAL"){
+						<img src="/assets/images/logo-materno.jpeg" width="200" height="200"/>
+					}
+					@if(key == "HOSPITAL SAMIC DE OBERA"){
+						<img src="/assets/images/logo-obera.jpeg" width="200" height="200"/>
+					}
+					@if(key == "INSTITUTO MISIONERO DEL CANCER"){
+						<img src="/assets/images/logo-imc.png" width="200" height="200"/>
+					}
+					@if(key == "LACMI"){
+						<img src="/assets/images/logo-lacmi.png" width="200" height="200"/>
+					}
+
+					@if(key == "HOSPITAL PEDIATRICO"){
+						<img src="/assets/images/logo-pediatria.jpg" width="200" height="200"/>
+					}
+
+					@if(key == "INSTITUTO DE GENETICA HUMANA"){
+						<img src="/assets/images/logo-igh.jpeg" width="200" height="200"/>
+					}
+				</td>
+			</tr>
+
+			<tr>
+				<td colspan="" width="200"></td>
+				@for(valuep <- p) {
+					<td align="center" colspan="2"><span style="font-weight: bold;">@valuep.nombre</span></td>
+				}
+			</tr>
+			@{totales=new java.util.HashMap[String,java.math.BigDecimal]}
+
+			@for((key2,value2) <- value) {
+				<tr>
+					<td  align="left" ><span style="font-weight: bold;">@key2</span></td>
+					@{totalPorcentajeTmp=new java.math.BigDecimal(0)}
+					@{totalPorcentaje=new java.math.BigDecimal(0)}
+
+					@for(valuep <- p) {
+						<td  align="center"><a style="cursor: pointer;" data-url=""
+						class="infoObligaciones" >@utils.NumberUtils.monedaSinDecimales(value2.get(valuep.nombre))</a></td>
+
+
+						@if(value2.get(valuep.nombre)== null){
+							@{tmpT = new java.math.BigDecimal(0)}
+						}else{
+							@{tmpT = value2.get(valuep.nombre)}
+						}
+
+						@if(totalPorcentajeTmp.compareTo(new java.math.BigDecimal(0)) != 0 ){
+							@{ totalPorcentaje = tmpT.divide(totalPorcentajeTmp, 2, java.math.RoundingMode.HALF_UP).subtract(new java.math.BigDecimal(1)).multiply(new java.math.BigDecimal(100))  }
+						}else{
+
+						}
+
+
+						<td align="center" >
+							@if(totalPorcentaje.compareTo(new java.math.BigDecimal(20)) > 0){
+								<span style="color:red;font-weight: bold;">
+							}else{
+								<span>
+							}
+									@totalPorcentaje %
+								</span>
+						</td>
+
+							@if(totales.containsKey(valuep.nombre)){
+
+
+									@{totaltmp = totales.get(valuep.nombre)}
+
+
+
+								@if(value2.get(valuep.nombre) != null){
+									@if(totaltmp != null){
+
+										@{totaltmp  = totaltmp.add(value2.get(valuep.nombre))}
+									}else{
+										@{totaltmp  = new java.math.BigDecimal(0)}
+									}
+								}
+
+
+								@{totaltmp2 = totales.put(valuep.nombre,totaltmp)}
+
+
+							}else{
+								@{totaltmp2 = totales.put(valuep.nombre,value2.get(valuep.nombre))}
+							}
+
+							@{ totalPorcentajeTmp = tmpT}
+					}
+				</tr>
+
+			}
+				<tr>
+					<td  align="right"><span style="font-size: 20px;font-weight: bold;">TOTALES</span></td>
+					@for(valuepx <- p) {
+						<td  align="center"><span style="font-size: 15px;font-weight: bold;">@utils.NumberUtils.monedaSinDecimales(totales.get(valuepx.nombre))</span></td>
+						<td></td>
+					}
+				</tr>
+	}
+
+</table>
+}
