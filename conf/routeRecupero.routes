@@ -108,6 +108,7 @@ GET    /reporte/presupuesto 			controllers.recupero.PresupuestosReportesControll
 
 GET    /recupero/reportes/deudas          	  controllers.recupero.RecuperoReportesController.informeDeuda()
 GET    /recupero/reportes/informeGeneral      controllers.recupero.RecuperoReportesController.informeGeneral()
+GET    /reportes/informeResumenFacturacionMensual      controllers.recupero.RecuperoReportesController.informeResumenFacturacionMensual()
 GET    /archivo/deudas          			  controllers.recupero.RecuperoReportesController.archivoInformeDeuda()
 GET    /archivo/archivoInformeGeneral         controllers.recupero.RecuperoReportesController.archivoInformeGeneral()
 
