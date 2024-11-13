@@ -453,7 +453,7 @@ public class BalanceController extends Controller {
 					linea= "";
 					linea += StringUtils.alfanumericoPadStart(b1.asiento.toString(),6);// Número de asiento (6 posiciones).
 					linea += StringUtils.alfanumericoPadStart(fechac, 8);//Fecha de asiento (8 posiciones: aaaammdd).
-					linea += StringUtils.alfanumerico(b1.cuenta.nombre, 30);//Concepto (30 posiciones).
+					linea += StringUtils.alfanumerico(b1.cuenta.nombre.replace("ñ", "n"), 30);//Concepto (30 posiciones).
 					linea += StringUtils.alfanumericoPadStart("R", 1);//Tipo (1 posición; <R> = Real, <P>= Presupuestado, <A> = Apertura).
 					linea += StringUtils.alfanumericoPadStart("1", 3);//Código de moneda del asiento (3 posiciones ; 1= Moneda de curso legal).
 					linea += StringUtils.alfanumericoPadStart("", 3);//Código de asiento automático (3 posiciones);
