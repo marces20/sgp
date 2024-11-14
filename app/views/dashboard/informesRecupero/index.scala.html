@@ -4,8 +4,7 @@
 @import models.auth._
 @implicitFieldConstructor = @{ FieldConstructor(simpleInput.render) }
 
-@views.html.dashboard.mainDashboard("Informes Recupero") {
-
+ @views.html.informes.mainInformes("Informes Recupero") {
 <div class="page-header">
 	<div class="row">
 		<div class="col-sm-7">
@@ -17,7 +16,7 @@
 @views.html.dashboard.informesRecupero.navinformes()
 <div class="row"  style="">
 	<div class="col-sm-3" style="">
-		 
+
 		<div class="panel panel-default">
 			<div class="panel-heading"><b>Descargas</b></div>
 			<div class="panel-body">
@@ -30,5 +29,5 @@
 			</div>
 		</div>
 	</div>
-</div>	
+</div>
 }
