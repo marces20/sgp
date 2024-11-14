@@ -13,12 +13,13 @@ deudasPorSeguro:List[com.avaje.ebean.SqlRow]
 @import java.lang.Integer;var clienteId =0;var bandera =0
 @import java.lang.String;var clienteNombre =""
 
-@views.html.dashboard.mainDashboard("Deudas Recupero") {				
-						
- 
+
+
+ @views.html.informes.mainInformes("Deudas Recupero ") {
+
 
 @views.html.dashboard.informesRecupero.navinformes()
-				
+
 
 <div class="page-header">
 	<div class="row">
@@ -34,7 +35,7 @@ deudasPorSeguro:List[com.avaje.ebean.SqlRow]
 			  </button>
 			  <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
 			  	<li role="presentation">
-				  <a id="" role="menuitem" tabindex="-1" 
+				  <a id="" role="menuitem" tabindex="-1"
 				  href="@controllers.dashboard.routes.InformesRecuperoReportesController.deudasPorTipoDeCliente(idTipoCliente)">Reporte Excel</a></li>
 			  </ul>
 			</div>
@@ -49,19 +50,19 @@ deudasPorSeguro:List[com.avaje.ebean.SqlRow]
 			@views.html.dashboard.informesRecupero.tablaDetalleDeudas("Pacientes")
 			<tbody>
 				@for(s <- deudasPorPaciente){
-					
+
 					@{ptfactura = ptfactura.add(s.getBigDecimal("total_factura"))}
 					@{ptpago = ptpago.add(s.getBigDecimal("total_pago"))}
 					@{ptdeuda = ptdeuda.add(s.getBigDecimal("total_deuda"))}
-					 
+
 					 <tr style="background-color:#ffffff;">
 						<td>@s.getString("cliente_nombre")</td>
 						<td>@utils.NumberUtils.moneda(s.getBigDecimal("total_factura"))</td>
 						<td>@utils.NumberUtils.moneda(s.getBigDecimal("total_pago"))</td>
 						<td>@utils.NumberUtils.moneda(s.getBigDecimal("total_deuda"))</td>
-					</tr> 
-					
-					
+					</tr>
+
+
 					@{mtfactura= mtfactura.add(s.getBigDecimal("total_factura"))}
 					@{mtpago= mtpago.add(s.getBigDecimal("total_pago"))}
 					@{mtdeuda= mtdeuda.add(s.getBigDecimal("total_deuda"))}
@@ -77,9 +78,9 @@ deudasPorSeguro:List[com.avaje.ebean.SqlRow]
 					<td><b>@utils.NumberUtils.moneda(ptdeuda)</b></td>
 				</tr>
 			</tfoot>
-		</table>			
+		</table>
 	</div>
-</div>	
+</div>
 }
 
 @if(deudasPorExtrajero.size() >0){
@@ -92,19 +93,19 @@ deudasPorSeguro:List[com.avaje.ebean.SqlRow]
 				@{ptpago = new java.math.BigDecimal(0)}
 				@{ptdeuda = new java.math.BigDecimal(0)}
 				@for(s <- deudasPorExtrajero){
-					
+
 					@{ptfactura = ptfactura.add(s.getBigDecimal("total_factura"))}
 					@{ptpago = ptpago.add(s.getBigDecimal("total_pago"))}
 					@{ptdeuda = ptdeuda.add(s.getBigDecimal("total_deuda"))}
-					 
+
 					 <tr style="background-color:#ffffff;">
 						<td>@s.getString("cliente_nombre")</td>
 						<td>@utils.NumberUtils.moneda(s.getBigDecimal("total_factura"))</td>
 						<td>@utils.NumberUtils.moneda(s.getBigDecimal("total_pago"))</td>
 						<td>@utils.NumberUtils.moneda(s.getBigDecimal("total_deuda"))</td>
-					</tr> 
-					
-					
+					</tr>
+
+
 					@{mtfactura= mtfactura.add(s.getBigDecimal("total_factura"))}
 					@{mtpago= mtpago.add(s.getBigDecimal("total_pago"))}
 					@{mtdeuda= mtdeuda.add(s.getBigDecimal("total_deuda"))}
@@ -122,7 +123,7 @@ deudasPorSeguro:List[com.avaje.ebean.SqlRow]
 			</tfoot>
 		</table>
 	</div>
-</div>	
+</div>
 }
 
 @if(deudasPorObrasSociales.size() >0){
@@ -135,19 +136,19 @@ deudasPorSeguro:List[com.avaje.ebean.SqlRow]
 				@{ptpago = new java.math.BigDecimal(0)}
 				@{ptdeuda = new java.math.BigDecimal(0)}
 				@for(s <- deudasPorObrasSociales){
-					
+
 					@{ptfactura = ptfactura.add(s.getBigDecimal("total_factura"))}
 					@{ptpago = ptpago.add(s.getBigDecimal("total_pago"))}
 					@{ptdeuda = ptdeuda.add(s.getBigDecimal("total_deuda"))}
-					 
+
 					 <tr style="background-color:#ffffff;">
 						<td>@s.getString("cliente_nombre")</td>
 						<td>@utils.NumberUtils.moneda(s.getBigDecimal("total_factura"))</td>
 						<td>@utils.NumberUtils.moneda(s.getBigDecimal("total_pago"))</td>
 						<td>@utils.NumberUtils.moneda(s.getBigDecimal("total_deuda"))</td>
-					</tr> 
-					
-					
+					</tr>
+
+
 					@{mtfactura= mtfactura.add(s.getBigDecimal("total_factura"))}
 					@{mtpago= mtpago.add(s.getBigDecimal("total_pago"))}
 					@{mtdeuda= mtdeuda.add(s.getBigDecimal("total_deuda"))}
@@ -165,7 +166,7 @@ deudasPorSeguro:List[com.avaje.ebean.SqlRow]
 			</tfoot>
 		</table>
 	</div>
-</div>	
+</div>
 }
 
 @if(deudasPorSeguro.size() >0){
@@ -178,19 +179,19 @@ deudasPorSeguro:List[com.avaje.ebean.SqlRow]
 				@{ptpago = new java.math.BigDecimal(0)}
 				@{ptdeuda = new java.math.BigDecimal(0)}
 				@for(s <- deudasPorSeguro){
-					
+
 					@{ptfactura = ptfactura.add(s.getBigDecimal("total_factura"))}
 					@{ptpago = ptpago.add(s.getBigDecimal("total_pago"))}
 					@{ptdeuda = ptdeuda.add(s.getBigDecimal("total_deuda"))}
-					 
+
 					 <tr style="background-color:#ffffff;">
 						<td>@s.getString("cliente_nombre")</td>
 						<td>@utils.NumberUtils.moneda(s.getBigDecimal("total_factura"))</td>
 						<td>@utils.NumberUtils.moneda(s.getBigDecimal("total_pago"))</td>
 						<td>@utils.NumberUtils.moneda(s.getBigDecimal("total_deuda"))</td>
-					</tr> 
-					
-					
+					</tr>
+
+
 					@{mtfactura= mtfactura.add(s.getBigDecimal("total_factura"))}
 					@{mtpago= mtpago.add(s.getBigDecimal("total_pago"))}
 					@{mtdeuda= mtdeuda.add(s.getBigDecimal("total_deuda"))}
@@ -222,19 +223,19 @@ deudasPorSeguro:List[com.avaje.ebean.SqlRow]
 				@{ptpago = new java.math.BigDecimal(0)}
 				@{ptdeuda = new java.math.BigDecimal(0)}
 				@for(s <- deudasPorArt){
-					
+
 					@{ptfactura = ptfactura.add(s.getBigDecimal("total_factura"))}
 					@{ptpago = ptpago.add(s.getBigDecimal("total_pago"))}
 					@{ptdeuda = ptdeuda.add(s.getBigDecimal("total_deuda"))}
-					 
+
 					 <tr style="background-color:#ffffff;">
 						<td>@s.getString("cliente_nombre")</td>
 						<td>@utils.NumberUtils.moneda(s.getBigDecimal("total_factura"))</td>
 						<td>@utils.NumberUtils.moneda(s.getBigDecimal("total_pago"))</td>
 						<td>@utils.NumberUtils.moneda(s.getBigDecimal("total_deuda"))</td>
-					</tr> 
-					
-					
+					</tr>
+
+
 					@{mtfactura= mtfactura.add(s.getBigDecimal("total_factura"))}
 					@{mtpago= mtpago.add(s.getBigDecimal("total_pago"))}
 					@{mtdeuda= mtdeuda.add(s.getBigDecimal("total_deuda"))}
@@ -252,7 +253,7 @@ deudasPorSeguro:List[com.avaje.ebean.SqlRow]
 			</tfoot>
 		</table>
 	</div>
-</div>	
+</div>
 }
 
 }
