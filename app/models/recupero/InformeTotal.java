@@ -171,7 +171,7 @@ public class InformeTotal extends Model {
 		if(idTipoCliente != 0){
 			sql += " AND cliente_tipo_id = "+idTipoCliente;
 		}
-		sql +=" GROUP BY cliente_id,tipo_cliente,cliente_nombre ORDER BY cliente_nombre ";
+		sql +=" GROUP BY cliente_id,tipo_cliente,cliente_nombre ORDER BY total_deuda desc ";
 
 
 		SqlQuery sqlQuery = Ebean.createSqlQuery(sql);
