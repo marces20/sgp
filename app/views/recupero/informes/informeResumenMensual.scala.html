@@ -1,4 +1,4 @@
-@(p:List[models.Periodo],orx:java.util.Map[Integer,String],ret: java.util.Map[String,java.util.Map[String,java.util.Map[String,java.math.BigDecimal]]])
+@(p:List[models.Periodo],orx:java.util.Map[Integer,String],ret: java.util.Map[String,java.util.Map[String,java.util.Map[String,java.math.BigDecimal]]],title:String)
 @import helper._
 @implicitFieldConstructor = @{ FieldConstructor(simpleInput.render) }
 @import utils._
@@ -15,12 +15,17 @@
 @scripts = {
 	<script src="@routes.Assets.at("javascripts/recupero/recuperoFactura.js")" type="text/javascript"></script>
 }
-@views.html.informes.mainInformes(title = "Informe Resumen Facturacion Mensual", scripts) {
+
+
+
+@views.html.informes.mainInformes("Informe Mensual ",scripts) {
+
+@views.html.dashboard.informesRecupero.navinformes()
 
 <div class="page-header">
 	<div class="row">
 		<div class="col-sm-4">
-			<h1>Informe Resumen Facturación Mensual </h1>
+			<h1>@title</h1>
 		</div>
 
 		<div class="col-sm-4">
