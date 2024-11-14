@@ -555,7 +555,202 @@ public class RecuperoReportesController extends Controller {
 		}
 
 
-		return ok(informeResumenMensual.render(p,clienteRubro,OrganigramaRubroPeriodoTotalTree));
+		return ok(informeResumenMensual.render(p,clienteRubro,OrganigramaRubroPeriodoTotalTree,"Informe Resumen Facturación Mensual"));
+	}
+
+	public static Result informeResumenPagoMensual() {
+
+
+		Periodo px = Periodo.getPeriodoByDate(new Date());
+		int periodo6meses = px.id.intValue() -5 ;
+		List<Periodo> p = Periodo.find.where().ge("id", periodo6meses).le("id", px.id).orderBy("id asc").findList();
+
+		String sql = "SELECT " +
+				"    round(sum(COALESCE(pa.total, 0::double precision)))  - round(sum(COALESCE(tc.total, 0::double precision))) "+
+				"	 AS total, " +
+				"    ct.nombre AS tipo_cliente, " +
+				"    d.nombre AS deposito, " +
+				"	to_char(f.fecha,'MM/yyyy') as periodo " +
+				"   FROM recupero_pagos pa "
+				+ " LEFT JOIN recupero_facturas f on f.id = pa.recupero_factura_id" +
+				"   LEFT JOIN punto_ventas pv ON pv.id = f.puntoventa_id " +
+				"   LEFT JOIN depositos d ON d.id = pv.deposito_id " +
+				"   LEFT JOIN clientes c ON c.id = f.cliente_id " +
+				"   LEFT JOIN clientes_tipos ct ON ct.id = c.cliente_tipo_id " +
+
+
+				"	LEFT JOIN ( SELECT recupero_notas_creditos.recupero_factura_id, " +
+				"		sum(recupero_notas_creditos.precio * recupero_notas_creditos.cantidad) AS total " +
+				"	   FROM recupero_notas_creditos " +
+				"	  GROUP BY recupero_notas_creditos.recupero_factura_id) tc ON tc.recupero_factura_id = f.id " +
+
+
+				"	where f.fecha >= ?  "+//&BETWEEN '2024-09-01' and '2024-09-30' " +
+				"   group by d.nombre,tipo_cliente,to_char(f.fecha,'MM/yyyy') ";
+
+		SqlQuery sqlQuery = Ebean.createSqlQuery(sql);
+		sqlQuery.setParameter(1, p.get(0).date_start);
+
+		List<SqlRow>  row = sqlQuery.findList();
+
+		Map<String,BigDecimal> periodoTotal = new HashMap<>();
+		Map<String,Map<String,BigDecimal>> rubroPeriodoTotal = new HashMap<>();
+		Map<String,Map<String,Map<String,BigDecimal>>> OrganigramaRubroPeriodoTotal = new HashMap<>();
+
+
+
+		for(SqlRow sr : row) {
+
+			Map<String,BigDecimal> periodoTotalTmp =new HashMap<>();
+			Map<String,Map<String,BigDecimal>> rubroPeriodoTotalTmp = new HashMap<>();
+			Map<String,Map<String,Map<String,BigDecimal>>> OrganigramaRubroPeriodoTotalTmp = new HashMap<>();
+
+			String depo = sr.getString("deposito");
+			String rubro = sr.getString("tipo_cliente");
+			String periodo = sr.getString("periodo");
+			BigDecimal total = sr.getBigDecimal("total");
+
+
+
+			if(OrganigramaRubroPeriodoTotal.containsKey(depo)) {// si esta el organigrama
+
+				rubroPeriodoTotalTmp = OrganigramaRubroPeriodoTotal.get(depo);// traigo el organigrama
+
+				if(OrganigramaRubroPeriodoTotal.get(depo).containsKey(rubro)) {// si tiene el rubro el organigrama
+					OrganigramaRubroPeriodoTotalTmp = OrganigramaRubroPeriodoTotal;
+
+					periodoTotalTmp = rubroPeriodoTotalTmp.get(rubro);
+					periodoTotalTmp.put(periodo, total);
+
+					rubroPeriodoTotalTmp.put(rubro,periodoTotalTmp);
+
+					OrganigramaRubroPeriodoTotalTmp.put(depo,rubroPeriodoTotalTmp);
+
+					OrganigramaRubroPeriodoTotal = OrganigramaRubroPeriodoTotalTmp;
+				}else {
+					periodoTotalTmp.put(periodo, total);
+
+					OrganigramaRubroPeriodoTotalTmp = OrganigramaRubroPeriodoTotal;
+
+					rubroPeriodoTotalTmp = OrganigramaRubroPeriodoTotal.get(depo);
+					rubroPeriodoTotalTmp.put(rubro,periodoTotalTmp);
+
+					OrganigramaRubroPeriodoTotalTmp.put(depo,rubroPeriodoTotalTmp);
+
+					OrganigramaRubroPeriodoTotal = OrganigramaRubroPeriodoTotalTmp;
+				}
+
+			}else {
+
+				periodoTotal = new HashMap<>();
+				periodoTotal.put(periodo, total);
+				rubroPeriodoTotal = new HashMap<>();
+				rubroPeriodoTotal.put(rubro, periodoTotal);
+				OrganigramaRubroPeriodoTotal.put(depo, rubroPeriodoTotal);
+			}
+
+
+		}
+
+		Map<String,Map<String,Map<String,BigDecimal>>> OrganigramaRubroPeriodoTotalTmp = new HashMap<>();
+
+		/////////////////////////////////////////////PARQUEEEEEEEEEEEEEEEEEEEE///////////////////////////
+
+		String sqlParque = "SELECT " +
+				"    round(sum(COALESCE(pa.total, 0::double precision)))  - round(sum(COALESCE(tc.total, 0::double precision))) "+
+				"	 AS total, " +
+				"    ct.nombre AS tipo_cliente, " +
+				"	to_char(f.fecha,'MM/yyyy') as periodo " +
+				"   FROM recupero_pagos pa "
+				+ " LEFT JOIN recupero_facturas f on f.id = pa.recupero_factura_id" +
+				"   LEFT JOIN punto_ventas pv ON pv.id = f.puntoventa_id " +
+				"   LEFT JOIN clientes c ON c.id = f.cliente_id " +
+				"   LEFT JOIN clientes_tipos ct ON ct.id = c.cliente_tipo_id " +
+				"	LEFT JOIN ( SELECT recupero_notas_creditos.recupero_factura_id, " +
+				"		sum(recupero_notas_creditos.precio * recupero_notas_creditos.cantidad) AS total " +
+				"	   FROM recupero_notas_creditos " +
+				"	  GROUP BY recupero_notas_creditos.recupero_factura_id) tc ON tc.recupero_factura_id = f.id " +
+				"	where f.fecha >= ?  "+//&BETWEEN '2024-09-01' and '2024-09-30' " +
+				"   group by  tipo_cliente,to_char(f.fecha,'MM/yyyy') ";
+
+
+
+		SqlQuery sqlQueryParque = Ebean.createSqlQuery(sqlParque);
+		sqlQueryParque.setParameter(1, p.get(0).date_start);
+
+		List<SqlRow>  rowParque = sqlQueryParque.findList();
+
+		Map<String,BigDecimal> periodoTotalParque = new HashMap<>();
+		Map<String,Map<String,BigDecimal>> rubroPeriodoTotalParque = new HashMap<>();
+		Map<String,Map<String,Map<String,BigDecimal>>> OrganigramaRubroPeriodoTotalParque = new HashMap<>();
+
+		for(SqlRow sr : rowParque) {
+
+			Map<String,BigDecimal> periodoTotalTmp =new HashMap<>();
+			Map<String,Map<String,BigDecimal>> rubroPeriodoTotalTmp = new HashMap<>();
+			Map<String,Map<String,Map<String,BigDecimal>>> OrganigramaRubroPeriodoTotalTmpParque = new HashMap<>();
+			String depo = "AAAPARQUE DE LA SALUD";
+			String rubro = sr.getString("tipo_cliente");
+			String periodo = sr.getString("periodo");
+			BigDecimal total = sr.getBigDecimal("total");
+
+			if(OrganigramaRubroPeriodoTotalParque.containsKey(depo)) {// si esta el organigrama
+
+				rubroPeriodoTotalTmp = OrganigramaRubroPeriodoTotalParque.get(depo);// traigo el organigrama
+
+				if(OrganigramaRubroPeriodoTotalParque.get(depo).containsKey(rubro)) {// si tiene el rubro el organigrama
+					OrganigramaRubroPeriodoTotalTmp = OrganigramaRubroPeriodoTotalParque;
+
+					periodoTotalTmp = rubroPeriodoTotalTmp.get(rubro);
+					periodoTotalTmp.put(periodo, total);
+
+					rubroPeriodoTotalTmp.put(rubro,periodoTotalTmp);
+
+					OrganigramaRubroPeriodoTotalTmp.put(depo,rubroPeriodoTotalTmp);
+
+					OrganigramaRubroPeriodoTotalParque = OrganigramaRubroPeriodoTotalTmp;
+				}else {
+					periodoTotalTmp.put(periodo, total);
+
+					OrganigramaRubroPeriodoTotalTmp = OrganigramaRubroPeriodoTotalParque;
+
+					rubroPeriodoTotalTmp = OrganigramaRubroPeriodoTotalParque.get(depo);
+					rubroPeriodoTotalTmp.put(rubro,periodoTotalTmp);
+
+					OrganigramaRubroPeriodoTotalTmp.put(depo,rubroPeriodoTotalTmp);
+
+					OrganigramaRubroPeriodoTotalParque = OrganigramaRubroPeriodoTotalTmp;
+				}
+
+			}else {
+
+				periodoTotal = new HashMap<>();
+				periodoTotal.put(periodo, total);
+				rubroPeriodoTotal = new HashMap<>();
+				rubroPeriodoTotal.put(rubro, periodoTotal);
+				OrganigramaRubroPeriodoTotalParque.put(depo, rubroPeriodoTotal);
+			}
+
+		}
+
+		for(Map.Entry<String,Map<String,Map<String,BigDecimal>>> rubroPeriodoTotalTmp : OrganigramaRubroPeriodoTotal.entrySet()) {
+
+			Map<String,Map<String,BigDecimal>> rubroPeriodoTotalTree = new TreeMap(rubroPeriodoTotalTmp.getValue());
+
+			OrganigramaRubroPeriodoTotalTmp.put(rubroPeriodoTotalTmp.getKey(), rubroPeriodoTotalTree);
+		}
+
+		OrganigramaRubroPeriodoTotalTmp.put("AAAPARQUE DE LA SALUD", OrganigramaRubroPeriodoTotalParque.get("AAAPARQUE DE LA SALUD"));
+
+		Map<String,Map<String,Map<String,BigDecimal>>> OrganigramaRubroPeriodoTotalTree = new TreeMap(OrganigramaRubroPeriodoTotalTmp);
+
+		Map<Integer,String> clienteRubro = new HashMap<>();
+		for(ClienteTipo orx:ClienteTipo.find.orderBy("orden asc").findList()) {
+			clienteRubro.put(orx.orden, orx.nombre);
+		}
+
+
+		return ok(informeResumenMensual.render(p,clienteRubro,OrganigramaRubroPeriodoTotalTree,"Resumen Mensual Cobranzas"));
 
 
 
