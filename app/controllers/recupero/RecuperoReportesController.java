@@ -555,7 +555,90 @@ public class RecuperoReportesController extends Controller {
 		}
 
 
-		return ok(informeResumenMensual.render(p,clienteRubro,OrganigramaRubroPeriodoTotalTree,"Informe Resumen Facturación Mensual"));
+		return ok(informeResumenMensual.render(p,clienteRubro,OrganigramaRubroPeriodoTotalTree,"Informe Resumen Facturación Mensual","facturas"));
+	}
+
+	public static Result informeDetalleResumenPagoMensual(String fecha,String tipoCliente,String deposito,String tipo) {
+
+		List<SqlRow>  row = new ArrayList<>();
+
+		if(tipo.compareToIgnoreCase("pagos")== 0) {
+			String sql = "SELECT " +
+					"    round(sum(COALESCE(pa.total, 0::double precision)))  - round(sum(COALESCE(tc.total, 0::double precision))) "+
+					"	 AS total, " +
+					"    ct.nombre AS tipo_cliente, " +
+					"    c.nombre AS cliente, " +
+					"    d.nombre AS deposito, " +
+					"	to_char(f.fecha,'MM/yyyy') as periodo " +
+					"   FROM recupero_pagos pa "
+					+ " LEFT JOIN recupero_facturas f on f.id = pa.recupero_factura_id" +
+					"   LEFT JOIN punto_ventas pv ON pv.id = f.puntoventa_id " +
+					"   LEFT JOIN depositos d ON d.id = pv.deposito_id " +
+					"   LEFT JOIN clientes c ON c.id = f.cliente_id " +
+					"   LEFT JOIN clientes_tipos ct ON ct.id = c.cliente_tipo_id " +
+
+
+					"	LEFT JOIN ( SELECT recupero_notas_creditos.recupero_factura_id, " +
+					"		sum(recupero_notas_creditos.precio * recupero_notas_creditos.cantidad) AS total " +
+					"	   FROM recupero_notas_creditos " +
+					"	  GROUP BY recupero_notas_creditos.recupero_factura_id) tc ON tc.recupero_factura_id = f.id " +
+
+
+					"	where to_char(f.fecha,'MM/yyyy') = ?  and  ct.nombre = ?  ";
+
+					if(deposito.compareToIgnoreCase("PARQUE DE LA SALUD") != 0) {
+						sql += "and d.nombre = '"+deposito+"' ";
+					}
+
+					sql += "   group by c.nombre,d.nombre,tipo_cliente,to_char(f.fecha,'MM/yyyy') ";
+
+			SqlQuery sqlQuery = Ebean.createSqlQuery(sql);
+			sqlQuery.setParameter(1, fecha);
+			sqlQuery.setParameter(2, tipoCliente);
+			row = sqlQuery.findList();
+		}else {
+			String sql = "SELECT " +
+					"    round(sum(COALESCE(tf.total, 0::double precision))) + round(sum(COALESCE(td.total, 0::double precision))) - round(sum(COALESCE(tc.total, 0::double precision))) "+
+					"	 AS total, " +
+					"    ct.nombre AS tipo_cliente, " +
+					"    c.nombre AS cliente, " +
+					"    d.nombre AS deposito, " +
+					"	to_char(f.fecha,'MM/yyyy') as periodo " +
+					"   FROM recupero_facturas f " +
+					"   LEFT JOIN punto_ventas pv ON pv.id = f.puntoventa_id " +
+					"   LEFT JOIN depositos d ON d.id = pv.deposito_id " +
+					"   LEFT JOIN clientes c ON c.id = f.cliente_id " +
+					"   LEFT JOIN clientes_tipos ct ON ct.id = c.cliente_tipo_id " +
+					"   LEFT JOIN ( SELECT recupero_factura_lineas.recupero_factura_id, " +
+					"            sum(recupero_factura_lineas.precio * recupero_factura_lineas.cantidad) AS total " +
+					"           FROM recupero_factura_lineas " +
+					"          GROUP BY recupero_factura_lineas.recupero_factura_id) tf ON tf.recupero_factura_id = f.id " +
+					"	LEFT JOIN ( SELECT recupero_notas_creditos.recupero_factura_id, " +
+					"		sum(recupero_notas_creditos.precio * recupero_notas_creditos.cantidad) AS total " +
+					"	   FROM recupero_notas_creditos " +
+					"	  GROUP BY recupero_notas_creditos.recupero_factura_id) tc ON tc.recupero_factura_id = f.id " +
+					"	LEFT JOIN ( SELECT recupero_notas_debitos.recupero_factura_id, " +
+					"		sum(recupero_notas_debitos.precio * recupero_notas_debitos.cantidad) AS total " +
+					"	   FROM recupero_notas_debitos " +
+					"	  GROUP BY recupero_notas_debitos.recupero_factura_id) td ON td.recupero_factura_id = f.id " +
+
+
+					"	where to_char(f.fecha,'MM/yyyy') = ?  and  ct.nombre = ?  ";
+
+					if(deposito.compareToIgnoreCase("PARQUE DE LA SALUD") != 0) {
+						sql += "and d.nombre = '"+deposito+"' ";
+					}
+
+					sql += " group by c.nombre,d.nombre,tipo_cliente,to_char(f.fecha,'MM/yyyy') ";
+
+					SqlQuery sqlQuery = Ebean.createSqlQuery(sql);
+					sqlQuery.setParameter(1, fecha);
+					sqlQuery.setParameter(2, tipoCliente);
+					row = sqlQuery.findList();
+		}
+
+
+		return ok(modalDetalleDeudaAntiguedad.render(row));
 	}
 
 	public static Result informeResumenPagoMensual() {
@@ -586,7 +669,7 @@ public class RecuperoReportesController extends Controller {
 
 
 				"	where f.fecha >= ?  "+//&BETWEEN '2024-09-01' and '2024-09-30' " +
-				"   group by d.nombre,tipo_cliente,to_char(f.fecha,'MM/yyyy') ";
+				"   group by c.nombre,d.nombre,tipo_cliente,to_char(f.fecha,'MM/yyyy') ";
 
 		SqlQuery sqlQuery = Ebean.createSqlQuery(sql);
 		sqlQuery.setParameter(1, p.get(0).date_start);
@@ -750,7 +833,7 @@ public class RecuperoReportesController extends Controller {
 		}
 
 
-		return ok(informeResumenMensual.render(p,clienteRubro,OrganigramaRubroPeriodoTotalTree,"Resumen Mensual Cobranzas"));
+		return ok(informeResumenMensual.render(p,clienteRubro,OrganigramaRubroPeriodoTotalTree,"Resumen Mensual Cobranzas","pagos"));
 
 
 
