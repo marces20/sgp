@@ -1,4 +1,4 @@
-@(p:List[models.Periodo],orx:java.util.Map[Integer,String],ret: java.util.Map[String,java.util.Map[String,java.util.Map[String,java.math.BigDecimal]]],title:String)
+@(p:List[models.Periodo],orx:java.util.Map[Integer,String],ret: java.util.Map[String,java.util.Map[String,java.util.Map[String,java.math.BigDecimal]]],title:String,tipo:String)
 @import helper._
 @implicitFieldConstructor = @{ FieldConstructor(simpleInput.render) }
 @import utils._
@@ -89,8 +89,10 @@
 					@{totalPorcentaje=new java.math.BigDecimal(0)}
 
 					@for(valuep <- p) {
-						<td  align="center"><a style="cursor: pointer;" data-url=""
-						class="infoObligaciones" >@utils.NumberUtils.monedaSinDecimales(value2.get(valuep.nombre))</a></td>
+						<td  align="center"><a style="cursor: pointer;"
+						data-url="@controllers.recupero.routes.RecuperoReportesController.informeDetalleResumenPagoMensual(valuep.nombre,key2,replace(key),tipo)"
+						class="abrirModal" >@utils.NumberUtils.monedaSinDecimales(value2.get(valuep.nombre))</a>
+						</td>
 
 
 						@if(value2.get(valuep.nombre)== null){
