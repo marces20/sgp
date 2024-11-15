@@ -23,6 +23,7 @@ import models.Usuario;
 import models.auth.Permiso;
 import play.data.validation.Constraints.Required;
 import play.db.ebean.Model;
+import utils.DateUtils;
 import utils.pagination.Pagination;
 
 @Entity
@@ -81,7 +82,9 @@ public class LiquidacionNovedadLicencia extends Model{
 															    String btnFiltro3,
 															    String btnFiltro4,
 															    String periodo_exacto_id,
-															    String residente){
+															    String residente,
+															    String fecha_novedad_desde,
+															    String fecha_novedad_hasta){
 
 		Pagination<LiquidacionNovedadLicencia> p = new Pagination<LiquidacionNovedadLicencia>();
 		p.setOrderDefault(" ");
@@ -102,6 +105,16 @@ public class LiquidacionNovedadLicencia extends Model{
 				e.eq("agenteAsistenciaLicencia.agente.organigrama_id", 0);
 			}
 		}
+
+		if(!fecha_novedad_desde.isEmpty()){
+    		Date fod = DateUtils.formatDate(fecha_novedad_desde, "dd/MM/yyyy");
+    		e.ge("fecha_creacion_novedad", fod);
+    	}
+
+		if(!fecha_novedad_hasta.isEmpty()){
+    		Date foh = DateUtils.formatDate(fecha_novedad_hasta, "dd/MM/yyyy");
+    		e.le("fecha_creacion_novedad", foh);
+    	}
 
 		if(!residente.isEmpty()){
     		if(residente.compareToIgnoreCase("SI") == 0){
