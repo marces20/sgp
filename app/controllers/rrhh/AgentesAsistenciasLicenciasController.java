@@ -103,7 +103,9 @@ public class AgentesAsistenciasLicenciasController extends Controller {
 				 																		RequestVar.get("btnFiltro[3]"),
 				 																		RequestVar.get("btnFiltro[4]"),
 				 																		RequestVar.get("periodo_exacto_id"),
-				 																		RequestVar.get("residente")
+				 																		RequestVar.get("residente"),
+				 																		RequestVar.get("fecha_novedad_desde"),
+				 																		RequestVar.get("fecha_novedad_hasta")
 				 																		);
 
 		return ok(indexLicenciaNovedadesLiquidacion.render(lineas,d));
