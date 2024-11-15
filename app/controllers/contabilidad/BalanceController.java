@@ -449,6 +449,10 @@ public class BalanceController extends Controller {
 
 				if(!asientos.contains(b1.asiento)) {
 
+					String cuenta = b1.cuenta.nombre;
+					if(b1.tipo.compareTo("nt_recupero") == 0) {
+						cuenta = "Descuentos Otorgados";
+					}
 
 					linea= "";
 					linea += StringUtils.alfanumericoPadStart(b1.asiento.toString(),6);// Número de asiento (6 posiciones).
