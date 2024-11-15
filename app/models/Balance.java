@@ -219,7 +219,7 @@ public class Balance extends Model {
     	}
 
 		if(!tipo.isEmpty()){
-    		if(tipo.compareTo("pagos") == 0) {
+    		/*if(tipo.compareTo("pagos") == 0) {
     			f.eq("tipo","pagos");
     		}
     		if(tipo.compareTo("facturas") == 0) {
@@ -234,6 +234,12 @@ public class Balance extends Model {
     		if(tipo.compareTo("nt_recupero") == 0) {
     			f.eq("tipo","nt_recupero");
     		}
+
+    		if(tipo.compareTo("nt_recupero") == 0) {
+    			f.eq("tipo","tipo");
+    		}*/
+
+    		f.eq("tipo",tipo);
     	}
 
 		if(!marca.isEmpty()){
