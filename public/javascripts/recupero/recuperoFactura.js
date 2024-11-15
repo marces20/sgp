@@ -27,6 +27,38 @@ $( function () {
 		};
 	var as_json = new bsn.AutoSuggest('cliente', options);
 
+	$('.abrirModal').on('click', function() {
+
+		var url = $(this).attr("data-url");
+		var dialogo = crearDialogo(url);
+		dialogo.dialog({title: "Informe"});
+	});
+
+	function crearDialogo(url){
+		var dialogo = $('<div></div>');
+		return dialogo.dialog({
+	    	resizable: false,
+			autoOpen: true,
+			modal: true,
+			height: 600,
+			width:800,
+	        buttons: {
+		          Cerrar: function() {
+		            $( this ).dialog( "destroy" );
+		          }
+		    },
+	    	close: function(event, ui ){
+	    		$(this).dialog( "destroy" );
+	    	},
+		    open: function( event, ui ) {
+				$.get(url, function(data){
+					dialogo.html(data);
+				});
+
+		    }
+	      });
+	}
+
 	$('#reportePlanilla').click( function() {
 		var url = $(this).attr("data-url");
 		dialogoPasarBorrador = crearDialogoGeneral(url);
