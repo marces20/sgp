@@ -7,6 +7,8 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.List;
 
 import org.apache.commons.mail.EmailException;
@@ -44,6 +46,26 @@ public class Application extends Controller {
 	public static Result index() throws EmailException, IOException, XDocReportException  {
 
 
+		//ActualizarProductosIps a = new ActualizarProductosIps();
+		//a.actualizar();
+
+
+
+
+
+		//AfipController a = new AfipController();
+		//RecuperoNotaCredito rc  = RecuperoNotaCredito.find.byId(new Long(5079));
+		//a.getUltimoComprobanteNew( new Integer(rc.puntoVenta.numero),TipoComprobante.NOTA_CREDITO);
+
+		//AfipController a = new AfipController();
+		//a.getAuth();
+
+		//a.crearComprobantesAutomaticos();
+		/*GregorianCalendar exptime = new GregorianCalendar();
+		Date ex = new Date(GenTime.getTime()+TicketTime);
+		Cache.set("exptime", ex);*/
+		 //RecuperoRecibo.actualizarNCND();
+
 
 		//LiquidacionMes.preliquidarEspera();
 		//HistorialDeudaProveedores.insertHistorialDeuda();
@@ -57,6 +79,7 @@ public class Application extends Controller {
 		//ActualizarBalance.facturaRecupero();
 		//ActualizarBalance.pagoRecupero();
 		//ActualizarBalance.notaCreditoRecupero();
+		//ActualizarBalance.notaDebitoRecupero();
 		//ActualizarBalance.arregloFacturas();
 		//LiquidacionPuesto.envioMailsReciboAutomatico();
 
@@ -338,19 +361,21 @@ alter table solicitudes disable trigger all;
 update solicitudes set departamento_id =244 where expediente_id = 26240;
 alter table solicitudes enable trigger all;
 
+
 alter table ordenes disable trigger all;
-update ordenes set tipo_orden = 'comun' where expediente_id = 36776;
+update ordenes set tipo_orden='servicio' where id in(135121);
 alter table ordenes enable trigger all;
 
 
+
 alter table ordenes disable trigger all;
-update ordenes set numero_orden_provision = 1 where expediente_id = 36775;
+update ordenes set fecha_presupuesto= '2024-04-09' where id in(129449);
 alter table ordenes enable trigger all;
 
 
 alter table ordenes_provision disable trigger all;
-update ordenes_provision set numero = 1
-where orden_compra_id in(select id from ordenes where expediente_id = 36775);
+update ordenes_provision set numero = 1996
+where orden_compra_id in(select id from ordenes where expediente_id = 45235);
 alter table ordenes_provision enable trigger all;
 
 
@@ -397,6 +422,9 @@ order by c.id ascv
     	boolean usuariosActivos = (u.equals(149) || //"MICHELLE NIELSEN"
     							   u.equals(401) || //"ZANIVAN SILVIA"
     							   u.equals(1) ||
+    							   u.equals(428) ||//ale storti
+    							   u.equals(415) ||// dani diblasi
+    							   u.equals(434) ||// mauro bar
     							   u.equals(15) || //"EDUARDO RICARDO DORSANEO"
     							   u.equals(5) ||   //"RYWAKA LIDIA"
     							   u.equals(143) || //"CHAPARRO GLADIS"
@@ -441,6 +469,9 @@ order by c.id ascv
     			   u.equals(439) || //"ana conde
     			   u.equals(8) || //"vanesa
 				   u.equals(401) || //"ZANIVAN SILVIA"
+				   u.equals(428) ||//ale storti
+				   u.equals(415) ||// dani diblasi
+				   u.equals(434) ||// mauro bar
 				   u.equals(1));
     	if(usuariosActivos2) {
     		ExpressionList<InformeDeudaProveedoresMaterializada> e =InformeDeudaProveedoresMaterializada.find
