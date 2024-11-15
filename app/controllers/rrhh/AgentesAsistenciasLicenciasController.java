@@ -1206,7 +1206,7 @@ public class AgentesAsistenciasLicenciasController extends Controller {
 				n.save();
 
 				LiquidacionNovedadLicencia ll = LiquidacionNovedadLicencia.find.where().eq("id", lnlx.id).findUnique();
-
+				ll.fecha_creacion_novedad = new Date();
 				ll.estado_id = (long) Estado.LIQUIDACION_LICENCIAS_NOVEDADES_APROBADO;
 				ll.save();
 
