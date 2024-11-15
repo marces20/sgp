@@ -111,6 +111,7 @@ GET    /recupero/reportes/informeGeneral      controllers.recupero.RecuperoRepor
 GET    /reportes/informeResumenFacturacionMensual      controllers.recupero.RecuperoReportesController.informeResumenFacturacionMensual()
 GET    /reportes/informeResumenPagoMensual      controllers.recupero.RecuperoReportesController.informeResumenPagoMensual()
 GET    /reportes/getDeudaPorAntiguedad      controllers.recupero.RecuperoReportesController.getDeudaPorAntiguedad()
+GET    /reportes/getDetalleDeudaPorAntiguedad      controllers.recupero.RecuperoReportesController.getDetalleDeudaPorAntiguedad(tipoCliente: String,fecha: String)
 GET    /archivo/deudas          			  controllers.recupero.RecuperoReportesController.archivoInformeDeuda()
 GET    /archivo/archivoInformeGeneral         controllers.recupero.RecuperoReportesController.archivoInformeGeneral()
 
