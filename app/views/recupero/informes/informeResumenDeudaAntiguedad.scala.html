@@ -45,7 +45,12 @@
 				@if(sx.getString("tipo_cliente").compareTo("Obras sociales") ==0){
 					<tr data-id="">
 						<td align="center">@split(sx.getString("fecha"))</td>
-						<td align="center">@utils.NumberUtils.moneda(sx.getBigDecimal("total_deuda"),0)</td>
+						<td align="center">
+							<a style="cursor: pointer;" data-url="@controllers.recupero.routes.RecuperoReportesController.getDetalleDeudaPorAntiguedad("""Obras sociales""",sx.getString("""fecha"""))"
+							class="abrirModal" >
+								@utils.NumberUtils.moneda(sx.getBigDecimal("total_deuda"),0)
+							</a>
+						</td>
 					</tr>
 				}
 			}
