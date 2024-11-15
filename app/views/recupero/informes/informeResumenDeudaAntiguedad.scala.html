@@ -1,0 +1,105 @@
+@(s:List[com.avaje.ebean.SqlRow],title:String)
+@import helper._
+@implicitFieldConstructor = @{ FieldConstructor(simpleInput.render) }
+@import utils._
+
+@scripts = {
+	<script src="@routes.Assets.at("javascripts/recupero/recuperoFactura.js")" type="text/javascript"></script>
+}
+
+@split(i:String) = @{
+
+	var s:Array[java.lang.String]= i.split("/")
+
+	var ret = new String()
+
+	ret = s(1)+"/"+s(0)
+
+	ret
+}
+
+@views.html.informes.mainInformes("Informe Mensual ",scripts) {
+
+@views.html.dashboard.informesRecupero.navinformes()
+
+<div class="page-header">
+	<div class="row">
+		<div class="col-sm-4">
+			<h1>@title</h1>
+		</div>
+
+		<div class="col-sm-4">
+			<h2> <b style="color: red;">SUJETO A REVISION</b></h2>
+		</div>
+
+	</div>
+</div>
+<div class="row">
+
+	<div class="col-sm-3">
+		<table class="table table-bordered">
+			<thead>
+				<th colspan="2" align="center" style="font-size:20px;text-align:center;">Obras sociales</th>
+			</thead>
+			@for(sx <- s) {
+				@if(sx.getString("tipo_cliente").compareTo("Obras sociales") ==0){
+					<tr data-id="">
+						<td align="center">@split(sx.getString("fecha"))</td>
+						<td align="center">@utils.NumberUtils.moneda(sx.getBigDecimal("total_deuda"),0)</td>
+					</tr>
+				}
+			}
+
+		</table>
+	</div>
+	<div class="col-sm-3">
+		<table class="table table-bordered">
+			<thead>
+				<th colspan="2" align="center" style="font-size:20px;text-align:center;">Compañías de seguro</th>
+			</thead>
+			@for(sx <- s) {
+				@if(sx.getString("tipo_cliente").compareTo("Compañías de seguro") ==0){
+					<tr data-id="">
+						<td align="center">@split(sx.getString("fecha"))</td>
+						<td align="center">@utils.NumberUtils.moneda(sx.getBigDecimal("total_deuda"),0)</td>
+					</tr>
+				}
+			}
+
+		</table>
+	</div>
+	<div class="col-sm-3">
+		<table class="table table-bordered">
+			<thead>
+				<th colspan="2" align="center" style="font-size:20px;text-align:center;">ART</th>
+			</thead>
+			@for(sx <- s) {
+				@if(sx.getString("tipo_cliente").compareTo("ART") ==0){
+					<tr data-id="">
+						<td align="center">@split(sx.getString("fecha"))</td>
+						<td align="center">@utils.NumberUtils.moneda(sx.getBigDecimal("total_deuda"),0)</td>
+					</tr>
+				}
+			}
+
+		</table>
+	</div>
+	<div class="col-sm-3">
+		<table class="table table-bordered">
+			<thead>
+				<th colspan="2" align="center" style="font-size:20px;text-align:center;">Otros</th>
+			</thead>
+			@for(sx <- s) {
+				@if(sx.getString("tipo_cliente").compareTo("Otros") ==0){
+					<tr data-id="">
+						<td align="center">@split(sx.getString("fecha"))</td>
+						<td align="center">@utils.NumberUtils.moneda(sx.getBigDecimal("total_deuda"),0)</td>
+					</tr>
+				}
+			}
+
+		</table>
+	</div>
+</div>
+
+}
