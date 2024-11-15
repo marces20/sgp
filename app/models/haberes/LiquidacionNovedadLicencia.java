@@ -63,6 +63,8 @@ public class LiquidacionNovedadLicencia extends Model{
 
 	public Date write_date;
 
+	public Date fecha_creacion_novedad;
+
 	public static Model.Finder<Long,LiquidacionNovedadLicencia> find = new Model.Finder<Long,LiquidacionNovedadLicencia>(Long.class, LiquidacionNovedadLicencia.class);
 
 	public static Pagination<LiquidacionNovedadLicencia> page(String nombre,
