@@ -773,6 +773,25 @@ public class RecuperoReportesController extends Controller {
 		return ok(informeResumenDeudaAntiguedad.render(rowParque,"Resumen Deuda por Antiguedad"));
 	}
 
+	public static Result getDetalleDeudaPorAntiguedad(String tipoCliente,String fecha){
+
+		String sqlParque = "SELECT sum(total_deuda) total,to_char(fecha,'yyyy/MM') as fecha, c.nombre as cliente  " +
+				"				FROM informe_totales_recupero i " +
+				"  				 LEFT JOIN clientes c ON c.id = i.cliente_id " +
+				"				WHERE total_deuda > 0 and (tipo_cliente= ? ) and to_char(fecha,'yyyy/MM') = ?" +
+				"				group by to_char(fecha,'yyyy/MM'),c.nombre " +
+				"				order by total desc ";
+
+		SqlQuery sqlQueryParque = Ebean.createSqlQuery(sqlParque);
+		sqlQueryParque.setParameter(1, tipoCliente);
+		sqlQueryParque.setParameter(2, fecha);
+
+
+		List<SqlRow>  rowParque = sqlQueryParque.findList();
+
+		return ok(modalDetalleDeudaAntiguedad.render(rowParque));
+	}
+
 
 	public static Result informeGeneral() {
 
