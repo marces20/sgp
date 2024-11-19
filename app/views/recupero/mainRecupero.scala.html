@@ -34,8 +34,12 @@
 
 
 				<li class="titulo">Informes</li>
-				<li><a href="@controllers.recupero.routes.RecuperoReportesController.informeGeneral()">Informe General</a></li>
-				<li><a href="@controllers.dashboard.routes.InformesRecuperoController.index()">Informe Resumen</a></li>
+				@if(Componente.check("recuperoInformeGeneral")) {
+					<li><a href="@controllers.recupero.routes.RecuperoReportesController.informeGeneral()">Informe General</a></li>
+				}
+				@if(Componente.check("recuperoInformeResumen")) {
+					<li><a href="@controllers.dashboard.routes.InformesRecuperoController.index()">Informe Resumen</a></li>
+				}
 
 
 			</ul>
