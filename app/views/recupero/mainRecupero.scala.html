@@ -34,10 +34,10 @@
 
 
 				<li class="titulo">Informes</li>
-				@if(Componente.check("recuperoInformeGeneral")) {
+				@if(Permiso.check("recuperoInformeGeneral")) {
 					<li><a href="@controllers.recupero.routes.RecuperoReportesController.informeGeneral()">Informe General</a></li>
 				}
-				@if(Componente.check("recuperoInformeResumen")) {
+				@if(Permiso.check("recuperoInformeResumen")) {
 					<li><a href="@controllers.dashboard.routes.InformesRecuperoController.index()">Informe Resumen</a></li>
 				}
 
