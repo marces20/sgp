@@ -81,6 +81,7 @@ import views.html.recupero.recuperoFactura.modalPlanilla;
 import views.html.recupero.recuperoPlanilla.reportePlanilla;
 import views.html.recupero.informes.*;
 import controllers.Secured;
+import controllers.auth.CheckPermiso;
 
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.EncodeHintType;
@@ -876,6 +877,7 @@ public class RecuperoReportesController extends Controller {
 	}
 
 
+	@CheckPermiso(key = "recuperoInformeGeneral")
 	public static Result informeGeneral() {
 
 		Pagination<InformeTotal> i = InformeTotal.page(RequestVar.get("cliente_id"),
