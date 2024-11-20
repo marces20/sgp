@@ -351,12 +351,10 @@ public class RecuperoFactura extends Model {
 	public boolean controlPermisoDeposito() {
 		boolean r = true;
 		if(!Permiso.check("verTodoRecupero")){
-			if(Usuario.getUsurioSesion().organigrama != null && Usuario.getUsurioSesion().organigrama.deposito != null && planilla != null){
-				RecuperoPlanilla rp = RecuperoPlanilla.find.byId(planilla_id.longValue());
+			if(Usuario.getUsurioSesion().organigrama != null && Usuario.getUsurioSesion().organigrama.deposito != null){
+				//RecuperoPlanilla rp = RecuperoPlanilla.find.byId(planilla_id.longValue());
 
-				if(Usuario.getUsurioSesion().organigrama.id.equals(new Integer(178))){//INSTITUTO GENETICA HUMANA
-					r = true;
-	    		}else if(Usuario.getUsurioSesion().organigrama.deposito_id.compareTo(rp.deposito_id) != 0) {
+				if(Usuario.getUsurioSesion().organigrama.deposito_id.compareTo(this.puntoVenta.deposito_id) != 0) {
 					r = false;
 				}
 			}else {
