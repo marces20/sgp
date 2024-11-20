@@ -324,14 +324,14 @@ private static final long serialVersionUID = 1L;
     		}else if(Usuario.getUsurioSesion().organigrama != null && Usuario.getUsurioSesion().organigrama.deposito != null){
     			e = e.disjunction();
 
-    			e = e.conjunction();
+    			/*e = e.conjunction();
     			e = e.eq("planilla.deposito_id", Usuario.getUsurioSesion().organigrama.deposito_id.intValue());
     			e = e.isNotNull("planilla.deposito_id");
-    			e = e.endJunction();
+    			e = e.endJunction();*/
 
     			e = e.conjunction();
-    			e = e.eq("recuperoFactura.planilla.deposito_id", Usuario.getUsurioSesion().organigrama.deposito_id.intValue());
-    			e = e.isNull("planilla.deposito_id");
+    			e = e.eq("recuperoFactura.puntoVenta.deposito_id", Usuario.getUsurioSesion().organigrama.deposito_id.intValue());
+    			//e = e.isNull("puntoVenta.deposito_id");
     			e = e.endJunction();
 
     			e = e.endJunction();
