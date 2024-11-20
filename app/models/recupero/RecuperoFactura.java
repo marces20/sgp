@@ -254,8 +254,8 @@ public class RecuperoFactura extends Model {
 												   String numero_nd
 												   ) {
     	Pagination<RecuperoFactura> p = new Pagination<RecuperoFactura>();
-    	p.setOrderDefault("DESC");
-    	p.setSortByDefault("id");
+    	p.setOrderDefault("ASC");
+    	p.setSortByDefault("numero");
 
     	ExpressionList<RecuperoFactura> e = find
     										.fetch("planilla")
@@ -332,12 +332,10 @@ public class RecuperoFactura extends Model {
     	}
 
     	if(!Permiso.check("verTodoRecupero")){
-    		if(Usuario.getUsurioSesion().organigrama.id.equals(new Integer(178))){//INSTITUTO GENETICA HUMANA
-    			e.eq("puntoventa_id", 14);
-    		}else if(Usuario.getUsurioSesion().organigrama != null && Usuario.getUsurioSesion().organigrama.deposito != null){
-    			e.eq("planilla.deposito_id", Usuario.getUsurioSesion().organigrama.deposito_id.intValue());
+    		if(Usuario.getUsurioSesion().organigrama != null && Usuario.getUsurioSesion().organigrama.deposito != null){
+    			e.eq("puntoVenta.deposito_id", Usuario.getUsurioSesion().organigrama.deposito_id.intValue());
     		}else{
-    			e.isNull("planilla.deposito_id");
+    			e.isNull("puntoVenta.deposito_id");
     		}
     	}
 
