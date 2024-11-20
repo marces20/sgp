@@ -254,7 +254,7 @@ public class RecuperoFactura extends Model {
 												   String numero_nd
 												   ) {
     	Pagination<RecuperoFactura> p = new Pagination<RecuperoFactura>();
-    	p.setOrderDefault("ASC");
+    	p.setOrderDefault("desc");
     	p.setSortByDefault("numero");
 
     	ExpressionList<RecuperoFactura> e = find
