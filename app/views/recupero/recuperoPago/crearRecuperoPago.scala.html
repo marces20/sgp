@@ -10,7 +10,7 @@
 	<div class="page-header">
 		<div class="row">
 			<div class="col-sm-7">
-				<h1>Crear nuevo pago</h1>
+				<h1>Crear nuevo  Movimientos</h1>
 			</div>
 		</div>
 	</div>
@@ -19,11 +19,11 @@
 			@flash.get("error")
 		</div>
     }
-    
+
     @helper.form(action = controllers.recupero.routes.RecuperoPagosController.guardar()) {
 
-		@views.html.recupero.recuperoPago.formRecuperoPago(recuperoPagoForm,null) 
-		@views.html.recupero.recuperoPago.tabsRecuperoPago(true,recuperoPagoForm)	
+		@views.html.recupero.recuperoPago.formRecuperoPago(recuperoPagoForm,null)
+		@views.html.recupero.recuperoPago.tabsRecuperoPago(true,recuperoPagoForm)
 
 
 	}

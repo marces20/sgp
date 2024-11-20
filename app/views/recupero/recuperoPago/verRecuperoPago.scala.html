@@ -1,14 +1,14 @@
 @(recuperoPagoForm: Form[models.recupero.RecuperoPago], recuperoPago: models.recupero.RecuperoPago)
 @import utils._
 @import helper._
-@implicitFieldConstructor = @{ FieldConstructor(simpleInput.render) } 
+@implicitFieldConstructor = @{ FieldConstructor(simpleInput.render) }
 
 
 @views.html.recupero.mainRecupero("Vista de pago") {
 	<div class="page-header">
 		<div class="row">
 			<div class="col-sm-7">
-				<h1>Vista de pago</h1>
+				<h1>Vista de  Movimientos</h1>
 			</div>
 			<div class="col-sm-5">
 				<div class="dropdown pull-right">
@@ -21,7 +21,7 @@
 					<li role="presentation"><a role="menuitem" tabindex="-1" href="@controllers.recupero.routes.RecuperoReportesController.imprimirRecibo(recuperoPago.id)">Imprimir recibo</a></li>
 				  </ul>
 				</div>
-				
+
 				<div class="dropdown pull-right btn-header">
 				 <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown">
 				 	<i class="glyphicon glyphicon-cog"></i>
@@ -29,14 +29,14 @@
 				    <span class="caret"></span>
 				  </button>
 				  <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
-				  	
+
 				  </ul>
 				</div>
 
 			</div>
 		</div>
 	</div>
-	
+
 @views.html.tags.successError()
 
 <div class="row menu-acciones">
@@ -67,7 +67,7 @@
 			<p class="form-control-static form-control">@recuperoPago.numero</p>
 		</div>
 		<div class="col-sm-4">
-			<label class="control-label">Cliente</label> 
+			<label class="control-label">Cliente</label>
 			<p class="form-control-static form-control" style="height: 25px; overflow: hidden;">
 				@recuperoPagoForm("cliente.nombre").value
 			</p>
@@ -76,9 +76,9 @@
 			<label class="control-label">Fecha </label>
 			<p class="form-control-static form-control">@recuperoPagoForm("fecha").value</p>
 		</div>
-		
+
 	</div>
-		
+
 	<div class="row">
 		<div class="col-sm-2">
 			<label class="control-label">Planilla</label>
@@ -87,12 +87,12 @@
 				@recuperoPago.planilla.getRecuperoPlanillaEjercicio()
 			}
 			</p>
-		</div>	
+		</div>
 		<div class="col-sm-4">
 			<label class="control-label">Concepto</label>
 			<p class="form-control-static form-control">@recuperoPago.concepto</p>
 		</div>
-	
+
 		<div class="col-sm-2">
 			<label class="control-label">Importe</label>
 			<p class="form-control-static form-control">@utils.NumberUtils.moneda(recuperoPago.total)</p>
@@ -107,40 +107,40 @@
 						case "transferencia" => {Transferencia}
 				    	case _ => {}
 					}
-			
+
 			</p>
 		</div>
 		<div class="col-sm-2">
 			<label class="control-label">N° Factura</label>
 			<p class="form-control-static form-control">@recuperoPago.recuperoFactura.getNumeroFactura()</p>
 		</div>
-	</div>	
-		
-		
-		
+	</div>
+
+
+
 	@views.html.recupero.recuperoPago.tabsRecuperoPago(false, recuperoPagoForm,recuperoPago)
-	
-		
-		
-	<h4>Estado actual: 	
+
+
+
+	<h4>Estado actual:
 		@if(recuperoPago.parcializada != null && recuperoPago.parcializada){
 			<b>Parcializada</b>
 		}else{
 			<b>@recuperoPago.estado.nombre</b>
 		}
 	</h4>
-	<div class="row margin-bottom-25">	
+	<div class="row margin-bottom-25">
 		@if(recuperoPago.parcializada != null && recuperoPago.parcializada){
-		
+
 		}else{
-			@for(estado <- models.Estado.getSiguienteEstadoPorAprobar(recuperoPago.estado.orden,models.Estado.TIPO_RECUPERO_PAGO)) {	
+			@for(estado <- models.Estado.getSiguienteEstadoPorAprobar(recuperoPago.estado.orden,models.Estado.TIPO_RECUPERO_PAGO)) {
 				@if(estado.orden <= 4) {
 					<div class="col-sm-3">
 						<a href="@controllers.recupero.routes.RecuperoPagosController.cambiarEstado(recuperoPagoForm.field("id").value.toInt, estado.id.toLong)@UriTrack.get("&")" class="btn btn-default">
 							<i class="glyphicon glyphicon-arrow-right"></i> @estado.nombre
 						</a>
 					</div>
-					
+
 				}
 			}
 			@if(recuperoPago.estado.id == models.Estado.RECUPERO_PAGO_CANCELADO) {
@@ -169,7 +169,7 @@
 
 <script>
 $( function() {
-	
+
 });
 </script>
 
