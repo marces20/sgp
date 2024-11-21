@@ -163,6 +163,33 @@ public class InformeTotal extends Model {
     	return p;
     }
 
+	public static Map<Long, Date> getPagoLastDateClienteConDeudaPorTipoDeCliente(Long idTipoCliente){
+
+		String sql = "SELECT max(fecha) as fecha,cliente_id "+
+				"FROM recupero_pagos rp "+
+				"inner join clientes c on c.id = rp.cliente_id "+
+				"WHERE fecha >= '2023-01-01' and  estado_id = 71 AND recupero_nota_credito_id IS NULL AND recupero_nota_debito_id IS NULL ";
+
+
+		if(idTipoCliente != 0){
+			sql += " AND c.cliente_tipo_id = "+idTipoCliente;
+		}
+		sql +=" GROUP BY cliente_id ";
+
+		SqlQuery sqlQuery = Ebean.createSqlQuery(sql);
+
+		List<SqlRow>  row = sqlQuery.findList();
+
+		Map<Long, Date> ret = new HashMap<>();
+
+		for(SqlRow r :row) {
+			ret.put(r.getLong("cliente_id"), r.getDate("fecha"));
+		}
+
+		return ret;
+	}
+
+
 	public static Map<Long, Integer> getPagoClienteConDeudaPorTipoDeCliente(Long idTipoCliente){
 
 		String sql = "SELECT count(*) as c,cliente_id "+
