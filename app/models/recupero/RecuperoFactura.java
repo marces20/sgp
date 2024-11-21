@@ -254,8 +254,9 @@ public class RecuperoFactura extends Model {
 												   String numero_nd
 												   ) {
     	Pagination<RecuperoFactura> p = new Pagination<RecuperoFactura>();
-    	p.setOrderDefault("desc");
-    	p.setSortByDefault("numero");
+    	p.setOrderDefault("DESC");
+    	p.setSortByDefault("id");
+
 
     	ExpressionList<RecuperoFactura> e = find
     										.fetch("planilla")
