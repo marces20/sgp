@@ -2,7 +2,9 @@ package models.recupero;
 
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -160,6 +162,32 @@ public class InformeTotal extends Model {
     	p.setExpressionList( e );
     	return p;
     }
+
+	public static Map<Long, Integer> getPagoClienteConDeudaPorTipoDeCliente(Long idTipoCliente){
+
+		String sql = "SELECT count(*) as c,cliente_id "+
+				"FROM recupero_pagos rp "+
+				"inner join clientes c on c.id = rp.cliente_id "+
+				"WHERE fecha >= '2023-01-01' and  estado_id = 71 AND recupero_nota_credito_id IS NULL AND recupero_nota_debito_id IS NULL ";
+
+
+		if(idTipoCliente != 0){
+			sql += " AND c.cliente_tipo_id = "+idTipoCliente;
+		}
+		sql +=" GROUP BY cliente_id ";
+
+		SqlQuery sqlQuery = Ebean.createSqlQuery(sql);
+
+		List<SqlRow>  row = sqlQuery.findList();
+
+		Map<Long, Integer> ret = new HashMap<>();
+
+		for(SqlRow r :row) {
+			ret.put(r.getLong("cliente_id"), r.getInteger("c"));
+		}
+
+		return ret;
+	}
 
 	public static List<SqlRow> getDeudaPorTipoDeCliente(Long idTipoCliente){
 
