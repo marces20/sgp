@@ -253,8 +253,8 @@
 					<td>@if(rf.cliente != null){@(rf.cliente.nombre)}</td>
 					<td>@if(rf.recuperoFactura != null){@(rf.recuperoFactura.getNumeroFactura())}</td>
 					<td>@if(rf.recuperoRecibo != null){@(rf.recuperoRecibo.getNumeroRecibo())}</td>
-					<td>@if(rf.recupero_nota_credito_id != null){@(rf.recuperoNotaCredito.numero)}</td>
-					<td>@if(rf.recupero_nota_debito_id != null){@(rf.recuperoNotaDebito.numero)}</td>
+					<td>@if(rf.recupero_nota_credito_id != null){@rf.recuperoNotaCredito.puntoVenta.numero - @(rf.recuperoNotaCredito.numero)}</td>
+					<td>@if(rf.recupero_nota_debito_id != null){@rf.recuperoNotaDebito.puntoVenta.numero - @(rf.recuperoNotaDebito.numero)}</td>
 					<td class="total" rel="@rf.total">@(utils.NumberUtils.moneda(rf.total))</td>
 					<td class="estado">@rf.getTextoTipoPago()</td>
 					<td class="estado">
