@@ -3,7 +3,9 @@ deudasPorPaciente:List[com.avaje.ebean.SqlRow],
 deudasPorExtrajero:List[com.avaje.ebean.SqlRow],
 deudasPorObrasSociales:List[com.avaje.ebean.SqlRow],
 deudasPorArt:List[com.avaje.ebean.SqlRow],
-deudasPorSeguro:List[com.avaje.ebean.SqlRow]
+deudasPorSeguro:List[com.avaje.ebean.SqlRow],
+totalPagosObra: Map[Long,Integer] = null,
+pagoLastDateObra: Map[Long,Date] = null
 )
 @import helper._
 @import utils._
@@ -60,6 +62,8 @@ deudasPorSeguro:List[com.avaje.ebean.SqlRow]
 						<!-- <td align="center">@utils.NumberUtils.moneda(s.getBigDecimal("total_factura"),0)</td>
 						<td align="center">@utils.NumberUtils.moneda(s.getBigDecimal("total_pago"),0)</td> -->
 						<td align="center">@utils.NumberUtils.moneda(s.getBigDecimal("total_deuda"),0)</td>
+						<td></td>
+						<td></td>
 					</tr>
 
 
@@ -76,6 +80,8 @@ deudasPorSeguro:List[com.avaje.ebean.SqlRow]
 					<!--<td align="center"><b>@utils.NumberUtils.moneda(ptfactura,0)</b></td>
 					<td align="center"><b>@utils.NumberUtils.moneda(ptpago,0)</b></td>-->
 					<td align="center"><b>@utils.NumberUtils.moneda(ptdeuda,0)</b></td>
+					<td></td>
+					<td></td>
 				</tr>
 			</tfoot>
 		</table>
@@ -103,6 +109,8 @@ deudasPorSeguro:List[com.avaje.ebean.SqlRow]
 						<!--<td align="center">@utils.NumberUtils.moneda(s.getBigDecimal("total_factura"),0)</td>
 						<td align="center">@utils.NumberUtils.moneda(s.getBigDecimal("total_pago"),0)</td>-->
 						<td align="center">@utils.NumberUtils.moneda(s.getBigDecimal("total_deuda"),0)</td>
+						<td></td>
+						<td></td>
 					</tr>
 
 
@@ -119,6 +127,8 @@ deudasPorSeguro:List[com.avaje.ebean.SqlRow]
 					<!--<td align="center"><b>@utils.NumberUtils.moneda(ptfactura,0)</b></td>
 					<td align="center"><b>@utils.NumberUtils.moneda(ptpago,0)</b></td>-->
 					<td align="center"><b>@utils.NumberUtils.moneda(ptdeuda,0)</b></td>
+					<td></td>
+					<td></td>
 				</tr>
 			</tfoot>
 		</table>
@@ -146,6 +156,9 @@ deudasPorSeguro:List[com.avaje.ebean.SqlRow]
 						<!--<td align="center">@utils.NumberUtils.moneda(s.getBigDecimal("total_factura"),0)</td>
 						<td align="center">@utils.NumberUtils.moneda(s.getBigDecimal("total_pago"),0)</td>-->
 						<td align="center">@utils.NumberUtils.moneda(s.getBigDecimal("total_deuda"),0)</td>
+						<td align="center">@if(totalPagosObra.get(s.getLong("cliente_id")) != null){@totalPagosObra.get(s.getLong("cliente_id"))}else{0}</td>
+						<td align="center">@if(pagoLastDateObra.get(s.getLong("cliente_id")) != null){@utils.DateUtils.formatDate(pagoLastDateObra.get(s.getLong("cliente_id")))}else{-}</td>
+
 					</tr>
 
 
@@ -162,6 +175,8 @@ deudasPorSeguro:List[com.avaje.ebean.SqlRow]
 					<!--<td align="center"><b>@utils.NumberUtils.moneda(ptfactura,0)</b></td>
 					<td align="center"><b>@utils.NumberUtils.moneda(ptpago,0)</b></td>-->
 					<td align="center"><b>@utils.NumberUtils.moneda(ptdeuda,0)</b></td>
+					<td></td>
+					<td></td>
 				</tr>
 			</tfoot>
 		</table>
@@ -189,6 +204,8 @@ deudasPorSeguro:List[com.avaje.ebean.SqlRow]
 						<!--<td align="center">@utils.NumberUtils.moneda(s.getBigDecimal("total_factura"),0)</td>
 						<td align="center">@utils.NumberUtils.moneda(s.getBigDecimal("total_pago"),0)</td>-->
 						<td align="center">@utils.NumberUtils.moneda(s.getBigDecimal("total_deuda"),0)</td>
+						<td></td>
+						<td></td>
 					</tr>
 
 
@@ -205,6 +222,8 @@ deudasPorSeguro:List[com.avaje.ebean.SqlRow]
 					<!--<td align="center"><b>@utils.NumberUtils.moneda(ptfactura,0)</b></td>
 					<td align="center"><b>@utils.NumberUtils.moneda(ptpago,0)</b></td>-->
 					<td align="center"><b>@utils.NumberUtils.moneda(ptdeuda,0)</b></td>
+					<td></td>
+					<td></td>
 				</tr>
 			</tfoot>
 		</table>
@@ -233,6 +252,8 @@ deudasPorSeguro:List[com.avaje.ebean.SqlRow]
 						<!--<td align="center">@utils.NumberUtils.moneda(s.getBigDecimal("total_factura"),0)</td>
 						<td align="center">@utils.NumberUtils.moneda(s.getBigDecimal("total_pago"),0)</td>-->
 						<td align="center">@utils.NumberUtils.moneda(s.getBigDecimal("total_deuda"),0)</td>
+						<td></td>
+						<td></td>
 					</tr>
 
 
@@ -249,6 +270,8 @@ deudasPorSeguro:List[com.avaje.ebean.SqlRow]
 					<!--<td align="center"><b>@utils.NumberUtils.moneda(ptfactura,0)</b></td>
 					<td align="center"><b>@utils.NumberUtils.moneda(ptpago,0)</b></td>-->
 					<td align="center"><b>@utils.NumberUtils.moneda(ptdeuda,0)</b></td>
+					<td></td>
+					<td></td>
 				</tr>
 			</tfoot>
 		</table>
