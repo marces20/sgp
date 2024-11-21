@@ -24,7 +24,7 @@
 	classEstado
 }
 
-@views.html.haberes.mainHaberes("Lista de Embargos", scripts) {
+@views.html.haberes.mainHaberes("Lista de Retenciones", scripts) {
 <div class="page-header">
 	<div class="row">
 		<div class="col-sm-7">
@@ -61,7 +61,9 @@
 				<!-- <li role="presentation"><a role="menuitem" id="accionCargarDetalleMasivo" tabindex="-1" href="#" data-url="@controllers.haberes.routes.LiquidacionEmbargosController.modalCargarDetalleMasivo()">Cargar Detalles</a></li> -->
 			</ul>
 		</div>
-
+		<div class="pull-right btn-header">
+					<a href="@controllers.haberes.routes.LiquidacionEmbargosController.crearMasivo()?@UriTrack.encode()"  class="form-control btn btn-default"><i class="glyphicon glyphicon-plus-sign"></i> Crear retenciones masivamente</a>
+				</div>
 
 		</div>
 	</div>
