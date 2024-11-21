@@ -27,11 +27,11 @@
 @views.html.haberes.mainHaberes("Lista de Retenciones", scripts) {
 <div class="page-header">
 	<div class="row">
-		<div class="col-sm-7">
+		<div class="col-sm-4">
 			<h1>Lista de Retenciones</h1>
 		</div>
 
-		<div class="col-sm-5">
+		<div class="col-sm-8">
 
 			<div class="btn-header pull-right">
 				<a href="@controllers.haberes.routes.LiquidacionEmbargosController.crear()?@UriTrack.encode()"  class="btn btn-default"><i class="glyphicon glyphicon-plus-sign"></i> Nueva Retencion</a>
@@ -45,7 +45,8 @@
 		    	<span class="caret"></span>
 		  	</button>
 			<ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
-				<li role="presentation"><a data-title="Datos Retenciones"  href="#" role="menuitem" tabindex="-1" data-url="@controllers.haberes.routes.LiquidacionEmbargosController.reporteDetalle()" id="modalDetalle">Datos Detalles</a></li>
+				<li role="presentation"><a data-title="Datos Retenciones"  href="#" role="menuitem" tabindex="-1" data-url="@controllers.haberes.routes.LiquidacionEmbargosController.exportarRetencionSinLiquidacion()" class="modalDetalle">Exportar Retenciones sin Liquidacion</a></li>
+				<li role="presentation"><a data-title="Datos Retenciones"  href="#" role="menuitem" tabindex="-1" data-url="@controllers.haberes.routes.LiquidacionEmbargosController.reporteDetalle()" class="modalDetalle">Datos Detalles</a></li>
 
 			</ul>
 		</div>
