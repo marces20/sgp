@@ -359,7 +359,7 @@ $( function(){
 	});
 
 
-	$('#modalDetalle').click( function() {
+	$('.modalDetalle').click( function() {
 		var url = $(this).attr("data-url");
 		var dialogo = $('<div></div>');
 
