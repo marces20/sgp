@@ -28,6 +28,7 @@ import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 
 import com.avaje.ebean.Ebean;
+import com.avaje.ebean.Expr;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
 import controllers.auth.CheckPermiso;
@@ -333,9 +334,18 @@ public class LiquidacionEmbargosController extends Controller {
 			return ok(modalResponseCargaLineaLiquidacion.render(null,d));
 		}
 
+
+
+
 		int x = 0;
 
 		try {
+
+			List<Long> idsCargados = new ArrayList<>();
+			List<LiquidacionDetalle> ids = LiquidacionDetalle.find.select("liquidacion_embargo_detalle_id").where().isNotNull("liquidacion_embargo_detalle_id").findList();
+			for(LiquidacionDetalle ldx :ids) {
+				idsCargados.add(ldx.liquidacion_embargo_detalle_id);
+			}
 
 			List<LiquidacionEmbargoDetalle> ld = LiquidacionEmbargoDetalle.find
 					.fetch("liquidacionEmbargo")
@@ -345,7 +355,7 @@ public class LiquidacionEmbargosController extends Controller {
 					.where()
 					.in("liquidacion_embargo_id", reteIds)
 					.eq("liquidacionEmbargo.estado.id",Estado.LIQUIDACION_EMBARGO_APROBADO)
-
+					.not(Expr.in("id",idsCargados))
 					.orderBy("liquidacionEmbargo.puestoLaboral.legajo.agente.apellido asc")
 					.findList();
 
@@ -362,7 +372,7 @@ public class LiquidacionEmbargosController extends Controller {
 										.eq("estado_id",Estado.LIQUIDACION_PUESTOS_BORRADOR)
 										.findUnique();
 
-				Logger.debug("111111111111 "+lp);
+
 
 				if(lp != null) {
 					LiquidacionDetalle ldelete = LiquidacionDetalle.find.where().eq("liquidacion_embargo_detalle_id", l.id).findUnique();
@@ -434,15 +444,23 @@ public class LiquidacionEmbargosController extends Controller {
 			estiloMoneda.setBorderTop(CellStyle.BORDER_THIN);
 			estiloMoneda.setBorderBottom(CellStyle.BORDER_THIN);
 
-			Sheet hoja = libro.createSheet("Seguro de Sepelio");
-			List<LiquidacionEmbargoDetalle> ld = LiquidacionEmbargoDetalle.find
+			Sheet hoja = libro.createSheet("Retencion");
+
+			List<Long> idsCargados = new ArrayList<>();
+			List<LiquidacionDetalle> ids = LiquidacionDetalle.find.select("liquidacion_embargo_detalle_id").where().isNotNull("liquidacion_embargo_detalle_id").findList();
+			for(LiquidacionDetalle ldx :ids) {
+				idsCargados.add(ldx.liquidacion_embargo_detalle_id);
+			}
+ 			List<LiquidacionEmbargoDetalle> ld = LiquidacionEmbargoDetalle.find
 					.fetch("liquidacionEmbargo")
 					.fetch("periodo")
+					.fetch("iquidacionTipo")
 					.fetch("liquidacionEmbargo.estado", "id, nombre")
 					.fetch("liquidacionEmbargo.proveedor", "nombre")
 			        .fetch("liquidacionEmbargo.puestoLaboral.legajo.agente", "apellido")
 					.where()
 					.in("liquidacion_embargo_id", reteIds)
+					.not(Expr.in("id",idsCargados))
 					.orderBy("liquidacionEmbargo.puestoLaboral.legajo.agente.apellido,periodo.id asc")
 						.findList();
 
