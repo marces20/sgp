@@ -3,16 +3,24 @@ package controllers.haberes;
 import static play.data.Form.form;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.math.RoundingMode;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.persistence.PersistenceException;
 
+import org.apache.poi.hssf.usermodel.HSSFCell;
+import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.poifs.filesystem.POIFSFileSystem;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.Row;
@@ -33,6 +41,7 @@ import models.haberes.LiquidacionDetalle;
 import models.haberes.LiquidacionEmbargo;
 import models.haberes.LiquidacionEmbargoDetalle;
 import models.haberes.LiquidacionPuesto;
+import models.haberes.Novedad;
 import models.haberes.PuestoLaboral;
 import play.Logger;
 import play.data.DynamicForm;
@@ -40,12 +49,15 @@ import play.data.Form;
 import play.libs.Json;
 import play.mvc.Controller;
 import play.mvc.Result;
+import play.mvc.Http.MultipartFormData;
+import play.mvc.Http.MultipartFormData.FilePart;
 import utils.DateUtils;
 import utils.RequestVar;
 import utils.UriTrack;
 import views.html.sinPermiso;
 import views.html.contabilidad.facturas.acciones.modalCargarFechaOrdenPago;
 import views.html.haberes.liquidacionEmbargos.*;
+import views.html.haberes.novedades.crearMasivo;
 import views.html.haberes.puestosLaborales.acciones.modalPasarABorrador;
 import views.html.rrhh.agente.modales.modalDatosAgente;
 
@@ -425,10 +437,13 @@ public class LiquidacionEmbargosController extends Controller {
 			Sheet hoja = libro.createSheet("Seguro de Sepelio");
 			List<LiquidacionEmbargoDetalle> ld = LiquidacionEmbargoDetalle.find
 					.fetch("liquidacionEmbargo")
+					.fetch("periodo")
 					.fetch("liquidacionEmbargo.estado", "id, nombre")
 					.fetch("liquidacionEmbargo.proveedor", "nombre")
 			        .fetch("liquidacionEmbargo.puestoLaboral.legajo.agente", "apellido")
-					.where().in("liquidacion_embargo_id", reteIds).orderBy("liquidacionEmbargo.puestoLaboral.legajo.agente.apellido asc")
+					.where()
+					.in("liquidacion_embargo_id", reteIds)
+					.orderBy("liquidacionEmbargo.puestoLaboral.legajo.agente.apellido,periodo.id asc")
 						.findList();
 
 
@@ -548,6 +563,221 @@ public class LiquidacionEmbargosController extends Controller {
 		return ok(modalDatosAgente.render(archivo.getPath(),d));
 	}
 
+	public static Result crearMasivo() {
+		Form<LiquidacionEmbargoDetalle> nForm = form(LiquidacionEmbargoDetalle.class);
+		return ok(crearEmbargoMasivo.render(nForm, null));
+	}
+
+	public static Result procesarMasivo() {
+
+		Form<LiquidacionEmbargoDetalle> nForm = form(LiquidacionEmbargoDetalle.class).bindFromRequest();
+		MultipartFormData body = request().body().asMultipartFormData();
+		Map<String, String[]> formData = request().body().asFormUrlEncoded();
+		List<String> msgArchivo = new ArrayList<String>();
+		List<String> msgCuit = new ArrayList<String>();
+		List<String> msgConcepto = new ArrayList<String>();
+		HashMap<String, List<String>> errores = new HashMap<String, List<String>>();
+
+		String algo = "";
+
+		File file;
+
+		Integer periodoId = null;
+		Integer tipoId = null;
+
+
+		System.out.println(nForm.data());
+
+		if (nForm.data().get("periodo_id").isEmpty()) {
+			nForm.reject("periodo_id", "Debe seleccionar periodo.");
+			return ok(crearEmbargoMasivo.render(nForm, null));
+		}
+
+		try {
+			FilePart upload = body.getFile("archivo");
+			file = upload.getFile();
+		} catch (NullPointerException n) {
+			nForm.reject("archivo", "Debe seleccionar un archivo");
+			return ok(crearEmbargoMasivo.render(nForm, null));
+		}
+
+		if (nForm.data().get("liquidacion_tipo_id").isEmpty()) {
+			nForm.reject("liquidacion_tipo_id", "Debe seleccionar un tipo.");
+			return ok(crearEmbargoMasivo.render(nForm, null));
+		}
+
+		periodoId = new Integer(nForm.data().get("periodo_id"));
+		tipoId = new Integer(nForm.data().get("liquidacion_tipo_id"));
+
+		Integer contador = 0;
+		Integer cargas = 0;
+		Integer actualizaciones = 0;
+
+		System.out.println(nForm.data());
+		try {
+			FileInputStream input = new FileInputStream(file.getAbsolutePath());
+			POIFSFileSystem fs = new POIFSFileSystem(input);
+			HSSFWorkbook wb = new HSSFWorkbook(fs);
+			HSSFSheet sheet = wb.getSheetAt(0);
+			Row row;
+
+			Ebean.beginTransaction();
+			String repe = "";
+			Boolean cargar = true;
+
+
+
+			for (int i = 1; i <= sheet.getLastRowNum(); i++) {
+
+
+				row = sheet.getRow(i);
+
+				Boolean pasar = false;
+				String cuit = null;
+				String cbu = null;
+				String tipoRetencion = null;
+				BigDecimal importe = null;
+
+				try {
+					row.getCell(1).getCellType();
+				} catch (Exception e) {
+					msgArchivo.add("Linea " + (i + 1) + ". El CUIT se encuentra vacío.");
+					pasar = true;
+				}
+
+				try {
+					row.getCell(4).getCellType();
+				} catch (Exception e) {
+					msgArchivo.add("Linea " + (i + 1) + ". El CBU se encuentra vacío.");
+					pasar = true;
+				}
+
+
+
+
+
+				if (HSSFCell.CELL_TYPE_NUMERIC == row.getCell(1).getCellType()) {
+					Double c = row.getCell(1).getNumericCellValue();
+					DecimalFormat decimalFormat = new DecimalFormat(".");
+					decimalFormat.setGroupingUsed(false);
+					decimalFormat.setDecimalSeparatorAlwaysShown(false);
+					cuit = decimalFormat.format(c);
+				} else {
+					msgArchivo.add("Linea " + (i + 1) + ". La celda de CUIT debe ser formato numérico.");
+					pasar = true;
+				}
+
+				if (HSSFCell.CELL_TYPE_STRING == row.getCell(2).getCellType()) {
+					tipoRetencion = row.getCell(2).getStringCellValue();
+				} else {
+					msgArchivo.add("Linea " + (i + 1) + ". La celda de Tipo Retencion debe ser formato text.");
+					pasar = true;
+				}
+
+				if (HSSFCell.CELL_TYPE_STRING == row.getCell(4).getCellType()) {
+					cbu = row.getCell(4).getStringCellValue();
+				} else {
+					msgArchivo.add("Linea " + (i + 1) + ". La celda de CBU debe ser formato text.");
+					pasar = true;
+				}
+
+				Logger.debug("xxxxxxxxxxxxxx {}",row.getCell(9).getCellType());
+				Logger.debug("xxxxxxxxxxxxxx {}",row.getCell(9).getCellType());
+				//Logger.debug("xxxxxxxxxxxxxx {}",row.getCell(9).get);
+
+				if (HSSFCell.CELL_TYPE_NUMERIC == row.getCell(9).getCellType()) {
+					importe = new BigDecimal(row.getCell(9).getNumericCellValue()).setScale(2, RoundingMode.HALF_DOWN);
+				} else {
+					msgArchivo.add("Linea " + (i + 1) + ". La celda de IMPORTE debe ser formato numérico.");
+					pasar = true;
+				}
+
+				List<LiquidacionEmbargo> le = LiquidacionEmbargo.find.where()
+											 .eq("puestoLaboral.legajo.agente.cuit", cuit)
+											 //.eq("proveedor.getCuentaBancaria().cbu",cbu)
+											 .eq("estado_id", Estado.LIQUIDACION_EMBARGO_APROBADO)
+											 .findList();
+
+
+				Long liquidacion_embargo_id = null;
+				if(le != null) {
+					boolean noHay = true;
+ 					for(LiquidacionEmbargo lex : le) {
+
+						if(lex.proveedor.getCuentaBancaria().cbu.trim().compareToIgnoreCase(cbu) == 0) {
+							 liquidacion_embargo_id = lex.id;
+							 noHay = false;
+						}
+
+						Logger.debug("ddddddddddddd {}", lex.proveedor.getCuentaBancaria().cbu);
+						Logger.debug("ddddddddddddd111 {}", lex.proveedor.getCuentaBancaria().cbu.compareToIgnoreCase(cbu));
+					}
+ 					if(noHay) {
+ 						Logger.debug("ddddddddddddd222 {}", cbu);
+
+ 						msgArchivo.add("Linea " + (i + 1) + ". No se encuentra una cbu cargada para este cuit");
+ 						pasar = true;
+ 					}
+
+				}else {
+					msgArchivo.add("Linea " + (i + 1) + ". No se encuentra una retencion cargada con este cuit");
+					pasar = true;
+				}
+
+				if (pasar) {
+					cargar = false;
+					continue;
+				}
+
+
+				Long liquidacion_concepto_id = null;
+
+				if(tipoRetencion.compareToIgnoreCase("RETENCION JUDICIAL POR ALIMENTOS") == 0) {
+					liquidacion_concepto_id = new Long(20);
+				}else if (tipoRetencion.compareToIgnoreCase("EMBARGO JUDICIAL") == 0) {
+					liquidacion_concepto_id = new Long(427);
+				}
+
+
+
+				if (cargar) {
+					LiquidacionEmbargoDetalle ld = new LiquidacionEmbargoDetalle();
+					ld.importe = importe;
+					ld.liquidacion_concepto_id = liquidacion_concepto_id;
+					ld.liquidacion_embargo_id = liquidacion_embargo_id;
+					ld.liquidacion_tipo_id =  tipoId;
+					ld.periodo_id = periodoId;
+					ld.save();
+					cargas ++;
+				}
+
+				contador++;
+
+			}
+
+			errores.put("archivo", msgArchivo);
+			errores.put("concepto", msgConcepto);
+			errores.put("cuit", msgCuit);
+
+
+			if (cargar) {
+				flash("success", "Se han creado <b>(" + cargas + ")</b> retenciones ");
+				Ebean.commitTransaction();
+			} else {
+				Ebean.rollbackTransaction();
+				flash("error", "Se han encontrado algunos errores. Corríjalos y vuelva a importar el archivo.");
+			}
+
+		} catch (Exception e) {
+			Ebean.rollbackTransaction();
+			System.out.println("Excepction: " + e.getMessage());
+			flash("error", e.getMessage());
+		} finally {
+			Ebean.endTransaction();
+		}
+
+	return ok(crearEmbargoMasivo.render(nForm, errores));
+}
 
 	public static List<Integer> getSeleccionados(){
 		String[] checks = null;
