@@ -1080,6 +1080,9 @@ POST    /haberes/liquidacionEmbargo/actualizar   	controllers.haberes.Liquidacio
 GET     /haberes/liquidacionEmbargo/ver        		controllers.haberes.LiquidacionEmbargosController.ver(id:Long)
 GET     /haberes/liquidacionEmbargo/cambiarEstado	controllers.haberes.LiquidacionEmbargosController.cambiarEstado(idEmbargo:Long, idEstado: Long)
 
+GET     /haberes/liquidacionEmbargo/acciones/crear-masivo        controllers.haberes.LiquidacionEmbargosController.crearMasivo()
+POST    /haberes/liquidacionEmbargo/acciones/procesar-masivo     controllers.haberes.LiquidacionEmbargosController.procesarMasivo()
+
 GET    /haberes/modalCargarDetalleMasivo   		controllers.haberes.LiquidacionEmbargosController.modalCargarDetalleMasivo()
 POST   /haberes/cargarDetalleMasivo   			controllers.haberes.LiquidacionEmbargosController.cargarDetalleMasivo()
 
