@@ -355,7 +355,7 @@ public class RecuperoFactura extends Model {
 			if(Usuario.getUsurioSesion().organigrama != null && Usuario.getUsurioSesion().organigrama.deposito != null){
 				//RecuperoPlanilla rp = RecuperoPlanilla.find.byId(planilla_id.longValue());
 
-				if(Usuario.getUsurioSesion().organigrama.deposito_id.compareTo(this.puntoVenta.deposito_id) != 0) {
+				if(this.puntoVenta.deposito_id != null && Usuario.getUsurioSesion().organigrama.deposito_id.compareTo(this.puntoVenta.deposito_id) != 0) {
 					r = false;
 				}
 			}else {
