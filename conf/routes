@@ -1087,6 +1087,7 @@ GET    /haberes/modalCargarDetalleMasivo   		controllers.haberes.LiquidacionEmba
 POST   /haberes/cargarDetalleMasivo   			controllers.haberes.LiquidacionEmbargosController.cargarDetalleMasivo()
 
 POST    /haberes/liquidacionEmbargoDetalle/reporteDetalle     			controllers.haberes.LiquidacionEmbargosController.reporteDetalle()
+POST    /haberes/liquidacionEmbargoDetalle/exportarRetencionSinLiquidacion     			controllers.haberes.LiquidacionEmbargosController.exportarRetencionSinLiquidacion()
 POST    /haberes/liquidacionEmbargoDetalle/crearLineaLiquidacion     	controllers.haberes.LiquidacionEmbargosController.crearLineaLiquidacion()
 
 GET     /haberes/liquidacionEmbargoDetalle/index       		controllers.haberes.LiquidacionEmbargosDetallesController.index(id:Long ?= 0, editable:Boolean ?= false)
