@@ -37,6 +37,7 @@ import models.AgenteNovedad;
 import models.AgenteRul;
 import models.Estado;
 import models.Factura;
+import models.Usuario;
 import models.auth.Permiso;
 import models.haberes.LiquidacionDetalle;
 import models.haberes.LiquidacionEmbargo;
@@ -342,7 +343,11 @@ public class LiquidacionEmbargosController extends Controller {
 		try {
 
 			List<Long> idsCargados = new ArrayList<>();
-			List<LiquidacionDetalle> ids = LiquidacionDetalle.find.select("liquidacion_embargo_detalle_id").where().isNotNull("liquidacion_embargo_detalle_id").findList();
+			List<LiquidacionDetalle> ids = LiquidacionDetalle.find.select("liquidacion_embargo_detalle_id")
+										  .fetch("liquidacionPuesto")
+										  .where().isNotNull("liquidacion_embargo_detalle_id")
+										  .eq("liquidacionPuesto.estado_id", Estado.LIQUIDACION_PUESTOS_APROBADO)
+										  .findList();
 			for(LiquidacionDetalle ldx :ids) {
 				idsCargados.add(ldx.liquidacion_embargo_detalle_id);
 			}
@@ -383,7 +388,6 @@ public class LiquidacionEmbargosController extends Controller {
 
 					LiquidacionDetalle ldx = new  LiquidacionDetalle();
 					ldx.liquidacion_puesto_id = lp.id;
-
 					ldx.liquidacion_concepto_id= l.liquidacion_concepto_id;
 					ldx.cantidad=new BigDecimal(1);
 					ldx.importe= l.importe;
@@ -391,6 +395,34 @@ public class LiquidacionEmbargosController extends Controller {
 					ldx.organigrama_id = lp.puestoLaboral.legajo.agente.organigrama_id;
 					ldx.liquidacion_embargo_detalle_id= l.id;
 					ldx.save();
+
+					List<Novedad> ndelete = Novedad.find.where()
+									.eq("puesto_laboral_id", lp.puestoLaboral.id)
+									.eq("liquidacion_concepto_id",  l.liquidacion_concepto_id)
+									.eq("periodo_inicio_id", l.periodo_id.longValue())
+									.eq("periodo_hasta_id", l.periodo_id.longValue()).findList();
+
+					for(Novedad nx :ndelete) {
+						nx.delete();
+					}
+
+					Novedad n = new Novedad();
+					n.puesto_laboral_id= lp.puestoLaboral.id;
+					n.liquidacion_concepto_id= l.liquidacion_concepto_id;
+					n.periodo_inicio_id= l.periodo_id.longValue();
+					n.periodo_hasta_id= l.periodo_id.longValue();
+					n.periodo_concepto_id= l.periodo_id.longValue();
+					n.organigrama_id= lp.puestoLaboral.legajo.agente.organigrama_id;
+					n.activo= true;
+					n.fecha_novedad= new Date();;
+					n.importe = l.importe;
+					n.cantidad = new BigDecimal(1);
+					n.usuario_id= new Long(Usuario.getUsuarioSesion());
+					n.liquidacion_tipo_id = l.liquidacion_tipo_id.longValue();
+					n.create_date = new Date();
+					n.save();
+
+
 					x ++;
 				}else {
 
@@ -446,15 +478,187 @@ public class LiquidacionEmbargosController extends Controller {
 
 			Sheet hoja = libro.createSheet("Retencion");
 
+
+ 			List<LiquidacionEmbargoDetalle> ld = LiquidacionEmbargoDetalle.find
+					.fetch("liquidacionEmbargo")
+					.fetch("periodo")
+					.fetch("liquidacionTipo")
+					.fetch("liquidacionEmbargo.estado", "id, nombre")
+					.fetch("liquidacionEmbargo.proveedor", "nombre")
+			        .fetch("liquidacionEmbargo.puestoLaboral.legajo.agente", "apellido")
+					.where()
+					.in("liquidacion_embargo_id", reteIds)
+					.orderBy("liquidacionEmbargo.puestoLaboral.legajo.agente.apellido,periodo.id asc")
+						.findList();
+
+
+			if(ld.size() > 0){
+				int x = 0;
+				Row fila = hoja.createRow(x);
+				Cell celda0 = fila.createCell(0);
+				celda0 = fila.createCell(0);
+				celda0.setCellValue("Nombre");
+				celda0.setCellStyle(comun);
+
+				celda0 = fila.createCell(1);
+				celda0.setCellValue("Cuit");
+				celda0.setCellStyle(comun);
+
+				celda0 = fila.createCell(2);
+				celda0.setCellValue("Tipo Retencion");
+				celda0.setCellStyle(comun);
+
+				celda0 = fila.createCell(3);
+				celda0.setCellValue("Nombre Oficio");
+				celda0.setCellStyle(comun);
+
+				celda0 = fila.createCell(4);
+				celda0.setCellValue("CBU Oficio");
+				celda0.setCellStyle(comun);
+
+				celda0 = fila.createCell(5);
+				celda0.setCellValue("Cuenta Oficio");
+				celda0.setCellStyle(comun);
+
+				celda0 = fila.createCell(6);
+				celda0.setCellValue("Concepto");
+				celda0.setCellStyle(comun);
+
+				celda0 = fila.createCell(7);
+				celda0.setCellValue("Periodo");
+				celda0.setCellStyle(comun);
+
+				celda0 = fila.createCell(8);
+				celda0.setCellValue("Tipo Liquidacion");
+				celda0.setCellStyle(comun);
+
+				celda0 = fila.createCell(9);
+				celda0.setCellValue("importe");
+				celda0.setCellStyle(comun);
+
+
+				x++;
+
+
+				BigDecimal total =  new BigDecimal(0);
+				BigDecimal totalHaberes =  new BigDecimal(0);
+
+
+				for (LiquidacionEmbargoDetalle l: ld) {
+
+					System.out.println(l.liquidacionEmbargo.puestoLaboral.legajo.agente.apellido);
+					fila = hoja.createRow(x);
+					celda0 = fila.createCell(0);
+					celda0.setCellValue(l.liquidacionEmbargo.puestoLaboral.legajo.agente.apellido);
+					celda0.setCellStyle(comun);
+
+					celda0 = fila.createCell(1);
+					celda0.setCellType(Cell.CELL_TYPE_NUMERIC);
+					celda0.setCellValue(l.liquidacionEmbargo.puestoLaboral.legajo.agente.cuit);
+					celda0.setCellStyle(comun);
+
+					celda0 = fila.createCell(2);
+					celda0.setCellValue(l.liquidacionEmbargo.tipoEmbargo.nombre);
+					celda0.setCellStyle(comun);
+
+					celda0 = fila.createCell(3);
+					celda0.setCellValue(l.liquidacionEmbargo.proveedor.nombre);
+					celda0.setCellStyle(comun);
+
+					celda0 = fila.createCell(4);
+					celda0.setCellValue(l.liquidacionEmbargo.proveedor.getCuentaBancaria().cbu);
+					celda0.setCellStyle(comun);
+
+ 					celda0 = fila.createCell(5);
+					celda0.setCellValue(l.liquidacionEmbargo.proveedor.getCuentaBancaria().numero_cuenta);
+					celda0.setCellStyle(comun);
+
+					celda0 = fila.createCell(6);
+					celda0.setCellValue(l.liquidacionConcepto.denominacion);
+					celda0.setCellStyle(comun);
+
+					celda0 = fila.createCell(7);
+					celda0.setCellValue(l.periodo.nombre);
+					celda0.setCellStyle(comun);
+
+					celda0 = fila.createCell(8);
+					celda0.setCellValue(l.liquidacionTipo.nombre);
+					celda0.setCellStyle(comun);
+
+					celda0 = fila.createCell(9);
+					celda0.setCellType(Cell.CELL_TYPE_NUMERIC);
+					celda0.setCellValue(l.importe.doubleValue());
+					celda0.setCellStyle(comun);
+
+
+
+
+					x++;
+
+				}
+
+
+			}
+
+			libro.write(archivoTmp);
+		} catch (IOException e) {
+			e.printStackTrace();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return ok(modalDatosAgente.render(archivo.getPath(),d));
+	}
+
+	public static Result exportarRetencionSinLiquidacion() {
+		DynamicForm d = form().bindFromRequest();
+		String error = "";
+		Boolean hayError = false;
+		String dirTemp = System.getProperty("java.io.tmpdir");
+		File archivo = new File(dirTemp+"/listado_retenciones.xls");
+
+
+		List<Integer> reteIds = getSeleccionados();
+
+		if(reteIds.size() <= 0){
+			flash("error", "Debe seleccionar una Retencion.");
+			return ok(modalDatosAgente.render(null,d));
+		}
+
+		try {
+
+			if(archivo.exists()) archivo.delete();
+			archivo.createNewFile();
+
+			Workbook libro = new HSSFWorkbook();
+			FileOutputStream archivoTmp = new FileOutputStream(archivo);
+
+			CellStyle comun = libro.createCellStyle();
+			comun.setBorderRight(CellStyle.BORDER_THIN);
+			comun.setBorderLeft(CellStyle.BORDER_THIN);
+			comun.setBorderTop(CellStyle.BORDER_THIN);
+			comun.setBorderBottom(CellStyle.BORDER_THIN);
+
+			CellStyle estiloMoneda = libro.createCellStyle();
+			estiloMoneda.setDataFormat((short) 7);
+			estiloMoneda.setBorderRight(CellStyle.BORDER_THIN);
+			estiloMoneda.setBorderLeft(CellStyle.BORDER_THIN);
+			estiloMoneda.setBorderTop(CellStyle.BORDER_THIN);
+			estiloMoneda.setBorderBottom(CellStyle.BORDER_THIN);
+
+			Sheet hoja = libro.createSheet("Retencion");
+
 			List<Long> idsCargados = new ArrayList<>();
-			List<LiquidacionDetalle> ids = LiquidacionDetalle.find.select("liquidacion_embargo_detalle_id").where().isNotNull("liquidacion_embargo_detalle_id").findList();
+			List<LiquidacionDetalle> ids = LiquidacionDetalle.find.select("liquidacion_embargo_detalle_id").where()
+					.isNotNull("liquidacion_embargo_detalle_id")
+					.eq("liquidacionPuesto.estado_id", Estado.LIQUIDACION_PUESTOS_APROBADO)
+					.findList();
 			for(LiquidacionDetalle ldx :ids) {
 				idsCargados.add(ldx.liquidacion_embargo_detalle_id);
 			}
  			List<LiquidacionEmbargoDetalle> ld = LiquidacionEmbargoDetalle.find
 					.fetch("liquidacionEmbargo")
 					.fetch("periodo")
-					.fetch("iquidacionTipo")
+					.fetch("liquidacionTipo")
 					.fetch("liquidacionEmbargo.estado", "id, nombre")
 					.fetch("liquidacionEmbargo.proveedor", "nombre")
 			        .fetch("liquidacionEmbargo.puestoLaboral.legajo.agente", "apellido")
@@ -526,6 +730,7 @@ public class LiquidacionEmbargosController extends Controller {
 					celda0.setCellStyle(comun);
 
 					celda0 = fila.createCell(1);
+					celda0.setCellType(Cell.CELL_TYPE_NUMERIC);
 					celda0.setCellValue(l.liquidacionEmbargo.puestoLaboral.legajo.agente.cuit);
 					celda0.setCellStyle(comun);
 
