@@ -354,9 +354,16 @@ public class RecuperoFactura extends Model {
 		if(!Permiso.check("verTodoRecupero")){
 			if(Usuario.getUsurioSesion().organigrama != null && Usuario.getUsurioSesion().organigrama.deposito != null){
 				//RecuperoPlanilla rp = RecuperoPlanilla.find.byId(planilla_id.longValue());
+				if(this.puntoventa_id != null) {
 
-				if(this.puntoVenta.deposito_id != null && Usuario.getUsurioSesion().organigrama.deposito_id.compareTo(this.puntoVenta.deposito_id) != 0) {
-					r = false;
+					PuntoVenta pv = PuntoVenta.find.where().eq("id", this.puntoventa_id).findUnique();
+
+					if(pv != null) {
+						if(pv.deposito_id != null && Usuario.getUsurioSesion().organigrama.deposito_id.compareTo(pv.deposito_id) != 0) {
+							r = false;
+						}
+					}
+
 				}
 			}else {
 				r = false;
