@@ -80,6 +80,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
 import models.ClienteTipo;
+import models.CondicionIva;
 import models.Estado;
 import models.Periodo;
 import models.TipoComprobante;
@@ -718,6 +719,8 @@ public class AfipController {
 					docTipo = 91;
 				}
 
+
+
 				if(rf.cliente.cie != null && !rf.cliente.cie.isEmpty()) {
 					doc = new Long(rf.cliente.cie);
 					docTipo = 91;
@@ -726,6 +729,12 @@ public class AfipController {
 				}else if(rf.cliente.dni != null) {
 					doc = new Long(rf.cliente.dni);
 					docTipo = 96;
+				}
+
+				if(rf.cliente.cliente_tipo_id.compareTo(ClienteTipo.ART) == 0 || rf.cliente.cliente_tipo_id.compareTo(ClienteTipo.SEGUROS) == 0 || rf.cliente.cliente_tipo_id.compareTo(ClienteTipo.OBRAS_SOCIALES) == 0) {
+					if(rf.cliente.condicioniva_id.compareTo(CondicionIva.CLIENTE_EXTERIOR.intValue()) == 0) {
+						docTipo = 91;
+					}
 				}
 
 
