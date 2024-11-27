@@ -14,6 +14,7 @@ import play.db.ebean.Model;
 public class CondicionIva  extends Model{
 
 	private static final long serialVersionUID = 1L;
+	public static Long CLIENTE_EXTERIOR = (long)13;
 
 	@Id
 	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="condiciones_iva_id_seq")
