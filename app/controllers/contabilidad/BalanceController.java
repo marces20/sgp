@@ -619,7 +619,10 @@ public class BalanceController extends Controller {
 									linea2 += StringUtils.alfanumericoPadStart(b.asiento.toString(),6);//Número de asiento (6 posiciones).
 									linea2 += StringUtils.alfanumerico(b.cuenta.code.replace(".", "").replace(" ",""),15);//Código de cuenta (15 posiciones).
 									linea2 += StringUtils.alfanumericoPadStart("",8);//Fecha alternativa (8 posiciones: aaaammdd), si no tiene se graba la fecha del asiento.
-									linea2 += StringUtils.alfanumericoPadStart(b.expediente.getExpedienteEjercicio(),30);//Leyenda (30 posiciones).
+
+									String leyenda = (b.expediente != null)?b.expediente.getExpedienteEjercicio():"";
+									linea2 += StringUtils.alfanumericoPadStart(leyenda,30);//Leyenda (30 posiciones).
+
 									linea2 += StringUtils.alfanumerico(dh,1);//Columna (1; <D> = Debe, <H> = Haber).
 									//linea2 += StringUtils.alfanumericoPadStart(dfxc.toString().replace(",", "."),15);//Importe (15 posiciones; 12 enteros, punto decimal, 2 decimales).
 									linea2 += StringUtils.alfanumericoPadStart(dfxcSTR,15);//Importe (15 posiciones; 12 enteros, punto decimal, 2 decimales).
