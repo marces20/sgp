@@ -1,0 +1,82 @@
+@(titulo:String,fecha:String,totalDeuda:String,clienteNombre:String)
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<title>Factura - Parque Salud Misiones</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+</head>
+<body style="margin: 0; padding: 0;">
+
+
+
+	<table border="0" cellpadding="0" cellspacing="0" width="100%">
+		<tr>
+			<td style="padding: 20px 0 20px 0;">
+				<table align="center" border="0" cellpadding="0" cellspacing="0" width="800" style="border: 0px solid #cccccc; border-collapse: collapse;">
+					<tr>
+						<td align="center">
+
+							<img id="1" src="https://parquesaludmisiones.org.ar/wp-content/uploads/2022/10/logo-1024x178.png">
+						</td>
+					</tr>
+					<tr>
+						<td align="center" bgcolor="#FFFFFF" style="padding: 10px 0 10px 0; color: #153643; font-size: 14px;   font-family: Arial, sans-serif;">
+
+
+						</td>
+					</tr>
+				</table>
+			</td>
+		</tr>
+		<tr>
+			<td style="padding: 10px 0 20px 0;">
+				<table align="center" border="0" cellpadding="0" cellspacing="0" width="800" style="border: 1px solid #cccccc; border-collapse: collapse;">
+					<tr>
+						<td align="center" bgcolor="#FFFFFF" style="padding: 10px 0 10px 0; color: #153643; font-size: 14px;   font-family: Arial, sans-serif;">
+							<h2>Estimado "@clienteNombre".</h2>
+							<h2>Informamos su estado de deuda con nuestra instituci&oacute;n a la fecha @fecha</h2>
+							<h2 style="color:red;font-size: 30px;" ><b>@totalDeuda</b></h2>
+						</td>
+					</tr>
+				</table>
+			</td>
+		</tr>
+		<tr>
+			<td style="padding: 10px 0 20px 0;">
+				<table align="center" border="0" cellpadding="0" cellspacing="0" width="800" style="border: 1px solid #cccccc; border-collapse: collapse;">
+					<tr>
+						<td align="center" bgcolor="#FFFFFF" style="padding: 10px 0 10px 0; color: #153643; font-size: 14px;   font-family: Arial, sans-serif;">
+							<h3>Solicitamos que regularice la situaci&oacute;n con el fin de evitar recargos.</h3>
+							<h3>Adjuntamos al mail el detalle de las facturas adeudadas.</h3>
+							<h3>Muchas Gracias Saludos Coordiales</h3>
+
+						</td>
+					</tr>
+				</table>
+			</td>
+		</tr>
+		<tr>
+			<td style="padding: 10px 0 20px 0;">
+				<table align="center" border="0" cellpadding="0" cellspacing="0" width="800" style="border: 0px solid #cccccc; border-collapse: collapse;">
+					<tr>
+						<td align="left" bgcolor="#FFFFFF" style="padding: 10px 0 10px 0;color:grey; font-size: 14px;   font-family: Arial, sans-serif;">
+
+							<h3 style="">Departamento de Recupero de Gastos</h3>
+							<h3>Parque de la Salud Provincia de Misiones</h3>
+							<h3>CUIT 30-71222430-0</h3>
+							<h3>Marconi N&#186; 3736 - Posadas - Misiones - CP3300</h3>
+							<h3>Tel 0376-4443700 (int 2212)</h3>
+						</td>
+					</tr>
+				</table>
+			</td>
+		</tr>
+
+
+	</table>
+
+
+</body>
+</html>
