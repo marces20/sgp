@@ -264,6 +264,7 @@
 					<th width="95" align="center">Total</th>
 					<th width="95" align="center">Saldo</th>
 					<th width="100">Estado</th>
+					<th width="100">Tipo</th>
 					<th width="">Usuario</th>
 					<th width="30">#</th>
 				</tr>
@@ -293,6 +294,7 @@
 							<br/>0.00%
 						}
 					}</td>
+					<td class="" >@if(rf.recuperoTipoPago != null){@rf.recuperoTipoPago.nombre}</td>
 					<td class="" >@if(rf.create_usuario != null){@rf.create_usuario.nombre}</td>
 					<td>
 						<!--  <a class="btn btn-default btn-xs delete-confirm-link notSeleccion" href="@controllers.recupero.routes.RecuperoFacturasController.eliminar(rf.id)&@UriTrack.encode()">
