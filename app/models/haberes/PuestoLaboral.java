@@ -137,6 +137,8 @@ public class PuestoLaboral extends Model{
 	public LiquidacionMes liquidacionMes;
 	public Long liquidacion_mes_id;
 
+	public Boolean dobla;
+
 	public static Model.Finder<Long,PuestoLaboral> find = new Finder<Long,PuestoLaboral>(Long.class, PuestoLaboral.class);
 
 
