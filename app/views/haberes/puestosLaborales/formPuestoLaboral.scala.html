@@ -3,12 +3,12 @@
 @import utils._
 @import models.auth._
 @import models.haberes._
-@implicitFieldConstructor = @{ FieldConstructor(simpleInput.render) } 
+@implicitFieldConstructor = @{ FieldConstructor(simpleInput.render) }
 <script>
-$( function(){ 
+$( function(){
 	$('.searchModal').modalSearch();
 	$("#sueldo_referencia").numeric_input();
- 	
+
 	if($("#liquidacion_mes").length){
 		var options = {
 				script:"/suggestLiquidacionMes/",
@@ -16,26 +16,26 @@ $( function(){
 				json:true,
 				shownoresults:true,
 				maxresults:6,
-				callback: function (obj) { 
-											$("#liquidacion_mes_id").val(obj.id); 
+				callback: function (obj) {
+											$("#liquidacion_mes_id").val(obj.id);
 										 }
 			};
 		var as_json = new bsn.AutoSuggest('liquidacion_mes', options);
 	}
 })
-</script>	
+</script>
 	<div class="row menu-acciones">
 		<div class="col-sm-10">
 			<button type="submit" class="btn btn-default" title="Guardar puesto laboral"><i class="glyphicon glyphicon-floppy-disk"></i> Guardar</button>
 			<a href="@if(request().getHeader("referer")){ @request().getHeader("referer") } else {@controllers.haberes.routes.PuestosLaboralesController.index()@UriTrack.decode()}" title="Cancelar editar" class="btn btn-default"><i class="glyphicon glyphicon-floppy-remove"></i> Cancelar</a>
 		</div>
 		<div class="col-sm-2">
-			<a href="@UriTrack.decode()" title="Volver al listado" class="btn btn-default"><i class="glyphicon glyphicon-list"></i></a> 
-		</div>	
+			<a href="@UriTrack.decode()" title="Volver al listado" class="btn btn-default"><i class="glyphicon glyphicon-list"></i></a>
+		</div>
 	</div>
 	<div class="row">
-		  
-		
+
+
 		<div class="col-sm-3">
 			<label class="control-label">Legajo</label>
 				<div class="input-group @if(puestoForm.error("legajo_id") != null) {has-error}else{has-required}">
@@ -43,11 +43,11 @@ $( function(){
 					@inputText(puestoForm("legajo_id"), 'hidden -> "hidden", 'id -> "legajo_id")
 					<span class="input-group-addon">
 					<a href="#" class="searchModal"
-								id="searchLegajo" 
-							 	data-title="Selección de legajo" 
-							 	data-url="@controllers.haberes.routes.LegajosController.modalBuscar()" 
-							 	data-height="650" data-width="700" 
-							 	data-listen="modal.seleccion.legajo.simple" 
+								id="searchLegajo"
+							 	data-title="Selección de legajo"
+							 	data-url="@controllers.haberes.routes.LegajosController.modalBuscar()"
+							 	data-height="650" data-width="700"
+							 	data-listen="modal.seleccion.legajo.simple"
 							 	data-label="#legajo" data-field="#legajo_id">
 					<i class="glyphicon glyphicon-search"></i></a></span>
 				</div>
@@ -55,72 +55,76 @@ $( function(){
 					<div class="text-error">@error.message</div>
 				}
 		</div>
-		<div class="col-sm-2">
-			<div class="form-group">
-				<label for="nombre" class="control-label">Estado
-				@select(puestoForm("activo"), options("true"->"Activo", "false"->"Inactivo"), 'class -> "form-control")
+		<div class="col-sm-3">
+			<div class="col-sm-6">
+				<div class="form-group">
+					<label for="nombre" class="control-label">Estado
+					@select(puestoForm("activo"), options("true"->"Activo", "false"->"Inactivo"), 'class -> "form-control")
+					</label>
+				</div>
+			</div>
+			<div class="col-sm-6">
+				<label class="control-label">
+					Envio mail
+					@select(puestoForm("mail_automatico"),options("true"->"SI","false"->"NO"), 'class -> "form-control select")
 				</label>
 			</div>
 		</div>
-		<div class="col-sm-2">
-			<label class="control-label"> 
-				Envio mail
-				@select(puestoForm("mail_automatico"),options("true"->"SI","false"->"NO"), 'class -> "form-control select")
-			</label>
-		</div>
-		<div class="col-sm-2 @if(puestoForm.error("convenio_ministerio") != null) {has-error}else{has-required}">
-			<b>Convenio Ministerio</b>
-			<div class="row">
-				<div class="col-sm-5">
-					<div class="radio">
-						<label class="control-label"> 
-							@inputRadioGroup(puestoForm("convenio_ministerio"), options = Seq("true"->"SI"))
-						</label>
+		<div class="col-sm-3">
+			<div class="col-sm-6 @if(puestoForm.error("convenio_ministerio") != null) {has-error}else{has-required}">
+				<b>Convenio Ministerio</b>
+				<div class="row">
+					<div class="col-sm-5">
+						<div class="radio">
+							<label class="control-label">
+								@inputRadioGroup(puestoForm("convenio_ministerio"), options = Seq("true"->"SI"))
+							</label>
+						</div>
+					</div>
+					<div class="col-sm-7">
+						<div class="radio">
+							<label class="control-label">
+								@inputRadioGroup(puestoForm("convenio_ministerio"),options = Seq("false"->"NO"))
+							</label>
+						</div>
 					</div>
 				</div>
-				<div class="col-sm-7">
-					<div class="radio">
-						<label class="control-label"> 
-							@inputRadioGroup(puestoForm("convenio_ministerio"),options = Seq("false"->"NO"))
-						</label>
-					</div>
-				</div>
-			</div>
-			@puestoForm("convenio_ministerio").error.map{ error =>
-				<div class="text-error">@error.message</div>
-			}
-		</div> 
-		<div class="col-sm-2">
-			<label class="control-label">Cargo Laboral</label>
-				<div class="input-group @if(puestoForm.error("cargo_laboral_id") != null) {has-error}else{has-required}">
-					@inputText(puestoForm("cargoLaboral.nombre"), 'name -> "", 'class -> "form-control", 'id -> "cargo_laboral")
-					@inputText(puestoForm("cargo_laboral_id"), 'hidden -> "hidden", 'id -> "cargo_laboral_id")
-					<span class="input-group-addon">
-					<a href="#" class="searchModal" id="searchCargoLaboral" 
-							 	data-title="Selección de Cargo" 
-							 	data-url="@controllers.haberes.routes.CargosLaboralesController.modalBuscar()" 
-							 	data-height="650" data-width="700" 
-							 	data-listen="modal.seleccion.cargoLaboral.simple" 
-							 	data-label="#cargo_laboral" data-field="#cargo_laboral_id">
-					<i class="glyphicon glyphicon-search"></i></a></span>
-				</div>
-				@puestoForm("cargo_laboral_id").error.map{ error =>
+				@puestoForm("convenio_ministerio").error.map{ error =>
 					<div class="text-error">@error.message</div>
 				}
+			</div>
+			<div class="col-sm-6">
+				<label class="control-label">Cargo Laboral</label>
+					<div class="input-group @if(puestoForm.error("cargo_laboral_id") != null) {has-error}else{has-required}">
+						@inputText(puestoForm("cargoLaboral.nombre"), 'name -> "", 'class -> "form-control", 'id -> "cargo_laboral")
+						@inputText(puestoForm("cargo_laboral_id"), 'hidden -> "hidden", 'id -> "cargo_laboral_id")
+						<span class="input-group-addon">
+						<a href="#" class="searchModal" id="searchCargoLaboral"
+								 	data-title="Selección de Cargo"
+								 	data-url="@controllers.haberes.routes.CargosLaboralesController.modalBuscar()"
+								 	data-height="650" data-width="700"
+								 	data-listen="modal.seleccion.cargoLaboral.simple"
+								 	data-label="#cargo_laboral" data-field="#cargo_laboral_id">
+						<i class="glyphicon glyphicon-search"></i></a></span>
+					</div>
+					@puestoForm("cargo_laboral_id").error.map{ error =>
+						<div class="text-error">@error.message</div>
+					}
+			</div>
 		</div>
-	</div>	
-	<div class="row">	
+	</div>
+	<div class="row">
 		<div class="col-sm-3">
 			<label class="control-label">Escala</label>
 				<div class="input-group @if(puestoForm.error("escala_laboral_id") != null) {has-error}else{has-required}">
 					@inputText(puestoForm("escalaLaboral.nombre"), 'name -> "", 'class -> "form-control", 'id -> "escala_laboral")
 					@inputText(puestoForm("escala_laboral_id"), 'hidden -> "hidden", 'id -> "escala_laboral_id")
 					<span class="input-group-addon">
-					<a href="#" class="searchModal" id="searchEscalaLaboral" 
-							 	data-title="Selección de escala" 
-							 	data-url="@controllers.haberes.routes.EscalasLaboralesController.modalBuscar()" 
-							 	data-height="650" data-width="700" 
-							 	data-listen="modal.seleccion.escalaLaboral.simple" 
+					<a href="#" class="searchModal" id="searchEscalaLaboral"
+							 	data-title="Selección de escala"
+							 	data-url="@controllers.haberes.routes.EscalasLaboralesController.modalBuscar()"
+							 	data-height="650" data-width="700"
+							 	data-listen="modal.seleccion.escalaLaboral.simple"
 							 	data-label="#escala_laboral" data-field="#escala_laboral_id">
 					<i class="glyphicon glyphicon-search"></i></a></span>
 				</div>
@@ -128,18 +132,18 @@ $( function(){
 					<div class="text-error">@error.message</div>
 				}
 		</div>
-		
+
 		<div class="col-sm-3">
 			<label class="control-label">Departamento</label>
 				<div class="input-group @if(puestoForm.error("departamento_id") != null) {has-error}else{has-required}">
 					@inputText(puestoForm("departamento.nombre"), 'name -> "", 'class -> "form-control", 'id -> "departamento")
 					@inputText(puestoForm("departamento_id"), 'hidden -> "hidden", 'id -> "departamento_id")
 					<span class="input-group-addon">
-					<a href="#" class="searchModal" id="searchDepartamento" 
-							 	data-title="Selección de departamento" 
-							 	data-url="@controllers.rrhh.routes.DepartamentosController.modalBuscar()" 
-							 	data-height="650" data-width="700" 
-							 	data-listen="modal.seleccion.departamento.simple" 
+					<a href="#" class="searchModal" id="searchDepartamento"
+							 	data-title="Selección de departamento"
+							 	data-url="@controllers.rrhh.routes.DepartamentosController.modalBuscar()"
+							 	data-height="650" data-width="700"
+							 	data-listen="modal.seleccion.departamento.simple"
 							 	data-label="#departamento" data-field="#departamento_id">
 					<i class="glyphicon glyphicon-search"></i></a></span>
 				</div>
@@ -148,18 +152,18 @@ $( function(){
 				}
 		</div>
 		<div class="col-sm-3">
-			<label for="inputEspecialidad" class="control-label">Especialidad</label> 
+			<label for="inputEspecialidad" class="control-label">Especialidad</label>
 			<div class="input-group">
-				
+
 				@inputText(puestoForm("especialidad.nombre"),'class -> "form-control", 'id -> "especialidad")
 				@inputText(puestoForm("especialidad_id"),'hidden -> "hidden", 'id -> "especialidad_id")
 				<span class="input-group-addon">
-					<a href="#" class="searchModal" id="searchEspecialidad" 
-							 	data-title="Selección de especialidad" 
-							 	data-url="@controllers.rrhh.routes.EspecialidadesController.modalBuscar()" 
-							 	data-height="650" data-width="700" 
-							 	data-listen="modal.seleccion.especialidad.simple" 
-							 	data-label="#especialidad" 
+					<a href="#" class="searchModal" id="searchEspecialidad"
+							 	data-title="Selección de especialidad"
+							 	data-url="@controllers.rrhh.routes.EspecialidadesController.modalBuscar()"
+							 	data-height="650" data-width="700"
+							 	data-listen="modal.seleccion.especialidad.simple"
+							 	data-label="#especialidad"
 							 	data-field="#especialidad_id">
 					<i class="glyphicon glyphicon-search"></i></a>
 				</span>
@@ -171,24 +175,24 @@ $( function(){
 					@inputText(puestoForm("categoriaLaboral.nombre"), 'name -> "", 'class -> "form-control", 'id -> "categoria_laboral")
 					@inputText(puestoForm("categoria_laboral_id"), 'hidden -> "hidden", 'id -> "categoria_laboral_id")
 					<span class="input-group-addon">
-					<a href="#" class="searchModal" id="searchCategoriaLaboral" 
-							 	data-title="Selección de categoria" 
-							 	data-url="@controllers.haberes.routes.CategoriasLaboralesController.modalBuscar()" 
-							 	data-height="650" data-width="700" 
-							 	data-listen="modal.seleccion.categoriaLaboral.simple" 
+					<a href="#" class="searchModal" id="searchCategoriaLaboral"
+							 	data-title="Selección de categoria"
+							 	data-url="@controllers.haberes.routes.CategoriasLaboralesController.modalBuscar()"
+							 	data-height="650" data-width="700"
+							 	data-listen="modal.seleccion.categoriaLaboral.simple"
 							 	data-label="#categoria_laboral" data-field="#categoria_laboral_id">
 					<i class="glyphicon glyphicon-search"></i></a></span>
 				</div>
 				@puestoForm("categoria_laboral_id").error.map{ error =>
 					<div class="text-error">@error.message</div>
 				}
-		</div> 
-		
+		</div>
+
 	</div>
 	<div class="row">
 		<div class="col-sm-3">
 			<div class="form-group @if(puestoForm.error("fecha_posesion") != null) {has-error}">
-				<label for="fechaPosesion" class="control-label">Fecha Posesion</label> 
+				<label for="fechaPosesion" class="control-label">Fecha Posesion</label>
 				@inputText(puestoForm("fecha_posesion"),'class -> "form-control date")
 			</div>
 			@puestoForm("fecha_posesion").error.map{ error =>
@@ -197,7 +201,7 @@ $( function(){
 		</div>
 		<div class="col-sm-2">
 			<div class="form-group @if(puestoForm.error("fecha_baja") != null) {has-error}">
-				<label for="fechaBaja" class="control-label">Fecha Baja</label> 
+				<label for="fechaBaja" class="control-label">Fecha Baja</label>
 				@inputText(puestoForm("fecha_baja"),'class -> "form-control date")
 			</div>
 			@puestoForm("fecha_baja").error.map{ error =>
@@ -206,7 +210,7 @@ $( function(){
 		</div>
 		<div class="col-sm-2">
 			<div class="form-group @if(puestoForm.error("fecha_telegrama") != null) {has-error}">
-				<label for="fechaTelegrama" class="control-label">Fecha Telegrama</label> 
+				<label for="fechaTelegrama" class="control-label">Fecha Telegrama</label>
 				@inputText(puestoForm("fecha_telegrama"),'class -> "form-control date")
 			</div>
 			@puestoForm("fecha_baja").error.map{ error =>
@@ -220,30 +224,30 @@ $( function(){
 				@inputText(puestoForm("liquidacion_mes_id"), 'hidden -> "hidden", 'id -> "liquidacion_mes_id")
 				<span class="input-group-addon">
 					<a href="#" class="searchModal"
-								id="searchLiquidacionMes" 
-								data-title="Selección de Liquidacion" 
-								data-url="@controllers.haberes.routes.LiquidacionMesesController.modalBuscar()" 
-								data-height="650" 
-								data-width="700" 
-								data-listen="modal.seleccion.liquidacionMes.simple" 
-								data-label="#liquidacion_mes" 
+								id="searchLiquidacionMes"
+								data-title="Selección de Liquidacion"
+								data-url="@controllers.haberes.routes.LiquidacionMesesController.modalBuscar()"
+								data-height="650"
+								data-width="700"
+								data-listen="modal.seleccion.liquidacionMes.simple"
+								data-label="#liquidacion_mes"
 								data-field="#liquidacion_mes_id">
 						<i class="glyphicon glyphicon-search"></i>
 					</a>
 				</span>
 			</div>
-		
+
 		</div>
-		
+
 		<div class="col-sm-2">
 			<label class="control-label">Sueldo referencia</label>
-			<div class="form-group @if(puestoForm.error("sueldo_referencia") != null) {has-error}">	
+			<div class="form-group @if(puestoForm.error("sueldo_referencia") != null) {has-error}">
 				@inputText(puestoForm("sueldo_referencia"), 'class -> "form-control", 'id -> "sueldo_referencia")
 				@puestoForm("sueldo_referencia").error.map{ error => <div class="text-error">@error.message</div>}
 			</div>
 		</div>
 	</div>
-	
+
 	<div class="row">
 		<div class="col-sm-3">
 			<label class="control-label">Centro Costo</label>
@@ -251,11 +255,11 @@ $( function(){
 					@inputText(puestoForm("centrolCosto.nombre"), 'name -> "", 'class -> "form-control", 'id -> "centro_costo")
 					@inputText(puestoForm("centro_costo_id"), 'hidden -> "hidden", 'id -> "centro_costo_id")
 					<span class="input-group-addon">
-					<a href="#" class="searchModal" id="searchCentroCosto" 
-							 	data-title="Selección de costo" 
-							 	data-url="@controllers.haberes.routes.CentrosCostosController.modalBuscar()" 
-							 	data-height="650" data-width="700" 
-							 	data-listen="modal.seleccion.centroCosto.simple" 
+					<a href="#" class="searchModal" id="searchCentroCosto"
+							 	data-title="Selección de costo"
+							 	data-url="@controllers.haberes.routes.CentrosCostosController.modalBuscar()"
+							 	data-height="650" data-width="700"
+							 	data-listen="modal.seleccion.centroCosto.simple"
 							 	data-label="#centro_costo" data-field="#centro_costo_id">
 					<i class="glyphicon glyphicon-search"></i></a></span>
 				</div>
@@ -263,18 +267,18 @@ $( function(){
 					<div class="text-error">@error.message</div>
 				}
 		</div>
-		
+
 		<div class="col-sm-3">
 			<label class="control-label">Unidad Laboral</label>
 				<div class="input-group @if(puestoForm.error("unidad_laboral_id") != null) {has-error}else{has-required}">
 					@inputText(puestoForm("unidadLaboral.nombre"), 'name -> "", 'class -> "form-control", 'id -> "unidad_laboral")
 					@inputText(puestoForm("unidad_laboral_id"), 'hidden -> "hidden", 'id -> "unidad_laboral_id")
 					<span class="input-group-addon">
-					<a href="#" class="searchModal" id="searchUnidadLaboral" 
-							 	data-title="Selección de unidad" 
-							 	data-url="@controllers.haberes.routes.UnidadesLaboralesController.modalBuscar()" 
-							 	data-height="650" data-width="700" 
-							 	data-listen="modal.seleccion.unidadLaboral.simple" 
+					<a href="#" class="searchModal" id="searchUnidadLaboral"
+							 	data-title="Selección de unidad"
+							 	data-url="@controllers.haberes.routes.UnidadesLaboralesController.modalBuscar()"
+							 	data-height="650" data-width="700"
+							 	data-listen="modal.seleccion.unidadLaboral.simple"
 							 	data-label="#unidad_laboral" data-field="#unidad_laboral_id">
 					<i class="glyphicon glyphicon-search"></i></a></span>
 				</div>
@@ -282,18 +286,18 @@ $( function(){
 					<div class="text-error">@error.message</div>
 				}
 		</div>
-		
+
 		<div class="col-sm-3">
 			<label class="control-label">Instrumento Legal</label>
 				<div class="input-group @if(puestoForm.error("instrumento_legal_id") != null) {has-error}else{has-required}">
 					@inputText(puestoForm("instrumentoLegal.nombre"), 'name -> "", 'class -> "form-control", 'id -> "instrumento_legal")
 					@inputText(puestoForm("instrumento_legal_id"), 'hidden -> "hidden", 'id -> "instrumento_legal_id")
 					<span class="input-group-addon">
-					<a href="#" class="searchModal" id="searchInstrumentoLegal" 
-							 	data-title="Selección de Instrumento" 
-							 	data-url="@controllers.haberes.routes.InstrumentosLegalesController.modalBuscar()" 
-							 	data-height="650" data-width="700" 
-							 	data-listen="modal.seleccion.instrumentoLegal.simple" 
+					<a href="#" class="searchModal" id="searchInstrumentoLegal"
+							 	data-title="Selección de Instrumento"
+							 	data-url="@controllers.haberes.routes.InstrumentosLegalesController.modalBuscar()"
+							 	data-height="650" data-width="700"
+							 	data-listen="modal.seleccion.instrumentoLegal.simple"
 							 	data-label="#instrumento_legal" data-field="#instrumento_legal_id">
 					<i class="glyphicon glyphicon-search"></i></a></span>
 				</div>
@@ -301,18 +305,18 @@ $( function(){
 					<div class="text-error">@error.message</div>
 				}
 		</div>
-		
+
 		<div class="col-sm-3">
 			<label class="control-label">Convenio Banco</label>
 				<div class="input-group @if(puestoForm.error("convenio_banco_id") != null) {has-error}else{has-required}">
 					@inputText(puestoForm("convenioBanco.nombre"), 'name -> "", 'class -> "form-control", 'id -> "convenio_banco")
 					@inputText(puestoForm("convenio_banco_id"), 'hidden -> "hidden", 'id -> "convenio_banco_id")
 					<span class="input-group-addon">
-					<a href="#" class="searchModal" id="searchConvenioBanco" 
-							 	data-title="Selección de convenio" 
-							 	data-url="@controllers.haberes.routes.ConveniosBancosController.modalBuscar()" 
-							 	data-height="650" data-width="700" 
-							 	data-listen="modal.seleccion.convenioBanco.simple" 
+					<a href="#" class="searchModal" id="searchConvenioBanco"
+							 	data-title="Selección de convenio"
+							 	data-url="@controllers.haberes.routes.ConveniosBancosController.modalBuscar()"
+							 	data-height="650" data-width="700"
+							 	data-listen="modal.seleccion.convenioBanco.simple"
 							 	data-label="#convenio_banco" data-field="#convenio_banco_id">
 					<i class="glyphicon glyphicon-search"></i></a></span>
 				</div>
@@ -320,5 +324,5 @@ $( function(){
 					<div class="text-error">@error.message</div>
 				}
 		</div>
-		
+
 	</div>

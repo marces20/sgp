@@ -86,44 +86,48 @@
 			<label class="control-label">Legajo</label>
 			<p class="form-control-static form-control">@lcForm.field("legajo.agente.apellido").value</p>
 		</div>
-		<div class="col-sm-2">
-			<label class="control-label">Estado</label>
-			<p class="form-control-static form-control">
-			@if(lc.activo){
-				Activo
-			}else{
-				Inactivo
-			}
-			</p>
-		</div>
-		<div class="col-sm-2">
-			<label class="control-label">Envio mail</label>
+		<div class="col-sm-3">
+			<div class="col-sm-6">
+				<label class="control-label">Estado</label>
 				<p class="form-control-static form-control">
-					@if(lcForm("mail_automatico").value == "true"){SI}else{NO}
+				@if(lc.activo){
+					Activo
+				}else{
+					Inactivo
+				}
 				</p>
+			</div>
+			<div class="col-sm-6">
+				<label class="control-label">Envio mail</label>
+					<p class="form-control-static form-control">
+						@if(lcForm("mail_automatico").value == "true"){SI}else{NO}
+					</p>
+			</div>
 		</div>
-		<div class="col-sm-2">
-			<b>Convenio Ministerio</b>
-			<div class="row">
-				<div class="col-sm-5">
-					<div class="radio">
-						<label class="control-label">
-							@inputRadioGroup(lcForm("convenio_ministerio"), options = Seq("true"->"SI"), 'disabled -> "disabled")
-						</label>
+		<div class="col-sm-3">
+			<div class="col-sm-6">
+				<b>Convenio Ministerio</b>
+				<div class="row">
+					<div class="col-sm-5">
+						<div class="radio">
+							<label class="control-label">
+								@inputRadioGroup(lcForm("convenio_ministerio"), options = Seq("true"->"SI"), 'disabled -> "disabled")
+							</label>
+						</div>
 					</div>
-				</div>
-				<div class="col-sm-7">
-					<div class="radio">
-						<label class="control-label">
-							@inputRadioGroup(lcForm("convenio_ministerio"),options = Seq("false"->"NO"), 'disabled -> "disabled")
-						</label>
+					<div class="col-sm-7">
+						<div class="radio">
+							<label class="control-label">
+								@inputRadioGroup(lcForm("convenio_ministerio"),options = Seq("false"->"NO"), 'disabled -> "disabled")
+							</label>
+						</div>
 					</div>
 				</div>
 			</div>
-		</div>
-		<div class="col-sm-2">
-			<label class="control-label">Cargo Laboral</label>
-			<p class="form-control-static form-control">@lcForm.field("cargoLaboral.nombre").value</p>
+			<div class="col-sm-6">
+				<label class="control-label">Cargo Laboral</label>
+				<p class="form-control-static form-control">@lcForm.field("cargoLaboral.nombre").value</p>
+			</div>
 		</div>
 	</div>
 	<div class="row">
