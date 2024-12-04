@@ -27,6 +27,7 @@ import java.util.TreeMap;
 
 import javax.xml.bind.DatatypeConverter;
 
+import models.Cliente;
 import models.ClienteTipo;
 import models.CuentaAnalitica;
 import models.Deposito;
@@ -34,7 +35,10 @@ import models.DireccionCliente;
 import models.Estado;
 import models.OrdenRubro;
 import models.Periodo;
+import models.TareaAutomatica;
 import models.TipoComprobante;
+import models.TipoTarea;
+import models.informes.InformeDeudaProveedoresMaterializada;
 import models.recupero.Cheque;
 import models.recupero.InformeTotal;
 import models.recupero.RecuperoFactura;
@@ -46,6 +50,7 @@ import models.recupero.RecuperoPlanilla;
 import models.recupero.RecuperoRecibo;
 import models.recupero.RecuperoReciboFactura;
 
+import org.apache.commons.mail.EmailAttachment;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
@@ -71,14 +76,17 @@ import play.mvc.Controller;
 import play.mvc.Result;
 import play.mvc.Security;
 import utils.DateUtils;
+import utils.EmailUtilis;
 import utils.NumberUtils;
 import utils.NumeroALetra;
 import utils.RequestVar;
 import utils.pagination.Pagination;
 import views.html.contabilidad.pagos.reportes.modalInformeLote;
 import views.html.contabilidad.pagos.reportes.modalInformeMensualImpuestos;
+import views.html.dashboard.deudasGlobalizadas.pagadoNoEntregados;
 import views.html.recupero.recuperoFactura.modalPlanilla;
 import views.html.recupero.recuperoPlanilla.reportePlanilla;
+import views.html.recupero.recuperoFactura.resumenDeudaPorClienteMail;
 import views.html.recupero.informes.*;
 import controllers.Secured;
 import controllers.auth.CheckPermiso;
@@ -2663,8 +2671,11 @@ order by nc.numero
 		return ok(reportePlanilla.render(null));
 	}
 
+	private static void htmlToPdf(String inputHTML, String outputPdf,Long facturaId,String tipo) throws IOException, Exception {
+		htmlToPdf(inputHTML, outputPdf,facturaId,tipo,null);
 
-	private static void htmlToPdf(String inputHTML, String outputPdf,Long facturaId,String tipo) throws Exception,IOException {
+	}
+	private static void htmlToPdf(String inputHTML, String outputPdf,Long facturaId,String tipo,List<InformeTotal> it) throws Exception,IOException {
 
 		//Document doc = html5ParseDocument(inputHTML);
 
@@ -2693,6 +2704,8 @@ order by nc.numero
 			doc = html5ParseDocumentPorElementoNotaCredito(inputHTML,facturaId);
 		}else if(tipo =="notadebito") {
 			doc = html5ParseDocumentPorElementoNotaDebito(inputHTML,facturaId);
+		}else if(tipo =="detalledeuda") {
+			doc = html5ParseDocumentPorElementoDetalleDeuda(inputHTML,facturaId,it);
 		}
 
 
@@ -3340,5 +3353,292 @@ order by nc.numero
       // OutputStream out = new FileOutputStream(file);
        return ret;
     }
+
+	public static boolean envioMailsResumenDeudaCliente() {
+	    boolean r = false;
+
+	    try {
+
+	    	List<InformeTotal> it = InformeTotal.find.where().eq("cliente_id", 7142).gt("total_deuda", BigDecimal.ZERO).findList();
+	    	 List<InformeTotal> first = new ArrayList<>(it.subList(0, 24));
+	    	 String dirTemp = System.getProperty("java.io.tmpdir");
+
+			 // Source HTML file
+			 String inputHTML = null;
+			 inputHTML = Play.application().getFile("conf/resources/reportes/recupero/detalledeuda.html").toString();
+
+			 /*if(it.size() < 25) {
+				 inputHTML = Play.application().getFile("conf/resources/reportes/recupero/detalledeuda.html").toString();
+			 }else if(it.size() >= 25 && it.size() < 50 ) {
+				 inputHTML = Play.application().getFile("conf/resources/reportes/recupero/detalledeuda1.html").toString();
+			 }else if(it.size() >= 50 && it.size() <= 75 ) {
+				 inputHTML = Play.application().getFile("conf/resources/reportes/recupero/detalledeuda2.html").toString();
+			 }*/
+
+			 BigDecimal totalDeuda = new BigDecimal(0);
+
+			 for (InformeTotal itx:first) {
+				 totalDeuda = totalDeuda.add(itx.totalDeuda);
+			 }
+
+
+
+			 String outputPdf = dirTemp+"/detalle-deuda-"+first.get(0).cliente_id+".pdf";
+
+
+			 htmlToPdf(inputHTML, outputPdf, first.get(0).cliente_id,"detalledeuda",first);
+
+
+			File file = new File(outputPdf);
+	        EmailAttachment attachment = new EmailAttachment();
+	        attachment.setPath(file.getPath());
+	        attachment.setDisposition(EmailAttachment.ATTACHMENT);
+
+	        attachment.setDescription("Detalle facturas deuda");
+	        attachment.setName(file.getName());
+
+	        List<EmailAttachment> attachmentList = new ArrayList<>();
+	        attachmentList.add(attachment);
+
+	    	String fecha = DateUtils.formatDate(new Date(), "dd/MM/yyyy");
+	        Object c = resumenDeudaPorClienteMail.render( "",fecha,utils.NumberUtils.moneda(totalDeuda,2),it.get(0).cliente.nombre);
+
+
+	        EmailUtilis eu = new EmailUtilis();
+
+	        eu.setSubject("ESTADO DEUDA - PARQUE SALUD DE LA PROVINCIA DE MISIONES - " + DateUtils.formatDate(new Date(), "dd/MM/yyyy"));
+	        eu.setHtmlMsg(c.toString());
+	        eu.setFrom("recupero@parquesaludmnes.org.ar");
+
+	        List<String> adds = new ArrayList<>();
+
+	       /* List<TareaAutomatica> ta = TareaAutomatica.find.where().eq("tipo_tarea_id", TipoTarea.MAIL_PAGADO_NOENTREGADOS).findList();
+	        for (TareaAutomatica tx : ta) {
+	          if (tx.usuario.email != null) {
+	            adds.add(tx.usuario.email);
+	          }
+	        }*/
+
+
+	        adds.add("marces2000@gmail.com");
+
+	        eu.setAttach(attachmentList);
+	        eu.setAdds(adds);
+	        eu.enviar();
+
+
+
+
+
+
+
+	    } catch (Exception e) {
+	      Logger.debug("cccccccccccc "+e);
+	    }
+
+
+	    return r;
+	  }
+
+	private static Document html5ParseDocumentPorElementoDetalleDeuda(String inputHTML,Long facturaId,List<InformeTotal> it) throws IOException,Exception{
+
+	    org.jsoup.nodes.Document doc;
+
+
+	    doc = Jsoup.parse(new File(inputHTML), "UTF-8");
+
+	    //RecuperoFactura rf = RecuperoFactura.find.byId(facturaId);
+
+	    Map<String,String> datos = new HashMap<>();
+
+	    datos.put("pv","");
+	    datos.put("pvdireccion","");
+	    datos.put("fantasia",    "");
+
+	    datos.put("fecha_emision", utils.DateUtils.formatDate(new Date()));
+
+
+
+
+	    Cliente cc = it.get(0).cliente;
+
+	    if(cc.cie != null && !cc.cie.isEmpty()) {
+	    	datos.put("cuittitulo", "CIE:");
+	    	datos.put("cuit", cc.cie);
+	    	datos.put("direccion", "Paraguay");
+	    }else {
+	    	datos.put("cuittitulo", "CUIT:");
+	    	datos.put("cuit", cc.cuit2);
+	    	String direccion = cc.getFirstDireccion();
+	 	    datos.put("direccion", direccion);
+	    }
+
+	    datos.put("razon_social", cc.nombre);
+
+
+
+
+
+	    BigDecimal totaldeuda = new BigDecimal(0);
+
+	    if(it.size() < 25) {
+
+		    String lineas ="";
+
+		    for(InformeTotal rfl :it) {
+
+
+
+			    lineas += "<tr>" +
+			    		"        		<td style='text-align: left'>"+rfl.numero+"</td>" +
+			    		"        		<td>"+DateUtils.formatDate(rfl.fecha)+"</td>" +
+			    		"                <td style='text-align: center;'>"+utils.NumberUtils.moneda(rfl.totalLineasFactura)+"</td>" +
+			      		"                <td style='text-align: center;'>"+utils.NumberUtils.moneda(rfl.totalNotas)+"</td>" +
+			      		"                <td style='text-align: center;'>"+utils.NumberUtils.moneda(rfl.totalNotaDebitos)+"</td>" +
+			      		"                <td style='text-align: center;'>"+utils.NumberUtils.moneda(rfl.totalPagos)+"</td>" +
+			      		"                <td style='text-align: center;'>"+utils.NumberUtils.moneda(rfl.totalDeuda)+"</td>" +
+			    		"            </tr>";
+			    totaldeuda = totaldeuda.add(rfl.totalDeuda);
+		    }
+
+		    datos.put("lineas",lineas);
+
+
+	    }else if(it.size() >= 25 && it.size() < 50 ) {
+	    	 List<InformeTotal> first = new ArrayList<>(it.subList(0, 24));
+			 List<InformeTotal> second = new ArrayList<>(it.subList(24,it.size()));
+
+			 	String lineas ="";
+			 	BigDecimal total1 = new BigDecimal(0);
+
+			    for(InformeTotal rfl :first) {
+
+
+			    	total1 = total1.add(rfl.totalDeuda);
+
+			    	lineas += "<tr>" +
+				    		"        		<td style='text-align: left'>"+rfl.numero+"</td>" +
+				    		"        		<td>"+DateUtils.formatDate(rfl.fecha)+"</td>" +
+				    		"                <td style='text-align: center;'>"+utils.NumberUtils.moneda(rfl.totalLineasFactura)+"</td>" +
+				      		"                <td style='text-align: center;'>"+utils.NumberUtils.moneda(rfl.totalNotas)+"</td>" +
+				      		"                <td style='text-align: center;'>"+utils.NumberUtils.moneda(rfl.totalNotaDebitos)+"</td>" +
+				      		"                <td style='text-align: center;'>"+utils.NumberUtils.moneda(rfl.totalPagos)+"</td>" +
+				      		"                <td style='text-align: center;'>"+utils.NumberUtils.moneda(rfl.totalDeuda)+"</td>" +
+				    		"            </tr>";
+			    	totaldeuda = totaldeuda.add(rfl.totalDeuda);
+			    }
+
+			    datos.put("lineas",lineas);
+			    datos.put("total1",utils.NumberUtils.moneda(total1));
+
+			    String lineas2 ="";
+
+			    for(InformeTotal rfl :second) {
+
+
+
+				    lineas2 += "<tr>" +
+				    		"        		<td style='text-align: left'>"+rfl.numero+"</td>" +
+				    		"        		<td>"+DateUtils.formatDate(rfl.fecha)+"</td>" +
+				    		"                <td style='text-align: center;'>"+utils.NumberUtils.moneda(rfl.totalLineasFactura)+"</td>" +
+				      		"                <td style='text-align: center;'>"+utils.NumberUtils.moneda(rfl.totalNotas)+"</td>" +
+				      		"                <td style='text-align: center;'>"+utils.NumberUtils.moneda(rfl.totalNotaDebitos)+"</td>" +
+				      		"                <td style='text-align: center;'>"+utils.NumberUtils.moneda(rfl.totalPagos)+"</td>" +
+				      		"                <td style='text-align: center;'>"+utils.NumberUtils.moneda(rfl.totalDeuda)+"</td>" +
+				    		"            </tr>";
+				    totaldeuda = totaldeuda.add(rfl.totalDeuda);
+			    }
+
+			    datos.put("lineas2",lineas2);
+
+
+	    }else if(it.size() >= 50 && it.size() <= 75 ) {
+	    		List<InformeTotal> first = new ArrayList<>(it.subList(0, 24));
+	    		List<InformeTotal> second = new ArrayList<>(it.subList(24,49));
+	    		List<InformeTotal> tres = new ArrayList<>(it.subList(49,it.size()));
+
+			 	String lineas ="";
+			 	BigDecimal total1 = new BigDecimal(0);
+
+			    for(InformeTotal rfl :first) {
+
+
+			    	total1 = total1.add(rfl.totalDeuda);
+				    lineas += "<tr>" +
+				    		"        		<td style='text-align: left'>"+rfl.numero+"</td>" +
+				    		"        		<td>"+DateUtils.formatDate(rfl.fecha)+"</td>" +
+				    		"                <td style='text-align: center;'>"+utils.NumberUtils.moneda(rfl.totalLineasFactura)+"</td>" +
+				      		"                <td style='text-align: center;'>"+utils.NumberUtils.moneda(rfl.totalNotas)+"</td>" +
+				      		"                <td style='text-align: center;'>"+utils.NumberUtils.moneda(rfl.totalNotaDebitos)+"</td>" +
+				      		"                <td style='text-align: center;'>"+utils.NumberUtils.moneda(rfl.totalPagos)+"</td>" +
+				      		"                <td style='text-align: center;'>"+utils.NumberUtils.moneda(rfl.totalDeuda)+"</td>" +
+				    		"            </tr>";
+				    totaldeuda = totaldeuda.add(rfl.totalDeuda);
+			    }
+
+			    datos.put("lineas",lineas);
+			    datos.put("total1",utils.NumberUtils.moneda(total1));
+
+			    String lineas2 ="";
+			    BigDecimal total2 = new BigDecimal(0);
+			    for(InformeTotal rfl :second) {
+
+
+			    	total2 = total2.add(rfl.totalDeuda);
+				    lineas2 += "<tr>" +
+				    		"        		<td style='text-align: left'>"+rfl.numero+"</td>" +
+				    		"        		<td>"+DateUtils.formatDate(rfl.fecha)+"</td>" +
+				    		"                <td style='text-align: center;'>"+utils.NumberUtils.moneda(rfl.totalLineasFactura)+"</td>" +
+				      		"                <td style='text-align: center;'>"+utils.NumberUtils.moneda(rfl.totalNotas)+"</td>" +
+				      		"                <td style='text-align: center;'>"+utils.NumberUtils.moneda(rfl.totalNotaDebitos)+"</td>" +
+				      		"                <td style='text-align: center;'>"+utils.NumberUtils.moneda(rfl.totalPagos)+"</td>" +
+				      		"                <td style='text-align: center;'>"+utils.NumberUtils.moneda(rfl.totalDeuda)+"</td>" +
+				    		"            </tr>";
+				    totaldeuda = totaldeuda.add(rfl.totalDeuda);
+			    }
+
+			    datos.put("lineas2",lineas2);
+			    datos.put("total2",utils.NumberUtils.moneda(total2));
+
+			    String lineas3 ="";
+
+			    for(InformeTotal rfl :tres) {
+
+
+
+				    lineas3  += "<tr>" +
+				    		"        		<td style='text-align: left'>"+rfl.numero+"</td>" +
+				    		"        		<td>"+DateUtils.formatDate(rfl.fecha)+"</td>" +
+				    		"                <td style='text-align: center;'>"+utils.NumberUtils.moneda(rfl.totalLineasFactura)+"</td>" +
+				      		"                <td style='text-align: center;'>"+utils.NumberUtils.moneda(rfl.totalNotas)+"</td>" +
+				      		"                <td style='text-align: center;'>"+utils.NumberUtils.moneda(rfl.totalNotaDebitos)+"</td>" +
+				      		"                <td style='text-align: center;'>"+utils.NumberUtils.moneda(rfl.totalPagos)+"</td>" +
+				      		"                <td style='text-align: center;'>"+utils.NumberUtils.moneda(rfl.totalDeuda)+"</td>" +
+				    		"            </tr>";
+				    totaldeuda = totaldeuda.add(rfl.totalDeuda);
+			    }
+
+			    datos.put("lineas3",lineas3);
+	    }
+
+	    datos.put("importe", utils.NumberUtils.moneda(totaldeuda) );
+
+
+
+
+	    for (Map.Entry<String, String> entry : datos.entrySet()) {
+	    	Logger.debug("xxxxxxx "+entry.getKey());
+		    org.jsoup.select.Elements myImgs = doc.select("."+entry.getKey());
+
+		    for (org.jsoup.nodes.Element element : myImgs) {
+		    	//element.text(entry.getValue());
+
+		    	element.append(entry.getValue());
+		    }
+
+	    }
+
+	    return new W3CDom().fromJsoup(doc);
+	}
 
 }
