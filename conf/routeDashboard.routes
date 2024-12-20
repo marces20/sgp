@@ -110,7 +110,7 @@ GET 	/autorizado-linea/get-actas				controllers.dashboard.AutorizadoLineasContro
 GET     /indexInformeRecupero					controllers.dashboard.InformesRecuperoController.index()
 GET     /deudasRecuperoPorTipoDeCliente			controllers.dashboard.InformesRecuperoController.deudasPorTipoDeCliente(idTipoCliente:Long)
 
-GET     /deudasRecuperoPorTipoDeClienteReporte	controllers.dashboard.InformesRecuperoReportesController.deudasPorTipoDeCliente(idTipoCliente:Long)
+GET     /deudasRecuperoPorTipoDeClienteReporte	controllers.dashboard.InformesRecuperoReportesController.deudasPorTipoDeCliente(idTipoCliente:Long,fecha_desde:String,fecha_hasta:String)
 
 GET     /deudas									controllers.dashboard.DeudasGlobalizadasController.index(soloDeuda:Boolean ?= false)
 GET     /deudasResumidas						controllers.dashboard.DeudasGlobalizadasController.deudasResumidas(deposito:Int ?= 0, ra:Boolean ?= false,soloDeuda:Boolean ?= false)
