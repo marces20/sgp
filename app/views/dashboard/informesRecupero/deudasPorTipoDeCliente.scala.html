@@ -5,7 +5,10 @@ deudasPorObrasSociales:List[com.avaje.ebean.SqlRow],
 deudasPorArt:List[com.avaje.ebean.SqlRow],
 deudasPorSeguro:List[com.avaje.ebean.SqlRow],
 totalPagosObra: Map[Long,Integer] = null,
-pagoLastDateObra: Map[Long,Date] = null
+pagoLastDateObra: Map[Long,Date] = null,
+formBuscador: DynamicForm,
+fecha_desde:String,
+fecha_hasta:String
 )
 @import helper._
 @import utils._
@@ -38,11 +41,34 @@ pagoLastDateObra: Map[Long,Date] = null
 			  <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
 			  	<li role="presentation">
 				  <a id="" role="menuitem" tabindex="-1"
-				  href="@controllers.dashboard.routes.InformesRecuperoReportesController.deudasPorTipoDeCliente(idTipoCliente)">Reporte Excel</a></li>
+				  href="@controllers.dashboard.routes.InformesRecuperoReportesController.deudasPorTipoDeCliente(idTipoCliente,fecha_desde,fecha_hasta)">Reporte Excel</a></li>
 			  </ul>
 			</div>
 		</div>
 	</div>
+</div>
+<div id="actions">
+		<form action="" id="formSearchRecuperoFacturas" method="GET">
+
+			<input type="hidden" name="idTipoCliente" id="idTipoCliente" value="@if(idTipoCliente != null) {@idTipoCliente}" />
+			<div class="row">
+				<div class="col-sm-2 input-group">
+					<label class="control-label">Fecha de factura</label>
+					<div>
+					@inputText(formBuscador("fecha_desde"), 'class -> "form-control dateMask inputDateMascara", 'id -> "desde", 'placeholder -> "Desde")
+					@inputText(formBuscador("fecha_hasta"), 'class -> "form-control dateMask inputDateMascara", 'id -> "hasta", 'placeholder -> "Hasta")
+					</div>
+
+				</div>
+				<div class="col-sm-2">
+					<div class="form-group">
+					<label for="nombre" class="control-label">&nbsp;</label>
+					<button  class="form-control btn btn-primary">Buscar</button>
+					</div>
+				</div>
+
+			</div>
+		</form>
 </div>
 
 @if(deudasPorPaciente.size() >0){
@@ -59,6 +85,7 @@ pagoLastDateObra: Map[Long,Date] = null
 
 					 <tr style="background-color:#ffffff;">
 						<td>@s.getString("cliente_nombre")</td>
+						<td>@s.getString("cuit")</td>
 						<!-- <td align="center">@utils.NumberUtils.moneda(s.getBigDecimal("total_factura"),0)</td>
 						<td align="center">@utils.NumberUtils.moneda(s.getBigDecimal("total_pago"),0)</td> -->
 						<td align="center">@utils.NumberUtils.moneda(s.getBigDecimal("total_deuda"),0)</td>
@@ -76,7 +103,7 @@ pagoLastDateObra: Map[Long,Date] = null
 			</tbody>
 			<tfoot>
 				<tr style="background-color:#dfdfdf;">
-					<td align="right"><b>TOTALES</b></td>
+					<td align="right" colspan="2"><b>TOTALES</b></td>
 					<!--<td align="center"><b>@utils.NumberUtils.moneda(ptfactura,0)</b></td>
 					<td align="center"><b>@utils.NumberUtils.moneda(ptpago,0)</b></td>-->
 					<td align="center"><b>@utils.NumberUtils.moneda(ptdeuda,0)</b></td>
@@ -106,6 +133,7 @@ pagoLastDateObra: Map[Long,Date] = null
 
 					 <tr style="background-color:#ffffff;">
 						<td>@s.getString("cliente_nombre")</td>
+						<td>@s.getString("cuit")</td>
 						<!--<td align="center">@utils.NumberUtils.moneda(s.getBigDecimal("total_factura"),0)</td>
 						<td align="center">@utils.NumberUtils.moneda(s.getBigDecimal("total_pago"),0)</td>-->
 						<td align="center">@utils.NumberUtils.moneda(s.getBigDecimal("total_deuda"),0)</td>
@@ -123,7 +151,7 @@ pagoLastDateObra: Map[Long,Date] = null
 			</tbody>
 			<tfoot>
 				<tr style="background-color:#dfdfdf;">
-					<td align="right"><b>TOTALES</b></td>
+					<td align="right" colspan="2"><b>TOTALES</b></td>
 					<!--<td align="center"><b>@utils.NumberUtils.moneda(ptfactura,0)</b></td>
 					<td align="center"><b>@utils.NumberUtils.moneda(ptpago,0)</b></td>-->
 					<td align="center"><b>@utils.NumberUtils.moneda(ptdeuda,0)</b></td>
@@ -153,6 +181,7 @@ pagoLastDateObra: Map[Long,Date] = null
 
 					 <tr style="background-color:#ffffff;">
 						<td>@s.getString("cliente_nombre")</td>
+						<td>@s.getString("cuit")</td>
 						<!--<td align="center">@utils.NumberUtils.moneda(s.getBigDecimal("total_factura"),0)</td>
 						<td align="center">@utils.NumberUtils.moneda(s.getBigDecimal("total_pago"),0)</td>-->
 						<td align="center">@utils.NumberUtils.moneda(s.getBigDecimal("total_deuda"),0)</td>
@@ -171,7 +200,7 @@ pagoLastDateObra: Map[Long,Date] = null
 			</tbody>
 			<tfoot>
 				<tr style="background-color:#dfdfdf;">
-					<td align="right"><b>TOTALES</b></td>
+					<td align="right" colspan="2"><b>TOTALES</b></td>
 					<!--<td align="center"><b>@utils.NumberUtils.moneda(ptfactura,0)</b></td>
 					<td align="center"><b>@utils.NumberUtils.moneda(ptpago,0)</b></td>-->
 					<td align="center"><b>@utils.NumberUtils.moneda(ptdeuda,0)</b></td>
@@ -201,6 +230,7 @@ pagoLastDateObra: Map[Long,Date] = null
 
 					 <tr style="background-color:#ffffff;">
 						<td>@s.getString("cliente_nombre")</td>
+						<td>@s.getString("cuit")</td>
 						<!--<td align="center">@utils.NumberUtils.moneda(s.getBigDecimal("total_factura"),0)</td>
 						<td align="center">@utils.NumberUtils.moneda(s.getBigDecimal("total_pago"),0)</td>-->
 						<td align="center">@utils.NumberUtils.moneda(s.getBigDecimal("total_deuda"),0)</td>
@@ -218,7 +248,7 @@ pagoLastDateObra: Map[Long,Date] = null
 			</tbody>
 			<tfoot>
 				<tr style="background-color:#dfdfdf;">
-					<td align="right"><b>TOTALES</b></td>
+					<td align="right" colspan="2"><b>TOTALES</b></td>
 					<!--<td align="center"><b>@utils.NumberUtils.moneda(ptfactura,0)</b></td>
 					<td align="center"><b>@utils.NumberUtils.moneda(ptpago,0)</b></td>-->
 					<td align="center"><b>@utils.NumberUtils.moneda(ptdeuda,0)</b></td>
@@ -249,6 +279,7 @@ pagoLastDateObra: Map[Long,Date] = null
 
 					 <tr style="background-color:#ffffff;">
 						<td>@s.getString("cliente_nombre")</td>
+						<td>@s.getString("cuit")</td>
 						<!--<td align="center">@utils.NumberUtils.moneda(s.getBigDecimal("total_factura"),0)</td>
 						<td align="center">@utils.NumberUtils.moneda(s.getBigDecimal("total_pago"),0)</td>-->
 						<td align="center">@utils.NumberUtils.moneda(s.getBigDecimal("total_deuda"),0)</td>
@@ -266,7 +297,7 @@ pagoLastDateObra: Map[Long,Date] = null
 			</tbody>
 			<tfoot>
 				<tr style="background-color:#dfdfdf;">
-					<td align="right"><b>TOTALES</b></td>
+					<td align="right" colspan="2"><b>TOTALES</b></td>
 					<!--<td align="center"><b>@utils.NumberUtils.moneda(ptfactura,0)</b></td>
 					<td align="center"><b>@utils.NumberUtils.moneda(ptpago,0)</b></td>-->
 					<td align="center"><b>@utils.NumberUtils.moneda(ptdeuda,0)</b></td>
