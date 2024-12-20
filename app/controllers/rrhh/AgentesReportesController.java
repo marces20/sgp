@@ -343,9 +343,12 @@ public class AgentesReportesController extends Controller  {
 
 			Sheet hoja = libro.createSheet("Seguro de Sepelio");
 
-			List<Agente> lp = new Agente()
+			List<AgenteRul> lp = new AgenteRul()
 			.find
-			.where().in("id",agenteIds).orderBy("apellido").findList();
+			.fetch("agente")
+			.fetch("agente.organigrama")
+			.fetch("agente.profesion")
+			.where().in("agente_id",agenteIds).orderBy("agente.apellido").findList();
 
 			if(lp.size() > 0){
 				int x = 0;
@@ -399,11 +402,88 @@ public class AgentesReportesController extends Controller  {
 
 
 				x++;
+				for (AgenteRul ru: lp) {
+					Agente l = ru.agente;
+
+					System.out.println(l.apellido);
+					fila = hoja.createRow(x);
+					celda0 = fila.createCell(0);
+					celda0.setCellValue(l.apellido);
+					celda0.setCellStyle(comun);
+
+					celda0 = fila.createCell(1);
+					celda0.setCellValue(l.dni);
+					celda0.setCellStyle(comun);
+
+					celda0 = fila.createCell(2);
+					celda0.setCellValue(l.cuit);
+					celda0.setCellStyle(comun);
+
+					celda0 = fila.createCell(3);
+					celda0.setCellValue((l.organigrama != null)?l.organigrama.nombre:"");
+					celda0.setCellStyle(comun);
+
+					celda0 = fila.createCell(4);
+					celda0.setCellValue((l.profesion != null)?l.profesion.nombre:"");
+					celda0.setCellStyle(comun);
+					System.out.println("1111111111");
 
 
-				BigDecimal total =  new BigDecimal(0);
-				BigDecimal totalHaberes =  new BigDecimal(0);
-				for (Agente l: lp) {
+
+					String relacion = "";
+					switch ( l.tipo_relacion_laboral ) {
+				    	case  "1": relacion = "Contrato Relacion Parque de la salud"; break;
+				    	case  "2": relacion = "Monotributo Parque de la salud"; break;
+				    	case  "3": relacion = "Contrato Relacion Convenio Ministerio Salud"; break;
+				    	case  "4": relacion = "Planta Ministerio Salud"; break;
+				    	case  "5": relacion = "Contrato Relacion Ministerio Salud"; break;
+				    	case  "6": relacion = "Adscripto Otras Entidades"; break;
+				    	case  "7": relacion = "Contrato Convenio Nacion"; break;
+				    	case  "8": relacion = "Planta Temporaria - Otras Entidades"; break;
+				    	case  "9": relacion = "Otro"; break;
+				    }
+
+
+					celda0 = fila.createCell(5);
+					celda0.setCellValue(relacion);
+					celda0.setCellStyle(comun);
+
+					String rul = "";
+					celda0 = fila.createCell(6);
+					celda0.setCellValue(rul);
+					celda0.setCellStyle(comun);
+
+					celda0 = fila.createCell(7);
+					celda0.setCellValue(ru.tipoRelacionLaboral.nombre);
+					celda0.setCellStyle(comun);
+
+					celda0 = fila.createCell(8);
+					celda0.setCellValue(ru.institucionExterna.nombre);
+					celda0.setCellStyle(comun);
+
+					celda0 = fila.createCell(9);
+					celda0.setCellValue(ru.nota);
+					celda0.setCellStyle(comun);
+
+					celda0 = fila.createCell(10);
+					celda0.setCellValue((l.telefono != null)?l.telefono:"");
+					celda0.setCellStyle(comun);
+
+                    celda0 = fila.createCell(11);
+                    celda0.setCellValue(l.getDireccionCompleta());
+                    celda0.setCellStyle(comun);
+
+                    celda0 = fila.createCell(12);
+                    celda0.setCellValue(l.email);
+                    celda0.setCellStyle(comun);
+
+					x++;
+
+
+				}
+
+
+				/*for (Agente l: lp) {
 
 
 
@@ -493,7 +573,7 @@ public class AgentesReportesController extends Controller  {
 
 					x++;
 
-				}
+				}*/
 
 
 			}
