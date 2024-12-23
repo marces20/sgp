@@ -1505,8 +1505,8 @@ public class PagosAccionesController extends Controller {
 					data += StringUtils.cortarString(pago.proveedor.cuit.toString(),11)+"\t";//bnfcuit		11	numerico
 					data += "1\t";//suc_entrega	3	numerico
 					//data += StringUtils.cortarString(pago.ordenPago.getNombreCompleto(),30)+"\t";//opg		30	alfa
-					String fechaActual = utils.DateUtils.formatDate(new Date());
-					data += StringUtils.cortarString(pago.proveedor_id+"|"+pago.orden_pago_id+"|"+pago.periodo_id+"|"+fechaActual,30)+"\t";//opg		30	alfa
+					String fechaActual = utils.DateUtils.formatDate(new Date(),"ddMMyyyy");
+					data += StringUtils.cortarString(pago.proveedor_id+""+pago.orden_pago_id+""+pago.periodo_id+""+fechaActual,30)+"\t";//opg		30	alfa
 
 					data += StringUtils.cortarString(pago.proveedor.nombre,120)+"\t";//op-razon	120	alfa
 
