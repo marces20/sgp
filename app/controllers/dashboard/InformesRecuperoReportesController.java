@@ -25,6 +25,7 @@ import com.avaje.ebean.SqlRow;
 import play.mvc.Controller;
 import play.mvc.Result;
 import play.mvc.Security;
+import utils.DateUtils;
 import utils.ReportesExcelsUtils;
 import views.html.dashboard.informesRecupero.*;
 import controllers.Secured;
@@ -88,11 +89,10 @@ public class InformesRecuperoReportesController extends Controller {
 
 		Sheet hoja = libro.createSheet("RESUMEN");
 
-		hoja.setColumnWidth(0, 18000);
-		hoja.setColumnWidth(1, 5000);
-		hoja.setColumnWidth(2, 5000);
-		hoja.setColumnWidth(3, 5000);
-		hoja.setColumnWidth(4, 5000);
+		hoja.setColumnWidth(0, 1200);
+		hoja.setColumnWidth(1, 18000);
+		hoja.setColumnWidth(2, 6000);
+		hoja.setColumnWidth(3, 6000);
 
 		hoja.setDefaultRowHeight( (short) 400);
 
@@ -123,36 +123,61 @@ public class InformesRecuperoReportesController extends Controller {
 		ReportesExcelsUtils reu = new ReportesExcelsUtils();
 		CellStyle estiloMoneda = reu.getEstiloMoneda(libro);
 		CellStyle comun = reu.getEstiloComun(libro);
-		CellStyle cabeceraPrincipal = reu.getCabecera(libro,14);
+		CellStyle cabeceraPrincipal = reu.getCabeceraSinFondoGris(libro,14);
 		CellStyle cabecera = reu.getCabecera(libro,10);
 
 		Row fila = hoja.createRow(x);
 
 		Cell celda0 = fila.createCell(0);
-		celda0.setCellValue(tipoCliente);
+		celda0.setCellValue("PARQUE DE LA SALUD DE LA PROVINCIA DE MISIONES ");
 		celda0.setCellStyle(cabeceraPrincipal);
-		hoja.addMergedRegion(new  CellRangeAddress(x,x,0,4));
+		hoja.addMergedRegion(new  CellRangeAddress(x,x,0,3));
 		x++;
+
+		fila = hoja.createRow(x);
+		celda0 = fila.createCell(0);
+		celda0.setCellValue(tipoCliente+" CON ATRASOS EN LOS PAGOS");
+		celda0.setCellStyle(cabeceraPrincipal);
+		hoja.addMergedRegion(new  CellRangeAddress(x,x,0,3));
+		x++;
+
+
+
+		String fecha = DateUtils.formatDate(new Date());
+
+		fila = hoja.createRow(x);
+		celda0 = fila.createCell(0);
+		celda0.setCellValue("MONTOS A INTIMAR POR EXCEDER EL PLAZO NORMAL DE CUMPLIMIENTO - "+fecha);
+		celda0.setCellStyle(cabeceraPrincipal);
+		hoja.addMergedRegion(new  CellRangeAddress(x,x,0,3));
+		x++;
+
+
+
 
 		fila = hoja.createRow(x);
 
 		celda0 = fila.createCell(0);
-		celda0.setCellValue("FINANCIADOR-PACIENTE");
+		celda0.setCellValue("N°");
 		celda0.setCellStyle(cabecera);
 
 		celda0 = fila.createCell(1);
-		celda0.setCellValue("CUIT");
+		celda0.setCellValue(tipoCliente);
 		celda0.setCellStyle(cabecera);
 
 		celda0 = fila.createCell(2);
+		celda0.setCellValue("CUIT");
+		celda0.setCellStyle(cabecera);
+
+		/*celda0 = fila.createCell(2);
 		celda0.setCellValue("IMPORTE");
 		celda0.setCellStyle(cabecera);
 
 		celda0 = fila.createCell(3);
 		celda0.setCellValue("DEBITOS");
-		celda0.setCellStyle(cabecera);
+		celda0.setCellStyle(cabecera);*/
 
-		celda0 = fila.createCell(4);
+		celda0 = fila.createCell(3);
 		celda0.setCellValue("SALDO");
 		celda0.setCellStyle(cabecera);
 
@@ -165,29 +190,36 @@ public class InformesRecuperoReportesController extends Controller {
 		boolean xx = false;
 		boolean ss = true;
 
+		int z = 1;
 		for(SqlRow s : lista){
 	    	fila = hoja.createRow(x);
+
 	    	celda0 = fila.createCell(0);
+			celda0.setCellValue(z);
+			celda0.setCellStyle(comun);
+
+	    	celda0 = fila.createCell(1);
 			celda0.setCellValue(s.getString("cliente_nombre"));
 			celda0.setCellStyle(comun);
 
-			celda0 = fila.createCell(1);
+			celda0 = fila.createCell(2);
 			celda0.setCellValue(s.getString("cuit"));
 			celda0.setCellStyle(comun);
 
-			celda0 = fila.createCell(2);
+			/*celda0 = fila.createCell(2);
 			celda0.setCellValue(s.getBigDecimal("total_factura").doubleValue());
 			celda0.setCellStyle(estiloMoneda);
 
 			celda0 = fila.createCell(3);
 			celda0.setCellValue(s.getBigDecimal("total_pago").doubleValue());
-			celda0.setCellStyle(estiloMoneda);
+			celda0.setCellStyle(estiloMoneda);*/
 
-			celda0 = fila.createCell(4);
+			celda0 = fila.createCell(3);
 			celda0.setCellValue(s.getBigDecimal("total_deuda").doubleValue());
 			celda0.setCellStyle(estiloMoneda);
 
 			x++;
+			z++;
 
 			mtfa= mtfa.add(s.getBigDecimal("total_factura"));
 			mtpa= mtpa.add(s.getBigDecimal("total_pago"));
@@ -200,18 +232,18 @@ public class InformesRecuperoReportesController extends Controller {
 			celda0.setCellValue("");
 			celda0.setCellStyle(comun);
 
-			celda0 = fila.createCell(1);
-			celda0.setCellValue("TOTAL");
-			celda0.setCellStyle(comun);
-			//hoja.addMergedRegion(new  CellRangeAddress(x,x,0,1));
+			celda0 = fila.createCell(0);
+			celda0.setCellValue("TOTAL GENERAL SUJETO A INTIMACION");
+			celda0.setCellStyle(cabeceraPrincipal);
+			hoja.addMergedRegion(new  CellRangeAddress(x,x,0,2));
 
-			celda0 = fila.createCell(2);
+			/*celda0 = fila.createCell(2);
 			celda0.setCellValue(mtfa.doubleValue());
 			celda0.setCellStyle(estiloMoneda);
 			celda0 = fila.createCell(3);
 			celda0.setCellValue(mtpa.doubleValue());
-			celda0.setCellStyle(estiloMoneda);
-			celda0 = fila.createCell(4);
+			celda0.setCellStyle(estiloMoneda);*/
+			celda0 = fila.createCell(3);
 			celda0.setCellValue(mtde.doubleValue());
 			celda0.setCellStyle(estiloMoneda);
 
