@@ -32,6 +32,27 @@ public class ReportesExcelsUtils {
 		return estiloCabecera;
 	}
 
+	public CellStyle getCabeceraSinFondoGris(Workbook libro,int size ) {
+
+		CellStyle estiloCabecera = libro.createCellStyle();
+		estiloCabecera.setDataFormat((short) 7);
+		estiloCabecera.setBorderRight(CellStyle.BORDER_THIN);
+		estiloCabecera.setBorderLeft(CellStyle.BORDER_THIN);
+		estiloCabecera.setBorderTop(CellStyle.BORDER_THIN);
+		estiloCabecera.setBorderBottom(CellStyle.BORDER_THIN);
+		//estiloCabecera.setFillForegroundColor(HSSFColor.GREY_25_PERCENT.index);
+		//estiloCabecera.setFillPattern(HSSFCellStyle.SOLID_FOREGROUND);
+		HSSFFont font = (HSSFFont) libro.createFont();
+		font.setBoldweight(HSSFFont.BOLDWEIGHT_BOLD);
+		font.setFontHeightInPoints((short)size);
+		estiloCabecera.setFont(font);
+		estiloCabecera.setAlignment(HSSFCellStyle.ALIGN_CENTER);
+		estiloCabecera.setVerticalAlignment(HSSFCellStyle.ALIGN_CENTER);
+		estiloCabecera.setWrapText(true);
+
+		return estiloCabecera;
+	}
+
 	public CellStyle getCabeceraSinDecimales(Workbook libro,int size ) {
 		DataFormat format = libro.createDataFormat();
 		CellStyle estiloCabecera = libro.createCellStyle();
