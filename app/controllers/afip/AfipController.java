@@ -732,7 +732,7 @@ public class AfipController {
 				}
 
 				if(rf.cliente.cliente_tipo_id.compareTo(ClienteTipo.ART) == 0 || rf.cliente.cliente_tipo_id.compareTo(ClienteTipo.SEGUROS) == 0 || rf.cliente.cliente_tipo_id.compareTo(ClienteTipo.OBRAS_SOCIALES) == 0) {
-					if(rf.cliente.condicioniva_id.compareTo(CondicionIva.CLIENTE_EXTERIOR.intValue()) == 0) {
+					if(rf.cliente.condicioniva_id != null && rf.cliente.condicioniva_id.compareTo(CondicionIva.CLIENTE_EXTERIOR.intValue()) == 0) {
 						docTipo = 91;
 					}
 				}
