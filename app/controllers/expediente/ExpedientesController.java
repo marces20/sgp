@@ -80,7 +80,7 @@ import fr.opensagres.xdocreport.template.formatter.FieldsMetadata;
 @Security.Authenticated(Secured.class)
 public class ExpedientesController extends Controller {
 
-	final static Long ID_EJERCICIO_PREDETERMINADO = (long) 15;
+	final static Long ID_EJERCICIO_PREDETERMINADO = (long) 16;
 	final static Form<Expediente> expedienteForm = form(Expediente.class);
 
 	public static Result URL_LISTA_IEXPEDIENTE = redirect(
