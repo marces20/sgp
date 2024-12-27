@@ -364,6 +364,19 @@ public class LiquidacionEmbargosController extends Controller {
 					.orderBy("liquidacionEmbargo.puestoLaboral.legajo.agente.apellido asc")
 					.findList();
 
+
+			for (LiquidacionEmbargoDetalle l: ld) {
+				List<Novedad> ndelete = Novedad.find.where()
+						.eq("puesto_laboral_id", l.liquidacionEmbargo.puesto_laboral_id)
+						.eq("liquidacion_concepto_id",  l.liquidacion_concepto_id)
+						.eq("periodo_inicio_id", l.periodo_id.longValue())
+						.eq("periodo_hasta_id", l.periodo_id.longValue()).findList();
+
+				for(Novedad nx :ndelete) {
+					nx.delete();
+				}
+			}
+
 			for (LiquidacionEmbargoDetalle l: ld) {
 
 				LiquidacionPuesto lp = LiquidacionPuesto.find.select("id, puestoLaboral.legajo.agente.organigrama_id")
@@ -396,15 +409,7 @@ public class LiquidacionEmbargosController extends Controller {
 					ldx.liquidacion_embargo_detalle_id= l.id;
 					ldx.save();
 
-					List<Novedad> ndelete = Novedad.find.where()
-									.eq("puesto_laboral_id", lp.puestoLaboral.id)
-									.eq("liquidacion_concepto_id",  l.liquidacion_concepto_id)
-									.eq("periodo_inicio_id", l.periodo_id.longValue())
-									.eq("periodo_hasta_id", l.periodo_id.longValue()).findList();
 
-					for(Novedad nx :ndelete) {
-						nx.delete();
-					}
 
 					Novedad n = new Novedad();
 					n.puesto_laboral_id= lp.puestoLaboral.id;
@@ -927,7 +932,7 @@ public class LiquidacionEmbargosController extends Controller {
 					boolean noHay = true;
  					for(LiquidacionEmbargo lex : le) {
 
-						if(lex.proveedor.getCuentaBancaria().cbu.trim().compareToIgnoreCase(cbu) == 0) {
+						if(lex.proveedor.getCuentaBancaria() !=  null && lex.proveedor.getCuentaBancaria().cbu.trim().compareToIgnoreCase(cbu) == 0) {
 							 liquidacion_embargo_id = lex.id;
 							 noHay = false;
 						}
@@ -994,7 +999,7 @@ public class LiquidacionEmbargosController extends Controller {
 		} catch (Exception e) {
 			Ebean.rollbackTransaction();
 			System.out.println("Excepction: " + e.getMessage());
-			flash("error", e.getMessage());
+			flash("error", e.toString());
 		} finally {
 			Ebean.endTransaction();
 		}
