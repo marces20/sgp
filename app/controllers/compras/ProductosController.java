@@ -1356,12 +1356,15 @@ public class ProductosController extends Controller {
 
 
 	    		}
+	    		RecuperoFactura rfx = rf;
 
-	    		rf.estado_id = (long) Estado.RECUPERO_FACTURA_ENCURSO;
-	    		rf.save();
+	    		rfx.estado_id = (long) Estado.RECUPERO_FACTURA_ENCURSO;
+	    		rfx.save();
 
-	    		rf.estado_id = (long) Estado.RECUPERO_FACTURA_APROBADO;
-	    		rf.save();
+	    		RecuperoFactura rfxx = rfx;
+
+	    		rfxx.estado_id = (long) Estado.RECUPERO_FACTURA_APROBADO;
+	    		rfxx.save();
     		}
 
     		return ok("OK - SE INSERTO FACTURA: "+json.get("idfactura").asInt());
