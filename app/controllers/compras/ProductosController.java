@@ -1357,8 +1357,9 @@ public class ProductosController extends Controller {
 
 	    		}
 
-	    		rf.estado_id = (long) Estado.ACTA_ESTADO_ENCURSO;
+	    		rf.estado_id = (long) Estado.RECUPERO_FACTURA_ENCURSO;
 	    		rf.save();
+
 	    		rf.estado_id = (long) Estado.RECUPERO_FACTURA_APROBADO;
 	    		rf.save();
     		}
