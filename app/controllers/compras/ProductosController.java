@@ -1356,6 +1356,9 @@ public class ProductosController extends Controller {
 
 
 	    		}
+
+	    		rf.estado_id = (long) Estado.RECUPERO_FACTURA_APROBADO;
+	    		rf.save();
     		}
 
     		return ok("OK - SE INSERTO FACTURA: "+json.get("idfactura").asInt());
