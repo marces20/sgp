@@ -1356,12 +1356,12 @@ public class ProductosController extends Controller {
 
 
 	    		}
-	    		RecuperoFactura rfx = rf;
+	    		RecuperoFactura rfx = RecuperoFactura.find.byId(rf.id);
 
 	    		rfx.estado_id = (long) Estado.RECUPERO_FACTURA_ENCURSO;
 	    		rfx.save();
 
-	    		RecuperoFactura rfxx = rfx;
+	    		RecuperoFactura rfxx = RecuperoFactura.find.byId(rf.id);
 
 	    		rfxx.estado_id = (long) Estado.RECUPERO_FACTURA_APROBADO;
 	    		rfxx.save();
