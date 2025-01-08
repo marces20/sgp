@@ -81,6 +81,10 @@ public class Producto extends Model{
 	@DecimalComa(value="")
 	public BigDecimal precio_coste;
 
+	@DecimalComa(value="")
+	public BigDecimal precio_extranjero;
+
+
 	public boolean venta = false;
 	public boolean compra = false;
 	public boolean activo = false;
