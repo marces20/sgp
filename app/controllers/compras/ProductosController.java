@@ -475,8 +475,15 @@ public class ProductosController extends Controller {
 	        restJs.put("id", a.id);
 	        String codigoIps = (a.codigo_ips != null)?a.codigo_ips:"";
 	        restJs.put("value",codigoIps+" - "+a.nombre);
-	        BigDecimal precio = (a.precio_coste != null)?a.precio_coste:BigDecimal.ZERO;
-	        restJs.put("info",  codigoIps+" - "+utils.NumberUtils.moneda(precio));
+
+	        //BigDecimal precio = (a.precio_coste != null)?a.precio_coste:BigDecimal.ZERO;
+
+	        String precio = utils.NumberUtils.moneda((a.precio_coste != null)?a.precio_coste:new BigDecimal(0));
+			String precioExtranjero = utils.NumberUtils.moneda((a.precio_extranjero != null)?a.precio_extranjero:new BigDecimal(0));
+
+			String precioStr = precio +" - Extranjero:"+ precioExtranjero;
+
+	        restJs.put("info",  codigoIps+" - "+precioStr);
 	        restJs.put("precio",  precio);
 
 	        udm.add(restJs);
