@@ -11,8 +11,14 @@
 }
 <script>
 $(function(){
+
+
 	$(document).on('modal.seleccion.producto.simple', function (event, respuesta) {
-		$('#precio').val(respuesta.costo);
+		if($('#tipo_cliente').val() ==='2' || $('#tipo_cliente').val() ==='6 '){
+			$('#precio').val(respuesta.costo_extrajento);
+		}else{
+			$('#precio').val(respuesta.costo);
+		}
 	});
 	$('#searchProductoModal').modalSearch();
 	$('#searchCuentaAnalitica').modalSearch();
@@ -149,7 +155,13 @@ $( function(){
 				maxresults:6,
 				callback: function (obj) {
 											$("#producto_id_modal").val(obj.id);
-											$("#precio").val(obj.precio);
+											console.log(obj)
+											if($('#tipo_cliente').val() ==='2' || $('#tipo_cliente').val() ==='6 '){
+												$('#precio').val(obj.precio_extranjero);
+											}else{
+												$("#precio").val(obj.precio);
+											}
+
 										 }
 			};
 		var as_json = new bsn.AutoSuggest('producto_modal', options);
