@@ -15,7 +15,7 @@ $(function(){
 
 	$(document).on('modal.seleccion.producto.simple', function (event, respuesta) {
 		if($('#tipo_cliente').val() ==='2' || $('#tipo_cliente').val() ==='6 '){
-			$('#precio').val(respuesta.costo_extrajento);
+			$('#precio').val(respuesta.precio_extranjero);
 		}else{
 			$('#precio').val(respuesta.costo);
 		}
