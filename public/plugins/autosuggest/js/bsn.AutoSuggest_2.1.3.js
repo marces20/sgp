@@ -36,35 +36,35 @@ _b.AutoSuggest = function (id, param)
 	//
 	if (!document.getElementById)
 		return 0;
-	
-	
-	
-	
+
+
+
+
 	// get field via DOM
 	//
 	this.fld = _b.DOM.gE(id);
 
 	if (!this.fld)
 		return 0;
-	
-	
-	
-	
+
+
+
+
 	// init variables
 	//
 	this.sInp 	= "";
 	this.nInpC 	= 0;
 	this.aSug 	= [];
 	this.iHigh 	= 0;
-	
-	
-	
-	
+
+
+
+
 	// parameters object
 	//
 	this.oP = param ? param : {};
-	
-	// defaults	
+
+	// defaults
 	//
 	var k, def = {minchars:1, meth:"get", varname:"input", className:"autosuggest", timeout:10000, delay:250, offsety:-5, shownoresults: true, noresults: "No hay resultados!", maxheight: 250, cache: false, maxentries: 25};
 	for (k in def)
@@ -72,19 +72,19 @@ _b.AutoSuggest = function (id, param)
 		if (typeof(this.oP[k]) != typeof(def[k]))
 			this.oP[k] = def[k];
 	}
-	
-	
+
+
 	// set keyup handler for field
 	// and prevent autocomplete from client
 	//
 	var p = this;
-	
+
 	// NOTE: not using addEventListener because UpArrow fired twice in Safari
 	//_b.DOM.addEvent( this.fld, 'keyup', function(ev){ return pointer.onKeyPress(ev); } );
-	
+
 	this.fld.onkeypress 	= function(ev){ return p.onKeyPress(ev); };
 	this.fld.onkeyup 		= function(ev){ return p.onKeyUp(ev); };
-	
+
 	this.fld.setAttribute("autocomplete","off");
 };
 
@@ -105,7 +105,7 @@ _b.AutoSuggest = function (id, param)
 
 _b.AutoSuggest.prototype.onKeyPress = function(ev)
 {
-	
+
 	var key = (window.event) ? window.event.keyCode : ev.keyCode;
 
 
@@ -118,7 +118,7 @@ _b.AutoSuggest.prototype.onKeyPress = function(ev)
 	var RETURN = 13;
 	var TAB = 9;
 	var ESC = 27;
-	
+
 	var bubble = 1;
 
 	switch(key)
@@ -141,7 +141,7 @@ _b.AutoSuggest.prototype.onKeyPress = function(ev)
 _b.AutoSuggest.prototype.onKeyUp = function(ev)
 {
 	var key = (window.event) ? window.event.keyCode : ev.keyCode;
-	
+
 
 
 	// set responses to keydown events in the field
@@ -152,7 +152,7 @@ _b.AutoSuggest.prototype.onKeyUp = function(ev)
 
 	var ARRUP = 38;
 	var ARRDN = 40;
-	
+
 	var bubble = 1;
 
 	switch(key)
@@ -169,14 +169,14 @@ _b.AutoSuggest.prototype.onKeyUp = function(ev)
 			this.changeHighlight(key);
 			bubble = 0;
 			break;
-		
-		
+
+
 		default:
 			this.getSuggestions(this.fld.value);
 	}
 
 	return bubble;
-	
+
 
 };
 
@@ -189,21 +189,21 @@ _b.AutoSuggest.prototype.onKeyUp = function(ev)
 
 _b.AutoSuggest.prototype.getSuggestions = function (val)
 {
-	
+
 	// if input stays the same, do nothing
 	//
 	if (val == this.sInp)
 		return 0;
-	
-	
+
+
 	// kill list
 	//
 	_b.DOM.remE(this.idAs);
-	
-	
+
+
 	this.sInp = val;
-	
-	
+
+
 	// input length is less than the min required to trigger a request
 	// do nothing
 	//
@@ -213,15 +213,15 @@ _b.AutoSuggest.prototype.getSuggestions = function (val)
 		this.nInpC = val.length;
 		return 0;
 	}
-	
-	
-	
-	
+
+
+
+
 	var ol = this.nInpC; // old length
 	this.nInpC = val.length ? val.length : 0;
-	
-	
-	
+
+
+
 	// if caching enabled, and user is typing (ie. length of input is increasing)
 	// filter results out of aSuggestions from last request
 	//
@@ -235,11 +235,11 @@ _b.AutoSuggest.prototype.getSuggestions = function (val)
 				arr.push( this.aSug[i] );
 		}
 		this.aSug = arr;
-		
+
 		this.createList(this.aSug);
-		
-		
-		
+
+
+
 		return false;
 	}
 	else
@@ -265,24 +265,24 @@ _b.AutoSuggest.prototype.doAjaxRequest = function (input)
 	//
 	if (input != this.fld.value)
 		return false;
-	
-	
+
+
 	var pointer = this;
-	
-	
+
+
 	// create ajax request
 	//
 	if (typeof(this.oP.script) == "function")
 		var url = this.oP.script(encodeURIComponent(this.sInp));
 	else
 		var url = this.oP.script+this.oP.varname+""+encodeURIComponent(this.sInp);
-	
+
 	if (!url)
 		return false;
-	
+
 	var meth = this.oP.meth;
 	var input = this.sInp;
-	
+
 	var onSuccessFunc = function (req) { pointer.setSuggestions(req, input) };
 	var onErrorFunc = function (status) { alert("AJAX error: "+status); };
 
@@ -301,25 +301,25 @@ _b.AutoSuggest.prototype.setSuggestions = function (req, input)
 	//
 	if (input != this.fld.value)
 		return false;
-	
-	
+
+
 	this.aSug = [];
-	
-	
+
+
 	if (this.oP.json)
-	{	
+	{
 		var jsondata = eval('(' + req.responseText + ')');
-		
+
 		for (var i=0;i<jsondata.results.length;i++)
-		{	 					
-			this.aSug.push(  { 'id':jsondata.results[i].id, 'value':jsondata.results[i].value, 'info':jsondata.results[i].info, 'precio':jsondata.results[i].precio }  );
+		{
+			this.aSug.push(  { 'id':jsondata.results[i].id, 'value':jsondata.results[i].value, 'info':jsondata.results[i].info, 'precio':jsondata.results[i].precio, 'precio_extranjero':jsondata.results[i].precio_extranjero}  );
 		}
 	}
 	else
 	{
 
 		var xml = req.responseXML;
-	
+
 		// traverse xml
 		//
 		var results = xml.getElementsByTagName('results')[0].childNodes;
@@ -327,13 +327,13 @@ _b.AutoSuggest.prototype.setSuggestions = function (req, input)
 		for (var i=0;i<results.length;i++)
 		{
 			if (results[i].hasChildNodes())
-				this.aSug.push(  { 'id':results[i].getAttribute('id'), 'value':results[i].childNodes[0].nodeValue, 'info':results[i].getAttribute('info'), 'precio':results[i].getAttribute('precio') }  );
+				this.aSug.push(  { 'id':results[i].getAttribute('id'), 'value':results[i].childNodes[0].nodeValue, 'info':results[i].getAttribute('info'), 'precio':results[i].getAttribute('precio'),'precio_extranjero':results[i].getAttribute('precio_extranjero') }  );
 		}
-	
+
 	}
-	
+
 	this.idAs = "as_"+this.fld.id;
-	
+
 
 	this.createList(this.aSug);
 
@@ -355,44 +355,44 @@ _b.AutoSuggest.prototype.setSuggestions = function (req, input)
 _b.AutoSuggest.prototype.createList = function(arr)
 {
 	var pointer = this;
-	
-	
-	
-	
+
+
+
+
 	// get rid of old list
 	// and clear the list removal timeout
 	//
 	_b.DOM.remE(this.idAs);
 	this.killTimeout();
-	
-	
+
+
 	// if no results, and shownoresults is false, do nothing
 	//
 	if (arr.length == 0 && !this.oP.shownoresults)
 		return false;
-	
-	
+
+
 	// create holding div
 	//
-	var div = _b.DOM.cE("div", {id:this.idAs, className:this.oP.className});	
-	
+	var div = _b.DOM.cE("div", {id:this.idAs, className:this.oP.className});
+
 	var hcorner = _b.DOM.cE("div", {className:"as_corner"});
 	var hbar = _b.DOM.cE("div", {className:"as_bar"});
 	var header = _b.DOM.cE("div", {className:"as_header"});
 	header.appendChild(hcorner);
 	header.appendChild(hbar);
 	div.appendChild(header);
-	
-	
-	
-	
+
+
+
+
 	// create and populate ul
 	//
 	var ul = _b.DOM.cE("ul", {id:"as_ul"});
-	
-	
-	
-	
+
+
+
+
 	// loop throught arr of suggestions
 	// creating an LI element for each suggestion
 	//
@@ -404,8 +404,8 @@ _b.AutoSuggest.prototype.createList = function(arr)
 		var val = arr[i].value;
 		var st = val.toLowerCase().indexOf( this.sInp.toLowerCase() );
 		var output = val.substring(0,st) + "<em>" + val.substring(st, st+this.sInp.length) + "</em>" + val.substring(st+this.sInp.length);
-		
-		
+
+
 		var span 		= _b.DOM.cE("span", {}, output, true);
 		if (arr[i].info != "")
 		{
@@ -414,26 +414,26 @@ _b.AutoSuggest.prototype.createList = function(arr)
 			var small		= _b.DOM.cE("small", {}, arr[i].info);
 			span.appendChild(small);
 		}
-		
+
 		var a 			= _b.DOM.cE("a", { href:"#" });
-		
+
 		var tl 		= _b.DOM.cE("span", {className:"tl"}, " ");
 		var tr 		= _b.DOM.cE("span", {className:"tr"}, " ");
 		a.appendChild(tl);
 		a.appendChild(tr);
-		
+
 		a.appendChild(span);
-		
+
 		a.name = i+1;
 		a.onclick = function () { pointer.setHighlightedValue(); return false; };
 		a.onmouseover = function () { pointer.setHighlight(this.name); };
-		
+
 		var li = _b.DOM.cE(  "li", {}, a  );
-		
+
 		ul.appendChild( li );
 	}
-	
-	
+
+
 	// no results
 	//
 	if (arr.length == 0 && this.oP.shownoresults)
@@ -441,32 +441,32 @@ _b.AutoSuggest.prototype.createList = function(arr)
 		var li = _b.DOM.cE(  "li", {className:"as_warning"}, this.oP.noresults  );
 		ul.appendChild( li );
 	}
-	
-	
+
+
 	div.appendChild( ul );
-	
-	
+
+
 	var fcorner = _b.DOM.cE("div", {className:"as_corner"});
 	var fbar = _b.DOM.cE("div", {className:"as_bar"});
 	var footer = _b.DOM.cE("div", {className:"as_footer"});
 	footer.appendChild(fcorner);
 	footer.appendChild(fbar);
 	div.appendChild(footer);
-	
-	
-	
+
+
+
 	// get position of target textfield
 	// position holding div below it
 	// set width of holding div to width of field
 	//
 	var pos = _b.DOM.getPos(this.fld);
-	
+
 	div.style.left 		= pos.x + "px";
 	div.style.top 		= ( pos.y + this.fld.offsetHeight + this.oP.offsety ) + "px";
 	div.style.width 	= this.fld.offsetWidth + "px";
-	
-	
-	
+
+
+
 	// set mouseover functions for div
 	// when mouse pointer leaves div, set a timeout to remove the list after an interval
 	// when mouse enters div, kill the timeout so the list won't be removed
@@ -478,18 +478,18 @@ _b.AutoSuggest.prototype.createList = function(arr)
 	// add DIV to document
 	//
 	document.getElementsByTagName("body")[0].appendChild(div);
-	
-	
-	
+
+
+
 	// currently no item is highlighted
 	//
 	this.iHigh = 0;
-	
-	
-	
-	
-	
-	
+
+
+
+
+
+
 	// remove list after an interval
 	//
 	var pointer = this;
@@ -511,25 +511,25 @@ _b.AutoSuggest.prototype.createList = function(arr)
 
 
 _b.AutoSuggest.prototype.changeHighlight = function(key)
-{	
+{
 	var list = _b.DOM.gE("as_ul");
 	if (!list)
 		return false;
-	
+
 	var n;
 
 	if (key == 40)
 		n = this.iHigh + 1;
 	else if (key == 38)
 		n = this.iHigh - 1;
-	
-	
+
+
 	if (n > list.childNodes.length)
 		n = list.childNodes.length;
 	if (n < 1)
 		n = 1;
-	
-	
+
+
 	this.setHighlight(n);
 };
 
@@ -540,12 +540,12 @@ _b.AutoSuggest.prototype.setHighlight = function(n)
 	var list = _b.DOM.gE("as_ul");
 	if (!list)
 		return false;
-	
+
 	if (this.iHigh > 0)
 		this.clearHighlight();
-	
+
 	this.iHigh = Number(n);
-	
+
 	list.childNodes[this.iHigh-1].className = "as_highlight";
 
 
@@ -558,7 +558,7 @@ _b.AutoSuggest.prototype.clearHighlight = function()
 	var list = _b.DOM.gE("as_ul");
 	if (!list)
 		return false;
-	
+
 	if (this.iHigh > 0)
 	{
 		list.childNodes[this.iHigh-1].className = "";
@@ -572,16 +572,16 @@ _b.AutoSuggest.prototype.setHighlightedValue = function ()
 	if (this.iHigh)
 	{
 		this.sInp = this.fld.value = this.aSug[ this.iHigh-1 ].value;
-		
+
 		// move cursor to end of input (safari)
 		//
 		this.fld.focus();
 		if (this.fld.selectionStart)
 			this.fld.setSelectionRange(this.sInp.length, this.sInp.length);
-		
+
 
 		this.clearSuggestions();
-		
+
 		// pass selected object to callback function, if exists
 		//
 		if (typeof(this.oP.callback) == "function")
@@ -621,9 +621,9 @@ _b.AutoSuggest.prototype.resetTimeout = function()
 
 _b.AutoSuggest.prototype.clearSuggestions = function ()
 {
-	
+
 	this.killTimeout();
-	
+
 	var ele = _b.DOM.gE(this.idAs);
 	var pointer = this;
 	if (ele)
@@ -659,15 +659,15 @@ _b.Ajax = function ()
 
 _b.Ajax.prototype.makeRequest = function (url, meth, onComp, onErr)
 {
-	
+
 	if (meth != "POST")
 		meth = "GET";
-	
+
 	this.onComplete = onComp;
 	this.onError = onErr;
-	
+
 	var pointer = this;
-	
+
 	// branch for native XMLHttpRequest object
 	if (window.XMLHttpRequest)
 	{
@@ -692,7 +692,7 @@ _b.Ajax.prototype.makeRequest = function (url, meth, onComp, onErr)
 
 _b.Ajax.prototype.processReqChange = function()
 {
-	
+
 	// only if req shows "loaded"
 	if (this.req.readyState == 4) {
 		// only if "OK"
@@ -728,12 +728,12 @@ _b.DOM.cE = function ( type, attr, cont, html )
 	var ne = document.createElement( type );
 	if (!ne)
 		return 0;
-		
+
 	for (var a in attr)
 		ne[a] = attr[a];
-	
+
 	var t = typeof(cont);
-	
+
 	if (t == "string" && !html)
 		ne.appendChild( document.createTextNode(cont) );
 	else if (t == "string" && html)
@@ -774,7 +774,7 @@ _b.DOM.gE = function ( e )
 _b.DOM.remE = function ( ele )
 {
 	var e = this.gE(ele);
-	
+
 	if (!e)
 		return 0;
 	else if (e.parentNode.removeChild(e))
@@ -803,9 +803,9 @@ _b.DOM.getPos = function ( e )
 	}
 	else if (obj.x)
 		curleft += obj.x;
-	
+
 	var obj = e;
-	
+
 	var curtop = 0;
 	if (obj.offsetParent)
 	{
@@ -842,22 +842,22 @@ if (typeof(_b.Fader) == "undefined")
 
 
 _b.Fader = function (ele, from, to, fadetime, callback)
-{	
+{
 	if (!ele)
 		return 0;
-	
+
 	this.e = ele;
-	
+
 	this.from = from;
 	this.to = to;
-	
+
 	this.cb = callback;
-	
+
 	this.nDur = fadetime;
-		
+
 	this.nInt = 50;
 	this.nTime = 0;
-	
+
 	var p = this;
 	this.nID = setInterval(function() { p._fade() }, this.nInt);
 };
@@ -868,16 +868,16 @@ _b.Fader = function (ele, from, to, fadetime, callback)
 _b.Fader.prototype._fade = function()
 {
 	this.nTime += this.nInt;
-	
+
 	var ieop = Math.round( this._tween(this.nTime, this.from, this.to, this.nDur) * 100 );
 	var op = ieop / 100;
-	
+
 	if (this.e.filters) // internet explorer
 	{
 		try
 		{
 			this.e.filters.item("DXImageTransform.Microsoft.Alpha").opacity = ieop;
-		} catch (e) { 
+		} catch (e) {
 			// If it is not set initially, the browser will throw an error.  This will set it if it is not set yet.
 			this.e.style.filter = 'progid:DXImageTransform.Microsoft.Alpha(opacity='+ieop+')';
 		}
@@ -886,8 +886,8 @@ _b.Fader.prototype._fade = function()
 	{
 		this.e.style.opacity = op;
 	}
-	
-	
+
+
 	if (this.nTime == this.nDur)
 	{
 		clearInterval( this.nID );
