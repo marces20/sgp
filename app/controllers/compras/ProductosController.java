@@ -484,7 +484,9 @@ public class ProductosController extends Controller {
 			String precioStr = precio +" - Extranjero:"+ precioExtranjero;
 
 	        restJs.put("info",  codigoIps+" - "+precioStr);
-	        restJs.put("precio",  precio);
+	        restJs.put("precio",  (a.precio_coste != null)?a.precio_coste:new BigDecimal(0));
+
+	        restJs.put("precio_extranjero", (a.precio_extranjero != null)?a.precio_extranjero:new BigDecimal(0));
 
 	        udm.add(restJs);
 		}
@@ -578,6 +580,7 @@ public class ProductosController extends Controller {
 			restJs.put("id", producto.id);
 			restJs.put("nombre", producto.nombre);
 			restJs.put("costo", producto.precio_coste);
+			restJs.put("precio_extranjero", producto.precio_extranjero);
 		}
 		nodo.add(restJs);
 		return ok(restJs);
@@ -599,6 +602,7 @@ public class ProductosController extends Controller {
 			restJs.put("id", producto.id);
 			restJs.put("nombre", producto.nombre);
 			restJs.put("precio", producto.precio_coste);
+			restJs.put("precio_extranjero", producto.precio_extranjero);
 		}
 		nodo.add(restJs);
 		return ok(restJs);
