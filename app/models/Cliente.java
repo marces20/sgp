@@ -113,7 +113,10 @@ public class Cliente extends Model {
     	p.setOrderDefault("ASC");
     	p.setSortByDefault("nombre");
 
-    	ExpressionList<Cliente> e = find.where();
+    	ExpressionList<Cliente> e = find
+    			.fetch("obrasocial", "nombre")
+    			.fetch("direcciones")
+    			.where();
     	if(!nombre.isEmpty()){
     		e.ilike("nombre", "%" + nombre + "%");
     	}
