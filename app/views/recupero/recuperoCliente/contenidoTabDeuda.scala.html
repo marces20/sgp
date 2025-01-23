@@ -1,0 +1,26 @@
+@(totalDeuda:java.math.BigDecimal,totalDeuda90dias:java.math.BigDecimal)
+<div class="panel panel-default">
+	<div class="panel-heading"><b>Total Deuda</b></div>
+	<div class="panel-body">
+
+		<div class="col-sm-6">
+	  	  <div class="small-box bg-green">
+	  	  	<div class="inner">
+	          <h4>TOTAL DEUDA</h4>
+	          <p>@utils.NumberUtils.moneda(totalDeuda)</p>
+	  	  </div>
+		 </div>
+	 	</div>
+	 	<div class="col-sm-6">
+	  	  <div class="small-box bg-green">
+	  	  	<div class="inner">
+	          <h4>TOTAL DEUDA 3 MESES</h4>
+	          <p>@utils.NumberUtils.moneda(totalDeuda90dias)</p>
+	  	  </div>
+		 </div>
+	 	</div>
+
+
+
+	</div>
+</div>

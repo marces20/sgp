@@ -1,0 +1,88 @@
+@(paginador:  utils.pagination.Pagination[models.recupero.InformeTotal], formBuscador: DynamicForm)
+@import models.auth._
+@import helper._
+@implicitFieldConstructor = @{ FieldConstructor(simpleInput.render) }
+@import utils._
+
+
+<div id="listaLineaListaDeuda" class="contenedorPaginador ajaxPaginador">
+
+<div class="panel panel-default">
+		<div class="panel-heading"><b>Lista Factura Deuda</b></div>
+		<div class="panel-body">
+			@if(paginador.getTotalRowCount == 0) {
+        		<p id="mensajeSinResultados" class="well"><i class="glyphicon glyphicon-info-sign"></i> No hay Facturas con Deuda para este cliente.</p>
+    		}else{
+
+				<table id="listaDeProductos" class="table table-striped table-bordered">
+					<thead>
+						<tr>
+							<th width="40">Institucion</th>
+							<th width="90">Número</th>
+							<th width="40">Fecha</th>
+							<!-- <th>Cliente</th> -->
+							<th width="90">Total factura</th>
+							<th width="90">Total pagos</th>
+							<th width="90">Total deuda</th>
+						<tr>
+					</thead>
+					<tbody>
+					@for(informe <- paginador.getList) {
+						<tr>
+							<td>@if(informe.deposito != null){@informe.deposito.sigla}</td>
+							<td>@informe.numero</td>
+							<td>@DateUtils.formatDate(informe.fecha)</td>
+							<!-- <td>@informe.cliente.nombre</td> -->
+							<td class="totalFactura" rel="@informe.totalFactura" data-valor="@informe.totalFactura">@utils.NumberUtils.moneda(informe.totalFactura)</td>
+							<td class="totalPagos" rel="@informe.totalPagos" data-valor="@informe.totalPagos">@utils.NumberUtils.moneda(informe.totalPagos)</td>
+							<td class="totalDeuda" rel="@informe.totalDeuda" data-valor="@informe.totalDeuda">@utils.NumberUtils.moneda(informe.totalDeuda)</td>
+						<tr>
+					}
+					</tbody>
+					<tfoot>
+				        <tr>
+					        <td colspan="3">&nbsp</td>
+					        <td><b>Total:</b> <span class="facturaFooter"></span></td>
+					        <td><b>Total:</b> <span class="pagoFooter"></span></td>
+					        <td><b>Total:</b> <span class="deudaFooter"></span></td>
+
+				        </tr>
+			        </tfoot>
+				</table>
+				<div class="pagination pull-right">
+				    @views.html.helpers.paginador(paginador, controllers.recupero.routes.RecuperoLibreDeudaController.index())
+				</div>
+			}
+	</div>
+</div>
+<script>
+$( function (){
+	var n = 0;
+	var nb = 0;
+	var nc = 0;
+	var nd = 0;
+	var b = 0;
+	var c = 0;
+	$(".totalFactura").each(function (index) {
+
+		n = Number($(this).attr("rel"))+n
+	})
+	$(".facturaFooter").append(formatNumberPesos(parseFloat(n).toFixed(2)));
+
+	$(".totalPagos").each(function (index) {
+
+		nb = Number($(this).attr("rel"))+nb
+	})
+	$(".pagoFooter").append(formatNumberPesos(parseFloat(nb).toFixed(2)));
+
+	$(".totalDeuda").each(function (index) {
+
+		nc = Number($(this).attr("rel"))+nc
+	})
+	$(".deudaFooter").append(formatNumberPesos(parseFloat(nc).toFixed(2)));
+
+
+});
+</script>
+
+

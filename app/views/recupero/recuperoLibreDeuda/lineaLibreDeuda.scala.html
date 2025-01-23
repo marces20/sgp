@@ -1,0 +1,25 @@
+@(linea: models.recupero.RecuperoLibreDeuda, editable: Boolean)
+@import models.auth._
+
+<tr data-id="@linea.id">
+	@if(editable && Permiso.check("editarLibreDeuda")){
+		<td class="accion-editar"><a class="btn btn-default btn-xs modificarLibreDeuda" href="@controllers.recupero.routes.RecuperoLibreDeudaController.editar(linea.id)"><i class="glyphicon glyphicon-edit"></i></a></td>
+	}else{
+		<td></td>
+	}
+	<td>@linea.id</td>
+	<td>@if(linea.cliente != null){@linea.cliente.nombre}</td>
+	<td>@if(linea.fecha != null){@(utils.DateUtils.formatDate(linea.fecha))}</td>
+	<td>@if(linea.fecha_vencimiento != null){@(utils.DateUtils.formatDate(linea.fecha_vencimiento))}</td>
+	<td>
+		<a role="menuitem" class="imprimirLibreDeuda btn btn-default btn-xs notSeleccion " tabindex="-1" href="#"
+		data-url="@controllers.recupero.routes.RecuperoReportesController.imprimirLibreDeuda(linea.id)">
+		<i class="glyphicon glyphicon-list-alt"></i>
+		</a>
+	</td>
+	@if(editable && Permiso.check("eliminarLibreDeuda")){
+		<td><a class="btn btn-default btn-xs eliminarLibreDeuda delete-confirm-link" href="@controllers.recupero.routes.RecuperoLibreDeudaController.eliminar(linea.id)"><i class="glyphicon glyphicon-trash icono-eliminar"></i></a></td>
+	}else{
+		<td></td>
+	}
+</tr>

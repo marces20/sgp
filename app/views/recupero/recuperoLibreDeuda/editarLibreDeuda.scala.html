@@ -1,0 +1,9 @@
+@(lineaForm: Form[models.recupero.RecuperoLibreDeuda])
+@import helper._
+@implicitFieldConstructor = @{ FieldConstructor(simpleInput.render) }
+
+@helper.form(action = controllers.recupero.routes.RecuperoLibreDeudaController.actualizar()) {
+	@views.html.recupero.recuperoLibreDeuda.formLibreDeuda(lineaForm)
+	@inputText(lineaForm("id"), 'hidden -> "hidden")
+
+}

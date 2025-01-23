@@ -1,0 +1,18 @@
+@(formularioCarga: Boolean, recuperoClienteForm: Form[models.Cliente] = null)
+@import java.util.List
+
+@if(recuperoClienteForm.field("id").value == null || recuperoClienteForm.field("id").value == ""){
+	<p>Para cargar libre deuda primero debe dar de alta el cliente</p>
+} else {
+	<script>
+	$( function (){
+		$.get('@controllers.recupero.routes.RecuperoLibreDeudaController.index(recuperoClienteForm.field("id").value.toLong, formularioCarga)', function(data){
+			$('#listaLineaLibreDeuda').parent().html(data);
+		})
+	});
+	</script>
+}
+
+<div id="listaLineaLibreDeuda">
+
+</div>
