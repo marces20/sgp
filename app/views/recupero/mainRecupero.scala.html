@@ -32,6 +32,13 @@
 					<li><a href="@controllers.recupero.routes.RecuperoPagosController.index()">Movimientos</a></li>
 				}
 
+				<li class="titulo">Clientes</li>
+					<li><a href="@controllers.recupero.routes.RecuperoClientesController.index(1)">Obra Social</a></li>
+					<li><a href="@controllers.recupero.routes.RecuperoClientesController.index(3)">Seguros</a></li>
+					<li><a href="@controllers.recupero.routes.RecuperoClientesController.index(9)">ART</a></li>
+					<li><a href="@controllers.recupero.routes.RecuperoClientesController.index(7)">Pacientes</a></li>
+					<li><a href="@controllers.recupero.routes.RecuperoClientesController.index(2)">Extranjeros</a></li>
+
 
 				<li class="titulo">Informes</li>
 				@if(Permiso.check("recuperoInformeGeneral")) {
