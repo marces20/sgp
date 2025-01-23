@@ -43,6 +43,7 @@ import models.recupero.Cheque;
 import models.recupero.InformeTotal;
 import models.recupero.RecuperoFactura;
 import models.recupero.RecuperoFacturaLinea;
+import models.recupero.RecuperoLibreDeuda;
 import models.recupero.RecuperoNotaCredito;
 import models.recupero.RecuperoNotaDebito;
 import models.recupero.RecuperoPago;
@@ -2586,6 +2587,31 @@ order by nc.numero
 	}
 
 
+	public static Result imprimirLibreDeuda(Long id) {
+
+		 try {
+
+			 RecuperoLibreDeuda rf = RecuperoLibreDeuda.find.byId(id);
+			 String dirTemp = System.getProperty("java.io.tmpdir");
+
+			 String inputHTML = null;
+			 inputHTML = Play.application().getFile("conf/resources/reportes/recupero/libredeuda.html").toString();
+
+			 String outputPdf = dirTemp+"/libredeuda-"+rf.id+".pdf";
+
+			 htmlToPdf(inputHTML, outputPdf, id,"libredeuda");
+
+			 return ok(reportePlanilla.render(outputPdf));
+
+		} catch (Exception e) {
+		  // TODO Auto-generated catch block
+		      e.printStackTrace();
+		}
+
+
+
+		 return ok(reportePlanilla.render(null));
+	}
 
 	public static Result imprimirFacturaAfip(Long id) {
 
@@ -2706,6 +2732,8 @@ order by nc.numero
 			doc = html5ParseDocumentPorElementoNotaDebito(inputHTML,facturaId);
 		}else if(tipo =="detalledeuda") {
 			doc = html5ParseDocumentPorElementoDetalleDeuda(inputHTML,facturaId,it);
+		}else if(tipo =="libredeuda") {
+			doc = html5ParseDocumentPorElementoLibreDeuda(inputHTML,facturaId,it);
 		}
 
 
@@ -3325,6 +3353,19 @@ order by nc.numero
 		//{"ver":1,"fecha":"2020-10-13","cuit":30000000007,"ptoVta":10,"tipoCmp":1,"nroCmp":94,"importe":12100,"moneda":"DOL","ctz":65,"tipoDocRec":80,"nroDocRec":20000000001,"tipoCodAut":"E","codAut":70417054367476}
 	}
 
+	public static String generarJsonQrLibreDeuda(Long id) throws Exception {
+
+		String url= "https://www.afip.gob.ar/fe/qr/?p="+id;
+
+		String ret = generateQR(url, 160,160);
+
+		return ret;
+
+
+
+		//{"ver":1,"fecha":"2020-10-13","cuit":30000000007,"ptoVta":10,"tipoCmp":1,"nroCmp":94,"importe":12100,"moneda":"DOL","ctz":65,"tipoDocRec":80,"nroDocRec":20000000001,"tipoCodAut":"E","codAut":70417054367476}
+	}
+
 
 	public static String generateQR(String text, int h, int w) throws Exception
     {
@@ -3439,6 +3480,32 @@ order by nc.numero
 
 	    return r;
 	  }
+
+	private static Document html5ParseDocumentPorElementoLibreDeuda(String inputHTML,Long facturaId,List<InformeTotal> it) throws IOException,Exception{
+
+		org.jsoup.nodes.Document doc;
+		doc = Jsoup.parse(new File(inputHTML), "UTF-8");
+		Map<String,String> datos = new HashMap<>();
+
+		 String qrBase =  generarJsonQrLibreDeuda(facturaId);
+		 String qr ="<img height='140' width='140' src='data:image/png;base64,"+qrBase+"'>";
+		 datos.put("qr",qr);
+
+		for (Map.Entry<String, String> entry : datos.entrySet()) {
+	    	Logger.debug("xxxxxxx "+entry.getKey());
+		    org.jsoup.select.Elements myImgs = doc.select("."+entry.getKey());
+
+		    for (org.jsoup.nodes.Element element : myImgs) {
+		    	//element.text(entry.getValue());
+
+		    	element.append(entry.getValue());
+		    }
+
+	    }
+
+	    return new W3CDom().fromJsoup(doc);
+
+	}
 
 	private static Document html5ParseDocumentPorElementoDetalleDeuda(String inputHTML,Long facturaId,List<InformeTotal> it) throws IOException,Exception{
 
