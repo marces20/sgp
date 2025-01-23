@@ -252,4 +252,42 @@ public class InformeTotal extends Model {
 		return row;
 	}
 
+	public static BigDecimal getDeudaPorIdCliente(Long idCliente,String fecha_desde,String fecha_hasta){
+
+		BigDecimal r = new BigDecimal(0);
+
+		String sql = "SELECT sum(total_deuda) total_deuda," +
+				"cliente_id,tipo_cliente,cliente_nombre,cuit " +
+				"FROM informe_totales_recupero " +
+				"WHERE total_deuda > 0 ";
+
+		if(idCliente != 0){
+			sql += " AND cliente_id = "+idCliente;
+		}
+
+		if(fecha_desde != null && !fecha_desde.isEmpty()){
+    		Date fod = DateUtils.formatDate(fecha_desde, "dd/MM/yyyy");
+
+    		sql += " AND fecha >=  '"+DateUtils.formatDate(fod, "yyyy-MM-dd")+"' ";
+    	}
+
+		if(fecha_hasta != null && !fecha_hasta.isEmpty()){
+			Date foh = DateUtils.formatDate(fecha_hasta, "dd/MM/yyyy");
+    		sql += " AND fecha <= '"+DateUtils.formatDate(foh, "yyyy-MM-dd")+"' ";
+    	}
+
+		sql +=" GROUP BY cliente_id,tipo_cliente,cliente_nombre,cuit ORDER BY total_deuda desc ";
+
+
+		SqlQuery sqlQuery = Ebean.createSqlQuery(sql);
+
+		List<SqlRow>  row = sqlQuery.findList();
+
+		if(row.size() > 0) {
+			r = row.get(0).getBigDecimal("total_deuda");
+		}
+
+		return r;
+	}
+
 }
