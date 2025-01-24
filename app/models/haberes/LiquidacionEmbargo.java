@@ -112,7 +112,7 @@ public class LiquidacionEmbargo  extends Model{
 	      }
 	    }
 
-    	if (!btnFiltro0.isEmpty() || !btnFiltro1.isEmpty() || !btnFiltro2.isEmpty()  ) {
+    	if (!btnFiltro0.isEmpty() || !btnFiltro1.isEmpty() || !btnFiltro2.isEmpty()  || !btnFiltro3.isEmpty()   || !btnFiltro4.isEmpty() ) {
     	      e = e.disjunction();
     	      if (!btnFiltro0.isEmpty()) {
     	        e = e.eq("estado_id", Estado.LIQUIDACION_EMBARGO_BORRADOR);
