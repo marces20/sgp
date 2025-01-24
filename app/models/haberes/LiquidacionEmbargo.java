@@ -79,7 +79,9 @@ public class LiquidacionEmbargo  extends Model{
 	public static Pagination<LiquidacionEmbargo> page(String puesto_laboral_id,
 													  String btnFiltro0, // borrador
 												      String btnFiltro1, // preaprobado
-												      String btnFiltro2,
+												      String btnFiltro2, //cancelado
+												      String btnFiltro3,// en espera
+												      String btnFiltro4,// pos espera
 												      String cm,
 												      String tipo_embargo_id) {
 
@@ -121,6 +123,12 @@ public class LiquidacionEmbargo  extends Model{
     	      if (!btnFiltro2.isEmpty()) {
     	        e = e.eq("estado_id", Estado.LIQUIDACION_EMBARGO_CANCELADO);
     	      }
+    	      if (!btnFiltro3.isEmpty()) {
+      	        e = e.eq("estado_id", Estado.LIQUIDACION_EMBARGO_ESPERA);
+      	      }
+    	      if (!btnFiltro4.isEmpty()) {
+      	        e = e.eq("estado_id", Estado.LIQUIDACION_EMBARGO_POST_ESPERA);
+      	      }
 
 
     	      e = e.endJunction();
