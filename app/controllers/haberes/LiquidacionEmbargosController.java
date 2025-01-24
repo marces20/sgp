@@ -80,6 +80,8 @@ public class LiquidacionEmbargosController extends Controller {
 																RequestVar.get("btnFiltro[0]"),//
 																RequestVar.get("btnFiltro[1]"),//
 																RequestVar.get("btnFiltro[2]"),
+																RequestVar.get("btnFiltro[3]"),
+																RequestVar.get("btnFiltro[4]"),
 																RequestVar.get("cm"),
 																RequestVar.get("tipo_embargo_id")
 
@@ -923,13 +925,17 @@ public class LiquidacionEmbargosController extends Controller {
 				List<LiquidacionEmbargo> le = LiquidacionEmbargo.find.where()
 											 .eq("puestoLaboral.legajo.agente.cuit", cuit)
 											 //.eq("proveedor.getCuentaBancaria().cbu",cbu)
+											 .disjunction()
+											 .eq("estado_id", Estado.LIQUIDACION_EMBARGO_ESPERA)
 											 .eq("estado_id", Estado.LIQUIDACION_EMBARGO_APROBADO)
+											 .endJunction()
 											 .findList();
 
 
 				Long liquidacion_embargo_id = null;
 				if(le != null) {
 					boolean noHay = true;
+					String prov = "";
  					for(LiquidacionEmbargo lex : le) {
 
 						if(lex.proveedor.getCuentaBancaria() !=  null && lex.proveedor.getCuentaBancaria().cbu.trim().compareToIgnoreCase(cbu) == 0) {
@@ -937,13 +943,13 @@ public class LiquidacionEmbargosController extends Controller {
 							 noHay = false;
 						}
 
-						Logger.debug("ddddddddddddd {}", lex.proveedor.getCuentaBancaria().cbu);
-						Logger.debug("ddddddddddddd111 {}", lex.proveedor.getCuentaBancaria().cbu.compareToIgnoreCase(cbu));
+						Logger.debug("getCuentaBancaria {}", lex.proveedor.getCuentaBancaria().cbu);
+						Logger.debug(".getCuentaBancaria().cbu.compareToIgnoreCase(cbu) {}", lex.proveedor.getCuentaBancaria().cbu.compareToIgnoreCase(cbu));
 					}
  					if(noHay) {
- 						Logger.debug("ddddddddddddd222 {}", cbu);
+ 						Logger.debug("cbu noHaynoHay yyyyyyyyyyyyyyyyyyyyyyyyyyyyy {}", cbu +cuit);
 
- 						msgArchivo.add("Linea " + (i + 1) + ". No se encuentra una cbu cargada para este cuit");
+ 						msgArchivo.add("Linea " + (i + 1) + ". No se encuentra una cbu cargada para este cuit  "+cuit );
  						pasar = true;
  					}
 
