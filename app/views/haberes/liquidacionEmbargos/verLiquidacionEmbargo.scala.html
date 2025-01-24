@@ -100,6 +100,17 @@
 					<i class="glyphicon glyphicon-minus-sign"></i> Cancelar Retencion
 				</a>
 			</div>
+
+			<div class="col-sm-3">
+				<a href="@controllers.haberes.routes.LiquidacionEmbargosController.cambiarEstado(lcForm.field("id").value.toInt, models.Estado.LIQUIDACION_EMBARGO_ESPERA)@UriTrack.get("&")" class="btn btn-default">
+					<i class="glyphicon glyphicon-minus-sign"></i> Pasar a En espera
+				</a>
+			</div>
+			<div class="col-sm-3">
+				<a href="@controllers.haberes.routes.LiquidacionEmbargosController.cambiarEstado(lcForm.field("id").value.toInt, models.Estado.LIQUIDACION_EMBARGO_POST_ESPERA)@UriTrack.get("&")" class="btn btn-default">
+					<i class="glyphicon glyphicon-minus-sign"></i> Pasar a Pos Espera
+				</a>
+			</div>
 		}
 
 
