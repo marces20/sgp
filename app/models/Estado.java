@@ -199,6 +199,8 @@ private static final long serialVersionUID = 1L;
 	public static final int LIQUIDACION_EMBARGO_BORRADOR = 125;
 	public static final int LIQUIDACION_EMBARGO_APROBADO = 126;
 	public static final int LIQUIDACION_EMBARGO_CANCELADO = 127;
+	public static final int LIQUIDACION_EMBARGO_ESPERA = 134;
+	public static final int LIQUIDACION_EMBARGO_POST_ESPERA = 135;
 
 	public static final int EQUIPO_BORRADOR = 128;
 	public static final int EQUIPO_FUNCIONANDO = 129;
