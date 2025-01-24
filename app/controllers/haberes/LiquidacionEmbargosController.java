@@ -216,6 +216,18 @@ public class LiquidacionEmbargosController extends Controller {
 				  }
 		    	  pasarCancelado(p.id);
 		          break;
+		      case Estado.LIQUIDACION_EMBARGO_ESPERA:
+		    	  if(!Permiso.check("liquidacionEmbargoPasarCancelado")) {
+					  return ok(sinPermiso.render(request().getHeader("referer")));
+				  }
+		    	  pasarEspera(p.id);
+		          break;
+		      case Estado.LIQUIDACION_EMBARGO_POST_ESPERA:
+		    	  if(!Permiso.check("liquidacionEmbargoPasarCancelado")) {
+					  return ok(sinPermiso.render(request().getHeader("referer")));
+				  }
+		    	  pasarPosEspera(p.id);
+		          break;
 		      default:
 		           break;
 		      }
@@ -269,6 +281,37 @@ public class LiquidacionEmbargosController extends Controller {
 		}
 
 	}
+
+	@CheckPermiso(key = "liquidacionEmbargoPasarCancelado")
+	public static void pasarEspera(Long id){
+
+		LiquidacionEmbargo p = Ebean.find(LiquidacionEmbargo.class).select("id, estado_id").setId(id).findUnique();
+
+		if(p != null){
+			p.estado_id = new Long(Estado.LIQUIDACION_EMBARGO_ESPERA);
+			p.save();
+			flash("success", "Operación exitosa. Estado actual: Espera");
+		} else {
+			flash("error", "Parámetros incorrectos");
+		}
+
+	}
+
+	@CheckPermiso(key = "liquidacionEmbargoPasarCancelado")
+	public static void pasarPosEspera(Long id){
+
+		LiquidacionEmbargo p = Ebean.find(LiquidacionEmbargo.class).select("id, estado_id").setId(id).findUnique();
+
+		if(p != null){
+			p.estado_id = new Long(Estado.LIQUIDACION_EMBARGO_POST_ESPERA);
+			p.save();
+			flash("success", "Operación exitosa. Estado actual: Pos Espera");
+		} else {
+			flash("error", "Parámetros incorrectos");
+		}
+
+	}
+
 	@CheckPermiso(key = "liquidacionEmbargoCargarDetalleMasivo")
 	public static Result modalCargarDetalleMasivo() {
 		return ok(modalCargarDetalleMasivo.render(form().bindFromRequest()));
