@@ -673,8 +673,19 @@ public class LiquidacionMes extends Model {
       return true;
       // return false;
 
-    } catch (SQLException e) {
-      Logger.error("Error duplicar: " + e);
+    } catch (Exception e) {
+      Logger.error("Error PRELIQUIDAR: " + e);
+
+      EmailUtilis eu = new EmailUtilis();
+      eu.setSubject("Error PRELIQUIDAR" );
+      eu.setHtmlMsg("Error PRELIQUIDAR");
+      eu.setFrom("liquidaciones@parquesaludmnes.org.ar");
+
+      List<String> adds = new ArrayList<>();
+      adds.add("marces2000@gmail.com");
+      eu.setAdds(adds);
+      eu.enviar();
+
     } finally {
       if (stmt != null)
         try {
