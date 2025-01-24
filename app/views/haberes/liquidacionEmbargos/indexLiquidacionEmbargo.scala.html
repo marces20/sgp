@@ -19,6 +19,8 @@
 		classEstado = "cancelada"
 	}else if(i.estado != null && i.estado.id == 126){
 		classEstado = "autorizado"
+	}else if(i.estado != null && i.estado.id == 134){
+		classEstado = "red"
 	}
 
 	classEstado
@@ -88,8 +90,18 @@
 						 </button>
 
 						 <button type="button" rel="aprobado" class="btn btn-default btn-filtros">
-						  	<i class="glyphicon glyphicon-ok"></i><br>Cancelado
+						  	<i class="glyphicon glyphicon-minus-sign"></i><br>Cancelado
 						  	@checkbox(formBuscador("btnFiltro[2]"), 'hidden -> "hidden")
+						 </button>
+
+						 <button type="button" rel="aprobado" class="btn btn-default btn-filtros">
+						  	<i class="glyphicon glyphicon-time"></i><br>En Espera
+						  	@checkbox(formBuscador("btnFiltro[3]"), 'hidden -> "hidden")
+						 </button>
+
+						 <button type="button" rel="aprobado" class="btn btn-default btn-filtros">
+						  	<i class="glyphicon glyphicon-wrench"></i><br>PosEspera
+						  	@checkbox(formBuscador("btnFiltro[4]"), 'hidden -> "hidden")
 						 </button>
 
 						</div>
