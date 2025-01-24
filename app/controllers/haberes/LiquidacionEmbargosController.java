@@ -358,8 +358,8 @@ public class LiquidacionEmbargosController extends Controller {
 
 	}
 
-	public static Boolean soloAprobados(List<Integer> pSeleccionados) {
-		return LiquidacionEmbargo.find.where().ne("estado_id", Estado.LIQUIDACION_EMBARGO_APROBADO).in("id", pSeleccionados).findRowCount() == 0;
+	public static Boolean soloAprobadosAndEnEspera(List<Integer> pSeleccionados) {
+		return LiquidacionEmbargo.find.where().ne("estado_id", Estado.LIQUIDACION_EMBARGO_ESPERA).ne("estado_id", Estado.LIQUIDACION_EMBARGO_APROBADO).in("id", pSeleccionados).findRowCount() == 0;
 	}
 
 	public static Result crearLineaLiquidacion() {
@@ -375,8 +375,8 @@ public class LiquidacionEmbargosController extends Controller {
 			return ok(modalResponseCargaLineaLiquidacion.render(null,d));
 		}
 
-		if(!soloAprobados(reteIds)) {
-			flash("error", "Solo se puede cargar registros en estado aprobados.");
+		if(!soloAprobadosAndEnEspera(reteIds)) {
+			flash("error", "Solo se puede cargar registros en estado aprobados o en espera");
 			return ok(modalResponseCargaLineaLiquidacion.render(null,d));
 		}
 
@@ -404,12 +404,15 @@ public class LiquidacionEmbargosController extends Controller {
 			        .fetch("liquidacionEmbargo.puestoLaboral.legajo.agente", "apellido")
 					.where()
 					.in("liquidacion_embargo_id", reteIds)
+					.disjunction()
 					.eq("liquidacionEmbargo.estado.id",Estado.LIQUIDACION_EMBARGO_APROBADO)
+					.eq("liquidacionEmbargo.estado.id",Estado.LIQUIDACION_EMBARGO_ESPERA)
+					.endJunction()
 					.not(Expr.in("id",idsCargados))
 					.orderBy("liquidacionEmbargo.puestoLaboral.legajo.agente.apellido asc")
 					.findList();
 
-
+			Logger.debug("xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx------------------------------------");
 			for (LiquidacionEmbargoDetalle l: ld) {
 				List<Novedad> ndelete = Novedad.find.where()
 						.eq("puesto_laboral_id", l.liquidacionEmbargo.puesto_laboral_id)
