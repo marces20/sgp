@@ -427,7 +427,7 @@ public class LiquidacionEmbargosController extends Controller {
 
 			for (LiquidacionEmbargoDetalle l: ld) {
 
-				LiquidacionPuesto lp = LiquidacionPuesto.find.select("id, puestoLaboral.legajo.agente.organigrama_id")
+				LiquidacionPuesto lp = LiquidacionPuesto.find
 										.fetch("liquidacionMes","liquidacion_tipo_id,periodo_id")
 										.fetch("puestoLaboral","id")
 										.fetch("puestoLaboral.legajo.agente","organigrama_id")
@@ -457,7 +457,11 @@ public class LiquidacionEmbargosController extends Controller {
 					ldx.liquidacion_embargo_detalle_id= l.id;
 					ldx.save();
 
+					Novedad ndelete = Novedad.find.where().eq("liquidacion_embargo_detalle_id", l.id).findUnique();
 
+					if(ndelete != null) {
+						ndelete.delete();
+					}
 
 					Novedad n = new Novedad();
 					n.puesto_laboral_id= lp.puestoLaboral.id;
@@ -473,6 +477,7 @@ public class LiquidacionEmbargosController extends Controller {
 					n.usuario_id= new Long(Usuario.getUsuarioSesion());
 					n.liquidacion_tipo_id = l.liquidacion_tipo_id.longValue();
 					n.create_date = new Date();
+					n.liquidacion_embargo_detalle_id = l.id;
 					n.save();
 
 
