@@ -19,6 +19,7 @@ import models.Estado;
 import models.Usuario;
 import models.auth.Permiso;
 import models.haberes.LiquidacionBaseCalculo;
+import models.haberes.LiquidacionDetalle;
 import models.haberes.LiquidacionMes;
 import models.haberes.LiquidacionPuesto;
 import play.Logger;
@@ -169,7 +170,20 @@ public class LiquidacionPuestosController extends Controller {
 			return URL_LISTA_LIQUIDACION_PUESTO;
 		}
 
-		return ok(verLiquidacionPuesto.render(liquidacionPuestoForm.fill(lc),lc, new PaginadorFicha(UriTrack.code())));
+		List<LiquidacionDetalle> ldList = LiquidacionDetalle.find
+				.where()
+				.eq("liquidacion_puesto_id", lc.id)
+				.eq("liquidacion_embargo_detalle_id", id)
+				.findList();
+
+		boolean tieneEmbargo = false;
+		if(ldList.size() > 0) {
+			tieneEmbargo = true;
+		}
+
+
+
+		return ok(verLiquidacionPuesto.render(liquidacionPuestoForm.fill(lc),lc, new PaginadorFicha(UriTrack.code()),tieneEmbargo));
 	}
 
 	public static Result suggestLiquidacionPuesto(String input) {
