@@ -114,6 +114,11 @@ public class Novedad extends Model{
 
 	public Date create_date;
 
+	@ManyToOne
+	@JoinColumn(name="liquidacion_embargo_detalle_id", referencedColumnName="id", insertable=false, updatable=false)
+	public LiquidacionEmbargoDetalle liquidacionEmbargoDetalle;
+	public Long liquidacion_embargo_detalle_id;
+
 	public static Finder<Long,Novedad> find = new Finder<Long,Novedad>(Long.class, Novedad.class);
 
 	public static Pagination<Novedad> page(String puesto_laboral_id,
