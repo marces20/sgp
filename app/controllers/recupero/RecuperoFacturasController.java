@@ -60,6 +60,9 @@ public class RecuperoFacturasController extends Controller {
 	@CheckPermiso(key = "recuperoFacturasVer")
 	public static Result index() {
 		DynamicForm d = form().bindFromRequest();
+		Date dx = new Date();
+
+		Logger.debug("date  {}",dx);
 
 		return ok(indexRecuperoFactura.render(
 											RecuperoFactura.page(
