@@ -439,6 +439,9 @@ public class RecuperoFacturasController extends Controller {
 		}
 
 		if(!error) {
+			if(Usuario.getUsuarioSesion().equals(83)){//GRaciela traid
+				rf.recupero_tipo_pago_id = new Long(2);
+			}
 			rf.estado_id = new Long(Estado.RECUPERO_FACTURA_APROBADO);
 			rf.write_date = new Date();
 			rf.write_usuario_id = new Long(Usuario.getUsuarioSesion());
