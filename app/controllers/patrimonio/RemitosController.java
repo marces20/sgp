@@ -267,9 +267,9 @@ public class RemitosController extends Controller {
 
 		if(r.recepcion.ordenProvision.ordenCompra.fecha_presupueso != null ) {
 
-			if(!r.sin_control_fecha && r.fecha_remito.before(r.recepcion.ordenProvision.ordenCompra.fecha_presupueso)) {
+			if( !r.sin_control_fecha   && r.fecha_remito.before(r.recepcion.ordenProvision.ordenCompra.fecha_presupueso)) {
 	        	flash("error", "La Fecha no puede ser menor a la fecha de PRESUPUESTO.");
-				return ok(crearRemito.render(rForm));
+				return ok(editarRemito.render(rForm,r));
 	        }
 
 		}else {
