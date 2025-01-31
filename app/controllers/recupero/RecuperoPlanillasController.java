@@ -335,7 +335,7 @@ public class RecuperoPlanillasController  extends Controller {
 
 			PuntoVenta pv = PuntoVenta.find.byId(puntoventa_id);
 
-			for (int i = 0; i < 5; i++) {
+			for (int i = 0; i < 6; i++) {
 
 				rp = RecuperoPlanilla.find.where().eq("deposito_id", pv.deposito_id).eq("fecha", fecha).findList();
 
