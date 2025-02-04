@@ -3481,15 +3481,26 @@ order by nc.numero
 	    return r;
 	  }
 
-	private static Document html5ParseDocumentPorElementoLibreDeuda(String inputHTML,Long facturaId,List<InformeTotal> it) throws IOException,Exception{
+	private static Document html5ParseDocumentPorElementoLibreDeuda(String inputHTML,Long id,List<InformeTotal> it) throws IOException,Exception{
+
+
+		RecuperoLibreDeuda rf = RecuperoLibreDeuda.find.byId(id);
 
 		org.jsoup.nodes.Document doc;
 		doc = Jsoup.parse(new File(inputHTML), "UTF-8");
 		Map<String,String> datos = new HashMap<>();
 
-		 String qrBase =  generarJsonQrLibreDeuda(facturaId);
+		 String qrBase =  generarJsonQrLibreDeuda(id);
 		 String qr ="<img height='140' width='140' src='data:image/png;base64,"+qrBase+"'>";
 		 datos.put("qr",qr);
+
+		 datos.put("cliente", rf.cliente.nombre);
+		 datos.put("cuit", rf.cliente.cuit2);
+
+		 //rf.fecha
+		 //String fecha = ""
+		 //context.put("mes", utils.DateUtils.getMesLetras(pago.fecha_pago.getMonth()).toUpperCase());
+		 //context.put("anio", utils.DateUtils.formatDate(pago.fecha_pago, "yyyy"));
 
 		for (Map.Entry<String, String> entry : datos.entrySet()) {
 	    	Logger.debug("xxxxxxx "+entry.getKey());
