@@ -3,12 +3,14 @@ package controllers.recupero;
 import static play.data.Form.form;
 
 import java.math.BigDecimal;
+import java.util.Date;
 import java.util.List;
 
 import controllers.auth.CheckPermiso;
 import models.Cliente;
 import models.Estado;
 import models.OrdenLineaCliente;
+import models.Periodo;
 import models.auth.Permiso;
 import models.recupero.InformeTotal;
 import models.recupero.RecuperoFactura;
@@ -16,6 +18,7 @@ import play.data.DynamicForm;
 import play.data.Form;
 import play.mvc.Controller;
 import play.mvc.Result;
+import utils.DateUtils;
 import utils.RequestVar;
 import utils.pagination.Pagination;
 import views.html.recupero.recuperoCliente.*;
@@ -43,9 +46,12 @@ public class RecuperoClientesController extends Controller {
 
 		Form<Cliente> recuperoClienteForm = form(Cliente.class).fill(cliente);
 		BigDecimal totalDeuda = InformeTotal.getDeudaPorIdCliente(id, null,null);
-		BigDecimal totalDeuda90Dias = InformeTotal.getDeudaPorIdCliente(id, null,"31/10/2024");
+		Periodo p = Periodo.getPeriodoByDate(new Date());
+		Periodo pMenosTres = Periodo.find.byId(p.id-3);
+		String menos90 = DateUtils.formatDate(pMenosTres.date_stop, "dd/MM/yyyy");
+		BigDecimal totalDeuda90Dias = InformeTotal.getDeudaPorIdCliente(id, null,menos90);
 
-		return ok(verClienteRecupero.render(cliente,tipoCliente,recuperoClienteForm,totalDeuda,totalDeuda90Dias));
+		return ok(verClienteRecupero.render(cliente,tipoCliente,recuperoClienteForm,totalDeuda,totalDeuda90Dias,menos90));
 	}
 
 	public static Result listaDeuda(Long id) {
