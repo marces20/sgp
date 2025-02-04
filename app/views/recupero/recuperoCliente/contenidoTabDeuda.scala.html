@@ -1,4 +1,4 @@
-@(totalDeuda:java.math.BigDecimal,totalDeuda90dias:java.math.BigDecimal)
+@(totalDeuda:java.math.BigDecimal,totalDeuda90dias:java.math.BigDecimal,menos90:String)
 <div class="panel panel-default">
 	<div class="panel-heading"><b>Total Deuda</b></div>
 	<div class="panel-body">
@@ -14,7 +14,7 @@
 	 	<div class="col-sm-6">
 	  	  <div class="small-box bg-green">
 	  	  	<div class="inner">
-	          <h4>TOTAL DEUDA 3 MESES</h4>
+	          <h4>TOTAL DEUDA 3 MESES (@menos90)</h4>
 	          <p>@utils.NumberUtils.moneda(totalDeuda90dias)</p>
 	  	  </div>
 		 </div>

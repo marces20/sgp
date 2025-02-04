@@ -1,4 +1,4 @@
-@(cliente:Cliente,tipoCliente:Long,recuperoClienteForm:Form[models.Cliente],totalDeuda:java.math.BigDecimal,totalDeuda90dias:java.math.BigDecimal)
+@(cliente:Cliente,tipoCliente:Long,recuperoClienteForm:Form[models.Cliente],totalDeuda:java.math.BigDecimal,totalDeuda90dias:java.math.BigDecimal,menos90:String)
 @import helper._
 @import utils._
 @import models.auth._
@@ -26,7 +26,7 @@
 </div>
 	@inputText(recuperoClienteForm("id"), 'type -> "hidden", 'id -> "recuperoClienteId")
 	<div class="row">
-		<div class="col-sm-3">
+		<div class="col-sm-6">
 			<div class="form-group">
 				<label class="control-label">Nombre del cliente</label>
 				<p class="form-control-static form-control">@cliente.nombre</p>
@@ -54,7 +54,7 @@
 		</div>
 		<div class="col-sm-6">
 
-			@views.html.recupero.recuperoCliente.contenidoTabDeuda(totalDeuda,totalDeuda90dias)
+			@views.html.recupero.recuperoCliente.contenidoTabDeuda(totalDeuda,totalDeuda90dias,menos90)
 		</div>
 	</div>
 <hr>
