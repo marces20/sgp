@@ -18,9 +18,9 @@
 		<div class="panel-body">
 			@if(paginador.getTotalRowCount == 0) {
         		<p id="mensajeSinResultados" class="well"><i class="glyphicon glyphicon-info-sign"></i> No hay Libre Deuda para este cliente.</p>
-    		}else{
+    		}
 
-				<table id="listaDeProductos" class="table table-striped table-bordered">
+				<table id="listaDeLibreDeuda" class="table table-striped table-bordered">
 					<thead>
 						<tr>
 							@if(editable){
@@ -46,7 +46,7 @@
 				<div class="pagination pull-right">
 				    @views.html.helpers.paginador(paginador, controllers.recupero.routes.RecuperoLibreDeudaController.index())
 				</div>
-			}
+
 	</div>
 </div>
 
@@ -60,7 +60,8 @@ $( function(){
 	 * Ventana de carga linea de productos en ordenes
 	 */
 
-	 $('.imprimirLibreDeuda').click( function() { //abrir modal para mostrar mensaje informe rentas
+	 var contenedor = $("#listaLineaLibreDeuda");
+	 contenedor.on('click', '.imprimirLibreDeuda', function() { //abrir modal para mostrar mensaje informe rentas
 
 			var url = $(this).attr("data-url");
 			var dialogo = $('<div></div>');
@@ -86,10 +87,12 @@ $( function(){
 					});
 			    }
 		    });
-		});
+		}
+	 );
 
 
-	var contenedor = $("#listaLineaLibreDeuda");
+
+
 
 	contenedor.on('click', '#nuevoLibreDeuda', function(){
 		urlContenidoModal = '/recupero/libredeuda/crear?clienteId='+$('#recuperoClienteId').val();
@@ -151,9 +154,10 @@ $( function(){
 			var data = $(e.target).serialize();
 			$.post(href, data, function(resultado){
 				if(resultado.success && resultado.nuevo){
-					$('#listaLineaLibreDeuda tbody').prepend(resultado.html);
+
+					$('#listaDeLibreDeuda tbody').prepend(resultado.html);
 					$('#mensajeSinResultados').remove();
-					$('#listaDeLibreDeuda').removeClass('hide');
+
 					modalCargaProductos.dialog( "destroy" );
 				} else if(resultado.success && resultado.modificar){
 					$(lineaParaEditar).replaceWith(resultado.html);
