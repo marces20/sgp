@@ -14,6 +14,7 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.nio.file.FileSystems;
 import java.nio.file.Files;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.Calendar;
@@ -3496,6 +3497,23 @@ order by nc.numero
 
 		 datos.put("cliente", rf.cliente.nombre);
 		 datos.put("cuit", rf.cliente.cuit2);
+
+		 SimpleDateFormat sdf = new SimpleDateFormat("yyyy/M/d");
+		 String fechaComoCadena = sdf.format(rf.fecha);
+		 String[] fe = fechaComoCadena.split("/");
+		 String dia =fe[2] ;
+		 String mes = fe[1];
+		 String anio = fe[0];
+
+		 String diaLetras= (dia.compareToIgnoreCase("1") ==0)?"al dia 1 ":"a los "+dia+" días";
+
+		 Logger.debug("DIAS - {}",dia);
+		 Logger.debug("MES - {}",mes);
+
+		 datos.put("dias", diaLetras);
+		 datos.put("mes", DateUtils.getMesLetras(new Integer(mes)-1));
+		 datos.put("anio", anio);
+
 
 		 //rf.fecha
 		 //String fecha = ""
