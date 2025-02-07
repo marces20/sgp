@@ -16,6 +16,7 @@ public class TipoComprobante extends Model{
 	public static final int FACTURA = 11;
 	public static final int NOTA_DEBITO = 12;
 	public static final int NOTA_CREDITO = 13;
+	public static final int RECIBO_C = 15;
 
 
 	private static final long serialVersionUID = 1L;
