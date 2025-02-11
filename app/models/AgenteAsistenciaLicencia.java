@@ -311,7 +311,12 @@ public class AgenteAsistenciaLicencia extends Model{
 	}
 
 	public int getDiasDisponibles(){
-		return getDiasDisponibles(getDiasTotales());
+
+		Map<Long,Integer> mapEjercicioDias = getDiasLicenciaReglamentariaPorEjercicio(agente.id);
+		int diasTotales = mapEjercicioDias.get(ejercicio.id);
+
+		//return getDiasDisponibles(getDiasTotales());
+		return getDiasDisponibles(diasTotales);
 	}
 
 	public int getDiasDisponiblesSinEsteId(Integer diasTotales){
