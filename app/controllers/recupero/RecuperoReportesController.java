@@ -48,6 +48,7 @@ import models.recupero.RecuperoLibreDeuda;
 import models.recupero.RecuperoNotaCredito;
 import models.recupero.RecuperoNotaDebito;
 import models.recupero.RecuperoPago;
+import models.recupero.RecuperoPartido;
 import models.recupero.RecuperoPlanilla;
 import models.recupero.RecuperoRecibo;
 import models.recupero.RecuperoReciboFactura;
@@ -2614,6 +2615,24 @@ order by nc.numero
 		 return ok(reportePlanilla.render(null));
 	}
 
+	public static void imprimirReciboPartido(Long id) {
+
+		try {
+			String dirTemp = System.getProperty("java.io.tmpdir");
+			RecuperoPartido rf = RecuperoPartido.find.byId(id);
+			String inputHTML = Play.application().getFile("conf/resources/reportes/recupero/recibopartido.html").toString();
+
+			String outputPdf = dirTemp+"/0003-"+rf.numero+".pdf";
+
+			htmlToPdf(inputHTML, outputPdf, id,"recibopartido");
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		//return ok();
+	}
+
 	public static Result imprimirFacturaAfip(Long id) {
 
 			 try {
@@ -2735,7 +2754,10 @@ order by nc.numero
 			doc = html5ParseDocumentPorElementoDetalleDeuda(inputHTML,facturaId,it);
 		}else if(tipo =="libredeuda") {
 			doc = html5ParseDocumentPorElementoLibreDeuda(inputHTML,facturaId,it);
+		}else if(tipo =="recibopartido") {
+			doc = html5ParseDocumentPorElementoReciboPartido(inputHTML,facturaId);
 		}
+
 
 
 
@@ -2941,6 +2963,79 @@ order by nc.numero
 
 
 
+
+	    for (Map.Entry<String, String> entry : datos.entrySet()) {
+	    	Logger.debug("xxxxxxx "+entry.getKey());
+		    org.jsoup.select.Elements myImgs = doc.select("."+entry.getKey());
+
+		    for (org.jsoup.nodes.Element element : myImgs) {
+		    	//element.text(entry.getValue());
+
+		    	element.append(entry.getValue());
+		    }
+
+	    }
+
+	    return new W3CDom().fromJsoup(doc);
+	}
+
+
+	private static Document html5ParseDocumentPorElementoReciboPartido(String inputHTML,Long facturaId) throws IOException,Exception{
+		org.jsoup.nodes.Document doc;
+
+
+	    doc = Jsoup.parse(new File(inputHTML), "UTF-8");
+
+	    RecuperoPartido rf = RecuperoPartido.find.byId(facturaId);
+
+	    Map<String,String> datos = new HashMap<>();
+
+	    datos.put("pv", "00003");
+	    datos.put("pvdireccion", "");
+	    datos.put("fantasia", "");
+	    datos.put("numeroFactura", rf.numero);
+	    datos.put("fecha_emision", utils.DateUtils.formatDate(rf.fecha));
+	    datos.put("fecha_desde", utils.DateUtils.formatDate(rf.fecha_desde));
+	    datos.put("fecha_hasta", utils.DateUtils.formatDate(rf.fecha_hasta));
+
+	    String recupero_tipo_pago = "Contado";
+
+	    //if(recupero_tipo_pago.compareToIgnoreCase("cuenta corriente") ==  0 && rf.puntoVenta.deposito_id.intValue() == Deposito.LACMI) {
+
+	    datos.put("tipo_pago",recupero_tipo_pago);
+
+
+	    	datos.put("cuittitulo", "DNI:");
+	    	datos.put("cuit", rf.dni);
+
+	    datos.put("razon_social", rf.nombre);
+
+	    String iva = "Consumidor Final";
+	    datos.put("ivaa", iva);
+
+
+	    datos.put("importe", utils.NumberUtils.moneda(rf.getMonto()) );
+	    datos.put("cae", (rf.cae!=null)? rf.cae:"" );
+	    datos.put("fechacae",utils.DateUtils.formatDate(rf.fecha_vencimiento));
+
+
+
+		    	String lineas ="";
+		    	lineas += 			"<tr>" +
+			    		"        		<td style='text-align: left'><b>Recibi(mos) la suma de:</b> "+utils.NumberUtils.moneda(rf.getMonto())+"</td>" +
+			    		"            </tr>";
+
+			    lineas += 			"<tr>" +
+			    		"        		<td style='text-align: left'><b>En concepto de:</b> Aporte Partidario período Enero/2024 a Diciembre/2024, con destino a Desenvolvimiento Institucional, Capacitación e Investigación y otros, Campaña Local o Campaña Nacional, a consideración de la Conducción Partidaria </td>" +
+			    		"            </tr>";
+
+
+		datos.put("lineas",lineas);
+
+
+	    String qrBase =  generarJsonQr(rf.id,rf.fecha,"00003",TipoComprobante.RECIBO_C,rf.numero,rf.getMonto().doubleValue(),96,new Long(rf.dni),rf.cae);
+	    String qr ="<img height='140' width='140'  src='data:image/png;base64,"+qrBase+"'>";
+	    datos.put("qr",qr);
 
 	    for (Map.Entry<String, String> entry : datos.entrySet()) {
 	    	Logger.debug("xxxxxxx "+entry.getKey());
