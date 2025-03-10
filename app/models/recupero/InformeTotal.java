@@ -219,23 +219,31 @@ public class InformeTotal extends Model {
 	}
 
 	public static List<SqlRow> getDeudaPorTipoDeCliente(Long idTipoCliente,String fecha_desde,String fecha_hasta){
+		return getDeudaPorTipoDeCliente(idTipoCliente,fecha_desde,fecha_hasta,true);
+	}
+
+	public static List<SqlRow> getDeudaPorTipoDeCliente(Long idTipoCliente,String fecha_desde,String fecha_hasta,boolean conDeuda){
 
 		String sql = "SELECT sum(total_factura) total_factura,sum(total_pagos) total_pago,sum(total_deuda) total_deuda," +
 				"cliente_id,tipo_cliente,cliente_nombre,cuit " +
 				"FROM informe_totales_recupero " +
-				"WHERE total_deuda > 0 ";
+				"WHERE 1= 1 ";
+
+		if(conDeuda) {
+			sql += " AND total_deuda > 0 ";
+		}
 
 		if(idTipoCliente != 0){
 			sql += " AND cliente_tipo_id = "+idTipoCliente;
 		}
 
-		if(!fecha_desde.isEmpty()){
+		if(fecha_desde != null && !fecha_desde.isEmpty()){
     		Date fod = DateUtils.formatDate(fecha_desde, "dd/MM/yyyy");
 
     		sql += " AND fecha >=  '"+DateUtils.formatDate(fod, "yyyy-MM-dd")+"' ";
     	}
 
-		if(!fecha_hasta.isEmpty()){
+		if(fecha_hasta != null && !fecha_hasta.isEmpty()){
 			Logger.debug("xxxxxxxxxxxx "+fecha_hasta);
     		Date foh = DateUtils.formatDate(fecha_hasta, "dd/MM/yyyy");
 
