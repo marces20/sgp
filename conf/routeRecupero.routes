@@ -4,6 +4,10 @@
 GET    /clientes        	  	controllers.recupero.RecuperoClientesController.index(tipoCliente: Long)
 GET    /clientes/ver         	controllers.recupero.RecuperoClientesController.ver(id: Long,tipoCliente: Long)
 GET	   /clientes/listaDeuda		controllers.recupero.RecuperoClientesController.listaDeuda(id: Long)
+GET	   /clientes/listaDeclaracionJuradaObraSocial		controllers.recupero.RecuperoClientesController.listaDeclaracionJuradaObraSocial()
+GET    /clientes/listaDeclaracionJuradaObraSocialArchivo         controllers.recupero.RecuperoClientesController.listaDeclaracionJuradaObraSocialArchivo()
+
+
 
 GET    /libredeuda/index    	controllers.recupero.RecuperoLibreDeudaController.index(clienteId:Long ?= 0, editable:Boolean ?= false)
 GET    /libredeuda/crear    	controllers.recupero.RecuperoLibreDeudaController.crear(clienteId:String)
@@ -133,6 +137,7 @@ POST   /recupero/reportes/reporteFacturasExcel   controllers.recupero.RecuperoRe
 
 GET    /facturas/imprimir-factura       controllers.recupero.RecuperoReportesController.imprimirFactura(id:Long)
 GET    /facturas/imprimir-factura-afip       controllers.recupero.RecuperoReportesController.imprimirFacturaAfip(id:Long)
+#GET    /facturas/imprimirReciboPartido       controllers.recupero.RecuperoReportesController.imprimirReciboPartido(id:Long)
 GET    /facturas/imprimir-libredeuda       controllers.recupero.RecuperoReportesController.imprimirLibreDeuda(id:Long)
 GET    /pagos/imprimir-recibo           controllers.recupero.RecuperoReportesController.imprimirRecibo(id:Long)
 GET    /recibos/imprimir-recibos      controllers.recupero.RecuperoReportesController.imprimirReciboNuevo(id:Long)
