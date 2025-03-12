@@ -170,9 +170,37 @@ public class RecuperoClientesController extends Controller {
 			String fecha = DateUtils.formatDate(new Date(), "dd/MM/yyyy");
 
 			List<SqlRow> getDeudaPorTipoDeCliente = InformeTotal.getDeudaPorTipoDeCliente(ClienteTipo.OBRAS_SOCIALES,null,menos90,false);
+
+
 			Row fila = hoja.createRow(0);
 
-			int f = 0;
+			Cell celda0 = fila.createCell(0);
+			celda0.setCellValue("ENTIDAD");
+			celda0.setCellStyle(comun);
+
+			celda0 = fila.createCell(1);
+			celda0.setCellValue("CUIT");
+			celda0.setCellStyle(comun);
+			celda0 = fila.createCell(2);
+			celda0.setCellValue("DENOMINACION");
+			celda0.setCellStyle(comun);
+			celda0 = fila.createCell(3);
+			celda0.setCellValue("FECHA DE ACTUALIZACION");
+			celda0.setCellStyle(comun);
+			celda0 = fila.createCell(4);
+			celda0.setCellValue("ESTADO");
+			celda0.setCellStyle(comun);
+			celda0 = fila.createCell(5);
+			celda0.setCellValue("FECHA DE VIGENCIA DESDE");
+			celda0.setCellStyle(comun);
+			celda0 = fila.createCell(6);
+			celda0.setCellValue("FECHA DE VIGENCIA HASTA");
+			celda0.setCellStyle(comun);
+
+
+
+
+			int f = 1;
 		    for (SqlRow i : getDeudaPorTipoDeCliente ) {
 		    	fila = hoja.createRow(f);
 		    	for(int c=0;c<7;c++){
