@@ -896,7 +896,7 @@ public class OrdenesController extends Controller {
 		}
 
 
-		if(orden.tipo_orden.compareTo("comun") == 0 || orden.tipo_orden.compareTo("servicio") == 0) {
+		if(orden.tipo_orden != null && (orden.tipo_orden.compareTo("comun") == 0 || orden.tipo_orden.compareTo("servicio") == 0)) {
 			if(orden.estado_id.compareTo((long) Estado.ORDEN_ESTADO_APROBADO) == 0) {
 
 				if(Permiso.check("ordenesCompraPasarACanceladoForzado")) {
