@@ -150,7 +150,8 @@ public class PuestoLaboral extends Model{
 												 String fecha_hasta_baja,
 												 String cm,
 												 String btnFiltro0,//borrador
-												 String btnFiltro1) {
+												 String btnFiltro1,
+												 String dobla) {
 
     	Pagination<PuestoLaboral> p = new Pagination<PuestoLaboral>();
     	p.setOrderDefault("ASC");
@@ -204,6 +205,14 @@ public class PuestoLaboral extends Model{
     			e.eq("convenio_ministerio", true);
     		}else{
     			e.eq("convenio_ministerio", false);
+    		}
+    	}
+
+		if(!dobla.isEmpty()){
+    		if(dobla.compareToIgnoreCase("SI") == 0){
+    			e.eq("dobla", true);
+    		}else{
+    			e.eq("dobla", false);
     		}
     	}
 
