@@ -2,7 +2,7 @@
 @import helper._
 @import utils._
 @import models.auth._
-@implicitFieldConstructor = @{ FieldConstructor(simpleInput.render) } 
+@implicitFieldConstructor = @{ FieldConstructor(simpleInput.render) }
 
 
 @scripts = {
@@ -17,9 +17,9 @@
 		classEstado = "cancelada"
 	}else if(i != null && i.id == 109){
 		classEstado = "autorizado"
-	} 
+	}
 	classEstado
-	
+
 }
 
 @views.html.haberes.mainHaberes("Lista de puestos laborales", scripts) {
@@ -35,17 +35,17 @@ $( function(){ $('.searchModal').modalSearch();})
 			<div class="col-sm-7">
 				<h1>Lista de Puestos Laborales</h1>
 			</div>
-	
+
 			<div class="col-sm-5">
 
 				<div class="btn-header pull-right">
 					<a href="@controllers.haberes.routes.PuestosLaboralesController.crear()?@UriTrack.encode()"  class="btn btn-default"><i class="glyphicon glyphicon-plus-sign"></i> Nuevo Puesto Laboral</a>
 				</div>
-				
-				
+
+
 			<div class="dropdown pull-right btn-header">
 			  	<button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-expanded="true">
-			    	<i class="glyphicon glyphicon-list-alt"></i> 
+			    	<i class="glyphicon glyphicon-list-alt"></i>
 			    	Reportes
 			    	<span class="caret"></span>
 			  	</button>
@@ -78,11 +78,11 @@ $( function(){ $('.searchModal').modalSearch();})
 						<li> <a id="formularioF649" href="#" data-title="Formulario F649" data-url="@controllers.haberes.routes.GananciasAccionesController.modalFormularioF649()">Formulario F649</a></li>
 					}
 					 @if(Permiso.check("puestoLaboralPasarBorrador")) {
-				    	<li role="presentation"><a role="menuitem" id="accionPasarBorrador" tabindex="-1" href="#" 
+				    	<li role="presentation"><a role="menuitem" id="accionPasarBorrador" tabindex="-1" href="#"
 				    	data-url="@controllers.haberes.routes.PuestosLaboralesAccionesController.modalPasarABorrador()">Pasar a Borrador</a></li>
 				    }
 				    @if(Permiso.check("puestoLaboralPasarControlado")) {
-				    	<li role="presentation"><a role="menuitem" id="accionPasarControlado" tabindex="-1" href="#" 
+				    	<li role="presentation"><a role="menuitem" id="accionPasarControlado" tabindex="-1" href="#"
 				    	data-url="@controllers.haberes.routes.PuestosLaboralesAccionesController.modalPasarAControlado()">Pasar a Controlado</a></li>
 				    }
 				</ul>
@@ -92,9 +92,9 @@ $( function(){ $('.searchModal').modalSearch();})
 			</div>
 		</div>
 	</div>
-	
+
 	@views.html.tags.successError()
-	
+
 	<div id="actions">
 		<form action="" method="GET">
 			<div class="row" >
@@ -104,16 +104,16 @@ $( function(){ $('.searchModal').modalSearch();})
 						  	<i class="glyphicon glyphicon-pencil size-14"></i><br>Borrador
 						  	@checkbox(formBuscador("btnFiltro[0]"), 'hidden -> "hidden")
 						  </button>
-						  
+
 						 <button type="button" rel="aprobado" class="btn btn-default btn-filtros">
 						  	<i class="glyphicon glyphicon-ok"></i><br>Controlado
 						  	@checkbox(formBuscador("btnFiltro[1]"), 'hidden -> "hidden")
 						 </button>
-						  
+
 						</div>
 					</div>
 				</div>
-				
+
 			<div class="row">
 
 				<div class="col-sm-4">
@@ -123,20 +123,20 @@ $( function(){ $('.searchModal').modalSearch();})
 						@inputText(formBuscador("puesto_laboral_id"), 'hidden -> "hidden", 'id -> "puesto_laboral_todos_id")
 						<span class="input-group-addon">
 							<a href="#" class="searchModal"
-										id="searchPuestoLaboral" 
-										data-title="Selección de puesto laboral" 
-										data-url="@controllers.haberes.routes.PuestosLaboralesController.modalBuscarTodos()" 
-										data-height="650" 
-										data-width="700" 
-										data-listen="modal.seleccion.puestoLaboral.simple" 
-										data-label="#puesto_laboral_todos" 
+										id="searchPuestoLaboral"
+										data-title="Selección de puesto laboral"
+										data-url="@controllers.haberes.routes.PuestosLaboralesController.modalBuscarTodos()"
+										data-height="650"
+										data-width="700"
+										data-listen="modal.seleccion.puestoLaboral.simple"
+										data-label="#puesto_laboral_todos"
 										data-field="#puesto_laboral_todos_id">
 								<i class="glyphicon glyphicon-search"></i>
 							</a>
 						</span>
-					</div>	
+					</div>
 				</div>
-				
+
 				<div class="col-sm-2">
 					<div class="form-group">
 						<label for="nombre" class="control-label">Estado
@@ -144,29 +144,36 @@ $( function(){ $('.searchModal').modalSearch();})
 						</label>
 					</div>
 				</div>
-				
+
 				<div class="col-sm-2 input-group">
 					<label class="control-label">Fecha Posesion</label>
 					<div>
 					@inputText(formBuscador("fecha_desde"), 'class -> "form-control inputDateMascara", 'id -> "desde", 'placeholder -> "Desde")
 					@inputText(formBuscador("fecha_hasta"), 'class -> "form-control inputDateMascara", 'id -> "hasta", 'placeholder -> "Hasta")
 					</div>
-				</div>	
+				</div>
 				<div class="col-sm-2 input-group">
 					<label class="control-label">Fecha Baja</label>
 					<div>
 					@inputText(formBuscador("fecha_desde_baja"), 'class -> "form-control inputDateMascara", 'id -> "desde_baja", 'placeholder -> "Desde")
 					@inputText(formBuscador("fecha_hasta_baja"), 'class -> "form-control inputDateMascara", 'id -> "hasta_baja", 'placeholder -> "Hasta")
 					</div>
-				</div>	
+				</div>
+
+			</div>
+			<div class="row">
 				<div class="col-sm-2">
-					<label class="control-label"> 
+					<label class="control-label">
 						C/M
 						@select(formBuscador("cm"),options(""->"","SI"->"SI","NO"->"NO"), 'class -> "form-control select")
 					</label>
 				</div>
-			</div>					
-			<div class="row">	
+				<div class="col-sm-2">
+					<label class="control-label">
+						Dobla
+						@select(formBuscador("dobla"),options(""->"","SI"->"SI","NO"->"NO"), 'class -> "form-control select")
+					</label>
+				</div>
 				<div class="col-sm-2">
 					<div class="form-group">
 					<label for="buscar" class="control-label">&nbsp;</label>
@@ -182,17 +189,17 @@ $( function(){ $('.searchModal').modalSearch();})
 			</div>
 		</form>
 	</div>
-	
+
 	@if(buscador.getTotalRowCount == 0) {
-        
+
         <div class="well">
             <em>No se encuentran Puestos Laborales</em>
         </div>
-        
+
     } else {
-    
-    	Mostrando @buscador.getDisplayXtoYofZ(" a "," de ") resultado(s). 
-		
+
+    	Mostrando @buscador.getDisplayXtoYofZ(" a "," de ") resultado(s).
+
 		<table id="listaDePuesto" class="table table-striped table-bordered">
 			<thead>
 				<tr>
@@ -237,7 +244,7 @@ $( function(){ $('.searchModal').modalSearch();})
              }
 	        </tbody>
         </table>
-        
+
         <div class="pagination pull-right">
 		    @views.html.helpers.paginador(buscador, controllers.haberes.routes.PuestosLaboralesController.index())
 		</div>
