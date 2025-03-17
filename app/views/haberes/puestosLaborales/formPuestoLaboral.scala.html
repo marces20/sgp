@@ -70,8 +70,8 @@ $( function(){
 				</label>
 			</div>
 		</div>
-		<div class="col-sm-3">
-			<div class="col-sm-6 @if(puestoForm.error("convenio_ministerio") != null) {has-error}else{has-required}">
+		<div class="col-sm-6">
+			<div class="col-sm-4 @if(puestoForm.error("convenio_ministerio") != null) {has-error}else{has-required}">
 				<b>Convenio Ministerio</b>
 				<div class="row">
 					<div class="col-sm-5">
@@ -93,7 +93,7 @@ $( function(){
 					<div class="text-error">@error.message</div>
 				}
 			</div>
-			<div class="col-sm-6">
+			<div class="col-sm-4">
 				<label class="control-label">Cargo Laboral</label>
 					<div class="input-group @if(puestoForm.error("cargo_laboral_id") != null) {has-error}else{has-required}">
 						@inputText(puestoForm("cargoLaboral.nombre"), 'name -> "", 'class -> "form-control", 'id -> "cargo_laboral")
@@ -110,6 +110,12 @@ $( function(){
 					@puestoForm("cargo_laboral_id").error.map{ error =>
 						<div class="text-error">@error.message</div>
 					}
+			</div>
+			<div class="col-sm-4">
+				<label class="control-label">
+					Dobla
+					@select(puestoForm("dobla"),options("true"->"SI","false"->"NO"), 'class -> "form-control select")
+				</label>
 			</div>
 		</div>
 	</div>
