@@ -976,6 +976,57 @@ public class RecuperoReportesController extends Controller {
 		    style.setFont(defaultFont);
 			style.setDataFormat(libro.createDataFormat().getFormat("$ #,##0.00"));
 
+			CellStyle comun = libro.createCellStyle();
+			comun.setDataFormat((short) 10);
+			//comun.setVerticalAlignment(CellStyle.VERTICAL_CENTER);
+			//comun.setAlignment(CellStyle.ALIGN_CENTER);
+			comun.setBorderRight(CellStyle.BORDER_THIN);
+			comun.setBorderLeft(CellStyle.BORDER_THIN);
+			comun.setBorderTop(CellStyle.BORDER_THIN);
+			comun.setBorderBottom(CellStyle.BORDER_THIN);
+			comun.setWrapText(true);
+			Font font2 = libro.createFont();
+	        font2.setFontHeightInPoints((short) 10);
+	        comun.setFont(font2);
+
+			CellStyle estiloMoneda = libro.createCellStyle();
+			estiloMoneda.setDataFormat((short) 10);
+			//estiloMoneda.setVerticalAlignment(CellStyle.VERTICAL_CENTER);
+			//estiloMoneda.setAlignment(CellStyle.ALIGN_CENTER);
+			estiloMoneda.setBorderRight(CellStyle.BORDER_THIN);
+			estiloMoneda.setBorderLeft(CellStyle.BORDER_THIN);
+			estiloMoneda.setBorderTop(CellStyle.BORDER_THIN);
+			estiloMoneda.setBorderBottom(CellStyle.BORDER_THIN);
+			estiloMoneda.setDataFormat(libro.createDataFormat().getFormat("$ #,##0.00"));
+		    estiloMoneda.setFont(font2);
+
+		    CellStyle estiloMoneda2 = libro.createCellStyle();
+			estiloMoneda.setDataFormat((short) 10);
+			//estiloMoneda.setVerticalAlignment(CellStyle.VERTICAL_CENTER);
+			//estiloMoneda.setAlignment(CellStyle.ALIGN_CENTER);
+			estiloMoneda2.setBorderRight(CellStyle.BORDER_THIN);
+			estiloMoneda2.setBorderLeft(CellStyle.BORDER_THIN);
+			estiloMoneda2.setBorderTop(CellStyle.BORDER_THIN);
+			estiloMoneda2.setBorderBottom(CellStyle.BORDER_THIN);
+			estiloMoneda2.setDataFormat(libro.createDataFormat().getFormat("$ #,##0.00"));
+			Font font3 = libro.createFont();
+	        font3.setFontHeightInPoints((short) 10);
+	        font3.setBoldweight(Font.BOLDWEIGHT_BOLD);
+	        estiloMoneda2.setFont(font3);
+
+	        CellStyle comun2 = libro.createCellStyle();
+			comun2.setDataFormat((short) 10);
+			comun2.setAlignment(CellStyle.ALIGN_RIGHT);
+			comun2.setBorderRight(CellStyle.BORDER_THIN);
+			comun2.setBorderLeft(CellStyle.BORDER_THIN);
+			comun2.setBorderTop(CellStyle.BORDER_THIN);
+			comun2.setBorderBottom(CellStyle.BORDER_THIN);
+			comun2.setWrapText(true);
+			comun2.setFont(font3);
+
+			BigDecimal  totalFactura = new BigDecimal(0);
+			BigDecimal  totalPagos = new BigDecimal(0);
+			BigDecimal  totalDeuda = new BigDecimal(0);
 
 		    for (InformeTotal i : informe.getList()) {
 
@@ -986,34 +1037,59 @@ public class RecuperoReportesController extends Controller {
 				String orden = "";
 				if(i.numero != null)
 					celda.setCellValue( i.numero );
+				celda.setCellStyle(comun);
 
 				//Celda fecha
 				celda = f.createCell(celdaFecha);
 				celda.setCellValue(DateUtils.formatDate(i.fecha));
+				celda.setCellStyle(comun);
 
 				//Celda Cliente
 				celda = f.createCell(celdaCliente);
 				celda.setCellValue( i.cliente.nombre );
+				celda.setCellStyle(comun);
 
 				//Celda total factura
 				celda = f.createCell(celdaTotalFactura);
 				celda.setCellValue(i.totalFactura.doubleValue());
-				celda.setCellStyle(style);
+				celda.setCellStyle(estiloMoneda);
 
 				//Celda total pagos
 				celda = f.createCell(celdaTotalPagos);
 				celda.setCellValue(i.totalPagos.doubleValue());
-				celda.setCellStyle(style);
-
-
+				celda.setCellStyle(estiloMoneda);
 
 				//Celda total de deudas
 				celda = f.createCell(celdaTotalDeuda);
 				celda.setCellValue(i.totalDeuda.doubleValue());
-				celda.setCellStyle(style);
+				celda.setCellStyle(estiloMoneda);
+
+				totalFactura = totalFactura.add(i.totalFactura);
+				totalPagos = totalPagos.add(i.totalPagos);
+				totalDeuda = totalDeuda.add(i.totalDeuda);
 
 				fila++;
 			}
+
+		    Row f = hoja.createRow(fila);
+		    celda = f.createCell(celdaCliente);
+			celda.setCellValue("TOTALES");
+			celda.setCellStyle(comun2);
+
+		    celda = f.createCell(celdaTotalFactura);
+			celda.setCellValue(totalFactura.doubleValue());
+			celda.setCellStyle(estiloMoneda2);
+
+			//Celda total pagos
+			celda = f.createCell(celdaTotalPagos);
+			celda.setCellValue(totalPagos.doubleValue());
+			celda.setCellStyle(estiloMoneda2);
+
+
+			//Celda total de deudas
+			celda = f.createCell(celdaTotalDeuda);
+			celda.setCellValue(totalDeuda.doubleValue());
+			celda.setCellStyle(estiloMoneda2);
 
 			libro.write(archivoTmp);
 
@@ -1080,6 +1156,55 @@ public class RecuperoReportesController extends Controller {
 		    style.setFont(defaultFont);
 			style.setDataFormat(libro.createDataFormat().getFormat("$ #,##0.00"));
 
+			CellStyle comun = libro.createCellStyle();
+			comun.setDataFormat((short) 10);
+			comun.setBorderRight(CellStyle.BORDER_THIN);
+			comun.setBorderLeft(CellStyle.BORDER_THIN);
+			comun.setBorderTop(CellStyle.BORDER_THIN);
+			comun.setBorderBottom(CellStyle.BORDER_THIN);
+			comun.setWrapText(true);
+			Font font2 = libro.createFont();
+	        font2.setFontHeightInPoints((short) 10);
+	        comun.setFont(font2);
+
+			CellStyle estiloMoneda = libro.createCellStyle();
+			estiloMoneda.setDataFormat((short) 10);
+			//estiloMoneda.setVerticalAlignment(CellStyle.VERTICAL_CENTER);
+			//estiloMoneda.setAlignment(CellStyle.ALIGN_CENTER);
+			estiloMoneda.setBorderRight(CellStyle.BORDER_THIN);
+			estiloMoneda.setBorderLeft(CellStyle.BORDER_THIN);
+			estiloMoneda.setBorderTop(CellStyle.BORDER_THIN);
+			estiloMoneda.setBorderBottom(CellStyle.BORDER_THIN);
+			estiloMoneda.setDataFormat(libro.createDataFormat().getFormat("$ #,##0.00"));
+		    estiloMoneda.setFont(font2);
+
+		    CellStyle estiloMoneda2 = libro.createCellStyle();
+			estiloMoneda.setDataFormat((short) 10);
+			//estiloMoneda.setVerticalAlignment(CellStyle.VERTICAL_CENTER);
+			//estiloMoneda.setAlignment(CellStyle.ALIGN_CENTER);
+			estiloMoneda2.setBorderRight(CellStyle.BORDER_THIN);
+			estiloMoneda2.setBorderLeft(CellStyle.BORDER_THIN);
+			estiloMoneda2.setBorderTop(CellStyle.BORDER_THIN);
+			estiloMoneda2.setBorderBottom(CellStyle.BORDER_THIN);
+			estiloMoneda2.setDataFormat(libro.createDataFormat().getFormat("$ #,##0.00"));
+			Font font3 = libro.createFont();
+	        font3.setFontHeightInPoints((short) 10);
+	        font3.setBoldweight(Font.BOLDWEIGHT_BOLD);
+	        estiloMoneda2.setFont(font3);
+
+	        CellStyle comun2 = libro.createCellStyle();
+			comun2.setDataFormat((short) 10);
+			comun2.setAlignment(CellStyle.ALIGN_RIGHT);
+			comun2.setBorderRight(CellStyle.BORDER_THIN);
+			comun2.setBorderLeft(CellStyle.BORDER_THIN);
+			comun2.setBorderTop(CellStyle.BORDER_THIN);
+			comun2.setBorderBottom(CellStyle.BORDER_THIN);
+			comun2.setWrapText(true);
+			comun2.setFont(font3);
+
+			BigDecimal  totalFactura = new BigDecimal(0);
+			BigDecimal  totalPagos = new BigDecimal(0);
+			BigDecimal  totalDeuda = new BigDecimal(0);
 
 		    for (InformeTotal i : informe.getList()) {
 
@@ -1095,34 +1220,62 @@ public class RecuperoReportesController extends Controller {
 				String orden = "";
 				if(i.numero != null)
 					celda.setCellValue( i.numero );
+				celda.setCellStyle(comun);
 
 				//Celda fecha
 				celda = f.createCell(celdaFecha);
 				celda.setCellValue(DateUtils.formatDate(i.fecha));
+				celda.setCellStyle(comun);
 
 				//Celda Cliente
 				celda = f.createCell(celdaCliente);
 				celda.setCellValue( i.cliente.nombre );
+				celda.setCellStyle(comun);
 
 				//Celda total factura
 				celda = f.createCell(celdaTotalFactura);
 				celda.setCellValue(i.totalFactura.doubleValue());
-				celda.setCellStyle(style);
+				celda.setCellStyle(estiloMoneda);
 
 				//Celda total pagos
 				celda = f.createCell(celdaTotalPagos);
 				celda.setCellValue(i.totalPagos.doubleValue());
-				celda.setCellStyle(style);
+				celda.setCellStyle(estiloMoneda);
 
 
 
 				//Celda total de deudas
 				celda = f.createCell(celdaTotalDeuda);
 				celda.setCellValue(i.totalDeuda.doubleValue());
-				celda.setCellStyle(style);
+				celda.setCellStyle(estiloMoneda);
+
+				totalFactura = totalFactura.add(i.totalFactura);
+				totalPagos = totalPagos.add(i.totalPagos);
+				totalDeuda = totalDeuda.add(i.totalDeuda);
 
 				fila++;
 			}
+
+		    Row f = hoja.createRow(fila);
+		    celda = f.createCell(celdaCliente);
+			celda.setCellValue("TOTALES");
+			celda.setCellStyle(comun2);
+
+		    celda = f.createCell(celdaTotalFactura);
+			celda.setCellValue(totalFactura.doubleValue());
+			celda.setCellStyle(estiloMoneda2);
+
+			//Celda total pagos
+			celda = f.createCell(celdaTotalPagos);
+			celda.setCellValue(totalPagos.doubleValue());
+			celda.setCellStyle(estiloMoneda2);
+
+
+			//Celda total de deudas
+			celda = f.createCell(celdaTotalDeuda);
+			celda.setCellValue(totalDeuda.doubleValue());
+			celda.setCellStyle(estiloMoneda2);
+
 
 			libro.write(archivoTmp);
 
