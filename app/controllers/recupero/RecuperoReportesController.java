@@ -1001,7 +1001,7 @@ public class RecuperoReportesController extends Controller {
 		    estiloMoneda.setFont(font2);
 
 		    CellStyle estiloMoneda2 = libro.createCellStyle();
-			estiloMoneda.setDataFormat((short) 10);
+			estiloMoneda2.setDataFormat((short) 10);
 			//estiloMoneda.setVerticalAlignment(CellStyle.VERTICAL_CENTER);
 			//estiloMoneda.setAlignment(CellStyle.ALIGN_CENTER);
 			estiloMoneda2.setBorderRight(CellStyle.BORDER_THIN);
@@ -1035,8 +1035,9 @@ public class RecuperoReportesController extends Controller {
 				//Número
 				celda = f.createCell(celdaNumero);
 				String orden = "";
-				if(i.numero != null)
+				if(i.numero != null) {
 					celda.setCellValue( i.numero );
+				}
 				celda.setCellStyle(comun);
 
 				//Celda fecha
@@ -1179,7 +1180,7 @@ public class RecuperoReportesController extends Controller {
 		    estiloMoneda.setFont(font2);
 
 		    CellStyle estiloMoneda2 = libro.createCellStyle();
-			estiloMoneda.setDataFormat((short) 10);
+		    estiloMoneda2.setDataFormat((short) 10);
 			//estiloMoneda.setVerticalAlignment(CellStyle.VERTICAL_CENTER);
 			//estiloMoneda.setAlignment(CellStyle.ALIGN_CENTER);
 			estiloMoneda2.setBorderRight(CellStyle.BORDER_THIN);
@@ -1214,12 +1215,14 @@ public class RecuperoReportesController extends Controller {
 				//Celda fecha
 				celda = f.createCell(celdaInstitucion);
 				celda.setCellValue((i.deposito != null)?i.deposito.sigla:"");
+				celda.setCellStyle(comun);
 
 				//Número
 				celda = f.createCell(celdaNumero);
 				String orden = "";
-				if(i.numero != null)
+				if(i.numero != null) {
 					celda.setCellValue( i.numero );
+				}
 				celda.setCellStyle(comun);
 
 				//Celda fecha
