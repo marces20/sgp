@@ -119,6 +119,16 @@ GET    /planilla/getPlanillaByFecha          controllers.recupero.RecuperoPlanil
 
 GET    /suggestRecuperoPlanilla/:input	controllers.recupero.RecuperoPlanillasController.suggestRecuperoPlanilla(input: String)
 
+GET    /certificadoDeuda        	  controllers.recupero.RecuperoCertificadoDeudaController.index()
+GET    /certificadoDeuda/crear        controllers.recupero.RecuperoCertificadoDeudaController.crear()
+POST   /certificadoDeuda/guardar      controllers.recupero.RecuperoCertificadoDeudaController.guardar()
+GET    /certificadoDeuda/editar       controllers.recupero.RecuperoCertificadoDeudaController.editar(id:Long)
+GET    /certificadoDeuda/eliminar     controllers.recupero.RecuperoCertificadoDeudaController.eliminar(id:Long)
+GET    /certificadoDeuda/ver          controllers.recupero.RecuperoCertificadoDeudaController.ver(id:Long)
+POST   /certificadoDeuda/actualizar   controllers.recupero.RecuperoCertificadoDeudaController.actualizar(id:Long)
+GET    /certificadoDeuda/reporteCertificadoDeuda controllers.recupero.RecuperoCertificadoDeudaController.reporteCertificadoDeuda(id:Long)
+
+
 GET    /reporte/presupuesto 			controllers.recupero.PresupuestosReportesController.presupuesto(id:Long,extrajero:Boolean ?=false)
 
 GET    /recupero/reportes/deudas          	  controllers.recupero.RecuperoReportesController.informeDeuda()
