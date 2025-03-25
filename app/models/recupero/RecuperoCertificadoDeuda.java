@@ -14,6 +14,7 @@ import javax.persistence.Table;
 
 import com.avaje.ebean.ExpressionList;
 
+import models.Cliente;
 import models.Expediente;
 import models.Usuario;
 import play.data.format.Formats;
@@ -34,6 +35,12 @@ public class RecuperoCertificadoDeuda extends Model {
 	public Long id;
 
 	@ManyToOne
+	@JoinColumn(name="cliente_id", referencedColumnName="id", insertable=false, updatable=false)
+	public Cliente cliente;
+	@Required(message="Debe tener un cliente asociado")
+	public Long cliente_id;
+
+	@ManyToOne
 	@JoinColumn(name="expediente_id", referencedColumnName="id", insertable=false, updatable=false)
 	public Expediente expediente;
 	@Required(message="Seleccion Expediente")
@@ -44,7 +51,7 @@ public class RecuperoCertificadoDeuda extends Model {
 	public BigDecimal monto;
 
 	@Required(message="Debe escribir un numero")
-	public Integer numero;
+	public String numero;
 
 	@Required(message="Debe escribir una fecha")
 	@Formats .DateTime(pattern="dd/MM/yyyy")
