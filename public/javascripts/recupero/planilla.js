@@ -2,7 +2,7 @@ $( function () {
 
 	$('#searchExpediente,#searchDeposito,#searchDeposito').modalSearch();
 	$("#numero").numeric_input();
-	$('#searchPlanilla').modalSearch();
+	$('#searchPlanilla,#searchCliente').modalSearch();
 
 	$('#reporteDesdePlanilla').click( function() { //abrir modal para mostrar mensaje solicitud 322
 		var url = $(this).attr("data-url");
