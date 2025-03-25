@@ -396,6 +396,7 @@ public class LiquidacionEmbargosController extends Controller {
 			for(LiquidacionDetalle ldx :ids) {
 				idsCargados.add(ldx.liquidacion_embargo_detalle_id);
 			}
+			idsCargados.add(new Long(486));
 
 			List<LiquidacionEmbargoDetalle> ld = LiquidacionEmbargoDetalle.find
 					.fetch("liquidacionEmbargo")
@@ -427,7 +428,7 @@ public class LiquidacionEmbargosController extends Controller {
 
 			for (LiquidacionEmbargoDetalle l: ld) {
 
-				LiquidacionPuesto lp = LiquidacionPuesto.find
+				LiquidacionPuesto lp = LiquidacionPuesto.find.select("id,puestoLaboral.id,puestoLaboral.legajo.agente.organigrama_id")
 										.fetch("liquidacionMes","liquidacion_tipo_id,periodo_id")
 										.fetch("puestoLaboral","id")
 										.fetch("puestoLaboral.legajo.agente","organigrama_id")
@@ -435,7 +436,10 @@ public class LiquidacionEmbargosController extends Controller {
 										.eq("liquidacionMes.liquidacion_tipo_id",l.liquidacion_tipo_id)
 										.eq("liquidacionMes.periodo_id",l.periodo_id)
 										.eq("puestoLaboral.id", l.liquidacionEmbargo.puesto_laboral_id)
+										.disjunction()
+										.eq("estado_id",Estado.LIQUIDACION_PUESTOS_PREAPROBADO)
 										.eq("estado_id",Estado.LIQUIDACION_PUESTOS_BORRADOR)
+										.endJunction()
 										.findUnique();
 
 
