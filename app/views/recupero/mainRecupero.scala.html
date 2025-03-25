@@ -40,6 +40,9 @@
 					<li><a href="@controllers.recupero.routes.RecuperoClientesController.index(2)">Extranjeros</a></li>
 
 
+				<li class="titulo">Certificados</li>
+					<li><a href="@controllers.recupero.routes.RecuperoCertificadoDeudaController.index()">Certificado Deuda</a></li>
+
 				<li class="titulo">Informes</li>
 				@if(Permiso.check("recuperoInformeGeneral")) {
 					<li><a href="@controllers.recupero.routes.RecuperoReportesController.informeGeneral()">Informe General</a></li>
