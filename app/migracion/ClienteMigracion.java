@@ -12,6 +12,11 @@ public class ClienteMigracion {
 public void migrar(){
 
 	/*
+	 *
+	 alter table certificaciones_servicios_linea_clientes disable trigger all;
+update certificaciones_servicios_linea_clientes set cliente_id =22196 where cliente_id in(28844,27725); --
+alter table certificaciones_servicios_linea_clientes enable trigger all;
+
 	 alter table orden_lineas disable trigger all;
 update orden_lineas set cliente_id =18453 where cliente_id in(21718,21719); --
 alter table orden_lineas enable trigger all;
