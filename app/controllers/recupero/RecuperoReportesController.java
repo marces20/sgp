@@ -3017,7 +3017,13 @@ order by nc.numero
 
 			 for(RecuperoReciboFactura rfl :first) {
 		 	    	String desc = (rfl.descripcion != null)?rfl.descripcion:"";
-		 	    	total1 = total1.add(rfl.recuperoFactura.getBase());
+		 	    	Logger.debug("========================================");
+		 	    	Logger.debug("total1total1total1 "+total1);
+		 	    	Logger.debug("total1total1total222 "+rfl.recuperoFactura.getBase());
+		 	    	Logger.debug("========================================");
+		 	    	//total1 = total1.add(rfl.recuperoFactura.getBase());
+		 	    	total1 = total1.add(rfl.monto);
+
 
 		 		    lineas1 += "<tr>" +
 		 		    		"        		<td style='text-align: center'>"+rfl.recuperoFactura.getNumeroFactura()+"</td>" +
@@ -3036,8 +3042,8 @@ order by nc.numero
 		 	BigDecimal total2 = new BigDecimal(0);
 			 for(RecuperoReciboFactura rfl :second) {
 		 	    	String desc = (rfl.descripcion != null)?rfl.descripcion:"";
-		 	    	total2 = total2.add(rfl.recuperoFactura.getBase());
-
+		 	    	//total2 = total2.add(rfl.recuperoFactura.getBase());
+		 	    	total2 = total2.add(rfl.monto);
 		 		    lineas2 += "<tr>" +
 		 		    		"        		<td style='text-align: center'>"+rfl.recuperoFactura.getNumeroFactura()+"</td>" +
 		 		    		"        		<td>"+utils.NumberUtils.moneda(rfl.recuperoFactura.getBase()) +"</td>" +
@@ -3062,7 +3068,8 @@ order by nc.numero
 			 BigDecimal total1 = new BigDecimal(0);
 			 for(RecuperoReciboFactura rfl :first) {
 		 	    	String desc = (rfl.descripcion != null)?rfl.descripcion:"";
-		 	    	total1 = total1.add(rfl.recuperoFactura.getBase());
+		 	    	//total1 = total1.add(rfl.recuperoFactura.getBase());
+		 	    	total1 = total1.add(rfl.monto);
 		 		    lineas1 += "<tr>" +
 		 		    		"        		<td style='text-align: center'>"+rfl.recuperoFactura.getNumeroFactura()+"</td>" +
 		 		    		"        		<td>"+utils.NumberUtils.moneda(rfl.recuperoFactura.getBase()) +"</td>" +
@@ -3082,7 +3089,8 @@ order by nc.numero
 		 	 BigDecimal total2 = new BigDecimal(0);
 			 for(RecuperoReciboFactura rfl :second) {
 		 	    	String desc = (rfl.descripcion != null)?rfl.descripcion:"";
-		 	    	total2 = total2.add(rfl.recuperoFactura.getBase());
+		 	    	//total2 = total2.add(rfl.recuperoFactura.getBase());
+		 	    	total2 = total2.add(rfl.monto);
 		 		    lineas2 += "<tr>" +
 		 		    		"        		<td style='text-align: center'>"+rfl.recuperoFactura.getNumeroFactura()+"</td>" +
 		 		    		"        		<td>"+utils.NumberUtils.moneda(rfl.recuperoFactura.getBase()) +"</td>" +
@@ -3101,7 +3109,8 @@ order by nc.numero
 		 	 BigDecimal total3 = new BigDecimal(0);
 			 for(RecuperoReciboFactura rfl :tres) {
 		 	    	String desc = (rfl.descripcion != null)?rfl.descripcion:"";
-		 	    	total3 = total3.add(rfl.recuperoFactura.getBase());
+		 	    	//total3 = total3.add(rfl.recuperoFactura.getBase());
+		 	    	total3 = total3.add(rfl.monto);
 		 		    lineas3 += "<tr>" +
 		 		    		"        		<td style='text-align: center'>"+rfl.recuperoFactura.getNumeroFactura()+"</td>" +
 		 		    		"        		<td>"+utils.NumberUtils.moneda(rfl.recuperoFactura.getBase()) +"</td>" +
