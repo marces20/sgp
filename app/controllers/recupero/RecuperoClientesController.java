@@ -33,6 +33,7 @@ import models.Periodo;
 import models.auth.Permiso;
 import models.recupero.InformeTotal;
 import models.recupero.RecuperoFactura;
+import play.Logger;
 import play.Play;
 import play.data.DynamicForm;
 import play.data.Form;
@@ -182,19 +183,19 @@ public class RecuperoClientesController extends Controller {
 			celda0.setCellValue("CUIT");
 			celda0.setCellStyle(comun);
 			celda0 = fila.createCell(2);
-			celda0.setCellValue("DENOMINACION");
+			celda0.setCellValue("Denominacion");
 			celda0.setCellStyle(comun);
 			celda0 = fila.createCell(3);
-			celda0.setCellValue("FECHA DE ACTUALIZACION");
+			celda0.setCellValue("Fecha de Actualizacion");
 			celda0.setCellStyle(comun);
 			celda0 = fila.createCell(4);
-			celda0.setCellValue("ESTADO");
+			celda0.setCellValue("Estado");
 			celda0.setCellStyle(comun);
 			celda0 = fila.createCell(5);
-			celda0.setCellValue("FECHA DE VIGENCIA DESDE");
+			celda0.setCellValue("Fecha Vig. Des");
 			celda0.setCellStyle(comun);
 			celda0 = fila.createCell(6);
-			celda0.setCellValue("FECHA DE VIGENCIA HASTA");
+			celda0.setCellValue("Fecha Vig. Hasta");
 			celda0.setCellStyle(comun);
 
 
@@ -212,7 +213,19 @@ public class RecuperoClientesController extends Controller {
 							celda.setCellStyle(comun);
 							break;
 						case 1:
-							celda.setCellValue(i.getString("cuit"));
+
+							String cuitFormat =i.getString("cuit");
+
+							Logger.debug("--------------------- "+cuitFormat);
+
+							if(i.getString("cuit").length() == 11) {
+								cuitFormat = i.getString("cuit").substring(0,2)+"-"+i.getString("cuit").substring(2,10)+"-"+i.getString("cuit").substring(10,11);
+							}
+
+							Logger.debug("--------------------- "+cuitFormat);
+
+
+							celda.setCellValue(cuitFormat);
 							celda.setCellStyle(comun);
 							break;
 						case 2:
@@ -235,11 +248,11 @@ public class RecuperoClientesController extends Controller {
 							celda.setCellStyle(comun);
 							break;
 						case 5:
-							celda.setCellValue(fechaDesde+" 00:00 HS");
+							celda.setCellValue(fechaDesde);
 							celda.setCellStyle(comun);
 							break;
 						case 6:
-							celda.setCellValue(fechaHasta+" 23:59 HS");
+							celda.setCellValue(fechaHasta);
 							celda.setCellStyle(comun);
 							break;
 					}
