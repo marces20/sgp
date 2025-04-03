@@ -47,20 +47,22 @@ import views.html.patrimonio.inventario.*;
 @Security.Authenticated(Secured.class)
 public class InventarioController extends Controller {
 
-	
-	public static Result index() throws ParseException, IOException{
-		Pagination<Inventario> inventario = Inventario.page(RequestVar.get("prefijo_inventario_id"), RequestVar.get("numero"), RequestVar.get("remito_numero"), RequestVar.get("proveedor_id"), RequestVar.get("producto_id"));
 
-        
-        
+	public static Result index() throws ParseException, IOException{
+		Pagination<Inventario> inventario = Inventario.page(RequestVar.get("prefijo_inventario_id"),
+				RequestVar.get("numero"), RequestVar.get("remito_numero"), RequestVar.get("proveedor_id"),
+				RequestVar.get("producto_id"),RequestVar.get("expediente_id"));
+
+
+
 		DynamicForm d = form().bindFromRequest();
 		return ok(indexInventario.render(inventario, d));
 	}
 
 	public static Result registrarModal(Long remito_linea_id){
-		
+
 		RemitoLinea rl = RemitoLinea.find.where().eq("id", remito_linea_id).findUnique();
-		
+
 		if(rl.cantidad.compareTo(BigDecimal.ZERO) <= 0) {
 			flash("error", "No se han cargado productos en el remito.");
 			return ok(resultadoAgregarInventario.render());
@@ -73,31 +75,31 @@ public class InventarioController extends Controller {
 		if(i != null) {
 			iForm.data().put("prefijo_inventario_id", i.nomenclador_inventario_id.toString());
 		}
-		
+
 		iForm.data().put("remito_id", rl.remito_id.toString() );
 		return ok(registrarModal.render(rl, iForm));
 	}
-	
-	
+
+
 	public static Result actualizar() {
 		Form<Inventario> iForm = form(Inventario.class).bindFromRequest();
 		ObjectNode result = Json.newObject();
-		
+
 		if(iForm.hasErrors()) {
 			System.out.println(iForm.errors());
 			result.put("message", "Error en formulario.");
 			return ok(result);
-		} 
-		
+		}
+
 		Inventario i = iForm.get();
-		
+
 		List<Inventario> ir = Inventario.find.where().eq("numero", i.numero).eq("division", i.division).ne("id", i.id).findList();
-		
+
 		if(!ir.isEmpty()) {
 			result.put("message", "El número ya se encuentra asignado.");
 			return ok(result);
 		}
-		
+
 		try {
 			i.update();
 			result.put("success", true);
@@ -105,30 +107,30 @@ public class InventarioController extends Controller {
 		} catch (Exception e) {
 			result.put("message", "Se ha producido un error."+e.getMessage());
 		}
-		
-		
+
+
 		return ok(result);
 	}
-	
+
 	public static Result guardar() {
 		Form<Inventario> iForm = form(Inventario.class).bindFromRequest();
 		ObjectNode result = Json.newObject();
-		
+
 		if(iForm.hasErrors()) {
 			System.out.println(iForm.errors());
 			result.put("message", "Error en formulario.");
 			return ok(result);
-		} 
-		
+		}
+
 		Inventario i = iForm.get();
-		
+
 		Inventario ir = Inventario.find.where().eq("numero", i.numero).eq("division", i.division).findUnique();
-		
+
 		if(ir != null) {
 			result.put("message", "El número ya se encuentra asignado.");
 			return ok(result);
-		}	
-		
+		}
+
 		try {
 			i.save();
 			result.put("id", i.id);
@@ -137,14 +139,14 @@ public class InventarioController extends Controller {
 		} catch (Exception e) {
 			result.put("message", "Se ha producido un errors."+e.getMessage());
 		}
-		
-		
+
+
 		return ok(result);
 	}
-	
+
 	public static Result eliminar(Long id) {
 		ObjectNode result = Json.newObject();
-		
+
 		try {
 			Inventario.find.byId(id).delete();
 			result.put("success", true);
@@ -153,8 +155,8 @@ public class InventarioController extends Controller {
 			result.put("error", true);
 			result.put("message", "El inventario no se pudo eliminar.");
 		}
-		
+
 		return ok(result);
 	}
-	
+
 }
