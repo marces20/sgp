@@ -2,7 +2,7 @@
 @import helper._
 @import utils._
 @import models.auth._
-@implicitFieldConstructor = @{ FieldConstructor(simpleInput.render) } 
+@implicitFieldConstructor = @{ FieldConstructor(simpleInput.render) }
 @paginadorFicha.setActual(solicitud.id.toString)
 @scripts = {
 	<script src="@routes.Assets.at("javascripts/compras/solicitudes.js")" type="text/javascript"></script>
@@ -44,7 +44,7 @@
 				    }
 				    @if(Permiso.check("asignarUsuarios")) {
 				    	<li role="presentation">
-				    	<a role="menuitem" tabindex="-1" href="#" id="asignarUsuario" 
+				    	<a role="menuitem" tabindex="-1" href="#" id="asignarUsuario"
 				    		data-url="@controllers.compras.routes.SolicitudAccionesController.modalAsignarUsuario(solicitudForm.field("id").value.toLong)">Asignar Usuario</a></li>
 					}
 					</ul>
@@ -52,13 +52,13 @@
 				<div class="pull-right btn-header">
 					<a href="@controllers.compras.routes.SolicitudesController.crearSolicitud(searchIndex)"  class="btn btn-default"><i class="glyphicon glyphicon-plus-sign"></i> Nueva Solicitud</a>
 				</div>
-			</div> 
+			</div>
 		</div>
 	</div>
-	
 
-	
-	
+
+
+
 @views.html.tags.successError()
 
 	<div class="row menu-acciones">
@@ -77,7 +77,7 @@
 		</div>
 		<div class="col-sm-3">
 			<a href="@controllers.compras.routes.SolicitudesController.redirectSearchIndex(searchIndex)" class="btn btn-default"><i class="glyphicon glyphicon-list"></i></a>
-			
+
 		@if(paginadorFicha.getLista().size() > 1){
 		<div class="btn-group">
 			@if(paginadorFicha.hasPrev()) {
@@ -90,16 +90,16 @@
 				<a  role="group" href="@controllers.compras.routes.SolicitudesController.ver(paginadorFicha.next().toLong, searchIndex)@UriTrack.get("&")" class="btn btn-default"><i class="glyphicon glyphicon-chevron-right"></i></a>
 			} else {
 				<a  role="group" href="" class="btn btn-default disabled"><i class="glyphicon glyphicon-chevron-right"></i></a>
-			} 
+			}
 		</div>
 		}
-			
-		</div>
-		
 
-		
+		</div>
+
+
+
 	</div>
-	 
+
 	<input type="hidden" name="solicitudId" id="solicitudId" value="@solicitud.id"/>
 	<div class="row">
 		<div class="col-sm-2">
@@ -108,17 +108,17 @@
 				<p class="form-control-static form-control">@solicitud.referencia</p>
 			</div>
 		</div>
-		
+
 		<div class="col-sm-3">
-			<label for="solicitante" class="control-label">Solicitante</label> 
+			<label for="solicitante" class="control-label">Solicitante</label>
 			<p class="form-control-static form-control">@if(solicitud.solicitante != null){@solicitud.solicitante.apellido}</p>
 		</div>
-		
+
 		<div class="col-sm-3">
 			<label for="servicio" class="control-label">Servicio</label>
 			<p class="form-control-static form-control">@if(solicitud.departamento != null){@solicitud.departamento.nombre}</p>
 		</div>
-		
+
 		<!-- <div class="col-sm-3">
 			<div class="form-group">
 				<label for="@solicitudForm("dirigida").id" class="control-label">Dirigido a</label>
@@ -133,20 +133,20 @@
 		</div> -->
 		<div class="col-sm-3">
 			<div class="form-group">
-				<label for="inputDeposito" class="control-label">Institucion</label> 
+				<label for="inputDeposito" class="control-label">Institucion</label>
 				<p class="form-control-static form-control">@if(solicitud.deposito != null){@solicitud.deposito.nombre}</p>
 			</div>
 		</div>
 	</div>
 	<div class="row">
-	
+
 		<div class="col-sm-2">
 			<div class="form-group">
 				<label class="control-label">Expediente</label>
 					<p class="form-control-static form-control">@if(solicitud.expediente != null){@solicitud.expediente.getExpedienteEjercicio()}</p>
 			</div>
 		</div>
-		
+
 		<div class="col-sm-3">
 			<div class="form-group">
 				<label for="inputCliente" class="control-label">
@@ -160,13 +160,13 @@
 
 		<!-- <div class="col-sm-3">
 			<div class="form-group">
-				<label for="inputOrigen" class="control-label">Médico</label> 
+				<label for="inputOrigen" class="control-label">Médico</label>
 				<p class="form-control-static form-control">@solicitud.origen</p>
 			</div>
 		</div> -->
 		<div class="col-sm-3">
 			<div class="form-group">
-				<label for="inputMedico" class="control-label">Médico Solicitante</label> 
+				<label for="inputMedico" class="control-label">Médico Solicitante</label>
 				<p class="form-control-static form-control">@if(solicitud.medico != null){@solicitud.medico.apellido}</p>
 			</div>
 		</div>
@@ -184,30 +184,55 @@
 			</div>
 		</div>
 	</div>
-	
 	<div class="row">
-		
 		<div class="col-sm-2">
 			<div class="form-group">
-				<label for="inputFechaStart" class="control-label">Fecha Solicitud</label> 
+				<label for="inputFechaStart" class="control-label">Fecha Translado</label>
+				<p class="form-control-static form-control">@solicitudForm("fecha_viaje").value</p>
+			</div>
+		</div>
+		<div class="col-sm-3">
+			<div class="form-group">
+				<label for="inputFechaStart" class="control-label">Diagnostico</label>
+				<p class="form-control-static form-control">@solicitudForm("diagnostico").value</p>
+			</div>
+		</div>
+		<div class="col-sm-3">
+			<div class="form-group">
+				<label for="inputMedico" class="control-label">Origen</label>
+				<p class="form-control-static form-control">@if(solicitud.idaInstitucionExterna != null){@solicitud.idaInstitucionExterna.nombre}</p>
+			</div>
+		</div>
+		<div class="col-sm-3">
+			<div class="form-group">
+				<label for="inputMedico" class="control-label">Destino</label>
+				<p class="form-control-static form-control">@if(solicitud.vueltaInstitucionExterna != null){@solicitud.vueltaInstitucionExterna.nombre}</p>
+			</div>
+		</div>
+	</div>
+	<div class="row">
+
+		<div class="col-sm-2">
+			<div class="form-group">
+				<label for="inputFechaStart" class="control-label">Fecha Solicitud</label>
 				<p class="form-control-static form-control">@solicitudForm("date_start").value</p>
 			</div>
 		</div>
-		
+
 		<!-- <div class="col-sm-2">
 			<div class="form-group">
-				<label for="inputFechaEnd" class="control-label">Fecha Límite</label> 
+				<label for="inputFechaEnd" class="control-label">Fecha Límite</label>
 				<p class="form-control-static form-control">@solicitud.date_end</p>
 			</div>
 		</div> -->
 		<div class="col-sm-3">
 			<div class="col-sm-6">
 				<div class="form-group">
-					<label for="inputFechaImputacion" class="control-label">Fecha imp. preventiva</label> 
+					<label for="inputFechaImputacion" class="control-label">Fecha imp. preventiva</label>
 					<p class="form-control-static form-control date">@solicitudForm("fecha_imputacion").value</p>
 				</div>
 			</div>
-			 
+
 			<div class="col-sm-6">
 				<div class="form-group">
 					<label class="control-label">Pedido Rismi</label>
@@ -225,52 +250,52 @@
 				</p>
 			</div>
 		</div>
-		
+
 		<div class="col-sm-3">
 			<!-- <div class="col-sm-4">
 				<div class="checkbox">
 					<label>
 						Profe @checkbox(solicitudForm("profe"), 'disabled -> "disabled")
 					</label>
-				</div> 
+				</div>
 			</div> -->
 			<div class="col-sm-4">
 				<div class="checkbox">
 					<label>
 						Repo Stock @checkbox(solicitudForm("repo_stock"), 'disabled -> "disabled")
 					</label>
-				</div> 
+				</div>
 			</div>
 			<div class="col-sm-4">
 				<div class="checkbox">
 					<label>
 						Recuperable Profe @checkbox(solicitudForm("recuperable"), 'disabled -> "disabled")
 					</label>
-				</div> 
+				</div>
 			</div>
 			<div class="col-sm-4">
 				<div class="checkbox">
 					<label>
 						Entregado @checkbox(solicitudForm("entregado"), 'disabled -> "disabled")
 					</label>
-				</div> 
+				</div>
 			</div>
 		</div>
-		
-		
-		
+
+
+
 	</div>
 
 	@views.html.compras.solicitudes.tabsSolicitud(false, solicitudForm)
 	@if(!Permiso.check("noVerPrecios")) {
-	<h4>Base: 	<b>@utils.NumberUtils.moneda(solicitud.total)</b></h4>	
+	<h4>Base: 	<b>@utils.NumberUtils.moneda(solicitud.total)</b></h4>
 	<h4>Total Ajuste: 	<b>@utils.NumberUtils.moneda(solicitud.totalAjuste)</b></h4>
 	<h4>Total: 	<b>@utils.NumberUtils.moneda(solicitud.getTotalTotal())</b></h4>
 	}
 	<h4>Estado actual: 	<b>@solicitud.estado.nombre</b></h4>
-	
-	<div class="row margin-bottom-25">	
-		@for(estado <- models.Estado.getSiguienteEstadoPorAprobar(solicitud.estado.orden,models.Estado.TIPO_SOLICITUD)) {	
+
+	<div class="row margin-bottom-25">
+		@for(estado <- models.Estado.getSiguienteEstadoPorAprobar(solicitud.estado.orden,models.Estado.TIPO_SOLICITUD)) {
 			@if(estado.orden <= 7) {
 				@if(Permiso.check("verTodasLasSolicitudes") && solicitud.create_usuario.departamento_id == null){
 					@if(solicitud.estado_id == Estado.SOLICITUD_ESTADO_ENCURSO){
@@ -315,8 +340,8 @@
 					<i class="glyphicon glyphicon-minus-sign"></i> Cancelar Solicitud
 				</a>
 			</div>
-		}	 
-		
+		}
+
 		@if(solicitud.estado.id != models.Estado.SOLICITUD_ESTADO_RESERVADO && Permiso.check("solicitudesPasarReservado") ) {
 			<div class="col-sm-3">
 				<a href="@controllers.compras.routes.SolicitudesController.cambiarEstado(solicitudForm.field("id").value.toInt, models.Estado.SOLICITUD_ESTADO_RESERVADO,searchIndex)" class="btn btn-default btn-disable-onclick">
