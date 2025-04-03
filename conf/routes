@@ -570,6 +570,9 @@ POST    /rrhh/especialidad/actualizar   controllers.rrhh.EspecialidadesControlle
 GET     /rrhh/especialidad/modalBuscar	controllers.rrhh.EspecialidadesController.modalBuscar()
 GET     /rrhh/especialidad/get          controllers.rrhh.EspecialidadesController.get(id:Int ?= 0)
 
+GET     /rrhh/institucionExterna/modalBuscar	controllers.rrhh.InstitucionExternaController.modalBuscar()
+GET     /rrhh/institucionExterna/get          controllers.rrhh.InstitucionExternaController.get(id:Int ?= 0)
+
 GET     /rrhh/profesion/modalBuscar		controllers.rrhh.ProfesionesController.modalBuscar()
 GET     /rrhh/profesion/get          	controllers.rrhh.ProfesionesController.get(id:Int ?= 0)
 GET     /rrhh/profesion         		controllers.rrhh.ProfesionesController.indexProfesion()
@@ -1100,7 +1103,7 @@ GET     /haberes/liquidacionEmbargoDetalle/eliminar       	controllers.haberes.L
 
 #-----------------------------FIN MODULO HABERES ---------------------------------
 
-
+GET    /suggestInstitucionExterna/:input	controllers.rrhh.InstitucionExternaController.suggestInstitucionExterna(input: String)
 GET    /suggestLiquidacionMes/:input		controllers.haberes.LiquidacionMesesController.suggestLiquidacionMes(input: String)
 GET    /suggestArticulo/:input		controllers.compras.ArticulosController.suggestArticulo(input: String)
 GET    /suggestCategoria/:input		controllers.compras.CategoriasController.suggestCategoria(input: String)
