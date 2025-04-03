@@ -1,60 +1,156 @@
 @(id: Long,lineaForm: Form[OrdenLineaCliente])
 @import helper._
-@implicitFieldConstructor = @{ FieldConstructor(simpleInput.render) } 
+@implicitFieldConstructor = @{ FieldConstructor(simpleInput.render) }
 
 @if(id != null) {
 	@inputText(lineaForm("id"), 'hidden -> "hidden", 'id -> "idLineaModalAddCLiente")
 	<div class="panel panel-default">
 		<div class="panel-body">
 			<div class="row" style="margin-bottom: 10px;">
-		 
+
 				<div class="col-sm-6">
 					<label for="cliente" class="control-label">Paciente</label>
 					<div class="input-group">
 						@inputText(lineaForm("cliente.nombre"), 'class -> "form-control", 'id -> "cliente")
 						@inputText(lineaForm("cliente_id"), 'hidden -> "hidden", 'id -> "clienteIdModalAddCLiente")
 						<span class="input-group-addon">
-							<a href="#" 
-							   id="searchCliente" 
+							<a href="#"
+							   id="searchCliente"
 							   class="searchModal"
-							   data-title="Selección de paciente" 
-							   data-url="@controllers.compras.routes.ClientesController.modalBuscar()" 
-							   data-height="650" 
-							   data-width="700" 
-							   data-listen="modal.seleccion.cliente.simple" 
+							   data-title="Selección de paciente"
+							   data-url="@controllers.compras.routes.ClientesController.modalBuscar()"
+							   data-height="650"
+							   data-width="700"
+							   data-listen="modal.seleccion.cliente.simple"
 							   data-label="#cliente" data-field="#clienteIdModalAddCLiente">
 							   <i class="glyphicon glyphicon-search"></i>
 							 </a>
 						</span>
 					</div>
 				</div>
-				<div class="col-sm-4">
+				<div class="col-sm-6">
 					<label for="cliente" class="control-label">Cantidad</label>
 					@inputText(lineaForm("cantidad"), 'class -> "form-control", 'id -> "cantidadModalAddCLiente")
 				</div>
 			</div>
 			<div class="row">
-				 
-				<div class="col-sm-4 col-sm-offset-4">
+
+				<div class="col-sm-3">
+					<label for="cliente" class="control-label">Fecha</label>
+					@inputText(lineaForm("fecha"), 'class -> "form-control", 'id -> "fechaModalAddCLiente", 'id ->  "fechamodal")
+				</div>
+				<div class="col-sm-3">
+					<label class="control-label">
+						IPS
+						@select(lineaForm("ips"),options("false"->"NO","true"->"SI"), 'class -> "form-control select", 'id -> "ipsModalAddCLiente")
+					</label>
+				</div>
+
+
+				<div class="col-sm-6">
+					<label for="cliente" class="control-label">Diagnostico</label>
+					@inputText(lineaForm("diagnostico"), 'class -> "form-control", 'id -> "diagnosticoModalAddCLiente")
+				</div>
+			</div>
+			<div class="row">
+
+					<div class="col-sm-6">
+						<label for="cliente" class="control-label">Origen</label>
+						<div class="input-group">
+							@inputText(lineaForm("idaInstitucionExterna.nombre"), 'class -> "form-control", 'id -> "idaInstitucionExterna")
+							@inputText(lineaForm("ida_institucion_externa_id"), 'hidden -> "hidden", 'id -> "idaInstitucionExternaIdModalAddCLiente")
+							<span class="input-group-addon">
+								<a href="#"
+								   id="searchInstitucionExterna"
+								   class="searchModal"
+								   data-title="Selección de Institucion Externa"
+								   data-url="@controllers.rrhh.routes.InstitucionExternaController.modalBuscar()"
+								   data-height="650"
+								   data-width="700"
+								   data-listen="modal.seleccion.institucionExterna.simple"
+								   data-label="#idaInstitucionExterna" data-field="#idaInstitucionExternaIdModalAddCLiente">
+								   <i class="glyphicon glyphicon-search"></i>
+								 </a>
+							</span>
+						</div>
+					</div>
+
+					<div class="col-sm-6">
+						<label for="cliente" class="control-label">Destino</label>
+						<div class="input-group">
+							@inputText(lineaForm("vueltaInstitucionExterna.nombre"), 'class -> "form-control", 'id -> "vueltaInstitucionExterna")
+							@inputText(lineaForm("vuelta_institucion_externa_id"), 'hidden -> "hidden", 'id -> "vueltaInstitucionExternaIdModalAddCLiente")
+							<span class="input-group-addon">
+								<a href="#"
+								   id="searchInstitucionExterna"
+								   class="searchModal"
+								   data-title="Selección de Institucion Externa"
+								   data-url="@controllers.rrhh.routes.InstitucionExternaController.modalBuscar()"
+								   data-height="650"
+								   data-width="700"
+								   data-listen="modal.seleccion.institucionExterna.simple"
+								   data-label="#vueltaInstitucionExterna" data-field="#vueltaInstitucionExternaIdModalAddCLiente">
+								   <i class="glyphicon glyphicon-search"></i>
+								 </a>
+							</span>
+						</div>
+					</div>
+
+
+			</div>
+			<div class="row">
+				<div class="col-sm-4 col-sm-offset-4"><br />
 					<button type="button" class="btn btn-default" id="guardarOrdenLineaCliente"><i class="glyphicon glyphicon-floppy-disk"></i> Guardar</button>
 					<button type="button" class="btn btn-default" id="cancelarOrdenLineaCliente"><i class="glyphicon glyphicon-floppy-remove"></i>Cancelar</button>
 				</div>
 			</div>
 		</div>
-	</div>	
+	</div>
 
 }else{
 	<div class="panel panel-default">
 		<div class="panel-body">
 			<p>Debe guardar la linea primero para despues poder asignarles Pacientes.</p>
 		</div>
-	</div>	
+	</div>
 
 }
 
 <script>
 $( function(){
-	$('#searchCliente').modalSearch();	
+	$('#searchCliente,#searchInstitucionExterna').modalSearch();
+	$("#fechamodal").mask("99/99/9999");
+	if($("#idaInstitucionExterna").length){
+		var options = {
+				script:"/suggestInstitucionExterna/",
+				varname:"",
+				json:true,
+				shownoresults:true,
+				maxresults:6,
+				callback: function (obj) {
+											$("#idaInstitucionExternaIdModalAddCLiente").val(obj.id);
+										 }
+			};
+		var as_json = new bsn.AutoSuggest('idaInstitucionExterna', options);
+	}
+
+	if($("#vueltaInstitucionExterna").length){
+		var options = {
+				script:"/suggestInstitucionExterna/",
+				varname:"",
+				json:true,
+				shownoresults:true,
+				maxresults:6,
+				callback: function (obj) {
+											$("#vueltaInstitucionExternaIdModalAddCLiente").val(obj.id);
+										 }
+			};
+		var as_json = new bsn.AutoSuggest('vueltaInstitucionExterna', options);
+	}
+
+
+
+
 	if($("#clienteIdModalAddCLiente").length){
 		var options = {
 				script:"/suggestCliente/",
@@ -62,32 +158,39 @@ $( function(){
 				json:true,
 				shownoresults:true,
 				maxresults:6,
-				callback: function (obj) { 
-											$("#clienteIdModalAddCLiente").val(obj.id); 
+				callback: function (obj) {
+											$("#clienteIdModalAddCLiente").val(obj.id);
 										 }
 			};
 		var as_json = new bsn.AutoSuggest('cliente', options);
 	}
-	
+
 	$( "#cancelarOrdenLineaCliente" ).on( "click", function() {
 		$("#modalAddClientes").dialog( "destroy" );
 	});
-	
+
 	$( "#guardarOrdenLineaCliente" ).on( "click", function() {
-		
+
 		if($('#idLineaModalAddCLiente').val() != '' && $('#clienteIdModalAddCLiente').val() != ''){
 			var url = '/compras/linea-orden-cliente/guardarAjax';
 			var data = 'idLinea='+$('#idLineaModalAddCLiente').val();
 			data += '&clienteId='+$('#clienteIdModalAddCLiente').val();
 			data += '&cantidad='+$('#cantidadModalAddCLiente').val();
+
+			data += '&ips='+$('#ipsModalAddCLiente').val();
+			data += '&diagnostico='+$('#diagnosticoModalAddCLiente').val();
+			data += '&ida='+$('#idaInstitucionExternaIdModalAddCLiente').val();
+			data += '&vuelta='+$('#vueltaInstitucionExternaIdModalAddCLiente').val();
+			data += '&fecha='+$('#fechamodal').val();
+
 			var urlEliminar = '';
 			var cantidad = $('#cantidad').val();
 			var cantidadLineaCliente = 0;
 			$('.cantidadLineaCliente').each(function(idx,valor){
 				cantidadLineaCliente += parseInt($(valor).html())
-			});	
+			});
 			cantidadLineaCliente += parseInt($("#cantidadModalAddCLiente").val());
-			
+
 			if(cantidadLineaCliente > cantidad){
 				alert('La cantidad por paciente excede a la cantidad de la linea.');
 			}else{
@@ -101,36 +204,43 @@ $( function(){
 							}
 						})
 					}
-					
+
 					if(respuesta){
 							var tr = "<tr>";
 							tr += "<td>"+$("#cliente").val()+"</td>";
 							tr += "<td class='cantidadLineaCliente'>"+$("#cantidadModalAddCLiente").val()+"</td>";
+
+							tr += "<td>"+$("#fechamodal").val()+"</td>";
+							tr += "<td>"+$("#ipsModalAddCLiente").val()+"</td>";
+							tr += "<td>"+$("#diagnosticoModalAddCLiente").val()+"</td>";
+							tr += "<td>"+$("#idaInstitucionExterna").val()+"</td>";
+							tr += "<td>"+$("#vueltaInstitucionExterna").val()+"</td>";
+
 							tr += '<td><a data-url="'+urlEliminar+'" class="btn btn-default btn-xs notSeleccion eliminarLineaPaciente" href="#">';
 							tr += '<i class="glyphicon glyphicon-trash icono-eliminar"></i></a></td>';
 							tr += "</tr>";
-						
+
 							if (!$('.eliminarLineaPaciente').length) {
 								$('#tablaListadoPacientes tbody').empty();
-							}	
+							}
 							$('#tablaListadoPacientes tbody').append(tr);
-							
+
 							$("#modalAddClientes").dialog( "destroy" );
-						
+
 					}else{
 						alert('No se puede guardar el paciente.');
 					}
 				});
-			}	
+			}
 		}else{
 			alert('Debe ingresar un paciente.')
 		}
 	});
-	
-	
+
+
 	function getDatos(){
-		
+
 	}
-	
+
 });
 </script>

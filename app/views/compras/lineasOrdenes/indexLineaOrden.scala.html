@@ -5,7 +5,7 @@
 	<b>Productos</b>
 	@if(editable){
 	<a class="btn btn-default btn-xs" href="#" id="nuevoProducto"><i class="glyphicon glyphicon-plus"></i> Nuevo</a>
-	<a id="eliminarfacturas" href="@controllers.compras.routes.LineasOrdenesController.eliminarMasivo()" class="btn btn-xs btn-default"><i class="glyphicon glyphicon-trash icono-eliminar"></i> Eliminar</a>	 	
+	<a id="eliminarfacturas" href="@controllers.compras.routes.LineasOrdenesController.eliminarMasivo()" class="btn btn-xs btn-default"><i class="glyphicon glyphicon-trash icono-eliminar"></i> Eliminar</a>
 	}
 </p>
 
@@ -33,7 +33,7 @@
 			<th>Servicio</th>
 			<th>Subtotal</th>
 			<th></th>
-		<tr>	
+		<tr>
 	</thead>
 	<tbody>
 	@for(linea <- paginador.getList) {
@@ -52,7 +52,7 @@ $( function(){
 	/**
 	 * Ventana de carga linea de productos en ordenes
 	 */
-	 
+
 	var contenedor = $("#listaLineaProductos");
 
 	contenedor.on('click', '#nuevoProducto', function(){
@@ -60,14 +60,14 @@ $( function(){
 		mostrarModal(urlContenidoModal);
 		return false;
 	});
-	
+
 	contenedor.on('click', '.modificarProducto', function(){
 		lineaParaEditar = $(this).closest('tr');
 		var modal = mostrarModal($(this).attr('href'));
-		modal.dialog('option', 'title', 'Editar producto');	
+		modal.dialog('option', 'title', 'Editar producto');
 		return false;
 	});
-	
+
 	contenedor.on('click', '.eliminarProducto', function(){
 		var mensaje = "¿Confirma que desea eliminar el registro?";
 		if(confirm(mensaje)){
@@ -83,13 +83,13 @@ $( function(){
 		}
 		return false;
 	});
-	
+
 	function mostrarModal(url){
 		modalCargaProductos = $('<div></div>').dialog({
 			resizable: false,
 		    title: "Cargar producto",
-		    height: 500,
-		    width: 750,
+		    height: 550,
+		    width: 800,
 		    modal: true,
 		    open: function( event, ui ) {
 				$.get(url, function(data){
@@ -100,12 +100,12 @@ $( function(){
 		    	modalCargaProductos.dialog('destroy');
 			}
 		  });
-		
+
 		modalCargaProductos.on('click', '.cancelar', function(){
 			modalCargaProductos.dialog('destroy');
 			return false;
 		});
-		
+
 		modalCargaProductos.on('submit', function(e){
 			var href = $(e.target).attr('action');
 			var data = $(e.target).serialize();
@@ -122,12 +122,12 @@ $( function(){
 			});
 			return false;
 		});
-		
-		
+
+
 		return modalCargaProductos;
 	}
-	
-	
+
+
 	contenedor.find('form').on('submit', function(){
 		alert("xxxxx");
 		var url = $(this).attr("action");
@@ -137,8 +137,8 @@ $( function(){
 		});
 		return false;
 	});
-	
-	
+
+
 
 	/*
 	 * Seleccion de check en la tabla
@@ -156,12 +156,12 @@ $( function(){
 			alert("Debe seleccionar al menos una linea de factura.");
 			return false;
 		}
-		
-		
-		var ids = $("input[name='check_listado[]']").serialize();
-		
 
-		
+
+		var ids = $("input[name='check_listado[]']").serialize();
+
+
+
 		var dialogo = $('<div><p><span class="ui-icon ui-icon-alert" style="float:left; margin:0 7px 20px 0;"></span> ¿Está seguro que desea eliminar los registros registros seleccionados?<p></div>');
 	    dialogo.dialog({
 	        resizable: false,
@@ -187,9 +187,9 @@ $( function(){
 		    }
 	      });
 	    return false;
-	}); 
-	
-	
-	
+	});
+
+
+
 });
 </script>
