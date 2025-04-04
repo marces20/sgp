@@ -112,6 +112,7 @@ POST 	/ordenCompra/reporte/cuadroSugerenciaAdjudicacion 	controllers.compras.Ord
 POST 	/ordenCompra/reporte/controlDolar 					controllers.compras.OrdenesReportesController.controlDolar()
 GET     /ordenCompra/reporte/reporteCertificacionPaciente   controllers.compras.OrdenesReportesController.reporteCertificacionPaciente(id:Long)
 POST 	/ordenCompra/reporte/controlProfe					controllers.compras.OrdenesReportesController.controlProfe(id:Long ?= 0)
+POST 	/ordenCompra/reporte/exportacionDatosTranslados		controllers.compras.OrdenesReportesController.exportacionDatosTranslados()
 
 GET     /compras/orden/linea-orden-ajuste/index     controllers.compras.OrdenesLineasAjustesController.index(id:Long ?= 0, editable:Boolean ?= false)
 POST    /compras/orden/linea-orden-ajuste/guardar   controllers.compras.OrdenesLineasAjustesController.guardar()
