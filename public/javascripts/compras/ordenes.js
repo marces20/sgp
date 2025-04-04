@@ -442,7 +442,7 @@ $( function(){
 
 	});
 
-	$('#exportacionDatosConLineas').click( function() {
+	$('#exportacionDatosConLineas,#exportacionDatosTranslados').click( function() {
 		var url = $(this).attr("data-url");
 		var dialogo = $('<div>...</div>');
 
