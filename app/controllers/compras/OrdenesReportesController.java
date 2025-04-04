@@ -833,6 +833,157 @@ public class OrdenesReportesController extends Controller {
 
 	}
 
+	public static Result exportacionDatosTranslados() {
+
+		List<Integer> ordenesSeleccionadas = getSeleccionados();
+
+		if(ordenesSeleccionadas.isEmpty()) {
+			flash("error", "No se han seleccionado órdenes.");
+			return ok(resultadoCuadroComparativoPrecios.render(null));
+		}
+
+		String error = "";
+		Boolean hayError = false;
+		String dirTemp = System.getProperty("java.io.tmpdir");
+		File archivo = new File(dirTemp+"/lineas.xls");
+
+		try {
+			if(archivo.exists()) archivo.delete();
+			archivo.createNewFile();
+
+			Workbook libro = new HSSFWorkbook();
+			FileOutputStream archivoTmp = new FileOutputStream(archivo);
+
+			CellStyle comun = libro.createCellStyle();
+			comun.setBorderRight(CellStyle.BORDER_THIN);
+			comun.setBorderLeft(CellStyle.BORDER_THIN);
+			comun.setBorderTop(CellStyle.BORDER_THIN);
+			comun.setBorderBottom(CellStyle.BORDER_THIN);
+
+			CellStyle estiloMoneda = libro.createCellStyle();
+			estiloMoneda.setDataFormat((short) 7);
+			estiloMoneda.setBorderRight(CellStyle.BORDER_THIN);
+			estiloMoneda.setBorderLeft(CellStyle.BORDER_THIN);
+			estiloMoneda.setBorderTop(CellStyle.BORDER_THIN);
+			estiloMoneda.setBorderBottom(CellStyle.BORDER_THIN);
+
+			Sheet hoja = libro.createSheet("lineas");
+
+			List<Orden> o = Orden.find.select("id,fecha_inicio,fecha_inicio,total,totalAjuste,")
+							.fetch("proveedor","nombre")
+							.fetch("deposito","nombre")
+							.fetch("expediente", "nombre, id, emergencia")
+			    			.fetch("expediente.ejercicio", "nombre")
+			    			.fetch("periodo", "nombre")
+							.fetch("ordenLinea")
+							.fetch("ordenLinea.producto","nombre")
+							.fetch("ordenLinea.cuentaAnalitica","codigo,nombre")
+							.fetch("ordenLinea.departamento","nombre")
+							.fetch("ordenLinea.udm","nombre")
+							.fetch("ordenLinea.ordenLineaCliente.cliente","id,orden_linea_id,nombre,id_paciente_rismi,ips,fecha,ida_institucion_externa_id,vuelta_institucion_externa_id,ips,diagnostico")
+							.fetch("ordenLinea.ordenLineaCliente.idaInstitucionExterna","nombre")
+							.fetch("ordenLinea.ordenLineaCliente.vueltaInstitucionExterna","nombre")
+							.where().in("id", ordenesSeleccionadas).order("id asc").findList();
+
+			if(o.size() > 0){
+				int x = 0;
+				Row fila;
+				Cell celda0;
+
+				fila = hoja.createRow(x);
+
+				celda0 = fila.createCell(0);
+				celda0.setCellValue("EXPEDIENTE");
+				celda0.setCellStyle(comun);
+
+				celda0 = fila.createCell(1);
+				celda0.setCellValue("PACIENTE");
+				celda0.setCellStyle(comun);
+
+				celda0 = fila.createCell(2);
+				celda0.setCellValue("DIAGNOSTICO");
+				celda0.setCellStyle(comun);
+
+				celda0 = fila.createCell(3);
+				celda0.setCellValue("ORIGEN");
+				celda0.setCellStyle(comun);
+
+				celda0 = fila.createCell(4);
+				celda0.setCellValue("DESTINO");
+				celda0.setCellStyle(comun);
+
+				celda0 = fila.createCell(5);
+				celda0.setCellValue("MONTO");
+				celda0.setCellStyle(comun);
+
+				celda0 = fila.createCell(6);
+				celda0.setCellValue("FECHA FACTURA");
+				celda0.setCellStyle(comun);
+
+				celda0 = fila.createCell(7);
+				celda0.setCellValue("IPS");
+				celda0.setCellStyle(comun);
+				x++;
+
+
+
+				for(Orden oll : o){
+					if(oll.lineas.size() > 0){
+						for(OrdenLinea ollx : oll.lineas){
+							for(OrdenLineaCliente olp : ollx.ordenLineaCliente) {
+
+								fila = hoja.createRow(x);
+								celda0 = fila.createCell(0);
+								celda0.setCellValue(oll.expediente.getExpedienteEjercicio());
+								celda0.setCellStyle(comun);
+
+								celda0 = fila.createCell(1);
+								celda0.setCellValue(olp.cliente.nombre.toUpperCase()+" - ID:"+olp.cliente.id_paciente_rismi);
+								celda0.setCellStyle(comun);
+
+								celda0 = fila.createCell(2);
+								celda0.setCellValue((olp.diagnostico != null)?olp.diagnostico:"");
+								celda0.setCellStyle(comun);
+
+								celda0 = fila.createCell(3);
+								celda0.setCellValue((olp.idaInstitucionExterna != null)?olp.idaInstitucionExterna.nombre:"");
+								celda0.setCellStyle(comun);
+
+								celda0 = fila.createCell(4);
+								celda0.setCellValue((olp.vueltaInstitucionExterna != null)? olp.vueltaInstitucionExterna.nombre:"");
+								celda0.setCellStyle(comun);
+
+								celda0 = fila.createCell(5);
+								celda0.setCellValue( ollx.precio.multiply(ollx.cantidad).setScale(2, RoundingMode.HALF_UP).doubleValue() );
+								celda0.setCellStyle(comun);
+
+								celda0 = fila.createCell(6);
+								celda0.setCellValue( (olp.fecha != null)? utils.DateUtils.formatDate(olp.fecha):"");
+								celda0.setCellStyle(comun);
+
+								celda0 = fila.createCell(7);
+								celda0.setCellValue(  (olp.ips != null && olp.ips)?"SI":"NO" );
+								celda0.setCellStyle(comun);
+								x++;
+							}
+						}
+					}
+				}
+			}
+
+			libro.write(archivoTmp);
+			flash("success", "El archivo fue creado correctamente.");
+			return ok(resultadoCuadroComparativoPrecios.render(archivo.getPath()));
+		} catch (IOException e) {
+			e.printStackTrace();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		return ok(resultadoCuadroComparativoPrecios.render(null));
+
+	}
+
 	public static Result exportacionDatosConLineas() {
 
 		List<Integer> ordenesSeleccionadas = getSeleccionados();
