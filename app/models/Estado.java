@@ -47,6 +47,7 @@ private static final long serialVersionUID = 1L;
 	public static final Integer TIPO_LIQUIDACION_EMBARGO = 28;
 	public static final Integer TIPO_EQUIPO = 29;
 	public static final Integer TIPO_EQUIPO_INCIDENCIA = 30;
+	public static final Integer TIPO_RECUPERO_CERTIFICADO_DEUDA = 31;
 
 	public static final int SOLICITUD_ESTADO_BORRADOR = 1;
 	public static final int SOLICITUD_ESTADO_ENCURSO = 2;
@@ -210,6 +211,8 @@ private static final long serialVersionUID = 1L;
 	public static final int EQUIPO_INCIDENCIA_ABIERTO = 132;
 	public static final int EQUIPO_INCIDENCIA_CERRADO = 133;
 
+	public static final int RECUPERO_CERTIFICADO_DEUDA_BORRADOR = 136;
+	public static final int RECUPERO_CERTIFICADO_DEUDA_APROBADO = 137;
 
 	//ULTIMOOOO ID ES 124
 
