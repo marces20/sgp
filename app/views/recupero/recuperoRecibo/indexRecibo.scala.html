@@ -147,8 +147,11 @@
 					<th width="70">Fecha</th>
 					<th width="70">Fecha Transf.</th>
 					<th width="70">Planilla</th>
+					<th width=" ">Total</th>
 					<th width="70">Estado</th>
 					<th width="190">Usuario</th>
+
+
 
 					<th width="30">#</th>
 				</tr>
@@ -165,8 +168,11 @@
 						<td class="fecha">@if(recibo.fecha != null){@(utils.DateUtils.formatDate(recibo.fecha))}</td>
 						<td class="fecha">@if(recibo.fecha_transferencia != null){@(utils.DateUtils.formatDate(recibo.fecha_transferencia))}</td>
 						<td class="">@if(recibo.planilla != null){@(recibo.planilla.getRecuperoPlanillaEjercicio())}</td>
+						<td class="">@utils.NumberUtils.moneda(recibo.getTotal(), 2) </td>
 						<td class="">@if(recibo.estado != null){@(recibo.estado.nombre)}</td>
 						<td class="">@if(recibo.write_usuario != null){@(recibo.write_usuario.nombre)}</td>
+
+
 
 						<td>
 							<a class="btn btn-default btn-xs delete-confirm-link notSeleccion" href="@controllers.recupero.routes.RecuperoRecibosController.eliminar(recibo.id)&@UriTrack.encode()">
