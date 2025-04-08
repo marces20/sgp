@@ -128,7 +128,7 @@ public class RecuperoRecibo extends Model {
 			p.setOrderDefault("DESC");
 			p.setSortByDefault("id");
 
-			ExpressionList<RecuperoRecibo> e = find.fetch("cliente").fetch("planilla").fetch("puntoVenta").where();
+			ExpressionList<RecuperoRecibo> e = find.fetch("cliente").fetch("planilla").fetch("puntoVenta").fetch("create_usuario").where();
 
 			if(!numero.isEmpty()) {
 
