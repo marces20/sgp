@@ -232,9 +232,63 @@ public class AgenteAsistenciaLicencia extends Model{
 		return dias;
 	}
 
+	public int getDiasEntreFechasJava(){
+
+		boolean habiles = false;
+		int diffDays = 0 ;
+
+		Calendar calendarInicio = Calendar.getInstance();
+		calendarInicio.setTime(finicio);
+
+		Calendar calendarFin = Calendar.getInstance();
+		calendarFin.setTime(ffin);
+
+
+
+		if(tipoLicencia != null && tipoLicencia.habiles != null && tipoLicencia.habiles == true){
+			Logger.debug(tipoLicencia.habiles.toString());
+			habiles = true;
+
+		}
+
+		List<Feriado> f = Feriado.find.findList();
+		ArrayList<Date> feriadosList = new ArrayList<>();
+		for(Feriado fx :f) {
+			feriadosList.add(fx.fecha);
+		}
+
+		while (calendarInicio.before(calendarFin) || calendarInicio.equals(calendarFin)) {
+
+			if(habiles) {
+				if(feriadosList.contains(calendarInicio.getTime() ) ) {
+
+
+				}else {
+					if (calendarInicio.get(Calendar.DAY_OF_WEEK) != Calendar.SUNDAY && calendarInicio.get(Calendar.DAY_OF_WEEK) != Calendar.SATURDAY) {
+			            //se aumentan los dias de diferencia entre min y max
+			            diffDays++;
+					}
+				}
+			}else {
+				 diffDays++;
+			}
+
+			calendarInicio.add(Calendar.DATE, 1);
+
+		}
+
+		Logger.debug("aaaaaaaaaaaaaaaaa5555555555555555555555 "+calendarInicio.get(Calendar.DAY_OF_WEEK));
+
+		return diffDays;
+	}
+
+
+
 	public int getDiasEntreFechas(){
 
-		Connection conn = null;
+		return getDiasEntreFechasJava();
+
+		/*Connection conn = null;
 		PreparedStatement stmt = null;
 		ResultSet rs = null;
 		int ret = 0;
@@ -271,7 +325,7 @@ public class AgenteAsistenciaLicencia extends Model{
             if (conn != null) try { conn.close(); } catch (Exception e) { }
         }
 
-		return ret;
+		return ret;*/
 	}
 
 	public static int setDiasPorPeriodos(Integer idLicencia){
@@ -448,11 +502,11 @@ public class AgenteAsistenciaLicencia extends Model{
 
 						if(retTmp.containsKey(ax.tipoLicencia.nombre)){
 							Integer[] cargaTmp = retTmp.get(ax.tipoLicencia.nombre);
-							cargaTmp[0] = cargaTmp[0]+ax.getDiasEntreFechas();
+							cargaTmp[0] = cargaTmp[0]+ax.dias;//ax.getDiasEntreFechas();
 							cargaTmp[1] = dias-cargaTmp[0];
 							carga = cargaTmp;
 						}else{
-							carga[0] = ax.getDiasEntreFechas();//dias tomados
+							carga[0] = ax.dias; //ax.getDiasEntreFechas();//dias tomados
 							carga[1] = ax.getDiasDisponibles(dias);//dias disponibles
 							carga[2] = dias;//dias totales
 						}
@@ -464,7 +518,7 @@ public class AgenteAsistenciaLicencia extends Model{
 					}else{
 						Logger.debug("---------------------------2222222 ");
 						Integer[] cargax = new Integer[4];//array con los valores de cada tipo de licencia
-						cargax[0] = ax.getDiasEntreFechas();//dias tomados
+						cargax[0] = ax.dias;//ax.getDiasEntreFechas();//dias tomados
 						cargax[1] = ax.getDiasDisponibles(dias);//dias disponibles
 						cargax[2] = dias;//dias totales
 						Map<String, Integer[]> resumen = new HashMap<String, Integer[]>();
