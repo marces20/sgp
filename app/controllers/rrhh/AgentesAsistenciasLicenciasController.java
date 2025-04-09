@@ -486,7 +486,7 @@ public class AgentesAsistenciasLicenciasController extends Controller {
 
 					int diasDispo = llx.getDiasDisponiblesSinEsteId(diasEjercicio);
 
-					int saldo = diasDispo-llx.getDiasEntreFechas();
+					int saldo = diasDispo-llx.dias;//llx.getDiasEntreFechas();
 
 					Logger.debug("diasEjercicio: "+diasEjercicio);
 					Logger.debug("diasDispo: "+diasDispo);
@@ -508,7 +508,7 @@ public class AgentesAsistenciasLicenciasController extends Controller {
 				for(AgenteAsistenciaLicencia llx : ll) {
 
 					Logger.debug("aaaaaaaaaaaaaa111111111");
-					llx.dias = llx.getDiasEntreFechas();
+					llx.dias = llx.dias;//llx.getDiasEntreFechas();
 					llx.save();
 
 					if(llx.tipo_licencia_id.compareTo(new Long(5)) == 0) {
