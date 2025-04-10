@@ -242,8 +242,9 @@ public class AgenteAsistenciaLicencia extends Model{
 
 		Calendar calendarFin = Calendar.getInstance();
 		calendarFin.setTime(ffin);
-
-
+		Logger.debug("getDiasEntreFechasJava id: "+id);
+		Logger.debug("getDiasEntreFechasJava calendarInicio: "+calendarInicio.get(Calendar.DAY_OF_WEEK));
+		Logger.debug("getDiasEntreFechasJava calendarInicio: "+calendarInicio.get(Calendar.DAY_OF_WEEK));
 
 		if(tipoLicencia != null && tipoLicencia.habiles != null && tipoLicencia.habiles == true){
 			Logger.debug(tipoLicencia.habiles.toString());
@@ -277,7 +278,7 @@ public class AgenteAsistenciaLicencia extends Model{
 
 		}
 
-		Logger.debug("aaaaaaaaaaaaaaaaa5555555555555555555555 "+calendarInicio.get(Calendar.DAY_OF_WEEK));
+
 
 		return diffDays;
 	}
