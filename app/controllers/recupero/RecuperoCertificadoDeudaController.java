@@ -7,6 +7,9 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -14,6 +17,10 @@ import java.util.Map;
 import javax.persistence.PersistenceException;
 
 import com.avaje.ebean.Ebean;
+import com.avaje.ebean.Expr;
+import com.avaje.ebean.ExpressionList;
+import com.fasterxml.jackson.databind.node.ArrayNode;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.common.collect.Lists;
 
 import controllers.Secured;
@@ -24,9 +31,16 @@ import fr.opensagres.xdocreport.document.IXDocReport;
 import fr.opensagres.xdocreport.document.registry.XDocReportRegistry;
 import fr.opensagres.xdocreport.template.IContext;
 import fr.opensagres.xdocreport.template.TemplateEngineKind;
+import models.Estado;
 import models.Expediente;
+import models.Factura;
+import models.Orden;
 import models.Solicitud;
 import models.SolicitudLinea;
+import models.Usuario;
+import models.auth.Permiso;
+import models.recupero.InformeTotal;
+import models.recupero.RecuperoCerficadoDeudaLinea;
 import models.recupero.RecuperoCertificadoDeuda;
 import models.recupero.RecuperoFactura;
 import models.recupero.RecuperoNotaCredito;
@@ -36,6 +50,9 @@ import play.Logger;
 import play.Play;
 import play.data.DynamicForm;
 import play.data.Form;
+import play.db.ebean.Model;
+import play.db.ebean.Model.Finder;
+import play.libs.Json;
 import play.mvc.Controller;
 import play.mvc.Result;
 import play.mvc.Security;
@@ -43,10 +60,25 @@ import utils.DateUtils;
 import utils.NumeroALetra;
 import utils.RequestVar;
 import utils.UriTrack;
+import utils.pagination.Pagination;
+import views.html.sinPermiso;
+import views.html.contabilidad.facturas.acciones.modalPasarEnPreCurso;
 import views.html.recupero.recuperoCertificadoDeuda.*;
 
 @Security.Authenticated(Secured.class)
 public class RecuperoCertificadoDeudaController  extends Controller {
+
+/*
+ * PERMISOS CAMBIOSS DE ESTADOS
+ * LINEAS
+ * CUANDO SE BORRA UNA LINEA SACAR EL CERTIFICADO_DEUDA_ID Q VOY A PONER EN LA FACTURA
+ *
+ *
+ *
+ *
+ */
+
+
 
 	final static Form<RecuperoCertificadoDeuda> certificadoForm = form(RecuperoCertificadoDeuda.class);
 
@@ -62,7 +94,9 @@ public class RecuperoCertificadoDeudaController  extends Controller {
 				RecuperoCertificadoDeuda.page(
 												  		RequestVar.get("numero"),
 												  		RequestVar.get("expediente_id"),
-												  		RequestVar.get("fecha_desde")
+												  		RequestVar.get("fecha_desde"),
+												  		RequestVar.get("btnFiltro[0]"),//borrador
+												  		RequestVar.get("btnFiltro[1]")
 												  		),d));
 	}
 
@@ -142,7 +176,9 @@ public class RecuperoCertificadoDeudaController  extends Controller {
 		if(certificado  == null){
 			flash("error", "No se encuentra el certificado.");
 			return redirect(controllers.recupero.routes.RecuperoCertificadoDeudaController.index()+UriTrack.get("?"));
-		}else {
+		}else if(certificado.estado_id == Estado.RECUPERO_CERTIFICADO_DEUDA_APROBADO ){
+			flash("error", "El certificado no se puede editar en este Estado. Debe cambiar su estado a borrador.");
+			return redirect(request().getHeader("referer"));
 
 		}
 
@@ -215,6 +251,75 @@ public class RecuperoCertificadoDeudaController  extends Controller {
 		return redirect(refererUrl);
 	}
 
+	public static Result cambiarEstado(Long id, Long idEstado) throws IOException{
+
+		Estado estado = Estado.getEstado(idEstado,Estado.TIPO_RECUPERO_CERTIFICADO_DEUDA);
+
+		RecuperoCertificadoDeuda rp = RecuperoCertificadoDeuda.find.byId(id);
+
+
+		if(rp == null){
+			flash("error", "No se encuentra el certificado");
+			return redirect(request().getHeader("referer"));
+		}
+
+		/*if((rp.recuperoFacturaLinea.isEmpty()) && (idEstado != Estado.RECUPERO_FACTURA_CANCELADO && idEstado != Estado.RECUPERO_FACTURA_BORRADOR)){
+			flash("error", "No se puede modificar el estado si no contiene lineas de productos.");
+			return redirect(request().getHeader("referer"));
+		}*/
+
+		if(idEstado != null){
+
+			Boolean permiso = false;
+
+			switch ( idEstado.intValue() ) {
+		      case  Estado.RECUPERO_CERTIFICADO_DEUDA_BORRADOR:
+		    	  pasarEnBorrador(rp.id);
+		    	  break;
+
+		      case Estado.RECUPERO_CERTIFICADO_DEUDA_APROBADO:
+		    	  pasarAprobado(rp.id);
+		    	  break;
+
+		      default:
+		           break;
+		      }
+
+		}
+
+		return redirect(controllers.recupero.routes.RecuperoCertificadoDeudaController.ver(rp.id)+ UriTrack.get("&"));
+	}
+
+	public static void pasarEnBorrador(Long idRf){
+
+		RecuperoCertificadoDeuda rf = Ebean.find(RecuperoCertificadoDeuda.class).select("id, estado_id,write_date,write_usuario_id").setId(idRf).findUnique();
+
+		if(rf != null){
+			rf.estado_id = new Long(Estado.RECUPERO_CERTIFICADO_DEUDA_BORRADOR);
+			rf.write_date = new Date();
+			rf.write_usuario_id = new Long(Usuario.getUsuarioSesion());
+			rf.save();
+			flash("success", "Operación exitosa. Estado actual: Borrador");
+		} else {
+			flash("error", "Parámetros incorrectos");
+		}
+	}
+
+	public static void pasarAprobado(Long idRf){
+
+		RecuperoCertificadoDeuda rf = Ebean.find(RecuperoCertificadoDeuda.class).select("id, estado_id,write_date,write_usuario_id").setId(idRf).findUnique();
+
+		if(rf != null){
+			rf.estado_id = new Long(Estado.RECUPERO_CERTIFICADO_DEUDA_APROBADO);
+			rf.write_date = new Date();
+			rf.write_usuario_id = new Long(Usuario.getUsuarioSesion());
+			rf.save();
+			flash("success", "Operación exitosa. Estado actual: Aprobado");
+		} else {
+			flash("error", "Parámetros incorrectos");
+		}
+	}
+
 	public static Result reporteCertificadoDeuda(Long id) throws IOException {
 
 		String dirTemp = System.getProperty("java.io.tmpdir");
@@ -260,5 +365,195 @@ public class RecuperoCertificadoDeudaController  extends Controller {
 	    	return ok(archivo);
 	}
 
+	public static Result suggestCertificadoDeudas(String input) {
 
+		ObjectNode rpta = Json.newObject();
+	    ArrayNode ordenes = rpta.arrayNode();
+
+	    RecuperoCertificadoDeuda ad = new RecuperoCertificadoDeuda();
+
+		for(RecuperoCertificadoDeuda a : ad.getDataSuggest(input, 25)){
+			ObjectNode restJs = Json.newObject();
+	        restJs.put("id", a.id);
+	        restJs.put("value",a.getNombreCompleto());
+	        restJs.put("info", "");
+	        ordenes.add(restJs);
+		}
+
+		ObjectNode response = Json.newObject();
+		response.put("results", ordenes);
+
+		return ok(response);
+	}
+
+
+	public static Result modalBuscar() {
+    	Pagination<RecuperoCertificadoDeuda> p = new Pagination<RecuperoCertificadoDeuda>();
+    	p.setOrderDefault("DESC");
+    	p.setSortByDefault("id");
+
+    	Model.Finder<Long,RecuperoCertificadoDeuda> find = new Finder<Long,RecuperoCertificadoDeuda>(Long.class, RecuperoCertificadoDeuda.class);
+
+    	ExpressionList<RecuperoCertificadoDeuda> e = find
+				.fetch("cliente", "nombre")
+				.where();
+
+    	if(!RequestVar.get("numero").isEmpty()) {
+    		e.ilike("numero", "%" + RequestVar.get("numero") + "%");
+    	}
+
+    	p.setExpressionList(e);
+		return ok( modalBusquedaCertificadoDeuda.render(p, form().bindFromRequest()) );
+	}
+
+	public static Result get(int id){
+		RecuperoCertificadoDeuda cert = RecuperoCertificadoDeuda.find.fetch("cliente", "nombre") .where().eq("id", id).findUnique();
+
+		ObjectNode obj = Json.newObject();
+	    ArrayNode nodo = obj.arrayNode();
+		ObjectNode restJs = Json.newObject();
+
+		if(cert == null) {
+			restJs.put("success", false);
+			restJs.put("message", "No se encuentra el certificado");
+		} else {
+			restJs.put("success", true);
+			restJs.put("id", cert.id);
+			restJs.put("nombre", cert.getNombreCompleto());
+			restJs.put("cliente", cert.cliente.nombre);
+		}
+		nodo.add(restJs);
+		return ok(restJs);
+	}
+
+
+	public static Result modalCargarCertificadoDeuda() {
+		return ok(modalCargarCertificadoDeuda.render(form().bindFromRequest()));
+	}
+
+	public static Result cargarCertificadoDeuda() {
+		DynamicForm d = form().bindFromRequest();
+		d.discardErrors();
+
+		//FACTURAS CONTROL
+		List<Integer> factSeleccionados = getSeleccionados();
+
+		if(factSeleccionados.isEmpty()) {
+			flash("error", "Seleccione al menos una factura.");
+			return ok(modalCargarCertificadoDeuda.render(d));
+		}
+
+		if(!soloSinCertficiadoAsignado(factSeleccionados)) {
+			flash("error", "Solo se puede agregar facturas que no tenga certificado asignado.");
+			return ok(modalPasarEnPreCurso.render(d));
+		}
+
+		//CERTIFICADOS CONTROL
+		Integer idCert  = null;
+		if(request().body().asFormUrlEncoded().get("cert_id_modal") !=null && !request().body().asFormUrlEncoded().get("cert_id_modal")[0].isEmpty()){
+			idCert = new Integer(request().body().asFormUrlEncoded().get("cert_id_modal")[0]);
+		}else {
+			flash("error", "Debe seleccionar un certificado.");
+			return ok(modalCargarCertificadoDeuda.render(d));
+
+		}
+
+		RecuperoCertificadoDeuda ce = RecuperoCertificadoDeuda.find.where().eq("id",idCert).findUnique();
+
+		if(ce == null){
+			flash("error", "No se encuentra el certificado");
+			return ok(modalCargarCertificadoDeuda.render(d));
+		}else {
+			if(ce.estado_id.compareTo(new Long(Estado.RECUPERO_CERTIFICADO_DEUDA_BORRADOR)) != 0 ) {
+				flash("error", "El certificado seleccionado debe estar en estado Borrador");
+				return ok(modalCargarCertificadoDeuda.render(d));
+			}
+		}
+
+		//CERTIFICADO-FACTURAS CONTROL
+		if(!mismoCliente(factSeleccionados,ce.cliente_id)) {
+			flash("error", "Los clientes de las facturas seleccionados deben coincidir con el cliente del certificado.");
+			return ok(modalCargarCertificadoDeuda.render(d));
+		}
+
+		//CERTIFICADO-FACTURAS CONTROL
+		List<InformeTotal> listInforme = InformeTotal.find.where().in("id", factSeleccionados).gt("total_deuda", Float.parseFloat("0")).findList();
+		if(listInforme.size() != factSeleccionados.size()) {
+			flash("error", "Solo se pueden asignar facturas con deuda.");
+			return ok(modalCargarCertificadoDeuda.render(d));
+		}
+
+		if(d.hasErrors())
+			return ok(modalCargarCertificadoDeuda.render(d));
+
+		ObjectNode result = Json.newObject();
+
+		Map<Long,BigDecimal> facturaDeuda = new HashMap<>();
+		for(InformeTotal ix:listInforme) {
+			facturaDeuda.put(ix.id, ix.totalDeuda);
+		}
+
+
+
+		try {
+
+
+
+			Ebean.beginTransaction();
+			List<RecuperoFactura> lf = RecuperoFactura.find.where().in("id", factSeleccionados).findList();
+			for(RecuperoFactura lfx:lf) {
+
+
+				RecuperoCerficadoDeudaLinea rcl = new RecuperoCerficadoDeudaLinea();
+				rcl.create_usuario_id =  Usuario.getUsuarioSesion().longValue();
+				rcl.recupero_certificado_deuda_id = ce.id;
+				rcl.recupero_factura_id = lfx.id;
+				rcl.deuda = facturaDeuda.get(lfx.id);
+				rcl.save();
+
+			}
+
+			RecuperoFactura.modificarCertificadoDeudaId(ce.id,factSeleccionados);
+
+			Ebean.commitTransaction();
+			result.put("success", true);
+			result.put("html", modalCargarCertificadoDeuda.render(d).toString());
+			return ok(result);
+
+
+		} catch (Exception e){
+			Ebean.rollbackTransaction();
+			flash("error", "No se puede modificar los registros.");
+			return ok(modalCargarCertificadoDeuda.render(d));
+		}
+
+	}
+
+	public static Boolean facturaSoloConDeuda(List<Integer> facturasSeleccionados) {
+		return InformeTotal.find.where().in("id", facturasSeleccionados).gt("total_deuda", Float.parseFloat("0")).findRowCount() == facturasSeleccionados.size();
+	}
+
+	public static Boolean soloSinCertficiadoAsignado(List<Integer> facturasSeleccionados) {
+		return RecuperoFactura.find.where().isNotNull("recupero_certificado_deuda_id").in("id", facturasSeleccionados).findRowCount() == 0;
+	}
+
+	public static Boolean mismoCliente(List<Integer> facturasSeleccionados,Long idCliente) {
+		return RecuperoFactura.find.where().eq("cliente_id",idCliente).in("id", facturasSeleccionados).findRowCount() == facturasSeleccionados.size();
+	}
+
+	public static List<Integer> getSeleccionados(){
+		String[] checks = null;
+		try {
+			checks = request().body().asFormUrlEncoded().get("check_listado[]");
+		} catch (NullPointerException e) {
+		}
+
+		List<Integer> ids = new ArrayList<Integer>();
+		if(checks != null) {
+			for (String id : checks) {
+				ids.add(Integer.valueOf(id));
+			}
+		}
+		return ids;
+	}
 }
