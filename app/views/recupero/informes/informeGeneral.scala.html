@@ -12,16 +12,32 @@
 
 <div class="page-header">
 	<div class="row">
-		<div class="col-sm-9">
+		<div class="col-sm-4">
 			<h1>Informe deudas</h1>
 		</div>
 
-		<div class="col-sm-3">
-			<a id="generarArchivo" href="@controllers.recupero.routes.RecuperoReportesController.archivoInformeGeneral()"  class="btn btn-default"><i class="glyphicon glyphicon-download-alt"></i> Generar archivo</a>
+
+		<div class="col-sm-8">
+
+			<div class="dropdown pull-right">
+				<button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown"> <i class="glyphicon glyphicon-list-alt"></i> Reportes <span class="caret"></span></button>
+				<ul class="dropdown-menu"></ul>
+			</div>
+			<div class="dropdown pull-right btn-header">
+				<button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown"> <i class="glyphicon glyphicon-cog"></i> Acciones <span class="caret"></span> </button>
+				<ul class="dropdown-menu">
+					<li role="presentation"><a role="menuitem" id="accionCargarCertificadoDeuda" tabindex="-1" href="#"
+					data-url="@controllers.recupero.routes.RecuperoCertificadoDeudaController.modalCargarCertificadoDeuda()">Cargar Certificado Deuda</a></li>
+				</ul>
+			</div>
+			<div class="pull-right  btn-header">
+				<a id="generarArchivo" href="@controllers.recupero.routes.RecuperoReportesController.archivoInformeGeneral()"  class="btn btn-default"><i class="glyphicon glyphicon-download-alt"></i> Generar archivo</a>
+			</div>
 		</div>
 
 	</div>
 </div>
+
 
 
 <script>
@@ -173,6 +189,28 @@ $( function() {
                 </span>
 			</div>
 		</div>
+		<div class="col-sm-2">
+			<label for="deposito" class="control-label">Certificado</label>
+			<div class="input-group">
+
+				@inputText(formBuscador("recuperoCertificadoDeuda.getNombreCompleto()"),'class -> "form-control", 'id -> "certificicado_deuda", 'autocomplete -> "off")
+				@inputText(formBuscador("certificicado_deuda_id"),'hidden -> "hidden", 'id -> "certificicado_deuda_id")
+
+				<span class="input-group-addon">
+					<a href="#" class="searchModal"
+								id="searchCertificadoDueda"
+								data-title="Selección de certificado deuda"
+								data-url="@controllers.recupero.routes.RecuperoCertificadoDeudaController.modalBuscar()"
+								data-height="650"
+								data-width="700"
+								data-listen="modal.seleccion.recuperoCertificadoDeuda.simple"
+								data-label="#certificicado_deuda"
+								data-field="#certificicado_deuda_id">
+						<i class="glyphicon glyphicon-search"></i>
+					</a>
+				</span>
+			</div>
+		</div>
 	</div>
 
 	<div class="row">
@@ -205,8 +243,8 @@ $( function() {
 			<thead>
 				<tr>
 				    <th width="20"><input type="checkbox" name="checkAll" id="checkAll"/></th>
-				    <th>Institucion</th>
-					<th width="40">Número</th>
+				    <th width="80">Institucion</th>
+					<th width="120">Número</th>
 					<th width="60">Fecha</th>
 					<th>Cliente</th>
 					<th width="90">Total factura</th>
@@ -219,7 +257,9 @@ $( function() {
 				<tr>
 					<td><input type="checkbox" name="check_listado[]" value="@informe.id" class="notSeleccion" id="check-@informe.id"/></td>
 					<td>@if(informe.deposito != null){@informe.deposito.sigla}</td>
-					<td>@informe.numero</td>
+					<td>
+						@informe.numero @if(informe.recupero_certificado_deuda_id != null){<span style="color:red;font-weight: bold;">CD (@informe.recuperoCertificadoDeuda.getNombreCompleto())</span>}
+					</td>
 					<td>@DateUtils.formatDate(informe.fecha)</td>
 					<td>@informe.cliente.nombre</td>
 					<td class="totalFactura" data-valor="@informe.totalFactura">@utils.NumberUtils.moneda(informe.totalFactura)</td>
@@ -245,7 +285,7 @@ $( function() {
 
 	<script type="text/javascript">
 	$( function() {
-		$('#searchPeriodo, #searchExpediente, #searchCliente').modalSearch();
+		$('#searchPeriodo, #searchExpediente, #searchCliente,#searchCertificadoDueda').modalSearch();
 
 		var trs = $('#listaInforme tbody tr');
 		sumarFilas(trs);
@@ -274,7 +314,38 @@ $( function() {
 			$("#deudaFooter").html(formatNumberPesos(parseFloat(deuda).toFixed(2)));
 		}
 
+		$('#accionCargarCertificadoDeuda').click( function() { //abrir modal para mostrar mensaje solicitud 322
+			var url = $(this).attr("data-url");
+			var dialogo = $('<div></div>');
+			dialogo.dialog({
+				title: "Cargar Certificado Deuda",
+		    	resizable: false,
+				autoOpen: true,
+				modal: true,
+				height: 250,
+				width:750,
+		        buttons: {
+			          Cerrar: function() {
+			        	  window.location.reload();
+			            $( this ).dialog( "destroy" );
+			          }
+			    },
+		    	close: function(event, ui ){
+		    		window.location.reload();
+		    		$(this).dialog( "destroy" );
+		    	},
+			    open: function( event, ui ) {
+					$.get(url, getCheckFacturaSeleccionados(), function(data){
+						dialogo.html(data);
+					});
+			    }
+		      });
 
+		});
+
+       function getCheckFacturaSeleccionados(){
+      		return $("input[name='check_listado[]']").serialize();
+      	}
 
 	});
 	</script>
