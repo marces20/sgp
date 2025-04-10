@@ -954,7 +954,7 @@ public class OrdenesReportesController extends Controller {
 								celda0.setCellStyle(comun);
 
 								celda0 = fila.createCell(5);
-								celda0.setCellValue( ollx.precio.multiply(ollx.cantidad).setScale(2, RoundingMode.HALF_UP).doubleValue() );
+								celda0.setCellValue( ollx.precio.multiply(olp.cantidad).setScale(2, RoundingMode.HALF_UP).doubleValue() );
 								celda0.setCellStyle(comun);
 
 								celda0 = fila.createCell(6);
