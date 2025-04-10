@@ -65,6 +65,11 @@ public class InformeTotal extends Model {
 	public Long deposito_id;
 
 	@ManyToOne
+	@JoinColumn(name="recupero_certificado_deuda_id", referencedColumnName="id", insertable=false, updatable=false)
+	public RecuperoCertificadoDeuda recuperoCertificadoDeuda;
+	public Long recupero_certificado_deuda_id;
+
+	@ManyToOne
 	@JoinColumn(name="expediente_id", referencedColumnName="id", insertable=false, updatable=false)
 	public Expediente expediente;
 	public Integer expediente_id;
