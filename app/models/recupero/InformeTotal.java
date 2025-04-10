@@ -97,7 +97,8 @@ public class InformeTotal extends Model {
 												String cliente_tipo_id,
 												String fecha_factura_desde,
 												String fecha_factura_hasta,
-												String deposito) {
+												String deposito,
+												String certificicado_deuda_id) {
     	Pagination<InformeTotal> p = new Pagination<InformeTotal>();
     	p.setOrderDefault("ASC");
     	p.setSortByDefault("fecha");
@@ -109,6 +110,10 @@ public class InformeTotal extends Model {
 
     	if(!cliente.isEmpty()) {
     		e.eq("cliente_id", Integer.parseInt(cliente));
+    	}
+
+    	if(!certificicado_deuda_id.isEmpty()) {
+    		e.eq("recupero_certificado_deuda_id", Integer.parseInt(certificicado_deuda_id));
     	}
 
     	if(!cliente_tipo_id.isEmpty()){

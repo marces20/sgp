@@ -32,6 +32,7 @@ import com.avaje.ebean.Ebean;
 import com.avaje.ebean.ExpressionList;
 import com.avaje.ebean.SqlQuery;
 import com.avaje.ebean.SqlRow;
+import com.avaje.ebean.SqlUpdate;
 import com.avaje.ebean.annotation.Formula;
 
 import play.Logger;
@@ -143,6 +144,12 @@ public class RecuperoFactura extends Model {
 	@Required(message="Seleccion Tipo Pago")
 	@Column(name="recupero_tipo_pago_id")
 	public Long recupero_tipo_pago_id;
+
+	@ManyToOne
+	@JoinColumn(name="recupero_certificado_deuda_id", referencedColumnName="id", insertable=false, updatable=false)
+	public RecuperoCertificadoDeuda recuperoCertificadoDeuda;
+	public Integer recupero_certificado_deuda_id;
+
 
 
 	@Formula(select = "_c${ta}.base", join = "left outer join (select recupero_factura_id, round(sum(precio * cantidad)::numeric,2) as base from recupero_factura_lineas group by recupero_factura_id) as _c${ta} on _c${ta}.recupero_factura_id = ${ta}.id")
@@ -411,6 +418,19 @@ public class RecuperoFactura extends Model {
 
 		return ret;
 
+	}
+
+	public static Integer modificarCertificadoDeudaId(Long idCertificado,List<Integer> facturasSeleccionados){
+
+		SqlUpdate update = Ebean.createSqlUpdate("UPDATE recupero_facturas " +
+				"SET recupero_certificado_deuda_id = :recupero_certificado_deuda_id ,write_date = :write_date,write_usuario_id = :write_usuario_id " +
+				"WHERE id IN (:ids)");
+		update.setParameter("recupero_certificado_deuda_id", idCertificado);
+		update.setParameter("write_date",new Date());
+		update.setParameter("write_usuario_id",new Long(Usuario.getUsuarioSesion()));
+		update.setParameter("ids", facturasSeleccionados);
+
+		return update.execute();
 	}
 
 }
