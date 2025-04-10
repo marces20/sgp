@@ -1,4 +1,18 @@
 $(document).ready(function(){
+	if($("#certificicado_deuda").length){
+		var options = {
+				script:"/recupero/suggestCertificadoDeudas/",
+				varname:"",
+				json:true,
+				shownoresults:true,
+				maxresults:6,
+				callback: function (obj) {
+											$("#certificicado_deuda_id").val(obj.id);
+										 }
+			};
+		var as_json = new bsn.AutoSuggest('certificicado_deuda', options);
+
+	}
 	if($("#idaInstitucionExterna").length){
 		var options = {
 				script:"/suggestInstitucionExterna/",
