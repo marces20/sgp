@@ -1,0 +1,15 @@
+@(linea: models.recupero.RecuperoCerficadoDeudaLinea, editable: Boolean)
+
+<tr data-id="@linea.id">
+	@if(editable){
+
+	}
+
+	<td>@if(linea.recuperoFactura != null ){@linea.recuperoFactura.getNumeroFactura()}</td>
+
+	<td>@utils.NumberUtils.moneda(linea.deuda, 2)</td>
+
+	@if(editable){
+		<td><a class="btn btn-default btn-xs eliminarProducto delete-confirm-link" href="@controllers.recupero.routes.RecuperoCertificadoDeudaLineasController.eliminar(linea.id)"><i class="glyphicon glyphicon-trash icono-eliminar"></i></a></td>
+	}
+</tr>

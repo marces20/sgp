@@ -1,0 +1,67 @@
+@(formBuscador: DynamicForm)
+@import helper._
+@implicitFieldConstructor = @{ FieldConstructor(simpleInput.render) }
+
+@helper.form(action = controllers.recupero.routes.RecuperoCertificadoDeudaController.cargarCertificadoDeuda(), 'id -> "formCargarCertificadoDeuda") {
+
+	@views.html.tags.successError()
+
+	<div class="row">
+		<div class="col-sm-3">
+
+
+			<div class="input-group">
+				<input type="text" name="cert_modal" id="cert_modal" class="form-control" value=""/>
+				<input type="hidden" name="cert_id_modal" id="cert_id_modal" class="" value=""/>
+				<span class="input-group-addon">
+					<a href="#" class="searchModal"
+								id="searchCertificadoDuedaModal"
+								data-title="Selección de certificado deuda"
+								data-url="@controllers.recupero.routes.RecuperoCertificadoDeudaController.modalBuscar()"
+								data-height="650"
+								data-width="700"
+								data-listen="modal.seleccion.recuperoCertificadoDeuda.simple"
+								data-label="#cert_modal"
+								data-field="#cert_id_modal">
+						<i class="glyphicon glyphicon-search"></i>
+					</a>
+				</span>
+			</div>
+
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-sm-5"><br />
+			<button type="submit" class="btn btn-default" title="Agregar Certificado Deuda"><i class="glyphicon glyphicon-arrow-right"></i> Cargar Certificado Deuda</button>
+		</div>
+	</div>
+
+}
+<script>
+$( function(){
+	$('#searchCertificadoDuedaModal').modalSearch();
+
+	$('#formCargarCertificadoDeuda').on('submit', function() {
+		var form = $(this);
+		var url = form.attr('action');
+		var data = form.serialize()+'&'+$("input[name='check_listado[]']").serialize();
+		var submit = form.find("button[type='submit']");
+
+		submit.replaceWith(getLoading());
+		$.post(url, data, function(data){
+			if(data.success) {
+				window.location.reload();
+
+				form.replaceWith(data.html);
+			} else {
+				form.replaceWith(data);
+			}
+		});
+
+		return false;
+	});
+
+
+});
+</script>
+@flash().clear()

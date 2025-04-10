@@ -1,0 +1,83 @@
+@(formularioCarga: Boolean, recuperoCertificadoDeudaForm: Form[models.recupero.RecuperoCertificadoDeuda] = null,cert:models.recupero.RecuperoCertificadoDeuda = null)
+@import utils._
+@import helper._
+@implicitFieldConstructor = @{ FieldConstructor(simpleInput.render) }
+<hr />
+<div class="col-sm-12">
+	<div class="row">
+		<ul id="recuperoFacturaTab" class="nav nav-tabs">
+			<li class="active"><a class="tabProducto" href="#contenedorProductos" data-toggle="tab">Facturas</a></li>
+
+		</ul>
+
+		<div class="tab-content">
+
+			<div class="tab-pane active" id="contenedorProductos">
+
+				@views.html.recupero.recuperoCertificadoDeuda.contenidoTabProducto(formularioCarga, recuperoCertificadoDeudaForm)
+				</div>
+			</div>
+
+
+		</div>
+	</div>
+
+
+<hr />
+
+
+
+@if(!formularioCarga){
+<div class="row">
+	<div class="col-sm-6">
+		 <div class="panel panel-default">
+			<div class="panel-heading"><b>Detalles</b></div>
+			<div class="panel-body">
+
+				<div class="row margin-bottom-25">
+					<div class="col-sm-12">
+
+						<h4>Total: 	<b>@if(cert.getTotal() != null){@utils.NumberUtils.moneda(cert.getTotal())}else{0,00}</b></h4>
+
+						<h4>Estado:
+							<b>@cert.estado.nombre</b>
+						</h4>
+					</div>
+				</div>
+
+			</div>
+		</div>
+	</div>
+	<div class="col-sm-6">
+		<div class="panel panel-default">
+		<div class="panel-heading"><b>Acciones</b></div>
+		<div class="panel-body">
+
+			<div class="row margin-bottom-25">
+
+						<div class="col-sm-12">
+							<div class="row">
+								@if(cert.estado.id == models.Estado.RECUPERO_CERTIFICADO_DEUDA_APROBADO) {
+									<div class="col-sm-3">
+										<a href="@controllers.recupero.routes.RecuperoCertificadoDeudaController.cambiarEstado(recuperoCertificadoDeudaForm.field("id").value.toInt, models.Estado.RECUPERO_CERTIFICADO_DEUDA_BORRADOR)@UriTrack.get("&")" class="btn btn-default">
+											<i class="glyphicon glyphicon-arrow-right"></i> Volver a Borrador
+										</a>
+									</div>
+								}else{
+
+									<div class="col-sm-3">
+										<a href="@controllers.recupero.routes.RecuperoCertificadoDeudaController.cambiarEstado(recuperoCertificadoDeudaForm.field("id").value.toInt,models.Estado.RECUPERO_CERTIFICADO_DEUDA_APROBADO )@UriTrack.get("&")" class="btn btn-default">
+											<i class="glyphicon glyphicon-arrow-right"></i>Volver a Aprobado
+										</a>
+									</div>
+								}
+							</div>
+
+						</div>
+					</div>
+
+				</div>
+			</div>
+		</div>
+</div>
+}

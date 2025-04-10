@@ -1,0 +1,18 @@
+@(formularioCarga: Boolean, recuperoCertificadoDeudaForm: Form[models.recupero.RecuperoCertificadoDeuda] = null)
+@import java.util.List
+
+@if(recuperoCertificadoDeudaForm.field("id").value == null || recuperoCertificadoDeudaForm.field("id").value == ""){
+	<p>Para cargar productos primero debe dar de alta el certificado</p>
+} else {
+	<script>
+	$( function (){
+		$.get('@controllers.recupero.routes.RecuperoCertificadoDeudaLineasController.index(recuperoCertificadoDeudaForm.field("id").value.toLong, formularioCarga)', function(data){
+			$('#listaLineaProductos').parent().html(data);
+		})
+	});
+	</script>
+}
+
+<div id="listaLineaProductos">
+
+</div>

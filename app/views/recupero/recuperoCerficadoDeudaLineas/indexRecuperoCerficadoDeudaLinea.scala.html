@@ -1,0 +1,74 @@
+@(paginador:  utils.pagination.Pagination[models.recupero.RecuperoCerficadoDeudaLinea], editable: Boolean)
+<div id="listaLineaProductos" class="contenedorPaginador ajaxPaginador">
+
+	<p>
+		<b>Facturas</b>
+		@if(editable){
+
+		}
+	</p>
+	@if(paginador.getTotalRowCount() > 0) {
+		Mostrando @paginador.getDisplayXtoYofZ(" a "," de ") resultado(s).
+	}
+
+	<table id="listaDeProductos" class="table table-striped table-bordered">
+		<thead>
+			<tr>
+
+				<th>Factura</th>
+				<th>Deuda</th>
+				@if(editable){
+					<th  width="30"></th>
+				}
+			<tr>
+		</thead>
+		<tbody>
+		@for(linea <- paginador.getList) {
+			@views.html.recupero.recuperoCerficadoDeudaLineas.lineaProducto(linea, editable)
+		}
+		</tbody>
+	</table>
+
+	<div class="pagination pull-right">
+	    @views.html.helpers.paginador(paginador, controllers.recupero.routes.RecuperoCertificadoDeudaLineasController.index())
+	</div>
+</div>
+
+<script>
+$( function(){
+	/**
+	 * Ventana de carga linea de productos en ordenes
+	 */
+
+	var contenedor = $("#listaLineaProductos");
+
+
+	contenedor.on('click', '.eliminarProducto', function(){
+		var mensaje = "¿Confirma que desea eliminar el registro?";
+		if(confirm(mensaje)){
+			var url = $(this).attr('href');
+			$this = $(this);
+			$.get(url, function(data){
+				if(data.success){
+					$this.closest("tr").remove();
+				} else {
+					alert("No se puedo eliminar el registro.");
+				}
+			});
+		}
+		return false;
+	});
+
+
+
+
+	contenedor.find('form').on('submit', function(){
+		var url = $(this).attr("action");
+		var query = $(this).serialize();
+		$.get(url+"?"+query, function(data){
+			contenedor.parent().html(data);
+		});
+		return false;
+	});
+});
+</script>
