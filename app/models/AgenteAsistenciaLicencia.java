@@ -260,33 +260,41 @@ public class AgenteAsistenciaLicencia extends Model{
 
 		Logger.debug("calendarInicio.before(calendarFin) id: "+calendarInicio.before(calendarFin));
 
-		boolean suma = true;
+
 		if(!calendarInicio.before(calendarFin)) {
-			suma = false;
-		}
 
-		//while (calendarInicio.before(calendarFin) || calendarInicio.equals(calendarFin)) {
-		while (calendarInicio.equals(calendarFin)) {
-			if(habiles) {
-				if(feriadosList.contains(calendarInicio.getTime() ) ) {
-
-
-				}else {
-					if (calendarInicio.get(Calendar.DAY_OF_WEEK) != Calendar.SUNDAY && calendarInicio.get(Calendar.DAY_OF_WEEK) != Calendar.SATURDAY) {
-			            //se aumentan los dias de diferencia entre min y max
-			            diffDays++;
+			while (calendarFin.before(calendarInicio) || calendarInicio.equals(calendarFin)) {
+				if(habiles) {
+					if(!feriadosList.contains(calendarInicio.getTime() ) ) {
+						if (calendarInicio.get(Calendar.DAY_OF_WEEK) != Calendar.SUNDAY && calendarInicio.get(Calendar.DAY_OF_WEEK) != Calendar.SATURDAY) {
+				            //se aumentan los dias de diferencia entre min y max
+				            diffDays--;
+						}
 					}
+				}else {
+					 diffDays--;
 				}
-			}else {
-				 diffDays++;
-			}
 
-			if(suma) {
-				calendarInicio.add(Calendar.DATE, 1);
-			}else {
 				calendarInicio.add(Calendar.DATE, -1);
 			}
+		}else {
+			while (calendarInicio.before(calendarFin) || calendarInicio.equals(calendarFin)) {
+				if(habiles) {
+					if(!feriadosList.contains(calendarInicio.getTime() ) ) {
+						if (calendarInicio.get(Calendar.DAY_OF_WEEK) != Calendar.SUNDAY && calendarInicio.get(Calendar.DAY_OF_WEEK) != Calendar.SATURDAY) {
+				            //se aumentan los dias de diferencia entre min y max
+				            diffDays++;
+						}
+					}
+				}else {
+					 diffDays++;
+				}
+
+				calendarInicio.add(Calendar.DATE, 1);
+			}
 		}
+		//LICENCIA ANUAL REGLAMENTARIA	11/04/2025	14/04/2025	22/04/2025	0	2024	RESTAN 10 DIAS LAR 2024	MONTENEGRO, DANILA
+
 
 
 
