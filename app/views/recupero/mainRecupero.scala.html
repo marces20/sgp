@@ -32,6 +32,9 @@
 					<li><a href="@controllers.recupero.routes.RecuperoPagosController.index()">Movimientos</a></li>
 				}
 
+
+
+				@if(Permiso.check("verTodosPuntoVenta")) {
 				<li class="titulo">Clientes</li>
 					<li><a href="@controllers.recupero.routes.RecuperoClientesController.index(1)">Obra Social</a></li>
 					<li><a href="@controllers.recupero.routes.RecuperoClientesController.index(3)">Seguros</a></li>
@@ -42,6 +45,7 @@
 
 				<li class="titulo">Certificados</li>
 					<li><a href="@controllers.recupero.routes.RecuperoCertificadoDeudaController.index()">Certificado Deuda</a></li>
+				}
 
 				<li class="titulo">Informes</li>
 				@if(Permiso.check("recuperoInformeGeneral")) {
