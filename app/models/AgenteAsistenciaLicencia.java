@@ -258,8 +258,15 @@ public class AgenteAsistenciaLicencia extends Model{
 			feriadosList.add(fx.fecha);
 		}
 
-		while (calendarInicio.before(calendarFin) || calendarInicio.equals(calendarFin)) {
+		Logger.debug("calendarInicio.before(calendarFin) id: "+calendarInicio.before(calendarFin));
 
+		boolean suma = true;
+		if(!calendarInicio.before(calendarFin)) {
+			suma = false;
+		}
+
+		//while (calendarInicio.before(calendarFin) || calendarInicio.equals(calendarFin)) {
+		while (calendarInicio.equals(calendarFin)) {
 			if(habiles) {
 				if(feriadosList.contains(calendarInicio.getTime() ) ) {
 
@@ -274,8 +281,11 @@ public class AgenteAsistenciaLicencia extends Model{
 				 diffDays++;
 			}
 
-			calendarInicio.add(Calendar.DATE, 1);
-
+			if(suma) {
+				calendarInicio.add(Calendar.DATE, 1);
+			}else {
+				calendarInicio.add(Calendar.DATE, -1);
+			}
 		}
 
 
