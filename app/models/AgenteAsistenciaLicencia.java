@@ -470,8 +470,10 @@ public class AgenteAsistenciaLicencia extends Model{
 													   .fetch("agente")
 													   .where()
 													   .eq("agente_id", agente_id)
+													   .disjunction()
 													   .eq("estado_id", Estado.AGENTE_LICENCIA_APROBADO)
-
+													   .eq("estado_id", Estado.AGENTE_LICENCIA_PREAPROBADO)
+													   .endJunction()
 													   .ne("ejercicio_id", 6)
 													   .orderBy("ejercicio_id")
 													   .findList();
