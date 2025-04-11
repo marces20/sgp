@@ -443,7 +443,7 @@ public class AgenteAsistenciaLicencia extends Model{
 													   .findList();
 
 				for(AgenteAsistenciaLicencia ax :laall){
-					ret += ax.getDiasEntreFechas();
+					ret += ax.dias;//.getDiasEntreFechas();
 				}
 
 				ret = diasTotales - ret;
