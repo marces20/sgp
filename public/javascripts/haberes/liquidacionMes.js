@@ -136,7 +136,7 @@ $( function(){
 		    }
 	    });
 	});
-	$('#exportEmbargoExterno').click( function() {
+	$('#exportEmbargoExterno,#exportEmbargoExternoEspera').click( function() {
 		var url = $(this).attr("data-url");
 		var dialogo = $('<div></div>');
 
@@ -162,7 +162,7 @@ $( function(){
 		    }
 	    });
 	});
-	$('#exportEmbargo').click( function() {
+	$('#exportEmbargo,#exportEmbargoEspera').click( function() {
 		var url = $(this).attr("data-url");
 		var dialogo = $('<div></div>');
 
