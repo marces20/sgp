@@ -62,6 +62,11 @@ public class RecuperoReciboFacturasController extends Controller {
 
 				RecuperoFactura rf = RecuperoFactura.find.byId(l.recupero_factura_id);
 
+				if(rf.recupero_certificado_deuda_id != null) {
+					flash("error", "No se puede asignar facturas con Certificados Asignados.");
+					return ok(crearRecuperoReciboFactura.render(lineaForm));
+				}
+
 				List<RecuperoReciboFactura> ll = RecuperoReciboFactura.find.where().eq("recupero_recibo_id", l.recupero_recibo_id).findList();
 
 				/*if(ll.size() > 0) {
