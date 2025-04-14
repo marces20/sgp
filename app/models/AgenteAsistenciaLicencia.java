@@ -260,8 +260,7 @@ public class AgenteAsistenciaLicencia extends Model{
 
 		Logger.debug("calendarInicio.before(calendarFin) id: "+calendarInicio.before(calendarFin));
 
-
-		if(!calendarInicio.before(calendarFin)) {
+		 if(calendarFin.before(calendarInicio)) {
 
 			while (calendarFin.before(calendarInicio) || calendarInicio.equals(calendarFin)) {
 				if(habiles) {
@@ -277,7 +276,9 @@ public class AgenteAsistenciaLicencia extends Model{
 
 				calendarInicio.add(Calendar.DATE, -1);
 			}
-		}else {
+
+		}else if(calendarInicio.before(calendarFin) || calendarInicio.equals(calendarFin)) {
+
 			while (calendarInicio.before(calendarFin) || calendarInicio.equals(calendarFin)) {
 				if(habiles) {
 					if(!feriadosList.contains(calendarInicio.getTime() ) ) {
