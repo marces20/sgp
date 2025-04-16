@@ -111,7 +111,8 @@
 					<th width="30">Numero</th>
 					<th>Cliente</th>
 					<th width="50">Fecha</th>
-					<th>Expediente</th>
+					<th width="100">Expediente</th>
+					<th width="95" align="center">Total</th>
 					<th width="100">Estado</th>
 					<th width="30">#</th>
 				</tr>
@@ -127,6 +128,7 @@
 					<td>@(planilla.cliente.nombre)</td>
 					<td class="fecha">@if(planilla.fecha != null){@(utils.DateUtils.formatDate(planilla.fecha))}</td>
 					<td>@if(planilla.expediente != null){@(planilla.expediente.getExpedienteEjercicio())}</td>
+					<td class="total" rel="@planilla.getTotal()"  align="center">@(utils.NumberUtils.moneda(planilla.getTotal()))</td>
 					<td class="estado" align="center">@if(planilla.estado != null){ @(planilla.estado.nombre)}</td>
 					<td>
 						<a class="btn btn-default btn-xs delete-confirm-link notSeleccion" href="@controllers.recupero.routes.RecuperoCertificadoDeudaController.eliminar(planilla.id)&@UriTrack.encode()">
