@@ -114,7 +114,12 @@ $( function(){
 			<div class="col-sm-4">
 				<label class="control-label">
 					Dobla
-					@select(puestoForm("dobla"),options("true"->"SI","false"->"NO"), 'class -> "form-control select")
+					@if(Permiso.check("cambiarDobla")) {
+						@select(puestoForm("dobla"),options("true"->"SI","false"->"NO"), 'class -> "form-control select")
+					}else{
+						@select(puestoForm("dobla"),options("true"->"SI","false"->"NO"), 'class -> "form-control select", 'disabled -> "disabled")
+					}
+
 				</label>
 			</div>
 		</div>
