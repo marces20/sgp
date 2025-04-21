@@ -1,5 +1,6 @@
 package models.recupero;
 
+import java.math.BigDecimal;
 import java.util.Date;
 
 import javax.persistence.Entity;
@@ -30,6 +31,12 @@ public class InformeTotalPago extends Model {
 	private static final long serialVersionUID = 1L;
 	@Id
 	public Long id;
+
+	@ManyToOne
+	@JoinColumn(name="recupero_factura_id", referencedColumnName="id", insertable=false, updatable=false)
+	public RecuperoFactura recupero_factura;
+	@Required(message="Debe tener una factura asociado")
+	public Long recupero_factura_id;
 
 	@Formats .DateTime(pattern="dd/MM/yyyy")
 	public Date fecha;
@@ -68,6 +75,8 @@ public class InformeTotalPago extends Model {
 
 	public String cuit;
 
+	public BigDecimal totalPagos;
+
 	public static Model.Finder<Long,InformeTotalPago> find = new Model.Finder<Long,InformeTotalPago>(Long.class, InformeTotalPago.class);
 
 	public static Pagination<InformeTotalPago> page(String cliente,
@@ -84,7 +93,7 @@ public class InformeTotalPago extends Model {
 
 
 				Pagination<InformeTotalPago> p = new Pagination<InformeTotalPago>();
-				p.setOrderDefault("ASC");
+				p.setOrderDefault("DESC");
 				p.setSortByDefault("fecha");
 
 				ExpressionList<InformeTotalPago> e = find
