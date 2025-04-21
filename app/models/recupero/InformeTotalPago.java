@@ -3,6 +3,7 @@ package models.recupero;
 import java.math.BigDecimal;
 import java.util.Date;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
@@ -37,6 +38,12 @@ public class InformeTotalPago extends Model {
 	public RecuperoFactura recupero_factura;
 	@Required(message="Debe tener una factura asociado")
 	public Long recupero_factura_id;
+
+	@ManyToOne
+	@JoinColumn(name="recupero_recibo_id", referencedColumnName="id", insertable=false, updatable=false)
+	public RecuperoRecibo recuperoRecibo;
+	@Column(name="recupero_recibo_id")
+	public Long recupero_recibo_id;
 
 	@Formats .DateTime(pattern="dd/MM/yyyy")
 	public Date fecha;
