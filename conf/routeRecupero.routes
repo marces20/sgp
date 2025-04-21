@@ -127,6 +127,7 @@ GET    /certificadoDeuda/eliminar     controllers.recupero.RecuperoCertificadoDe
 GET    /certificadoDeuda/ver          controllers.recupero.RecuperoCertificadoDeudaController.ver(id:Long)
 POST   /certificadoDeuda/actualizar   controllers.recupero.RecuperoCertificadoDeudaController.actualizar(id:Long)
 GET    /certificadoDeuda/reporteCertificadoDeuda controllers.recupero.RecuperoCertificadoDeudaController.reporteCertificadoDeuda(id:Long)
+GET    /certificadoDeuda/reporteDispoCertificadoDeuda controllers.recupero.RecuperoCertificadoDeudaController.reporteDispoCertificadoDeuda(id:Long)
 GET    /certificadoDeuda/modalCargarCertificadoDeuda   	controllers.recupero.RecuperoCertificadoDeudaController.modalCargarCertificadoDeuda()
 POST   /certificadoDeuda/cargarCertificadoDeuda   	controllers.recupero.RecuperoCertificadoDeudaController.cargarCertificadoDeuda()
 GET     /certificadoDeuda/modalBuscar	controllers.recupero.RecuperoCertificadoDeudaController.modalBuscar()
@@ -141,6 +142,7 @@ GET    /reporte/presupuesto 			controllers.recupero.PresupuestosReportesControll
 
 GET    /recupero/reportes/deudas          	  controllers.recupero.RecuperoReportesController.informeDeuda()
 GET    /recupero/reportes/informeGeneral      controllers.recupero.RecuperoReportesController.informeGeneral()
+GET    /recupero/reportes/informePagos      controllers.recupero.RecuperoReportesController.informePagos()
 GET    /reportes/informeResumenFacturacionMensual      controllers.recupero.RecuperoReportesController.informeResumenFacturacionMensual()
 GET    /reportes/informeResumenPagoMensual      controllers.recupero.RecuperoReportesController.informeResumenPagoMensual()
 GET    /reportes/getDeudaPorAntiguedad      controllers.recupero.RecuperoReportesController.getDeudaPorAntiguedad()

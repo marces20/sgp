@@ -1,0 +1,261 @@
+@(buscador: utils.pagination.Pagination[models.recupero.InformeTotalPago], formBuscador: DynamicForm)
+@import helper._
+@implicitFieldConstructor = @{ FieldConstructor(simpleInput.render) }
+@import utils._
+
+@scripts = {
+	<script src="@routes.Assets.at("javascripts/recupero/recuperoFactura.js")" type="text/javascript"></script>
+}
+
+
+@views.html.recupero.mainRecupero(title = "Informe Pagos", scripts) {
+
+<div class="page-header">
+	<div class="row">
+		<div class="col-sm-4">
+			<h1>Informe Pagos</h1>
+		</div>
+
+
+		<div class="col-sm-8">
+
+			<!--<div class="dropdown pull-right">
+				<button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown"> <i class="glyphicon glyphicon-list-alt"></i> Reportes <span class="caret"></span></button>
+				<ul class="dropdown-menu"></ul>
+			</div>
+
+			 <div class="pull-right  btn-header">
+				<a id="generarArchivo" href="@controllers.recupero.routes.RecuperoReportesController.archivoInformeGeneral()"  class="btn btn-default"><i class="glyphicon glyphicon-download-alt"></i> Generar archivo</a>
+			</div> -->
+		</div>
+
+	</div>
+</div>
+
+@views.html.tags.successError()
+<form action="" method="GET" id="filtroInforme">
+		<div class="row seccion">
+
+
+		<div class="col-sm-4">
+			<label class="control-label">Cliente
+				<div class="input-group">
+					@inputText(formBuscador("cliente_nombre"), 'name -> "", 'autofocus -> "autofocus", 'class -> "form-control", 'id -> "cliente")
+					@inputText(formBuscador("cliente_id"), 'hidden -> "hidden", 'id -> "cliente_id")
+					<span class="input-group-addon">
+						<a href="#" class="searchModal"
+									id="searchCliente"
+									data-title="Selección de cliente"
+									data-url="@controllers.compras.routes.ClientesController.modalBuscar()"
+									data-height="650"
+									data-width="700"
+									data-listen="modal.seleccion.cliente.simple"
+									data-label="#cliente"
+									data-field="#cliente_id">
+							<i class="glyphicon glyphicon-search"></i>
+						</a>
+					</span>
+				</div>
+			</label>
+		</div>
+		<div class="col-sm-3">
+			<div class=" form-group">
+				<label class="control-label">Tipo de cliente</label>
+				@select(formBuscador("cliente_tipo_id"), ClienteTipo.find.all().map { p => p.id.toString -> p.nombre}, 'class -> "form-control select", '_default -> "Seleccionar")
+			</div>
+		</div>
+		<div class="col-sm-2">
+			<label for="inputPeriodo" class="control-label">Periodo</label>
+			<div class="input-group">
+
+				@inputText(formBuscador("periodo"),'class -> "form-control",'id -> "periodo")
+				@inputText(formBuscador("periodo_id"),'hidden -> "hidden",'id -> "periodo_id")
+				<span class="input-group-addon">
+				<a href="#" class="searchModal"
+							id="searchPeriodo"
+							data-title="Selección de Periodo"
+							data-url="@controllers.contabilidad.routes.PeriodosController.modalBuscar()"
+							data-height="650"
+							data-width="700"
+							data-listen="modal.seleccion.periodo.simple"
+							data-label="#periodo"
+							data-field="#periodo_id">
+					<i class="glyphicon glyphicon-search"></i>
+				</a>
+				</span>
+			</div>
+		</div>
+
+
+		<div class="col-sm-2">
+			<label class="control-label">Expediente
+				<div class="input-group">
+					@inputText(formBuscador("expediente.nombre"), 'name -> "", 'class -> "form-control", 'id -> "expediente")
+					@inputText(formBuscador("expediente_id"), 'hidden -> "hidden", 'id -> "expediente_id")
+
+					<span class="input-group-addon">
+						<a href="#" class="searchModal"
+									id="searchExpediente"
+									data-title="Selección de expediente"
+									data-url="@controllers.expediente.routes.ExpedientesController.modalBuscar()"
+									data-height="650"
+									data-width="700"
+									data-listen="modal.seleccion.expediente.simple"
+									data-label="#expediente"
+									data-field="#expediente_id">
+							<i class="glyphicon glyphicon-search"></i>
+						</a>
+					</span>
+				</div>
+			</label>
+		</div>
+
+
+	</div>
+	<div class="row">
+
+
+		<!--  <div class="col-sm-2">
+			<label class="control-label">Ejercicio</label>
+				@select(formBuscador("ejercicio"), Ejercicio.getEjercicios().map { p => p.id.toString -> p.nombre}, 'class -> "form-control select", '_default -> "Seleccionar")
+		</div>-->
+		<div class="col-sm-2 input-group">
+			<label class="control-label">Fecha Factura</label>
+			<div>
+				@inputText(formBuscador("fecha_factura_desde"), 'class -> "form-control inputDateMascara", 'id -> "fecha_factura_desde", 'placeholder -> "Desde")
+				@inputText(formBuscador("fecha_factura_hasta"), 'class -> "form-control inputDateMascara", 'id -> "fecha_factura_hasta", 'placeholder -> "Hasta")
+			</div>
+		</div>
+
+		<div class="col-sm-2 input-group">
+			<label class="control-label">Fecha Pago</label>
+			<div>
+				@inputText(formBuscador("fecha_pago_desde"), 'class -> "form-control inputDateMascara", 'id -> "fecha_pago_desde", 'placeholder -> "Desde")
+				@inputText(formBuscador("fecha_pago_hasta"), 'class -> "form-control inputDateMascara", 'id -> "fecha_pago_hasta", 'placeholder -> "Hasta")
+			</div>
+		</div>
+
+
+
+		<div class="col-sm-4">
+			<label for="deposito" class="control-label">Institucion</label>
+			<div class="input-group">
+				@inputText(formBuscador("deposito.nombre"),'class -> "form-control", 'id -> "deposito_nombre", 'autocomplete -> "off")
+				@inputText(formBuscador("deposito_id"),'hidden -> "hidden", 'id -> "deposito_id")
+				<span class="input-group-addon">
+                	<a href="#" id="searchDeposito" data-title="Selección de Institucion"
+                	data-url="@controllers.delegacion.routes.DepositosController.modalBuscar()"
+                	data-height="650" data-width="700"
+                	data-listen="modal.seleccion.deposito.simple"
+                	data-label="#deposito_nombre" data-field="#deposito_id" /> <i class="glyphicon glyphicon-search"></i></a>
+                </span>
+			</div>
+		</div>
+
+	</div>
+
+	<div class="row">
+
+
+		<div class="col-sm-2">
+			<div class="form-group">
+			<label for="nombre" class="control-label">&nbsp;</label>
+			<button  class="form-control btn btn-primary">Buscar</button>
+			</div>
+		</div>
+		<div class="col-sm-2">
+			<div class="form-group">
+			<label for="nombre" class="control-label">&nbsp;</label>
+			<a href="@controllers.recupero.routes.RecuperoReportesController.informeGeneral()"  class="form-control btn btn-default">Limpiar</a>
+			</div>
+		</div>
+
+		</div>
+    </form>
+	 @if(buscador.getTotalRowCount == 0) {
+
+        <div class="well">
+            <em>No se encuentran resultados</em>
+        </div>
+
+    } else {
+
+   		 Mostrando @buscador.getDisplayXtoYofZ(" a "," de ") resultado(s).
+		<table class="table table-striped table-bordered" id="listaInforme">
+			<thead>
+				<tr>
+				    <th width="20"><input type="checkbox" name="checkAll" id="checkAll"/></th>
+				    <th width="80">Institucion</th>
+					<th width="120">Número</th>
+					<th width="60">Fecha</th>
+					<th>Cliente</th>
+					<th width="90">Total factura</th>
+					<th width="90">Total pagos</th>
+				</tr>
+			</thead>
+			<tbody>
+		        @for(informe <- buscador.getList) {
+				<tr>
+					<td><input type="checkbox" name="check_listado[]" value="@informe.id" class="notSeleccion" id="check-@informe.id"/></td>
+					<td>@if(informe.deposito != null){@informe.deposito.sigla}</td>
+					<td>
+						@informe.numero
+					</td>
+					<td>@DateUtils.formatDate(informe.fecha)</td>
+					<td>@informe.cliente.nombre</td>
+					<td class="totalFactura" data-valor="@informe.recupero_factura.getTotal()">@utils.NumberUtils.moneda(informe.recupero_factura.getTotal())</td>
+					<td class="totalPagos" data-valor="@informe.totalPagos">@utils.NumberUtils.moneda(informe.totalPagos)</td>
+				</tr>
+		        }
+			</tbody>
+			<tfoot>
+				<tr>
+					<td colspan="5"></td>
+					<td><b>Total:</b><br /><span id="facturaFooter"></span></td>
+					<td><b>Total:</b><br /><span id="pagosFooter"></span></td>
+				</tr>
+			</tfoot>
+		</table>
+		<div class="pagination pull-right">
+		    @views.html.helpers.paginador(buscador, controllers.recupero.routes.RecuperoReportesController.informePagos())
+		</div>
+	}
+	<script type="text/javascript">
+	$( function() {
+		$('#searchPeriodo, #searchExpediente, #searchCliente,#searchCertificadoDueda').modalSearch();
+
+		var trs = $('#listaInforme tbody tr');
+		sumarFilas(trs);
+
+
+		$('#checkAll').click( function() {
+			sumarFilas($('#listaInforme tbody tr'));
+		});
+
+		$('input[name="check_listado[]"]').click( function() {
+			sumarFilas( $('#listaInforme tbody tr:has(td:eq(0):has(input:checked))') );
+		});
+
+		function sumarFilas(trs) {
+
+			var factura = 0; var pagado = 0; var deuda = 0;
+
+			trs.each( function() {
+				factura += Number($('.totalFactura',this).attr("data-valor"));
+				pagado += Number($('.totalPagos',this).attr("data-valor"));
+				deuda += Number($('.totalDeuda',this).attr("data-valor"));
+			});
+
+			$("#facturaFooter").html(formatNumberPesos(parseFloat(factura).toFixed(2)));
+			$("#pagosFooter").html(formatNumberPesos(parseFloat(pagado).toFixed(2)));
+
+		}
+
+
+       function getCheckFacturaSeleccionados(){
+      		return $("input[name='check_listado[]']").serialize();
+      	}
+
+	});
+	</script>
+}

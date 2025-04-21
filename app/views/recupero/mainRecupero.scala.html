@@ -50,6 +50,7 @@
 				<li class="titulo">Informes</li>
 				@if(Permiso.check("recuperoInformeGeneral")) {
 					<li><a href="@controllers.recupero.routes.RecuperoReportesController.informeGeneral()">Informe General</a></li>
+					<li><a href="@controllers.recupero.routes.RecuperoReportesController.informePagos()">Informe Pagos</a></li>
 				}
 				@if(Permiso.check("recuperoInformeResumen")) {
 					<li><a href="@controllers.dashboard.routes.InformesRecuperoController.index()">Informe Resumen</a></li>
