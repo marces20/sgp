@@ -42,6 +42,7 @@ import models.TipoTarea;
 import models.informes.InformeDeudaProveedoresMaterializada;
 import models.recupero.Cheque;
 import models.recupero.InformeTotal;
+import models.recupero.InformeTotalPago;
 import models.recupero.RecuperoFactura;
 import models.recupero.RecuperoFacturaLinea;
 import models.recupero.RecuperoLibreDeuda;
@@ -907,6 +908,26 @@ public class RecuperoReportesController extends Controller {
 				);
 
 		return ok(informeGeneral.render(i, form().bindFromRequest()));
+	}
+
+	@CheckPermiso(key = "recuperoInformeGeneral")
+	public static Result informePagos() {
+
+		Pagination<InformeTotalPago> i = InformeTotalPago.page(RequestVar.get("cliente_id"),
+				RequestVar.get("periodo_id"),
+				RequestVar.get("expediente_id"),
+				RequestVar.get("ejercicio"),
+				RequestVar.get("cliente_tipo_id"),
+				RequestVar.get("fecha_pago_desde"),
+				RequestVar.get("fecha_pago_hasta"),
+				RequestVar.get("fecha_factura_desde"),
+				RequestVar.get("fecha_factura_hasta"),
+				RequestVar.get("deposito_id"),
+				RequestVar.get("certificicado_deuda_id")
+				);
+
+
+		return ok(informePagos.render(i, form().bindFromRequest()));
 	}
 
 	public static Result informeDeuda() {
