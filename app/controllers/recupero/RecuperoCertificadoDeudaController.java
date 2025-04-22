@@ -399,9 +399,9 @@ public class RecuperoCertificadoDeudaController  extends Controller {
 		      fechaStr = DateUtils.formatDate(certificado.fecha,"dd")+" de "+DateUtils.getMesLetras(new Integer(DateUtils.formatDate(certificado.fecha,"MM"))-1) +" "+DateUtils.formatDate(certificado.fecha,"YYYY");
 		      context.put("fechaStr",fechaStr);
 
-		      context.put("monto",utils.NumberUtils.moneda(certificado.monto));
+		      context.put("monto",utils.NumberUtils.moneda(certificado.getTotal()));
 		      new NumeroALetra();
-			  context.put("monto_letra", NumeroALetra.convertNumberToLetter(String.valueOf(certificado.monto)));
+			  context.put("monto_letra", NumeroALetra.convertNumberToLetter(String.valueOf(certificado.getTotal())));
 
 			  DireccionCliente dp =   certificado.cliente.getFirstDireccionObj();
 
