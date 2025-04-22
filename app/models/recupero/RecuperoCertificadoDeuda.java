@@ -11,6 +11,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
@@ -90,7 +91,7 @@ public class RecuperoCertificadoDeuda extends Model {
 	public String getNombreCompleto(){
 
 		if(numero != null && expediente != null) {
-			return expediente.ejercicio != null ? numero+ " / " + expediente.ejercicio.nombre :numero;
+			return expediente.ejercicio != null ? numero+ "/" + expediente.ejercicio.nombre :numero;
 		}else {
 			return "";
 		}
@@ -105,6 +106,9 @@ public class RecuperoCertificadoDeuda extends Model {
 			return new BigDecimal(0);
 		return total;
 	}
+
+	@OneToMany()
+	public List<RecuperoCerficadoDeudaLinea> recuperoCerficadoDeudaLinea;
 
 	public static Model.Finder<Long,RecuperoCertificadoDeuda> find = new Finder<Long,RecuperoCertificadoDeuda>(Long.class, RecuperoCertificadoDeuda.class);
 
