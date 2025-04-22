@@ -31,6 +31,7 @@ import fr.opensagres.xdocreport.document.IXDocReport;
 import fr.opensagres.xdocreport.document.registry.XDocReportRegistry;
 import fr.opensagres.xdocreport.template.IContext;
 import fr.opensagres.xdocreport.template.TemplateEngineKind;
+import models.DireccionCliente;
 import models.Estado;
 import models.Expediente;
 import models.Factura;
@@ -57,6 +58,7 @@ import play.mvc.Controller;
 import play.mvc.Result;
 import play.mvc.Security;
 import utils.DateUtils;
+import utils.NumberUtils;
 import utils.NumeroALetra;
 import utils.RequestVar;
 import utils.UriTrack;
@@ -263,10 +265,10 @@ public class RecuperoCertificadoDeudaController  extends Controller {
 			return redirect(request().getHeader("referer"));
 		}
 
-		/*if((rp.recuperoFacturaLinea.isEmpty()) && (idEstado != Estado.RECUPERO_FACTURA_CANCELADO && idEstado != Estado.RECUPERO_FACTURA_BORRADOR)){
-			flash("error", "No se puede modificar el estado si no contiene lineas de productos.");
+		if((rp.recuperoCerficadoDeudaLinea.isEmpty())){
+			flash("error", "No se puede modificar el estado si no contiene lineas asociadas.");
 			return redirect(request().getHeader("referer"));
-		}*/
+		}
 
 		if(idEstado != null){
 
@@ -274,10 +276,16 @@ public class RecuperoCertificadoDeudaController  extends Controller {
 
 			switch ( idEstado.intValue() ) {
 		      case  Estado.RECUPERO_CERTIFICADO_DEUDA_BORRADOR:
+		    	  if(!Permiso.check("certificadoDeudaPasarBorrador")) {
+					  return ok(sinPermiso.render(request().getHeader("referer")));
+				  }
 		    	  pasarEnBorrador(rp.id);
 		    	  break;
 
 		      case Estado.RECUPERO_CERTIFICADO_DEUDA_APROBADO:
+		    	  if(!Permiso.check("certificadoDeudaPasarAprobado")) {
+					  return ok(sinPermiso.render(request().getHeader("referer")));
+				  }
 		    	  pasarAprobado(rp.id);
 		    	  break;
 
@@ -320,10 +328,10 @@ public class RecuperoCertificadoDeudaController  extends Controller {
 		}
 	}
 
-	public static Result reporteCertificadoDeuda(Long id) throws IOException {
+	public static Result reporteDispoCertificadoDeuda(Long id) throws IOException {
 
 		String dirTemp = System.getProperty("java.io.tmpdir");
-		File archivo = new File(dirTemp+"/certificado_deuda.odt");
+		File archivo = new File(dirTemp+"/dispo_certificado_deuda.odt");
 
 		try {
 		      // 1) Load ODT file by filling Velocity template engine and cache it to the registry
@@ -349,6 +357,74 @@ public class RecuperoCertificadoDeudaController  extends Controller {
 		      context.put("monto",utils.NumberUtils.moneda(certificado.monto));
 		      new NumeroALetra();
 			  context.put("monto_letra", NumeroALetra.convertNumberToLetter(String.valueOf(certificado.monto)));
+
+
+
+		      // 3) Generate report by merging Java model with the ODT
+		      OutputStream out = new FileOutputStream(archivo);
+		      report.process(context, out);
+
+		    } catch (IOException e) {
+		      e.printStackTrace();
+		    } catch (XDocReportException e) {
+		      e.printStackTrace();
+		    }
+
+	    	return ok(archivo);
+	}
+
+	public static Result reporteCertificadoDeuda(Long id) throws IOException {
+
+		String dirTemp = System.getProperty("java.io.tmpdir");
+		File archivo = new File(dirTemp+"/certificado_deuda.odt");
+
+		try {
+		      // 1) Load ODT file by filling Velocity template engine and cache it to the registry
+			  InputStream in = Play.application().resourceAsStream("resources/reportes/recupero/certificadodeuda3.odt");
+		      IXDocReport report = XDocReportRegistry.getRegistry().loadReport(in,TemplateEngineKind.Velocity);
+
+		      // 2) Create context Java model
+		      IContext context = report.createContext();
+
+		      RecuperoCertificadoDeuda certificado = RecuperoCertificadoDeuda.find.byId(id);
+
+		      context.put("fecha",(certificado.fecha != null)?DateUtils.formatDate(certificado.fecha):"");
+
+		      context.put("expediente",(certificado.expediente.getExpedienteEjercicio() != null)?certificado.expediente.getExpedienteEjercicio():"");
+		      context.put("cliente",(certificado.cliente.nombre != null)?certificado.cliente.nombre:"");
+		      context.put("cuit",(certificado.cliente.cuit2 != null)?certificado.cliente.cuit2:"");
+
+		      context.put("numero",(certificado.numero != null)? certificado.getNombreCompleto():"");
+		      String fechaStr = "";
+		      fechaStr = DateUtils.formatDate(certificado.fecha,"dd")+" de "+DateUtils.getMesLetras(new Integer(DateUtils.formatDate(certificado.fecha,"MM"))-1) +" "+DateUtils.formatDate(certificado.fecha,"YYYY");
+		      context.put("fechaStr",fechaStr);
+
+		      context.put("monto",utils.NumberUtils.moneda(certificado.monto));
+		      new NumeroALetra();
+			  context.put("monto_letra", NumeroALetra.convertNumberToLetter(String.valueOf(certificado.monto)));
+
+			  DireccionCliente dp =   certificado.cliente.getFirstDireccionObj();
+
+			  String calle = (dp != null && dp.calle != null)?dp.calle:"";
+		      String numero = (dp != null && dp.numero != null)?dp.numero:"";
+		      String localidad = (dp != null && dp.localidad != null)? dp.localidad.nombre:"";
+		      String provincia = (dp != null && dp.localidad != null && dp.localidad.provincia != null)?dp.localidad.provincia.nombre:"";
+		      String pais = (dp != null && dp.localidad != null && dp.localidad.provincia != null && dp.localidad.provincia.pais != null)?dp.localidad.provincia.pais.nombre:"";
+		      String cp = (dp != null && dp.cp != null)?" - CP "+ dp.cp:"";
+ 		      String direccionTotal = calle+" "+numero+", "+localidad+" CP"+cp+" provincia de " +provincia;
+ 		      String direccion = calle+" "+numero;
+
+
+
+ 		      context.put("provincia",provincia);
+ 		      context.put("localidad",localidad+cp);
+			  context.put("direccion",direccion);
+			  context.put("direccionTotal",direccionTotal);
+
+			  context.put("lineas",certificado.recuperoCerficadoDeudaLinea);
+
+			  context.put("dateUtils", new DateUtils());
+			  context.put("numberUtils", new NumberUtils());
 
 
 
