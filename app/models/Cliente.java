@@ -201,6 +201,20 @@ public class Cliente extends Model {
 		return edad;
 	}
 
+	public DireccionCliente getFirstDireccionObj(){
+		DireccionCliente ret = null ;
+
+		List<DireccionCliente> listaDireccionProveedor = DireccionCliente.find.where().eq("cliente_id", id).findList();
+    	if(listaDireccionProveedor.size() > 0){
+    		DireccionCliente dp = listaDireccionProveedor.get(0);
+	    	if(dp != null){
+	    		ret = dp ;
+	    	}
+    	}
+
+    	return ret;
+	}
+
 	public String getFirstDireccion(){
     	String direccion = "";
 
