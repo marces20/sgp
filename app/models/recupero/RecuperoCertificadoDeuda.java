@@ -53,9 +53,9 @@ public class RecuperoCertificadoDeuda extends Model {
 	@Required(message="Seleccion Expediente")
 	public Integer expediente_id;
 
-	@DecimalComa(value="")
+	/*@DecimalComa(value="")
 	@Required(message="Requiere monto")
-	public BigDecimal monto;
+	public BigDecimal monto;*/
 
 	@Required(message="Debe escribir un numero")
 	public String numero;
