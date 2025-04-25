@@ -328,6 +328,55 @@ public class RecuperoCertificadoDeudaController  extends Controller {
 		}
 	}
 
+	public static Result reporteCartaDocumento(Long id) throws IOException {
+
+		String dirTemp = System.getProperty("java.io.tmpdir");
+		File archivo = new File(dirTemp+"/carta_documento.odt");
+
+		try {
+		      // 1) Load ODT file by filling Velocity template engine and cache it to the registry
+			  InputStream in = Play.application().resourceAsStream("resources/reportes/recupero/carta_documento.odt");
+		      IXDocReport report = XDocReportRegistry.getRegistry().loadReport(in,TemplateEngineKind.Velocity);
+
+		      // 2) Create context Java model
+		      IContext context = report.createContext();
+
+		      RecuperoCertificadoDeuda certificado = RecuperoCertificadoDeuda.find.byId(id);
+
+		      context.put("fecha",(certificado.fecha != null)?DateUtils.formatDate(certificado.fecha):"");
+
+		      context.put("expediente",(certificado.expediente.getInstitucionExpedienteEjercicio() != null)?certificado.expediente.getInstitucionExpedienteEjercicio():"");
+		      context.put("expedienteCaratura",(certificado.expediente != null)?certificado.expediente.descripcion:"");
+		      context.put("cliente",(certificado.cliente.nombre != null)?certificado.cliente.nombre:"");
+		      context.put("cliente_direccion",(certificado.cliente.getFirstDireccion() != null)?certificado.cliente.getFirstDireccion():"");
+		      context.put("cuit",(certificado.cliente.cuit2 != null)?certificado.cliente.cuit2:"");
+
+		      context.put("numero",(certificado.numero != null)? certificado.numero:"");
+		      context.put("numeroEjercicio",(certificado.numero != null)? certificado.getNombreCompleto():"");
+
+		      String fechaStr = "";
+		      fechaStr = DateUtils.formatDate(certificado.fecha,"dd")+" de "+DateUtils.getMesLetras(new Integer(DateUtils.formatDate(certificado.fecha,"MM"))-1) +" "+DateUtils.formatDate(certificado.fecha,"YYYY");
+		      context.put("fechaStr",fechaStr);
+
+		      context.put("monto",utils.NumberUtils.moneda(certificado.getTotal()));
+		      new NumeroALetra();
+			  context.put("monto_letra", NumeroALetra.convertNumberToLetter(String.valueOf(certificado.getTotal())));
+
+
+
+		      // 3) Generate report by merging Java model with the ODT
+		      OutputStream out = new FileOutputStream(archivo);
+		      report.process(context, out);
+
+		    } catch (IOException e) {
+		      e.printStackTrace();
+		    } catch (XDocReportException e) {
+		      e.printStackTrace();
+		    }
+
+	    	return ok(archivo);
+	}
+
 	public static Result reporteDispoCertificadoDeuda(Long id) throws IOException {
 
 		String dirTemp = System.getProperty("java.io.tmpdir");
