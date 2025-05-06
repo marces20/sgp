@@ -31,7 +31,10 @@
 				</ul>
 			</div>
 			<div class="pull-right  btn-header">
-				<a id="generarArchivo" href="@controllers.recupero.routes.RecuperoReportesController.archivoInformeGeneral()"  class="btn btn-default"><i class="glyphicon glyphicon-download-alt"></i> Generar archivo</a>
+				<a  href="@controllers.recupero.routes.RecuperoReportesController.archivoInformeGeneral(false)"  class="btn btn-default generarArchivo"><i class="glyphicon glyphicon-download-alt"></i> Generar archivo</a>
+			</div>
+			<div class="pull-right  btn-header">
+				<a  href="@controllers.recupero.routes.RecuperoReportesController.archivoInformeGeneral(true)"  class="btn btn-default generarArchivo"><i class="glyphicon glyphicon-download-alt"></i> Archivo Deuda</a>
 			</div>
 		</div>
 
@@ -43,7 +46,7 @@
 <script>
 
 $( function() {
-	var baseUrl = $('#generarArchivo').attr('href')
+	var baseUrl = $('.generarArchivo').attr('href')
 	$('#generarArchivo').attr('href', baseUrl + '?descarga=&' + window.location.href.slice(window.location.href.indexOf('?') + 1))
 
 });
