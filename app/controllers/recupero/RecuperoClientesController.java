@@ -91,7 +91,7 @@ public class RecuperoClientesController extends Controller {
 				RequestVar.get("fecha_factura_desde"),
 				RequestVar.get("fecha_factura_hasta"),
 				RequestVar.get("deposito_id"),
-				RequestVar.get("certificicado_deuda_id")
+				RequestVar.get("certificicado_deuda_id"),false
 				);
 
 		return ok(listaDeudaTab.render(i, form().bindFromRequest()));

@@ -904,7 +904,7 @@ public class RecuperoReportesController extends Controller {
 				RequestVar.get("fecha_factura_desde"),
 				RequestVar.get("fecha_factura_hasta"),
 				RequestVar.get("deposito_id"),
-				RequestVar.get("certificicado_deuda_id")
+				RequestVar.get("certificicado_deuda_id"),false
 				);
 
 		return ok(informeGeneral.render(i, form().bindFromRequest()));
@@ -945,7 +945,7 @@ public class RecuperoReportesController extends Controller {
 													RequestVar.get("fecha_factura_desde"),
 													RequestVar.get("fecha_factura_hasta"),
 													RequestVar.get("deposito_id"),
-													RequestVar.get("certificicado_deuda_id")
+													RequestVar.get("certificicado_deuda_id"),false
 				);
 
 		return ok(deudas.render(i, form().bindFromRequest()));
@@ -965,7 +965,7 @@ public class RecuperoReportesController extends Controller {
 				RequestVar.get("fecha_factura_desde"),
 				RequestVar.get("fecha_factura_hasta"),
 				RequestVar.get("deposito_id"),
-				RequestVar.get("certificicado_deuda_id")
+				RequestVar.get("certificicado_deuda_id"),false
 				);
 
 
@@ -1133,23 +1133,43 @@ public class RecuperoReportesController extends Controller {
 		return ok("ddd");
 	}
 
-	public static Result archivoInformeGeneral () {
+	public static Result archivoInformeGeneral (Boolean soloDeuda) {
 
-		Pagination<InformeTotal> informe = InformeTotal.page(RequestVar.get("cliente_id"),
-				RequestVar.get("periodo_id"),
-				RequestVar.get("expediente_id"),
-				RequestVar.get("ejercicio"),
-				RequestVar.get("deuda_mayor"),
-				RequestVar.get("deuda_menor"),
-				RequestVar.get("pago_mayor"),
-				RequestVar.get("pago_menor"),
-				RequestVar.get("cliente_tipo_id"),
-				RequestVar.get("fecha_factura_desde"),
-				RequestVar.get("fecha_factura_hasta"),
-				RequestVar.get("deposito_id"),
-				RequestVar.get("certificicado_deuda_id")
-				);
+		Pagination<InformeTotal> informe = null;
+		if(soloDeuda) {
+			informe = InformeTotal.page("",
+					"",
+					"",
+					"",
+					"0",
+					"",
+					"",
+					"",
+					"",
+					"",
+					"",
+					RequestVar.get("deposito_id"),
+					"",true);
 
+		}else {
+
+
+			informe = InformeTotal.page(RequestVar.get("cliente_id"),
+					RequestVar.get("periodo_id"),
+					RequestVar.get("expediente_id"),
+					RequestVar.get("ejercicio"),
+					RequestVar.get("deuda_mayor"),
+					RequestVar.get("deuda_menor"),
+					RequestVar.get("pago_mayor"),
+					RequestVar.get("pago_menor"),
+					RequestVar.get("cliente_tipo_id"),
+					RequestVar.get("fecha_factura_desde"),
+					RequestVar.get("fecha_factura_hasta"),
+					RequestVar.get("deposito_id"),
+					RequestVar.get("certificicado_deuda_id"),
+					false
+					);
+		}
 
 		String dirTemp = System.getProperty("java.io.tmpdir");
 
