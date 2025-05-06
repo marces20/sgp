@@ -98,11 +98,14 @@ public class InformeTotal extends Model {
 												String fecha_factura_desde,
 												String fecha_factura_hasta,
 												String deposito,
-												String certificicado_deuda_id) {
+												String certificicado_deuda_id,
+												Boolean pagina20000) {
     	Pagination<InformeTotal> p = new Pagination<InformeTotal>();
     	p.setOrderDefault("ASC");
     	p.setSortByDefault("fecha");
-
+    	if(pagina20000) {
+    		p.setPageSize(200000);
+    	}
     	ExpressionList<InformeTotal> e = find
 
     			.fetch("deposito","nombre")
