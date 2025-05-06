@@ -3267,7 +3267,7 @@ order by nc.numero
 	    if(rf.cliente_id.compareTo(new Long(7092)) ==  0) {
 	    	recupero_tipo_pago = "Contado";
 	    }else if(recupero_tipo_pago.compareToIgnoreCase("cuenta corriente") ==  0) {
-	    	recupero_tipo_pago = "Otra";
+	    	recupero_tipo_pago = "Cuenta Corriente";
 	    }
 
 	    datos.put("tipo_pago",recupero_tipo_pago);
