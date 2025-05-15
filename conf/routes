@@ -639,6 +639,10 @@ GET     /rrhh/novedades/ver         				controllers.rrhh.NovedadesController.ver
 GET     /rrhh/novedades/eliminar         			controllers.rrhh.NovedadesController.eliminar(id:Long)
 GET     /rrhh/novedades/crear         				controllers.rrhh.NovedadesController.crear()
 POST    /rrhh/novedades/guardar         			controllers.rrhh.NovedadesController.guardar()
+
+GET     /rrhh/novedades/crearFechaMasiva         	controllers.rrhh.NovedadesController.crearMasiva()
+POST    /rrhh/novedades/guardarMasivo         		controllers.rrhh.NovedadesController.guardarMasivo()
+
 GET     /rrhh/novedades/editar         				controllers.rrhh.NovedadesController.editar(id:Long)
 POST    /rrhh/novedades/actualizar         			controllers.rrhh.NovedadesController.actualizar()
 GET     /rrhh/novedades/lista         				controllers.rrhh.NovedadesController.lista()
@@ -852,6 +856,7 @@ GET 	/reportes/formulario649-2021   controllers.haberes.PuestosLaboralesReportes
 GET 	/reportes/formulario649-2022   controllers.haberes.PuestosLaboralesReportesController.formulario6492022(id:Long, ejercicio_id:Int)
 GET 	/reportes/formulario649-2023   controllers.haberes.PuestosLaboralesReportesController.formulario6492023(id:Long, ejercicio_id:Int)
 GET 	/reportes/formulario649-2024   controllers.haberes.PuestosLaboralesReportesController.formulario6492024(id:Long, ejercicio_id:Int)
+GET 	/reportes/formulario649-2025   controllers.haberes.PuestosLaboralesReportesController.formulario6492025(id:Long, ejercicio_id:Int)
 
 GET     /haberes/liquidacionConcepto         			controllers.haberes.LiquidacionConceptosController.index()
 GET     /haberes/liquidacionConcepto/crear        		controllers.haberes.LiquidacionConceptosController.crear()
