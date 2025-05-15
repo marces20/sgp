@@ -22,32 +22,32 @@
 				<div class="pull-right btn-header">
 					<a href="#" id="btnNuevo" class="form-control btn btn-default"><i class="glyphicon glyphicon-plus-sign"></i> Nuevo</a>
 				</div>
-				
+
 			</div>
 		</div>
 	</div>
-	
-@views.html.tags.successError()	
-	
+
+@views.html.tags.successError()
+
 	<div id="actions">
-		 
+
 			<form action="@controllers.rrhh.routes.NovedadesController.lista()" id="formSearchNovedades" method="GET">
-				
-				<div class="row">	  
+
+				<div class="row">
 					<div class="col-sm-3">
-						<label for="servicio" class="control-label">Servicio</label> 
+						<label for="servicio" class="control-label">Servicio</label>
 						<div class="input-group">
 							<input type="hidden" name="servicio_id" id="bservicio_id" />
 							<input type="text" name="servicio" id="bservicio" class="form-control" autocomplete="off" />
 							<span class="input-group-addon">
 							<a href="#" class="searchModal"
-										id="buscarServicio" 
-										data-title="Selección de servicios" 
-										data-url="@controllers.administracion.routes.OrganigramasController.modalBuscarServicios()" 
-										data-height="650" 
-										data-width="700" 
-										data-listen="modal.seleccion.servicio.simple" 
-										data-label="#bservicio" 
+										id="buscarServicio"
+										data-title="Selección de servicios"
+										data-url="@controllers.administracion.routes.OrganigramasController.modalBuscarServicios()"
+										data-height="650"
+										data-width="700"
+										data-listen="modal.seleccion.servicio.simple"
+										data-label="#bservicio"
 										data-field="#bservicio_id">
 								<i class="glyphicon glyphicon-search"></i>
 							</a>
@@ -63,14 +63,14 @@
 							</div>
 						</label>
 					</div>
-					
+
 				<div class="col-sm-2">
 					<div class="form-group">
 					<label for="nombre" class="control-label">&nbsp;</label>
 					<button  class="form-control btn btn-primary">Buscar</button>
 					</div>
 				</div>
-					
+
 					<div class="col-sm-2">
 						<div class="form-group">
 						<label for="nombre" class="control-label">&nbsp;</label>
@@ -79,32 +79,30 @@
 					</div>
 				</div>
 			</form>
-		 
+
 	</div>
 
 <hr />
-	
 
 
-<div id='calendar'></div>	
-	
+
+<div id='calendar'></div>
+
 <script>
 
 urlListaNovedades = '@controllers.rrhh.routes.NovedadesController.lista()';
 urlVerNovedad = '@controllers.rrhh.routes.NovedadesController.ver()';
 urlGetFeriados = '@controllers.rrhh.routes.NovedadesController.getFeriados()';
 urlCrearNovedad = '@controllers.rrhh.routes.NovedadesController.crear()';
+urlCrearNovedadMasiva = '@controllers.rrhh.routes.NovedadesController.crearMasiva()';
+</script>
 
-	
-</script>	
-	
-	
+
 <style>
 .fc-day-grid-event {cursor: pointer}
-</style>	
-	
+</style>
+
 }
-		
-		
-	
-	
+
+
+
