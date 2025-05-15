@@ -500,7 +500,7 @@ public class ExpedientesController extends Controller {
 	    	return ok(modalReporteListadoExpedientes.render(archivo.getPath()));
 	}
 
-	public static Result reporteTapaExpediente(Long id) throws IOException {
+	public static Result reporteTapaExpediente(Long id,boolean plansumar) throws IOException {
 
 		String dirTemp = System.getProperty("java.io.tmpdir");
 		File archivo = new File(dirTemp+"/tapa_expediente.odt");
@@ -508,6 +508,9 @@ public class ExpedientesController extends Controller {
 		try {
 		      // 1) Load ODT file by filling Velocity template engine and cache it to the registry
 			  InputStream in = Play.application().resourceAsStream("resources/reportes/expedientes/tapa_expediente_old.odt");
+			  if(plansumar) {
+				  in = Play.application().resourceAsStream("resources/reportes/expedientes/tapa_expediente_plan_sumar.odt");
+			  }
 		      IXDocReport report = XDocReportRegistry.getRegistry().loadReport(in,TemplateEngineKind.Velocity);
 
 		      // 2) Create context Java model
