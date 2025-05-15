@@ -471,7 +471,7 @@ GET     /expediente/expediente/modalBuscarCopia			controllers.expediente.Expedie
 GET     /expediente/expediente/get           		controllers.expediente.ExpedientesController.get(id:Int ?= 0)
 GET     /expediente/expediente/ver		 	 		controllers.expediente.ExpedientesController.ver(id:Long)
 POST 	/expediente/reporteTapaExpedienteMasiva 	controllers.expediente.ExpedientesController.reporteTapaExpedienteMasivo()
-GET 	/expediente/reporteTapaExpediente 	 		controllers.expediente.ExpedientesController.reporteTapaExpediente(id:Long)
+GET 	/expediente/reporteTapaExpediente 	 		controllers.expediente.ExpedientesController.reporteTapaExpediente(id:Long,plansumar:Boolean ?= false)
 POST 	/expediente/reporteListadoExpedientes 		controllers.expediente.ExpedientesController.listadoExpedientes()
 GET     /expediente/expediente/crearCopia		 	controllers.expediente.ExpedientesController.crearCopia(id:Long)
 GET     /expediente/expediente/crearRP		 		controllers.expediente.ExpedientesController.crearRP(id:Long)
