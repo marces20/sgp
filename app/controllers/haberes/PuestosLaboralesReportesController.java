@@ -40,6 +40,7 @@ import models.Estado;
 import models.EstadoCivil;
 import models.Provincia;
 import models.haberes.PuestoLaboral;
+import play.Logger;
 import play.Play;
 import play.mvc.Controller;
 import play.mvc.Result;
@@ -85,6 +86,273 @@ public class PuestosLaboralesReportesController extends Controller  {
 
 		 	flash("Error", "No se puedo crear el archivo.");
 		 	return ok(descargarArchivo.render(null));
+	}
+
+	@CheckPermiso(key = "puestoLaboralForm649")
+	public static Result formulario6492025(Long id, Integer ejercicio_id) {
+
+		try {
+
+			String dirTemp = System.getProperty("java.io.tmpdir");
+			String nombreArchivo = "";
+
+
+			String sql = "";
+
+			sql = " select * from query_649_2025 where puesto_laboral_id = :id ";
+			nombreArchivo = dirTemp+"/formulario649-2025.xls";
+
+
+			SqlRow s = Ebean.createSqlQuery(sql).setParameter("id", id).findUnique();
+
+
+			if(s == null) {
+				flash("error", "El puesto laboral no tiene datos de ganancia");
+				return redirect(request().getHeader("referer"));
+			}
+
+
+
+			File archivo = new File(nombreArchivo);
+			if(archivo.exists()) archivo.delete();
+			FileInputStream file = new FileInputStream(Play.application().getFile("conf/resources/reportes/ganancias/formulario649-2025.xls"));
+
+			Workbook libro = new HSSFWorkbook(file);
+			FileOutputStream archivoTmp = new FileOutputStream(archivo);
+			Sheet hoja = libro.getSheetAt(0);
+			Cell celda;
+
+			CellStyle style = libro.createCellStyle();
+			Font defaultFont = libro.createFont();
+		    defaultFont.setFontHeightInPoints((short)8);
+		    style.setFont(defaultFont);
+			style.setDataFormat(libro.createDataFormat().getFormat("$ #,##0.00"));
+
+			Row f;
+
+			f = hoja.createRow(7);
+		    Font boldFont = libro.createFont();
+		    boldFont.setBoldweight(Font.BOLDWEIGHT_BOLD);
+		    RichTextString richFecha = new HSSFRichTextString("Fecha: " + DateUtils.formatDate(new Date()));
+		    richFecha.applyFont(0, 5, boldFont);
+		    f.createCell(0);
+		    f.getCell(0).setCellValue(richFecha);
+
+		    f = hoja.getRow(8);
+			String bene = "Beneficiario "+s.getString("agente_cuil")+", "+s.getString("agente_apellido")+", Tipo de Presentacion: "+s.getString("presentacion_tipo");
+			RichTextString richString = new HSSFRichTextString(bene);
+		    richString.applyFont(0, 9, boldFont);
+		    f.getCell(0).setCellValue(richString);
+
+		    f = hoja.getRow(9);
+		    String ag = "Agente de Retención "+s.getString("responsable_cuit")+","+s.getString("responsable_denominacion");
+		    RichTextString richCuit = new HSSFRichTextString(ag);
+		    richCuit.applyFont(0, 5, boldFont);
+		    f.getCell(0).setCellValue(richCuit);
+
+		    f = hoja.getRow(10);
+		    RichTextString richPeriodo = new HSSFRichTextString("Período Fiscal: " + s.getString("anio"));
+		    richPeriodo.applyFont(0, 15, boldFont);
+		    f.getCell(0).setCellValue(richPeriodo);
+
+
+
+
+
+
+			boolean test = false;
+
+			int i = 14;
+			f = hoja.getRow(i++);
+			f.getCell(1).setCellValue(s.getBigDecimal("remuneracion_bruta_y_no_habit").doubleValue());//15
+			f = hoja.getRow(i++);
+			f.getCell(1).setCellValue(s.getBigDecimal("sac").doubleValue());//16
+			f = hoja.getRow(i++);
+			f.getCell(1).setCellValue(s.getBigDecimal("ajuste_periodos_anteriores_gravado").doubleValue());//17
+
+			i++;
+			f = hoja.getRow(i++);
+			f.getCell(1).setCellValue(s.getBigDecimal("otros_empleos_remuneracion_bruta_y_no_habit").doubleValue());//19
+			f = hoja.getRow(i++);
+			f.getCell(1).setCellValue(s.getBigDecimal("otros_empleos_sac").doubleValue());//20
+			f = hoja.getRow(i++);
+			f.getCell(1).setCellValue(s.getBigDecimal("otros_empleos_ajuste_periodos_anteriores_gravado").doubleValue());//21
+			f = hoja.getRow(i++);
+			f.getCell(1).setCellValue(s.getBigDecimal("total_remuneracion_gravada").doubleValue());//22
+
+			i++;//23
+			i++;//24
+			i++;//25
+
+			f = hoja.getRow(i++);
+			f.getCell(1).setCellValue(s.getBigDecimal("asignaciones_familiares").doubleValue());//26
+			f = hoja.getRow(i++);
+			f.getCell(1).setCellValue(s.getBigDecimal("intereses_por_prestamos_al_empleador").doubleValue());//27
+			f = hoja.getRow(i++);
+			f.getCell(1).setCellValue(s.getBigDecimal("indemnizaciones_rg_4003_2017").doubleValue());//28
+			f = hoja.getRow(i++);
+			f.getCell(1).setCellValue(s.getBigDecimal("remuneraciones_tierra_del_fuego").doubleValue());//29
+			f = hoja.getRow(i++);
+			f.getCell(1).setCellValue(s.getBigDecimal("remuneraciones_personal_de_pozo").doubleValue());//30
+			f = hoja.getRow(i++);
+			f.getCell(1).setCellValue(s.getBigDecimal("cursos_y_seminarios").doubleValue());//31
+			f = hoja.getRow(i++);
+			f.getCell(1).setCellValue(s.getBigDecimal("indumentaria_y_equipos").doubleValue());//32
+			f = hoja.getRow(i++);
+			f.getCell(1).setCellValue(s.getBigDecimal("ajuste_periodos_anteriores_exe").doubleValue());//33
+
+
+//////////////////////////////////Otros Empleos/////////////////////////////////////////
+			i++;//34
+			i++;//35
+			f = hoja.getRow(i++);
+			f.getCell(1).setCellValue(s.getBigDecimal("otros_empleos_asignaciones_familiares").doubleValue());//36
+			f = hoja.getRow(i++);
+			f.getCell(1).setCellValue(s.getBigDecimal("otros_empleos_intereses_por_prestamos_al_empleador").doubleValue());//37
+			f = hoja.getRow(i++);
+			f.getCell(1).setCellValue(s.getBigDecimal("otros_empleos_indemnizaciones_rg_4003_2017").doubleValue());//38
+			f = hoja.getRow(i++);
+			f.getCell(1).setCellValue(s.getBigDecimal("otros_empleos_remuneraciones_tierra_del_fuego").doubleValue());//39
+			f = hoja.getRow(i++);
+			f.getCell(1).setCellValue(s.getBigDecimal("otros_empleos_remuneraciones_personal_de_pozo").doubleValue());//40
+			f = hoja.getRow(i++);
+			f.getCell(1).setCellValue(s.getBigDecimal("otros_empleos_cursos_y_seminarios").doubleValue());//41
+			f = hoja.getRow(i++);
+			f.getCell(1).setCellValue(s.getBigDecimal("otros_empleos_indumentaria_y_equipos").doubleValue());//42
+			f = hoja.getRow(i++);
+			f.getCell(1).setCellValue(s.getBigDecimal("otros_empleos_ajuste_periodos_anteriores_exe").doubleValue());//43
+			f = hoja.getRow(i++);
+			f.getCell(1).setCellValue(s.getBigDecimal("total_remuneracion_exenta").doubleValue());//44
+			f = hoja.getRow(i++);
+			f.getCell(1).setCellValue(s.getBigDecimal("total_remuneraciones").doubleValue());//45
+
+
+			//DEDUCCIONES GENERALES
+
+			i++;//46
+			i++;//47
+			f = hoja.getRow(i++);
+			f.getCell(1).setCellValue(s.getBigDecimal("ap_jub_pens_anses").doubleValue());//48
+			f = hoja.getRow(i++);
+			f.getCell(1).setCellValue(s.getBigDecimal("ap_jub_pens_anses_otros_emp").doubleValue());//49
+			f = hoja.getRow(i++);
+			f.getCell(1).setCellValue(s.getBigDecimal("ap_jub_pens_etc").doubleValue());//50
+			f = hoja.getRow(i++);
+			f.getCell(1).setCellValue(s.getBigDecimal("ap_jub_pens_etc_otros_emp").doubleValue());//51
+			f = hoja.getRow(i++);
+			f.getCell(1).setCellValue(s.getBigDecimal("ap_obra_social").doubleValue());//52
+			f = hoja.getRow(i++);
+			f.getCell(1).setCellValue(s.getBigDecimal("ap_obra_social_otros_emp").doubleValue());//53
+			f = hoja.getRow(i++);
+			f.getCell(1).setCellValue(s.getBigDecimal("cuota_sindical").doubleValue());//54
+			f = hoja.getRow(i++);
+			f.getCell(1).setCellValue(s.getBigDecimal("cuota_sindical_otros_emp").doubleValue());//55
+			f = hoja.getRow(i++);
+			f.getCell(1).setCellValue(s.getBigDecimal("cuota_medico_asist").doubleValue());//56
+			f = hoja.getRow(i++);
+			f.getCell(1).setCellValue(s.getBigDecimal("seguro_muerte").doubleValue());//57
+			f = hoja.getRow(i++);
+			f.getCell(1).setCellValue(s.getBigDecimal("seguro_muerte_ssn").doubleValue());//58
+			f = hoja.getRow(i++);
+			f.getCell(1).setCellValue(s.getBigDecimal("cuotas_fci").doubleValue());//59
+			f = hoja.getRow(i++);
+			f.getCell(1).setCellValue(s.getBigDecimal("gastos_sepelio").doubleValue());//60
+			f = hoja.getRow(i++);
+			f.getCell(1).setCellValue(s.getBigDecimal("amort_e_interes_rodados").doubleValue());//61
+			f = hoja.getRow(i++);
+			f.getCell(1).setCellValue(s.getBigDecimal("donaciones_fisco").doubleValue());//62
+			f = hoja.getRow(i++);
+			f.getCell(1).setCellValue(s.getBigDecimal("alquileres").doubleValue());//63
+			f = hoja.getRow(i++);
+			f.getCell(1).setCellValue(s.getBigDecimal("dtos_obligatorios_leyes_nac_prov_munic").doubleValue());//64
+			f = hoja.getRow(i++);
+			f.getCell(1).setCellValue(s.getBigDecimal("honorarios_serv_medico").doubleValue());//65
+			f = hoja.getRow(i++);
+			f.getCell(1).setCellValue(s.getBigDecimal("int_credito_hipot").doubleValue());//66
+			f = hoja.getRow(i++);
+			f.getCell(1).setCellValue(s.getBigDecimal("ap_captial_social").doubleValue());//67
+			f = hoja.getRow(i++);
+			f.getCell(1).setCellValue(s.getBigDecimal("serv_domestico").doubleValue());//68
+			f = hoja.getRow(i++);
+			f.getCell(1).setCellValue(s.getBigDecimal("ap_cajas_complem").doubleValue());//69
+			f = hoja.getRow(i++);
+			f.getCell(1).setCellValue(s.getBigDecimal("fondos_compensadores_prevision").doubleValue());//70
+			f = hoja.getRow(i++);
+			f.getCell(1).setCellValue(s.getBigDecimal("otros_ap_jub_pens_anses_autonomas").doubleValue());//71
+			f = hoja.getRow(i++);
+			f.getCell(1).setCellValue(s.getBigDecimal("seguro_retiro_privado").doubleValue());//72
+			f = hoja.getRow(i++);
+			f.getCell(1).setCellValue(s.getBigDecimal("indumentaria").doubleValue());//73
+			f = hoja.getRow(i++);
+			f.getCell(1).setCellValue(s.getBigDecimal("servicios_educativos").doubleValue());//74
+			f = hoja.getRow(i++);
+			f.getCell(1).setCellValue(s.getBigDecimal("alquiler_casa_habit_10_porc").doubleValue());//75
+			f = hoja.getRow(i++);
+			f.getCell(1).setCellValue(s.getBigDecimal("adicional_pers_militar_antartida_arg").doubleValue());//76
+			f = hoja.getRow(i++);
+			f.getCell(1).setCellValue(s.getBigDecimal("actores_retribucion_pagada_a_representantes").doubleValue());//77
+			f = hoja.getRow(i++);
+			f.getCell(1).setCellValue(s.getBigDecimal("total_deducciones_generales").doubleValue());//78
+
+
+			//DEDUCCIONES PERSONALES
+
+			i++;//79
+			i++;//80
+
+			f = hoja.getRow(i++);
+			f.getCell(1).setCellValue(s.getBigDecimal("gan_no_imponible").doubleValue());//81
+			f = hoja.getRow(i++);
+			f.getCell(1).setCellValue(s.getBigDecimal("carga_familia").doubleValue());//82
+			f = hoja.getRow(i++);
+			f.getCell(1).setCellValue(s.getBigDecimal("deduccion_especial").doubleValue());//83
+			f = hoja.getRow(i++);
+			f.getCell(1).setCellValue(s.getBigDecimal("deduccion_especial_12va_parte").doubleValue());//84
+			f = hoja.getRow(i++);
+			f.getCell(1).setCellValue(s.getBigDecimal("deduccion_especifica").doubleValue());//85
+			f = hoja.getRow(i++);
+			f.getCell(1).setCellValue(s.getBigDecimal("total_deducciones_personales").doubleValue());//86
+
+
+
+
+			//////////////////////////////////DETERMINACIÓN/////////////////////////////////////////
+			i++;//87
+			i++;//88
+			f = hoja.getRow(i++);
+			f.getCell(1).setCellValue(s.getBigDecimal("ganancia_sujeta_a_impuesto").doubleValue()); //89
+			f = hoja.getRow(i++);
+			f.getCell(1).setCellValue(s.getBigDecimal("cod_alicuota").doubleValue());//90
+			f = hoja.getRow(i++);
+			f.getCell(1).setCellValue(s.getBigDecimal("impuesto_determinado").doubleValue());//91
+			f = hoja.getRow(i++);
+			f.getCell(1).setCellValue(s.getBigDecimal("impuesto_retenido").doubleValue());//92
+			f = hoja.getRow(i++);
+			f.getCell(1).setCellValue(s.getBigDecimal("ganancias_pagos_a_cuenta").doubleValue());//93
+			f = hoja.getRow(i++);
+			f.getCell(1).setCellValue(s.getBigDecimal("ganancias_deduccion_especial").doubleValue());//94
+			f = hoja.getRow(i++);
+			f.getCell(1).setCellValue(s.getBigDecimal("pagos_a_cuenta_total").doubleValue());//95
+			f = hoja.getRow(i++);
+			f.getCell(1).setCellValue(s.getBigDecimal("saldo_a_pagar").doubleValue());//96
+
+
+
+			libro.write(archivoTmp);
+
+			Writer out = new BufferedWriter(new OutputStreamWriter(archivoTmp, "UTF8"));
+			out.flush();
+			out.close();
+
+
+			return ok(archivo);
+
+		} catch (IOException e) {
+		    e.printStackTrace();
+		}
+
+
+		return ok();
 	}
 
 	@CheckPermiso(key = "puestoLaboralForm649")
