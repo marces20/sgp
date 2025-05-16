@@ -96,6 +96,7 @@ public class Cliente extends Model {
 				.disjunction()
 				.ilike("nombre", "%"+input+"%")
 				.ilike("id_paciente_rismi", "%"+input+"%")
+				.ilike("cuit2", "%"+input+"%")
 				.endJunction()
 				.setMaxRows(limit).orderBy("nombre")
 				.findList();
