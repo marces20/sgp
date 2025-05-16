@@ -366,7 +366,11 @@ public class ClientesController extends Controller {
 	        //String b = (a.referencia != null)?"ID:"+a.referencia.toString():"";
 	        String b = "";
 	        restJs.put("value",a.nombre);
-	        restJs.put("info", "id: "+a.id_paciente_rismi);
+
+	        String idpaciente = (a.id_paciente_rismi != null && !a.id_paciente_rismi.isEmpty())?"id: "+a.id_paciente_rismi:"";
+	        String cuit = (a.cuit2 != null && !a.cuit2.isEmpty())?" - cuit: "+a.cuit2:"";
+	        String info = idpaciente+cuit;
+	        restJs.put("info",info);
 	        cliente.add(restJs);
 		}
 
