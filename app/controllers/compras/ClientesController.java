@@ -12,12 +12,14 @@ import models.ClienteTipo;
 import models.DireccionCliente;
 import models.DireccionProveedor;
 import models.Estado;
+import models.Expediente;
 import models.Factura;
 import models.OrdenLineaCliente;
 import models.Proveedor;
 import models.Usuario;
 import models.auth.Permiso;
 
+import com.avaje.ebean.ExpressionList;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
@@ -384,7 +386,18 @@ public class ClientesController extends Controller {
     	Pagination<Cliente> p = new Pagination<Cliente>();
     	p.setOrderDefault("DESC");
     	p.setSortByDefault("id");
-    	p.setExpressionList(Cliente.find.where().eq("activo", true).ilike("nombre", "%" + RequestVar.get("nombre") + "%"));
+
+    	ExpressionList<Cliente> e = Cliente.find.where().eq("activo", true);
+
+    	if(!RequestVar.get("nombre").isEmpty()){
+    		e.like("nombre", "%"+RequestVar.get("nombre")+"%" );
+    	}
+
+    	if(!RequestVar.get("cuit").isEmpty()){
+    		e.like("cuit2", "%"+RequestVar.get("cuit")+"%" );
+    	}
+
+    	p.setExpressionList(e);
 		return ok( modalBusquedaClientes.render(p, form().bindFromRequest()) );
 	}
 
