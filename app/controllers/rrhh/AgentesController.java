@@ -322,7 +322,9 @@ public class AgentesController extends Controller {
 
 	public static Result get(Long id){
 		//Agente agente = Agente.find.select("id, nombre, apellido").where().eq("id", id).findUnique();
-		Agente agente = Agente.find.select("id, apellido").where().eq("id", id).findUnique();
+		Agente agente = Agente.find
+						.fetch("organigrama","nombre")
+						.where().eq("id", id).findUnique();
 
 		ObjectNode obj = Json.newObject();
 	    ArrayNode nodo = obj.arrayNode();
@@ -412,7 +414,10 @@ public class AgentesController extends Controller {
     	Pagination<Agente> p = new Pagination<Agente>();
     	p.setOrderDefault("DESC");
     	p.setSortByDefault("id");
-    	p.setExpressionList(Agente.find.where().ilike("apellido", "%" + RequestVar.get("nombre") + "%"));
+    	p.setExpressionList(Agente.
+    						find
+    						.fetch("organigrama","nombre")
+    						.where().ilike("apellido", "%" + RequestVar.get("nombre") + "%"));
 		return ok( modalBusquedaAgente.render(p, form().bindFromRequest()) );
 	}
 
