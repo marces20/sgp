@@ -136,7 +136,7 @@ public class NovedadesController extends Controller {
 
 		b.put("servicio.nombre", Usuario.getUsurioSesion().organigrama.nombre);
 		b.put("servicio_id", Usuario.getUsurioSesion().organigrama_id.toString());
-
+		b.put("fecha_inicio", "01/01/2025");
 
 
 		Form<Novedad> nForm = form(Novedad.class).bind(b);
@@ -147,34 +147,70 @@ public class NovedadesController extends Controller {
 	}
 
 	public static Result guardarMasivo() {
+
 		Form<Novedad> nForm = form(Novedad.class).bindFromRequest();
 		ObjectNode restJs = Json.newObject();
 		ObjectNode evento = Json.newObject();
 
 		try {
 
+
+			Logger.debug("111111111 "+nForm );
+			Logger.debug("2222222222222222 "+nForm.data().get("fechas"));
+
+			//			nForm.errors().remove("fecha_inicio");
+//			nForm.data().put("fecha_inicio","01/01/2025");
+
 			if(nForm.hasErrors()) {
 				flash("error", "Error en formulario");
 				return ok(crearFechaMasivaNovedad.render(nForm));
 			} else {
 
-				Novedad e = nForm.get();
-				e.create_usuario_id = new Long(Usuario.getUsuarioSesion());
-				e.create_date = new Date();
-				e.save();
+				if(nForm.data().get("fechas") != null && !nForm.data().get("fechas").isEmpty()) {
 
-				Novedad n = Novedad.find.byId(e.id);
-				restJs.put("success", true);
-				restJs.put("nuevo", true);
-				evento.put("id", n.id);
-				evento.put("nombre", n.agente.apellido);
-				evento.put("color", n.servicio.color);
-				//evento.put("fecha", utils.DateUtils.formatDate(n.fecha_inicio, "yyyy-MM-dd'T'HH:mm:ss"));
-				evento.put("fecha", utils.DateUtils.formatDate(n.fecha_inicio, "yyyy-MM-dd"));
 
-				restJs.put("evento", evento);
-				return ok(restJs);
-				//flash("success", "La novedad se ha creado correctamente");
+
+
+					String[] fechasArray = nForm.data().get("fechas").split(",");
+
+					for(String ftmp : fechasArray) {
+
+						Novedad e = nForm.get();
+
+						Novedad ex = new Novedad();
+						ex.agente_id = e.agente_id;
+						ex.descripcion = e.descripcion;
+						ex.servicio_id = e.servicio_id;
+						ex.fecha_inicio = utils.DateUtils.formatDate(ftmp, "dd/MM/yyyy");
+						ex.create_usuario_id = new Long(Usuario.getUsuarioSesion());
+						ex.create_date = new Date();
+						ex.save();
+
+
+						/*Novedad n = Novedad.find.byId(e.id);
+
+						evento.put("id", n.id);
+						evento.put("nombre", n.agente.apellido);
+						evento.put("color", n.servicio.color);
+						evento.put("fecha", utils.DateUtils.formatDate(n.fecha_inicio, "yyyy-MM-dd"));
+
+						restJs.put("evento", evento);*/
+
+
+					}
+					restJs.put("success", true);
+					restJs.put("nuevo", true);
+					/*
+*/
+
+
+
+					return ok(restJs);
+					//flash("success", "La novedad se ha creado correctamente");
+				}else {
+					flash("error", "Debe seleccionar fecha.");
+					return ok(crearFechaMasivaNovedad.render(nForm));
+				}
 			}
 		} catch (PersistenceException pe){
 			play.Logger.error("excepcion", pe);
@@ -206,7 +242,7 @@ public class NovedadesController extends Controller {
 		ObjectNode restJs = Json.newObject();
 		ObjectNode evento = Json.newObject();
 		try {
-
+			Logger.debug("looooofechasfechas "+nForm );
 			if(nForm.hasErrors()) {
 				flash("error", "Error en formulario");
 				return ok(crearNovedad.render(nForm));
