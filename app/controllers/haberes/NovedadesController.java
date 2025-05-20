@@ -110,9 +110,16 @@ public class NovedadesController extends Controller {
 		Novedad n = nForm.get();
 
 		LiquidacionConcepto lc = LiquidacionConcepto.find.byId(n.liquidacion_concepto_id);
-		if(n.organigrama_id == null || n.periodo_concepto_id == null) {
-			flash("error", "Para este tipo de Conceptos debe cargar Periodo y Organigrama");
-			return ok(crearNovedades.render(nForm));
+		if(lc.control_guardia != null && !lc.control_guardia) {
+			if(n.organigrama_id == null || n.periodo_concepto_id == null) {
+				flash("error", "Para este tipo de Conceptos debe cargar Periodo y Organigrama");
+				return ok(crearNovedades.render(nForm));
+			}
+		}else {
+			if(n.organigrama_id == null ) {
+				flash("error", "Para este tipo de Conceptos debe cargar un Organigrama");
+				return ok(crearNovedades.render(nForm));
+			}
 		}
 
 
@@ -200,6 +207,19 @@ public class NovedadesController extends Controller {
 		Novedad n = nForm.get();
 
 		LiquidacionConcepto lc = LiquidacionConcepto.find.byId(n.liquidacion_concepto_id);
+		if(lc.control_guardia != null && !lc.control_guardia) {
+			if(n.organigrama_id == null || n.periodo_concepto_id == null) {
+				flash("error", "Para este tipo de Conceptos debe cargar Periodo y Organigrama");
+				return ok(editarNovedades.render(nForm));
+			}
+		}else {
+			if(n.organigrama_id == null ) {
+				flash("error", "Para este tipo de Conceptos debe cargar un Organigrama");
+				return ok(editarNovedades.render(nForm));
+			}
+		}
+
+
 		if(lc.control_guardia) {
 			if(n.organigrama_id == null || n.periodo_concepto_id == null) {
 				flash("error", "Para este tipo de Conceptos debe cargar Periodo y Organigrama");
