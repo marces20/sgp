@@ -37,6 +37,24 @@ alter table orden_linea_anulacion_clientes disable trigger all;
 update orden_linea_anulacion_clientes set cliente_id =18453 where cliente_id in(21718,21719); --
 alter table orden_linea_anulacion_clientes enable trigger all;
 
+alter table recupero_facturas disable trigger all;
+update recupero_facturas set cliente_id =18453 where cliente_id in(21718,21719); --
+alter table recupero_facturas enable trigger all;
+
+
+alter table recupero_pagos disable trigger all;
+update recupero_pagos set cliente_id =18453 where cliente_id in(21718,21719); --
+alter table recupero_pagos enable trigger all;
+
+alter table public.recupero_certificado_deudas disable trigger all;
+update public.recupero_certificado_deudas set cliente_id =23685 where cliente_id in(30110); --
+alter table public.recupero_certificado_deudas enable trigger all;
+
+alter table public.recupero_certificado_deudas disable trigger all;
+update public.recupero_certificado_deudas set cliente_id =23685 where cliente_id in(30110); --
+alter table public.recupero_certificado_deudas enable trigger all;
+
+
 delete from clientes where id in(21718,21719);
 	 */
 
