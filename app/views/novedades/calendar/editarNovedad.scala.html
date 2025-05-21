@@ -1,8 +1,8 @@
 @(lineaForm: Form[Novedad])
 @import helper._
-@implicitFieldConstructor = @{ FieldConstructor(simpleInput.render) } 
+@implicitFieldConstructor = @{ FieldConstructor(simpleInput.render) }
 
-@helper.form(action = controllers.rrhh.routes.NovedadesController.actualizar(), 'id -> "formNovedades") {
-	@views.html.rrhh.novedades.formNovedad(lineaForm)
+@helper.form(action = controllers.novedades.routes.NovedadesController.actualizar(), 'id -> "formNovedades") {
+	@views.html.novedades.calendar.formNovedad(lineaForm)
 	@inputText(lineaForm("id"), 'hidden -> "hidden")
 }

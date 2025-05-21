@@ -31,7 +31,7 @@
 
 	<div id="actions">
 
-			<form action="@controllers.rrhh.routes.NovedadesController.lista()" id="formSearchNovedades" method="GET">
+			<form action="@controllers.novedades.routes.NovedadesController.lista()" id="formSearchNovedades" method="GET">
 
 				<div class="row">
 					<div class="col-sm-3">
@@ -74,7 +74,7 @@
 					<div class="col-sm-2">
 						<div class="form-group">
 						<label for="nombre" class="control-label">&nbsp;</label>
-						<a href="@controllers.rrhh.routes.NovedadesController.index()"  class="form-control btn btn-default">Limpiar</a>
+						<a href="@controllers.novedades.routes.NovedadesController.index()"  class="form-control btn btn-default">Limpiar</a>
 						</div>
 					</div>
 				</div>
@@ -90,11 +90,11 @@
 
 <script>
 
-urlListaNovedades = '@controllers.rrhh.routes.NovedadesController.lista()';
-urlVerNovedad = '@controllers.rrhh.routes.NovedadesController.ver()';
-urlGetFeriados = '@controllers.rrhh.routes.NovedadesController.getFeriados()';
-urlCrearNovedad = '@controllers.rrhh.routes.NovedadesController.crear()';
-urlCrearNovedadMasiva = '@controllers.rrhh.routes.NovedadesController.crearMasiva()';
+urlListaNovedades = '@controllers.novedades.routes.NovedadesController.lista()';
+urlVerNovedad = '@controllers.novedades.routes.NovedadesController.ver()';
+urlGetFeriados = '@controllers.novedades.routes.NovedadesController.getFeriados()';
+urlCrearNovedad = '@controllers.novedades.routes.NovedadesController.crear()';
+urlCrearNovedadMasiva = '@controllers.novedades.routes.NovedadesController.crearMasiva()';
 </script>
 
 
