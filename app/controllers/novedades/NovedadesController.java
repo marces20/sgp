@@ -14,6 +14,7 @@ import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
 import controllers.Secured;
+import controllers.auth.CheckPermiso;
 import models.Feriado;
 import models.Novedad;
 import models.Usuario;
@@ -31,6 +32,7 @@ import views.html.novedades.calendar.*;
 public class NovedadesController extends Controller {
 
 
+	@CheckPermiso(key = "verCalendario")
 	public static Result index() {
 		DynamicForm d = form().bindFromRequest();
 
@@ -38,6 +40,7 @@ public class NovedadesController extends Controller {
 
 	}
 
+	@CheckPermiso(key = "verCalendario")
 	public static Result lista() {
 
 		ObjectNode obj = Json.newObject();
@@ -81,9 +84,6 @@ public class NovedadesController extends Controller {
 		return ok(s);
 	}
 
-
-
-
 	public static Result getFeriados(){
 
 		ObjectNode o = Json.newObject();
@@ -114,7 +114,7 @@ public class NovedadesController extends Controller {
 			flash("error", "No se ha podido eliminar la novedad");
 		}
 
-		return redirect(controllers.rrhh.routes.NovedadesController.index());
+		return redirect(controllers.novedades.routes.NovedadesController.index());
 	}
 
 	public static Result crearMasiva() {
