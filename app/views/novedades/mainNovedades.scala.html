@@ -6,10 +6,11 @@
 			<div class="menu-contenido">
 			<ul class="nav nav-pills nav-stacked">
 
+
 				<li class="titulo">Novedades</li>
-
-				<li><a href="@controllers.novedades.routes.NovedadesController.index()">Calendario </a></li>
-
+				@if(Componente.check("calendario")) {
+					<li><a href="@controllers.novedades.routes.NovedadesController.index()">Calendario</a></li>
+				}
 
 
 
