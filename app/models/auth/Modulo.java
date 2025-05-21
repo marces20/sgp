@@ -37,6 +37,7 @@ public class Modulo extends Model {
 	public static final Integer RECUPERO = 12;
 	public static final Integer INFORMES = 13;
 	public static final Integer EQUIPOS = 14;
+	public static final Integer NOVEDADES = 15;
 
 	@Id
 	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="auth_modulos_id_seq")
