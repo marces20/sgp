@@ -10,6 +10,7 @@
 -> /recupero    	routeRecupero.Routes
 -> /informes    	routeInformes.Routes
 -> /equipo    		routeEquipo.Routes
+-> /novedades    	routeNovedades.Routes
 
 GET    /                    controllers.Application.index()
 #GET   /reporte             controllers.Reportes.index()
@@ -633,20 +634,6 @@ POST    /rrhh/agente/pasarAPreaprobado		controllers.rrhh.AgentesAccionesControll
 
 POST    /rrhh/agente/actualizarMail		controllers.rrhh.AgentesController.actualizarMail()
 
-
-GET     /rrhh/novedades         					controllers.rrhh.NovedadesController.index()
-GET     /rrhh/novedades/ver         				controllers.rrhh.NovedadesController.ver(id:Long ?= 0)
-GET     /rrhh/novedades/eliminar         			controllers.rrhh.NovedadesController.eliminar(id:Long)
-GET     /rrhh/novedades/crear         				controllers.rrhh.NovedadesController.crear()
-POST    /rrhh/novedades/guardar         			controllers.rrhh.NovedadesController.guardar()
-
-GET     /rrhh/novedades/crearFechaMasiva         	controllers.rrhh.NovedadesController.crearMasiva()
-POST    /rrhh/novedades/guardarMasivo         		controllers.rrhh.NovedadesController.guardarMasivo()
-
-GET     /rrhh/novedades/editar         				controllers.rrhh.NovedadesController.editar(id:Long)
-POST    /rrhh/novedades/actualizar         			controllers.rrhh.NovedadesController.actualizar()
-GET     /rrhh/novedades/lista         				controllers.rrhh.NovedadesController.lista()
-GET     /rrhh/novedades/feriados         			controllers.rrhh.NovedadesController.getFeriados()
 
 GET     /rrhh/agente/reportes/ficha					controllers.rrhh.AgentesReportesController.ficha(id:Long)
 GET     /rrhh/agente/reportes/fichaAptitud			controllers.rrhh.AgentesReportesController.fichaAptitud(id:Long)
