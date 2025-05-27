@@ -394,7 +394,7 @@ public class RecuperoCertificadoDeudaController  extends Controller {
 
 		      context.put("fecha",(certificado.fecha != null)?DateUtils.formatDate(certificado.fecha):"");
 
-		      context.put("expediente",(certificado.expediente.getExpedienteEjercicio() != null)?certificado.expediente.getExpedienteEjercicio():"");
+		      context.put("expediente",(certificado.expediente != null)?certificado.expediente.getInstitucionExpedienteEjercicio():"");
 		      context.put("cliente",(certificado.cliente.nombre != null)?certificado.cliente.nombre:"");
 		      context.put("cuit",(certificado.cliente.cuit2 != null)?certificado.cliente.cuit2:"");
 
