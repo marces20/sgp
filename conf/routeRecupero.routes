@@ -128,7 +128,7 @@ GET    /certificadoDeuda/ver          controllers.recupero.RecuperoCertificadoDe
 POST   /certificadoDeuda/actualizar   controllers.recupero.RecuperoCertificadoDeudaController.actualizar(id:Long)
 GET    /certificadoDeuda/reporteCertificadoDeuda controllers.recupero.RecuperoCertificadoDeudaController.reporteCertificadoDeuda(id:Long)
 GET    /certificadoDeuda/reporteDispoCertificadoDeuda controllers.recupero.RecuperoCertificadoDeudaController.reporteDispoCertificadoDeuda(id:Long)
-GET    /certificadoDeuda/reporteCartaDocumento controllers.recupero.RecuperoCertificadoDeudaController.reporteCartaDocumento(id:Long)
+GET    /certificadoDeuda/reporteCartaDocumento controllers.recupero.RecuperoCertificadoDeudaController.reporteCartaDocumento(id:Long,correo:Boolean ?= false)
 GET    /certificadoDeuda/modalCargarCertificadoDeuda   	controllers.recupero.RecuperoCertificadoDeudaController.modalCargarCertificadoDeuda()
 POST   /certificadoDeuda/cargarCertificadoDeuda   	controllers.recupero.RecuperoCertificadoDeudaController.cargarCertificadoDeuda()
 GET     /certificadoDeuda/modalBuscar	controllers.recupero.RecuperoCertificadoDeudaController.modalBuscar()
