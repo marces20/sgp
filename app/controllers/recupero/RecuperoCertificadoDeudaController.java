@@ -328,14 +328,18 @@ public class RecuperoCertificadoDeudaController  extends Controller {
 		}
 	}
 
-	public static Result reporteCartaDocumento(Long id) throws IOException {
+	public static Result reporteCartaDocumento(Long id,Boolean correo) throws IOException {
 
 		String dirTemp = System.getProperty("java.io.tmpdir");
 		File archivo = new File(dirTemp+"/carta_documento.odt");
 
 		try {
 		      // 1) Load ODT file by filling Velocity template engine and cache it to the registry
+
 			  InputStream in = Play.application().resourceAsStream("resources/reportes/recupero/carta_documento.odt");
+			  if(correo) {
+				  in = Play.application().resourceAsStream("resources/reportes/recupero/carta_documento_correo_argentino.odt");
+			  }
 		      IXDocReport report = XDocReportRegistry.getRegistry().loadReport(in,TemplateEngineKind.Velocity);
 
 		      // 2) Create context Java model
