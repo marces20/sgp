@@ -11,7 +11,7 @@ import play.Logger;
  * @author Mouse
  */
 	public class NumeroALetra {
-	 
+
 
 	    private static final String[] UNIDADES = { "", "UN ", "DOS ", "TRES ",
 	            "CUATRO ", "CINCO ", "SEIS ", "SIETE ", "OCHO ", "NUEVE ", "DIEZ ",
@@ -28,7 +28,7 @@ import play.Logger;
 
 	    /**
 	     * Convierte a letras un numero de la forma $123,456.32
-	     * 
+	     *
 	     * @param number
 	     *            Numero en representacion texto
 	     * @throws NumberFormatException
@@ -40,23 +40,23 @@ import play.Logger;
 	    	BigDecimal b = new BigDecimal(number);
 	    	return convertNumberToLetter(b,true);
 	    }
-	    
+
 	    public static String convertNumberToLetterSinPesos(String number)throws NumberFormatException{
 	    	BigDecimal b = new BigDecimal(number);
 	    	return convertNumberToLetter(b,false);
 	    }
-	    
+
 	    /*public static String convertNumberToLetterBigDecimal2(BigDecimal number,boolean a)
 	            throws NumberFormatException {
-	    	
+
 	    	return convertNumberToLetter(number,a);
 	    }*/
-	    
+
 	    public static String convertNumberToLetterBigDecimal(BigDecimal number)
 	            throws NumberFormatException {
 	    	return convertNumberToLetter(String.valueOf(number));
 	    }
-	    
+
 	    public static String convertNumberToLetterBigDecimal(Integer number)
 	            throws NumberFormatException {
 	    	return convertNumberToLetter(String.valueOf(number));
@@ -65,7 +65,7 @@ import play.Logger;
 	    /**
 	     * Convierte un numero en representacion numerica a uno en representacion de
 	     * texto. El numero es valido si esta entre 0 y 999'999.999
-	     * 
+	     *
 	     * @param number
 	     *            Numero a convertir
 	     * @return Numero convertido a texto
@@ -74,33 +74,33 @@ import play.Logger;
 	     */
 	    public static String convertNumberToLetter(BigDecimal doubleNumber,boolean conPesos)
 	            throws NumberFormatException {
-	    	//Logger.debug("11111111 "+doubleNumber); 
+	    	//Logger.debug("11111111 "+doubleNumber);
 	        StringBuilder converted = new StringBuilder();
 
 	        String patternThreeDecimalPoints = "#.###";
 
 	        DecimalFormat format = new DecimalFormat(patternThreeDecimalPoints);
 	        format.setRoundingMode(RoundingMode.DOWN);
-	        
-	        
+
+
 	        // formateamos el numero, para ajustarlo a el formato de tres puntos
 	        // decimales
 	        //String formatedDouble = format.format(doubleNumber);
-	        
+
 	        doubleNumber = doubleNumber.setScale(2, BigDecimal.ROUND_DOWN);
-	        
+
 	        //doubleNumber = Double.parseDouble(formatedDouble);
 
 	        // Validamos que sea un numero legal
 	        BigDecimal s = new BigDecimal(999999999);
-	        
+
 	        //if (doubleNumber.compareTo(s) > 0)
 	        //	return "";
 	        //    throw new NumberFormatException(
 	        //            "El numero es mayor de 999'999.999, "
 	        //                   + "no es posible convertirlo");
 	        BigDecimal sa = new BigDecimal(0);
-	        
+
 	        String menos = "";
 	        if (doubleNumber.compareTo(sa) < 0) {
 	        	doubleNumber = doubleNumber.multiply(new BigDecimal(-1));
@@ -109,7 +109,7 @@ import play.Logger;
 	        }
 	        String splitNumber[] = String.valueOf(doubleNumber).replace('.', '#')
 	                .split("#");
-	        
+
 	        if(splitNumber[0].length() > 8) {
 	        	int milmillon = Integer.parseInt(String.valueOf(getDigitAt(splitNumber[0], 9)));
 	        	 if (milmillon == 1)
@@ -118,22 +118,22 @@ import play.Logger;
 	 	            converted.append(convertNumber(String.valueOf(milmillon))
 	 	                    + " MIL ");
 	        }
-	        
+
 	        // Descompone el trio de millones 1.000.000
 	        int millon = Integer.parseInt(
 	        		  //String.valueOf(getDigitAt(splitNumber[0], 9))+
-	        		 String.valueOf(getDigitAt(splitNumber[0], 8))  
+	        		 String.valueOf(getDigitAt(splitNumber[0], 8))
 	                + String.valueOf(getDigitAt(splitNumber[0], 7))
 	                + String.valueOf(getDigitAt(splitNumber[0], 6))
 	                );
-	        
-	        
-	        
+
+
+
 	        if (millon == 1)
 	            converted.append("UN MILLON ");
 	        else if (millon > 1)
 	            converted.append(convertNumber(String.valueOf(millon))
-	                    + "MILLONES ");
+	                    + " MILLONES ");
 
 	        // Descompone el trio de miles
 	        int miles = Integer.parseInt(String.valueOf(getDigitAt(splitNumber[0],
@@ -164,24 +164,24 @@ import play.Logger;
 	        int centavos = Integer.parseInt(String.valueOf(getDigitAt(splitNumber[1], 2))
 	                + String.valueOf(getDigitAt(splitNumber[1], 1))
 	                + String.valueOf(getDigitAt(splitNumber[1], 0)));
-	        
+
 	        String centaString = String.valueOf(centavos);
 	        if(centaString.length() == 1){
 	        	centaString = centaString+"0";
 	        }
 	        centavos = new Integer(centaString);
-	        
+
 	        if (centavos == 1)
 	            converted.append(" CON UN CENTAVO");
 	        else if (centavos > 1){
-	        	Logger.debug("----------- "+String.valueOf(splitNumber[0])); 
+	        	Logger.debug("----------- "+String.valueOf(splitNumber[0]));
 	        	Logger.debug("----------- "+String.valueOf(splitNumber[1]));
 	        	if(splitNumber[1].length() == 1){
 	        		splitNumber[1] = splitNumber[1]+"0";
 	        	}
-	        	
+
 	        	if(getDigitAt(splitNumber[1],1) == 0){
-	        		String cent = String.valueOf(getDigitAt(splitNumber[1],0)); 
+	        		String cent = String.valueOf(getDigitAt(splitNumber[1],0));
 	        		if(cent.compareTo("1") == 0){
 	        			converted.append(" CON UN CENTAVO");
 	        		}else{
@@ -191,22 +191,22 @@ import play.Logger;
 		        	converted.append(" CON " + convertNumber(String.valueOf(centavos)) + " CENTAVOS");
 	        	}
 	        }
-	        
-	        
-	        
+
+
+
 	        return menos+converted.toString();
 	    }
 
 	    /**
 	     * Convierte los trios de numeros que componen las unidades, las decenas y
 	     * las centenas del numero.
-	     * 
+	     *
 	     * @param number
 	     *            Numero a convetir en digitos
 	     * @return Numero convertido en letras
 	     */
 	    private static String convertNumber(String number) {
-	    	
+
 	    	if (number.length() > 3)
 	            throw new NumberFormatException(
 	                    "La longitud maxima debe ser 3 digitos");
@@ -237,7 +237,7 @@ import play.Logger;
 
 	    /**
 	     * Retorna el digito numerico en la posicion indicada de derecha a izquierda
-	     * 
+	     *
 	     * @param origin
 	     *            Cadena en la cual se busca el digito
 	     * @param position
