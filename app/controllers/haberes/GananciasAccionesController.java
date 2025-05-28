@@ -564,14 +564,23 @@ public class GananciasAccionesController extends Controller {
 		for (int i = 0; i < ganLiqOtrosEmpEnt.getLength(); i++) {
 			Element e = (Element) ganLiqOtrosEmpEnt.item(i);
 			String tipoDoc = XPath.selectText("tipoDoc", e).toString();
-			String nroDoc = XPath.selectText("nroDoc", e).toString();
+			//String nroDoc = XPath.selectText("nroDoc", e).toString();
+			String nroDoc = XPath.selectText("cuit", e).toString();
 			String deno = XPath.selectText("denominacion", e).toString();
+			String convenioColectivo = XPath.selectText("convenioColectivo", e).toString();
+			String transporteLargaDist = XPath.selectText("transporteLargaDist", e).toString();
+			String transporteTerrLargaDist = XPath.selectText("transporteTerrLargaDist", e).toString();
+
+
 
 			Integer idEmpEnt = cargarEmpEnt(
 					idPresentacion,
 					(tipoDoc.isEmpty()) ? null : Integer.parseInt(tipoDoc),
 					(nroDoc.isEmpty()) ? null : Long.valueOf(nroDoc),
-					(deno.isEmpty()) ? "" : deno);
+					(deno.isEmpty()) ? "" : deno,
+					(convenioColectivo.isEmpty() ) ? "" : convenioColectivo,
+					(transporteLargaDist.isEmpty()  ) ? "" : transporteLargaDist,
+					(transporteTerrLargaDist.isEmpty()  ) ? "" : transporteTerrLargaDist);
 
 			if (idEmpEnt == null) {
 				flash("error", "La carga de empEnt de " + a.apellido + " no se puedo insertar");
@@ -599,6 +608,29 @@ public class GananciasAccionesController extends Controller {
 				String matDid = XPath.selectText("matDid", g).toString();
 				String gastosMovViat = XPath.selectText("gastosMovViat", g).toString();
 
+				//2025
+				String regimen = XPath.selectText("regimen", g).toString();
+				String asign_familiares = XPath.selectText("asignFam", g).toString();
+				String interes_prest_al_emp = XPath.selectText("intPrestEmp", g).toString();
+				String indem_ley_4003 = XPath.selectText("indemLey4003", g).toString();
+				String remun_ley_19640 = XPath.selectText("remunLey19640", g).toString();
+				String remun_cct_petro = XPath.selectText("remunCctPetro", g).toString();
+				String cursos_semin = XPath.selectText("cursosSemin", g).toString();
+				String indum_equip_emp = XPath.selectText("indumEquipEmp", g).toString();
+				String otros_conc_an = XPath.selectText("otrosConAn", g).toString();
+				String bonos_prod = XPath.selectText("bonosProd", g).toString();
+				String fallos_caja = XPath.selectText("fallosCaja", g).toString();
+				String con_sim_nat = XPath.selectText("conSimNat", g).toString();
+				String movilidad = XPath.selectText("movilidad", g).toString();
+
+				String seg_social_anses = XPath.selectText("segSocANSES", g).toString();
+				String seg_social_cajas = XPath.selectText("segSocCajas", g).toString();
+				String ajuste_rem_gravadas = XPath.selectText("ajusteRemGravadas", g).toString();
+				String ajuste_rem_exe_no_alcanzadas = XPath.selectText("AjusteRemExeNoAlcanzadas", g).toString();
+				String viaticos = XPath.selectText("viaticos", g).toString();
+				String rem_exenta_ley_27549 = XPath.selectText("remunExentaLey27549", g).toString();
+				String suplem_partic_ley_19101 = XPath.selectText("suplemParticLey19101", g).toString();
+				String teletrabajo_exento = XPath.selectText("teletrabajoExento", g).toString();
 
 				cargarIngresosAportes(
 						idEmpEnt,
@@ -615,7 +647,29 @@ public class GananciasAccionesController extends Controller {
 						(horasExtGr.isEmpty()) ? null : new BigDecimal(horasExtGr),
 						(horasExtEx.isEmpty()) ? null : new BigDecimal(horasExtEx),
 						(matDid.isEmpty()) ? null : new BigDecimal(matDid),
-						(gastosMovViat.isEmpty()) ? null : new BigDecimal(gastosMovViat));
+						(gastosMovViat.isEmpty()) ? null : new BigDecimal(gastosMovViat),
+						(regimen.isEmpty()  ) ? "g" : regimen,
+						(asign_familiares.isEmpty()) ? null : new BigDecimal(asign_familiares),
+						(interes_prest_al_emp.isEmpty()) ? null : new BigDecimal(interes_prest_al_emp),
+						(indem_ley_4003.isEmpty()) ? null : new BigDecimal(indem_ley_4003),
+						(remun_ley_19640.isEmpty()) ? null : new BigDecimal(remun_ley_19640),
+						(remun_cct_petro.isEmpty()) ? null : new BigDecimal(remun_cct_petro),
+						(cursos_semin.isEmpty()) ? null : new BigDecimal(cursos_semin),
+						(indum_equip_emp.isEmpty()) ? null : new BigDecimal(indum_equip_emp),
+						(otros_conc_an.isEmpty()) ? null : new BigDecimal(otros_conc_an),
+						(bonos_prod.isEmpty()) ? null : new BigDecimal(bonos_prod),
+						(fallos_caja.isEmpty()) ? null : new BigDecimal(fallos_caja),
+						(con_sim_nat.isEmpty()) ? null : new BigDecimal(con_sim_nat),
+						(movilidad.isEmpty()) ? null : new BigDecimal(movilidad),
+						(seg_social_anses.isEmpty()) ? null : new BigDecimal(seg_social_anses),
+						(seg_social_cajas.isEmpty()) ? null : new BigDecimal(seg_social_cajas),
+						(ajuste_rem_gravadas.isEmpty()) ? null : new BigDecimal(ajuste_rem_gravadas),
+						(ajuste_rem_exe_no_alcanzadas.isEmpty()) ? null : new BigDecimal(ajuste_rem_exe_no_alcanzadas),
+						(viaticos.isEmpty()) ? null : new BigDecimal(viaticos),
+						(rem_exenta_ley_27549.isEmpty()) ? null : new BigDecimal(rem_exenta_ley_27549),
+						(suplem_partic_ley_19101.isEmpty()) ? null : new BigDecimal(suplem_partic_ley_19101),
+						(teletrabajo_exento.isEmpty()) ? null : new BigDecimal(teletrabajo_exento)
+						);
 			}
 
 		}
@@ -682,16 +736,22 @@ public class GananciasAccionesController extends Controller {
 
 	}
 
-	private static Integer cargarEmpEnt(Integer idPresentacion, Integer tipoDoc, Long nroDoc, String denominacion)
+	private static Integer cargarEmpEnt(Integer idPresentacion, Integer tipoDoc, Long nroDoc, String denominacion,String convenio_colectivo,String transporte_larga_dist,String transporte_terr_larga_dist)
 			throws PSQLException {
 
 		SqlUpdate insert = Ebean.createSqlUpdate(
-				"INSERT INTO ganancias_liq_otros_emp_ent (ganancias_presentacion_id, documento_tipo, documento_nro, denominacion) VALUES (:ganancias_presentacion_id, :documento_tipo, :documento_nro, :denominacion)");
+				"INSERT INTO ganancias_liq_otros_emp_ent (ganancias_presentacion_id, documento_tipo, documento_nro, denominacion,convenio_colectivo,transporte_larga_dist,transporte_terr_larga_dist) "
+			+ "VALUES (:ganancias_presentacion_id, :documento_tipo, :documento_nro, :denominacion,:convenio_colectivo,:transporte_larga_dist,:transporte_terr_larga_dist)");
 
 		insert.setParameter("ganancias_presentacion_id", idPresentacion);
 		insert.setParameter("documento_tipo", tipoDoc);
 		insert.setParameter("documento_nro", nroDoc);
 		insert.setParameter("denominacion", denominacion);
+		insert.setParameter("convenio_colectivo", convenio_colectivo);
+		insert.setParameter("transporte_larga_dist", transporte_larga_dist);
+		insert.setParameter("transporte_terr_larga_dist", transporte_terr_larga_dist);
+
+
 
 		if (insert.execute() == 0) {
 			return null;
@@ -704,10 +764,36 @@ public class GananciasAccionesController extends Controller {
 	private static Integer cargarIngresosAportes(Integer idEmpEnt, Integer mes, BigDecimal obraSoc, BigDecimal segSoc,
 			BigDecimal sind, BigDecimal ganBrut, BigDecimal retGan, BigDecimal retribNoHab, BigDecimal ajuste,
 			BigDecimal exeNoAlc, BigDecimal sac, BigDecimal horasExtGr, BigDecimal horasExtEx, BigDecimal matDid,
-			BigDecimal gastosMovViat) throws PSQLException {
+			BigDecimal gastosMovViat,String regimen,
+			BigDecimal asign_familiares,
+			BigDecimal interes_prest_al_emp,
+			BigDecimal indem_ley_4003,
+			BigDecimal remun_ley_19640,
+			BigDecimal remun_cct_petro,
+			BigDecimal cursos_semin,
+			BigDecimal indum_equip_emp,
+			BigDecimal otros_conc_an,
+			BigDecimal bonos_prod,
+			BigDecimal fallos_caja,
+			BigDecimal con_sim_nat,
+			BigDecimal movilidad,
+			BigDecimal seg_social_anses,
+			BigDecimal seg_social_cajas,
+			BigDecimal ajuste_rem_gravadas,
+			BigDecimal ajuste_rem_exe_no_alcanzadas,
+			BigDecimal viaticos,
+			BigDecimal rem_exenta_ley_27549,
+			BigDecimal suplem_partic_ley_19101,
+			BigDecimal teletrabajo_exento) throws PSQLException {
+
 
 		SqlUpdate insert = Ebean.createSqlUpdate(
-				"INSERT INTO ganancias_liq_otros_emp_ent_det (liq_emp_ent_id, mes, obra_soc, seg_soc, sind, gan_brut, ret_gan, retrib_no_hab, ajuste, exe_no_alc, sac, hs_ext_gr, hs_ext_ex, mat_did, mov_viat) VALUES (:liq_emp_ent_id, :mes, :obra_soc, :seg_soc, :sind, :gan_brut, :ret_gan, :retrib_no_hab, :ajuste, :exeNoAlc, :sac, :horasExtGr, :horasExtEx, :matDid, :gastosMovViat)");
+				"INSERT INTO ganancias_liq_otros_emp_ent_det (liq_emp_ent_id, mes, obra_soc, seg_soc, sind, gan_brut, ret_gan, retrib_no_hab, ajuste, exe_no_alc, sac, hs_ext_gr, hs_ext_ex, mat_did, mov_viat,regimen,"
+				+ "asign_familiares,interes_prest_al_emp,indem_ley_4003,remun_ley_19640,remun_cct_petro,cursos_semin,indum_equip_emp,otros_conc_an,bonos_prod,fallos_caja,con_sim_nat,movilidad,"
+				+ "seg_social_anses,seg_social_cajas,ajuste_rem_gravadas,ajuste_rem_exe_no_alcanzadas,viaticos,rem_exenta_ley_27549,suplem_partic_ley_19101,teletrabajo_exento) "
+			+ "VALUES (:liq_emp_ent_id, :mes, :obra_soc, :seg_soc, :sind, :gan_brut, :ret_gan, :retrib_no_hab, :ajuste, :exeNoAlc, :sac, :horasExtGr, :horasExtEx, :matDid, :gastosMovViat,:regimen,"
+			+ ":asign_familiares,:interes_prest_al_emp,:indem_ley_4003,:remun_ley_19640,:remun_cct_petro,:cursos_semin,:indum_equip_emp,:otros_conc_an,:bonos_prod,:fallos_caja,:con_sim_nat,:movilidad,"
+			+ ":seg_social_anses,:seg_social_cajas,:ajuste_rem_gravadas,:ajuste_rem_exe_no_alcanzadas,:viaticos,:rem_exenta_ley_27549,:suplem_partic_ley_19101,:teletrabajo_exento)");
 
 		insert.setParameter("liq_emp_ent_id", idEmpEnt);
 		insert.setParameter("mes", mes);
@@ -724,6 +810,29 @@ public class GananciasAccionesController extends Controller {
 		insert.setParameter("horasExtEx", horasExtEx);
 		insert.setParameter("matDid", matDid);
 		insert.setParameter("gastosMovViat", gastosMovViat);
+		insert.setParameter("regimen", regimen);
+
+		insert.setParameter("asign_familiares", asign_familiares);
+		insert.setParameter("interes_prest_al_emp", interes_prest_al_emp);
+		insert.setParameter("indem_ley_4003", indem_ley_4003);
+		insert.setParameter("remun_ley_19640", remun_ley_19640);
+		insert.setParameter("remun_cct_petro", remun_cct_petro);
+		insert.setParameter("cursos_semin", cursos_semin);
+		insert.setParameter("indum_equip_emp", indum_equip_emp);
+		insert.setParameter("otros_conc_an", otros_conc_an);
+		insert.setParameter("bonos_prod", bonos_prod);
+		insert.setParameter("fallos_caja", fallos_caja);
+		insert.setParameter("con_sim_nat", regimen);
+		insert.setParameter("movilidad", movilidad);
+
+		insert.setParameter("seg_social_anses", seg_social_anses);
+		insert.setParameter("seg_social_cajas", seg_social_cajas);
+		insert.setParameter("ajuste_rem_gravadas", ajuste_rem_gravadas);
+		insert.setParameter("ajuste_rem_exe_no_alcanzadas", ajuste_rem_exe_no_alcanzadas);
+		insert.setParameter("viaticos", viaticos);
+		insert.setParameter("rem_exenta_ley_27549", rem_exenta_ley_27549);
+		insert.setParameter("suplem_partic_ley_19101", suplem_partic_ley_19101);
+		insert.setParameter("teletrabajo_exento", teletrabajo_exento);
 
 		if (insert.execute() == 0) {
 			return null;
