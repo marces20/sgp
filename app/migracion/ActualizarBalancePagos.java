@@ -29,8 +29,8 @@ public class ActualizarBalancePagos {
 		Connection conn2 = null;
 		try {
 
-			Date fd = DateUtils.formatDate("01/06/2023", "dd/MM/yyyy");
-			Date fh = DateUtils.formatDate("30/06/2023", "dd/MM/yyyy");
+			Date fd = DateUtils.formatDate("01/12/2024", "dd/MM/yyyy");
+			Date fh = DateUtils.formatDate("31/12/2024", "dd/MM/yyyy");
 			System.out.println("Tffffffffffffffffffffffffffffffffffffff");
 			List<Integer> idsExpLiq = new ArrayList<Integer>();
 			idsExpLiq.add(34720);
@@ -43,7 +43,7 @@ public class ActualizarBalancePagos {
 												   .le("fecha_pago", fh)
 												   .eq("tipo", "payment")
 												   //.in("expediente_id", idsExpLiq)
-												   //.eq("expediente_id",37237)
+												   //.eq("expediente_id",44261)
 												   //.eq("orden_pago_id",35787)
 												   //.eq("tipo_cuenta_id", TipoCuenta.PLAN_SUMAR_LACMI)
 												   .disjunction()
@@ -83,11 +83,15 @@ public class ActualizarBalancePagos {
 				}else if(f.tipo_cuenta_id.compareTo(TipoCuenta.PLAN_SUMAR_HEARM) == 0) {
 					cuentaPagoBanco = 294; //1.1.1.02.07 Bco Macro C/C $ N 0941423613/9 Prog Sumar HEARM
 				}else if(f.tipo_cuenta_id.compareTo(TipoCuenta.PLAN_SUMAR_LACMI) == 0) {
+
 					cuentaPagoBanco = 295; //1.1.1.02.08 Bco Macro C/C $ N 0941646917/7 Prog Sumar Lacmi
+
 				}else if(f.tipo_cuenta_id.compareTo(TipoCuenta.PLAN_SUMAR_MATERNO) == 0) {
 					cuentaPagoBanco = 561; //111/02/12 Bco Macro C/C $ Nº 0942037597/4 Sumar Materno
 				}else if(f.tipo_cuenta_id.compareTo(TipoCuenta.PLAN_SUMAR_OBERA) == 0) {
 					cuentaPagoBanco = 564; //111/02/15 Bco Macro C/C $ Nº 0942035024/5 Sumar Obera
+				}else if(f.tipo_cuenta_id.compareTo(TipoCuenta.PLAN_SUMAR_FAVALORO) == 0) {
+					cuentaPagoBanco = 602; //111/02/16 Bco Macro C/C $ Nº 0942035024/5 Sumar Favaloro
 				}else {
 					tc = 413;
 					cuentaPagoBanco = 288;
@@ -117,11 +121,11 @@ public class ActualizarBalancePagos {
 					List<FacturaLinea> fll = FacturaLinea.find.where().eq("factura_id", f.factura_id).findList();
 					for(FacturaLinea fllx :fll) {
 
-						if(fllx.cuenta_analitica_original_id.equals((long)178)) {//HONORARIOS Y RETRIBUCIONES A TERCEROS
+						//if(fllx.cuenta_analitica_original_id.equals((long)178)) {//HONORARIOS Y RETRIBUCIONES A TERCEROS
 							if(fllx.factura.orden.orden_rubro_id.equals((long)8)) {//HONORARIOS
 								ISHONORARIO = true;
 							}
-						}
+							//}
 
 						if(fllx.cuenta_analitica_original_id.equals((long)286)) {//HONORARIOS Y RETRIBUCIONES A TERCEROS (IMC)
 							ISHONORARIO = true;
@@ -247,7 +251,7 @@ public class ActualizarBalancePagos {
 					b.create_date = new Date();
 					b.create_usuario_id = new Long(Usuario.getUsuarioSesion());
 					b.save();
-
+					System.out.println("11111111111111111111 "+tc);
 					BalanceExpediente be = new BalanceExpediente();
 					be.balance_id = b.id;
 					be.expediente_id= f.expediente_id.longValue();
@@ -312,7 +316,7 @@ public class ActualizarBalancePagos {
 								box.balance_id = bx.id;
 								box.orden_pago_id = f.orden_pago_id;
 								box.save();
-								System.out.println("1111111111111111 "+pay.total.subtract(pay.total_credito));
+								System.out.println("22222222222222222222 "+tc);
 								//////////////////////////////////////////////////////////////////////
 							}
 
@@ -333,7 +337,7 @@ public class ActualizarBalancePagos {
 							bx2.create_date = new Date();
 							bx2.create_usuario_id = new Long(Usuario.getUsuarioSesion());
 							bx2.save();
-							System.out.println("222222222222222 "+pay.total.subtract(pay.total_credito));
+							System.out.println("3333333333333 "+cuentaPagoBanco);
 							BalanceExpediente bex2 = new BalanceExpediente();
 							bex2.balance_id = bx2.id;
 							bex2.expediente_id= pay.expediente_id.longValue();
@@ -371,7 +375,7 @@ public class ActualizarBalancePagos {
 							bx.create_date = new Date();
 							bx.create_usuario_id = new Long(Usuario.getUsuarioSesion());
 							bx.save();
-
+							System.out.println("4444444444444444 "+cuentaPagoBanco);
 							BalanceExpediente bex = new BalanceExpediente();
 							bex.balance_id = bx.id;
 							bex.expediente_id= pay.expediente_id.longValue();
@@ -500,7 +504,7 @@ public class ActualizarBalancePagos {
 						bx.create_date = new Date();
 						bx.create_usuario_id = new Long(Usuario.getUsuarioSesion());
 						bx.save();
-
+						System.out.println("55555555555555555 "+cuentaPagoBanco);
 						BalanceExpediente bex = new BalanceExpediente();
 						bex.balance_id = bx.id;
 						bex.expediente_id= imp.expediente_id.longValue();
@@ -623,7 +627,7 @@ public class ActualizarBalancePagos {
 						bxx.create_date = new Date();
 						bxx.create_usuario_id = new Long(Usuario.getUsuarioSesion());
 						bxx.save();
-
+						System.out.println("66666666666666666666666 "+cuentaPagoBanco);
 						BalanceExpediente bexx = new BalanceExpediente();
 						bexx.balance_id = bxx.id;
 						bexx.expediente_id= imp.expediente_id.longValue();
@@ -696,7 +700,7 @@ public class ActualizarBalancePagos {
 				r = 7;
 				break;
 			case 4:
-				r = 7;
+				r = 8;
 				break;
 			case 5:
 				r = 9;
