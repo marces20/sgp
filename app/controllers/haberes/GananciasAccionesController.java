@@ -822,7 +822,7 @@ public class GananciasAccionesController extends Controller {
 		insert.setParameter("otros_conc_an", otros_conc_an);
 		insert.setParameter("bonos_prod", bonos_prod);
 		insert.setParameter("fallos_caja", fallos_caja);
-		insert.setParameter("con_sim_nat", regimen);
+		insert.setParameter("con_sim_nat", con_sim_nat);
 		insert.setParameter("movilidad", movilidad);
 
 		insert.setParameter("seg_social_anses", seg_social_anses);
