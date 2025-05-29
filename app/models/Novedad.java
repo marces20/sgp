@@ -11,6 +11,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 import org.joda.time.DateTime;
 
@@ -59,6 +60,9 @@ public class Novedad extends Model{
     public Date horas;
 
 	public String descripcion;
+
+
+	public String fechas;
 
 	@ManyToOne
 	@JoinColumn(name="create_usuario_id", referencedColumnName="id", insertable=false, updatable=false)
