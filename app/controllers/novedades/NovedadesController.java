@@ -26,11 +26,23 @@ import play.mvc.Controller;
 import play.mvc.Result;
 import play.mvc.Security;
 import utils.RequestVar;
+import utils.UriTrack;
 import views.html.novedades.calendar.*;
+import views.html.novedades.listaNovedades.*;
 
 @Security.Authenticated(Secured.class)
 public class NovedadesController extends Controller {
 
+	@CheckPermiso(key = "verCalendario")
+	public static Result indexListaNovedades() {
+		DynamicForm d = form().bindFromRequest();
+
+		return ok(indexListaNovedades.render(Novedad.page(RequestVar.get("agente_id"),
+											RequestVar.get("servicio_id"),
+											RequestVar.get("desde"),
+											RequestVar.get("hasta")),d));
+
+	}
 
 	@CheckPermiso(key = "verCalendario")
 	public static Result index() {
@@ -99,10 +111,16 @@ public class NovedadesController extends Controller {
 	}
 
 
+	public static Result verNovedad(Long id) {
+		Novedad n = Novedad.find.byId(id);
+
+		return ok(views.html.novedades.listaNovedades.verNovedad.render(n));
+	}
+
 	public static Result ver(Long id) {
 		Novedad n = Novedad.find.byId(id);
 
-		return ok(verNovedad.render(n));
+		return ok(views.html.novedades.calendar.verNovedad.render(n));
 	}
 
 	public static Result eliminar(Long id) {
@@ -114,7 +132,7 @@ public class NovedadesController extends Controller {
 			flash("error", "No se ha podido eliminar la novedad");
 		}
 
-		return redirect(controllers.novedades.routes.NovedadesController.index());
+		return redirect(controllers.novedades.routes.NovedadesController.indexListaNovedades()+UriTrack.get("?"));
 	}
 
 	public static Result crearMasiva() {
