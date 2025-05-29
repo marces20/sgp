@@ -788,10 +788,11 @@ public class GananciasAccionesController extends Controller {
 
 
 		SqlUpdate insert = Ebean.createSqlUpdate(
-				"INSERT INTO ganancias_liq_otros_emp_ent_det (liq_emp_ent_id, mes, obra_soc, seg_soc, sind, gan_brut, ret_gan, retrib_no_hab, ajuste, exe_no_alc, sac, hs_ext_gr, hs_ext_ex, mat_did, mov_viat,regimen,"
+				"INSERT INTO ganancias_liq_otros_emp_ent_det (liq_emp_ent_id, mes, obra_soc, seg_soc, sind, gan_brut, ret_gan, retrib_no_hab, ajuste, exe_no_alc, sac, hs_ext_gr, hs_ext_ex, mat_did, regimen,"
 				+ "asign_familiares,interes_prest_al_emp,indem_ley_4003,remun_ley_19640,remun_cct_petro,cursos_semin,indum_equip_emp,otros_conc_an,bonos_prod,fallos_caja,con_sim_nat,movilidad,"
 				+ "seg_social_anses,seg_social_cajas,ajuste_rem_gravadas,ajuste_rem_exe_no_alcanzadas,viaticos,rem_exenta_ley_27549,suplem_partic_ley_19101,teletrabajo_exento) "
-			+ "VALUES (:liq_emp_ent_id, :mes, :obra_soc, :seg_soc, :sind, :gan_brut, :ret_gan, :retrib_no_hab, :ajuste, :exeNoAlc, :sac, :horasExtGr, :horasExtEx, :matDid, :gastosMovViat,:regimen,"
+
+			+ "VALUES (:liq_emp_ent_id, :mes, :obra_soc, :seg_soc, :sind, :gan_brut, :ret_gan, :retrib_no_hab, :ajuste, :exeNoAlc, :sac, :horasExtGr, :horasExtEx, :matDid, :regimen,"
 			+ ":asign_familiares,:interes_prest_al_emp,:indem_ley_4003,:remun_ley_19640,:remun_cct_petro,:cursos_semin,:indum_equip_emp,:otros_conc_an,:bonos_prod,:fallos_caja,:con_sim_nat,:movilidad,"
 			+ ":seg_social_anses,:seg_social_cajas,:ajuste_rem_gravadas,:ajuste_rem_exe_no_alcanzadas,:viaticos,:rem_exenta_ley_27549,:suplem_partic_ley_19101,:teletrabajo_exento)");
 
@@ -809,7 +810,6 @@ public class GananciasAccionesController extends Controller {
 		insert.setParameter("horasExtGr", horasExtGr);
 		insert.setParameter("horasExtEx", horasExtEx);
 		insert.setParameter("matDid", matDid);
-		insert.setParameter("gastosMovViat", gastosMovViat);
 		insert.setParameter("regimen", regimen);
 
 		insert.setParameter("asign_familiares", asign_familiares);
