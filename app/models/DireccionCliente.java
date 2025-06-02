@@ -29,25 +29,25 @@ public class DireccionCliente extends Model {
 	@OneToOne
 	@JoinColumn(name="cliente_id", referencedColumnName="id", insertable=false, updatable=false)
 	public Cliente cliente;
-	
+
 	@OneToOne
 	public Long cliente_id;
-	
+
 	@OneToOne
 	@JoinColumn(name="localidad_id", referencedColumnName="id", insertable=false, updatable=false)
 	public Localidad localidad;
-	
+
 	@Required(message="Localidad es requerida")
 	public Long localidad_id;
 
 	public boolean activo = false;
-	
+
 	@Column(name="zip")
 	public String cp;
-	
+
 	@Required(message="El nombre de contacto es requerido")
 	public String nombre;
-	
+
 	@Required(message="Calle es requerido")
 	public String calle;
 	@Required(message="Campo requerido")
@@ -57,24 +57,25 @@ public class DireccionCliente extends Model {
 	public String telefono;
 	public String mobile;
 	public String fax;
-	
+	public String otro;
+
 	@ManyToOne
 	@JoinColumn(name="create_usuario_id", referencedColumnName="id", insertable=false, updatable=false)
-	public Usuario create_usuario; 
+	public Usuario create_usuario;
 	@Column(name="create_usuario_id")
 	public Long create_usuario_id;
-	 
-	public Date create_date; 
-	public Date write_date; 
-	
+
+	public Date create_date;
+	public Date write_date;
+
 	@ManyToOne
 	@JoinColumn(name="write_usuario_id", referencedColumnName="id", insertable=false, updatable=false)
-	public Usuario write_usuario; 
+	public Usuario write_usuario;
 	@Column(name="write_usuario_id")
 	public Long write_usuario_id;
-	
-	public static Model.Finder<Long,DireccionCliente> find = new Model.Finder<Long,DireccionCliente>(Long.class, DireccionCliente.class); 
-	
+
+	public static Model.Finder<Long,DireccionCliente> find = new Model.Finder<Long,DireccionCliente>(Long.class, DireccionCliente.class);
+
 	public static List<DireccionCliente> getDireccionesById(Long id){
 		return DireccionCliente.find
 				.fetch("localidad")
