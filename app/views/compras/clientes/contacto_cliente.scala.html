@@ -3,7 +3,7 @@
 <div id="listaContactos" class="@if(clienteForm.data().containsKey("direcciones[0].nombre")){hide}">
 @if(!vista){
 	<p><a class="btn btn-xs btn-default" id="nuevoContacto" href="#"><i class="glyphicon glyphicon-plus"></i> Agregar nuevo</a></p>
-}	
+}
 
 @for(direccion <- DireccionCliente.find.fetch("localidad").where().eq("cliente_id", clienteForm("id").value.toInt).findList())  {
 
@@ -11,7 +11,7 @@
 	<div class="panel panel-default">
 
 	  	<div class="panel-body">
-	  	
+
 		@if(!vista){
 			<p>
 			<div class="btn-group">
@@ -20,22 +20,22 @@
 			</div>
 			</p>
 		}
-		  	
+
 	  	<div class="row">
 	  		<div class="col-sm-4"><b>Nombre:</b> @direccion.nombre</div>
 	  		<div class="col-sm-3"><b>Calle:</b>  @direccion.calle</div>
-	  		<div class="col-sm-2"><b>Número:</b>  @direccion.numero</div>
+	  		<div class="col-sm-2"><b>Número:</b>  @direccion.numero @if(direccion.otro != null){ - @direccion.otro}</div>
 	  		<div class="col-sm-3"><b>CP:</b>  @direccion.cp</div>
 	  		<div class="col-sm-3"><b>Localidad:</b>  @if(direccion.localidad != null){@direccion.localidad.nombre}</div>
 	  	</div>
-	  	
+
 	  	<div class="row">
 	  		<div class="col-sm-4"><b>Email:</b> @direccion.email</div>
 	  		<div class="col-sm-3"><b>Celular:</b>  @direccion.mobile</div>
 	  		<div class="col-sm-2"><b>Fijo:</b>  @direccion.telefono</div>
 	  		<div class="col-sm-3"><b>Fax:</b>  @direccion.fax</div>
 	  	</div>
-	  	
+
 	  	</div>
 	</div>
 }

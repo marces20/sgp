@@ -1,6 +1,6 @@
 @(clienteForm: Form[DireccionCliente], clienteId: Long, clienteExiste: Boolean)
 @import helper._
-@implicitFieldConstructor = @{ FieldConstructor(simpleInput.render) } 
+@implicitFieldConstructor = @{ FieldConstructor(simpleInput.render) }
 
 
 
@@ -14,13 +14,13 @@
 	}
 </p>
 
-  	@inputText(clienteForm("id"), 'hidden -> "hidden") 	
+  	@inputText(clienteForm("id"), 'hidden -> "hidden")
   	<input type="hidden" name="cliente_id" value="@clienteId" />
   	<div class="row">
   		<div class="col-sm-6">
   			<legend>Dirección postal</legend>
   				<div class="row">
-				<div class="col-sm-6">
+				<div class="col-sm-5">
 					<div class="form-group @if(clienteForm.error("calle") != null)  {has-error} else {has-required}">
 						<label for="@clienteForm("calle").id" class="control-label">Calle</label>
 						@inputText(clienteForm("calle"), 'class -> "form-control")
@@ -29,8 +29,8 @@
 						}
 					</div>
 				</div>
-			
-				<div class="col-sm-3">
+
+				<div class="col-sm-2">
 					<div class="form-group @if(clienteForm.error("numero") != null)  {has-error} else {has-required}">
 						<label for="@clienteForm("numero").id" class="control-label">Número</label>
 						@inputText(clienteForm("numero"), 'class -> "form-control")
@@ -39,8 +39,8 @@
 						}
 					</div>
 				</div>
-				
-				<div class="col-sm-3">
+
+				<div class="col-sm-2">
 					<div class="form-group @if(clienteForm.error("cp") != null) {has-error}">
 						<label for="@clienteForm("cp").id" class="control-label">C. Postal</label>
 						@inputText(clienteForm("cp"), 'class -> "form-control")
@@ -49,7 +49,14 @@
 						}
 					</div>
 				</div>
-				
+				<div class="col-sm-3">
+					<div class="form-group">
+						<label for="@clienteForm("otro").id" class="control-label">Otro</label>
+						@inputText(clienteForm("otro"), 'class -> "form-control")
+
+					</div>
+				</div>
+
  				</div>
 
 				<div class="row contenedorUbicacion">
@@ -62,16 +69,16 @@
 							}
 						</div>
 					</div>
-		
+
 					<div class="col-sm-4">
 						<div class="seleccionProvincia form-group @if(clienteForm.error("localidad.provincia.id") != null) {has-error}">
 							<label for="@clienteForm("localidad.provincia.id").id" class="control-label">Provincia</label>
-							@select(clienteForm("localidad.provincia.id"), 
+							@select(clienteForm("localidad.provincia.id"),
 								clienteForm("localidad.provincia.pais.id").value match {
 									case null => {options()}
 									case v if v.matches("\\d+") => {Provincia.getProvincias(v.toInt).map { p => p.id.toString -> p.nombre}}
 									case _ => {options()}
-								}, 
+								},
 							'class -> "form-control select", '_default -> "Seleccionar")
 							@clienteForm("localidad.provincia.id").error.map{ error =>
 								<div class="text-error">@error.message</div>
@@ -82,12 +89,12 @@
 					<div class="col-sm-4">
 						<div class="seleccionLocalidad form-group @if(clienteForm.error("localidad_id") != null) {has-error} else {has-required}">
 							<label for="@clienteForm("localidad.id").id" class="control-label">Localidad</label>
-							@select(clienteForm("localidad_id"), 
+							@select(clienteForm("localidad_id"),
 								clienteForm("localidad.provincia.id").value match {
 									case null => {options()}
 									case v if v.matches("\\d+") => {Localidad.getLocalidades(v.toInt).map { p => p.id.toString -> p.nombre}}
 									case _ => {options()}
-								}, 
+								},
 							'class -> "form-control select", '_default -> "Seleccionar")
 							@clienteForm("localidad_id").error.map{ error =>
 								<div class="text-error">@error.message</div>
@@ -97,10 +104,10 @@
 				</div>
 
   		</div>
-  		
+
   		<div class="col-sm-6">
   			<legend>Comunicación</legend>
-  			
+
   			<div class="row">
 				<div class="col-sm-12">
 			   			<label for="@clienteForm("nombre").id" class="control-label">Nombre del contacto</label>
@@ -110,8 +117,8 @@
 							}
 				</div>
 			</div>
-  			
-  			
+
+
   			<div class="row">
 				<div class="col-sm-7">
 			   		<div class="form-group @if(clienteForm.error("email") != null) {has-error}">
@@ -132,7 +139,7 @@
 					</div>
 		  		</div>
   			</div>
-  			
+
   			<div class="row">
 		  		<div class="col-sm-6">
 			   		<div class="form-group @if(clienteForm.error("mobile") != null) {has-error}">
@@ -143,7 +150,7 @@
 							}
 					</div>
 		  		</div>
-		  		
+
 		  		<div class="col-sm-6">
 			   		<div class="form-group @if(clienteForm.error("fax") != null) {has-error}">
 			   			<label for="@clienteForm("fax").id" class="control-label">Fax</label>
