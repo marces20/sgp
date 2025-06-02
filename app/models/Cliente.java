@@ -225,10 +225,11 @@ public class Cliente extends Model {
 	    	if(dp != null){
 	    		String calle = (dp.calle != null)?dp.calle:"";
 	    		String numero = (dp.numero != null)?dp.numero:"";
+	    		String otro = (dp.otro != null)?"-"+dp.otro:"";
 	    		String localidad = (dp.localidad != null && !dp.localidad.id.equals(new Integer(442)))?dp.localidad.nombre:"";
 	    		String provincia = (dp.localidad != null && dp.localidad.provincia != null)?dp.localidad.provincia.nombre:"";
 	    		String pais = (dp.localidad != null && dp.localidad.provincia != null && dp.localidad.provincia.pais != null)?dp.localidad.provincia.pais.nombre:"";
-	    		direccion = calle+" "+numero+" - "+localidad+" - "+provincia+" - "+pais;
+	    		direccion = calle+" "+numero+otro+" - "+localidad+" - "+provincia+" - "+pais;
 	    	}
     	}
     	return direccion;
