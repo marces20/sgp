@@ -181,7 +181,9 @@
 					<th>Fecha Inicio</th>
 					<th>Fecha Fin</th>
 					<th>Tipo</th>
+					<th>Cargado</th>
 					<th>Importe Tope</th>
+					<th>Resto</th>
 					<th>Estado</th>
 					<th>#</th>
 				</tr>
@@ -202,7 +204,9 @@
 				 	<td class="">@if(lc.fecha_inicio != null){@(utils.DateUtils.formatDate(lc.fecha_inicio))}</td>
 					<td class="">@if(lc.fecha_fin != null){@(utils.DateUtils.formatDate(lc.fecha_fin))}</td>
 					<td>@(lc.tipoEmbargo.nombre)</td>
+					<td>@if(lc.total != null){@utils.NumberUtils.moneda(lc.total)}</td>
 					<td>@if(lc.importe != null){@utils.NumberUtils.moneda(lc.importe)}</td>
+					<td>@if(lc.importe != null && lc.total != null){@utils.NumberUtils.moneda(lc.importe.subtract(lc.total))}</td>
 					<td class="estado" align="center">@(lc.estado.nombre)</td>
 				 </tr>
 			 }
