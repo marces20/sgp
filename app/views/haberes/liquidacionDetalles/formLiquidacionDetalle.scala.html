@@ -1,6 +1,6 @@
 @(detalleForm: Form[models.haberes.LiquidacionDetalle])
 @import helper._
-@implicitFieldConstructor = @{ FieldConstructor(simpleInput.render) } 
+@implicitFieldConstructor = @{ FieldConstructor(simpleInput.render) }
 
 
 
@@ -16,7 +16,7 @@ $(function(){
 	$("#importe").numeric_input({allowNegative: true});
 });
 </script>
- 
+
 <div class="row">
 	@inputText(detalleForm("liquidacion_puesto_id"), 'type -> "hidden")
 	<div class="col-sm-6">
@@ -25,13 +25,13 @@ $(function(){
 			@inputText(detalleForm("liquidacionConcepto.denominacion"), 'class -> "form-control", 'autofocus -> "autofocus", 'id -> "liquidacion_concepto_modal")
 			@inputText(detalleForm("liquidacion_concepto_id"), 'hidden -> "hidden", 'id -> "liquidacion_concepto_id_modal")
 			<span class="input-group-addon">
-				<a href="#" class="searchModal" id="searchProductoModal" 
-							data-title="Selección de Concepto" 
+				<a href="#" class="searchModal" id="searchProductoModal"
+							data-title="Selección de Concepto"
 							data-url="@controllers.haberes.routes.LiquidacionConceptosController.modalBuscar()"
-							data-height="650" 
-							data-width="700" 
-							data-listen="modal.seleccion.concepto.simple" 
-							data-label="#liquidacion_concepto_modal" 
+							data-height="650"
+							data-width="700"
+							data-listen="modal.seleccion.concepto.simple"
+							data-label="#liquidacion_concepto_modal"
 							data-field="#liquidacion_concepto_id_modal">
 							<i class="glyphicon glyphicon-search"></i>
 				</a>
@@ -58,13 +58,25 @@ $(function(){
 </div>
 <div class="row form-actions">
     <div class="col-lg-offset-4 col-lg-8">
-      <button type="submit" class="btn btn-default"><i class="glyphicon glyphicon-floppy-disk"></i>Guardar</button>	
+      <button type="submit" class="btn btn-default"><i class="glyphicon glyphicon-floppy-disk"></i>Guardar</button>
       <a href="" class="btn btn-default cancelar"><i class="glyphicon glyphicon-floppy-remove"></i>Cancelar</a>
     </div>
 </div>
 <script>
 $( function(){
-	
-	
+
+	if($("#concepto").length){
+		var options = {
+				script:"/suggestConcepto/",
+				varname:"",
+				json:true,
+				shownoresults:true,
+				maxresults:6,
+				callback: function (obj) {
+											$("#concepto").next().val(obj.id);
+										 }
+			};
+		var as_json = new bsn.AutoSuggest('concepto', options);
+	}
 });
 </script>
