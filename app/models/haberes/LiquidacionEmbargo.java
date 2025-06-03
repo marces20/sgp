@@ -12,6 +12,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 import com.avaje.ebean.ExpressionList;
+import com.avaje.ebean.annotation.Formula;
 
 import models.Estado;
 import models.Periodo;
@@ -73,6 +74,11 @@ public class LiquidacionEmbargo  extends Model{
 
 	@DecimalComa(value="")
 	public BigDecimal importe;
+
+	@Formula(
+      select = "_b${ta}.total",
+      join = "left outer join (select liquidacion_embargo_id, sum(round(importe,2)) as total from liquidacion_embargo_detalles ld  group by liquidacion_embargo_id) as _b${ta} on _b${ta}.liquidacion_embargo_id = ${ta}.id")
+	public BigDecimal total;
 
 	public static Model.Finder<Long,LiquidacionEmbargo> find = new Finder<Long,LiquidacionEmbargo>(Long.class, LiquidacionEmbargo.class);
 
