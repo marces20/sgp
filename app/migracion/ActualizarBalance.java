@@ -1525,7 +1525,8 @@ public class ActualizarBalance extends Controller {
 					}
 
 					//PRAXAIR ARGENTINA S.R.L.
-					if(idProveedor.equals(1852) || idProveedor.equals(18325)) {//PRAXAIR ARGENTINA S.R.L.
+					if(idProveedor.equals(1852) || idProveedor.equals(18325)) {//PRAXAIR ARGENTINA S.R.L. ROBERTO SALINAS E HIJOS S.A.
+
 
 						cuentaId = new Long(546);//EL RESTO	00000 - SIN CUENTA ASIGNADA
 
