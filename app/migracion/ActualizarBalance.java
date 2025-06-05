@@ -37,6 +37,7 @@ import models.Usuario;
 import models.haberes.LiquidacionMes;
 import models.recupero.RecuperoFactura;
 import models.recupero.RecuperoNotaCredito;
+import models.recupero.RecuperoNotaDebito;
 import models.recupero.RecuperoPago;
 import play.Logger;
 import server.Configuracion2;
@@ -117,8 +118,8 @@ public class ActualizarBalance extends Controller {
 
 		try {
 
-			Date fd = DateUtils.formatDate("01/01/2023", "dd/MM/yyyy");
-			Date fh = DateUtils.formatDate("31/03/2023", "dd/MM/yyyy");
+			Date fd = DateUtils.formatDate("01/01/2025", "dd/MM/yyyy");
+			Date fh = DateUtils.formatDate("31/03/2025", "dd/MM/yyyy");
 
 
 			conn2 = Configuracion2.get2().getConnection2();
@@ -131,10 +132,13 @@ public class ActualizarBalance extends Controller {
 				asiento = rs1.getInt(1);
 			}
 
+			List<Integer> pto = new ArrayList<>();
+			pto.add(7);
+
 			List<RecuperoFactura> lf = RecuperoFactura.find.where().ge("fecha", fd)
 					   .le("fecha", fh)
 					   .eq("estado_id", Estado.RECUPERO_FACTURA_APROBADO)
-					   //.not(Expr.in("expediente_id",idsExpLiq))
+					  // .not(Expr.in("puntoventa_id",pto))
 					   //.eq("id", 52641)
 					   .findList();
 
@@ -157,6 +161,8 @@ public class ActualizarBalance extends Controller {
 				b.asiento = asiento;
 				//b.orden_id = f.orden_id;
 				b.referencia = "fac-"+f.id.toString();
+				b.puntoventa_id = f.puntoventa_id;
+
 				b.save();
 
 				Integer cc = 320;
@@ -207,7 +213,8 @@ public class ActualizarBalance extends Controller {
 				bx.create_usuario_id = new Long(Usuario.getUsuarioSesion());
 				//bx.orden_id = f.orden_id;
 				bx.referencia = "fac-"+f.id.toString();
-				bx.save();
+				bx.puntoventa_id = f.puntoventa_id;
+ 				bx.save();
 
 
 				asiento ++;
@@ -236,8 +243,8 @@ public class ActualizarBalance extends Controller {
 
 		try {
 
-			Date fd = DateUtils.formatDate("01/01/2023", "dd/MM/yyyy");
-			Date fh = DateUtils.formatDate("31/03/2023", "dd/MM/yyyy");
+			Date fd = DateUtils.formatDate("01/01/2025", "dd/MM/yyyy");
+			Date fh = DateUtils.formatDate("31/03/2025", "dd/MM/yyyy");
 
 
 			conn2 = Configuracion2.get2().getConnection2();
@@ -250,16 +257,22 @@ public class ActualizarBalance extends Controller {
 				asiento = rs1.getInt(1);
 			}
 
+			List<Integer> pto = new ArrayList<>();
+			pto.add(7);
+
 			List<RecuperoPago> lf = RecuperoPago.find.where().ge("fecha", fd)
 					   .le("fecha", fh)
 					   .eq("estado_id", Estado.RECUPERO_PAGO_PAGADO)
-					   //.not(Expr.in("expediente_id",idsExpLiq))
+					   .isNull("recupero_nota_credito_id")
+					   .isNull("recupero_nota_debito_id")
+					  // .not(Expr.in("recuperoFactura.puntoventa_id",pto))
 					   //.eq("id", 52641)
 					   .findList();
 
 			System.out.println("-------------- "+lf.size());
 
 			for(RecuperoPago f:lf) {
+
 				Balance b = new Balance();
 				b.fecha = f.fecha;
 				b.fecha_debito = f.fecha;
@@ -277,6 +290,7 @@ public class ActualizarBalance extends Controller {
 				b.asiento = asiento;
 				//b.orden_id = f.orden_id;
 				b.referencia = "pago-"+f.id.toString();
+				b.puntoventa_id = f.recuperoFactura.puntoventa_id;
 				b.save();
 
 				Integer cc = 320;
@@ -327,6 +341,7 @@ public class ActualizarBalance extends Controller {
 				bx.create_usuario_id = new Long(Usuario.getUsuarioSesion());
 				//bx.orden_id = f.orden_id;
 				bx.referencia = "pago-"+f.id.toString();
+				bx.puntoventa_id = f.recuperoFactura.puntoventa_id;
 				bx.save();
 
 
@@ -349,15 +364,15 @@ public class ActualizarBalance extends Controller {
 		return true;
 	}
 
-	public static boolean notaCreditoRecupero(){
+	public static boolean notaDebitoRecupero(){
 
 		System.out.println("Empezo a ActualizarBalance PAGO RECUPERO");
 		Connection conn2 = null;
 
 		try {
 
-			Date fd = DateUtils.formatDate("01/04/2022", "dd/MM/yyyy");
-			Date fh = DateUtils.formatDate("31/12/2022", "dd/MM/yyyy");
+			Date fd = DateUtils.formatDate("01/01/2025", "dd/MM/yyyy");
+			Date fh = DateUtils.formatDate("31/03/2025", "dd/MM/yyyy");
 
 
 			conn2 = Configuracion2.get2().getConnection2();
@@ -370,17 +385,21 @@ public class ActualizarBalance extends Controller {
 				asiento = rs1.getInt(1);
 			}
 
-			List<RecuperoNotaCredito> lf = RecuperoNotaCredito.find.where().ge("fecha", fd)
+			List<Integer> pto = new ArrayList<>();
+			pto.add(7);
+
+
+			List<RecuperoNotaDebito> lf = RecuperoNotaDebito.find.where().ge("fecha", fd)
 					   .le("fecha", fh)
 					   .eq("recupero_factura.estado_id", Estado.RECUPERO_FACTURA_APROBADO)
-					   //.not(Expr.in("expediente_id",idsExpLiq))
+					  // .not(Expr.in("recupero_factura.puntoventa_id",pto))
 					   //.eq("id", 52641)
 					   .findList();
 
 			System.out.println("-------------- "+lf.size());
 
 
-			for(RecuperoNotaCredito f:lf) {
+			for(RecuperoNotaDebito f:lf) {
 				Balance b = new Balance();
 				b.fecha = f.fecha;
 				b.fecha_debito = f.fecha;
@@ -392,12 +411,13 @@ public class ActualizarBalance extends Controller {
 				b.cuenta_propia_id = 2;
 				b.estado_id = (long) Estado.BALANCE_BORRADOR;
 				b.cuenta_id = 555;//4.2.2.04.02 Descuentos Otorgados
-				b.tipo = "nt_recupero";
+				b.tipo = "nd_recupero";
 				b.create_date = new Date();
 				b.create_usuario_id = new Long(Usuario.getUsuarioSesion());
 				b.asiento = asiento;
 				//b.orden_id = f.orden_id;
 				b.referencia = "fac-"+f.recupero_factura.id.toString();
+				b.puntoventa_id = f.recupero_factura.puntoventa_id;
 				b.save();
 
 				Integer cc = 320;
@@ -442,6 +462,126 @@ public class ActualizarBalance extends Controller {
 				bx.create_usuario_id = new Long(Usuario.getUsuarioSesion());
 				//bx.orden_id = f.orden_id;
 				bx.referencia = "fac-"+f.recupero_factura.id.toString();
+				bx.puntoventa_id = f.recupero_factura.puntoventa_id;
+				bx.save();
+
+				asiento ++;
+			}
+
+
+		}catch (Exception e) {
+	        //log.error("Error ResUserMigracion ", e);
+	    	play.Logger.error("errror", e);
+	    }finally {
+
+
+
+        }
+
+		System.out.println("Termino a ActualizarBalance FACTURA RECUPERO");
+
+		return true;
+	}
+
+	public static boolean notaCreditoRecupero(){
+
+		System.out.println("Empezo a ActualizarBalance PAGO RECUPERO");
+		Connection conn2 = null;
+
+		try {
+
+			Date fd = DateUtils.formatDate("01/01/2025", "dd/MM/yyyy");
+			Date fh = DateUtils.formatDate("31/03/2025", "dd/MM/yyyy");
+
+
+			conn2 = Configuracion2.get2().getConnection2();
+			PreparedStatement stmt1 = conn2.prepareStatement("select max(asiento)+1 from balances ");
+			ResultSet rs1 = stmt1.executeQuery();
+
+			int asiento = 0;
+
+			while (rs1.next()) {
+				asiento = rs1.getInt(1);
+			}
+
+			List<Integer> pto = new ArrayList<>();
+			pto.add(7);
+
+
+			List<RecuperoNotaCredito> lf = RecuperoNotaCredito.find.where().ge("fecha", fd)
+					   .le("fecha", fh)
+					   .eq("recupero_factura.estado_id", Estado.RECUPERO_FACTURA_APROBADO)
+					   //.not(Expr.in("recupero_factura.puntoventa_id",pto))
+					   //.eq("id", 52641)
+					   .findList();
+
+			System.out.println("-------------- "+lf.size());
+
+
+			for(RecuperoNotaCredito f:lf) {
+				Balance b = new Balance();
+				b.fecha = f.fecha;
+				b.fecha_debito = f.fecha;
+
+				b.expediente_id = (f.recupero_factura.expediente_id != null)?f.recupero_factura.expediente_id:(f.planilla != null && f.planilla.expediente_id != null)?f.planilla.expediente_id:null;
+				//b.orden_pago_id = f.orden_pago_id;
+				b.debe = f.getTotal();
+				b.haber= BigDecimal.ZERO;
+				b.cuenta_propia_id = 2;
+				b.estado_id = (long) Estado.BALANCE_BORRADOR;
+				b.cuenta_id = 555;//4.2.2.04.02 Descuentos Otorgados
+				b.tipo = "nt_recupero";
+				b.create_date = new Date();
+				b.create_usuario_id = new Long(Usuario.getUsuarioSesion());
+				b.asiento = asiento;
+				//b.orden_id = f.orden_id;
+				b.referencia = "fac-"+f.recupero_factura.id.toString();
+				b.puntoventa_id = f.recupero_factura.puntoventa_id;
+				b.save();
+
+				Integer cc = 320;
+
+				if(f.recupero_factura.cliente_id.equals((long) 11281) || f.recupero_factura.cliente_id.equals((long) 7705) || f.recupero_factura.cliente_id.equals((long) 9951)) {
+					cc = 316;//316	1.1.3.03.02 Entidades de Medicina Prepaga
+				}else {
+
+					if(f.recupero_factura.cliente.cliente_tipo_id.equals((long) 1)) {//"1";"Obras sociales"
+						cc = 315;//315	1.1.3.03.01 Obras Sociales
+					}else if(f.recupero_factura.cliente.cliente_tipo_id.equals((long) 2) ||  f.recupero_factura.cliente.cliente_tipo_id.equals((long) 7)) {//"2";"Extranjeros" || "7";"Pacientes"
+						cc = 319;//319	1.1.3.03.05 Extranjeros sin Residencia Legal en el Pais
+					}else if(f.recupero_factura.cliente.cliente_tipo_id.equals((long) 3) || f.recupero_factura.cliente.cliente_tipo_id.equals((long) 9)) {//"3";"Compañías de seguro" || "9";"ART"
+						cc = 317;//317	1.1.3.03.03 Compañias de Seguro <option value="9">ART</option>
+					}else if(f.recupero_factura.cliente.cliente_tipo_id.equals((long) 10)) {//"10";"Otros"
+						cc = 320;//320	1.1.3.03.06 Otros Creditos
+					}
+				}
+				/*315	1.1.3.03.01 Obras Sociales
+				319	1.1.3.03.05 Extranjeros sin Residencia Legal en el Pais
+				317	1.1.3.03.03 Compañias de Seguro
+				320	1.1.3.03.06 Otros Creditos
+				<option class="blank" value="">Seleccionar</option>
+	            	<option value="7">Pacientes</option>
+
+
+				*/
+
+				Balance bx = new Balance();
+				bx.fecha = f.fecha;
+				bx.fecha_debito = f.fecha;
+				bx.haber= f.getTotal();
+				bx.debe = BigDecimal.ZERO;
+				bx.expediente_id = (f.recupero_factura.expediente_id != null)?f.recupero_factura.expediente_id:(f.planilla != null && f.planilla.expediente_id != null)?f.planilla.expediente_id:null;
+				//bx.orden_pago_id = f.orden_pago_id;
+				bx.cuenta_propia_id = 2;
+				bx.cuenta_id = cc;
+				bx.tipo = "nt_recupero";
+				bx.asiento = asiento;
+				bx.create_date = new Date();
+				bx.estado_id = (long) Estado.BALANCE_BORRADOR;
+				bx.create_usuario_id = new Long(Usuario.getUsuarioSesion());
+				//bx.orden_id = f.orden_id;
+				bx.referencia = "fac-"+f.recupero_factura.id.toString();
+				bx.puntoventa_id = f.recupero_factura.puntoventa_id;
 				bx.save();
 
 				asiento ++;
@@ -469,8 +609,8 @@ public class ActualizarBalance extends Controller {
 
 		try {
 
-			Date fd = DateUtils.formatDate("01/06/2023", "dd/MM/yyyy");
-			Date fh = DateUtils.formatDate("30/06/2023", "dd/MM/yyyy");
+			Date fd = DateUtils.formatDate("01/12/2024", "dd/MM/yyyy");
+			Date fh = DateUtils.formatDate("31/12/2024", "dd/MM/yyyy");
 
 
 			conn2 = Configuracion2.get2().getConnection2();
@@ -627,12 +767,14 @@ public class ActualizarBalance extends Controller {
 
 						if(!listaOpSueldo.contains(f.orden_pago_id) && !listaOpSueldoConvenio.contains(f.orden_pago_id)) {
 							List<LiquidacionMes> lm = LiquidacionMes.find.where().eq("orden_pago_id", f.orden_pago_id).findList();
-							if(lm.get(0).convenio_ministerio) {
-								SUELDOSCONVENIO = true;
-								listaOpSueldoConvenio.add(f.orden_pago_id);
-							}else {
-								SUELDOSPARQUE = true;
-								listaOpSueldo.add(f.orden_pago_id);
+							if(lm.size() > 0) {
+								if(lm.get(0).convenio_ministerio) {
+									SUELDOSCONVENIO = true;
+									listaOpSueldoConvenio.add(f.orden_pago_id);
+								}else {
+									SUELDOSPARQUE = true;
+									listaOpSueldo.add(f.orden_pago_id);
+								}
 							}
 
 						}else {
@@ -1116,7 +1258,11 @@ public class ActualizarBalance extends Controller {
 					if(fl.factura.orden != null && fl.factura.orden.orden_rubro_id.equals((long)3)) {//INSUMOS VARIOS
 
 						if(fl.factura.orden.deposito_id.equals((long)1)) {
-							cuentaId = new Long(500);//4.2.2.02.04 Insumos Varios
+							if(fl.factura.orden.orden_subrubro_id != null && fl.factura.orden.orden_subrubro_id.equals((long)574)) {
+								cuentaId = new Long(601);//4.2.2.02.04 Insumos Varios
+							}else {
+								cuentaId = new Long(500);//4.2.2.02.04 Insumos Varios
+							}
 						}else{
 							cuentaId = getCuentaTransferencia(fl.factura.orden.deposito_id);
 						}
@@ -1379,7 +1525,7 @@ public class ActualizarBalance extends Controller {
 					}
 
 					//PRAXAIR ARGENTINA S.R.L.
-					if(idProveedor.equals(1852)) {//PRAXAIR ARGENTINA S.R.L.
+					if(idProveedor.equals(1852) || idProveedor.equals(18325)) {//PRAXAIR ARGENTINA S.R.L.
 
 						cuentaId = new Long(546);//EL RESTO	00000 - SIN CUENTA ASIGNADA
 
