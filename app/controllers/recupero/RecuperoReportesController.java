@@ -3026,7 +3026,7 @@ order by nc.numero
 	    datos.put("ivaa", iva);
 
 
-	    String direccion = rdlxr.get(0).recuperoFactura.cliente.getFirstDireccion();
+	    String direccion = (rdlxr.size() > 0)?rdlxr.get(0).recuperoFactura.cliente.getFirstDireccion():"";
 	    datos.put("direccion", direccion);
 
 
