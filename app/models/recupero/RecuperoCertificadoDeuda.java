@@ -124,7 +124,8 @@ public class RecuperoCertificadoDeuda extends Model {
 															String expediente_id,
 															String fecha,
 															String filtroBorrador,
-															String filtroAprobada){
+															String filtroAprobada,
+															String cliente_id){
 
 		Pagination<RecuperoCertificadoDeuda> p = new Pagination<RecuperoCertificadoDeuda>();
     	p.setOrderDefault("DESC");
@@ -136,6 +137,10 @@ public class RecuperoCertificadoDeuda extends Model {
 
     	if(!numero.isEmpty()) {
     		e.ilike("numero", "%"+numero+"%");
+    	}
+
+    	if(!cliente_id.isEmpty()) {
+    		e.eq("cliente_id", Integer.parseInt(cliente_id));
     	}
 
     	if(  !filtroBorrador.isEmpty() || !filtroAprobada.isEmpty() ) {
