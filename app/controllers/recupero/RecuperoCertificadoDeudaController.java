@@ -98,7 +98,8 @@ public class RecuperoCertificadoDeudaController  extends Controller {
 												  		RequestVar.get("expediente_id"),
 												  		RequestVar.get("fecha_desde"),
 												  		RequestVar.get("btnFiltro[0]"),//borrador
-												  		RequestVar.get("btnFiltro[1]")
+												  		RequestVar.get("btnFiltro[1]"),
+												  		RequestVar.get("cliente_id")
 												  		),d));
 	}
 
