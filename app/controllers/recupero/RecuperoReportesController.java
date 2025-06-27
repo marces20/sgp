@@ -558,6 +558,7 @@ public class RecuperoReportesController extends Controller {
 			OrganigramaRubroPeriodoTotalTmp.put(rubroPeriodoTotalTmp.getKey(), rubroPeriodoTotalTree);
 		}
 
+		 OrganigramaRubroPeriodoTotalTmp = new HashMap<>();
 		OrganigramaRubroPeriodoTotalTmp.put("AAAPARQUE DE LA SALUD", OrganigramaRubroPeriodoTotalParque.get("AAAPARQUE DE LA SALUD"));
 
 		Map<String,Map<String,Map<String,BigDecimal>>> OrganigramaRubroPeriodoTotalTree = new TreeMap(OrganigramaRubroPeriodoTotalTmp);
