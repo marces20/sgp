@@ -9,12 +9,12 @@
 @views.html.recupero.mainRecupero("Vista de factura", scripts) {
 	<div class="page-header">
 		<div class="row">
-			<div class="col-sm-4">
+			<div class="col-sm-3">
 				<h1>Vista de factura</h1>
 			</div>
-			<div class="col-sm-4">
+			<div class="col-sm-5">
 				@if(recuperoFactura.cae != null && !recuperoFactura.cae.isEmpty()){
-					<h1 style="color: green;font-weight: bold;font-size: 25px;">CAE: @recuperoFactura.cae</h1>
+					<h1 style="color: green;font-weight: bold;font-size: 25px;">CAE: @recuperoFactura.cae  @if(recuperoFactura.judicializado != null && recuperoFactura.judicializado){<span style="color:red;font-size: 25px;"> - JUDICIALIZADO</span>}</h1>
 				}
 			</div>
 			<div class="col-sm-4">

@@ -49,7 +49,9 @@
 				    <span class="caret"></span>
 				  </button>
 				  <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
-
+					@if(Permiso.check("editarJudicializado")) {
+			    		<li role="presentation"><a role="menuitem" id="accionEditarJudicializado" tabindex="-1" href="#" data-url="@controllers.recupero.routes.RecuperoFacturasController.modalModificarJudicializado()">Editar Judicializado</a></li>
+			    	}
 				  </ul>
 				</div>
 
@@ -275,7 +277,7 @@
 				<tr class="pointer @getClassEstado(rf.estado)" data-estado="@rf.estado_id" data-href="@controllers.recupero.routes.RecuperoFacturasController.ver(rf.id)&@UriTrack.encode()">
 					<td><input type="checkbox" name="check_listado[]" value="@rf.id" class="notSeleccion" id="check-@rf.id"/></td>
 					<td><a class="btn btn-default btn-xs notSeleccion" href="@controllers.recupero.routes.RecuperoFacturasController.editar(rf.id)&@UriTrack.encode()"><i class="glyphicon glyphicon-edit"></i></a></td>
-					<td>@(rf.nombre)</td>
+					<td>@(rf.nombre) @if(rf.judicializado != null && rf.judicializado){<span style="color:red;">JUDICIAL</span>}</td>
 					<td>@if(rf.planilla != null){@rf.planilla.getRecuperoPlanillaEjercicioDeposito()}</td>
 					<td class="fechaRecuperoFactura">@if(rf.fecha != null){@(utils.DateUtils.formatDate(rf.fecha))}</td>
 					<td>@if(rf.cliente != null){@(rf.cliente.nombre)}</td>
