@@ -4,6 +4,7 @@ import static play.data.Form.form;
 
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -23,6 +24,7 @@ import controllers.afip.AfipController;
 import controllers.auth.CheckPermiso;
 import models.ClienteTipo;
 import models.Estado;
+import models.Factura;
 import models.Periodo;
 import models.Producto;
 import models.PuntoVenta;
@@ -47,6 +49,7 @@ import utils.UriTrack;
 import utils.pagination.Pagination;
 import views.html.sinPermiso;
 import views.html.recupero.recuperoFactura.*;
+import views.html.recupero.recuperoFactura.acciones.*;
 
 @Security.Authenticated(Secured.class)
 public class RecuperoFacturasController extends Controller {
@@ -640,5 +643,56 @@ public class RecuperoFacturasController extends Controller {
 
 
 		return redirect(controllers.recupero.routes.RecuperoFacturasController.index());
+	}
+
+	@CheckPermiso(key = "editarJudicializado")
+	public static Result modalModificarJudicializado() {
+		return ok(modalModificarJudicializado.render(form().bindFromRequest()));
+	}
+
+	@CheckPermiso(key = "editarJudicializado")
+	public static Result modificarJudicializado() {
+		DynamicForm d = form().bindFromRequest();
+		d.discardErrors();
+
+		List<Integer> facturasSeleccionados = getSeleccionados();
+		if(facturasSeleccionados.isEmpty()) {
+			flash("error", "Seleccione al menos una factura.");
+			return ok(modalModificarJudicializado.render(d));
+		}
+
+		String judicializado =request().body().asFormUrlEncoded().get("judicializado")[0];
+
+		if(d.hasErrors())
+			return ok(modalModificarJudicializado.render(d));
+
+		ObjectNode result = Json.newObject();
+		try {
+			Integer count = RecuperoFactura.editarJudicializado(facturasSeleccionados,judicializado);
+			result.put("success", true);
+			flash("success", "Se actualizaron " + count + " registros de "+ facturasSeleccionados.size() +" seleccionados.");
+			result.put("html", modalModificarJudicializado.render(d).toString());
+			return ok(result);
+		} catch (Exception e){
+			flash("error", "No se puede modificar los registros.");
+			return ok(modalModificarJudicializado.render(d));
+		}
+
+	}
+
+	public static List<Integer> getSeleccionados(){
+		String[] checks = null;
+		try {
+			checks = request().body().asFormUrlEncoded().get("check_listado[]");
+		} catch (NullPointerException e) {
+		}
+
+		List<Integer> ids = new ArrayList<Integer>();
+		if(checks != null) {
+			for (String id : checks) {
+				ids.add(Integer.valueOf(id));
+			}
+		}
+		return ids;
 	}
 }
