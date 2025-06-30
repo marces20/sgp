@@ -1,6 +1,7 @@
 package models.recupero;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -41,6 +42,7 @@ import play.data.validation.Constraints.Required;
 import play.db.ebean.Model;
 import play.db.ebean.Model.Finder;
 import utils.DateUtils;
+import utils.StringUtils;
 import utils.pagination.Pagination;
 
 @Entity
@@ -259,7 +261,8 @@ public class RecuperoFactura extends Model {
 												   String deposito,
 												   String create_usuario_id,
 												   String numero_nc,
-												   String numero_nd
+												   String numero_nd,
+												   String judicializado
 												   ) {
     	Pagination<RecuperoFactura> p = new Pagination<RecuperoFactura>();
     	p.setOrderDefault("DESC");
@@ -312,6 +315,14 @@ public class RecuperoFactura extends Model {
 		if(!hasta.isEmpty()){
     		Date fh = DateUtils.formatDate(hasta, "dd/MM/yyyy");
     		e.le("fecha", fh);
+    	}
+
+		if(!judicializado.isEmpty()){
+    		if(judicializado.compareToIgnoreCase("SI") == 0){
+    			e.eq("judicializado", true);
+    		}else{
+    			e.eq("judicializado", false);
+    		}
     	}
 
     	if(!filtroPagado.isEmpty() || !filtroBorrador.isEmpty() || !filtroAprobada.isEmpty() || !filtroCancelada.isEmpty() || !filtroEnCurso.isEmpty()) {
@@ -429,6 +440,27 @@ public class RecuperoFactura extends Model {
 		update.setParameter("recupero_certificado_deuda_id", idCertificado);
 		update.setParameter("write_date",new Date());
 		update.setParameter("write_usuario_id",new Long(Usuario.getUsuarioSesion()));
+		update.setParameter("ids", facturasSeleccionados);
+
+		return update.execute();
+	}
+
+	public static Integer editarJudicializado(List<Integer> facturasSeleccionados,String judicializado){
+
+		List<String> sqllist = new ArrayList<String>();
+
+		if(!judicializado.isEmpty()){
+			String a = (judicializado.compareToIgnoreCase("SI") == 0)?"true":"false";
+			sqllist.add(" judicializado = "+a);
+		}
+
+
+		String parametros = StringUtils.implode(sqllist, ",");
+
+		SqlUpdate update = Ebean.createSqlUpdate("UPDATE recupero_facturas " +
+				"SET   "+parametros+
+				" WHERE id IN (:ids)");
+
 		update.setParameter("ids", facturasSeleccionados);
 
 		return update.execute();
