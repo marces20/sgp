@@ -150,6 +150,7 @@ public class RecuperoFactura extends Model {
 	public RecuperoCertificadoDeuda recuperoCertificadoDeuda;
 	public Integer recupero_certificado_deuda_id;
 
+	public Boolean judicializado = false;
 
 
 	@Formula(select = "_c${ta}.base", join = "left outer join (select recupero_factura_id, round(sum(precio * cantidad)::numeric,2) as base from recupero_factura_lineas group by recupero_factura_id) as _c${ta} on _c${ta}.recupero_factura_id = ${ta}.id")
