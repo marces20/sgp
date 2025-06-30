@@ -101,7 +101,8 @@ public class InformeTotal extends Model {
 												String fecha_factura_hasta,
 												String deposito,
 												String certificicado_deuda_id,
-												Boolean pagina20000) {
+												Boolean pagina20000,
+												String judicializado) {
     	Pagination<InformeTotal> p = new Pagination<InformeTotal>();
     	p.setOrderDefault("ASC");
     	p.setSortByDefault("fecha");
@@ -162,6 +163,14 @@ public class InformeTotal extends Model {
 		if(!fecha_factura_hasta.isEmpty()){
     		Date ffh = DateUtils.formatDate(fecha_factura_hasta, "dd/MM/yyyy");
     		e.le("fecha", ffh);
+    	}
+
+		if(!judicializado.isEmpty()){
+    		if(judicializado.compareToIgnoreCase("SI") == 0){
+    			e.eq("judicializado", true);
+    		}else{
+    			e.eq("judicializado", false);
+    		}
     	}
 
 		if(!Permiso.check("verTodoRecupero")){
