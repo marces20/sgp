@@ -84,8 +84,8 @@ public class RecuperoFacturasController extends Controller {
 												  		RequestVar.get("deposito_id"),
 												  		RequestVar.get("create_usuario_id"),
 												  		RequestVar.get("numero_nc"),
-												  		RequestVar.get("numero_nd")
-
+												  		RequestVar.get("numero_nd"),
+												  		RequestVar.get("judicializado")
 												  		  ),d));
 	}
 
