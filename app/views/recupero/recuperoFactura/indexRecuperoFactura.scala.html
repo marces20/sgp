@@ -99,23 +99,24 @@
 					</div>
 				</div>
 			</div>
-			<div class="col-sm-2">
-				<label class="control-label">Punto Venta</label>
-				<div class="">
-				@select(formBuscador("puntoventa_id"),
-				PuntoVenta.getPuntoVentaPermisos().map { p => p.id.toString -> p.numero}, 'class -> "form-control select", '_default -> "Seleccionar")
-				</div>
-			</div>
-			<div class="col-sm-2">
-				<div class="form-group">
-					<label for="nombre" class="control-label">Numero</label>
+			<div class="col-sm-3">
+				<div class="col-sm-5">
+					<label class="control-label">Punto Venta</label>
 					<div class="">
-					@inputText(formBuscador("numero"), 'class -> "form-control", 'autofocus -> "autofocus")
+					@select(formBuscador("puntoventa_id"),
+					PuntoVenta.getPuntoVentaPermisos().map { p => p.id.toString -> p.numero}, 'class -> "form-control select", '_default -> "Seleccionar")
+					</div>
+				</div>
+				<div class="col-sm-7">
+					<div class="form-group">
+						<label for="nombre" class="control-label">Numero</label>
+						<div class="">
+						@inputText(formBuscador("numero"), 'class -> "form-control", 'autofocus -> "autofocus")
+						</div>
 					</div>
 				</div>
 			</div>
-
-			<div class="col-sm-4">
+			<div class="col-sm-3">
 				<label class="control-label">Cliente</label>
 					<div class="input-group">
 						@inputText(formBuscador("cliente.nombre"), 'name -> "", 'class -> "form-control", 'id -> "cliente")
@@ -145,6 +146,12 @@
 				@inputText(formBuscador("fecha_hasta"), 'class -> "form-control dateMask inputDateMascara", 'id -> "hasta", 'placeholder -> "Hasta")
 				</div>
 
+			</div>
+			<div class="col-sm-2">
+				<label class="control-label">
+					Judicial
+					@select(formBuscador("judicializado"),options(""->"","SI"->"SI","NO"->"NO"), 'class -> "form-control select")
+				</label>
 			</div>
 		</div>
 		<div class="row">
@@ -213,6 +220,7 @@
 					</div>
 				</div>
 			</div>
+
 
 		</div>
 		<div class="row">
