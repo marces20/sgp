@@ -265,6 +265,7 @@ $( function() {
 					<td>@if(informe.deposito != null){@informe.deposito.sigla}</td>
 					<td>
 						@informe.numero @if(informe.recupero_certificado_deuda_id != null){<span style="color:red;font-weight: bold;">CD (@informe.recuperoCertificadoDeuda.getNombreCompleto())</span>}
+						 @if(informe.judicializado != null && informe.judicializado){<span style="color:red;font-weight: bold;"> - JUDICIAL</span>}
 					</td>
 					<td>@DateUtils.formatDate(informe.fecha)</td>
 					<td>@informe.cliente.nombre</td>
