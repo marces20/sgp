@@ -233,6 +233,32 @@ $( function () {
 	    });
 	});
 
+	$('#accionEditarJudicializado').click( function() { //abrir modal para cargar Orden de pago
+		var url = $(this).attr("data-url");
+		dialogoEditarJudicializado = crearDialogoGeneral(url);
+		dialogoEditarJudicializado.dialog({title: "Cargar Marcadores"});
+	});
+
+	$(document).on("submit", '#formModificarJudicializado', function(){
+		var form = $(this);
+		var url = form.attr('action');
+		var data = form.serialize()+'&'+$("input[name='check_listado[]']").serialize();
+		var submit = form.find("button[type='submit']");
+		var debe_dgr = form.find("#judicializado").val();
+
+		submit.replaceWith(getLoading());
+		$.post(url, data, function(data){
+			if(data.success) {
+
+				form.replaceWith(data.html);
+			} else {
+				form.replaceWith(data);
+			}
+		});
+
+		return false;
+	});
+
 	function getCheckSeleccionados(){
 		return $("input[name='check_listado[]']").serialize();
 	}
