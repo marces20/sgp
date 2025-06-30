@@ -84,6 +84,8 @@ public class InformeTotal extends Model {
 	public BigDecimal totalDeuda;
 	public String cuit;
 
+	public Boolean judicializado;
+
 	public static Model.Finder<Long,InformeTotal> find = new Model.Finder<Long,InformeTotal>(Long.class, InformeTotal.class);
 
 	public static Pagination<InformeTotal> page(String cliente,
