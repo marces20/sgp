@@ -103,6 +103,22 @@ public class OrdenesAccionesController extends Controller {
       return ok(result);
     }
 
+    if (o.fecha_provision == null) {
+        flash("error", "La Orden debe tener una fecha de provision cargada.");
+        result.put("error", true);
+        result.put("html", modalOrdenProvisionMail.render(d, null, null).toString());
+        return ok(result);
+    }
+
+    List<Dispo> listDispo = Dispo.find.where().eq("expediente_id", o.expediente_id).findList();
+    if(listDispo.size() == 0) {
+    	 flash("error", "La Orden debe tener una disposicion asociada al expediente.");
+         result.put("error", true);
+         result.put("html", modalOrdenProvisionMail.render(d, null, null).toString());
+         return ok(result);
+    }
+
+
     Long idDireProveedor = null;
     if (!request().body().asFormUrlEncoded().get("id_direccion")[0].isEmpty()) {
       idDireProveedor = new Long(request().body().asFormUrlEncoded().get("id_direccion")[0]);
@@ -138,8 +154,25 @@ public class OrdenesAccionesController extends Controller {
 
     try {
 
-      String textoMail = "<html><p>SERVICIO COMPRAS PARQUE DE LA SALUD DE LA PROVINCIA DE MISIONES.</p>";
-      textoMail = "<p>ORDEN DE PROVISION:" + o.numero_orden_provision + "</p></html>";
+      String textoMail = "<html>><p></p>";
+      textoMail += "<p>Estimados Buenos D&iacute;as.</p>";
+      textoMail += "<p>Por medio de la presente adjunto orden de provisi&oacute;n N&deg;"+o.numero_orden_provision+" con fecha "+utils.DateUtils.formatDate(o.fecha_provision)+" , expediente "+o.expediente.getInstitucionExpedienteEjercicio()+". "
+      		+ "La misma es para que tomen conocimiento de que la compra les fue adjudicada.</p>";
+      textoMail += "<p>En cuanto al pago, deben aguardar a que se comuniquen con Ustedes desde el Departamento de Tesorer&iacute;a del Parque de la Salud, "
+      			+  "para darles aviso de que los fondos se encuentran disponibles y detallar que documentaci&oacute;n deber&aacute;n generar para poder cobrar.</p>";
+      textoMail += "<p>Cualquier consulta estamos a su disposici&oacute;n.</p>";
+      textoMail += "<p>Saludos cordiales.-</p></br></br></br>";
+
+      textoMail += "<p style='font-weight: bold;font-size: 10px;'>"+Usuario.getUsurioSesion().nombre+"</p>";
+      textoMail += "<p style='font-weight: bold;font-size: 10px;'>Departamento Compras</p>";
+      textoMail += "<p style='font-weight: bold;font-size: 10px;'>Parque de la Salud de la Provincia de Misiones</p>";
+      textoMail += "<p style='font-weight: bold;font-size: 10px;'>CUIT N&deg; 30-71222430-0</p>";
+      textoMail += "<p style='font-weight: bold;font-size: 10px;'>Tel: 0376-4443700 - interno 2431</p>";
+      textoMail += "<p style='font-weight: bold;font-size: 10px;'>Posadas - Misiones</p>";
+
+      textoMail += "</html>";
+
+
       archivo = OrdenProvision.getArchivoReporteOrdenProvision(archivo, false, o, dp, pr);
 
 
@@ -152,14 +185,19 @@ public class OrdenesAccionesController extends Controller {
       attachmentList.add(attachment);
 
       EmailUtilis eu = new EmailUtilis();
-      eu.setFrom("compras@hospitalmadariaga.org");
-      eu.setSubject("ORDEN DE PROVISION:" + o.numero_orden_provision);
+      eu.setFrom("compras@parquesaludmnes.org.ar");
+      eu.setSubject("PARQUE DE LA SALUD - ORDEN DE PROVISION N°" + o.numero_orden_provision);
       eu.setHtmlMsg(textoMail);
       eu.setAttach(attachmentList);
 
       List<String> adds = new ArrayList<>();
       adds.add(dp.email);
+
       eu.setAdds(adds);
+
+      eu.setAddCc("compras@parquesaludmnes.org.ar");
+
+
       eu.enviar();
 
 
