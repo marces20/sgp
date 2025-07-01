@@ -29,9 +29,11 @@ public class EmailUtilis {
 
   private List<String> adds;
 
+  private String addCc = null;
+
   private List<EmailAttachment> attach;
 
-  
+
   /**
    * @return the from
    */
@@ -111,20 +113,32 @@ public class EmailUtilis {
   }
 
 
+  public String getAddCc() {
+	  return addCc;
+  }
+
+  public void setAddCc(String addCc) {
+	  this.addCc = addCc;
+  }
+
   public void enviar() throws EmailException {
-	  
+
 	HtmlEmail mail = new HtmlEmail();
     mail.setHostName("smtp-relay.sendinblue.com");
     mail.setSmtpPort(587);
     mail.setAuthenticator(new DefaultAuthenticator(Play.application().configuration().getString("email.authenticator.user"), Play.application().configuration().getString("email.authenticator.pass")));
     mail.setFrom(getFrom());
-    
-    
+
+
     if (getAttach() != null && getAttach().size() > 0) {
     	for(EmailAttachment ea : getAttach()) {
     		mail.attach(ea);
     	}
-      
+
+    }
+
+    if(addCc != null) {
+    	mail.addCc(getAddCc());
     }
 
     mail.setSubject(getSubject());
