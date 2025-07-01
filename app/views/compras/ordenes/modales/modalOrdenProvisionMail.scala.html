@@ -1,6 +1,6 @@
 @(formBuscador: DynamicForm,ordenId:Long,lista: List[DireccionProveedor])
 @import helper._
-@implicitFieldConstructor = @{ FieldConstructor(simpleInput.render) } 
+@implicitFieldConstructor = @{ FieldConstructor(simpleInput.render) }
 @import utils._
 @import models.auth._
 <div class="row" id="div-actualizar-mail-proveedor">
@@ -16,7 +16,7 @@
 	</thead>
 	<tbody>
 		@for(linea <- lista) {
-			<tr> 
+			<tr>
   				<td>
   					<input size="40" type="text" name="email" value="@linea.email" />
   					<input type="hidden" name="id_direccion" value="@linea.id" />
