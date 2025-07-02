@@ -221,9 +221,9 @@ public class RecuperoClientesController extends Controller {
 
 							Logger.debug("--------------------- "+cuitFormat);
 
-							if(i.getString("cuit").length() == 11) {
-								cuitFormat = i.getString("cuit").substring(0,2)+"-"+i.getString("cuit").substring(2,10)+"-"+i.getString("cuit").substring(10,11);
-							}
+							//if(i.getString("cuit").length() == 11) {
+							//	cuitFormat = i.getString("cuit").substring(0,2)+"-"+i.getString("cuit").substring(2,10)+"-"+i.getString("cuit").substring(10,11);
+							//}
 
 							Logger.debug("--------------------- "+cuitFormat);
 
@@ -232,11 +232,18 @@ public class RecuperoClientesController extends Controller {
 							celda.setCellStyle(comun);
 							break;
 						case 2:
-							celda.setCellValue(i.getString("cliente_nombre"));
+							String clienteNombre = i.getString("cliente_nombre");
+
+							if(clienteNombre.length() > 400) {
+								clienteNombre = i.getString("cliente_nombre").substring(0, 399);
+							}
+
+
+							celda.setCellValue(clienteNombre);
 							celda.setCellStyle(comun);
 							break;
 						case 3:
-							celda.setCellValue(fecha+" 00:00 HS");
+							celda.setCellValue(fecha+" 00:00");
 							celda.setCellStyle(comun);
 							break;
 						case 4:
@@ -251,11 +258,11 @@ public class RecuperoClientesController extends Controller {
 							celda.setCellStyle(comun);
 							break;
 						case 5:
-							celda.setCellValue(fechaDesde);
+							celda.setCellValue(fechaDesde+" 00:00");
 							celda.setCellStyle(comun);
 							break;
 						case 6:
-							celda.setCellValue(fechaHasta);
+							celda.setCellValue(fechaHasta+" 00:00");
 							celda.setCellStyle(comun);
 							break;
 					}
