@@ -107,7 +107,8 @@ public class Remito extends Model {
     	p.setOrderDefault(" ");
     	p.setSortByDefault("fecha_remito desc, id asc");
 
-    	ExpressionList<Remito> e = find.select("id,numero, fecha_remito, total")
+    	ExpressionList<Remito> e = find.select("id,numero, fecha_remito, total,create_date")
+    								.fetch("create_usuario", "nombre")
     								.fetch("recepcion", "numero, cantidadRemitos")
     								.fetch("recepcion.acta", "numero")
     								.fetch("recepcion.ordenProvision", "numero")
