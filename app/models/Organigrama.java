@@ -17,6 +17,7 @@ import com.avaje.ebean.Expr;
 import com.avaje.ebean.Query;
 import com.avaje.ebean.SqlRow;
 
+import play.Logger;
 import play.data.validation.Constraints.Required;
 import play.db.ebean.Model;
 
@@ -96,7 +97,7 @@ public class Organigrama extends Model {
 		" UNION ALL "+
 	    " SELECT c.id,c.padre_id,c.nombre "+
 	    " FROM recursetree t , organigramas AS c "+
-	    " WHERE c.parent_departamento_id = t.id )" +
+	    " WHERE c.padre_id = t.id )" +
 
 	    " SELECT * FROM recursetree; ";
 
@@ -108,6 +109,7 @@ public class Organigrama extends Model {
 			luAux.add(new Integer(m.getString("id")));
 		}
 
+		Logger.debug("xxxxxxxx "+luAux);
 
 
 		return luAux;
