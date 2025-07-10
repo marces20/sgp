@@ -82,6 +82,12 @@ public class PresupuestoLinea extends Model {
 
 	public String nota;
 
+	public String getNombre() {
+		String pr = (producto!= null)?producto.nombre:"";
+		String not = (nota != null)?"- "+nota:"";
+		return pr+not;
+	}
+
 	@ManyToOne
 	@JoinColumn(name="write_usuario_id", referencedColumnName="id", insertable=false, updatable=false)
 	public Usuario write_usuario;
