@@ -289,6 +289,25 @@ public class RecuperoCertificadoDeudaController  extends Controller {
 				  }
 		    	  pasarAprobado(rp.id);
 		    	  break;
+		      case Estado.RECUPERO_CERTIFICADO_DEUDA_PAGADO:
+		    	  if(!Permiso.check("certificadoDeudaPasarPagado")) {
+					  return ok(sinPermiso.render(request().getHeader("referer")));
+				  }
+		    	  pasarPagado(rp.id);
+		    	  break;
+		      case Estado.RECUPERO_CERTIFICADO_DEUDA_CANCELADO:
+
+		    	  if(!Permiso.check("certificadoDeudaPasarCancelado")) {
+					  return ok(sinPermiso.render(request().getHeader("referer")));
+				  }
+
+		    	  if(rp.estado_id.compareTo(new Long(Estado.RECUPERO_CERTIFICADO_DEUDA_PAGADO)) == 0) {
+		  			flash("error", "No se puede cancelar Certificados Aprobados");
+					return redirect(request().getHeader("referer"));
+		    	  }
+
+		    	  pasarCancelado(rp.id);
+		    	  break;
 
 		      default:
 		           break;
@@ -324,6 +343,36 @@ public class RecuperoCertificadoDeudaController  extends Controller {
 			rf.write_usuario_id = new Long(Usuario.getUsuarioSesion());
 			rf.save();
 			flash("success", "Operación exitosa. Estado actual: Aprobado");
+		} else {
+			flash("error", "Parámetros incorrectos");
+		}
+	}
+
+	public static void pasarPagado(Long idRf){
+
+		RecuperoCertificadoDeuda rf = Ebean.find(RecuperoCertificadoDeuda.class).select("id, estado_id,write_date,write_usuario_id").setId(idRf).findUnique();
+
+		if(rf != null){
+			rf.estado_id = new Long(Estado.RECUPERO_CERTIFICADO_DEUDA_PAGADO);
+			rf.write_date = new Date();
+			rf.write_usuario_id = new Long(Usuario.getUsuarioSesion());
+			rf.save();
+			flash("success", "Operación exitosa. Estado actual: Pagado");
+		} else {
+			flash("error", "Parámetros incorrectos");
+		}
+	}
+
+	public static void pasarCancelado(Long idRf){
+
+		RecuperoCertificadoDeuda rf = Ebean.find(RecuperoCertificadoDeuda.class).select("id, estado_id,write_date,write_usuario_id").setId(idRf).findUnique();
+
+		if(rf != null){
+			rf.estado_id = new Long(Estado.RECUPERO_CERTIFICADO_DEUDA_CANCELADO);
+			rf.write_date = new Date();
+			rf.write_usuario_id = new Long(Usuario.getUsuarioSesion());
+			rf.save();
+			flash("success", "Operación exitosa. Estado actual: Cancelado");
 		} else {
 			flash("error", "Parámetros incorrectos");
 		}
