@@ -57,6 +57,32 @@
 
 						<div class="col-sm-12">
 							<div class="row">
+
+								@for(estado <- models.Estado.getSiguienteEstadoPorAprobar(cert.estado.orden,models.Estado.TIPO_RECUPERO_CERTIFICADO_DEUDA)) {
+									@if(estado.orden <= 3) {
+										<div class="col-sm-3">
+											<a href="@controllers.recupero.routes.RecuperoCertificadoDeudaController.cambiarEstado(recuperoCertificadoDeudaForm.field("id").value.toInt, estado.id.toLong)@UriTrack.get("&")" class="btn btn-default">
+												<i class="glyphicon glyphicon-arrow-right"></i> @estado.nombre
+											</a>
+										</div>
+
+									}
+								}
+
+								@if(cert.estado.id == models.Estado.RECUPERO_CERTIFICADO_DEUDA_CANCELADO) {
+									<div class="col-sm-3">
+										<a href="@controllers.recupero.routes.RecuperoCertificadoDeudaController.cambiarEstado(recuperoCertificadoDeudaForm.field("id").value.toInt, models.Estado.RECUPERO_CERTIFICADO_DEUDA_BORRADOR)@UriTrack.get("&")" class="btn btn-default">
+											<i class="glyphicon glyphicon-arrow-right"></i> Volver a Borrador
+										</a>
+									</div>
+								}else{
+									<div class="col-sm-3">
+										<a href="@controllers.recupero.routes.RecuperoCertificadoDeudaController.cambiarEstado(recuperoCertificadoDeudaForm.field("id").value.toInt, models.Estado.RECUPERO_CERTIFICADO_DEUDA_CANCELADO)@UriTrack.get("&")" class="btn btn-default">
+											<i class="glyphicon glyphicon-minus-sign"></i> Cancelar Certificado
+										</a>
+									</div>
+								}
+							<!--
 								@if(cert.estado.id == models.Estado.RECUPERO_CERTIFICADO_DEUDA_APROBADO) {
 									<div class="col-sm-3">
 										<a href="@controllers.recupero.routes.RecuperoCertificadoDeudaController.cambiarEstado(recuperoCertificadoDeudaForm.field("id").value.toInt, models.Estado.RECUPERO_CERTIFICADO_DEUDA_BORRADOR)@UriTrack.get("&")" class="btn btn-default">
@@ -70,7 +96,7 @@
 											<i class="glyphicon glyphicon-arrow-right"></i>Pasar a Aprobado
 										</a>
 									</div>
-								}
+								} -->
 							</div>
 
 						</div>
