@@ -11,6 +11,7 @@ import javax.persistence.PersistenceException;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
 import controllers.Secured;
+import models.Estado;
 import models.recupero.Cheque;
 import models.recupero.RecuperoFactura;
 import models.recupero.RecuperoRecibo;
@@ -57,15 +58,19 @@ public class RecuperoReciboFacturasController extends Controller {
 			} else {
 
 
-				RecuperoReciboFactura l = lineaForm.get();
 
+				RecuperoReciboFactura l = lineaForm.get();
 
 				RecuperoFactura rf = RecuperoFactura.find.byId(l.recupero_factura_id);
 
 				if(rf.recupero_certificado_deuda_id != null) {
-					flash("error", "No se puede asignar facturas con Certificados Asignados.");
-					return ok(crearRecuperoReciboFactura.render(lineaForm));
+					if(rf.recuperoCertificadoDeuda.estado_id.compareTo(new Long(Estado.RECUPERO_CERTIFICADO_DEUDA_CANCELADO)) != 0) {
+						flash("error", "No se puede asignar facturas con Certificados Asignados.");
+						return ok(crearRecuperoReciboFactura.render(lineaForm));
+					}
 				}
+
+
 
 				List<RecuperoReciboFactura> ll = RecuperoReciboFactura.find.where().eq("recupero_recibo_id", l.recupero_recibo_id).findList();
 
