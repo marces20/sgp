@@ -60,6 +60,26 @@
 				</div>
 			</div>
 
+			<div class="col-sm-4">
+				<label class="control-label">Cliente</label>
+					<div class="input-group">
+						@inputText(formBuscador("cliente.nombre"), 'name -> "", 'class -> "form-control", 'id -> "cliente")
+						@inputText(formBuscador("cliente_id"), 'hidden -> "hidden", 'id -> "cliente_id")
+						<span class="input-group-addon">
+							<a href="#" class="searchModal"
+										id="searchCliente"
+										data-title="Selección de Clientes"
+										data-url="@controllers.compras.routes.ClientesController.modalBuscar()"
+										data-height="650"
+										data-width="700"
+										data-listen="modal.seleccion.cliente.simple"
+										data-label="#cliente"
+										data-field="#cliente_id">
+								<i class="glyphicon glyphicon-search"></i>
+							</a>
+						</span>
+					</div>
+			</div>
 
 
 			<div class="col-sm-2 input-group">
