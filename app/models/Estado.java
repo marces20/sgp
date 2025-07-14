@@ -48,6 +48,7 @@ private static final long serialVersionUID = 1L;
 	public static final Integer TIPO_EQUIPO = 29;
 	public static final Integer TIPO_EQUIPO_INCIDENCIA = 30;
 	public static final Integer TIPO_RECUPERO_CERTIFICADO_DEUDA = 31;
+	public static final Integer TIPO_PLANIFICACION = 32;
 
 	public static final int SOLICITUD_ESTADO_BORRADOR = 1;
 	public static final int SOLICITUD_ESTADO_ENCURSO = 2;
@@ -213,6 +214,12 @@ private static final long serialVersionUID = 1L;
 
 	public static final int RECUPERO_CERTIFICADO_DEUDA_BORRADOR = 136;
 	public static final int RECUPERO_CERTIFICADO_DEUDA_APROBADO = 137;
+	public static final int RECUPERO_CERTIFICADO_DEUDA_PAGADO = 138;
+	public static final int RECUPERO_CERTIFICADO_DEUDA_CANCELADO = 139;
+
+	public static final int PLANIFICIACION_BORRADOR = 140;
+	public static final int PLANIFICIACION_APROBADO = 141;
+	public static final int PLANIFICIACION_CANCELADO = 142;
 
 	//ULTIMOOOO ID ES 124
 
