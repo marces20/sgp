@@ -57,6 +57,8 @@ public class RecuperoCertificadoDeuda extends Model {
 	@Required(message="Requiere monto")
 	public BigDecimal monto;*/
 
+	public String nota;
+
 	@Required(message="Debe escribir un numero")
 	public String numero;
 
