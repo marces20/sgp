@@ -179,7 +179,7 @@ public class RecuperoCertificadoDeudaController  extends Controller {
 		if(certificado  == null){
 			flash("error", "No se encuentra el certificado.");
 			return redirect(controllers.recupero.routes.RecuperoCertificadoDeudaController.index()+UriTrack.get("?"));
-		}else if(certificado.estado_id == Estado.RECUPERO_CERTIFICADO_DEUDA_APROBADO ){
+		}else if(certificado.estado_id != Estado.RECUPERO_CERTIFICADO_DEUDA_BORRADOR ){
 			flash("error", "El certificado no se puede editar en este Estado. Debe cambiar su estado a borrador.");
 			return redirect(request().getHeader("referer"));
 
