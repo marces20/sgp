@@ -56,6 +56,16 @@
 		<a href="@controllers.recupero.routes.RecuperoFacturasController.crear()@UriTrack.get("?")"  class="btn btn-default"><i class="glyphicon glyphicon-plus-sign"></i> Nuevo</a>
 		<a href="@controllers.recupero.routes.RecuperoFacturasController.editar(recuperoFactura.id)@UriTrack.get("&")"  class="btn btn-default"><i class="glyphicon glyphicon-edit"></i> Editar</a>
 		<a href="@controllers.recupero.routes.RecuperoFacturasController.eliminar(recuperoFactura.id)@UriTrack.get("&")"  class="btn btn-default delete-confirm-link"><i class="glyphicon glyphicon-trash icono-eliminar"></i> Eliminar</a>
+
+		@if(recuperoFactura.recupero_certificado_deuda_id != null) {
+
+
+		 		<a target="_blank"  href="/recupero/certificadoDeuda/ver?id=@recuperoFactura.recupero_certificado_deuda_id" class="btn btn-default">
+		 		<i class="glyphicon glyphicon-copyright-mark"></i> Certificado Deuda
+		 		</a>
+
+	 	}
+
 	</div>
 	<div class="col-sm-3">
 		<a href="@UriTrack.getOnNull(controllers.recupero.routes.RecuperoFacturasController.index().absoluteURL())" class="btn btn-default"><i class="glyphicon glyphicon-list"></i></a>
