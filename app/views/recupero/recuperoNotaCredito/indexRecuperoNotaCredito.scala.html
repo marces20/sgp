@@ -9,7 +9,12 @@
 		@if(rf.estado_id == models.Estado.RECUPERO_FACTURA_APROBADO) {
 			@if(Permiso.check("recuperoNotasEditar")) {
 				@if((rf.cae != null && !rf.cae.isEmpty() ) || !rf.puntoVenta.habilitado){
-					<a class="btn btn-default btn-xs" href="#" id="nuevoNotaCredito"><i class="glyphicon glyphicon-plus"></i> Nuevo</a>
+					@if(rf.recupero_certificado_deuda_id ==null){
+						<a class="btn btn-default btn-xs" href="#" id="nuevoNotaCredito"><i class="glyphicon glyphicon-plus"></i> Nuevo</a>
+					}else{
+						(La Factura está asignada a un Certificado de deuda.)
+					}
+
 				}else{
 					(La Factura no tiene un CAE asigna aun.)
 				}
