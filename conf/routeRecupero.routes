@@ -133,6 +133,10 @@ GET    /certificadoDeuda/reporteDispoCertificadoDeuda controllers.recupero.Recup
 GET    /certificadoDeuda/reporteCartaDocumento controllers.recupero.RecuperoCertificadoDeudaController.reporteCartaDocumento(id:Long,correo:Boolean ?= false)
 GET    /certificadoDeuda/modalCargarCertificadoDeuda   	controllers.recupero.RecuperoCertificadoDeudaController.modalCargarCertificadoDeuda()
 POST   /certificadoDeuda/cargarCertificadoDeuda   	controllers.recupero.RecuperoCertificadoDeudaController.cargarCertificadoDeuda()
+
+GET    /certificadoDeuda/modalAgregarNotaCertificadoDeuda   	controllers.recupero.RecuperoCertificadoDeudaController.modalAgregarNotaCertificadoDeuda(id:Long)
+POST   /certificadoDeuda/agregarNotaCertificadoDeuda   	controllers.recupero.RecuperoCertificadoDeudaController.agregarNotaCertificadoDeuda()
+
 GET     /certificadoDeuda/modalBuscar	controllers.recupero.RecuperoCertificadoDeudaController.modalBuscar()
 GET    /certificadoDeuda/get           controllers.recupero.RecuperoCertificadoDeudaController.get(id:Int ?= 0)
 GET    /certificadoDeuda/cambiarEstado	controllers.recupero.RecuperoCertificadoDeudaController.cambiarEstado(idRecuperoCertificadoDeuda:Long, idEstado: Long)
