@@ -606,6 +606,45 @@ public class RecuperoCertificadoDeudaController  extends Controller {
 		return ok(restJs);
 	}
 
+	public static Result modalAgregarNotaCertificadoDeuda(Long id) {
+		return ok(modalAgregarNotaCertificadoDeuda.render(form().bindFromRequest(),id));
+	}
+
+	public static Result agregarNotaCertificadoDeuda() {
+		DynamicForm d = form().bindFromRequest();
+		d.discardErrors();
+
+		ObjectNode result = Json.newObject();
+
+		Long idCert  = null;
+		if(request().body().asFormUrlEncoded().get("cert_id_modal") !=null && !request().body().asFormUrlEncoded().get("cert_id_modal")[0].isEmpty()){
+			idCert = new Long(request().body().asFormUrlEncoded().get("cert_id_modal")[0]);
+		}else {
+			flash("error", "Debe seleccionar un certificado.");
+			return ok(modalAgregarNotaCertificadoDeuda.render(d,idCert));
+
+		}
+
+		try {
+			RecuperoCertificadoDeuda ce = RecuperoCertificadoDeuda.find.where().eq("id",idCert).findUnique();
+			String prenota= (ce.nota !=null)?ce.nota+" - ":"";
+			ce.nota = prenota+ request().body().asFormUrlEncoded().get("nota")[0];
+			ce.save();
+
+
+			result.put("success", true);
+
+			return ok(result);
+
+		}catch (Exception e){
+			Ebean.rollbackTransaction();
+			flash("error", "No se puede modificar los registros.");
+			result.put("html", modalAgregarNotaCertificadoDeuda.render(d,idCert).toString());
+		}
+
+		return ok(modalAgregarNotaCertificadoDeuda.render(form().bindFromRequest(),idCert));
+	}
+
 
 	public static Result modalCargarCertificadoDeuda() {
 		return ok(modalCargarCertificadoDeuda.render(form().bindFromRequest()));
