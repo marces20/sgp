@@ -1,0 +1,24 @@
+@(formBuscador: DynamicForm,id:Long)
+@import helper._
+@implicitFieldConstructor = @{ FieldConstructor(simpleInput.render) }
+
+@helper.form(action = controllers.recupero.routes.RecuperoCertificadoDeudaController.agregarNotaCertificadoDeuda(), 'id -> "formAgregarNotaCertificadoDeuda") {
+
+<input type="hidden" name="cert_id_modal" value="@id" />
+	<div class="row">
+		<div class="col-sm-12">
+			<div class="form-group">
+				<label for="detalle" class="control-label">Nota</label>
+				@textarea(formBuscador("nota"), 'class -> "form-control", 'id -> "nota", 'rows -> "5")
+
+			</div>
+		</div>
+	</div>
+	<div class="row">
+
+		<div class="col-sm-3">
+			<button type="submit" class="btn btn-default" title="Guardar"><i class="glyphicon glyphicon-floppy-disk"></i> Guardar</button>
+		</div>
+
+	</div>
+}
