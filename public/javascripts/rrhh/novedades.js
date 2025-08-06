@@ -1,12 +1,30 @@
 $( function(){
 
+
+	urlGet  = window.location.search.replace("?","");
 	$('#formSearchNovedades').on('submit', function() {
-		var url = $(this).attr('action') + '?'+ $(this).serialize();
+
+		var url = urlListaNovedades + '?'+ $(this).serialize();
+
 		getLista(url);
-		return false;
+
 	});
 
 	$('#buscarAgente,#buscarServicio,#searchAgente').modalSearch();
+
+	$('#filtrosEstados button').click( function() {
+		var checkbox = $(this).find(':checkbox');
+		checkbox.is(':checked') ? checkbox.removeAttr('checked') : checkbox.prop('checked', true);
+
+
+		$('#filtrosEstados button:not(:has(:checkbox:checked))').removeClass('activeFiltro');
+		$('#filtrosEstados button:has(:checkbox:checked)').addClass('activeFiltro');
+
+		$(this).closest('form').submit();
+	});
+
+	$('#filtrosEstados button:has(:checkbox:checked)').addClass('activeFiltro');
+
 
 
 	cal = $('#calendar');
@@ -32,9 +50,9 @@ $( function(){
 		},
 		viewRender: function(view,element){
 
-			getLista(urlListaNovedades+'?desde='+moment(view.start).format('DD-MM-YYYY')+'&hasta='+moment(view.end).format('DD-MM-YYYY'));
+			getLista(urlListaNovedades+'?desde='+moment(view.start).format('DD-MM-YYYY')+'&hasta='+moment(view.end).format('DD-MM-YYYY')+'&'+urlGet);
 
-			$.get(urlGetFeriados+'?desde='+moment(view.start).format('DD-MM-YYYY')+'&hasta='+moment(view.end).format('DD-MM-YYYY'), function(data){
+			$.get(urlGetFeriados+'?desde='+moment(view.start).format('DD-MM-YYYY')+'&hasta='+moment(view.end).format('DD-MM-YYYY')+'&'+urlGet, function(data){
 				for (var f in data.feriados){
 					cal.find('td.fc-day[data-date='+data.feriados[f]+']').css("background-color","#ffe0e9");
 				}
@@ -138,12 +156,15 @@ $( function(){
 				var form = $(this).find('form');
 				var href = $(e.target).attr('action');
 				var data = $(e.target).serialize();
+
 				$.post(href, data, function(resultado){
 					if(resultado.success) {
-						if(resultado.nuevo)
+						if(resultado.nuevo){
 							//$(document).trigger( "carga-novedad", resultado.evento);
-							location.reload();
-						else {
+							 location.reload();
+
+
+						}else{
 							var data = resultado.evento;
 							event.title = data.nombre;
 							event.start = data.fecha;
@@ -215,6 +236,8 @@ $( function(){
 
 
 	}
+
+
 
 });
 
