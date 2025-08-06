@@ -2,6 +2,7 @@ package controllers.novedades;
 
 import static play.data.Form.form;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -15,8 +16,11 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 
 import controllers.Secured;
 import controllers.auth.CheckPermiso;
+import models.Estado;
+import models.Factura;
 import models.Feriado;
 import models.Novedad;
+import models.Solicitud;
 import models.Usuario;
 import play.Logger;
 import play.data.DynamicForm;
@@ -25,10 +29,12 @@ import play.libs.Json;
 import play.mvc.Controller;
 import play.mvc.Result;
 import play.mvc.Security;
+import utils.DateUtils;
 import utils.RequestVar;
 import utils.UriTrack;
 import views.html.novedades.calendar.*;
 import views.html.novedades.listaNovedades.*;
+import views.html.novedades.listaNovedades.acciones.*;
 
 @Security.Authenticated(Secured.class)
 public class NovedadesController extends Controller {
@@ -40,15 +46,72 @@ public class NovedadesController extends Controller {
 		return ok(indexListaNovedades.render(Novedad.page(RequestVar.get("agente_id"),
 											RequestVar.get("servicio_id"),
 											RequestVar.get("desde"),
-											RequestVar.get("hasta")),d));
+											RequestVar.get("hasta")) // cancelado)
+											,d));
 
+	}
+
+
+
+	public static Result modalEliminarMasivo() {
+		return ok(modalEliminarMasivo.render(form().bindFromRequest()));
+	}
+
+	public static Result eliminarMasivo() {
+
+		DynamicForm d = form().bindFromRequest();
+		d.discardErrors();
+
+		List<Integer> novedadSeleccionados = getSeleccionados();
+
+		if(novedadSeleccionados.isEmpty()) {
+			flash("error", "Seleccione al menos una novedad.");
+			return ok(modalEliminarMasivo.render(d));
+		}
+
+		if(d.hasErrors())
+			return ok(modalEliminarMasivo.render(d));
+
+		ObjectNode result = Json.newObject();
+		try {
+			int count = 0;
+
+			List<Novedad> novedades = Novedad.find.where().in("id", novedadSeleccionados).findList();
+			for(Novedad n :novedades) {
+				Novedad.find.byId(n.id).delete();
+				count ++;
+			}
+
+			result.put("success", true);
+			flash("success", "Se eliminaron " + count + " registros de "+ novedadSeleccionados.size() +" seleccionados.");
+			result.put("html", modalEliminarMasivo.render(d).toString());
+			return ok(result);
+		} catch (Exception e){
+			flash("error", "No se puede modificar los registros.");
+			return ok(modalEliminarMasivo.render(d));
+		}
 	}
 
 	@CheckPermiso(key = "verCalendario")
 	public static Result index() {
-		DynamicForm d = form().bindFromRequest();
 
-		return ok(indexNovedades.render());
+
+		Logger.debug("------------------------- index()" );
+
+		Long agenteId = (!RequestVar.get("agente_id").isEmpty())?new Long(RequestVar.get("agente_id")):null;
+	    Long servicioId =  (!RequestVar.get("servicio_id").isEmpty())?new Long(RequestVar.get("servicio_id")):Usuario.getUsurioSesion().organigrama_id;
+		String btnFiltro0 = RequestVar.get("btnFiltro[0]"); // licencias
+		String btnFiltro1 = RequestVar.get("btnFiltro[1]"); // guardias
+		String btnFiltro2 = RequestVar.get("btnFiltro[2]");
+
+		Map<String,String> p = new HashMap<String, String>();
+		p.put("servicio.nombre",Usuario.getUsurioSesion().organigrama.nombre);
+		p.put("servicio_id",Usuario.getUsurioSesion().organigrama_id.toString());
+
+		DynamicForm d = form().bindFromRequest().bind(p);
+		d.discardErrors();
+
+		return ok(indexNovedades.render(d));
 
 	}
 
@@ -58,40 +121,56 @@ public class NovedadesController extends Controller {
 		ObjectNode obj = Json.newObject();
 	    ArrayNode s = obj.arrayNode();
 
+	    Long agenteId = (!RequestVar.get("agente_id").isEmpty())?new Long(RequestVar.get("agente_id")):null;
+	    Long servicioId =  (!RequestVar.get("servicio_id").isEmpty())?new Long(RequestVar.get("servicio_id")):Usuario.getUsurioSesion().organigrama_id;
+		String btnFiltro0 = RequestVar.get("btnFiltro[0]"); // licencias
+		String btnFiltro1 = RequestVar.get("btnFiltro[1]"); // guardias
+		String btnFiltro2 = RequestVar.get("btnFiltro[2]");
 
+		Logger.debug("xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx "+servicioId);
 
-	    List<Novedad> novedades = Novedad.page(RequestVar.get("agente_id"),
-	    									   Usuario.getUsurioSesion().organigrama_id.toString(),//RequestVar.get("servicio_id"),
-	    									   RequestVar.get("desde"),
-	    									   RequestVar.get("hasta")).getList();
+		if(btnFiltro1.isEmpty()){
+		    List<Novedad> novedades = Novedad.page(RequestVar.get("agente_id"),
+		    									   //Usuario.getUsurioSesion().organigrama_id.toString(),
+		    										servicioId.toString(),
+		    									   RequestVar.get("desde"),
+		    									   RequestVar.get("hasta")).getList();
 
-	    Logger.debug("xxxxxxxxxxxxxxxxxxxxxxxxxxxx "+Usuario.getUsurioSesion().organigrama_id.toString());
+		    Logger.debug("xxxxxxxxxxxxxxxxxxxxxxxxxxxx "+Usuario.getUsurioSesion().organigrama_id.toString());
 
-	    for (Novedad n : novedades) {
-		    ObjectNode e = Json.newObject();
-		    e.put("id", n.id.toString());
-		    e.put("title", n.agente.apellido);
-		    e.put("start", utils.DateUtils.formatDate(n.fecha_inicio, "yyyy-MM-dd"));
-		    e.put("color", n.servicio.color);
-			s.add(e);
+		    for (Novedad n : novedades) {
+			    ObjectNode e = Json.newObject();
+			    e.put("id", n.id.toString());
+			    e.put("title", n.agente.apellido);
+			    e.put("start", utils.DateUtils.formatDate(n.fecha_inicio, "yyyy-MM-dd"));
+			    e.put("color", n.servicio.color);
+				s.add(e);
+			}
 		}
 
-	    List<SqlRow>  licencias = Novedad.getDiasLicenciasByOrganigrama(Usuario.getUsurioSesion().organigrama_id);
-
-	    for (SqlRow lx : licencias) {
+	    if(!btnFiltro0.isEmpty()){
 
 
-	    	String data = lx.getString("apellido")+"-"+lx.getString("tipo_licencia");
 
-		    ObjectNode e = Json.newObject();
-		    e.put("id", lx.getLong("id").toString());
-		    e.put("title", data);
-		    e.put("start", utils.DateUtils.formatDate(lx.getDate("finicio"), "yyyy-MM-dd"));
-		    e.put("end", utils.DateUtils.formatDate(lx.getDate("ffin"), "yyyy-MM-dd"));
-		    e.put("color", "#FFB933");
-			s.add(e);
-		}
+	    	List<SqlRow>  licencias = Novedad.getDiasLicenciasByOrganigrama(
+	    																	//Usuario.getUsurioSesion().organigrama_id,
+	    																	servicioId,
+	    																	agenteId);
 
+		    for (SqlRow lx : licencias) {
+
+
+		    	String data = lx.getString("apellido")+"-"+lx.getString("tipo_licencia");
+
+			    ObjectNode e = Json.newObject();
+			    e.put("id", lx.getLong("id").toString());
+			    e.put("title", data);
+			    e.put("start", utils.DateUtils.formatDate(lx.getDate("finicio"), "yyyy-MM-dd"));
+			    e.put("end", utils.DateUtils.formatDate(lx.getDate("ffin"), "yyyy-MM-dd"));
+			    e.put("color", "#FFB933");
+				s.add(e);
+			}
+	    }
 
 		return ok(s);
 	}
@@ -159,6 +238,7 @@ public class NovedadesController extends Controller {
 		ObjectNode restJs = Json.newObject();
 		ObjectNode evento = Json.newObject();
 
+
 		try {
 
 
@@ -194,21 +274,12 @@ public class NovedadesController extends Controller {
 						ex.save();
 
 
-						/*Novedad n = Novedad.find.byId(e.id);
-
-						evento.put("id", n.id);
-						evento.put("nombre", n.agente.apellido);
-						evento.put("color", n.servicio.color);
-						evento.put("fecha", utils.DateUtils.formatDate(n.fecha_inicio, "yyyy-MM-dd"));
-
-						restJs.put("evento", evento);*/
-
-
 					}
+
+					restJs.put("evento", evento);
 					restJs.put("success", true);
 					restJs.put("nuevo", true);
-					/*
-*/
+
 
 
 
@@ -292,7 +363,7 @@ public class NovedadesController extends Controller {
 
 			if(nForm.hasErrors()) {
 				flash("error", "Error en formulario");
-				return ok(crearNovedad.render(nForm));
+				return ok(editarNovedad.render(nForm));
 			} else {
 				nForm.get().update();
 
@@ -309,8 +380,24 @@ public class NovedadesController extends Controller {
 		} catch (PersistenceException pe){
 			play.Logger.error("excepcion", pe);
 			flash("error", "No se ha podido almacenar la novedad");
-			return badRequest(crearNovedad.render(nForm));
+			return badRequest(editarNovedad.render(nForm));
 		}
+	}
+
+	public static List<Integer> getSeleccionados(){
+		String[] checks = null;
+		try {
+			checks = request().body().asFormUrlEncoded().get("check_listado[]");
+		} catch (NullPointerException e) {
+		}
+
+		List<Integer> ids = new ArrayList<Integer>();
+		if(checks != null) {
+			for (String id : checks) {
+				ids.add(Integer.valueOf(id));
+			}
+		}
+		return ids;
 	}
 
 }
