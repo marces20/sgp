@@ -2,6 +2,8 @@
 @import helper._
 @implicitFieldConstructor = @{ FieldConstructor(simpleInput.render) }
 
+
+
 @helper.form(action = controllers.novedades.routes.NovedadesController.guardarMasivo(), 'id -> "formNovedades") {
 
 
@@ -14,9 +16,16 @@
 		<div class="col-sm-6 @if(nForm.error("agente_id") != null) {has-error} else {has-required}">
 			<label class="control-label">Agente
 				<div class="input-group">
-					@inputText(nForm("agente.apellido"), 'name -> "", 'autocomplete -> "off", 'class -> "form-control", 'id -> "agente")
-					@inputText(nForm("agente_id"), 'hidden -> "hidden", 'id -> "agente_id")
-					<span class="input-group-addon"><a href="#" id="searchAgente" data-title="Selección de agente" data-url="@controllers.rrhh.routes.AgentesController.modalBuscar()" data-height="650" data-width="700" data-listen="modal.seleccion.agente.simple" data-label="#agente" data-field="#agente_id"><i class="glyphicon glyphicon-search"></i></a></span>
+					@inputText(nForm("agente.apellido"), 'name -> "", 'autocomplete -> "off", 'class -> "form-control", 'id -> "agenteModal")
+					@inputText(nForm("agente_id"), 'hidden -> "hidden", 'id -> "agente_id_modal")
+					<span class="input-group-addon">
+					<a href="#" id="searchAgenteModal"
+					data-title="Selección de agente"
+					data-url="@controllers.rrhh.routes.AgentesController.modalBuscar()"
+					data-height="650" data-width="700"
+					data-listen="modal.seleccion.agente.simple"
+					data-label="#agenteModal" data-field="#agente_id_modal"><i class="glyphicon glyphicon-search"></i></a>
+					</span>
 				</div>
 			</label>
 				@nForm("agente_id").error.map{ error => <div class="text-error">@error.message</div>}
@@ -24,20 +33,20 @@
 		<div class="col-sm-6">
 				<label for="servicio" class="control-label">Servicio</label>
 				<div class="input-group @if(nForm.error("servicio_id")  != null) {has-error} else {has-required}">
-					@inputText(nForm("servicio.nombre"),'class -> "form-control",'id -> "servicio")
-					@inputText(nForm("servicio_id"),'hidden -> "hidden",'id -> "servicio_id")
+					@inputText(nForm("servicio.nombre"),'class -> "form-control",'id -> "servicioModal", 'disabled -> "disabled")
+					@inputText(nForm("servicio_id"),'hidden -> "hidden",'id -> "servicio_id_modal")
 					<span class="input-group-addon">
-					<a href="#" class="searchModal"
-								id="searchServicio"
+					<!-- <a href="#" class="searchModal"
+								id="searchServicioModal"
 								data-title="Selección de servicios"
 								data-url="@controllers.administracion.routes.OrganigramasController.modalBuscarServicios()"
 								data-height="650"
 								data-width="700"
 								data-listen="modal.seleccion.servicio.simple"
-								data-label="#servicio"
-								data-field="#servicio_id">
+								data-label="#servicioModal"
+								data-field="#servicio_id_modal">
 						<i class="glyphicon glyphicon-search"></i>
-					</a>
+					</a> -->
 					</span>
 				</div>
 				@nForm("departamento_id").error.map{ error =>
@@ -80,11 +89,42 @@
 
 	<script>
 	$( function(){
-		$('#searchAgente').modalSearch();
-		$('#searchServicio').modalSearch();
+		$('#searchAgenteModal').modalSearch();
+		$('#searchServicioModal').modalSearch();
 
 		$("#horas").mask("99:99");
 		$('#multipleFechas').multiDatesPicker({altField:'#fechas'});
+
+		if($("#agenteModal").length){
+
+			var options = {
+					script:"/suggestAgente/",
+					varname:"",
+					json:true,
+					shownoresults:true,
+					maxresults:6,
+					callback: function (obj) {
+												$("#agente_id_modal").val(obj.id);
+											 }
+				};
+			var as_json = new bsn.AutoSuggest('agenteModal', options);
+		}
+
+		if($("#servicioModal").length){
+			var options = {
+					script:"/suggestOrganigrama/",
+					varname:"",
+					json:true,
+					shownoresults:true,
+					maxresults:26,
+					cache:false,
+					callback: function (obj) {
+												$("#servicio_id_modal").val(obj.id);
+											 }
+				};
+			var as_json = new bsn.AutoSuggest('servicioModal', options);
+		}
+
 	});
 	</script>
 
