@@ -1,13 +1,13 @@
 @(factura: Form[Factura],facturaObj:Factura, paginadorFicha: utils.pagination.PaginadorFicha)
 @import helper._
 @import utils._
-@implicitFieldConstructor = @{ FieldConstructor(simpleInput.render) } 
+@implicitFieldConstructor = @{ FieldConstructor(simpleInput.render) }
 @scripts = {
 	<script src="@routes.Assets.at("javascripts/contabilidad/facturas.js")" type="text/javascript"></script>
 }
 @import models.auth._
 @import java.util.HashMap; var oo = new HashMap[String,Date] ;
-@import java.math.BigDecimal; var vencimiento349 = new Date(); 
+@import java.math.BigDecimal; var vencimiento349 = new Date();
 @import java.lang.String;var nui ="";
 @paginadorFicha.setActual(facturaObj.id.toString)
 
@@ -19,23 +19,18 @@
 			<h1>Vista de factura @if(facturaObj.expediente != null){@if(facturaObj.expediente.emergencia){<span style="color:red;font-weight: bold;font-size:14px; ">(Emergencia Sanitaria)</span>}}</h1>
 		</div>
 		<div class="col-sm-3">
-			
-			@{oo = Orden349.getLastOrden349(facturaObj.orden_id)}
-			@if(oo != null){
-				
-				@for((key,value) <- oo){
-				
-					@{vencimiento349 = value}
-					@{nui = key}
-				}
-				@if(vencimiento349 != null && utils.DateUtils.compareDate(vencimiento349,new Date()) < 0){
-					<span style="color:red;font-size: 15px;font-weight: bold;">Vto 349: @utils.DateUtils.formatDate(vencimiento349) - NUI:@nui </span>
+
+			@if(facturaObj.proveedor.fecha_vencimiento_f344 != null && facturaObj.proveedor.nuif344 != null){
+				@if(facturaObj.proveedor.fecha_vencimiento_f344 != null && utils.DateUtils.compareDate(facturaObj.proveedor.fecha_vencimiento_f344,new Date()) < 0){
+					<span style="color:red;font-size: 15px;font-weight: bold;">Vto 349: @utils.DateUtils.formatDate(facturaObj.proveedor.fecha_vencimiento_f344) - NUI:@facturaObj.proveedor.nuif344 </span>
 				}else{
-					@if(vencimiento349 != null && utils.DateUtils.compareDate(vencimiento349,new Date()) >= 0){
-					<span style="color:green;font-size: 15px;font-weight: bold;">Vto 349: @utils.DateUtils.formatDate(vencimiento349)- NUI:@nui</span>
+					@if(facturaObj.proveedor.fecha_vencimiento_f344 != null && utils.DateUtils.compareDate(facturaObj.proveedor.fecha_vencimiento_f344,new Date()) >= 0){
+					<span style="color:green;font-size: 15px;font-weight: bold;">Vto 349: @utils.DateUtils.formatDate(facturaObj.proveedor.fecha_vencimiento_f344)- NUI:@facturaObj.proveedor.nuif344</span>
 					}
 				}
 			}
+
+
 		</div>
 		<div class="col-sm-5">
 			<div class="dropdown pull-right">
@@ -60,16 +55,16 @@
 							<li><a id="importarListaComisiones" href="#" data-url="@controllers.contabilidad.routes.FacturasAccionesController.modalImportarListaComisiones()">Importar Comisiones</a></li>
 					 	}
 						@if(Permiso.check("cargar349")) {
-							<li><a id="cargar349" href="#" data-url="@controllers.contabilidad.routes.FacturasAccionesController.modalCargar349(facturaObj.id)">Cargar 349</a></li>
+							<li><a id="cargar349" href="#" data-url="@controllers.contabilidad.routes.FacturasAccionesController.modalCargar349(facturaObj.id)">Cargar 344</a></li>
 						}
-						
+
 						@if(Permiso.check("cerrarFondo") && facturaObj.fondo_cerrado != true && (facturaObj.proveedor_id.compareTo(models.Proveedor.FONDO_PERMANENTE) == 0)) {
 						<li><a id="accionCerrarFondoPermanente" href="#" data-url="@controllers.contabilidad.routes.FacturasAccionesController.modalCerrarFondoPermanente(facturaObj.id)">Cerrar Fondo Permanente</a></li>
 						}
-						
+
 						@if(Permiso.check("cerrarFondo") && facturaObj.estado_id == models.Estado.FACTURA_ESTADO_APROBADO){
 						<li><a id="reporteFondo" href="#" data-url="@controllers.contabilidad.routes.FacturasReportesController.reporteFondoPermanente(facturaObj.id)">Reporte Fondo Permanente</a></li>
-						
+
 						}
 					</ul>
 				</div>
@@ -97,7 +92,7 @@
 	</div>
 	<div class="col-sm-3">
 		<a href="@UriTrack.getOnNull(controllers.contabilidad.routes.FacturasController.index().absoluteURL())" class="btn btn-default"><i class="glyphicon glyphicon-list"></i></a>
-		
+
 		@if(paginadorFicha.getLista().size() > 1){
 
 		<div class="btn-group">
@@ -107,10 +102,10 @@
 			<p style="padding-top: 3px" href=""  role="group" class="btn btn-default">@paginadorFicha.posicionActual() de @paginadorFicha.getLista().size()</p>
 			@if(paginadorFicha.hasNext()) {
 				<a  role="group" href="@controllers.contabilidad.routes.FacturasController.ver(paginadorFicha.next().toLong)@UriTrack.get("&")" class="btn btn-default"><i class="glyphicon glyphicon-chevron-right"></i></a>
-			}  
+			}
 		</div>
 		}
-		
+
 	</div>
 </div>
 @inputText(factura("id"), 'hidden -> "hidden",'id -> "facturaId")
@@ -171,7 +166,7 @@
 			<p class="form-control-static form-control">@factura.field("fecha_recepcion").value</p>
 		</div>
 	</div>
-	
+
 	<div class="col-sm-2">
 		<div class="form-group">
 			<label class="control-label">Fecha aprobación</label>
@@ -189,12 +184,12 @@
 			PROFE @checkbox(factura("profe"), 'disabled -> "disabled")
 		</div> -->
 		<label class="control-label">Tipo Cuenta</label>
-		<p class="form-control-static form-control">@if(facturaObj.tipoCuenta != null){@facturaObj.tipoCuenta.nombre}</p> 
+		<p class="form-control-static form-control">@if(facturaObj.tipoCuenta != null){@facturaObj.tipoCuenta.nombre}</p>
 	</div>
 </div>
 
 <div class="row">
-	
+
 	<div class="col-sm-4">
 		<div class="form-group">
 			<label class="control-label">Cuenta</label>
@@ -205,7 +200,7 @@
 		<div class="form-group">
 			<label class="control-label">Orden de pago N°</label>
 			<p class="form-control-static form-control">
-				@if(facturaObj.ordenPago != null){ 
+				@if(facturaObj.ordenPago != null){
 					@factura.field("ordenPago.nombreCompleto").value
 				}
 			</p>
@@ -217,61 +212,61 @@
 			<p class="form-control-static form-control">@factura.field("fecha_orden_pago").value</p>
 		</div>
 	</div>
-	
+
 	<div class="col-sm-2">
 		<div class="form-group">
 			<label class="control-label">Cot. dólar</label>
 			<p class="form-control-static form-control">@utils.NumberUtils.moneda(facturaObj.cot_dolar, 2)</p>
 		</div>
 	</div>
-	
+
 </div>
 <div class="row">
 	<div class="col-sm-3">
 		<div class="checkbox">
 			Debe libre deuda DGR @checkbox(factura("debe_dgr"), 'disabled -> "disabled")
-		</div> 
+		</div>
 	</div>
 	<div class="col-sm-3">
 		<div class="checkbox">
 			Debe libre deuda DGR Aguinaldo @checkbox(factura("debe_dgr_aguinaldo"), 'disabled -> "disabled")
-		</div> 
+		</div>
 	</div>
 	<div class="col-sm-3">
 		<div class="checkbox">
 			Debe constancia AFIP @checkbox(factura("debe_afip"), 'disabled -> "disabled")
-		</div> 
+		</div>
 	</div>
 	<div class="col-sm-2">
 		<div class="checkbox">
 			Debe Judicial @checkbox(factura("debe_judicial"), 'disabled -> "disabled")
-		</div> 
+		</div>
 	</div>
-	
+
 </div>
 <div class="row">
 	<div class="col-sm-3">
 		<div class="checkbox">
 			<label class="control-label">Creacion Automatica
-			@checkbox(factura("creacion_automatica"), 'disabled -> "disabled")</label> 
+			@checkbox(factura("creacion_automatica"), 'disabled -> "disabled")</label>
 		</div>
 	</div>
 	<div class="col-sm-3">
 		<div class="checkbox">
 			<label class="control-label">Agente Pago Externo
-			@checkbox(factura("agente_pago_externo"), 'disabled -> "disabled")</label> 
+			@checkbox(factura("agente_pago_externo"), 'disabled -> "disabled")</label>
 		</div>
 	</div>
 	<div class="col-sm-3">
 		<div class="checkbox">
 			<label class="control-label">Produccion
-			@checkbox(factura("produccion"), 'disabled -> "disabled")</label> 
+			@checkbox(factura("produccion"), 'disabled -> "disabled")</label>
 		</div>
 	</div>
 	<div class="col-sm-3">
 		<div class="checkbox">
 			Debito Automatico @checkbox(factura("debito_automatico"), 'disabled -> "disabled")
-		</div> 
+		</div>
 	</div>
 </div>
 @views.html.contabilidad.facturas.tabsFactura(false,false,factura,facturaObj, true)
@@ -280,8 +275,8 @@
 <div class="row margin-bottom-25">
 	@if(facturaObj.facturaParciales != null && facturaObj.facturaParciales.size() > 0){
 		<div class="col-sm-3"><h4><b>FACTURA PARCIALIZADA</b></h4></div>
-	}else{	
-		@for(estado <- models.Estado.getSiguienteEstadoPorAprobar(facturaObj.estado.orden,models.Estado.TIPO_FACTURA)) {	
+	}else{
+		@for(estado <- models.Estado.getSiguienteEstadoPorAprobar(facturaObj.estado.orden,models.Estado.TIPO_FACTURA)) {
 			@if(estado.orden <= 5) {
 				@if(facturaObj.debito_automatico != null && facturaObj.debito_automatico) {
 					<div class="col-sm-3">
@@ -302,7 +297,7 @@
 							</a>
 						</div>
 					}
-					
+
 				}
 				@if(facturaObj.estado.id ==  models.Estado.FACTURA_ESTADO_PREAPROBADO){
 					<div class="col-sm-3">
