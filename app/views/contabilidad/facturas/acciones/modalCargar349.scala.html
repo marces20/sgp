@@ -1,21 +1,21 @@
 @(formBuscador: DynamicForm,idFactura:Long)
 @import helper._
-@implicitFieldConstructor = @{ FieldConstructor(simpleInput.render) } 
-																			
-@helper.form(action = controllers.contabilidad.routes.FacturasAccionesController.cargar349(), 'id -> "formCargar349") {	
-	
+@implicitFieldConstructor = @{ FieldConstructor(simpleInput.render) }
+
+@helper.form(action = controllers.contabilidad.routes.FacturasAccionesController.cargar349(), 'id -> "formCargar349") {
+
 	@views.html.tags.successError()
 	<input type="hidden" name="id" value="@idFactura" />
 	<div class="row">
 		<div class="col-sm-4">
 			<div class="form-group">
-				<label for="fecha_349" class="control-label">Fecha vencimiento 349</label> 
+				<label for="fecha_349" class="control-label">Fecha vencimiento 344</label>
 				<input name="fecha_349" id="fecha_349" class="form-control date"/>
 			</div>
 		</div>
 		<div class="col-sm-3">
 			<div class="form-group">
-				<label for="nui" class="control-label">NUI</label> 
+				<label for="nui" class="control-label">NUI</label>
 				<input name="nui" id="nui" class="form-control"/>
 			</div>
 		</div>
