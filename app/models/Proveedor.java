@@ -108,6 +108,10 @@ public class Proveedor extends Model {
 	@Column(name="proveedor_padre_id")
 	public Long proveedor_padre_id;
 
+	@Formats .DateTime(pattern="dd/MM/yyyy")
+	public Date fecha_vencimiento_f344;
+
+	public String nuif344;
 
 	public static Model.Finder<Long,Proveedor> find = new Model.Finder<Long,Proveedor>(Long.class, Proveedor.class);
 
