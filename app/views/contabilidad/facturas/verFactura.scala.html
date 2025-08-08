@@ -22,10 +22,10 @@
 
 			@if(facturaObj.proveedor.fecha_vencimiento_f344 != null && facturaObj.proveedor.nuif344 != null){
 				@if(facturaObj.proveedor.fecha_vencimiento_f344 != null && utils.DateUtils.compareDate(facturaObj.proveedor.fecha_vencimiento_f344,new Date()) < 0){
-					<span style="color:red;font-size: 15px;font-weight: bold;">Vto 349: @utils.DateUtils.formatDate(facturaObj.proveedor.fecha_vencimiento_f344) - NUI:@facturaObj.proveedor.nuif344 </span>
+					<span style="color:red;font-size: 15px;font-weight: bold;">Vto 344: @utils.DateUtils.formatDate(facturaObj.proveedor.fecha_vencimiento_f344) - NUI:@facturaObj.proveedor.nuif344 </span>
 				}else{
 					@if(facturaObj.proveedor.fecha_vencimiento_f344 != null && utils.DateUtils.compareDate(facturaObj.proveedor.fecha_vencimiento_f344,new Date()) >= 0){
-					<span style="color:green;font-size: 15px;font-weight: bold;">Vto 349: @utils.DateUtils.formatDate(facturaObj.proveedor.fecha_vencimiento_f344)- NUI:@facturaObj.proveedor.nuif344</span>
+					<span style="color:green;font-size: 15px;font-weight: bold;">Vto 344: @utils.DateUtils.formatDate(facturaObj.proveedor.fecha_vencimiento_f344)- NUI:@facturaObj.proveedor.nuif344</span>
 					}
 				}
 			}
