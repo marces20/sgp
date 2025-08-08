@@ -1,16 +1,16 @@
 @(provForm: Form[Proveedor],proveedor:Proveedor)
 @import helper._
-@implicitFieldConstructor = @{ FieldConstructor(simpleInput.render) } 
+@implicitFieldConstructor = @{ FieldConstructor(simpleInput.render) }
 @views.html.compras.mainCompras("Ver proveedor") {
 <div class="page-header">
 	<div class="row">
 		<div class="col-sm-9">
 			<h1>Ver proveedor</h1>
 		</div>
-		
+
 		<div class="col-sm-3">
 			<a href="@controllers.compras.routes.ProveedoresController.crear"  class="btn btn-default"><i class="glyphicon glyphicon-plus-sign"></i> Nuevo proveedor</a>
-			 
+
 		</div>
 	</div>
 </div>
@@ -51,16 +51,16 @@
 			<label class="control-label">Cuit</label>
 			<p class="form-control-static form-control">@provForm.field("cuit").value</p>
 		</div>
-	</div>	
+	</div>
 	<div class="col-sm-2">
 		<div class="form-group">
 			<label class="control-label">DNI</label>
 			<p class="form-control-static form-control">@provForm.field("dni").value</p>
 		</div>
-	</div>		
-		
-	
-	
+	</div>
+
+
+
 	<div class="col-sm-2">
 		<div class="form-group">
 			<label class="control-label">Fecha vencimiento 322</label>
@@ -73,9 +73,21 @@
 			<p class="form-control-static form-control">@provForm.field("proveedor_padre.nombre").value</p>
 		</div>
 	</div>
-	
-</div>	
+
+</div>
 <div class="row">
+	<div class="col-sm-2">
+		<div class="form-group">
+			<label class="control-label">NUI 344</label>
+			<p class="form-control-static form-control">@provForm.field("nuif344").value</p>
+		</div>
+	</div>
+	<div class="col-sm-2">
+		<div class="form-group">
+			<label class="control-label">Fecha vencimiento 344</label>
+			<p class="form-control-static form-control">@provForm.field("fecha_vencimiento_f344").value</p>
+		</div>
+	</div>
 	<div class="col-sm-2">
 		<div class="form-group">
 			<label class="control-label">Número de inscripción</label>
@@ -87,15 +99,15 @@
 			<label for="activo" class="control-label"> @checkbox(provForm("activo"), 'disabled -> "disabled") Activo</label>
 		</div>
 	</div>
-	
+
 	<div class="col-sm-offset-1  col-sm-2">
 		<div class="checkbox">
 			<label for="activo" class="control-label"> @checkbox(provForm("oficio"), 'disabled -> "disabled") Oficio</label>
 		</div>
 	</div>
-	
-</div>	
-	
+
+</div>
+
 <ul class="nav nav-tabs">
   <li class="active"><a href="#contenedorDirecciones" data-toggle="tab">Contactos del proveedor</a></li>
   <li><a href="#contenedorObservaciones" data-toggle="tab">Observaciones</a></li>
@@ -104,13 +116,13 @@
 <div class="tab-content">
 	<div class="tab-pane active" id="contenedorDirecciones">
 		@if(provForm("id").value != null){
-			@views.html.compras.proveedores.contacto_proveedor(provForm,true) 
+			@views.html.compras.proveedores.contacto_proveedor(provForm,true)
 		}
 	</div>
 	<div class="tab-pane" id="contenedorObservaciones">
 		<p class="form-control-static form-control">@provForm.field("observaciones").value</p>
 	</div>
-	
+
 </div>
 <br>
 @views.html.compras.proveedores.tabsAtributos(provForm, false)
