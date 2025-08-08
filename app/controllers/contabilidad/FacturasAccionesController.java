@@ -114,16 +114,21 @@ public class FacturasAccionesController  extends Controller {
 		try {
 
 
-			Orden349 fd = new Orden349();
+			/*Orden349 fd = new Orden349();
 			fd.nui = nui;
 			fd.fecha_vencimiento = fecha_349;
 			fd.orden_id = (f.orden_id != null)?f.orden_id.longValue():null;
 			fd.create_date = new Date();
 			fd.create_usuario_id = new Long(Usuario.getUsuarioSesion());
-			fd.save();
+			fd.save();*/
+
+			Proveedor p = Proveedor.find.byId(f.proveedor_id.longValue());
+			p.fecha_vencimiento_f344 =fecha_349;
+			p.nuif344 =  nui;
+			p.save();
 
 			result.put("success", true);
-			flash("success", "Se actualizado el 349");
+			flash("success", "Se actualizado el 344");
 			result.put("html",modalCargar349.render(form().bindFromRequest(),id).toString());
 			return ok(result);
 		} catch (Exception e){
