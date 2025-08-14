@@ -10,7 +10,7 @@ $( function(){
 
 	});
 
-	$('#buscarAgente,#buscarServicio,#searchAgente').modalSearch();
+	$('#buscarAgente,#buscarServicio,#searchAgente,#searchPeriodo').modalSearch();
 
 	$('#filtrosEstados button').click( function() {
 		var checkbox = $(this).find(':checkbox');
