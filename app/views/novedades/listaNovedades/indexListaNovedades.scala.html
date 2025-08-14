@@ -4,6 +4,8 @@
 @import models.auth._
 @implicitFieldConstructor = @{ FieldConstructor(simpleInput.render) }
 
+
+
 @views.html.novedades.mainNovedades("Lista de Novedades") {
 
 <div class="page-header">
@@ -20,7 +22,7 @@
 			    <span class="caret"></span>
 			  </button>
 			  <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
-			  	<li><</li>
+			  	<li></li>
 
 			  </ul>
 			</div>
@@ -32,6 +34,10 @@
 			    <span class="caret"></span>
 			  </button>
 			  <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
+					<li role="presentation" class="dropdown-header">Acciones Masivas</li>
+
+				  		<li role="presentation"><a role="menuitem" id="accionEliminarMasivoNovedad" tabindex="-1" href="#"
+				  		data-url="@controllers.novedades.routes.NovedadesController.modalEliminarMasivo()">Eliminar</a></li>
 
 			  </ul>
 			</div>
@@ -47,6 +53,7 @@
 
 	<div id="actions">
 		<form action="" id="formSearchRecuperoFacturas" method="GET">
+
 			<div class="row">
 				<div class="col-sm-4">
 					<label class="control-label">Agente
@@ -92,7 +99,7 @@
 			<thead>
 				<tr>
 					<th width="30"><input type="checkbox" name="checkAll" id="checkAll"/></th>
-					<th width="30">#</th>
+					<!-- <th width="30">#</th> -->
 					<th width="70">Fecha</th>
 					<th>Agente</th>
 					<th width="80">Servicio</th>
@@ -103,7 +110,7 @@
 				@for(rf <- buscador.getList) {
 					<tr class="pointer" data-estado="" data-href="@controllers.novedades.routes.NovedadesController.verNovedad(rf.id)&@UriTrack.encode()">
 						<td><input type="checkbox" name="check_listado[]" value="@rf.id" class="notSeleccion" id="check-@rf.id"/></td>
-						<td><a class="btn btn-default btn-xs notSeleccion" href="@controllers.novedades.routes.NovedadesController.editar(rf.id)&@UriTrack.encode()"><i class="glyphicon glyphicon-edit"></i></a></td>
+						<!-- <td><a class="btn btn-default btn-xs notSeleccion" href="@controllers.novedades.routes.NovedadesController.editar(rf.id)&@UriTrack.encode()"><i class="glyphicon glyphicon-edit"></i></a></td>-->
 						<td class="fechaRecuperoFactura">@if(rf.fecha_inicio != null){@(utils.DateUtils.formatDate(rf.fecha_inicio))}</td>
 						<td>@(rf.agente.apellido)</td>
 						<td>@(rf.servicio.nombre)</td>
@@ -126,6 +133,57 @@
 	$( function() {
 
 		$('#searchAgente').modalSearch();
+
+
+
+
+		$('#accionEliminarMasivoNovedad').click( function() { //abrir modal para pasar en Curso
+			var url = $(this).attr("data-url");
+			var dialogo = $('<div></div>');
+
+			dialogo.dialog({
+				title: "Eliminar Masivo",
+		    	resizable: false,
+				autoOpen: true,
+				modal: true,
+				height: 300,
+				width:750,
+		        buttons: {
+			          Cerrar: function() {
+			        	  window.location.reload();
+			            $( this ).dialog( "destroy" );
+			          }
+			    },
+		    	close: function(event, ui ){
+		    		window.location.reload();
+		    		$(this).dialog( "destroy" );
+		    	},
+			    open: function( event, ui ) {
+					$.get(url, function(data){
+						dialogo.html(data);
+					});
+			    }
+		    });
+		});
+
+		$(document).on("submit", '#formEliminarMasivoNovedad', function(){
+			var form = $(this);
+			var url = form.attr('action');
+			var data = form.serialize()+'&'+$("input[name='check_listado[]']").serialize();
+			var submit = form.find("button[type='submit']");
+			submit.replaceWith(getLoading());
+			$.post(url, data, function(data){
+				if(data.success) {
+					form.replaceWith(data.html);
+
+				} else {
+					form.replaceWith(data);
+				}
+			});
+
+			return false;
+		});
+
 	});
 </script>
 
