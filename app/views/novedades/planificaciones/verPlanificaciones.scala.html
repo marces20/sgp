@@ -1,0 +1,74 @@
+@(planificacionesForm: Form[models.novedades.Planificacion],novedad: models.novedades.Planificacion)
+@import utils._
+@import helper._
+@implicitFieldConstructor = @{ FieldConstructor(simpleInput.render) }
+@scripts = {
+	<script src="@routes.Assets.at("javascripts/recupero/novedades.js")" type="text/javascript"></script>
+}
+
+
+@views.html.novedades.mainNovedades("Planificacion", scripts) {
+<div class="page-header">
+	<div class="row">
+		<div class="col-sm-7">
+			<h1>Vista Planificacion</h1>
+		</div>
+		<div class="col-sm-5">
+			<div class="dropdown pull-right">
+			 <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown">
+			 	<i class="glyphicon glyphicon-list-alt"></i>
+			    Reportes
+			    <span class="caret"></span>
+			  </button>
+			  <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
+
+			  </ul>
+			</div>
+
+			<div class="dropdown pull-right btn-header">
+			 <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown">
+			 	<i class="glyphicon glyphicon-cog"></i>
+			    Acciones
+			    <span class="caret"></span>
+			  </button>
+			  <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
+ 			  </ul>
+			</div>
+
+		</div>
+	</div>
+</div>
+@views.html.tags.successError()
+<div class="row menu-acciones">
+	<div class="col-sm-9">
+		<a href="@controllers.novedades.routes.PlanificacionesController.crear()@UriTrack.get("?")"  class="btn btn-default"><i class="glyphicon glyphicon-plus-sign"></i> Nuevo</a>
+		<a href="@controllers.novedades.routes.PlanificacionesController.editar(novedad.id)@UriTrack.get("&")"  class="btn btn-default"><i class="glyphicon glyphicon-edit"></i> Editar</a>
+		<a href="@controllers.novedades.routes.PlanificacionesController.eliminar(novedad.id)@UriTrack.get("&")"  class="btn btn-default delete-confirm-link"><i class="glyphicon glyphicon-trash icono-eliminar"></i> Eliminar</a>
+	</div>
+	<div class="col-sm-3">
+		<a href="@UriTrack.getOnNull(controllers.novedades.routes.PlanificacionesController.index().absoluteURL())" class="btn btn-default"><i class="glyphicon glyphicon-list"></i></a>
+	</div>
+</div>
+
+	<div class="row">
+
+
+		<div class="col-sm-2">
+			<label class="control-label">Fecha Inicio</label>
+			<p class="form-control-static form-control">@planificacionesForm.field("fecha_inicio").value</p>
+		</div>
+
+		<div class="col-sm-2">
+			<label class="control-label">Fecha Fin</label>
+			<p class="form-control-static form-control">@planificacionesForm.field("fecha_fin").value</p>
+		</div>
+
+		<div class="col-sm-2">
+			<div class="form-group">
+				<label class="control-label">Periodo</label>
+				<p class="form-control-static form-control">@planificacionesForm.field("periodo.nombre").value</p>
+			</div>
+		</div>
+	</div>
+
+}

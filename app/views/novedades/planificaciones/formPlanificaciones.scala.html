@@ -1,0 +1,69 @@
+@(planificacionesForm: Form[models.novedades.Planificacion])
+@import helper._
+@import utils._
+@implicitFieldConstructor = @{ FieldConstructor(simpleInput.render) }
+
+
+<div class="row menu-acciones">
+	<div class="col-sm-10">
+		<button type="submit" class="btn btn-default" title="Guardar orden"><i class="glyphicon glyphicon-floppy-disk"></i> Guardar</button>
+
+    	<a href="@if(request().getHeader("referer")){ @request().getHeader("referer") } else {@controllers.novedades.routes.PlanificacionesController.index()@UriTrack.decode()}" title="Cancelar editar" class="btn btn-default"><i class="glyphicon glyphicon-floppy-remove"></i> Cancelar</a>
+    </div>
+	<div class="col-sm-2">
+		<a href="@UriTrack.decode()" title="Volver al listado" class="btn btn-default"><i class="glyphicon glyphicon-list"></i></a>
+		@if(planificacionesForm.field("id").value){<a href="@controllers.novedades.routes.PlanificacionesController.ver(planificacionesForm.field("id").value.toLong)@UriTrack.get("&")" title="Ver novedad" class="btn btn-default"><i class="glyphicon glyphicon-align-justify"></i></a>}
+	</div>
+</div>
+
+@inputText(planificacionesForm("id"), 'type -> "hidden", 'id -> "planillaId")
+
+<div class="row">
+	<div class="col-sm-2">
+		<label class="control-label">Fecha Inicio</label>
+		<div class="form-group @if(planificacionesForm.error("fecha_inicio")  != null) {has-error}else{has-required}">
+			@inputText(planificacionesForm("fecha_inicio"),'class -> "form-control date", 'autocomplete -> "off",'id-> "fecha_inicio")
+		</div>
+		@planificacionesForm("fecha_inicio").error.map{ error =>
+			<div class="text-error">@error.message</div>
+		}
+	</div>
+
+	<div class="col-sm-2">
+		<label class="control-label">Fecha Fin</label>
+		<div class="form-group @if(planificacionesForm.error("fecha_fin")  != null) {has-error}else{has-required}">
+			@inputText(planificacionesForm("fecha_fin"),'class -> "form-control date", 'autocomplete -> "off",'id-> "fecha_fin")
+		</div>
+		@planificacionesForm("fecha_fin").error.map{ error =>
+			<div class="text-error">@error.message</div>
+		}
+	</div>
+	<div class="col-sm-2">
+		<div class="form-group @if(planificacionesForm.error("periodo_id") != null) {has-error}else{has-required}">
+			<label for="periodo" class="control-label">Periodo</label>
+
+			<div class="input-group">
+				@inputText(planificacionesForm("periodo.nombre"), 'class -> "form-control", 'id -> "periodo")
+				@inputText(planificacionesForm("periodo_id"),'hidden -> "hidden", 'id -> "periodo_id")
+				<span class="input-group-addon">
+					<a href="#" class="searchModal"
+								id="searchPeriodo"
+								data-title="Selección de Periodo"
+								data-url="@controllers.contabilidad.routes.PeriodosController.modalBuscar()"
+								data-height="650"
+								data-width="700"
+								data-listen="modal.seleccion.periodo.simple"
+								data-label="#periodo"
+								data-field="#periodo_id">
+						<i class="glyphicon glyphicon-search"></i>
+					</a>
+				</span>
+			</div>
+			@planificacionesForm("periodo_id").error.map{ error =>
+				<div class="text-error">@error.message</div>
+			}
+		</div>
+	</div>
+
+
+</div>
