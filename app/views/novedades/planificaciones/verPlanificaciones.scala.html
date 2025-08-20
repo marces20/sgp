@@ -1,4 +1,4 @@
-@(planificacionesForm: Form[models.novedades.Planificacion],novedad: models.novedades.Planificacion)
+@(planificacionesForm: Form[models.novedades.Planificacion],planificacion: models.novedades.Planificacion)
 @import utils._
 @import helper._
 @implicitFieldConstructor = @{ FieldConstructor(simpleInput.render) }
@@ -42,8 +42,8 @@
 <div class="row menu-acciones">
 	<div class="col-sm-9">
 		<a href="@controllers.novedades.routes.PlanificacionesController.crear()@UriTrack.get("?")"  class="btn btn-default"><i class="glyphicon glyphicon-plus-sign"></i> Nuevo</a>
-		<a href="@controllers.novedades.routes.PlanificacionesController.editar(novedad.id)@UriTrack.get("&")"  class="btn btn-default"><i class="glyphicon glyphicon-edit"></i> Editar</a>
-		<a href="@controllers.novedades.routes.PlanificacionesController.eliminar(novedad.id)@UriTrack.get("&")"  class="btn btn-default delete-confirm-link"><i class="glyphicon glyphicon-trash icono-eliminar"></i> Eliminar</a>
+		<a href="@controllers.novedades.routes.PlanificacionesController.editar(planificacion.id)@UriTrack.get("&")"  class="btn btn-default"><i class="glyphicon glyphicon-edit"></i> Editar</a>
+		<a href="@controllers.novedades.routes.PlanificacionesController.eliminar(planificacion.id)@UriTrack.get("&")"  class="btn btn-default delete-confirm-link"><i class="glyphicon glyphicon-trash icono-eliminar"></i> Eliminar</a>
 	</div>
 	<div class="col-sm-3">
 		<a href="@UriTrack.getOnNull(controllers.novedades.routes.PlanificacionesController.index().absoluteURL())" class="btn btn-default"><i class="glyphicon glyphicon-list"></i></a>
@@ -51,7 +51,10 @@
 </div>
 
 	<div class="row">
-
+		<div class="col-sm-2">
+			<label class="control-label">Nombre</label>
+			<p class="form-control-static form-control">@planificacionesForm.field("nombre").value</p>
+		</div>
 
 		<div class="col-sm-2">
 			<label class="control-label">Fecha Inicio</label>
@@ -70,5 +73,7 @@
 			</div>
 		</div>
 	</div>
+
+	@views.html.novedades.planificaciones.tabsPlanificaciones(false, planificacionesForm,planificacion)
 
 }

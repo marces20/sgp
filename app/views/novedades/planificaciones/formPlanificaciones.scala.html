@@ -20,6 +20,16 @@
 
 <div class="row">
 	<div class="col-sm-2">
+		<label class="control-label">Nombre</label>
+		<div class="form-group @if(planificacionesForm.error("nombre")  != null) {has-error}else{has-required}">
+			@inputText(planificacionesForm("nombre"),'class -> "form-control date", 'autocomplete -> "off",'id-> "nombre")
+		</div>
+		@planificacionesForm("nombre").error.map{ error =>
+			<div class="text-error">@error.message</div>
+		}
+	</div>
+
+	<div class="col-sm-2">
 		<label class="control-label">Fecha Inicio</label>
 		<div class="form-group @if(planificacionesForm.error("fecha_inicio")  != null) {has-error}else{has-required}">
 			@inputText(planificacionesForm("fecha_inicio"),'class -> "form-control date", 'autocomplete -> "off",'id-> "fecha_inicio")

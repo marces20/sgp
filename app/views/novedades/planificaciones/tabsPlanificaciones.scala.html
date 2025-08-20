@@ -1,0 +1,68 @@
+@(formularioCarga: Boolean, planificacionForm: Form[models.novedades.Planificacion] = null,planificacion:models.novedades.Planificacion = null)
+@import utils._
+@import helper._
+@implicitFieldConstructor = @{ FieldConstructor(simpleInput.render) }
+<hr />
+
+@if(!formularioCarga){
+<div class="row">
+	<div class="col-sm-6">
+		 <div class="panel panel-default">
+			<div class="panel-heading"><b>Detalles</b></div>
+			<div class="panel-body">
+
+				<div class="row margin-bottom-25">
+					<div class="col-sm-12">
+
+
+					</div>
+				</div>
+
+			</div>
+		</div>
+	</div>
+	<div class="col-sm-6">
+		<div class="panel panel-default">
+		<div class="panel-heading"><b>Acciones</b></div>
+		<div class="panel-body">
+
+			<div class="row margin-bottom-25">
+
+						<div class="col-sm-12">
+							<div class="row">
+
+								@for(estado <- models.Estado.getSiguienteEstadoPorAprobar(planificacion.estado.orden,models.Estado.TIPO_PLANIFICACION)) {
+									@if(estado.orden <= 3) {
+										<div class="col-sm-3">
+											<a href="@controllers.novedades.routes.PlanificacionesController.cambiarEstado(planificacionForm.field("id").value.toInt, estado.id.toLong)@UriTrack.get("&")" class="btn btn-default">
+												<i class="glyphicon glyphicon-arrow-right"></i> @estado.nombre
+											</a>
+										</div>
+
+									}
+								}
+
+								@if(planificacion.estado.id == models.Estado.PLANIFICIACION_CANCELADO) {
+									<div class="col-sm-3">
+										<a href="@controllers.novedades.routes.PlanificacionesController.cambiarEstado(planificacionForm.field("id").value.toInt, models.Estado.PLANIFICIACION_BORRADOR)@UriTrack.get("&")" class="btn btn-default">
+											<i class="glyphicon glyphicon-arrow-right"></i> Volver a Borrador
+										</a>
+									</div>
+								}else{
+									<div class="col-sm-3">
+										<a href="@controllers.novedades.routes.PlanificacionesController.cambiarEstado(planificacionForm.field("id").value.toInt, models.Estado.PLANIFICIACION_CANCELADO)@UriTrack.get("&")" class="btn btn-default">
+											<i class="glyphicon glyphicon-minus-sign"></i> Cancelar Planificacion
+										</a>
+									</div>
+								}
+
+							</div>
+
+						</div>
+					</div>
+
+				</div>
+			</div>
+		</div>
+</div>
+}

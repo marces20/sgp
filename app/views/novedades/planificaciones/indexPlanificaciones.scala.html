@@ -106,12 +106,13 @@
 			<thead>
 
 			    <tr style="background: #FFFFFF;">
-			        <td colspan="8">Mostrando @buscador.getDisplayXtoYofZ(" a "," de ") resultado(s). </td>
+			        <td colspan="9">Mostrando @buscador.getDisplayXtoYofZ(" a "," de ") resultado(s). </td>
 		        </tr>
 				<tr>
 					<th width="10"><input type="checkbox" name="checkAll" id="checkAll"/></th>
 					<th width="30">#</th>
-					<th width="50">Servicio</th>
+					<th width="">Nombre</th>
+					<th width="">Servicio</th>
 					<th width="50">Fecha Inicio</th>
 					<th width="50">Fecha Fin</th>
 					<th width="">Periodo</th>
@@ -125,7 +126,7 @@
 				<tr class="pointer @getClassEstado(planilla.estado)" data-estado="" data-href="@controllers.novedades.routes.PlanificacionesController.ver(planilla.id)&@UriTrack.encode()">
 					<td><input type="checkbox" name="check_listado[]" value="@planilla.id" class="notSeleccion" id="check-@planilla.id"/></td>
 					<td><a class="btn btn-default btn-xs notSeleccion" href="@controllers.novedades.routes.PlanificacionesController.editar(planilla.id)&@UriTrack.encode()"><i class="glyphicon glyphicon-edit"></i></a></td>
-
+					<td>@(planilla.nombre)</td>
 					<td>@(planilla.organigrama.nombre)</td>
 					<td class="fecha">@if(planilla.fecha_inicio != null){@(utils.DateUtils.formatDate(planilla.fecha_inicio))}</td>
 					<td class="fecha">@if(planilla.fecha_fin != null){@(utils.DateUtils.formatDate(planilla.fecha_fin))}</td>
@@ -142,7 +143,7 @@
 	        </tbody>
 	        <tfoot>
 		        <tr>
-			        <td colspan="8">&nbsp</td>
+			        <td colspan="9">&nbsp</td>
 				</tr>
 	        </tfoot>
         </table>
