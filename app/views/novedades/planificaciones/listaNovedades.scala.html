@@ -1,0 +1,16 @@
+@(planificacion:models.novedades.Planificacion = null)
+@import java.util.List
+
+
+	<script>
+	$( function (){
+		$.get('@controllers.novedades.routes.NovedadesController.listaNovedadesPlanificacion(planificacion.id)', function(data){
+			$('#listaNovedades').parent().html(data);
+		})
+	});
+	</script>
+
+
+<div id="listaNovedades">
+
+</div>

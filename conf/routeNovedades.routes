@@ -1,5 +1,6 @@
 GET  	/             				controllers.novedades.IndexController.index()
 GET     /novedades	         		controllers.novedades.NovedadesController.indexListaNovedades()
+GET     /novedades/listaNovedadesPlanificacion        		controllers.novedades.NovedadesController.listaNovedadesPlanificacion(idPlanificacion:Long ?= 0)
 GET     /novedadesCalendar	        controllers.novedades.NovedadesController.index()
 GET     /novedades/ver         		controllers.novedades.NovedadesController.ver(id:Long ?= 0)
 GET     /novedades/verNovedad      	controllers.novedades.NovedadesController.verNovedad(id:Long ?= 0)
