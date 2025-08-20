@@ -197,7 +197,12 @@ public class PlanificacionesController extends Controller {
 				  }
 		    	  pasarEnBorrador(rp.id);
 		    	  break;
-
+		      case Estado.PLANIFICIACION_ENCURSO:
+		    	  if(!Permiso.check("planificacionPasarEnCurso")) {
+					  return ok(sinPermiso.render(request().getHeader("referer")));
+				  }
+		    	  pasarEnCurso(rp.id);
+		    	  break;
 		      case Estado.PLANIFICIACION_APROBADO:
 		    	  if(!Permiso.check("planificacionPasarAprobado")) {
 					  return ok(sinPermiso.render(request().getHeader("referer")));
@@ -229,6 +234,21 @@ public class PlanificacionesController extends Controller {
 			rf.write_usuario_id = new Long(Usuario.getUsuarioSesion());
 			rf.save();
 			flash("success", "Operación exitosa. Estado actual: Borrador");
+		} else {
+			flash("error", "Parámetros incorrectos");
+		}
+	}
+
+	public static void pasarEnCurso(Long idRf){
+
+		Planificacion rf = Ebean.find(Planificacion.class).select("id, estado_id,write_date,write_usuario_id").setId(idRf).findUnique();
+
+		if(rf != null){
+			rf.estado_id = new Long(Estado.PLANIFICIACION_ENCURSO);
+			rf.write_date = new Date();
+			rf.write_usuario_id = new Long(Usuario.getUsuarioSesion());
+			rf.save();
+			flash("success", "Operación exitosa. Estado actual: En Curso");
 		} else {
 			flash("error", "Parámetros incorrectos");
 		}

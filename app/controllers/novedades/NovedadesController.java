@@ -22,6 +22,7 @@ import models.Feriado;
 import models.Novedad;
 import models.Solicitud;
 import models.Usuario;
+import models.recupero.RecuperoFactura;
 import play.Logger;
 import play.data.DynamicForm;
 import play.data.Form;
@@ -271,6 +272,7 @@ public class NovedadesController extends Controller {
 						ex.fecha_inicio = utils.DateUtils.formatDate(ftmp, "dd/MM/yyyy");
 						ex.create_usuario_id = new Long(Usuario.getUsuarioSesion());
 						ex.create_date = new Date();
+						ex.planificacion_id = e.planificacion_id;
 						ex.save();
 
 
@@ -316,12 +318,16 @@ public class NovedadesController extends Controller {
 	}
 
 	public static Result guardar() {
+
 		Form<Novedad> nForm = form(Novedad.class).bindFromRequest();
 		ObjectNode restJs = Json.newObject();
 		ObjectNode evento = Json.newObject();
 		try {
 			Logger.debug("looooofechasfechas "+nForm );
+
 			if(nForm.hasErrors()) {
+
+
 				flash("error", "Error en formulario");
 				return ok(crearNovedad.render(nForm));
 			} else {
