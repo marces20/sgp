@@ -101,6 +101,7 @@
 					<th width="30"><input type="checkbox" name="checkAll" id="checkAll"/></th>
 					<!-- <th width="30">#</th> -->
 					<th width="70">Fecha</th>
+					<th width="70">Habiles</th>
 					<th>Agente</th>
 					<th width="">Servicio</th>
 					<th width="">Planificacion</th>
@@ -109,10 +110,11 @@
 			</thead>
 			<tbody>
 				@for(rf <- buscador.getList) {
-					<tr class="pointer" data-estado="" data-href="@controllers.novedades.routes.NovedadesController.verNovedad(rf.id)&@UriTrack.encode()">
+					<tr class="pointer @if(rf.habiles) {borrador}else{red}" data-estado="" data-href="@controllers.novedades.routes.NovedadesController.verNovedad(rf.id)&@UriTrack.encode()">
 						<td><input type="checkbox" name="check_listado[]" value="@rf.id" class="notSeleccion" id="check-@rf.id"/></td>
 						<!-- <td><a class="btn btn-default btn-xs notSeleccion" href="@controllers.novedades.routes.NovedadesController.editar(rf.id)&@UriTrack.encode()"><i class="glyphicon glyphicon-edit"></i></a></td>-->
 						<td class="fechaRecuperoFactura">@if(rf.fecha_inicio != null){@(utils.DateUtils.formatDate(rf.fecha_inicio))}</td>
+						<td>@if(rf.habiles){SI}else{NO}</td>
 						<td>@(rf.agente.apellido)</td>
 						<td>@(rf.servicio.nombre)</td>
 						<td>@(rf.planificacion.nombre)</td>
