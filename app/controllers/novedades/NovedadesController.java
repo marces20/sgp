@@ -49,7 +49,7 @@ public class NovedadesController extends Controller {
 											RequestVar.get("desde"),
 											RequestVar.get("hasta"),
 											RequestVar.get("planificacion_id"),
-											null
+											"fecha_inicio ASC"
 											)
 											,d));
 
