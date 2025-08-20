@@ -26,8 +26,8 @@
 	<div class="col-sm-6">
 			<label for="servicio" class="control-label">Servicio</label>
 			<div class="input-group @if(nForm.error("servicio_id")  != null) {has-error} else {has-required}">
-				@inputText(nForm("servicio.nombre"),'class -> "form-control",'id -> "servicioModal", 'disabled -> "disabled")
-				@inputText(nForm("servicio_id"),'hidden -> "hidden",'id -> "servicio_id_modal")
+				@inputText(nForm("servicio.nombre"),'class -> "form-control",'id -> "")
+				@inputText(nForm("servicio_id"),'hidden -> "hidden",'id -> "")
 				<span class="input-group-addon">
 				<!--  <a href="#" class="searchModal"
 							id="searchServicioModal"
@@ -42,7 +42,7 @@
 				</a>-->
 				</span>
 			</div>
-			@nForm("departamento_id").error.map{ error =>
+			@nForm("servicio_id").error.map{ error =>
 					<div class="text-error">@error.message</div>
 				}
 	</div>
@@ -63,7 +63,13 @@
 		</div>
 		@nForm("horas").error.map{ error =><div class="text-error">@error.message</div>}
 	</div> -->
-
+	<div class="col-sm-6">
+		<label class="control-label">Planificacion
+		@select(nForm("planificacion_id"), models.novedades.Planificacion.getPlanificacionEnCursoByOrganigrama().map { p => p.id.toString -> p.nombre},
+		'class -> "form-control select", '_default -> "Seleccionar")
+		</label>
+		@nForm("planificacion_id").error.map{ error =><div class="text-error">@error.message</div>}
+	</div>
 
 
 </div>
