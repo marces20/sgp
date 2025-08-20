@@ -1,6 +1,7 @@
 package models.novedades;
 
 import java.util.Date;
+import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -13,6 +14,7 @@ import javax.persistence.Table;
 
 import com.avaje.ebean.ExpressionList;
 
+import models.Ejercicio;
 import models.Estado;
 import models.Novedad;
 import models.Organigrama;
@@ -35,9 +37,13 @@ public class Planificacion extends Model{
 	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="planificaciones_id_seq")
 	public Long id;
 
+	@Required(message="Debe seleccionar un nombre")
+	public String nombre;
+
 	@ManyToOne
 	@JoinColumn(name="organigrama_id", referencedColumnName="id", insertable=false, updatable=false)
 	public Organigrama organigrama;
+	@Required(message="Debe seleccionar un servicio")
 	public Integer organigrama_id;
 
 	@Required(message="Debe especificar la fecha de inicio")
@@ -77,6 +83,13 @@ public class Planificacion extends Model{
 	public Date write_date;
 
 	public static Model.Finder<Long,Planificacion> find = new Finder<Long,Planificacion>(Long.class, Planificacion.class);
+
+	public static List<Planificacion> getPlanificacionEnCursoByOrganigrama(){
+		return find.where()
+				.eq("estado_id", Estado.PLANIFICIACION_ENCURSO)
+				.eq("organigrama_id", Usuario.getUsurioSesion().organigrama_id)
+				.orderBy("id desc").findList();
+	}
 
 	public static Pagination<Planificacion> page(String organigrama_id ,
 			String desde,
