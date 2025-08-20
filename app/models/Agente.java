@@ -248,6 +248,17 @@ public class Agente extends Model{
 		return l;
 	}
 
+	public List<Agente> getDataSuggestByOrganigramaSesion(String input,Integer limit){
+		List<Agente> l = find.where()
+				//.or(Ebean.getExpressionFactory().ilike("apellido", "%" + input + "%"), Ebean.getExpressionFactory().ilike("nombre", "%" + input + "%"))
+				.ilike("apellido", "%" + input + "%")
+				.eq("organigrama_id", Usuario.getUsurioSesion().organigrama_id)
+				.setMaxRows(limit).orderBy("id")
+			    .findList();
+
+		return l;
+	}
+
 	public int getEdad() {
 		int years = 0;
 
