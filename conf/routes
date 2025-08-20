@@ -615,6 +615,7 @@ GET     /rrhh/agente/editar       		controllers.rrhh.AgentesController.editarAge
 GET     /rrhh/agente/eliminar     		controllers.rrhh.AgentesController.eliminarAgente(id:Long)
 POST    /rrhh/agente/actualizar   		controllers.rrhh.AgentesController.actualizarAgente(agenteId:Long)
 GET     /rrhh/agente/modalBuscar		controllers.rrhh.AgentesController.modalBuscar()
+GET     /rrhh/agente/modalBuscarByOrgranigrama		controllers.rrhh.AgentesController.modalBuscarByOrgranigrama()
 GET     /rrhh/agente/get               	controllers.rrhh.AgentesController.get(id:Long ?= 0)
 GET     /rrhh/agente/ver		 		controllers.rrhh.AgentesController.ver(id:Long)
 GET     /rrhh/agente/modalReplicarProveedor	controllers.rrhh.AgentesAccionesController.modalReplicarProveedor(id:Long)
@@ -1113,6 +1114,7 @@ GET    /suggestPuesto/:input	  	controllers.rrhh.PuestosController.suggestPuesto
 
 GET    /suggestLocalidad/:input	  	controllers.administracion.LocalidadesController.suggestLocalidad(input: String)
 GET    /suggestAgente/:input	  	controllers.rrhh.AgentesController.suggestAgente(input: String)
+GET    /suggestAgenteByOrganigramaSesion/:input	  	controllers.rrhh.AgentesController.suggestAgenteByOrganigramaSesion(input: String)
 GET    /suggestSolicitud/:input		controllers.compras.SolicitudesController.suggestSolicitud(input: String)
 GET    /suggestOrden/:input			controllers.compras.OrdenesController.suggestOrden(input: String)
 

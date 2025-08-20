@@ -21,7 +21,7 @@
 					<span class="input-group-addon">
 					<a href="#" id="searchAgenteModal"
 					data-title="Selección de agente"
-					data-url="@controllers.rrhh.routes.AgentesController.modalBuscar()"
+					data-url="@controllers.rrhh.routes.AgentesController.modalBuscarByOrgranigrama()"
 					data-height="650" data-width="700"
 					data-listen="modal.seleccion.agente.simple"
 					data-label="#agenteModal" data-field="#agente_id_modal"><i class="glyphicon glyphicon-search"></i></a>
@@ -107,7 +107,7 @@
 		if($("#agenteModal").length){
 
 			var options = {
-					script:"/suggestAgente/",
+					script:"/suggestAgenteByOrganigramaSesion/",
 					varname:"",
 					json:true,
 					shownoresults:true,

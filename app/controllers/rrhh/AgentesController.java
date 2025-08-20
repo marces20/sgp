@@ -285,6 +285,41 @@ public class AgentesController extends Controller {
 		return ok(verAgente.render(agenteForm.fill(agente),agente,pl));
 	}
 
+	public static Result suggestAgenteByOrganigramaSesion(String input) {
+
+		ObjectNode rpta = Json.newObject();
+	    ArrayNode agente = rpta.arrayNode();
+
+	    Agente ad = new Agente();
+
+		for(Agente a : ad.getDataSuggestByOrganigramaSesion(input, 25)){
+
+			Logger.debug(a.id+"  ---- "+a.create_date);
+			ObjectNode restJs = Json.newObject();
+	        restJs.put("id", a.id);
+	        //restJs.put("value",a.apellido+" "+a.nombre);
+	        restJs.put("value",a.apellido);
+
+	        String info = "";
+	        if(a.organigrama != null){
+	        	info += a.organigrama.nombre;
+	        }
+
+	        if(a.cuit != null){
+	        	info += " - "+a.cuit;
+	        }
+
+
+	        restJs.put("info", info);
+	        agente.add(restJs);
+		}
+
+		ObjectNode response = Json.newObject();
+		response.put("results", agente);
+
+		return ok(response);
+	}
+
 	public static Result suggestAgente(String input) {
 
 		ObjectNode rpta = Json.newObject();
@@ -419,6 +454,19 @@ public class AgentesController extends Controller {
     						.fetch("organigrama","nombre")
     						.where().ilike("apellido", "%" + RequestVar.get("nombre") + "%"));
 		return ok( modalBusquedaAgente.render(p, form().bindFromRequest()) );
+	}
+
+	public static Result modalBuscarByOrgranigrama() {
+    	Pagination<Agente> p = new Pagination<Agente>();
+    	p.setOrderDefault("ASC");
+    	p.setSortByDefault("apellido");
+    	p.setExpressionList(Agente.
+    						find
+    						.fetch("organigrama","nombre")
+    						.where()
+    						.eq("organigrama_id", Usuario.getUsurioSesion().organigrama_id)
+    						.ilike("apellido", "%" + RequestVar.get("nombre") + "%"));
+		return ok( modalBuscarByOrgranigrama.render(p, form().bindFromRequest()) );
 	}
 
 	public static Result cambiarEstado(Long idAgente, Long idEstado) throws IOException{
