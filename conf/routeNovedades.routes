@@ -25,3 +25,4 @@ POST   /planificacion/guardar  		controllers.novedades.PlanificacionesController
 POST   /planificacion/actualizar  	controllers.novedades.PlanificacionesController.actualizar(id:Long)
 GET    /planificacion/eliminar    	controllers.novedades.PlanificacionesController.eliminar(id:Long)
 GET    /planificacion/ver   		controllers.novedades.PlanificacionesController.ver(id:Long ?= 0)
+GET    /planificacion/cambiarEstado	controllers.novedades.PlanificacionesController.cambiarEstado(id:Long, idEstado: Long)
