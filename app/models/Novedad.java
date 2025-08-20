@@ -19,6 +19,7 @@ import com.avaje.ebean.Ebean;
 import com.avaje.ebean.ExpressionList;
 import com.avaje.ebean.SqlRow;
 
+import models.novedades.Planificacion;
 import play.data.format.Formats;
 import play.data.validation.Constraints.Required;
 import play.db.ebean.Model;
@@ -50,6 +51,12 @@ public class Novedad extends Model{
 	@Required(message="Debe seleccionar un servicio")
 	public Integer servicio_id;
 
+	@ManyToOne
+	@JoinColumn(name="planificacion_id", referencedColumnName="id", insertable=false, updatable=false)
+	public Planificacion planificacion;
+	@Required(message="Debe seleccionar una planificacion")
+	public Integer planificacion_id;
+
 	@Required(message="Debe especificar la fecha de inicio")
 	//@Formats .DateTime(pattern="dd/MM/yyyy HH:mm")
 	@Formats .DateTime(pattern="dd/MM/yyyy")
@@ -61,6 +68,7 @@ public class Novedad extends Model{
 
 	public String descripcion;
 
+	public Boolean habiles = true;
 
 	public String fechas;
 
@@ -75,11 +83,15 @@ public class Novedad extends Model{
 
 	public static Model.Finder<Long,Novedad> find = new Finder<Long,Novedad>(Long.class, Novedad.class);
 
-	public static Pagination<Novedad> page(String agente, String servicio, String desde, String hasta) {
+	public static Pagination<Novedad> page(String agente, String servicio, String desde, String hasta,String idPlanificacion,String orderBy) {
     	Pagination<Novedad> p = new Pagination<Novedad>();
-    	p.setOrderDefault("DESC");
-    	p.setSortByDefault("id");
-
+    	if (orderBy != null) {
+    		p.setOrderDefault(" ");
+    		p.setSortByDefault(orderBy);
+    	}else {
+    		p.setOrderDefault("DESC");
+    		p.setSortByDefault("id");
+    	}
     	ExpressionList<Novedad> e = find.where();
 
 		if(!agente.isEmpty()){
@@ -101,22 +113,30 @@ public class Novedad extends Model{
 			System.out.println(fh +" ------ " );
 		}
 
+		if(!idPlanificacion.isEmpty()){
+			 e.eq("planificacion_id", Integer.parseInt(idPlanificacion));
+		}
 
     	p.setExpressionList(e);
     	return p;
     }
 
-	public static List<SqlRow> getDiasLicenciasByOrganigrama(Long organigrama_id){
+	public static List<SqlRow> getDiasLicenciasByOrganigrama(Long organigrama_id,Long agente_id){
 		String sql = "SELECT al.id as id, ag.apellido as apellido,al.finicio as finicio,al.ffin as ffin,tl.nombre as tipo_licencia  "+
 					 "FROM agente_asistencia_licencias al "+
 					 "INNER JOIN agentes ag ON ag.id = al.agente_id "+
 					 "INNER JOIN tipo_licencias tl ON tl.id = al.tipo_licencia_id "+
-					 "WHERE organigrama_id = :organigrama_id ";
+					 "WHERE  1 = 1";
 
-		List<SqlRow> s = Ebean.createSqlQuery(sql)
-				.setParameter("organigrama_id", organigrama_id)
-				//.setParameter("fechahasta", fhasta)
-				.findList();
+		if (organigrama_id != null) {
+			sql += " AND organigrama_id = "+organigrama_id ;
+		}
+
+		if (agente_id != null) {
+			sql += " AND ag.id = "+agente_id ;
+		}
+
+		List<SqlRow> s = Ebean.createSqlQuery(sql).findList();
 
 		return s;
 	}
