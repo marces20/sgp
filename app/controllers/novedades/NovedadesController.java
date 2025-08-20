@@ -47,8 +47,26 @@ public class NovedadesController extends Controller {
 		return ok(indexListaNovedades.render(Novedad.page(RequestVar.get("agente_id"),
 											RequestVar.get("servicio_id"),
 											RequestVar.get("desde"),
-											RequestVar.get("hasta")) // cancelado)
+											RequestVar.get("hasta"),
+											RequestVar.get("planificacion_id"),
+											null
+											)
 											,d));
+
+	}
+
+	@CheckPermiso(key = "verCalendario")
+	public static Result listaNovedadesPlanificacion(Long idPlanificacion) {
+		DynamicForm d = form().bindFromRequest();
+
+		return ok(listaNovedadesPlanificacion.render(Novedad.page("",
+															"",
+															"",
+															"",
+															RequestVar.get("planificacion_id"),
+															"fecha_inicio ASC")
+															,d));
+
 
 	}
 
@@ -135,7 +153,8 @@ public class NovedadesController extends Controller {
 		    									   //Usuario.getUsurioSesion().organigrama_id.toString(),
 		    										servicioId.toString(),
 		    									   RequestVar.get("desde"),
-		    									   RequestVar.get("hasta")).getList();
+		    									   RequestVar.get("hasta"),RequestVar.get("planificacion_id"),
+		    									   "fecha_inicio ASC").getList();
 
 		    Logger.debug("xxxxxxxxxxxxxxxxxxxxxxxxxxxx "+Usuario.getUsurioSesion().organigrama_id.toString());
 
