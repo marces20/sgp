@@ -28,6 +28,23 @@
 					<span style="color:green;font-size: 15px;font-weight: bold;">Vto 344: @utils.DateUtils.formatDate(facturaObj.proveedor.fecha_vencimiento_f344)- NUI:@facturaObj.proveedor.nuif344</span>
 					}
 				}
+			}else{
+				@{oo = Orden349.getLastOrden349(facturaObj.orden_id)}
+				@if(oo != null){
+
+					@for((key,value) <- oo){
+
+						@{vencimiento349 = value}
+						@{nui = key}
+					}
+					@if(vencimiento349 != null && utils.DateUtils.compareDate(vencimiento349,new Date()) < 0){
+						<span style="color:red;font-size: 15px;font-weight: bold;">Vto 349: @utils.DateUtils.formatDate(vencimiento349) - NUI:@nui </span>
+					}else{
+						@if(vencimiento349 != null && utils.DateUtils.compareDate(vencimiento349,new Date()) >= 0){
+						<span style="color:green;font-size: 15px;font-weight: bold;">Vto 349: @utils.DateUtils.formatDate(vencimiento349)- NUI:@nui</span>
+						}
+					}
+				}
 			}
 
 
