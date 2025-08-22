@@ -185,7 +185,7 @@ public class OrdenesReportesController extends Controller {
 
 			//List<Orden> o = Orden.find.where().in("id", ordenesSeleccionadas).order("id asc").findList();
 
-			List<InformeDeudaProveedoresMaterializada> o = InformeDeudaProveedoresMaterializada.find.where().in("orden_id", ordenesSeleccionadas).order("id asc").findList();
+			List<InformeEstadisticoDeudaProveedores> o = InformeEstadisticoDeudaProveedores.find.where().in("orden_id", ordenesSeleccionadas).order("id asc").findList();
 
 			if(o.size() > 0){
 				int x = 0;
@@ -219,7 +219,7 @@ public class OrdenesReportesController extends Controller {
 				celda0.setCellValue("TOTAL OBLIGACION");
 				celda0.setCellStyle(comun);
 				x++;
-				for(InformeDeudaProveedoresMaterializada oll : o){
+				for(InformeEstadisticoDeudaProveedores oll : o){
 					fila = hoja.createRow(x);
 
 					celda0 = fila.createCell(0);
