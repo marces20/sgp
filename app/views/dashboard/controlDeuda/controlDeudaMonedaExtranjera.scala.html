@@ -1,4 +1,4 @@
-@(r:List[models.informes.InformeDeudaProveedoresMaterializada],
+@(
 al:List[models.AutorizadoLinea],
 f:List[models.Factura],
 o:Orden,rowActas:List[com.avaje.ebean.SqlRow],
@@ -28,27 +28,27 @@ alHijo:List[models.AutorizadoLinea])
 <div id="actions">
 	<form action="" method="GET">
 		<div class="row">
-			 
+
 				<div class="col-sm-2">
-					<label class="control-label">Orden de Compras</label> 
+					<label class="control-label">Orden de Compras</label>
 					<div class="input-group">
 						@inputText(formBuscador("orden.nombre"),'class -> "form-control", 'id -> "orden")
 						@inputText(formBuscador("orden_id"),'hidden -> "hidden", 'id -> "orden_id")
-						
-						<span class="input-group-addon"><a href="#" 
-						id="searchOrden" 
+
+						<span class="input-group-addon"><a href="#"
+						id="searchOrden"
 						class="searchModal"
-						data-title="Selección de orden" 
-						data-url="@controllers.compras.routes.OrdenesController.modalBuscar()" 
-						data-height="650" data-width="700" 
-						data-listen="modal.seleccion.orden.simple" 
-						data-label="#orden" 
+						data-title="Selección de orden"
+						data-url="@controllers.compras.routes.OrdenesController.modalBuscar()"
+						data-height="650" data-width="700"
+						data-listen="modal.seleccion.orden.simple"
+						data-label="#orden"
 						data-field="#orden_id"><i class="glyphicon glyphicon-search"></i></a></span>
-						
+
 					</div>
 				</div>
 		</div>
-			<div class="row">	
+			<div class="row">
 				<div class="col-sm-2">
 					<div class="form-group">
 					<label for="nombre" class="control-label">&nbsp;</label>
@@ -61,14 +61,14 @@ alHijo:List[models.AutorizadoLinea])
 					<a href="@controllers.compras.routes.SolicitudesController.index()"  class="form-control btn btn-default">Limpiar</a>
 					</div>
 				</div>
-				
+
 			</div>
-		
+
 	</form>
 </div>
 @if(o.cot_dolar != null && o.tipo_moneda != null){
 <div class="row">
-	<div class="col-sm-6">	 
+	<div class="col-sm-6">
 		<table class="table table-striped table-bordered" id="">
 			<thead>
 				<tr align="center">
@@ -91,7 +91,7 @@ alHijo:List[models.AutorizadoLinea])
 			</tbody>
 		</table>
 	</div>
-	<div class="col-sm-6">	 
+	<div class="col-sm-6">
 		@if(rowActas.size() > 0){
 			@for(ac <- rowActas) {
 				@{totalActa = totalActa.add(ac.getBigDecimal("total"))}
@@ -140,7 +140,7 @@ alHijo:List[models.AutorizadoLinea])
 			        		<td align="right">US@utils.NumberUtils.moneda(ac.getBigDecimal("total_dolar"))</td>
 			        		@{totalActa = totalActa.add(ac.getBigDecimal("total"))}
 							@{totalActaDolar = totalActaDolar.add(ac.getBigDecimal("total_dolar"))}
-							
+
 						</tr>
 					}
 				</tbody>
@@ -154,11 +154,11 @@ alHijo:List[models.AutorizadoLinea])
 			</table>
 		}
 	</div>
-	
+
 </div>
 <div class="row">
-	
-	<div class="col-sm-6">	 
+
+	<div class="col-sm-6">
 		<table class="table table-striped table-bordered" id="">
 			<thead>
 				<tr align="center">
@@ -182,7 +182,7 @@ alHijo:List[models.AutorizadoLinea])
 							<td align="right">NO TIENE COTIZACION</td>
 						}
 						@if(a.monto != null && a.cot_dolar != null){
-							<td align="right">US@utils.NumberUtils.moneda(a.monto.divide(a.cot_dolar, 2, java.math.RoundingMode.HALF_UP))</td>		
+							<td align="right">US@utils.NumberUtils.moneda(a.monto.divide(a.cot_dolar, 2, java.math.RoundingMode.HALF_UP))</td>
 						}else{
 							<td align="right">NO TIENE COTIZACION</td>
 						}
@@ -197,7 +197,7 @@ alHijo:List[models.AutorizadoLinea])
 						<th  colspan="3">HIJA</th>
 					</tr>
 		        }
-		        
+
 		        @for(ahh <- alHijo) {
 		        	<tr>
 		        		<td align="right">@ahh.autorizado.nombre</td>
@@ -208,7 +208,7 @@ alHijo:List[models.AutorizadoLinea])
 							<td align="right">NO TIENE COTIZACION</td>
 						}
 						@if(ahh.monto != null && ahh.cot_dolar != null){
-							<td align="right">US@utils.NumberUtils.moneda(ahh.monto.divide(ahh.cot_dolar, 2, java.math.RoundingMode.HALF_UP))</td>		
+							<td align="right">US@utils.NumberUtils.moneda(ahh.monto.divide(ahh.cot_dolar, 2, java.math.RoundingMode.HALF_UP))</td>
 						}else{
 							<td align="right">NO TIENE COTIZACION</td>
 						}
@@ -223,14 +223,14 @@ alHijo:List[models.AutorizadoLinea])
 				<tr>
 					<td></td>
 					<td align="right"><b>TOTAL:</b>@utils.NumberUtils.moneda(totalAutorizado)</td>
-					<td></td>				
+					<td></td>
 					<td align="right"><b>TOTAL:</b>US@utils.NumberUtils.moneda(totalAutorizadoDolar)</td>
 				</tr>
 			</tfoot>
 		</table>
-	</div>	 
+	</div>
 
-	<div class="col-sm-6">	 
+	<div class="col-sm-6">
 		<table class="table table-striped table-bordered" id="">
 			<thead>
 				<tr align="center">
@@ -246,23 +246,23 @@ alHijo:List[models.AutorizadoLinea])
 				@for(fx <- f) {
 		        	<tr>
 						<td align="right">@utils.NumberUtils.moneda(fx.getBase())</td>
-						@if(fx.cot_dolar != null){	
-							<td align="right">@utils.NumberUtils.moneda(fx.cot_dolar)</td>	
+						@if(fx.cot_dolar != null){
+							<td align="right">@utils.NumberUtils.moneda(fx.cot_dolar)</td>
 						}else{
 							<td align="right">NO TIENE COTIZACION</td>
 						}
-						
-						@if(fx.getBase() != null && fx.cot_dolar != null){		
-							<td align="right">US@utils.NumberUtils.moneda(fx.getBase().divide(fx.cot_dolar, 2, java.math.RoundingMode.HALF_UP))</td>	
+
+						@if(fx.getBase() != null && fx.cot_dolar != null){
+							<td align="right">US@utils.NumberUtils.moneda(fx.getBase().divide(fx.cot_dolar, 2, java.math.RoundingMode.HALF_UP))</td>
 						}else{
 							<td align="right">NO TIENE COTIZACION</td>
 						}
 					</tr>
 					@{totalFactura = totalFactura.add(fx.getBase())}
-					@if(fx.getBase() != null && fx.cot_dolar != null){		
+					@if(fx.getBase() != null && fx.cot_dolar != null){
 						@{totalFacturaDolar = totalFacturaDolar.add(fx.getBase().divide(fx.cot_dolar, 2, java.math.RoundingMode.HALF_UP))}
 					}
-					
+
 		        }
 		        @if(fh.size() > 0){
 		        	<tr align="center">
@@ -272,37 +272,37 @@ alHijo:List[models.AutorizadoLinea])
 		        @for(fhh <- fh) {
 		        	<tr>
 						<td align="right" >@utils.NumberUtils.moneda(fhh.getBase())</td>
-						@if(fhh.cot_dolar != null){	
-							<td align="right">@utils.NumberUtils.moneda(fhh.cot_dolar)</td>	
+						@if(fhh.cot_dolar != null){
+							<td align="right">@utils.NumberUtils.moneda(fhh.cot_dolar)</td>
 						}else{
 							<td align="right">NO TIENE COTIZACION</td>
 						}
-						
-						@if(fhh.getBase() != null && fhh.cot_dolar != null){		
-							<td align="right">US@utils.NumberUtils.moneda(fhh.getBase().divide(fhh.cot_dolar, 2, java.math.RoundingMode.HALF_UP))</td>	
+
+						@if(fhh.getBase() != null && fhh.cot_dolar != null){
+							<td align="right">US@utils.NumberUtils.moneda(fhh.getBase().divide(fhh.cot_dolar, 2, java.math.RoundingMode.HALF_UP))</td>
 						}else{
 							<td align="right">NO TIENE COTIZACION</td>
 						}
 					</tr>
 					@{totalFactura = totalFactura.add(fhh.getBase())}
-					@if(fhh.getBase() != null && fhh.cot_dolar != null){		
+					@if(fhh.getBase() != null && fhh.cot_dolar != null){
 						@{totalFacturaDolar = totalFacturaDolar.add(fhh.getBase().divide(fhh.cot_dolar, 2, java.math.RoundingMode.HALF_UP))}
 					}
-					
+
 		        }
 			</tbody>
 			<tfoot>
 				<tr>
 					<td align="right"><b>TOTAL:</b>@utils.NumberUtils.moneda(totalFactura)</td>
-					<td></td>				
+					<td></td>
 					<td align="right"><b>TOTAL:</b>US@utils.NumberUtils.moneda(totalFacturaDolar)</td>
 				</tr>
 			</tfoot>
 		</table>
-	</div>	 
+	</div>
 </div>
 <div class="row">
-	<div class="col-sm-6">	 
+	<div class="col-sm-6">
 		<table class="table table-striped table-bordered" id="">
 			<thead>
 				<tr align="center">
@@ -315,33 +315,33 @@ alHijo:List[models.AutorizadoLinea])
 					@if(totalActaDolar.compareTo(BigDecimal.ZERO) == 0 && o.monto_adelanto != null){
 						@{totalActaDolar = o.monto_adelanto.divide(o.cot_dolar, 2, java.math.RoundingMode.HALF_UP);}
 					}
-				
+
 					@if(totalAutorizadoDolar.compareTo(totalFacturaDolar) >= 0){
 						@{totalDeuda = totalActaDolar.subtract(totalAutorizadoDolar).multiply(ultimaCotizacion)}
 						@{totalDeudaDolar = totalActaDolar.subtract(totalAutorizadoDolar)}
-						
+
 					}else{
 						@{totalDeuda = totalActaDolar.subtract(totalFacturaDolar).multiply(ultimaCotizacion)}
 						@{totalDeudaDolar = totalActaDolar.subtract(totalFacturaDolar)}
 					}
 					<td align="right">
-	        			US@utils.NumberUtils.moneda(totalDeudaDolar) <br> 
+	        			US@utils.NumberUtils.moneda(totalDeudaDolar) <br>
 	        		</td>
 	        		<td align="right">
-	        		
-	        			@utils.NumberUtils.moneda(totalDeuda)<br> 
+
+	        			@utils.NumberUtils.moneda(totalDeuda)<br>
 	        		</td>
 	        	</tr>
-				
+
 			</tbody>
 		</table>
 	</div>
-</div>	
+</div>
 }else{
 <div class="row">
 	<div class="col-sm-4">
 		<p>NO ES UN EXPEDIENTE EN MONEDA EXTRAJERA.</p>
-	</div>	 
+	</div>
 </div>
 
 }
