@@ -88,7 +88,7 @@ public class ControlDeudaController extends Controller {
 	@CheckPermiso(key = "controlDeudaMonedaExtranjera")
 	public static Result controlDeudaMonedaExtranjera() {
 
-		List<InformeDeudaProveedoresMaterializada> e =  null;
+		List<InformeEstadisticoDeudaProveedores> e =  null;
 		List<AutorizadoLinea> al = new ArrayList<AutorizadoLinea>();
 		List<AutorizadoLinea> alHijo = new ArrayList<AutorizadoLinea>();
 		List<Factura> f = new ArrayList<Factura>();
@@ -155,7 +155,7 @@ public class ControlDeudaController extends Controller {
 			}
     	}
 
-		return ok(controlDeudaMonedaExtranjera.render(e,al,f,o,rowActas,ultimaCotizacion,form().bindFromRequest(),fh,alHijo));
+		return ok(controlDeudaMonedaExtranjera.render(al,f,o,rowActas,ultimaCotizacion,form().bindFromRequest(),fh,alHijo));
 	}
 
 	private static void actualizarVistaMaterializada () {
