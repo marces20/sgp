@@ -70,10 +70,14 @@ public class ControlDeudaController extends Controller {
 
 
 		//actualizarVistaMaterializada ();
-		ExpressionList<InformeDeudaProveedoresMaterializada> e =InformeDeudaProveedoresMaterializada.find
-												.fetch("proveedor", "nombre")
-												.fetch("ordenProvision", "numero, orden_compra_id")
-												.where();
+		ExpressionList<InformeEstadisticoDeudaProveedores> e =InformeEstadisticoDeudaProveedores.find.select("tipo_moneda,numero_orden_provision,expediente,rubro,nombreProveedor,totalOrden,"
+    			+ "totalAutorizado,totalPagado,totalDeuda,totalCompromiso,orden_provision_id,tipo_cuenta_id")
+    			.fetch("ordenProvision", "orden_compra_id,numero")
+    			.fetch("expedienteObj","emergencia,fecha,descripcion")
+    			.fetch("tipoCuenta","nombre")
+    			.fetch("deposito","nombre")
+    			.fetch("proveedor","nombre").where();
+
 		e = e.ne("rubro_id",8);
 		e = e.ne("rubro_id",10);
     	e = e.raw("total_autorizado <> total_pagado");
