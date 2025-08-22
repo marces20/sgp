@@ -64,12 +64,12 @@ import views.html.dashboard.informeEstadisticoDeudaProveedores.*;
 
 @Security.Authenticated(Secured.class)
 public class InformeEstadisticoDeudaProveedoresController extends Controller {
-	final static Form<InformeDeudaProveedoresMaterializada> form = form(InformeDeudaProveedoresMaterializada.class);
+	final static Form<InformeEstadisticoDeudaProveedores> form = form(InformeEstadisticoDeudaProveedores.class);
 
 	@CheckPermiso(key = "dashboardInformeDeudaProveedores")
 	public static Result index() {
-		actualizarVistaMaterializada();
-		Pagination<InformeDeudaProveedoresMaterializada> i = InformeDeudaProveedoresMaterializada.page(
+		//dactualizarVistaMaterializada();
+		Pagination<InformeEstadisticoDeudaProveedores> i = InformeEstadisticoDeudaProveedores.page(
 															RequestVar.get("orden"),
 															RequestVar.get("proveedor_id"),
 															RequestVar.get("expediente_id"),
@@ -97,8 +97,9 @@ public class InformeEstadisticoDeudaProveedoresController extends Controller {
 
 	@CheckPermiso(key = "dashboardInformeDeudaProveedores")
 	public static Result archivoEstadistico () {
-		actualizarVistaMaterializada();
-		Pagination<InformeDeudaProveedoresMaterializada> informe = InformeDeudaProveedoresMaterializada.page(
+		//actualizarVistaMaterializada();
+		Pagination<InformeEstadisticoDeudaProveedores> informe = InformeEstadisticoDeudaProveedores.page(
+		//Pagination<InformeDeudaProveedoresMaterializada> informe = InformeDeudaProveedoresMaterializada.page(
 																 RequestVar.get("orden"),
 																 RequestVar.get("proveedor_id"),
 																 RequestVar.get("expediente_id"),
@@ -162,8 +163,8 @@ public class InformeEstadisticoDeudaProveedoresController extends Controller {
 			style.setDataFormat(libro.createDataFormat().getFormat("$ #,##0.00"));
 
 
-		    for (InformeDeudaProveedoresMaterializada i : informe.getList()) {
-
+		    //for (InformeDeudaProveedoresMaterializada i : informe.getList()) {
+			for (InformeEstadisticoDeudaProveedores i : informe.getList()) {
 				Row f = hoja.createRow(fila);
 
 				//Número Op
@@ -195,7 +196,7 @@ public class InformeEstadisticoDeudaProveedoresController extends Controller {
 
 				//Celda Rubro
 				celda = f.createCell(celdaProveedor);
-				celda.setCellValue(i.proveedor.nombre);
+				celda.setCellValue(i.nombreProveedor);
 
 				//Celda total de orden
 				celda = f.createCell(celdaTotalOrden);
@@ -318,7 +319,7 @@ public class InformeEstadisticoDeudaProveedoresController extends Controller {
 	}
 
 	public static Result procesarDiferencias() {
-		actualizarVistaMaterializada();
+		//actualizarVistaMaterializada();
 		MultipartFormData body = request().body().asMultipartFormData();
 		FilePart upload = body.getFile("archivo");
 		List<String> msg = new ArrayList<String>();
@@ -330,11 +331,11 @@ public class InformeEstadisticoDeudaProveedoresController extends Controller {
 	    File file = upload.getFile();
 
 
-	    List<InformeDeudaProveedoresMaterializada> informe = InformeDeudaProveedoresMaterializada.find.where().findList();
-	    Map<String,InformeDeudaProveedoresMaterializada> aux = new HashMap<String,InformeDeudaProveedoresMaterializada>();
+	    List<InformeEstadisticoDeudaProveedores> informe = InformeEstadisticoDeudaProveedores.find.where().findList();
+	    Map<String,InformeEstadisticoDeudaProveedores> aux = new HashMap<String,InformeEstadisticoDeudaProveedores>();
 
 
-	    for (InformeDeudaProveedoresMaterializada info : informe) {
+	    for (InformeEstadisticoDeudaProveedores info : informe) {
 	    	//System.out.println(info.ano);
 			if(info.ordenProvision.numero != null) {
 				//System.out.println(info.ordenProvision);
@@ -447,7 +448,7 @@ public class InformeEstadisticoDeudaProveedoresController extends Controller {
 						//System.out.println("La OP "+op+ano+" no existe en el sistema.");
 					} else {
 
-						InformeDeudaProveedoresMaterializada info = aux.get(op+ano);
+						InformeEstadisticoDeudaProveedores info = aux.get(op+ano);
 
 						/*
 						if(totalOrden != null && info.totalOrden.compareTo(totalOrden) != 0) {
