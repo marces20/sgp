@@ -49,9 +49,15 @@ public class ControlDeudaController extends Controller {
 
 		List<SqlRow>  row = sqlQuery.findList();*/
 		//actualizarVistaMaterializada ();
-		ExpressionList<InformeDeudaProveedoresMaterializada> e =InformeDeudaProveedoresMaterializada.find
-												.fetch("proveedor", "nombre")
-												.fetch("ordenProvision", "numero, orden_compra_id")
+
+		//ExpressionList<InformeDeudaProveedoresMaterializada> e =InformeDeudaProveedoresMaterializada.find
+		ExpressionList<InformeEstadisticoDeudaProveedores> e =InformeEstadisticoDeudaProveedores.find.select("tipo_moneda,numero_orden_provision,expediente,rubro,nombreProveedor,totalOrden,"
+																				    			+ "totalAutorizado,totalPagado,totalDeuda,totalCompromiso,orden_provision_id,tipo_cuenta_id")
+																				    			.fetch("ordenProvision", "orden_compra_id,numero")
+																				    			.fetch("expedienteObj","emergencia,fecha,descripcion")
+																				    			.fetch("tipoCuenta","nombre")
+																				    			.fetch("deposito","nombre")
+																				    			.fetch("proveedor","nombre")
 												.where();
 
 		e.raw("total_autorizado <> total_pagado");
