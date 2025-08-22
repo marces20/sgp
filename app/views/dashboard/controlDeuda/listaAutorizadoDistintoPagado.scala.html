@@ -1,11 +1,11 @@
-@(r:List[models.informes.InformeDeudaProveedoresMaterializada])
+@(r:List[models.informes.InformeEstadisticoDeudaProveedores])
 @import helper._
-@implicitFieldConstructor = @{ FieldConstructor(simpleInput.render) } 
+@implicitFieldConstructor = @{ FieldConstructor(simpleInput.render) }
 
 <table class="table table-striped table-bordered" id="listaInforme">
 	<thead>
 		<tr>
-			<th width="40">Orden</th>
+			<th width="40">Ordenxxx</th>
 			<th width="60">Expediente</th>
 			<th width="30">Cuenta</th>
 			<th width="130">Rubro</th>
@@ -19,9 +19,9 @@
 		</tr>
 	</thead>
 	<tbody>
-	
+
 		@for(informe <- r) {
-         
+
 		<tr>
 			<td>@informe.numero_orden_provision
 			<br>@if(informe.tipo_moneda != null){<span style="color:green;font-weight:bold;font-size: 12px;">M.E.</span>}
@@ -40,12 +40,12 @@
 
 			</td>
 			<td class="totalCompromiso" data-valor="@informe.totalCompromiso">
-			
+
 
 					@utils.NumberUtils.moneda(informe.totalCompromiso)
 
-				
-			</td>		
+
+			</td>
 		</tr>
         }
 	</tbody>
