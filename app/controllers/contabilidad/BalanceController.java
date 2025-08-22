@@ -42,7 +42,6 @@ import models.Periodo;
 import models.UltimaCotizacion;
 import models.Cuenta;
 import models.Usuario;
-import models.informes.InformeDeudaProveedoresMaterializada;
 import play.Logger;
 import play.data.DynamicForm;
 import play.data.Form;
