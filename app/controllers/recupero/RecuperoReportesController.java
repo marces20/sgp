@@ -39,7 +39,6 @@ import models.Periodo;
 import models.TareaAutomatica;
 import models.TipoComprobante;
 import models.TipoTarea;
-import models.informes.InformeDeudaProveedoresMaterializada;
 import models.recupero.Cheque;
 import models.recupero.InformeTotal;
 import models.recupero.InformeTotalPago;
