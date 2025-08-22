@@ -259,15 +259,39 @@ public class InformeEstadisticoDeudaProveedores extends Model{
 		return totalOrden.subtract(totalAutorizado);
 	}
 
-	public static List<SqlRow> getDeudaPorProveedorAgrupados(boolean proveedoresDestacados,boolean profe,Integer deposito,boolean ra,boolean servicios,boolean equipamiento,boolean honorarios){
+	public static List<SqlRow> getDeudaPorProveedorAgrupados(boolean proveedoresDestacados,
+			 boolean profe,
+			 Integer deposito,
+			 boolean ra,
+			 boolean servicios,
+			 boolean equipamiento,
+			 boolean honorarios,
+			 boolean soloDeuda){
+		return getDeudaPorProveedorAgrupados( proveedoresDestacados, profe, deposito, ra, servicios, equipamiento, honorarios, null,soloDeuda);
+	}
+
+	public static List<SqlRow> getDeudaPorProveedorAgrupados(boolean proveedoresDestacados,
+			 boolean profe,
+			 Integer deposito,
+			 boolean ra,
+			 boolean servicios,
+			 boolean equipamiento,
+			 boolean honorarios,
+			 Boolean soloDestacados,
+			 boolean soloDeuda){
 
 		String sql = "SELECT i.proveedor_id proveedor_id,i.nombre_proveedor nombre_proveedor," +
 				" CASE WHEN coalesce(SUM(CASE WHEN total_deuda > 0 THEN total_deuda ELSE 0 END),0) > 0 THEN coalesce(SUM(CASE WHEN total_deuda > 0 THEN total_deuda ELSE 0 END),0) ELSE 0 END total_deuda," +
 				" CASE WHEN coalesce(SUM(CASE WHEN total_compromiso > 0 THEN total_compromiso ELSE 0 END),0) > 0 THEN coalesce(SUM(CASE WHEN total_compromiso > 0 THEN total_compromiso ELSE 0 END),0) ELSE 0 END total_compromiso " +
 				" FROM informe_estadistico_deuda_proveedores i 	" +
 				" INNER JOIN proveedores p ON p.id = i.proveedor_id " +
-				" WHERE i.perimido = false AND (i.total_deuda > 0.01 OR i.total_compromiso > 0)  ";
+				" WHERE i.perimido = false ";
 
+		if(soloDeuda){
+			sql += "AND (i.total_deuda > 0.01) ";
+		}else{
+			sql += "AND (i.total_deuda > 0.01 OR i.total_compromiso > 0) ";
+		}
 
 
 		if(profe){
@@ -286,11 +310,13 @@ public class InformeEstadisticoDeudaProveedores extends Model{
 			sql += " AND i.rubro_id = 7 ";
 		}else if(honorarios){
 			sql += " AND i.rubro_id = 8 ";
+		}else if (soloDestacados != null && !soloDestacados && equipamiento) {
+			sql += " AND i.rubro_id <> 7   ";
 		}else if(equipamiento){
 			sql += " AND i.rubro_id = 1 ";
 		}else{
-			if(ra || proveedoresDestacados){
-				sql += " AND i.rubro_id <> 7 AND i.rubro_id <> 8 ";
+			if((ra || proveedoresDestacados)) {
+				sql += " AND i.rubro_id <> 7 AND i.rubro_id <> 8  ";
 			}else{
 				sql += " AND i.rubro_id <> 7 AND i.rubro_id <> 1 AND i.rubro_id <> 8 ";
 			}
@@ -302,6 +328,9 @@ public class InformeEstadisticoDeudaProveedores extends Model{
 		}else{
 			if(proveedoresDestacados){
 				sql += " AND p.id IN (select proveedor_id from proveedores_destacados) ";
+				if(soloDestacados != null && soloDestacados) {
+					sql += " AND p.id NOT IN (2050,1430,3045,2176,14106,14441,14971,16359) ";
+				}
 			}else{
 				sql += " AND  p.id NOT IN (select proveedor_id from proveedores_destacados) ";
 			}
@@ -317,7 +346,41 @@ public class InformeEstadisticoDeudaProveedores extends Model{
 
 	}
 
-	public static List<SqlRow> getDeudaPorProveedorDetallesOtros(boolean profe,Long deposito,boolean equipamiento){
+	public static List<SqlRow> getDeudaPorProveedorDetallesOtros(boolean profe,Long deposito,boolean equipamiento,boolean soloDeuda){
+
+		/*String sql = "SELECT i.numero_orden_provision numeroProvision, i.expediente expediente,e.fecha fechaExpediente," +
+				" e.descripcion descripcion, i.proveedor_id proveedorId,i.nombre_proveedor nombre_proveedor,i.rubro_id rubroId,i.rubro rubro," +
+				" CASE WHEN coalesce(SUM(CASE WHEN total_deuda > 0 THEN total_deuda ELSE 0 END),0) > 0 THEN coalesce(SUM(CASE WHEN total_deuda > 0 THEN total_deuda ELSE 0 END),0) ELSE 0 END total_deuda," +
+				" CASE WHEN coalesce(SUM(CASE WHEN total_compromiso > 0 THEN total_compromiso ELSE 0 END),0) > 0 THEN coalesce(SUM(CASE WHEN total_compromiso > 0 THEN total_compromiso ELSE 0 END),0) ELSE 0 END total_compromiso " +
+				" FROM informe_estadistico_deuda_proveedores i 	" +
+				" INNER JOIN proveedores p ON p.id = i.proveedor_id " +
+				" INNER JOIN expedientes e ON e.id = i.expediente_id " +
+				" WHERE i.perimido = false AND (i.total_deuda > 0.01 OR i.total_compromiso > 0)  ";
+
+		if(profe){
+			sql += " AND (i.profe = true OR i.tipo_cuenta_id = 2) ";
+		}else{
+			sql += " AND (i.profe = false OR i.tipo_cuenta_id = 1) ";
+		}
+
+		if(deposito == null || deposito == -1){
+			sql += " AND i.deposito_id <> 1";
+		}else if(deposito != 0){
+			sql += " AND i.deposito_id = "+deposito;
+		}
+
+		if(equipamiento){
+			sql += " AND i.rubro_id = 1";
+		}else{
+			sql += " AND i.rubro_id <> 1";
+		}
+		sql += " AND i.rubro_id <> 7 AND i.rubro_id <> 8 ";
+
+		sql += " AND  p.id NOT IN (select proveedor_id from proveedores_destacados) ";
+
+
+		sql += " GROUP BY i.numero_orden_provision, i.expediente,e.fecha,e.descripcion,i.proveedor_id,i.nombre_proveedor,i.rubro_id,i.rubro " +
+			   " ORDER BY i.nombre_proveedor,e.fecha, i.numero_orden_provision  ASC ";*/
 
 		String sql = "SELECT i.numero_orden_provision numeroProvision, i.expediente expediente,e.fecha fechaExpediente," +
 				" e.descripcion descripcion, i.proveedor_id proveedorId,i.nombre_proveedor nombre_proveedor,i.rubro_id rubroId,i.rubro rubro," +
@@ -326,7 +389,13 @@ public class InformeEstadisticoDeudaProveedores extends Model{
 				" FROM informe_estadistico_deuda_proveedores i 	" +
 				" INNER JOIN proveedores p ON p.id = i.proveedor_id " +
 				" INNER JOIN expedientes e ON e.id = i.expediente_id " +
-				" WHERE i.perimido = false AND (i.total_deuda > 0.01 OR i.total_compromiso > 0)  ";
+				" WHERE i.perimido = false ";
+
+		if(soloDeuda){
+			sql += "AND (i.total_deuda > 0.01) ";
+		}else{
+			sql += "AND (i.total_deuda > 0.01 OR i.total_compromiso > 0) ";
+		}
 
 		if(profe){
 			sql += " AND (i.profe = true OR i.tipo_cuenta_id = 2) ";
@@ -361,7 +430,7 @@ public class InformeEstadisticoDeudaProveedores extends Model{
 
 	}
 
-	public static List<SqlRow> getDeudaPorProveedorDetalles(Integer idProoveedor,boolean profe,Long deposito){
+	public static List<SqlRow> getDeudaPorProveedorDetalles(Integer idProoveedor,boolean profe,Long deposito,boolean soloDeudas){
 
 		String sql = "SELECT i.numero_orden_provision numeroProvision, i.expediente expediente,e.fecha fechaExpediente," +
 				" e.descripcion descripcion, i.proveedor_id proveedorId,i.nombre_proveedor nombre_proveedor,i.rubro rubro," +
@@ -400,6 +469,30 @@ public class InformeEstadisticoDeudaProveedores extends Model{
 
 	public static List<SqlRow> getDeudaPorProveedorDetallesServicios(Long deposito,boolean todos){
 
+		/*String sql = "SELECT i.numero_orden_provision numeroProvision,i.orden_provision_id orden_provision_id,i.expediente expediente," +
+				" i.expediente_id expediente_id,e.fecha fechaExpediente," +
+				" e.descripcion descripcion, i.proveedor_id proveedorId,i.nombre_proveedor nombre_proveedor,i.rubro_id rubroId,i.rubro rubro,d.nombre deposito, " +
+				" CASE WHEN coalesce(SUM(CASE WHEN total_deuda > 0 THEN total_deuda ELSE 0 END),0) > 0 THEN coalesce(SUM(CASE WHEN total_deuda > 0 THEN total_deuda ELSE 0 END),0) ELSE 0 END total_deuda," +
+				" CASE WHEN coalesce(SUM(CASE WHEN total_compromiso > 0 THEN total_compromiso ELSE 0 END),0) > 0 THEN coalesce(SUM(CASE WHEN total_compromiso > 0 THEN total_compromiso ELSE 0 END),0) ELSE 0 END total_compromiso " +
+				" FROM informe_estadistico_deuda_proveedores i 	" +
+				" INNER JOIN proveedores p ON p.id = i.proveedor_id " +
+				" INNER JOIN expedientes e ON e.id = i.expediente_id " +
+				" INNER JOIN ordenes o ON o.id = i.orden_id " +
+				" INNER JOIN depositos d ON d.id = o.deposito_id " +
+				" WHERE i.perimido = false AND (i.total_deuda > 0.01 OR i.total_compromiso > 0)  ";
+
+		if(!todos){
+			if(deposito == null || deposito == -1){
+				sql += " AND i.deposito_id <> 1";
+			}else if(deposito != 0){
+				sql += " AND i.deposito_id = "+deposito;
+			}
+		}
+		sql += " AND i.rubro_id =7 ";
+
+		sql += " GROUP BY i.numero_orden_provision,i.orden_provision_id, i.expediente,i.expediente_id,e.fecha,e.descripcion,i.proveedor_id," +
+				" i.nombre_proveedor,i.rubro_id,i.rubro,d.nombre  " +
+			   " ORDER BY i.nombre_proveedor,e.fecha, i.numero_orden_provision  ASC ";*/
 		String sql = "SELECT i.numero_orden_provision numeroProvision,i.orden_provision_id orden_provision_id,i.expediente expediente," +
 				" i.expediente_id expediente_id,e.fecha fechaExpediente," +
 				" e.descripcion descripcion, i.proveedor_id proveedorId,i.nombre_proveedor nombre_proveedor,i.rubro_id rubroId,i.rubro rubro,d.nombre deposito, " +
@@ -435,11 +528,34 @@ public class InformeEstadisticoDeudaProveedores extends Model{
 
 	public static List<SqlRow> getDeudaPorProveedorDetallesHonorarios(Long deposito){
 
-		String sql = "SELECT i.numero_orden_provision numeroProvision, i.expediente expediente,e.fecha fechaExpediente," +
+		/*String sql = "SELECT i.numero_orden_provision numeroProvision, i.expediente expediente,e.fecha fechaExpediente," +
 				" e.descripcion descripcion, i.proveedor_id proveedorId,i.nombre_proveedor nombre_proveedor,i.rubro_id rubroId,i.rubro rubro," +
 				" CASE WHEN coalesce(SUM(CASE WHEN total_deuda > 0 THEN total_deuda ELSE 0 END),0) > 0 THEN coalesce(SUM(CASE WHEN total_deuda > 0 THEN total_deuda ELSE 0 END),0) ELSE 0 END total_deuda," +
 				" CASE WHEN coalesce(SUM(CASE WHEN total_compromiso > 0 THEN total_compromiso ELSE 0 END),0) > 0 THEN coalesce(SUM(CASE WHEN total_compromiso > 0 THEN total_compromiso ELSE 0 END),0) ELSE 0 END total_compromiso " +
 				" FROM informe_estadistico_deuda_proveedores i 	" +
+				" INNER JOIN proveedores p ON p.id = i.proveedor_id " +
+				" INNER JOIN expedientes e ON e.id = i.expediente_id " +
+				" WHERE i.perimido = false AND (i.total_deuda > 0.01 OR i.total_compromiso > 0)  ";
+
+		if(deposito == null || deposito == -1){
+			sql += " AND i.deposito_id <> 1";
+		}else if(deposito != 0){
+			sql += " AND i.deposito_id = "+deposito;
+		}
+
+		sql += " AND i.rubro_id =8";
+
+
+
+
+
+		sql += " GROUP BY i.numero_orden_provision, i.expediente,e.fecha,e.descripcion,i.proveedor_id,i.nombre_proveedor,i.rubro_id,i.rubro " +
+			   " ORDER BY i.nombre_proveedor,e.fecha, i.numero_orden_provision  ASC ";*/
+		String sql = "SELECT i.numero_orden_provision numeroProvision, i.expediente expediente,e.fecha fechaExpediente," +
+				" e.descripcion descripcion, i.proveedor_id proveedorId,i.nombre_proveedor nombre_proveedor,i.rubro_id rubroId,i.rubro rubro," +
+				" CASE WHEN coalesce(SUM(CASE WHEN total_deuda > 0 THEN total_deuda ELSE 0 END),0) > 0 THEN coalesce(SUM(CASE WHEN total_deuda > 0 THEN total_deuda ELSE 0 END),0) ELSE 0 END total_deuda," +
+				" CASE WHEN coalesce(SUM(CASE WHEN total_compromiso > 0 THEN total_compromiso ELSE 0 END),0) > 0 THEN coalesce(SUM(CASE WHEN total_compromiso > 0 THEN total_compromiso ELSE 0 END),0) ELSE 0 END total_compromiso " +
+				" FROM informe_estadistico_deuda_proveedores_matrializada i 	" +
 				" INNER JOIN proveedores p ON p.id = i.proveedor_id " +
 				" INNER JOIN expedientes e ON e.id = i.expediente_id " +
 				" WHERE i.perimido = false AND (i.total_deuda > 0.01 OR i.total_compromiso > 0)  ";
@@ -467,9 +583,9 @@ public class InformeEstadisticoDeudaProveedores extends Model{
 
 	}
 
-	public static List<SqlRow> getDeudaPorCuenta(Integer idCuenta,Long deposito){
+	public static List<SqlRow> getDeudaPorCuenta(Integer idCuenta,Long deposito,Boolean soloDeuda){
 
-		String sql = "SELECT i.numero_orden_provision numeroProvision, i.expediente expediente,e.fecha fechaExpediente," +
+		/*String sql = "SELECT i.numero_orden_provision numeroProvision, i.expediente expediente,e.fecha fechaExpediente," +
 				" e.descripcion descripcion, i.proveedor_id proveedorId,i.nombre_proveedor nombre_proveedor,i.rubro_id rubroId,i.rubro rubro," +
 				" CASE WHEN coalesce(SUM(CASE WHEN total_deuda > 0 THEN total_deuda ELSE 0 END),0) > 0 THEN coalesce(SUM(CASE WHEN total_deuda > 0 THEN total_deuda ELSE 0 END),0) ELSE 0 END total_deuda," +
 				" CASE WHEN coalesce(SUM(CASE WHEN total_compromiso > 0 THEN total_compromiso ELSE 0 END),0) > 0 THEN coalesce(SUM(CASE WHEN total_compromiso > 0 THEN total_compromiso ELSE 0 END),0) ELSE 0 END total_compromiso " +
@@ -490,6 +606,33 @@ public class InformeEstadisticoDeudaProveedores extends Model{
 
 
 		sql += " GROUP BY i.numero_orden_provision, i.expediente,e.fecha,e.descripcion,i.proveedor_id,i.nombre_proveedor,i.rubro_id,i.rubro " +
+			   " ORDER BY i.nombre_proveedor,e.fecha, i.numero_orden_provision  ASC ";*/
+		//////////////////
+		String sql = "SELECT i.numero_orden_provision numeroProvision, i.expediente expediente,e.fecha fechaExpediente," +
+				" e.descripcion descripcion, i.proveedor_id proveedorId,i.nombre_proveedor nombre_proveedor,i.rubro_id rubroId,i.rubro rubro," +
+				" CASE WHEN coalesce(SUM(CASE WHEN total_deuda > 0 THEN total_deuda ELSE 0 END),0) > 0 THEN coalesce(SUM(CASE WHEN total_deuda > 0 THEN total_deuda ELSE 0 END),0) ELSE 0 END total_deuda," +
+				" CASE WHEN coalesce(SUM(CASE WHEN total_compromiso > 0 THEN total_compromiso ELSE 0 END),0) > 0 THEN coalesce(SUM(CASE WHEN total_compromiso > 0 THEN total_compromiso ELSE 0 END),0) ELSE 0 END total_compromiso " +
+				" FROM informe_estadistico_deuda_proveedores i 	" +
+				" INNER JOIN proveedores p ON p.id = i.proveedor_id " +
+				" INNER JOIN expedientes e ON e.id = i.expediente_id " +
+				" WHERE i.perimido = false AND 1 = 1   ";
+
+		if(soloDeuda){
+			sql += " AND (i.total_deuda > 0.01)";
+		}else {
+			sql += " AND (i.total_deuda > 0.01 OR i.total_compromiso > 0)";
+		}
+
+		sql += " AND i.tipo_cuenta_id = "+idCuenta;
+		sql += " AND i.rubro_id <> 8 ";
+
+		if(deposito == null || deposito == -1){
+			sql += " AND i.deposito_id <> 1";
+		}else if(deposito != 0){
+			sql += " AND i.deposito_id = "+deposito;
+		}
+
+		sql += " GROUP BY i.numero_orden_provision, i.expediente,e.fecha,e.descripcion,i.proveedor_id,i.nombre_proveedor,i.rubro_id,i.rubro " +
 			   " ORDER BY i.nombre_proveedor,e.fecha, i.numero_orden_provision  ASC ";
 
 		SqlQuery sqlQuery = Ebean.createSqlQuery(sql);
@@ -500,7 +643,7 @@ public class InformeEstadisticoDeudaProveedores extends Model{
 
 	}
 
-	public static Map<String,Map<String,Map<Integer,List<SqlRow>>>> getListaFinalDeudasDetallesReporte(Integer idProveedor,boolean ra){
+	public static Map<String,Map<String,Map<Integer,List<SqlRow>>>> getListaFinalDeudasDetallesReporte(Integer idProveedor,boolean ra,boolean soloDeudas){
 
 		List<Integer> listaProveedores = new ArrayList<Integer>();
 		if(ra){
@@ -525,7 +668,7 @@ public class InformeEstadisticoDeudaProveedores extends Model{
 
 		Map<Integer,List<SqlRow>> listadoSqlRow = new HashMap<Integer, List<SqlRow>>();
 		for(Integer idPro : listaProveedores){
-			List<SqlRow> proveedorOperativa = InformeEstadisticoDeudaProveedores.getDeudaPorProveedorDetalles(idPro,false,(long)Deposito.HEARM);
+			List<SqlRow> proveedorOperativa = InformeEstadisticoDeudaProveedores.getDeudaPorProveedorDetalles(idPro,false,(long)Deposito.HEARM,soloDeudas);
 			listadoSqlRow.put(idPro, proveedorOperativa);
 		}
 
@@ -535,7 +678,7 @@ public class InformeEstadisticoDeudaProveedores extends Model{
 
 		listadoSqlRow = new HashMap<Integer, List<SqlRow>>();
 		for(Integer idPro : listaProveedores){
-			List<SqlRow> proveedorOperativaOtraInstitucion = InformeEstadisticoDeudaProveedores.getDeudaPorProveedorDetalles(idPro,false,null);
+			List<SqlRow> proveedorOperativaOtraInstitucion = InformeEstadisticoDeudaProveedores.getDeudaPorProveedorDetalles(idPro,false,null,soloDeudas);
 			listadoSqlRow.put(idPro, proveedorOperativaOtraInstitucion);
 		}
 
@@ -545,7 +688,7 @@ public class InformeEstadisticoDeudaProveedores extends Model{
 
 		listadoSqlRow = new HashMap<Integer, List<SqlRow>>();
 		for(Integer idPro : listaProveedores){
-			List<SqlRow> proveedorProfe = InformeEstadisticoDeudaProveedores.getDeudaPorProveedorDetalles(idPro,true,(long)Deposito.HEARM);
+			List<SqlRow> proveedorProfe = InformeEstadisticoDeudaProveedores.getDeudaPorProveedorDetalles(idPro,true,(long)Deposito.HEARM,soloDeudas);
 			listadoSqlRow.put(idPro, proveedorProfe);
 		}
 
@@ -553,7 +696,7 @@ public class InformeEstadisticoDeudaProveedores extends Model{
 
 		listadoSqlRow = new HashMap<Integer, List<SqlRow>>();
 		for(Integer idPro : listaProveedores){
-			List<SqlRow> proveedorProfeOtraInstitucion = InformeEstadisticoDeudaProveedores.getDeudaPorProveedorDetalles(idPro,true,null);
+			List<SqlRow> proveedorProfeOtraInstitucion = InformeEstadisticoDeudaProveedores.getDeudaPorProveedorDetalles(idPro,true,null,soloDeudas);
 			listadoSqlRow.put(idPro, proveedorProfeOtraInstitucion);
 		}
 
@@ -562,4 +705,231 @@ public class InformeEstadisticoDeudaProveedores extends Model{
 
 		return listaFinal;
 	}
+
+	public static List<SqlRow> getDeudaPorOtroProveedoresResumen(boolean profe,Long deposito,boolean equipamiento){
+
+		String sql = "SELECT i.proveedor_id proveedorId,i.nombre_proveedor nombre_proveedor," +
+				" CASE WHEN coalesce(SUM(CASE WHEN total_deuda > 0 THEN total_deuda ELSE 0 END),0) > 0 THEN coalesce(SUM(CASE WHEN total_deuda > 0 THEN total_deuda ELSE 0 END),0) ELSE 0 END total_deuda " +
+				//" CASE WHEN coalesce(SUM(CASE WHEN total_compromiso > 0 THEN total_compromiso ELSE 0 END),0) > 0 THEN coalesce(SUM(CASE WHEN total_compromiso > 0 THEN total_compromiso ELSE 0 END),0) ELSE 0 END total_compromiso " +
+				" FROM informe_estadistico_deuda_proveedores i 	" +
+				" INNER JOIN proveedores p ON p.id = i.proveedor_id " +
+				" INNER JOIN expedientes e ON e.id = i.expediente_id " +
+				" WHERE i.perimido = false AND (i.total_deuda > 0.01)  ";
+
+		if(profe){
+			sql += " AND (i.profe = true OR i.tipo_cuenta_id = 2) ";
+		}else{
+			sql += " AND (i.profe = false OR i.tipo_cuenta_id = 1) ";
+		}
+
+		if(deposito == null || deposito == -1){
+			//sql += " AND i.deposito_id <> 1";
+		}else if(deposito != 0){
+			//sql += " AND i.deposito_id = "+deposito;
+		}
+
+		if(equipamiento){
+			sql += " AND i.rubro_id = 1";
+		}else{
+			sql += " AND i.rubro_id <> 1";
+		}
+		sql += " AND i.rubro_id <> 7 AND i.rubro_id <> 8 ";
+
+		sql += " AND  p.id NOT IN (select proveedor_id from proveedores_destacados) ";
+
+
+		sql += " GROUP BY i.proveedor_id,i.nombre_proveedor " +
+			   " ORDER BY total_deuda DESC ,i.nombre_proveedor  ASC ";
+
+		SqlQuery sqlQuery = Ebean.createSqlQuery(sql);
+
+		List<SqlRow>  row = sqlQuery.findList();
+
+		return row;
+
+	}
+
+	public static List<SqlRow> getDeudaPorProveedorDetallesServiciosResumen(Long deposito,boolean todos){
+
+		String sql = "SELECT " +
+				" i.proveedor_id proveedorId,i.nombre_proveedor nombre_proveedor, " +
+				" CASE WHEN coalesce(SUM(CASE WHEN total_deuda > 0 THEN total_deuda ELSE 0 END),0) > 0 "+
+				" THEN coalesce(SUM(CASE WHEN total_deuda > 0 THEN total_deuda ELSE 0 END),0) ELSE 0 END total_deuda " +
+
+				" FROM informe_estadistico_deuda_proveedores i 	" +
+				" INNER JOIN proveedores p ON p.id = i.proveedor_id " +
+				" INNER JOIN expedientes e ON e.id = i.expediente_id " +
+				" INNER JOIN ordenes o ON o.id = i.orden_id " +
+				" INNER JOIN depositos d ON d.id = o.deposito_id " +
+				" WHERE i.perimido = false AND (i.total_deuda > 0.01)  ";
+
+		if(!todos){
+			if(deposito == null || deposito == -1){
+				sql += " AND i.deposito_id <> 1";
+			}else if(deposito != 0){
+				sql += " AND i.deposito_id = "+deposito;
+			}
+		}
+		sql += " AND i.rubro_id =7 ";
+
+		sql += " GROUP BY i.proveedor_id, i.nombre_proveedor " +
+			   " ORDER BY total_deuda DESC ,i.nombre_proveedor  ASC ";
+
+		SqlQuery sqlQuery = Ebean.createSqlQuery(sql);
+
+		List<SqlRow>  row = sqlQuery.findList();
+
+		return row;
+
+	}
+
+	public static List<SqlRow> getDeudaPorProveedorHonorariosResumen(Long deposito){
+
+		String sql = "SELECT i.proveedor_id proveedorId,i.nombre_proveedor nombre_proveedor," +
+				" CASE WHEN coalesce(SUM(CASE WHEN total_deuda > 0 THEN total_deuda ELSE 0 END),0) > 0 THEN coalesce(SUM(CASE WHEN total_deuda > 0 THEN total_deuda ELSE 0 END),0) ELSE 0 END total_deuda " +
+				" FROM informe_estadistico_deuda_proveedores i 	" +
+				" INNER JOIN proveedores p ON p.id = i.proveedor_id " +
+				" INNER JOIN expedientes e ON e.id = i.expediente_id " +
+				" WHERE i.perimido = false AND (i.total_deuda > 0.01)  ";
+
+		/*if(deposito == null || deposito == -1){
+			sql += " AND i.deposito_id <> 1";
+		}else if(deposito != 0){
+			sql += " AND i.deposito_id = "+deposito;
+		}*/
+
+		sql += " AND i.rubro_id =8";
+
+		sql += " GROUP BY i.proveedor_id,i.nombre_proveedor " +
+			   " ORDER BY total_deuda DESC ,i.nombre_proveedor  ASC ";
+
+		SqlQuery sqlQuery = Ebean.createSqlQuery(sql);
+
+		List<SqlRow>  row = sqlQuery.findList();
+
+		return row;
+
+	}
+
+	public static List<SqlRow> getDeudaPorProveedoresDestacados(Integer deposito,Integer rubro,Integer proveedor_id){
+
+		String sql = "SELECT i.proveedor_id proveedor_id,i.nombre_proveedor nombre_proveedor,"
+				+ " CASE WHEN coalesce(SUM(CASE WHEN total_deuda > 0 THEN total_deuda ELSE 0 END),0) > 0 THEN coalesce(SUM(CASE WHEN total_deuda > 0 THEN total_deuda ELSE 0 END),0) ELSE 0 END total_deuda,"
+				+ " CASE WHEN coalesce(SUM(CASE WHEN total_deuda_en_tramite > 0 THEN total_deuda_en_tramite ELSE 0 END),0) > 0 THEN coalesce(SUM(CASE WHEN total_deuda_en_tramite > 0 THEN total_deuda_en_tramite ELSE 0 END),0) "
+				+ "ELSE 0 END total_deuda_en_tramite "
+				+ " FROM informe_estadistico_deuda_proveedores i 	"
+				+ " INNER JOIN proveedores p ON p.id = i.proveedor_id " + " WHERE i.perimido = false ";
+
+		if (false) {
+			sql += "AND (i.total_deuda > 0.01) ";
+		} else {
+			sql += "AND (i.total_deuda > 0.01 OR i.total_deuda_en_tramite > 0) ";
+		}
+
+
+		 sql += " AND (i.profe = false OR i.tipo_cuenta_id = 1) ";
+
+
+		if (deposito == null || deposito == -1) {
+			//sql += " AND i.deposito_id <> 1";
+		} else if (deposito != 0) {
+			sql += " AND i.deposito_id = " + deposito;
+		}
+
+
+
+		/*if (servicios) {
+			sql += " AND i.rubro_id = 7 ";
+		} else if (honorarios) {
+			sql += " AND i.rubro_id = 8 ";
+		} else if (soloDestacados != null && !soloDestacados && equipamiento) {
+			sql += " AND i.rubro_id <> 7   ";
+		} else if (equipamiento) {
+			sql += " AND i.rubro_id = 1 ";
+		} else {
+			if ((ra || proveedoresDestacados)) {
+				sql += " AND i.rubro_id <> 7 AND i.rubro_id <> 8  ";
+			} else {
+				sql += " AND i.rubro_id <> 7 AND i.rubro_id <> 1 AND i.rubro_id <> 8 ";
+			}
+
+		}*/
+
+		if (rubro != null) {
+			sql += " AND i.rubro_id = " + rubro;
+		}
+
+		if(proveedor_id != null) {
+			sql += " AND p.id  = " + proveedor_id;
+		}else {
+			sql += " AND p.id IN (select proveedor_id from proveedores_destacados) ";
+		}
+
+
+
+		sql += " GROUP BY i.proveedor_id,i.nombre_proveedor ORDER BY total_deuda DESC";
+
+		SqlQuery sqlQuery = Ebean.createSqlQuery(sql);
+
+		List<SqlRow> row = sqlQuery.findList();
+
+		return row;
+
+	}
+
+	public static List<SqlRow> getDeudaPorProveedoresPorRubro(Integer deposito,List<Integer> rubros){
+
+		String sql = "SELECT i.proveedor_id proveedor_id,i.nombre_proveedor nombre_proveedor,"
+				+ " CASE WHEN coalesce(SUM(CASE WHEN total_deuda > 0 THEN total_deuda ELSE 0 END),0) > 0 THEN coalesce(SUM(CASE WHEN total_deuda > 0 THEN total_deuda ELSE 0 END),0) ELSE 0 END total_deuda,"
+				+ " CASE WHEN coalesce(SUM(CASE WHEN total_deuda_en_tramite > 0 THEN total_deuda_en_tramite ELSE 0 END),0) > 0 THEN coalesce(SUM(CASE WHEN total_deuda_en_tramite > 0 THEN total_deuda_en_tramite ELSE 0 END),0) ELSE 0 END total_deuda_en_tramite "
+				+ " FROM informe_estadistico_deuda_proveedores i 	"
+				+ " INNER JOIN proveedores p ON p.id = i.proveedor_id " + " WHERE i.perimido = false ";
+
+		if (false) {
+			sql += "AND (i.total_deuda > 0.01) ";
+		} else {
+			sql += "AND (i.total_deuda > 0.01 OR i.total_deuda_en_tramite > 0) ";
+		}
+
+
+		 sql += " AND (i.profe = false OR i.tipo_cuenta_id = 1) ";
+
+
+		if (deposito == null || deposito == -1) {
+			//sql += " AND i.deposito_id <> 1";
+		} else if (deposito != 0) {
+			sql += " AND i.deposito_id = " + deposito;
+		}
+
+		sql += " AND i.rubro_id in(:rubros) "; //OTROS SERVICIOS
+
+		/*if (servicios) {
+			sql += " AND i.rubro_id = 7 ";
+		} else if (honorarios) {
+			sql += " AND i.rubro_id = 8 ";
+		} else if (soloDestacados != null && !soloDestacados && equipamiento) {
+			sql += " AND i.rubro_id <> 7   ";
+		} else if (equipamiento) {
+			sql += " AND i.rubro_id = 1 ";
+		} else {
+			if ((ra || proveedoresDestacados)) {
+				sql += " AND i.rubro_id <> 7 AND i.rubro_id <> 8  ";
+			} else {
+				sql += " AND i.rubro_id <> 7 AND i.rubro_id <> 1 AND i.rubro_id <> 8 ";
+			}
+
+		}*/
+
+		sql += " AND p.id not IN (select proveedor_id from proveedores_destacados) ";
+
+
+		sql += " GROUP BY i.proveedor_id,i.nombre_proveedor ORDER BY total_deuda DESC";
+
+		SqlQuery sqlQuery = Ebean.createSqlQuery(sql);
+		List<SqlRow> row = sqlQuery.setParameter("rubros", rubros).findList();
+
+		return row;
+
+	}
+
 }
