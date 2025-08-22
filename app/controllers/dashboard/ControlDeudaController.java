@@ -98,13 +98,13 @@ public class ControlDeudaController extends Controller {
 
 		BigDecimal ultimaCotizacion = new BigDecimal(0);
 
-		actualizarVistaMaterializada ();
+		//actualizarVistaMaterializada ();
 
 		if(!RequestVar.get("orden_id").isEmpty()){
 			o = Orden.find.byId(new Long(RequestVar.get("orden_id")));
 			if(o.cot_dolar != null && o.tipo_moneda != null){
 
-				e = InformeDeudaProveedoresMaterializada.find.where().eq("orden_id", Integer.parseInt(RequestVar.get("orden_id"))).findList();
+				//e = InformeDeudaProveedoresMaterializada.find.where().eq("orden_id", Integer.parseInt(RequestVar.get("orden_id"))).findList();
 
 				al = AutorizadoLinea.find.where()
 									.eq("orden_id",Integer.parseInt(RequestVar.get("orden_id")))
