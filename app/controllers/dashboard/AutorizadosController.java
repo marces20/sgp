@@ -524,9 +524,8 @@ public class AutorizadosController extends Controller {
 
 		String deuda_mayor = "0";
 
-		Pagination<InformeDeudaProveedoresMaterializada> p = InformeDeudaProveedoresMaterializada.page(
-				// Pagination<InformeEstadisticoDeudaProveedores> p =
-				// InformeEstadisticoDeudaProveedores.page(
+		//Pagination<InformeDeudaProveedoresMaterializada> p = InformeDeudaProveedoresMaterializada.page(
+				 Pagination<InformeEstadisticoDeudaProveedores> p = InformeEstadisticoDeudaProveedores.page(
 				RequestVar.get("orden"),
 				RequestVar.get("proveedor_id"),
 				RequestVar.get("expediente_id"),
