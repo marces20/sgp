@@ -1363,11 +1363,11 @@ public class PagosAccionesController extends Controller {
 			return ok(modalPagarProveedoresMacroMasivos.render(d));
 		}
 
-		Integer soloMacro= Pago.find.select("id").where().eq("referencia", referencia).ne("tipo_pago","transferenciaMacroProveedores").findRowCount();
+		/*Integer soloMacro= Pago.find.select("id").where().eq("referencia", referencia).ne("tipo_pago","transferenciaMacroProveedores").findRowCount();
 		if(soloMacro > 0) {
-			flash("error", "Los pagos deben ser solamente tipo Macro Proveedores.");
-			return ok(modalPagarProveedoresMacroMasivos.render(d));
-		}
+			//flash("error", "Los pagos deben ser solamente tipo Macro Proveedores.");
+			//return ok(modalPagarProveedoresMacroMasivos.render(d));
+		}*/
 
 		if(!conFechaPagoVieja(referencia) && !Usuario.getUsurioSesion().id.equals(401)){
 			flash("error", "No se pueden aprobar pagos con fecha de pago menor del ejercicio actual.");
@@ -1420,7 +1420,7 @@ public class PagosAccionesController extends Controller {
 
 			String error = "";
 			for (Pago pago : Pago.find.where().eq("mis_pagos_id", mipago.id).findList()) {
-				error += getErrorProveedorEmbargo(pago);
+				error += getErrorProveedorMasivo(pago);
 			}
 			if(!error.isEmpty()) {
 				flash("error", error);
@@ -1463,7 +1463,7 @@ public class PagosAccionesController extends Controller {
 
 			for (Pago pago : pagos) {
 
-				String sql = "SELECT c.numero_cuenta numero_cuenta, sb.codigo sucursal "
+				String sql = "SELECT c.numero_cuenta numero_cuenta,c.cbu cbu, sb.codigo sucursal,c.banco_id as banco_id "
 						+ " FROM cuenta_bancarias c "
 						+ " LEFT JOIN sucursal_bancos sb ON sb.id = c.sucursal_banco_id "
 						+ " INNER JOIN proveedores p ON p.id =  c.proveedor_id"
@@ -1478,7 +1478,7 @@ public class PagosAccionesController extends Controller {
 					hayError = true;
 
 
-				}else if(row.getString("numero_cuenta") == null || row.getString("numero_cuenta").isEmpty()){
+				}else if(row.getString("cbu") == null || row.getString("cbu").isEmpty()){
 					error = "EL PROVEEDOR: "+pago.proveedor.nombre+" NO TIENE CBU CARGADO.";
 					outError.append(error);
 					hayError = true;
@@ -1514,11 +1514,15 @@ public class PagosAccionesController extends Controller {
 					//String df = new DecimalFormat("000000000000000.00").format(pago.total);
 					data += df+"\t";
 					//data += pago.total.toString()+"\t";//importe		15	decimales con coma
-
-
 					data += pago.cuentaPropia.numero+"\t";//cuentadebito	25	numercio
-					data += row.getString("numero_cuenta")+"\t";//cuenta/cbu		22	numerico
-					data += "02\t";//modalidad	2	numerico
+					data += row.getString("cbu")+"\t";//cuenta/cbu		22	numerico
+
+					if(row.getInteger("banco_id").compareTo(new Integer(1)) !=0) {
+						data += "04\t";//modalidad	2	numerico
+					}else {
+						data += "02\t";//modalidad	2	numerico
+					}
+
 					data += "\t";//marca		/t
 					data += utils.DateUtils.formatDate(pago.fecha_pago)+"\t";//fechaop		10	DD/MM/AAAA
 					data += "\t";//pagodife		/t
@@ -2240,6 +2244,69 @@ public class PagosAccionesController extends Controller {
 						error += "El número de cuenta del agente " + pago.proveedor.nombre+ " no se encuentra definido."+newLine;
 					}else if(cuenta.banco_id.compareTo(new Long(1)) !=0){
 						error += "El Banco de la cuenta del agente " + pago.proveedor.nombre+ " debe ser BANCO MACRO para pagos no externos."+newLine;
+					}
+				}
+				break;
+			}
+		}
+
+
+		if(!tieneCuentaActiva) {
+			error += "El proveedor " + pago.proveedor.nombre + " no tiene cuenta bancaria aprobada."+newLine;
+		} else if (!tieneCuentaPredeterminada) {
+			error += "El proveedor " + pago.proveedor.nombre + " no tiene cuenta predeterminada."+newLine;
+		}
+
+		return error;
+	}
+
+	public static String getErrorProveedorMasivo(Pago pago) {
+		String newLine = System.getProperty("line.separator");
+		String error = "";
+
+
+
+		if(pago.fecha_pago == null) {
+			error += "La fecha de pago del proveedor " + pago.proveedor.nombre + " no se encuentra definido" + newLine;
+		}
+		if(pago.proveedor.cuit == null) {
+			error += "El CUIT del proveedor " + pago.proveedor.nombre + " no se encuentra definido" + newLine;
+		}
+
+
+		//Verifico total
+		if(pago.total == null || pago.total.equals(0)) {
+			error += "El pago del proveedor " + pago.proveedor.nombre + " no se encuentra definido." + newLine;
+		}
+		//Si no tiene cuenta asignada
+		if(pago.proveedor.cuenta.isEmpty()) {
+			error += "La cuenta del proveedor " + pago.proveedor.nombre + " no se encuentra definida." + newLine;
+		}
+
+
+
+			/*String[] ss = pago.proveedor.nombre.split("C/ ");
+			if(ss.length > 1) {
+				if(ss[1] == null) {
+					error += "El pago del proveedor " + pago.proveedor.nombre + " no se puede definir." + newLine;
+				}
+			}else{
+				error += "El pago del proveedor " + pago.proveedor.nombre + " no se puede definir." + newLine;
+			} */
+
+		//Verifico que tenga una cuenta predeterminada
+		Boolean tieneCuentaPredeterminada = false;
+		Boolean tieneCuentaActiva = false;
+		for (CuentaBancaria cuenta : pago.proveedor.cuenta) {
+			if(cuenta.estado != null && cuenta.estado.id == Estado.CUENTA_BANCARIA_ESTADO_APROBADO) {
+				tieneCuentaActiva = true;
+				if(cuenta.predeterminada) {
+					tieneCuentaPredeterminada = true;
+					//Verifico que la cuenta predeterminada tenga un numero
+					if(cuenta.numero_cuenta.isEmpty()) {
+						error += "El número de cuenta del agente " + pago.proveedor.nombre+ " no se encuentra definido."+newLine;
+					}else if(cuenta.banco_id.compareTo(new Long(1)) !=0){
+						//error += "El Banco de la cuenta del agente " + pago.proveedor.nombre+ " debe ser BANCO MACRO para pagos no externos."+newLine;
 					}
 				}
 				break;
