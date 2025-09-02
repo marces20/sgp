@@ -545,7 +545,7 @@ public class ProductosController extends Controller {
     	e = e.eq("categoria_id", Producto.CATEGORIA_IPS);
     	e = e.eq("activo", true);
 
-    	if(Usuario.getUsurioSesion().id.compareTo(new Integer(83)) == 0) {
+    	if(Usuario.getUsurioSesion().id.compareTo(new Integer(83)) == 0 || Usuario.getUsurioSesion().id.compareTo(new Integer(532)) == 0) {
     		e = e.eq("referencia", "PROD. TR.");
     	}else {
 
