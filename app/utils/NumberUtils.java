@@ -28,6 +28,12 @@ public class NumberUtils {
 		return x;
 	}
 
+	public static BigDecimal roundTo(int decimals, BigDecimal bd) {
+	    //BigDecimal bd = new BigDecimal(num);
+	    bd = bd.setScale(decimals, RoundingMode.HALF_UP);
+	    return bd;
+	}
+
 	public static double roundDouble(double value, int places) {
 	    if (places < 0) throw new IllegalArgumentException();
 
