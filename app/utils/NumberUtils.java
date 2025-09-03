@@ -8,6 +8,8 @@ import java.text.NumberFormat;
 import java.util.Currency;
 import java.util.Locale;
 
+import com.avaje.ebean.SqlRow;
+
 public class NumberUtils {
 
 	public static String agregarCerosAlaIzquierda(int numero,int cantidadDeDigitos) {
@@ -32,6 +34,10 @@ public class NumberUtils {
 	    //BigDecimal bd = new BigDecimal(num);
 	    bd = bd.setScale(decimals, RoundingMode.HALF_UP);
 	    return bd;
+	}
+
+	public static BigDecimal roundTo(int decimals, Double value) {
+		return  roundTo(decimals, new BigDecimal(value));
 	}
 
 	public static double roundDouble(double value, int places) {
