@@ -609,8 +609,8 @@ public class ActualizarBalance extends Controller {
 
 		try {
 
-			Date fd = DateUtils.formatDate("01/12/2024", "dd/MM/yyyy");
-			Date fh = DateUtils.formatDate("31/12/2024", "dd/MM/yyyy");
+			Date fd = DateUtils.formatDate("01/06/2025", "dd/MM/yyyy");
+			Date fh = DateUtils.formatDate("30/06/2025", "dd/MM/yyyy");
 
 
 			conn2 = Configuracion2.get2().getConnection2();
@@ -1258,8 +1258,12 @@ public class ActualizarBalance extends Controller {
 					if(fl.factura.orden != null && fl.factura.orden.orden_rubro_id.equals((long)3)) {//INSUMOS VARIOS
 
 						if(fl.factura.orden.deposito_id.equals((long)1)) {
-							if(fl.factura.orden.orden_subrubro_id != null && fl.factura.orden.orden_subrubro_id.equals((long)574)) {
-								cuentaId = new Long(601);//4.2.2.02.04 Insumos Varios
+							if(fl.factura.orden.orden_subrubro_id != null) {
+								if(fl.factura.orden.orden_subrubro_id.equals((long)574) ||fl.factura.orden.orden_subrubro_id.equals((long)614)) {
+									cuentaId = new Long(601);//"4.2.2.02.42" "Insumos Medicos Varios"
+								}else if(fl.factura.orden.orden_subrubro_id.equals((long)613)) {
+									cuentaId = new Long(603);//"4.2.2.02.43" "Insumos Oftalmologicos"
+								}
 							}else {
 								cuentaId = new Long(500);//4.2.2.02.04 Insumos Varios
 							}
