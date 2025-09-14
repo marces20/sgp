@@ -51,10 +51,8 @@
 				<td align="center">@o.getPendiente()</td>
 				<td>@utils.NumberUtils.moneda(o.precio)</td>
 				<td>@utils.NumberUtils.moneda(o.getTotal())</td>
-				@if(o.orden_linea_id != null && o.getOrdenLinea().ordenLineaCliente != null && o.getOrdenLinea().ordenLineaCliente.size() > 0){
-					@if(o.getOrdenLinea().ordenLineaCliente != null && o.getOrdenLinea().ordenLineaCliente.size() > 0){
-					
-					}
+
+				@if(o.cantidadPacientes != null && o.cantidadPacientes > 0){
 					<td><div class='tip-top pointer' title='@getPacientes(o.getOrdenLinea())'><i class="glyphicon glyphicon-user"></i></div></td>
 				}else{
 					<td></td>
