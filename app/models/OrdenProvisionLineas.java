@@ -28,16 +28,16 @@ import com.avaje.ebean.annotation.Sql;
 public class OrdenProvisionLineas  extends Model {
 
 private static final long serialVersionUID = 1L;
-	
+
 	public Long orden_linea_id;
 	@DecimalComa(value="")
 	public BigDecimal cantidad;
-	
+
 	public BigDecimal precio;
-	
+
 	public BigDecimal totalRecepcionado;
 	public BigDecimal totalAjustes;
-	
+
 	@ManyToOne
 	@JoinColumn(name="producto_id", referencedColumnName="id", insertable=false, updatable=false)
 	public  Producto producto;
@@ -47,56 +47,57 @@ private static final long serialVersionUID = 1L;
 	public String departamento;
 	public BigDecimal recepcionado;
 	public BigDecimal anulados;
+	public int cantidadPacientes;
 
-	
+
 	public static Model.Finder<Integer,OrdenProvisionLineas> find = new Model.Finder<Integer,OrdenProvisionLineas>(Integer.class, OrdenProvisionLineas.class);
-	
+
 	public OrdenLinea getOrdenLinea() {
 		return OrdenLinea.find.byId(orden_linea_id);
 	}
-	
+
 	public BigDecimal getTotalRecepcionado() {
 		if(totalRecepcionado == null)
 			return new BigDecimal(0);
 		return totalRecepcionado;
 	}
-	
-	
+
+
 	public BigDecimal getRecepcionado() {
 		if(recepcionado == null)
 			return new BigDecimal(0);
 		return recepcionado;
 	}
-	
+
 	public BigDecimal getAnulados() {
 		if(anulados == null)
 			return new BigDecimal(0);
 		return anulados;
 	}
-	
+
 	public BigDecimal getAnuladosMonto() {
 		if(anulados == null)
 			return new BigDecimal(0);
 		return anulados.multiply(precio);
 	}
-	
+
 	public BigDecimal getPendiente() {
 		if(recepcionado == null)
 			return cantidad;
 		return cantidad.subtract(recepcionado);
 	}
-	
+
 	public BigDecimal getTotalPendiente() {
 		return getPendiente().multiply(precio);
 	}
-	
-	
+
+
 	public BigDecimal getTotal () {
 		return cantidad.multiply(precio);
 	}
-	
+
 	public static Query<OrdenProvisionLineas> getQuery (Long idOrdenCompra) {
-		
+
 /*
 		String sql = " SELECT ol.id as orden_linea_id, ol.cantidad cantidad, ol.precio, p.id, p.nombre, SUM(r.cantidad) recepcionado, u.nombre as udm, ol.cantidad - SUM(r.cantidad) as pendiente, tc.totalcertificado from orden_lineas ol " +
 					 " inner join productos p on p.id = ol.producto_id  " +
@@ -106,13 +107,13 @@ private static final long serialVersionUID = 1L;
 					 " where ol.orden_id = " + idOrdenCompra +
 					 " group by ol.id, p.id, p.nombre, u.nombre, ol.precio, totalcertificado ORDER BY p.nombre DESC";
 */
-    	
-	
-		
-		String sql = 
+
+
+
+		String sql =
 					 //" SELECT ol.id as orden_linea_id, CASE WHEN ola.cantidad IS NOT NULL THEN (ol.cantidad - ola.cantidad) ELSE ol.cantidad END as cantidad, SUM(ol.precio) precio, p.id, p.nombre, SUM(linea.cantidad) recepcionado, u.nombre as udm, ol.cantidad - SUM(linea.cantidad) as pendiente, sum(linea.precio) totalRecepcionado from orden_lineas ol "+
 					 " SELECT o.orden_linea_id as orden_linea_id, cantidad, precio, id, nombre,departamento, recepcionado, udm, pendiente, "
-					 + "o.totalRecepcionado totalRecepcionado, anulados FROM ( " +
+					 + "o.totalRecepcionado totalRecepcionado, anulados,cantidad_pacientes FROM ( " +
 					 "   SELECT ol.id as orden_linea_id, " +
 					 "	 CASE WHEN ola.cantidad IS NOT NULL THEN (ol.cantidad - ola.cantidad) " +
 					 "		  ELSE ol.cantidad " +
@@ -136,7 +137,7 @@ private static final long serialVersionUID = 1L;
 					 " rl.linea_orden_id, ol.precio "+
 					 " union all "+
 				     " select cs.orden_provision_id, SUM(csl.cantidad), csl.linea_orden_id, "+
-					 //" ((SUM(csl.precio) - (SUM(csl.precio) * COALESCE(csl.descuento,0) / 100)) * csl.cantidad) precio "+   
+					 //" ((SUM(csl.precio) - (SUM(csl.precio) * COALESCE(csl.descuento,0) / 100)) * csl.cantidad) precio "+
 				     " sum(round( CAST (((csl.precio - (csl.precio * COALESCE(csl.descuento,0) / 100)) * csl.cantidad) as numeric),2)) precio "+
 					 " from certificaciones_servicios cs  "+
 					 " inner join certificaciones_servicios_lineas csl on csl.certificaciones_servicio_id = cs.id " +
@@ -144,34 +145,34 @@ private static final long serialVersionUID = 1L;
 					 //" group by cs.orden_provision_id, csl.linea_orden_id, csl.descuento, csl.cantidad "+
 					 " group by cs.orden_provision_id, csl.linea_orden_id "+
 					 " ) as linea "+
-					 " on ol.id = linea.linea_orden_id "+ 
+					 " on ol.id = linea.linea_orden_id "+
 					 " left join productos p on p.id = ol.producto_id "+
 					 " left join departamentos de on de.id = ol.departamento_id "+
 					 " left join udms u on u.id = ol.udm_id "+
 					 " left join (select orden_linea_id, SUM(cantidad) cantidad from orden_lineas_anulaciones GROUP BY orden_linea_id union all "+
-					 			  "select csl.linea_orden_id,sum(round(csl.cantidad,2)) cantidad " + 
-					 			  "from certificaciones_servicios cs " + 
-					 			  "inner join certificaciones_servicios_lineas csl on csl.certificaciones_servicio_id = cs.id " + 
-					 			  "where cs.state_id = 88  " + 
-					 			  "group by csl.linea_orden_id "+	
+					 			  "select csl.linea_orden_id,sum(round(csl.cantidad,2)) cantidad " +
+					 			  "from certificaciones_servicios cs " +
+					 			  "inner join certificaciones_servicios_lineas csl on csl.certificaciones_servicio_id = cs.id " +
+					 			  "where cs.state_id = 88  " +
+					 			  "group by csl.linea_orden_id "+
 					 " ) ola on ola.orden_linea_id = ol.id "+
 					 " left join (select orden_linea_id, SUM(cantidad) cantidad from orden_linea_clientes GROUP BY orden_linea_id) olc on olc.orden_linea_id = ol.id "+
 					 " where ol.orden_id = " + idOrdenCompra +
 					 " group by ol.id, p.id, p.nombre,de.nombre, u.nombre, ola.cantidad, olc.cantidad ORDER BY p.nombre ASC ) as o ";
 
-		
-    	
+
+
 		RawSql rawSql = RawSqlBuilder.parse(sql)
 				.columnMapping("id", "producto.id")
 			    .columnMapping("nombre", "producto.nombre")
-			    
+
 	      .create();
-		
+
 		return Ebean.find(OrdenProvisionLineas.class).setRawSql(rawSql).fetch("producto");
 	}
 
-	
-	
+
+
 	public static Pagination<OrdenProvisionLineas> getProductosRecepcionados(Long idOrdenCompra) {
     	Pagination<OrdenProvisionLineas> p = new Pagination<OrdenProvisionLineas>();
     	p.setOrderDefault("ASC");
@@ -180,18 +181,18 @@ private static final long serialVersionUID = 1L;
     	ExpressionList<OrdenProvisionLineas> e = getQuery(idOrdenCompra).where();
 
     	e.gt("recepcionado", 0);
-    	
+
 		p.parcheCountAllFormula = true;
 		p.setTotalRowCount(e.findList().size());
 
-    	
-    	
+
+
     	p.setExpressionList(e);
 
 		return p;
 	}
-	
-	
+
+
 	public static Pagination<OrdenProvisionLineas> getLineas(Long idOrdenCompra) {
     	Pagination<OrdenProvisionLineas> p = new Pagination<OrdenProvisionLineas>();
     	p.setOrderDefault("ASC");
@@ -201,13 +202,13 @@ private static final long serialVersionUID = 1L;
 
 		p.parcheCountAllFormula = true;
 		p.setTotalRowCount(e.findList().size());
-    	
+
     	p.setExpressionList(e);
 
 		return p;
 	}
-	
-	
+
+
 	public static Pagination<OrdenProvisionLineas> getProductosParaAgregar(Long idOrdenCompra, Long remito_id, String producto) {
     	Pagination<OrdenProvisionLineas> p = new Pagination<OrdenProvisionLineas>();
     	p.setOrderDefault("ASC");
@@ -224,56 +225,56 @@ private static final long serialVersionUID = 1L;
 		}
 
     	e.not(Expr.in("orden_linea_id", i));
-    	
+
     	if(!producto.isEmpty())
     		e.ilike("producto.nombre", "%"+producto+"%");
 
     	//e.having().gt("ol.cantidad - SUM(COALESCE(linea.cantidad,0))", 0);
     	e.gt("(cantidad - recepcionado)", 0);
-    	
+
     	p.setExpressionList(e);
 		p.parcheCountAllFormula = true;
 		p.setTotalRowCount(e.findList().size());
 		return p;
 	}
-	
-	
+
+
 	public static void recepcionarTodos(Long id_remito) throws Exception {
-		
+
 		Long idOrdenCompra = Remito.find.byId(id_remito).recepcion.ordenProvision.orden_compra_id;
 
     	ExpressionList<OrdenProvisionLineas> e = getQuery(idOrdenCompra).where();
-    	
+
     	List<RemitoLinea> rl = RemitoLinea.find.select("linea_orden_id").fetch("lineaOrden").where().eq("remito_id", id_remito).findList();
     	List<Long> i = new ArrayList<>();
     	for (RemitoLinea linea : rl) {
 			i.add(linea.linea_orden_id);
 		}
-    	
+
     	e.not(Expr.in("orden_linea_id", i));
     	e.gt("(cantidad - recepcionado)", 0);
-    	
+
     	System.out.println("-------------" + e.findList().size());
-    	
+
     	Ebean.beginTransaction();
 		try {
 			boolean f = false;
-			
+
 			List<SqlRow> sc = OrdenLinea.getCantidadDisponiblePorClientesPorOrden(idOrdenCompra);
 			if(sc.size() > 0){
 				f = true;
 			}
-			
+
 	    	for (OrdenProvisionLineas l : e.findList()) {
 	    		RemitoLinea linea = new RemitoLinea();
 	    		linea.cantidad = l.getPendiente();
 	    		linea.remito_id = id_remito;
 	    		linea.linea_orden_id = l.orden_linea_id;
 	    		linea.save();
-	    		
+
 	    		if(f){
 	    			List<SqlRow> s = OrdenLinea.getCantidadDisponiblePorClientes(l.orden_linea_id);
-	    		
+
 	    			if(s.size() > 0){
 	    				List<SqlRow> x = OrdenLinea.getCantidadDisponiblePorClientes(l.orden_linea_id);
 			    		if(x.size() > 0){
@@ -296,11 +297,11 @@ private static final long serialVersionUID = 1L;
 			throw ex;
 		}finally{
 			Ebean.endTransaction();
-		}	
-    	
+		}
+
 	}
-	
-	
+
+
 	public static BigDecimal getCantidadMaxima(Long linea_id) {
 		String sql = " select id, " +
 					 " ol.cantidad - " +
@@ -310,7 +311,7 @@ private static final long serialVersionUID = 1L;
 					 " where ol.id = " + linea_id;
 		return Ebean.createSqlQuery(sql).findUnique().getBigDecimal("cantidadMaxima");
 	}
-	
+
 	public static BigDecimal getCantidadDisponible(Long linea_id) {
 		String sql = " select id, " +
 					 " ol.cantidad - " +
@@ -320,8 +321,8 @@ private static final long serialVersionUID = 1L;
 					 " where ol.id = " + linea_id;
 		return Ebean.createSqlQuery(sql).findUnique().getBigDecimal("cantidadMaxima");
 	}
-	
-	
+
+
 	public static BigDecimal getCantidadDisponibleCertificaciones(Long linea_id) {
 		String sql = " select id, " +
 					 " ol.cantidad - " +
