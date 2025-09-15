@@ -405,7 +405,10 @@ public class Agente extends Model{
     	}
 
     	if(!organigrama_id.isEmpty()){
-    		e.eq("organigrama_id", Integer.parseInt(organigrama_id));
+
+    		List<Integer> ol = Organigrama.getOrganigramasIdsHijos(Integer.parseInt(organigrama_id));
+    		e.in("organigrama_id", ol);
+    		//e.eq("organigrama_id", Integer.parseInt(organigrama_id));
     	}
 
     	if(!especialidad_id.isEmpty()){
