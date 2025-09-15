@@ -47,7 +47,7 @@ private static final long serialVersionUID = 1L;
 	public String departamento;
 	public BigDecimal recepcionado;
 	public BigDecimal anulados;
-	public int cantidadPacientes;
+	public Integer cantidadPacientes;
 
 
 	public static Model.Finder<Integer,OrdenProvisionLineas> find = new Model.Finder<Integer,OrdenProvisionLineas>(Integer.class, OrdenProvisionLineas.class);
@@ -119,7 +119,7 @@ private static final long serialVersionUID = 1L;
 					 "		  ELSE ol.cantidad " +
 					 "		  END as cantidad, " +
 					 //"	  SUM(ol.precio) as precio, p.id, p.nombre, " +
-					 
+
 					 "	  (ol.precio) as precio, p.id, p.nombre,de.nombre as departamento, " +
 					 "	  coalesce(SUM(linea.cantidad),0) recepcionado, " +
 					 "	  u.nombre as udm, " +
@@ -215,7 +215,7 @@ private static final long serialVersionUID = 1L;
     	p.setSortByDefault("producto.nombre");
 
     	ExpressionList<OrdenProvisionLineas> e = getQuery(idOrdenCompra).where();
-    	
+
 
 
     	List<RemitoLinea> rl = RemitoLinea.find.select("linea_orden_id").fetch("lineaOrden").where().eq("remito_id", remito_id).findList();
