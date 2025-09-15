@@ -1,0 +1,81 @@
+@(ret: java.util.Map[String,java.util.Map[String,java.util.Map[String,Integer]]],
+p:List[models.Periodo])
+@import helper._
+@import utils._
+@import models.auth._
+@implicitFieldConstructor = @{ FieldConstructor(simpleInput.render) }
+
+@views.html.informes.mainInformes("Laboratorio - Control Producto Mensual") {
+
+	@views.html.informes.navInformes()
+
+	@views.html.tags.successError()
+
+
+	<div class="page-header">
+		<div class="row">
+			<div class="col-sm-12">
+				<h1 style="font-size: 25px; " >Cantidas Recibidas por Periodo</h1>
+			</div>
+		</div>
+	</div>
+	@for((key,value) <- ret) {
+		<table class="table table-bordered">
+			<tr>
+				<td colspan="15" align="center">
+					<span style="font-size: 20px;font-weight: bold;">@key</span>
+					@if(key == "HOSPITAL ESCUELA DE AGUDOS"){
+						<img src="/assets/images/logo-hearm.png" width="200" height="200"/>
+					}
+					@if(key == "HOSPITAL FATIMA"){
+						<img src="/assets/images/logo-fatima.jpeg" width="200" height="200"/>
+					}
+					@if(key == "HOSPITAL MATERNO NEONATAL"){
+						<img src="/assets/images/logo-materno.jpeg" width="200" height="200"/>
+					}
+					@if(key == "HOSPITAL SAMIC DE OBERA"){
+						<img src="/assets/images/logo-obera.jpeg" width="200" height="200"/>
+					}
+					@if(key == "INSTITUTO MISIONERO DEL CANCER"){
+						<img src="/assets/images/logo-imc.png" width="200" height="200"/>
+					}
+					@if(key == "LACMI"){
+						<img src="/assets/images/logo-lacmi.png" width="200" height="200"/>
+					}
+					@if(key == "MINISTERIO DE SALUD PUBLICA"){
+						<img src="/assets/images/logo-ministerio.jpeg" width="200" height="200"/>
+					}
+					@if(key == "HOSPITAL PEDIATRICO"){
+						<img src="/assets/images/logo-pediatria.jpg" width="200" height="200"/>
+					}
+					@if(key == "HOSPITAL FAVALORO"){
+						<img src="/assets/images/logo-favaloro.jpeg" width="200" height="200"/>
+					}
+
+
+
+
+				</td>
+
+			</tr>
+			<tr>
+				<td colspan="" width="200"></td>
+				@for(valuep <- p) {
+					<td align="center"><span style="font-weight: bold;">@valuep.nombre</span></td>
+				}
+			</tr>
+			@for((key2,value2) <- value) {
+
+				<tr>
+					<td  align="left" ><span style="font-weight: bold;">@key2</span></td>
+					@for(valuep <- p) {
+						<td  align="center">@value2.get(valuep.nombre)</td>
+					}
+				</tr>
+			}
+		</table>
+
+
+	}
+
+}
