@@ -485,7 +485,7 @@ public class InformeMensualController extends Controller {
 					    "      GROUP BY cc.orden_id, cc.state_id,cc.fecha_certificacion, o_1.cot_dolar) a ON a.orden_id = o.id "+
 
 					"where  "+
-					" o.deposito_id in(1,2,3,4,25,31,32,34,35) and "+
+					" o.deposito_id in(1,2,3,4,25,31,32,34,35,21) and "+
 					//" o.deposito_id in(1,2) and "+
 					" a.fecha >= ? "+
 					//" and o.orden_rubro_id = 7 "+
