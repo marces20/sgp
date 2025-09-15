@@ -12,6 +12,7 @@ import com.avaje.ebean.SqlQuery;
 import com.avaje.ebean.SqlRow;
 
 import controllers.Secured;
+import controllers.auth.CheckPermiso;
 import models.OrdenRubro;
 import models.Periodo;
 import play.mvc.Controller;
@@ -22,6 +23,7 @@ import views.html.informes.informeLaboratorio.*;
 @Security.Authenticated(Secured.class)
 public class InformeLaboratorioController extends Controller {
 
+	@CheckPermiso(key = "verInformeLaboratorio")
 	public static Result controlProductoPorMesPorInstitucion() {
 
 		Periodo px = Periodo.getPeriodoByDate(new Date());
