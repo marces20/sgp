@@ -92,7 +92,7 @@ public class Cliente extends Model {
 	public static Finder<Long,Cliente> find = new Finder<Long,Cliente>(Long.class, Cliente.class);
 
 	public List<Cliente> getDataSuggest(String input,Integer limit){
-		List<Cliente> e = find.where()
+		List<Cliente> e = find.where().eq("activo", true)
 				.disjunction()
 				.ilike("nombre", "%"+input+"%")
 				.ilike("id_paciente_rismi", "%"+input+"%")
