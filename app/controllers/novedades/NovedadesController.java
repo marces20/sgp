@@ -161,7 +161,7 @@ public class NovedadesController extends Controller {
 		    for (Novedad n : novedades) {
 			    ObjectNode e = Json.newObject();
 			    e.put("id", n.id.toString());
-			    e.put("title", n.agente.apellido);
+			    e.put("title", n.horas+"HS - "+n.agente.apellido);
 			    e.put("start", utils.DateUtils.formatDate(n.fecha_inicio, "yyyy-MM-dd"));
 			    e.put("color", n.servicio.color);
 				s.add(e);
@@ -292,6 +292,7 @@ public class NovedadesController extends Controller {
 						ex.create_usuario_id = new Long(Usuario.getUsuarioSesion());
 						ex.create_date = new Date();
 						ex.planificacion_id = e.planificacion_id;
+						ex.horas = e.horas;
 						ex.save();
 
 

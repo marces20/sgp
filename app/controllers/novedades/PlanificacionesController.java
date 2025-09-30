@@ -58,9 +58,13 @@ public class PlanificacionesController extends Controller {
 	@CheckPermiso(key = "planificacionCrear")
 	public static Result crear() {
 
-		Map<String,String> p = new HashMap<String, String>();
 
-		Form<Planificacion> planificacionForm = form(Planificacion.class).bind(p);
+		Map<String,String> b = new HashMap<String, String>();
+
+		b.put("organigrama.nombre", Usuario.getUsurioSesion().organigrama.nombre);
+		b.put("organigrama_id", Usuario.getUsurioSesion().organigrama_id.toString());
+
+		Form<Planificacion> planificacionForm = form(Planificacion.class).bind(b);
 		planificacionForm.discardErrors();
 
 		return ok(crearPlanificaciones.render(planificacionForm));
@@ -116,7 +120,7 @@ public class PlanificacionesController extends Controller {
 		Planificacion planificacion = Ebean.find(Planificacion.class, id);
 
 		if(planificacionForm.hasErrors()) {
-			flash("error", "Error en formulario");
+			flash("error", "Error en formulario ");
 			return badRequest(editarPlanificaciones.render(planificacionForm,planificacion));
 		}
 
@@ -241,16 +245,28 @@ public class PlanificacionesController extends Controller {
 
 	public static void pasarEnCurso(Long idRf){
 
-		Planificacion rf = Ebean.find(Planificacion.class).select("id, estado_id,write_date,write_usuario_id").setId(idRf).findUnique();
+		Planificacion rf = Ebean.find(Planificacion.class).select("id,tipo_planificacion_id,periodo_id, estado_id,write_date,write_usuario_id").setId(idRf).findUnique();
 
-		if(rf != null){
-			rf.estado_id = new Long(Estado.PLANIFICIACION_ENCURSO);
-			rf.write_date = new Date();
-			rf.write_usuario_id = new Long(Usuario.getUsuarioSesion());
-			rf.save();
-			flash("success", "Operación exitosa. Estado actual: En Curso");
-		} else {
-			flash("error", "Parámetros incorrectos");
+		List<Planificacion> listPlanificacionControl = Planificacion.find.where().eq("tipo_planificacion_id", rf.tipo_planificacion_id)
+														.eq("periodo_id", rf.periodo_id)
+														.ne("estado_id", Estado.PLANIFICIACION_APROBADO)
+														.ne("estado_id", Estado.PLANIFICIACION_CANCELADO)
+														.ne("id",rf.id)
+														.findList();
+
+		if(listPlanificacionControl.size() > 0) {
+			flash("error", "No puede haber mas de una Planificacion con el mismo tipo, periodo y estado en este estado.");
+		}else {
+
+			if(rf != null){
+				rf.estado_id = new Long(Estado.PLANIFICIACION_ENCURSO);
+				rf.write_date = new Date();
+				rf.write_usuario_id = new Long(Usuario.getUsuarioSesion());
+				rf.save();
+				flash("success", "Operación exitosa. Estado actual: En Curso");
+			} else {
+				flash("error", "Parámetros incorrectos");
+			}
 		}
 	}
 
