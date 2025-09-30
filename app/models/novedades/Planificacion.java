@@ -13,6 +13,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 import com.avaje.ebean.ExpressionList;
+import com.avaje.ebean.annotation.Formula;
 
 import models.Ejercicio;
 import models.Estado;
@@ -55,6 +56,12 @@ public class Planificacion extends Model{
 	public Date fecha_fin;
 
 	@ManyToOne
+	@JoinColumn(name="tipo_planificacion_id", referencedColumnName="id", insertable=false, updatable=false)
+	public TipoPlanificacion tipoPlanificacion;
+	@Required(message="Debe seleccionar un tipo")
+	public Integer tipo_planificacion_id;
+
+	@ManyToOne
 	@JoinColumn(name="periodo_id", referencedColumnName="id", insertable=false, updatable=false)
 	public Periodo periodo;
 	@Required(message="Debe seleccionar un periodo")
@@ -81,6 +88,18 @@ public class Planificacion extends Model{
 	public Long write_usuario_id;
 
 	public Date write_date;
+
+	@Formula(select = "_c${ta}.habiles", join = "left outer join (select planificacion_id, count(*) as habiles from novedades af  WHERE habiles = true group by planificacion_id) as _c${ta} on _c${ta}.planificacion_id = ${ta}.id")
+	public Integer habiles;
+
+	@Formula(select = "_d${ta}.inhabiles", join = "left outer join (select planificacion_id, count(*) as inhabiles from novedades af  WHERE habiles = false group by planificacion_id) as _d${ta} on _d${ta}.planificacion_id = ${ta}.id")
+	public Integer inhabiles;
+
+	@Formula(select = "_e${ta}.horashabiles", join = "left outer join (select planificacion_id, sum(horas) as horashabiles from novedades af  WHERE habiles = true group by planificacion_id) as _e${ta} on _e${ta}.planificacion_id = ${ta}.id")
+	public Integer horashabiles;
+
+	@Formula(select = "_f${ta}.horasinhabiles", join = "left outer join (select planificacion_id, sum(horas) as horasinhabiles from novedades af  WHERE habiles = false group by planificacion_id) as _f${ta} on _f${ta}.planificacion_id = ${ta}.id")
+	public Integer horasinhabiles;
 
 	public static Model.Finder<Long,Planificacion> find = new Finder<Long,Planificacion>(Long.class, Planificacion.class);
 
@@ -141,6 +160,9 @@ public class Planificacion extends Model{
     	return p;
     }
 
+	public boolean controlFechaEntreRango(Date fechaBuscar) {
+		return fechaBuscar.compareTo(fecha_inicio) >= 0 && fechaBuscar.compareTo(fecha_fin) <= 0;
+	}
 
 
 }
