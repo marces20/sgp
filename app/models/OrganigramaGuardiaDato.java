@@ -1,6 +1,11 @@
 package models;
 
+import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -11,6 +16,9 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import models.novedades.TipoPlanificacion;
+import play.cache.Cache;
+import play.data.validation.Constraints.Required;
 import play.db.ebean.Model;
 
 @Entity
@@ -26,10 +34,18 @@ public class OrganigramaGuardiaDato extends Model {
 	public Organigrama organigrama;
 	public Long organigrama_id;
 
-	public Integer personas;
+	public Integer personas_habiles;
 	public Integer habiles_horas;
+	public Integer personas_inhabiles;
 	public Integer inhabiles_horas;
+	public Integer horasxdia;
 	public Boolean activo = false;
+
+	@ManyToOne
+	@JoinColumn(name="tipo_planificacion_id", referencedColumnName="id", insertable=false, updatable=false)
+	public TipoPlanificacion tipoPlanificacion;
+	@Required(message="Debe seleccionar un tipo")
+	public Integer tipo_planificacion_id;
 
 	@ManyToOne
 	@JoinColumn(name="create_usuario_id", referencedColumnName="id", insertable=false, updatable=false)
@@ -41,6 +57,50 @@ public class OrganigramaGuardiaDato extends Model {
 
 	public static Model.Finder<Long,OrganigramaGuardiaDato> find = new Model.Finder<Long,OrganigramaGuardiaDato>(Long.class, OrganigramaGuardiaDato.class);
 
+
+	public Map<String, Integer> getDiasHorasHabilesInhabilesPorPeriodo(Periodo periodo,Date finicio,Date ffin){
+		Integer daysHabiles = 0;
+		Integer daysInHabiles = 0;
+
+		Map<String, Integer> ret = new HashMap<>();
+
+		ArrayList<Date> feriadosList = Feriado.getFeriados();
+
+		if(periodo != null) {
+			finicio = periodo.date_start;
+			ffin = periodo.date_stop;
+		}
+
+		Calendar calendarInicio = Calendar.getInstance();
+		calendarInicio.setTime(finicio);
+
+		Calendar calendarFin = Calendar.getInstance();
+		calendarFin.setTime(ffin);
+
+		while (calendarInicio.before(calendarFin) || calendarInicio.equals(calendarFin)) {
+
+				if(!feriadosList.contains(calendarInicio.getTime() ) ) {
+					if (calendarInicio.get(Calendar.DAY_OF_WEEK) != Calendar.SUNDAY && calendarInicio.get(Calendar.DAY_OF_WEEK) != Calendar.SATURDAY) {
+			            //se aumentan los dias de diferencia entre min y max
+						daysHabiles++;
+					}else {
+						daysInHabiles++;
+					}
+				}else {
+					daysInHabiles++;
+				}
+
+
+			calendarInicio.add(Calendar.DATE, 1);
+		}
+		ret.put("habiles", daysHabiles);
+		ret.put("inhabiles", daysInHabiles);
+		ret.put("habilesHoras", daysHabiles * habiles_horas * horasxdia);
+		ret.put("inhabilesHoras", daysInHabiles * inhabiles_horas * horasxdia);
+
+
+		return ret;
+	}
 
 
 }
