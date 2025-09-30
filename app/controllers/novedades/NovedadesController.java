@@ -20,8 +20,10 @@ import models.Estado;
 import models.Factura;
 import models.Feriado;
 import models.Novedad;
+import models.OrganigramaGuardiaDato;
 import models.Solicitud;
 import models.Usuario;
+import models.novedades.Planificacion;
 import models.recupero.RecuperoFactura;
 import play.Logger;
 import play.data.DynamicForm;
@@ -44,6 +46,8 @@ public class NovedadesController extends Controller {
 	public static Result indexListaNovedades() {
 		DynamicForm d = form().bindFromRequest();
 
+
+
 		return ok(indexListaNovedades.render(Novedad.page(RequestVar.get("agente_id"),
 											RequestVar.get("servicio_id"),
 											RequestVar.get("desde"),
@@ -63,7 +67,7 @@ public class NovedadesController extends Controller {
 															"",
 															"",
 															"",
-															RequestVar.get("planificacion_id"),
+															idPlanificacion.toString(),
 															"fecha_inicio ASC")
 															,d));
 
@@ -113,9 +117,6 @@ public class NovedadesController extends Controller {
 
 	@CheckPermiso(key = "verCalendario")
 	public static Result index() {
-
-
-		Logger.debug("------------------------- index()" );
 
 		Long agenteId = (!RequestVar.get("agente_id").isEmpty())?new Long(RequestVar.get("agente_id")):null;
 	    Long servicioId =  (!RequestVar.get("servicio_id").isEmpty())?new Long(RequestVar.get("servicio_id")):Usuario.getUsurioSesion().organigrama_id;
@@ -199,12 +200,17 @@ public class NovedadesController extends Controller {
 
 		ObjectNode o = Json.newObject();
 		ArrayNode s = o.arrayNode();
-
+		/*Feriado.getFeriados()
 		List<Feriado> feriados = Feriado.find.findList();
 
 		for (Feriado f : feriados) {
 			s.add(utils.DateUtils.formatDate(f.fecha, "yyyy-MM-dd"));
+		}*/
+
+		for (Date f :  Feriado.getFeriados()) {
+			s.add(utils.DateUtils.formatDate(f, "yyyy-MM-dd"));
 		}
+
 		o.put("feriados", s);
 		return ok(o);
 	}
@@ -276,13 +282,21 @@ public class NovedadesController extends Controller {
 				if(nForm.data().get("fechas") != null && !nForm.data().get("fechas").isEmpty()) {
 
 
+					Novedad e = nForm.get();
 
-
+					Planificacion p = Planificacion.find.byId(e.planificacion_id.longValue());
 					String[] fechasArray = nForm.data().get("fechas").split(",");
 
 					for(String ftmp : fechasArray) {
+						if(!p.controlFechaEntreRango(utils.DateUtils.formatDate(ftmp, "dd/MM/yyyy"))) {
+							flash("error", "La fecha "+ftmp+" seleccionada esta fuera del rango de las fecha de planificación.");
+							return ok(crearFechaMasivaNovedad.render(nForm));
+						}
+					}
 
-						Novedad e = nForm.get();
+					for(String ftmp : fechasArray) {
+
+
 
 						Novedad ex = new Novedad();
 						ex.agente_id = e.agente_id;
@@ -351,10 +365,22 @@ public class NovedadesController extends Controller {
 				flash("error", "Error en formulario");
 				return ok(crearNovedad.render(nForm));
 			} else {
+
 				Novedad e = nForm.get();
+
+
+				Planificacion p = Planificacion.find.byId(e.planificacion_id.longValue());
+
+				if(!p.controlFechaEntreRango(e.fecha_inicio)) {
+					flash("error", "La fecha seleccionada esta fuera del rango de las fecha de planificación.");
+					return ok(crearNovedad.render(nForm));
+				}
+
+
 				e.create_usuario_id = new Long(Usuario.getUsuarioSesion());
 				e.create_date = new Date();
 				e.save();
+
 				Novedad n = Novedad.find.byId(e.id);
 				restJs.put("success", true);
 				restJs.put("nuevo", true);
@@ -366,6 +392,7 @@ public class NovedadesController extends Controller {
 
 				restJs.put("evento", evento);
 				return ok(restJs);
+
 				//flash("success", "La novedad se ha creado correctamente");
 			}
 		} catch (PersistenceException pe){

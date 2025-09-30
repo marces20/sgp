@@ -11,11 +11,14 @@ import java.util.Map;
 import javax.persistence.PersistenceException;
 
 import com.avaje.ebean.Ebean;
+import com.avaje.ebean.SqlRow;
 
 import controllers.Secured;
 import controllers.auth.CheckPermiso;
 import models.Estado;
 import models.Expediente;
+import models.Novedad;
+import models.OrganigramaGuardiaDato;
 import models.Usuario;
 import models.auth.Permiso;
 import models.novedades.Planificacion;
@@ -33,6 +36,13 @@ import views.html.novedades.planificaciones.*;
 
 @Security.Authenticated(Secured.class)
 public class PlanificacionesController extends Controller {
+
+	/*
+	 * CONTROL POR DIAS FUERA DE LA PLANIFICACION
+	 * CONTROL POR CANTIDAD POR DIA
+	 * CONTROL POR CANTIDAD POR PERSONA
+	 *
+	 */
 
 	final static Form<Planificacion> planificacionForm = form(Planificacion.class);
 
@@ -168,8 +178,19 @@ public class PlanificacionesController extends Controller {
 
 		if(p != null){
 
+			OrganigramaGuardiaDato og = OrganigramaGuardiaDato.find.where()
+					.eq("organigrama_id", p.organigrama_id)
+					.eq("activo",true)
+					.eq("tipo_planificacion_id",p.tipo_planificacion_id)
+					.findUnique();
+
+			Map<String,Integer> diasHabilesInhabiles = og.getDiasHorasHabilesInhabilesPorPeriodo(p.periodo, p.fecha_inicio, p.fecha_fin);
+
+
+			List<SqlRow> totalHorarPorDiaPorPlanificacion =  Novedad.getTotalHorarPorDiaPorPlanificacion(p.id);
+
 			Form<Planificacion> planificacionForm = form(Planificacion.class).fill(p);
-			return ok(verPlanificaciones.render(planificacionForm, p));
+			return ok(verPlanificaciones.render(planificacionForm, p,diasHabilesInhabiles,totalHorarPorDiaPorPlanificacion));
 
 		}else{
 			flash("error", "No se encuentra la planificacion.");
