@@ -62,9 +62,10 @@ public class Novedad extends Model{
 	@Formats .DateTime(pattern="dd/MM/yyyy")
 	public Date fecha_inicio;
 
-	@Formats .DateTime(pattern="HH:mm")
+	//@Formats .DateTime(pattern="HH:mm")
 	//@Required(message="Debe especificar en tiempo en horas:minutos")
-    public Date horas;
+	//public Date horas;
+	public Integer horas;
 
 	public String descripcion;
 
@@ -135,6 +136,24 @@ public class Novedad extends Model{
 		if (agente_id != null) {
 			sql += " AND ag.id = "+agente_id ;
 		}
+
+		List<SqlRow> s = Ebean.createSqlQuery(sql).findList();
+
+		return s;
+	}
+
+	public static List<SqlRow> getTotalHorarPorDiaPorPlanificacion(Long planificacion_id){
+
+		String sql = "SELECT fecha_inicio as fecha,SUM(horas) as horas,habiles " +
+					 "FROM novedades " +
+					 "WHERE 1 = 1 ";
+
+		if (planificacion_id != null) {
+			sql += " AND planificacion_id = "+planificacion_id ;
+		}
+
+		sql +=  "GROUP BY fecha_inicio,habiles ORDER BY fecha_inicio asc";
+
 
 		List<SqlRow> s = Ebean.createSqlQuery(sql).findList();
 
