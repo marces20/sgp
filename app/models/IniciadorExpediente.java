@@ -48,7 +48,7 @@ public class IniciadorExpediente extends Model{
 
 	public List<IniciadorExpediente> getDataSuggest(String input,Integer limit){
 		List<IniciadorExpediente> l = find.where()
-				.ilike("nombre", "%"+input+"%")
+				.ilike("nombre", "%"+input+"%").eq("activo",true)
 				.setMaxRows(limit).orderBy("nombre")
 			    .findList();
 
@@ -62,7 +62,7 @@ public class IniciadorExpediente extends Model{
 
     	p.setExpressionList(
     			find.where()
-                .ilike("nombre", "%" + nombre + "%")
+                .ilike("nombre", "%" + nombre + "%").eq("activo",true)
 	            );
     	return p;
     }
