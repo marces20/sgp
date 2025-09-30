@@ -1,4 +1,7 @@
-@(planificacionesForm: Form[models.novedades.Planificacion],planificacion: models.novedades.Planificacion)
+@(planificacionesForm: Form[models.novedades.Planificacion],
+planificacion: models.novedades.Planificacion,
+diasHabilesInhabiles: java.util.Map[String,Integer],
+totalHorarPorDiaPorPlanificacion:List[com.avaje.ebean.SqlRow])
 @import utils._
 @import helper._
 @implicitFieldConstructor = @{ FieldConstructor(simpleInput.render) }
@@ -55,6 +58,11 @@
 			<label class="control-label">Nombre</label>
 			<p class="form-control-static form-control">@planificacionesForm.field("nombre").value</p>
 		</div>
+		<div class="col-sm-2">
+			<label class="control-label">Tipo Planificacion</label>
+			<p class="form-control-static form-control">@planificacionesForm.field("tipoPlanificacion.nombre").value</p>
+		</div>
+
 
 		<div class="col-sm-2">
 			<label class="control-label">Fecha Inicio</label>
@@ -74,6 +82,6 @@
 		</div>
 	</div>
 
-	@views.html.novedades.planificaciones.tabsPlanificaciones(false, planificacionesForm,planificacion)
+	@views.html.novedades.planificaciones.tabsPlanificaciones(false, planificacionesForm,planificacion,diasHabilesInhabiles,totalHorarPorDiaPorPlanificacion)
 
 }
