@@ -17,6 +17,7 @@ import javax.persistence.Table;
 
 import com.avaje.ebean.ExpressionList;
 
+import models.auth.Permiso;
 import play.Logger;
 import play.data.validation.Constraints.Required;
 import play.db.ebean.Model;
@@ -163,8 +164,10 @@ public class Producto extends Model{
     			Logger.debug("UPDATE");
     			p.activo =  activo;
         		p.write_date =  new Date();
-        		//p.nombre = nombre;
-        		//p.slug = nombre.replace(" ", "").replace(".","").replace("-","").toUpperCase();
+        		if(!Permiso.check("editarProductosDesdeRismi")){
+        			p.nombre = nombre;
+        			p.slug = nombre.replace(" ", "").replace(".","").replace("-","").toUpperCase();
+        		}
         		p.articulo_id = articuloId;
         		p.categoria_id = categoriaId;
         		p.tipo_producto_id = tipoProductoId;
@@ -181,8 +184,10 @@ public class Producto extends Model{
     				Logger.debug("UPDATE POR NOMBRE");
     				p.activo =  activo;
             		p.write_date =  new Date();
-            		//p.nombre = nombre;
-            		//p.slug = nombre.replace(" ", "").replace(".","").replace("-","").toUpperCase();
+            		if(!Permiso.check("editarProductosDesdeRismi")){
+            			p.nombre = nombre;
+            			p.slug = nombre.replace(" ", "").replace(".","").replace("-","").toUpperCase();
+            		}
             		p.articulo_id = articuloId;
             		p.categoria_id = categoriaId;
             		p.tipo_producto_id = tipoProductoId;
