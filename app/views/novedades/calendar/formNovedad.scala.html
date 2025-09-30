@@ -56,13 +56,13 @@
 		</div>
 		@nForm("fecha_inicio").error.map{ error =><div class="text-error">@error.message</div>}
 	</div>
-	<!-- <div class="col-sm-2">
-		<label class="control-label">Tiempo</label>
+	<div class="col-sm-2">
+		<label class="control-label">Horas</label>
 		<div class="form-group @if(nForm.error("horas")  != null) {has-error} else {has-required}">
 			@inputText(nForm("horas"),'class -> "form-control", 'autocomplete -> "off", 'id -> "horas")
 		</div>
 		@nForm("horas").error.map{ error =><div class="text-error">@error.message</div>}
-	</div> -->
+	</div>
 	<div class="col-sm-6">
 		<label class="control-label">Planificacion
 		@select(nForm("planificacion_id"), models.novedades.Planificacion.getPlanificacionEnCursoByOrganigrama().map { p => p.id.toString -> p.nombre},
@@ -97,7 +97,7 @@ $( function(){
 	$('#searchAgenteModal').modalSearch();
 	$('#searchServicioModal').modalSearch();
 	$("#fecha_inicio").mask("99/99/9999");
-	$("#horas").mask("99:99");
+	$("#horas").numeric_input();
 	if($("#agenteModal").length){
 
 		var options = {
