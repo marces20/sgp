@@ -19,14 +19,24 @@
 @inputText(planificacionesForm("id"), 'type -> "hidden", 'id -> "planillaId")
 
 <div class="row">
+@inputText(planificacionesForm("organigrama_id"),'hidden -> "hidden",'id -> "")
 	<div class="col-sm-2">
 		<label class="control-label">Nombre</label>
 		<div class="form-group @if(planificacionesForm.error("nombre")  != null) {has-error}else{has-required}">
-			@inputText(planificacionesForm("nombre"),'class -> "form-control date", 'autocomplete -> "off",'id-> "nombre")
+			@inputText(planificacionesForm("nombre"),'class -> "form-control", 'autocomplete -> "off",'id-> "nombre")
 		</div>
 		@planificacionesForm("nombre").error.map{ error =>
 			<div class="text-error">@error.message</div>
 		}
+	</div>
+	<div class="col-sm-2">
+		<div class="form-group @if(planificacionesForm.error("tipo_planificacion_id") != null) {has-error}">
+			<label class="control-label">Tipo Planificacion</label>
+			@select(planificacionesForm("tipo_planificacion_id"),models.novedades.TipoPlanificacion.find.all().map { p => p.id.toString -> p.nombre}, 'class -> "form-control select", '_default -> "Seleccionar")
+			@planificacionesForm("tipo_planificacion_id").error.map{ error =>
+				<div class="text-error">@error.message</div>
+			}
+		</div>
 	</div>
 
 	<div class="col-sm-2">
@@ -74,6 +84,4 @@
 			}
 		</div>
 	</div>
-
-
-</div>
+	</div>
