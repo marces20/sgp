@@ -843,8 +843,7 @@ public class FacturasReportesController extends Controller  {
             context.put("fecha_orden", utils.DateUtils.formatDate(facturaDatosSimples.fecha_orden_pago));
             context.put("expediente", facturaDatosSimples.expediente.getExpedienteEjercicio());
             context.put("expedienteDescripcion", facturaDatosSimples.expediente.descripcion);
-         http://localhost:9000/contabilidad/facturaProveedor?numero_factura=&referencia=&proveedor.nombre=&proveedor.id=&expediente.nombre=&expediente.id=&periodo=&periodo_id=&cuentaImpuesto.nombre=&cuentaImpuesto.id=&desc_ret=&ordenPago.numero=3369+%2F+2025&ordenPago.id=50301&fecha_op_desde=&fecha_op_hasta=&fecha_factura_desde=&fecha_factura_hasta=&fecha_aprobacion_desde=&fecha_aprobacion_hasta=&tipo_proveedor=&acta=&tipo_cuenta_id=&deposito.nombre=&deposito_id=&emergencia=#   context.put("orden_pago", facturaDatosSimples.ordenPago.getOrdenEjercicio());
-
+            context.put("orden_pago", facturaDatosSimples.ordenPago.getOrdenEjercicio());
             context.put("monto_orden", utils.NumberUtils.moneda(new BigDecimal(monto_orden)));
             context.put("monto_neto",  utils.NumberUtils.moneda(new BigDecimal(((monto_orden - sellosart21 - sellosart22 -  sello - monto_afip - monto_prov -
             		monto_suss - monto_suss1 - monto_dgr331-gcias3884-gcias4245-gcias424519-gcias3726-suss3883-muni-monto_dgr429-
