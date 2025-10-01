@@ -158,7 +158,40 @@ $( function(){
 	      });
 
 	});
+
+	$('.reporteGenerico').click( function() { //abrir modal para mostrar mensaje informe rentas
+
+		var url = $(this).attr("data-url");
+		var title = $(this).attr("data-title");
+		var dialogo = $('<div></div>');
+
+		dialogo.dialog({
+			title: title,
+	    	resizable: false,
+			autoOpen: true,
+			modal: true,
+			height: 250,
+			width:750,
+	        buttons: {
+		          Cerrar: function() {
+		            $( this ).dialog( "destroy" );
+		          }
+		    },
+	    	close: function(event, ui ){
+	    		$(this).dialog( "destroy" );
+	    	},
+		    open: function( event, ui ) {
+				$.get(url, getCheckSeleccionados(), function(data){
+					dialogo.html(data);
+				});
+		    }
+	    });
+	});
 });
+
+function getCheckSeleccionados(){
+	return $("input[name='check_listado[]']").serialize();
+}
 
 function getLoading () {
 	return $('<div id="loading"></div>');
@@ -186,6 +219,8 @@ function formatNumberPesos(n){
 
 	return "$"+r;
 }
+
+
 
 function crearDialogoGeneral(url){
 	var dialogo = $('<div></div>');
