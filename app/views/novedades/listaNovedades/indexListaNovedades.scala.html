@@ -121,9 +121,11 @@
 						<td>@(rf.servicio.nombre)</td>
 						<td>@(rf.planificacion.nombre)</td>
 						<td>
+							@if(rf.planificacion.estado_id == models.Estado.PLANIFICIACION_ENCURSO){
 							<a class="btn btn-default btn-xs delete-confirm-link notSeleccion" href="@controllers.novedades.routes.NovedadesController.eliminar(rf.id)&@UriTrack.encode()">
 							<i class="glyphicon glyphicon-trash icono-eliminar"></i>
 							</a>
+							}
 						</td>
 					</tr>
 				}

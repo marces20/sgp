@@ -1,35 +1,46 @@
 @(linea:  Novedad)
+@import utils._
+@import helper._
+@implicitFieldConstructor = @{ FieldConstructor(simpleInput.render) }
 
+@if(linea.planificacion.estado_id == models.Estado.PLANIFICIACION_ENCURSO){
 <div class="row menu-acciones">
 	<div class="col-sm-10">
 		<a href="@controllers.novedades.routes.NovedadesController.editar(linea.id)"  class="btn btn-default" id="btnModificar"><i class="glyphicon glyphicon-edit"></i> Editar</a>
 		<a href="@controllers.novedades.routes.NovedadesController.eliminar(linea.id)"  class="btn btn-default delete-confirm-link"><i class="glyphicon glyphicon-trash icono-eliminar"></i> Eliminar</a>
 	</div>
 </div>
+}
 
 
 <div class="row">
 
 	<div class="col-sm-6">
-		<label class="control-label">Nombre</label>
+		<label class="control-label">Agente</label>
 		<p class="form-control-static form-control">@linea.agente.apellido</p>
 	</div>
-
+	<div class="col-sm-6">
+		<label class="control-label">Servicio</label>
+		<p class="form-control-static form-control">@linea.servicio.nombre</p>
+	</div>
+</div>
+<div class="row">
 	<div class="col-sm-3">
 		<label class="control-label">Fecha de inicio</label>
 		<p class="form-control-static form-control">@utils.DateUtils.formatDate(linea.fecha_inicio, "dd-MM-yyyy")</p>
 	</div>
 
 	<div class="col-sm-3">
-		<label class="control-label">Total de horas</label>
+		<label class="control-label">Horas</label>
 		<p class="form-control-static form-control">@linea.horas</p>
 	</div>
 
-
 	<div class="col-sm-6">
-		<label class="control-label">Servicio</label>
-		<p class="form-control-static form-control">@linea.servicio.nombre</p>
+		<label class="control-label">Planificacion</label>
+		<p class="form-control-static form-control">@linea.planificacion.nombre</p>
 	</div>
+
+
 
 </div>
 

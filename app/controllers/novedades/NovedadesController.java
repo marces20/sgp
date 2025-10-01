@@ -237,7 +237,7 @@ public class NovedadesController extends Controller {
 			flash("error", "No se ha podido eliminar la novedad");
 		}
 
-		return redirect(controllers.novedades.routes.NovedadesController.indexListaNovedades()+UriTrack.get("?"));
+		return redirect(controllers.novedades.routes.NovedadesController.index()+UriTrack.get("?"));
 	}
 
 	public static Result crearMasiva() {
