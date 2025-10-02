@@ -24,11 +24,12 @@ import views.html.informes.informeLaboratorio.*;
 public class InformeLaboratorioController extends Controller {
 
 	@CheckPermiso(key = "verInformeLaboratorio")
-	public static Result controlProductoPorMesPorInstitucion() {
+	public static Result controlProductoPorMesPorInstitucion(Long ejercicioId) {
 
 		Periodo px = Periodo.getPeriodoByDate(new Date());
 		int periodo6meses = px.id.intValue() -12 ;
-		List<Periodo> p = Periodo.find.where().ge("id", periodo6meses).ge("id", 163).le("id", px.id).orderBy("id asc").findList();
+		//List<Periodo> p = Periodo.find.where().ge("id", periodo6meses).ge("id", 163).le("id", px.id).orderBy("id asc").findList();
+		List<Periodo> p = Periodo.find.where().eq("ejercicio_id", ejercicioId).orderBy("id asc").findList();
 
 
 		String sql  = "SELECT o.orden_linea_id as orden_linea_id, cantidad, precio, id, nombre,deposito, recepcionado, udm, pendiente, " +
