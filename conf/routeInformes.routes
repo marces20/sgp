@@ -24,4 +24,4 @@ GET  /getObligacionPorOrganigrama						controllers.informes.InformeMensualContro
 GET  /getObligacionPorOrganigramaPorRubroPorPeriodo						controllers.informes.InformeMensualController.getObligacionPorOrganigramaPorRubroPorPeriodo(deposito:String,ordenRubro:Int ?= 0,periodoId:Long ?= 0)
 
 
-GET  /controlProductoPorMesPorInstitucion						controllers.informes.InformeLaboratorioController.controlProductoPorMesPorInstitucion()
+GET  /controlProductoPorMesPorInstitucion						controllers.informes.InformeLaboratorioController.controlProductoPorMesPorInstitucion(ejercicioId:Long ?= 0)
