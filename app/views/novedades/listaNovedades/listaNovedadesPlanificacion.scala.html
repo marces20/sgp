@@ -12,12 +12,11 @@
 				<tr>
 
 					<th width="70">Fecha</th>
-					<th>Agente</th>
+					<th  width="300">Agente</th>
+					<th width="70">Habiles</th>
+					<th width="20">HS</th>
 
-					<th>Habiles</th>
-					<th>HS</th>
-
-
+					<th>Notas</th>
 
 				</tr>
 			</thead>
@@ -29,7 +28,12 @@
 						<td>@if(rf.habiles){SI}else{NO}</td>
 
 						<td>@rf.horas</td>
-
+						<td>
+							@if(rf.descripcion != null && !rf.descripcion.isEmpty()){
+								@rf.descripcion
+								<!-- <div class='tip-top pointer' title='@rf.descripcion'><i class="glyphicon glyphicon-list"></i></div> -->
+							}
+						</td>
 					</tr>
 				}
 			</tbody>

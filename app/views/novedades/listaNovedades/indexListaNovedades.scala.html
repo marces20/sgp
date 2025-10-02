@@ -101,12 +101,15 @@
 					<th width="30"><input type="checkbox" name="checkAll" id="checkAll"/></th>
 					<!-- <th width="30">#</th> -->
 					<th width="70">Fecha</th>
-					<th style="text-align: center;" width="70">HS</th>
+					<th style="text-align: center;" width="20">HS</th>
 					<th width="70">Habiles</th>
-					<th>Agente</th>
+					<th width="300">Agente</th>
 					<th width="">Servicio</th>
 					<th width="">Planificacion</th>
+					<th width="30">Nota</th>
 					<th width="30">#</th>
+
+
 				</tr>
 			</thead>
 			<tbody>
@@ -120,6 +123,12 @@
 						<td>@(rf.agente.apellido)</td>
 						<td>@(rf.servicio.nombre)</td>
 						<td>@(rf.planificacion.nombre)</td>
+						<td>
+							@if(rf.descripcion != null && !rf.descripcion.isEmpty()){
+
+								 <div class='tip-top pointer' title='@rf.descripcion'><i class="glyphicon glyphicon-list"></i></div>
+							}
+						</td>
 						<td>
 							@if(rf.planificacion.estado_id == models.Estado.PLANIFICIACION_ENCURSO){
 							<a class="btn btn-default btn-xs delete-confirm-link notSeleccion" href="@controllers.novedades.routes.NovedadesController.eliminar(rf.id)&@UriTrack.encode()">
