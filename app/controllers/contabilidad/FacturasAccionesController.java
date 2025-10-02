@@ -120,19 +120,30 @@ public class FacturasAccionesController  extends Controller {
 			fd.orden_id = (f.orden_id != null)?f.orden_id.longValue():null;
 			fd.create_date = new Date();
 			fd.create_usuario_id = new Long(Usuario.getUsuarioSesion());
-			fd.save();*/
+			fd.save();
 
 			Proveedor p = Proveedor.find.byId(f.proveedor_id.longValue());
 			p.fecha_vencimiento_f344 =fecha_349;
 			p.nuif344 =  nui;
-			p.save();
+			p.write_usuario_id = new Long(Usuario.getUsuarioSesion());
+			p.write_date = new Date();
+			p.update();*/
+
+			SqlUpdate update = Ebean.createSqlUpdate("UPDATE proveedores SET fecha_vencimiento_f344 = :fecha_vencimiento_f344, nuif344 = :nuif344, write_date = :write_date,write_usuario_id = :write_usuario_id " +
+					"WHERE id = :id ");
+			update.setParameter("write_date",new Date());
+			update.setParameter("write_usuario_id",new Long(Usuario.getUsuarioSesion()));
+			update.setParameter("fecha_vencimiento_f344", fecha_349);
+			update.setParameter("nuif344", nui);
+			update.setParameter("id", f.proveedor_id.longValue());
+			update.execute();
 
 			result.put("success", true);
 			flash("success", "Se actualizado el 344");
 			result.put("html",modalCargar349.render(form().bindFromRequest(),id).toString());
 			return ok(result);
 		} catch (Exception e){
-			flash("error", "No se puede modificar los registros.");
+			flash("error", "No se puede modificar los registros."+e);
 			return ok(modalCargar349.render(form().bindFromRequest(),id));
 		}
 	}
