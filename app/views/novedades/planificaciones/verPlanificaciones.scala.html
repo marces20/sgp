@@ -6,7 +6,7 @@ totalHorarPorDiaPorPlanificacion:List[com.avaje.ebean.SqlRow])
 @import helper._
 @implicitFieldConstructor = @{ FieldConstructor(simpleInput.render) }
 @scripts = {
-	<script src="@routes.Assets.at("javascripts/recupero/planificacion.js")" type="text/javascript"></script>
+	<script src="@routes.Assets.at("javascripts/rrhh/planificacion.js")" type="text/javascript"></script>
 }
 
 
@@ -24,7 +24,9 @@ totalHorarPorDiaPorPlanificacion:List[com.avaje.ebean.SqlRow])
 			    <span class="caret"></span>
 			  </button>
 			  <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
-
+				<li role="presentation">
+				<a role="menuitem" class="reporteGenerico" tabindex="-1" href="#" data-title="Reporte Planificacion" data-url="@controllers.novedades.routes.PlanificacionesController.imprimirPlanificacion(planificacion.id)">Imprimir Reporte</a>
+			  	</li>
 			  </ul>
 			</div>
 
