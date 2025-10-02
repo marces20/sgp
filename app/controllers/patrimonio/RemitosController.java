@@ -172,16 +172,14 @@ public class RemitosController extends Controller {
 				return ok(crearRemito.render(rForm));
 	        }
 
-		}else {
-			Date dt =  rec.ordenProvision.ordenCompra.expediente.fecha;
-	        //Date fechaExpedienteMas7Dias = new Date(dt.getTime() + (7000 * 60 * 60 * 24));
-
-
-	        if(!r.sin_control_fecha && r.fecha_remito.before(dt)) {
-	        	flash("error", "La Fecha no puede ser menor a la fecha de Expediente.");
-				return ok(crearRemito.render(rForm));
-	        }
 		}
+
+		Date dt =  rec.ordenProvision.ordenCompra.expediente.fecha;
+		if(!r.sin_control_fecha && r.fecha_remito.before(dt)) {
+        	flash("error", "La Fecha no puede ser menor a la fecha de Expediente.");
+			return ok(crearRemito.render(rForm));
+        }
+
 		try {
 
 			if(!r.controlPermisoDeposito()) {
@@ -272,18 +270,14 @@ public class RemitosController extends Controller {
 				return ok(editarRemito.render(rForm,r));
 	        }
 
-		}else {
-
-			Date dt =  r.recepcion.ordenProvision.ordenCompra.expediente.fecha;
-	        //Date fechaExpedienteMas7Dias = new Date(dt.getTime() + (7000 * 60 * 60 * 24));
-
-
-
-	        if(!rf.sin_control_fecha && rf.fecha_remito.before(dt)) {
-	        	flash("error", "La Fecha no puede ser menor a la fecha de Expediente.");
-	        	return badRequest(editarRemito.render(rForm,r));
-	        }
 		}
+
+		Date dt =  r.recepcion.ordenProvision.ordenCompra.expediente.fecha;
+        //Date fechaExpedienteMas7Dias = new Date(dt.getTime() + (7000 * 60 * 60 * 24));
+		if(!rf.sin_control_fecha && rf.fecha_remito.before(dt)) {
+        	flash("error", "La Fecha no puede ser menor a la fecha de Expediente.");
+        	return badRequest(editarRemito.render(rForm,r));
+        }
 
 		try {
 
