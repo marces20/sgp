@@ -71,6 +71,8 @@ public class Novedad extends Model{
 
 	public Boolean habiles = true;
 
+	public Boolean festivas = false;
+
 	public String fechas;
 
 	@ManyToOne
@@ -93,7 +95,8 @@ public class Novedad extends Model{
     		p.setOrderDefault("DESC");
     		p.setSortByDefault("id");
     	}
-    	ExpressionList<Novedad> e = find.where();
+    	ExpressionList<Novedad> e = find
+    			.fetch("agente","apellido").where();
 
 		if(!agente.isEmpty()){
 			 e.eq("agente_id", Integer.parseInt(agente));
