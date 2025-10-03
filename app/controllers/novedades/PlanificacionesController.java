@@ -6,6 +6,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.file.FileSystems;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -37,6 +38,7 @@ import play.data.Form;
 import play.mvc.Controller;
 import play.mvc.Result;
 import play.mvc.Security;
+import utils.DateUtils;
 import utils.ReportePdf;
 import utils.RequestVar;
 import utils.UriTrack;
@@ -357,14 +359,52 @@ public class PlanificacionesController extends Controller {
 			 		"         	</tbody>\n" +
 			 		"         </table></div></header>";
 
+			 String texto = "<p style=\"font-size:20px;\">Por medio de la presente se <b>CERTIFICA</b> que los profesionales, cuyo detalle obra a continuación, han cumplimentado en forma real y efectiva las prestaciones médicas extraordinarias durante el período de SEPTIEMBRE del 2025.</p>\n";
 
-			 String texto = "<div class=\"border_div\" style=\"height:900px; padding:10px;border-top:none; border-bottom:2px solid #000000;   font-size:20px;text-align: justify;\">\n" +
-			 		"     <p>Por medio de la presente se <b>CERTIFICA</b> que los profesionales, cuyo detalle obra a continuación, han cumplimentado en forma real y efectiva las prestaciones médicas extraordinarias durante el período de SEPTIEMBRE del 2025.</p>\n" +
-			 		"   </div>";
+
+
 
 
 			 List<SqlRow> novedades = Novedad.getNovedadesPorAgentePorPlanificaciones(id);
+			 List<SqlRow> novedadestt = new ArrayList<SqlRow>();
+			 for (int i = 0; i < 2; i++) {
+				 for(SqlRow sx :novedades) {
+					 novedadestt.add(sx);
+				 }
+		     }
 
+
+			 String novedadesTr ="";
+
+			 for(SqlRow sx :novedadestt) {
+
+				 int horas = sx.getInteger("horas");
+
+				 novedadesTr  += "<tr>" +
+						    		"   <td style='text-align:left;border:1px solid black; padding:5px; margin:0px:'><b>"+sx.getString("apellido")+"</b></td>" +
+						    		"   <td style='text-align: center;border:1px solid black; margin:0px:'>"+sx.getString("dni")+"</td>" +
+						    		"	<td style='text-align: center;border:1px solid black; margin:0px:'>"+horas+"9 Hs</td>" +
+						      		"	<td style='text-align: center;border:1px solid black; margin:0px:'>"+horas+"9 Hs</td>" +
+						      		"	<td style='text-align: center;border:1px solid black; margin:0px:'>"+horas+"9 Hs</td>" +
+						      	"</tr>";
+			 }
+
+			 String novedadesTabla = "<table class=\"tabla-uno\" style=\"border:1px solid #000000;font-size:14px;width: 100%;text-align: center;\" cellspacing=\"2\" cellpadding=\"2\">\n" +
+			 		"        <thead style=\"background-color: #BDBDBD;\">\n" +
+			 		"            <tr>\n" +
+			 		"            	<th style=\"border: 1px solid;\">Apellido</th>\n" +
+			 		"               <th style=\"border: 1px solid;width:50px;\">DNI</th>\n" +
+			 		"               <th style=\"border: 1px solid;width:45px;\">Hab.</th>\n" +
+			 		"               <th style=\"border: 1px solid;width:45px;\">Inh.</th>\n" +
+			 		"               <th style=\"border: 1px solid;width:45px;\">Fest.</th>\n" +
+			 		"            </tr>\n" +
+			 		"        </thead>\n" +
+			 		"        	<tbody class=\"lineas\">\n" +novedadesTr+
+			 		"			</tbody>\n" +
+			 		"		</table>";
+
+			 String hoja = "<div class=\"border_div\" style=\"height:900px; padding:10px;border-top:none; border-bottom:2px solid #000000;text-align: justify;\">\n"
+				 		+texto+novedadesTabla+"</div>";
 
 
 			 String footer = "<footer clase=\"footer\" style=\"\">\n" +
@@ -401,7 +441,7 @@ public class PlanificacionesController extends Controller {
 			 }
 
 
-			 body = header+texto+footer+footerPage+notas+footer+footerPage;
+			 body = header+hoja+footer+footerPage+notas+footer+footerPage;
 
 			 datos.put("body", body);
 
