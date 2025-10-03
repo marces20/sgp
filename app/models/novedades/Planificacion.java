@@ -12,7 +12,9 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import com.avaje.ebean.Ebean;
 import com.avaje.ebean.ExpressionList;
+import com.avaje.ebean.SqlRow;
 import com.avaje.ebean.annotation.Formula;
 
 import models.Ejercicio;
@@ -89,6 +91,11 @@ public class Planificacion extends Model{
 
 	public Date write_date;
 
+	public String nota_servicio;
+	public String nota_rrhh;
+	public String nota_liquidaciones;
+
+
 	@Formula(select = "_c${ta}.habiles", join = "left outer join (select planificacion_id, count(*) as habiles from novedades af  WHERE habiles = true group by planificacion_id) as _c${ta} on _c${ta}.planificacion_id = ${ta}.id")
 	public Integer habiles;
 
@@ -159,6 +166,8 @@ public class Planificacion extends Model{
     	p.setExpressionList(e);
     	return p;
     }
+
+
 
 	public boolean controlFechaEntreRango(Date fechaBuscar) {
 		return fechaBuscar.compareTo(fecha_inicio) >= 0 && fechaBuscar.compareTo(fecha_fin) <= 0;
