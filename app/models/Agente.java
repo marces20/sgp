@@ -252,6 +252,7 @@ public class Agente extends Model{
 		List<Agente> l = find.where()
 				//.or(Ebean.getExpressionFactory().ilike("apellido", "%" + input + "%"), Ebean.getExpressionFactory().ilike("nombre", "%" + input + "%"))
 				.ilike("apellido", "%" + input + "%")
+				.eq("activo",true)
 				.eq("organigrama_id", Usuario.getUsurioSesion().organigrama_id)
 				.setMaxRows(limit).orderBy("id")
 			    .findList();
