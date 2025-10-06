@@ -23,6 +23,7 @@ import models.Novedad;
 import models.Organigrama;
 import models.Periodo;
 import models.Usuario;
+import models.auth.Permiso;
 import play.data.format.Formats;
 import play.data.validation.Constraints.Required;
 import play.db.ebean.Model;
@@ -112,7 +113,6 @@ public class Planificacion extends Model{
 
 	public static List<Planificacion> getPlanificacionEnCursoByOrganigrama(){
 		return find.where()
-				.eq("estado_id", Estado.PLANIFICIACION_ENCURSO)
 				.eq("organigrama_id", Usuario.getUsurioSesion().organigrama_id)
 				.orderBy("id desc").findList();
 	}
@@ -122,17 +122,20 @@ public class Planificacion extends Model{
 			String hasta,
 			String btnFiltro0,
 			String btnFiltro1,//imputado
-			String btnFiltro2) {
+			String btnFiltro2,
+			String btnFiltro3,
+			String btnFiltro4,
+			String btnFiltro5,
+			String cliente_id) {
     	Pagination<Planificacion> p = new Pagination<Planificacion>();
     	p.setOrderDefault("DESC");
     	p.setSortByDefault("id");
 
     	ExpressionList<Planificacion> e = find.where();
 
-		if(!organigrama_id.isEmpty()){
-			 e.eq("organigrama_id", Integer.parseInt(organigrama_id));
+    	if(!Permiso.check("verTodoPlanificacion")){
+    		e.eq("organigrama_id", Usuario.getUsurioSesion().organigrama.id);
 		}
-
 
 
 		if(!desde.isEmpty()){
@@ -146,17 +149,29 @@ public class Planificacion extends Model{
 			System.out.println(fh +" ------ " );
 		}
 
-		if(!btnFiltro0.isEmpty() || !btnFiltro1.isEmpty() || !btnFiltro2.isEmpty()){
+		if(!btnFiltro0.isEmpty() || !btnFiltro1.isEmpty() || !btnFiltro2.isEmpty() || !btnFiltro3.isEmpty() || !btnFiltro4.isEmpty() || !btnFiltro5.isEmpty()){
 			e = e.disjunction();
 			if(!btnFiltro0.isEmpty()){
 				 e = e.eq("estado_id", Estado.PLANIFICIACION_BORRADOR);
 			}
 
 			if(!btnFiltro1.isEmpty()){
-				 e = e.eq("estado_id", Estado.PLANIFICIACION_APROBADO);
+				 e = e.eq("estado_id", Estado.PLANIFICIACION_ENCURSO);
 			}
 
 			if(!btnFiltro2.isEmpty()){
+				 e = e.eq("estado_id", Estado.PLANIFICIACION_APROBADO_SERVICIO);
+			}
+
+			if(!btnFiltro3.isEmpty()){
+				 e = e.eq("estado_id", Estado.PLANIFICIACION_APROBADO_RRHH);
+			}
+
+			if(!btnFiltro4.isEmpty()){
+				 e = e.eq("estado_id", Estado.PLANIFICIACION_APROBADO_LIQUIDACIONES);
+			}
+
+			if(!btnFiltro5.isEmpty()){
 				 e = e.eq("estado_id", Estado.PLANIFICIACION_CANCELADO);
 			}
 
