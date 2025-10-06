@@ -93,7 +93,7 @@ totalHorarPorDiaPorPlanificacion:List[com.avaje.ebean.SqlRow])
 									<div class="row">
 
 										@for(estado <- models.Estado.getSiguienteEstadoPorAprobar(planificacion.estado.orden,models.Estado.TIPO_PLANIFICACION)) {
-											@if(estado.orden <= 3) {
+											@if(estado.orden <= 5) {
 												<div class="col-sm-3">
 													<a href="@controllers.novedades.routes.PlanificacionesController.cambiarEstado(planificacionForm.field("id").value.toInt, estado.id.toLong)@UriTrack.get("&")" class="btn btn-default">
 														<i class="glyphicon glyphicon-arrow-right"></i> @estado.nombre

@@ -12,7 +12,7 @@
 	var classEstado:String = new String()
 	if(i != null && i.id == 140){
 		classEstado = "borrador"
-	}else if(i != null && i.id == 141){
+	}else if(i != null && i.id == 145){
 		classEstado = "autorizado"
 	}else if(i != null && i.id == 142){
 			classEstado = "cancelada"
@@ -54,6 +54,30 @@
 		<form action="" id="formSearchPlanillas" method="GET">
 
 		<div class="row">
+
+			<div class="col-sm-8 filtrosEstados" id="filtrosEstados">
+			 	<div class="btn-group">
+				  <button type="button" id="btn-filtro-borrador" rel="borrador" class="btn btn-default btn-filtros"><i class="glyphicon glyphicon-pencil"></i><br>Borrador
+				 	@checkbox(formBuscador("btnFiltro[0]"), 'hidden -> "hidden")
+				  </button>
+				  <button type="button" id="btn-filtro-encurso" rel="encurso" class="btn btn-default btn-filtros"><i class="glyphicon glyphicon-arrow-right"></i><br>En Curso
+				  	@checkbox(formBuscador("btnFiltro[1]"), 'hidden -> "hidden")
+				  </button>
+				  <button type="button" id="btn-filtro-aprobado" rel="aprobado" class="btn btn-default btn-filtros"><i class="glyphicon glyphicon-ok"></i><br>Aprobado Serv.
+				  	@checkbox(formBuscador("btnFiltro[2]"), 'hidden -> "hidden")
+				  </button>
+				   <button type="button" id="btn-filtro-aprobado" rel="aprobado" class="btn btn-default btn-filtros"><i class="glyphicon glyphicon-ok"></i><br>Aprobado RRHH
+				  	@checkbox(formBuscador("btnFiltro[3]"), 'hidden -> "hidden")
+				  </button>
+				   <button type="button" id="btn-filtro-aprobado" rel="aprobado" class="btn btn-default btn-filtros"><i class="glyphicon glyphicon-ok"></i><br>Aprobado Liqui.
+				  	@checkbox(formBuscador("btnFiltro[4]"), 'hidden -> "hidden")
+				  </button>
+				  <button type="button" id="btn-filtro-cancelado" rel="cancelado" class="btn btn-default btn-filtros"><i class="glyphicon glyphicon-minus-sign"></i><br>Cancelado
+				  	@checkbox(formBuscador("btnFiltro[5]"), 'hidden -> "hidden")
+				  </button>
+				</div>
+			</div>
+
 
 			<div class="col-sm-2">
 				<div class="form-group">
