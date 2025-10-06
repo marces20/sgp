@@ -352,14 +352,18 @@ public class PlanificacionesController extends Controller {
 			 		"\" style=\"width: 100px;heigth: 100px;\">\n" +
 			 		"					</div>\n" +
 			 		"                 </td>\n" +
-			 		"                 <td style=\"width: 90%;border-left: 2px solid;border-left-width: 2px;text-align: center\">\n" +
+			 		"                 <td style=\"width: 90%;border-left: 2px solid;border-left-width: 2px;padding-left:10px;text-align: left\">\n" +
 			 		"                     <h1>CERTIFICACION</h1>\n" +
+			 		"					  <p style=\"font-size:12px;\"><b>Planificacion N° "+rf.id+"</b></p>\n" +
+			 		"					  <p style=\"font-size:12px;\"><b>Servicio: </b>"+rf.organigrama.nombre+"</p>\n" +
 			 		"                 </td>\n" +
 			 		"             	</tr>\n" +
 			 		"         	</tbody>\n" +
 			 		"         </table></div></header>";
 
-			 String texto = "<p style=\"font-size:20px;\">Por medio de la presente se <b>CERTIFICA</b> que los profesionales, cuyo detalle obra a continuación, han cumplimentado en forma real y efectiva las prestaciones médicas extraordinarias durante el período de SEPTIEMBRE del 2025.</p>\n";
+			 String periodo =rf.periodo.getMesAnioStringPeriodo();
+
+			 String texto = "<p style=\"font-size:20px;\">Por medio de la presente se <b>CERTIFICA</b> que los profesionales, cuyo detalle obra a continuación, han cumplimentado en forma real y efectiva las prestaciones médicas extraordinarias durante el período de "+periodo+".</p>\n";
 
 
 
@@ -376,16 +380,32 @@ public class PlanificacionesController extends Controller {
 
 			 String novedadesTr ="";
 
-			 for(SqlRow sx :novedadestt) {
+			 for(SqlRow sx :novedades) {
 
-				 int horas = sx.getInteger("horas");
+				 int horasHab = 0;
+				 int horasInh = 0;
+				 int horasFes = 0;
+
+				 if(sx.getBoolean("festivas") ) {
+					 horasFes = sx.getInteger("horas");
+				 }else {
+
+					 if(sx.getBoolean("habiles") ) {
+						 horasHab = sx.getInteger("horas");
+					 }else {
+						 horasInh = sx.getInteger("horas");
+					 }
+				 }
+
+
+
 
 				 novedadesTr  += "<tr>" +
 						    		"   <td style='text-align:left;border:1px solid black; padding:5px; margin:0px:'><b>"+sx.getString("apellido")+"</b></td>" +
 						    		"   <td style='text-align: center;border:1px solid black; margin:0px:'>"+sx.getString("dni")+"</td>" +
-						    		"	<td style='text-align: center;border:1px solid black; margin:0px:'>"+horas+"9 Hs</td>" +
-						      		"	<td style='text-align: center;border:1px solid black; margin:0px:'>"+horas+"9 Hs</td>" +
-						      		"	<td style='text-align: center;border:1px solid black; margin:0px:'>"+horas+"9 Hs</td>" +
+						    		"	<td style='text-align: center;border:1px solid black; margin:0px:'>"+horasHab+" Hs</td>" +
+						      		"	<td style='text-align: center;border:1px solid black; margin:0px:'>"+horasInh+" Hs</td>" +
+						      		"	<td style='text-align: center;border:1px solid black; margin:0px:'>"+horasFes+" Hs</td>" +
 						      	"</tr>";
 			 }
 
@@ -424,7 +444,7 @@ public class PlanificacionesController extends Controller {
 				 		"	<table style=\"width: 100%;    \">\n" +
 				 		"	    <tbody>\n" +
 				 		"		    <tr style=\" \">\n" +
-				 		"				<td style=\"text-align: right;\">1/2</td>\n" +
+				 		"				<td style=\"text-align: right;\">1/1</td>\n" +
 				 		"			</tr>\n" +
 				 		"		</tbody>\n" +
 				 		"	</table>\n" +
@@ -433,7 +453,8 @@ public class PlanificacionesController extends Controller {
 
 
 			 String notas = "";
-			 if(rf.nota_servicio != null || !rf.nota_servicio.isEmpty() || rf.nota_rrhh != null || !rf.nota_rrhh.isEmpty() || rf.nota_liquidaciones != null || !rf.nota_liquidaciones.isEmpty()) {
+			 //Prueba 1@@@Prueba 2@@@prueba 3
+			 if((rf.nota_servicio != null && !rf.nota_servicio.isEmpty()) || (rf.nota_rrhh != null && !rf.nota_rrhh.isEmpty()) || (rf.nota_liquidaciones != null && !rf.nota_liquidaciones.isEmpty())) {
 				 notas += "<div class=\"page_break\"></div>"+header;
 				 notas += "<div class=\"border_div\" style=\"height:900px;padding:10px;border-top:none; border-bottom:2px solid; font-size:20px;text-align: justify;\">\n" +
 					 		"     <p>Por medio de la presente se <b>CERTIFICA</b> que los profesionales, cuyo detalle obra a continuación, han cumplimentado en forma real y efectiva las prestaciones médicas extraordinarias durante el período de SEPTIEMBRE del 2025.</p>\n" +
@@ -441,7 +462,7 @@ public class PlanificacionesController extends Controller {
 			 }
 
 
-			 body = header+hoja+footer+footerPage+notas+footer+footerPage;
+			 body = header+hoja+footer+footerPage+notas+footer;
 
 			 datos.put("body", body);
 
