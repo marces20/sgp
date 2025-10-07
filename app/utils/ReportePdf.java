@@ -64,4 +64,16 @@ public class ReportePdf {
 
 		 return outputPdf;
 	}
+
+	public static String getFooterPage(int page,int qpage) {
+		return "<div clase=\"footer-page\" style=\"\">\n" +
+		 		"	<table style=\"width: 100%;    \">\n" +
+		 		"	    <tbody>\n" +
+		 		"		    <tr style=\" \">\n" +
+		 		"				<td style=\"text-align: right;\">"+page+"/"+qpage+"</td>\n" +
+		 		"			</tr>\n" +
+		 		"		</tbody>\n" +
+		 		"	</table>\n" +
+		 		"</div>";
+	}
 }
