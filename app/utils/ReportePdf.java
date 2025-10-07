@@ -66,7 +66,7 @@ public class ReportePdf {
 	}
 
 	public static String getFooterPage(int page,int qpage) {
-		return "<div clase=\"footer-page\" style=\"\">\n" +
+		String ret = "<div clase=\"footer-page\" style=\"\">\n" +
 		 		"	<table style=\"width: 100%;    \">\n" +
 		 		"	    <tbody>\n" +
 		 		"		    <tr style=\" \">\n" +
@@ -75,5 +75,10 @@ public class ReportePdf {
 		 		"		</tbody>\n" +
 		 		"	</table>\n" +
 		 		"</div>";
+		if(page != qpage) {
+			ret += "<div class=\"page_break\"></div>";
+		}
+
+		return ret;
 	}
 }
