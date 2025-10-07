@@ -176,7 +176,7 @@ public class Novedad extends Model{
 			sql += " AND planificacion_id = "+planificacion_id ;
 		}
 
-		sql +=  "GROUP BY a.id,a.apellido,a.dni,n.habiles,n.festivas ORDER BY  a.apellido asc";
+		sql +=  "GROUP BY a.id,a.apellido,a.dni,n.habiles,n.festivas ORDER BY  a.apellido asc LIMIT 71";
 
 
 		List<SqlRow> s = Ebean.createSqlQuery(sql).findList();
