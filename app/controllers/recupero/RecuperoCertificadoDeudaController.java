@@ -510,7 +510,7 @@ public class RecuperoCertificadoDeudaController  extends Controller {
 
 			  String calle = (dp != null && dp.calle != null)?dp.calle:"";
 		      String numero = (dp != null && dp.numero != null)?dp.numero:"";
-		      String otro = (dp.otro != null)?"-"+dp.otro:"";
+		      String otro = (dp != null && dp.otro != null)?"-"+dp.otro:"";
 		      String localidad = (dp != null && dp.localidad != null)? dp.localidad.nombre:"";
 		      String provincia = (dp != null && dp.localidad != null && dp.localidad.provincia != null)?dp.localidad.provincia.nombre:"";
 		      String pais = (dp != null && dp.localidad != null && dp.localidad.provincia != null && dp.localidad.provincia.pais != null)?dp.localidad.provincia.pais.nombre:"";
