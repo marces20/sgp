@@ -53,7 +53,8 @@ public class NovedadesController extends Controller {
 											RequestVar.get("desde"),
 											RequestVar.get("hasta"),
 											RequestVar.get("planificacion_id"),
-											"fecha_inicio ASC"
+											"fecha_inicio ASC",
+											null
 											)
 											,d));
 
@@ -68,7 +69,8 @@ public class NovedadesController extends Controller {
 															"",
 															"",
 															idPlanificacion.toString(),
-															"fecha_inicio ASC")
+															"fecha_inicio ASC",
+															null)
 															,d));
 
 
@@ -155,7 +157,8 @@ public class NovedadesController extends Controller {
 		    										servicioId.toString(),
 		    									   RequestVar.get("desde"),
 		    									   RequestVar.get("hasta"),RequestVar.get("planificacion_id"),
-		    									   "fecha_inicio ASC").getList();
+		    									   "fecha_inicio ASC",
+		    									   "500000").getList();
 
 		    Logger.debug("xxxxxxxxxxxxxxxxxxxxxxxxxxxx "+Usuario.getUsurioSesion().organigrama_id.toString());
 
@@ -192,6 +195,7 @@ public class NovedadesController extends Controller {
 				s.add(e);
 			}
 	    }
+	    Logger.debug("sssssssssssssssssssssssss "+s.toString());
 
 		return ok(s);
 	}
