@@ -86,8 +86,13 @@ public class Novedad extends Model{
 
 	public static Model.Finder<Long,Novedad> find = new Finder<Long,Novedad>(Long.class, Novedad.class);
 
-	public static Pagination<Novedad> page(String agente, String servicio, String desde, String hasta,String idPlanificacion,String orderBy) {
+	public static Pagination<Novedad> page(String agente, String servicio, String desde, String hasta,String idPlanificacion,String orderBy,String pageSize) {
     	Pagination<Novedad> p = new Pagination<Novedad>();
+
+    	if (pageSize != null) {
+    		p.setPageSize(Integer.parseInt(pageSize));
+    	}
+
     	if (orderBy != null) {
     		p.setOrderDefault(" ");
     		p.setSortByDefault(orderBy);
