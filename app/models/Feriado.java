@@ -60,12 +60,12 @@ public class Feriado extends Model {
 			for(Feriado fx :f) {
 				feriadosList.add(fx.fecha);
 			}
-			Logger.debug("Feriados seteando Cache: "+feriadosList.toString());
+			Logger.debug("Feriados seteando Cache: ");
 			Cache.set("feriado", feriadosList, 86400);
 		}else {
 
 			feriadosList= (ArrayList<Date>) Cache.get("feriado");
-			Logger.debug("Feriados desde Cache: "+feriadosList.toString());
+			Logger.debug("Feriados desde Cache");
 		}
 
 		return feriadosList;
