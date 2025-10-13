@@ -524,9 +524,6 @@ public class PlanificacionesController extends Controller {
 						 }
 					 }
 
-
-
-
 					 novedadesTr  += "<tr>" +
 							    		"   <td style='text-align:left;border:1px solid black; padding:5px; margin:0px;'><b>"+sx.getString("apellido")+"</b></td>" +
 							    		"   <td style='text-align: center;border:1px solid black; margin:0px;'>"+sx.getString("dni")+"</td>" +
@@ -535,8 +532,6 @@ public class PlanificacionesController extends Controller {
 							      		"	<td style='text-align: center;border:1px solid black; margin:0px;'>"+horasFes+" Hs</td>" +
 							      	"</tr>";
 				 }
-
-
 
 				 String novedadesTabla = "<table class=\"tabla-uno\" style=\"border:1px solid #000000;font-size:14px;width: 100%;text-align: center;\" cellspacing=\"2\" cellpadding=\"2\">\n" +
 				 		"        <thead style=\"background-color: #BDBDBD;\">\n" +
@@ -554,9 +549,6 @@ public class PlanificacionesController extends Controller {
 
 				 String hoja = "<div class=\"border_div\" style=\"height:900px; padding:10px;border-top:none; border-bottom:2px solid #000000;text-align: justify;\">\n"
 					 		+textInicial+novedadesTabla+"</div>";
-
-
-
 
 				 footerPage = ReportePdf.getFooterPage(pag, qpag);
 				 pag ++;
@@ -576,8 +568,6 @@ public class PlanificacionesController extends Controller {
 					 		+notas+"</div>";
 				 body += notas+footer+footerPage;
 			 }
-
-
 
 
 			 datos.put("body", body);
