@@ -63,7 +63,12 @@ public class PuntoVenta extends Model {
 				List<Integer> l = null;
 				if( Usuario.getUsurioSesion().organigrama_id != null){
 					deptoId = Usuario.getUsurioSesion().organigrama.deposito.id.intValue();
-					return find.where().eq("comodin", false).eq("deposito_id", deptoId).orderBy("numero asc").findList();
+					if(Permiso.check("verTodosComodinPuntoVenta")){
+						return find.where().eq("deposito_id", deptoId).orderBy("numero asc").findList();
+					}else {
+						return find.where().eq("comodin", false).eq("deposito_id", deptoId).orderBy("numero asc").findList();
+					}
+
 				}
 			}
 		}
