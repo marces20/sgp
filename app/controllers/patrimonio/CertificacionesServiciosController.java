@@ -388,6 +388,18 @@ public class CertificacionesServiciosController extends Controller {
 					controllers.patrimonio.routes.CertificacionesServiciosController.ver(cert.id) + UriTrack.get("&"));
 		}
 
+		if (cert.estado_id != Estado.CERTIFICACION_SERVICIO_BORRADOR && idEstado == Estado.CERTIFICACION_SERVICIO_CERTIFICADA) {
+			flash("error", "Debe estar en estado Borrador para APROBAR la certificacion.");
+			return redirect(
+					controllers.patrimonio.routes.CertificacionesServiciosController.ver(cert.id) + UriTrack.get("&"));
+		}
+
+		if (cert.estado_id != Estado.CERTIFICACION_SERVICIO_CANCELADA && idEstado == Estado.CERTIFICACION_SERVICIO_BORRADOR) {
+			flash("error", "Debe estar en estado Cancelada para pasar a BORRADOR la certificacion.");
+			return redirect(
+					controllers.patrimonio.routes.CertificacionesServiciosController.ver(cert.id) + UriTrack.get("&"));
+		}
+
 		if (cert.estado_id == Estado.CERTIFICACION_SERVICIO_NOCERTIFICADA
 				&& idEstado == Estado.CERTIFICACION_SERVICIO_CANCELADA) {
 			flash("error", "No se puede cancelar una certificacion No certificada.");
