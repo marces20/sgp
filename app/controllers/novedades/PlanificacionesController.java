@@ -78,6 +78,7 @@ public class PlanificacionesController extends Controller {
 												  		RequestVar.get("btnFiltro[3]"),
 												  		RequestVar.get("btnFiltro[4]"),
 												  		RequestVar.get("btnFiltro[5]"),
+												  		RequestVar.get("btnFiltro[6]"),
 												  		RequestVar.get("cliente_id")
 												  		),d));
 	}
@@ -250,6 +251,13 @@ public class PlanificacionesController extends Controller {
 					  return ok(sinPermiso.render(request().getHeader("referer")));
 				  }
 		    	  pasarAprobadoServicio(rp.id);
+		    	  break;
+
+		      case Estado.PLANIFICIACION_APROBADO_ASISTENCIAL:
+		    	  if(!Permiso.check("planificacionPasarAprobadoAsistencial")) {
+					  return ok(sinPermiso.render(request().getHeader("referer")));
+				  }
+		    	  pasarAprobadoRrhh(rp.id);
 		    	  break;
 		      case Estado.PLANIFICIACION_APROBADO_RRHH:
 		    	  if(!Permiso.check("planificacionPasarAprobadoRrhh")) {
