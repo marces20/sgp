@@ -223,6 +223,7 @@ private static final long serialVersionUID = 1L;
 	public static final int PLANIFICIACION_ENCURSO= 143;
 	public static final int PLANIFICIACION_APROBADO_RRHH = 144;
 	public static final int PLANIFICIACION_APROBADO_LIQUIDACIONES = 145;
+	public static final int PLANIFICIACION_APROBADO_ASISTENCIAL = 146;
 	//ULTIMOOOO ID ES 124
 
 	@Id
