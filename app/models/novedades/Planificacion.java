@@ -126,6 +126,7 @@ public class Planificacion extends Model{
 			String btnFiltro3,
 			String btnFiltro4,
 			String btnFiltro5,
+			String btnFiltro6,
 			String cliente_id) {
     	Pagination<Planificacion> p = new Pagination<Planificacion>();
     	p.setOrderDefault("DESC");
@@ -164,14 +165,18 @@ public class Planificacion extends Model{
 			}
 
 			if(!btnFiltro3.isEmpty()){
-				 e = e.eq("estado_id", Estado.PLANIFICIACION_APROBADO_RRHH);
+				 e = e.eq("estado_id", Estado.PLANIFICIACION_APROBADO_ASISTENCIAL);
 			}
 
 			if(!btnFiltro4.isEmpty()){
-				 e = e.eq("estado_id", Estado.PLANIFICIACION_APROBADO_LIQUIDACIONES);
+				 e = e.eq("estado_id", Estado.PLANIFICIACION_APROBADO_RRHH);
 			}
 
 			if(!btnFiltro5.isEmpty()){
+				 e = e.eq("estado_id", Estado.PLANIFICIACION_APROBADO_LIQUIDACIONES);
+			}
+
+			if(!btnFiltro6.isEmpty()){
 				 e = e.eq("estado_id", Estado.PLANIFICIACION_CANCELADO);
 			}
 
