@@ -5,7 +5,7 @@ $( function() {
 	$("#cantidad, #importe_tope").numeric_input();
 	$("#importe").numeric_input({allowNegative: true});
 
-	$('#searchPuestoLaboral, #searchPeriodoInicio,#searchPeriodoConcepto, #searchPeriodoFin, #searchConcepto,#searchOrganigrama').modalSearch();
+	$('#searchPlanificacion,#searchPuestoLaboral, #searchPeriodoInicio,#searchPeriodoConcepto, #searchPeriodoFin, #searchConcepto,#searchOrganigrama').modalSearch();
 
 	$('#puesto_laboral_id').on('change', function(){
 
