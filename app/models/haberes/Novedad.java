@@ -1,6 +1,7 @@
 package models.haberes;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -21,9 +22,11 @@ import com.avaje.ebean.ExpressionList;
 
 import models.OrdenProvision;
 import models.Organigrama;
+import models.OrganigramaGuardiaDato;
 import models.Periodo;
 import models.Remito;
 import models.Usuario;
+import models.novedades.Planificacion;
 import play.Logger;
 import play.data.validation.Constraints.Required;
 import play.db.ebean.Model;
@@ -119,6 +122,11 @@ public class Novedad extends Model{
 	public LiquidacionEmbargoDetalle liquidacionEmbargoDetalle;
 	public Long liquidacion_embargo_detalle_id;
 
+	@ManyToOne
+	@JoinColumn(name="planificacion_id", referencedColumnName="id", insertable=false, updatable=false)
+	public Planificacion planificacion;
+	public Long planificacion_id;
+
 	public static Finder<Long,Novedad> find = new Finder<Long,Novedad>(Long.class, Novedad.class);
 
 	public static Pagination<Novedad> page(String puesto_laboral_id,
@@ -133,7 +141,9 @@ public class Novedad extends Model{
 										   String activo,
 										   String cm,
 										   String periodo_concepto_id,
-										   String organigrama_id) {
+										   String organigrama_id,
+										   String planificacion_id) {
+
     	Pagination<Novedad> p = new Pagination<Novedad>();
     	p.setOrderDefault("ASC");
     	p.setSortByDefault("puestoLaboral.legajo.agente.apellido");
@@ -217,10 +227,58 @@ public class Novedad extends Model{
     		e.eq("liquidacion_tipo_id", Integer.parseInt(liquidacion_tipo_id));
     	}
 
+    	if(!planificacion_id.isEmpty()) {
+    		e.eq("planificacion_id", Integer.parseInt(planificacion_id));
+    	}
 
     	p.setExpressionList(e);
     	return p;
     }
+
+	public static BigDecimal getCantidadByHabilesHoras(BigDecimal horas,Boolean habiles,OrganigramaGuardiaDato ogd) {
+		BigDecimal ret = BigDecimal.ZERO;
+
+		if(habiles) {
+			BigDecimal hh = new BigDecimal(ogd.horasxdia_habiles);
+			ret = (horas).divide(hh, 2, RoundingMode.HALF_UP).setScale(2, BigDecimal.ROUND_HALF_UP);
+		}else {
+			BigDecimal hh = new BigDecimal(ogd.horasxdia_inhabiles);
+			ret = (horas).divide(hh, 2, RoundingMode.HALF_UP).setScale(2, BigDecimal.ROUND_HALF_UP);
+		}
+
+
+		return ret;
+	}
+
+	public static Long getLiquidacionConceptoByHoraHabilesFestivaOrg(BigDecimal horas,Boolean habiles,Boolean festivas,OrganigramaGuardiaDato ogd) {
+		Long ret = null;
+
+		if(festivas) {
+			if(ogd.critica) {
+				ret = LiquidacionConcepto.GUARDIA_ACTIVA_CRITICA_FESTIVA;
+			}else {
+				ret = LiquidacionConcepto.GUARDIA_ACTIVA_NO_CRITICA_FESTIVA;
+			}
+		}else {
+
+			if(habiles) {
+				if(ogd.critica) {
+					 ret = LiquidacionConcepto.GUARDIA_CRITICA_DÍA_HÁBIL;
+				}else {
+					 ret = LiquidacionConcepto.GUARDIA_ACTIVA_DÍA_HÁBIL;
+				}
+
+			}else {
+				if(ogd.critica) {
+					ret = LiquidacionConcepto.GUARDIA_CRITICA_DÍA_INHÁBIL;
+				}else {
+					ret = LiquidacionConcepto.GUARDIA_ACTIVA_DÍA_INHÁBIL;
+				}
+			}
+		}
+
+		return ret;
+	}
 
 	/*
 	public Boolean comprobarPeriodoUnico() {
