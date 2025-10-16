@@ -17,6 +17,7 @@ import com.avaje.ebean.ExpressionList;
 import com.avaje.ebean.SqlRow;
 import com.avaje.ebean.annotation.Formula;
 
+import models.Agente;
 import models.Ejercicio;
 import models.Estado;
 import models.Novedad;
@@ -40,6 +41,8 @@ public class Planificacion extends Model{
 	@Id
 	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="planificaciones_id_seq")
 	public Long id;
+
+	public String referencia;
 
 	@Required(message="Debe seleccionar un nombre")
 	public String nombre;
@@ -69,6 +72,11 @@ public class Planificacion extends Model{
 	public Periodo periodo;
 	@Required(message="Debe seleccionar un periodo")
 	public Integer periodo_id;
+
+	@ManyToOne
+	@JoinColumn(name="periodo_liquidacion_id", referencedColumnName="id", insertable=false, updatable=false)
+	public Periodo periodoLiquidacion;
+	public Integer periodo_liquidacion_id;
 
 	@ManyToOne
 	@JoinColumn(name="estado_id", referencedColumnName="id", insertable=false, updatable=false)
@@ -187,7 +195,17 @@ public class Planificacion extends Model{
     	return p;
     }
 
+	public List<Planificacion> getDataSuggest(String input,Integer limit){
+		List<Planificacion> l = find.where()
+				.disjunction()
+				.ilike("referencia", "%" + input + "%")
+				.ilike("nombre", "%" + input + "%")
+				.endJunction()
+				.setMaxRows(limit).orderBy("id")
+			    .findList();
 
+		return l;
+	}
 
 	public boolean controlFechaEntreRango(Date fechaBuscar) {
 		return fechaBuscar.compareTo(fecha_inicio) >= 0 && fechaBuscar.compareTo(fecha_fin) <= 0;
