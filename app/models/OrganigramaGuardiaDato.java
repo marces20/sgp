@@ -38,8 +38,10 @@ public class OrganigramaGuardiaDato extends Model {
 	public Integer habiles_horas;
 	public Integer personas_inhabiles;
 	public Integer inhabiles_horas;
-	public Integer horasxdia;
+	public Integer horasxdia_habiles;
+	public Integer horasxdia_inhabiles;
 	public Boolean activo = false;
+	public Boolean critica = false;
 
 	@ManyToOne
 	@JoinColumn(name="tipo_planificacion_id", referencedColumnName="id", insertable=false, updatable=false)
@@ -95,8 +97,8 @@ public class OrganigramaGuardiaDato extends Model {
 		}
 		ret.put("habiles", daysHabiles);
 		ret.put("inhabiles", daysInHabiles);
-		ret.put("habilesHoras", daysHabiles * habiles_horas * horasxdia);
-		ret.put("inhabilesHoras", daysInHabiles * inhabiles_horas * horasxdia);
+		ret.put("habilesHoras", daysHabiles * habiles_horas * horasxdia_habiles);
+		ret.put("inhabilesHoras", daysInHabiles * inhabiles_horas * horasxdia_inhabiles);
 
 
 		return ret;
