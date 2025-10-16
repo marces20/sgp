@@ -57,7 +57,8 @@ public class NovedadesController extends Controller {
 												 RequestVar.get("activo"),
 												 RequestVar.get("cm"),
 												 RequestVar.get("periodo_concepto_id"),
-												 RequestVar.get("organigrama_id")
+												 RequestVar.get("organigrama_id"),
+												 RequestVar.get("planificacion_id")
 												 );
 		return ok(indexNovedades.render(lista, d));
 	}
@@ -76,7 +77,8 @@ public class NovedadesController extends Controller {
 												 "activo",
 												 RequestVar.get("cm"),
 												 RequestVar.get("periodo_concepto_id"),
-												 RequestVar.get("organigrama_id")
+												 RequestVar.get("organigrama_id"),
+												 RequestVar.get("planificacion_id")
 												 );
 		return ok(listaNovedades.render(lista));
 	}
