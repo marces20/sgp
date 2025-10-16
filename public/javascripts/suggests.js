@@ -1,4 +1,19 @@
 $(document).ready(function(){
+	if($("#planificacion").length){
+
+		var options = {
+				script:"/novedades/planificacion/suggest/",
+				varname:"",
+				json:true,
+				shownoresults:true,
+				maxresults:6,
+				callback: function (obj) {
+											$("#planificacion_id").val(obj.id);
+										 }
+			};
+		var as_json = new bsn.AutoSuggest('planificacion', options);
+
+	}
 	if($("#certificicado_deuda").length){
 		var options = {
 				script:"/recupero/suggestCertificadoDeudas/",
