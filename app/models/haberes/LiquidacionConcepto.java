@@ -32,6 +32,14 @@ public class LiquidacionConcepto extends Model{
 	public static final long AJUSTE_DIFERENCIAL_VACACIONES = 826;
 	public static final long OB = 4;
 
+	public static final long GUARDIA_ACTIVA_DÍA_HÁBIL = 672;
+	public static final long GUARDIA_ACTIVA_DÍA_INHÁBIL = 673;
+	public static final long GUARDIA_CRITICA_DÍA_HÁBIL = 674;
+	public static final long GUARDIA_CRITICA_DÍA_INHÁBIL = 675;
+	public static final long GUARDIA_ACTIVA_NO_CRITICA_FESTIVA = 807;
+	public static final long GUARDIA_ACTIVA_CRITICA_FESTIVA = 808;
+
+
 	@Id
 	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="liquidacion_conceptos_id_seq")
 	public Long id;
