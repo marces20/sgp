@@ -14,6 +14,10 @@ import play.db.ebean.Model;
 @Table(name = "tipo_planificaciones")
 public class TipoPlanificacion extends Model{
 
+	public static final int GUARDIA = 1;
+	public static final int PRODUCCION_STANDAR = 2;
+	public static final int PRODUCCION_IMAGENES = 3;
+
 	private static final long serialVersionUID = 1L;
 	@Id
 	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="tipo_planificaciones_id_seq")
