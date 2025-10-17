@@ -5,6 +5,7 @@ diasHabilesInhabiles: java.util.Map[String,Integer],
 totalHorarPorDiaPorPlanificacion:List[com.avaje.ebean.SqlRow])
 @import utils._
 @import helper._
+@import models.auth._
 @implicitFieldConstructor = @{ FieldConstructor(simpleInput.render) }
 
 @split(i:String) = @{
@@ -90,7 +91,7 @@ totalHorarPorDiaPorPlanificacion:List[com.avaje.ebean.SqlRow])
 							<div class="row margin-bottom-25">
 
 								<div class="col-sm-12">
-									<div class="row">
+									<div class="row margin-bottom-25">
 
 										@for(estado <- models.Estado.getSiguienteEstadoPorAprobar(planificacion.estado.orden,models.Estado.TIPO_PLANIFICACION)) {
 											@if(estado.orden <= 6) {
@@ -102,6 +103,18 @@ totalHorarPorDiaPorPlanificacion:List[com.avaje.ebean.SqlRow])
 
 											}
 										}
+										@if(planificacion.estado.id == models.Estado.PLANIFICIACION_APROBADO_RRHH) {
+											@if(Permiso.check("planificacionCrearNovedades")) {
+											<div class="col-sm-3">
+												<a href="@controllers.novedades.routes.PlanificacionesController.crearNovedades(planificacionForm.field("id").value.toInt)@UriTrack.get("&")" class="btn btn-default">
+													<i class="glyphicon glyphicon glyphicon-share-alt"></i> Crear Novedades
+												</a>
+											</div>
+											}
+
+										}
+									</div>
+									<div class="row margin-bottom-25">
 
 										@if(planificacion.estado.id == models.Estado.PLANIFICIACION_CANCELADO) {
 											<div class="col-sm-3">
@@ -116,6 +129,8 @@ totalHorarPorDiaPorPlanificacion:List[com.avaje.ebean.SqlRow])
 												</a>
 											</div>
 										}
+
+
 
 									</div>
 										<hr>
