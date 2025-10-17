@@ -103,7 +103,7 @@ totalHorarPorDiaPorPlanificacion:List[com.avaje.ebean.SqlRow])
 
 											}
 										}
-										@if(planificacion.estado.id == models.Estado.PLANIFICIACION_APROBADO_RRHH) {
+										@if(planificacion.estado.id == models.Estado.PLANIFICIACION_APROBADO_LIQUIDACIONES) {
 											@if(Permiso.check("planificacionCrearNovedades")) {
 											<div class="col-sm-3">
 												<a href="@controllers.novedades.routes.PlanificacionesController.crearNovedades(planificacionForm.field("id").value.toInt)@UriTrack.get("&")" class="btn btn-default">
