@@ -144,6 +144,27 @@
 						</span>
 					</div>
 				</div>
+
+				<div class="col-sm-2">
+					<label for="inputPeriodo" class="control-label">Planificacion</label>
+					<div class="input-group">
+						@inputText(formBuscador("planificacion"),'class -> "form-control",'id -> "planificacion")
+						@inputText(formBuscador("planificacion_id"),'hidden -> "hidden",'id -> "planificacion_id")
+						<span class="input-group-addon">
+						<a href="#" class="searchModal"
+									id="searchPlanificacion"
+									data-title="Selección de Planificacion"
+									data-url="@controllers.novedades.routes.PlanificacionesController.modalBuscar()"
+									data-height="650"
+									data-width="700"
+									data-listen="modal.seleccion.planificacion.simple"
+									data-label="#planificacion"
+									data-field="#planificacion_id">
+							<i class="glyphicon glyphicon-search"></i>
+						</a>
+						</span>
+					</div>
+				</div>
 	</div>
 	<div class="row">
 				<div class="col-sm-2">
@@ -211,17 +232,17 @@ Mostrando @buscador.getDisplayXtoYofZ(" a "," de ") resultado(s).
 		<tr>
 			<th width="30"></th>
 			<th>Puesto laboral</th>
-			<th width="180">Concepto</th>
-			<th width="90">Cantidad</th>
-			<th width="90">Importe</th>
-			<th width="90">P. inicio</th>
-			<th width="90">P. fin</th>
-			<th width="90">Fecha</th>
+			<th >Concepto</th>
+			<th width="50">Cantidad</th>
+			<th width="80">Importe</th>
+			<th width="60">P.inicio</th>
+			<th width="60">P.fin</th>
+			<th width="70">Fecha</th>
 
-			<th>Tipo Liq.</th>
-			<th width="90">P. Conc.</th>
-			<th width="90">Orga.</th>
-			<th></th>
+			<th width="60">Tipo Liq.</th>
+			<th width="60">P. Conc.</th>
+			<th width="">Orga.</th>
+			<th width="30"></th>
 		</tr>
 	</thead>
 	<tbody>
@@ -231,7 +252,12 @@ Mostrando @buscador.getDisplayXtoYofZ(" a "," de ") resultado(s).
         @for(novedad <- buscador.getList) {
 		<tr class="" data-href="@controllers.haberes.routes.NovedadesController.ver(novedad.id)&@UriTrack.encode()">
 			<td><a class="btn btn-default btn-xs" href="@controllers.haberes.routes.NovedadesController.editar(novedad.id)&@UriTrack.encode()"><i class="glyphicon glyphicon-edit"></i></a></td>
-			<td>@novedad.puestoLaboral.legajo.agente.getNombreCompleto()</td>
+			<td>@novedad.puestoLaboral.legajo.agente.getNombreCompleto()
+				@if(novedad.planificacion_id != null){ -
+
+				<a  style="font-weight:bold;color: green;" target="_blank"  href="/novedades/planificacion/ver?id=@novedad.planificacion_id" class="">(@novedad.planificacion.referencia)</a>
+				 }
+			</td>
 			<td>@novedad.concepto.denominacion</td>
 			<td>@novedad.cantidad</td>
 			<td>@utils.NumberUtils.moneda(novedad.importe)</td>
