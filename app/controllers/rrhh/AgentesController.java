@@ -460,13 +460,7 @@ public class AgentesController extends Controller {
 
 	public static Result modalBuscarByOrgranigrama() {
 
-		List<AgenteOrganigrama> agentesOrgaList = AgenteOrganigrama.find.where().eq("organigrama_id", Usuario.getUsurioSesion().organigrama_id).findList();
-		List<Long> agentesByOrga = new ArrayList<>();
-		for(AgenteOrganigrama aox: agentesOrgaList) {
-			agentesByOrga.add(aox.agente_id);
-		}
-
-    	Pagination<Agente> p = new Pagination<Agente>();
+		Pagination<Agente> p = new Pagination<Agente>();
     	p.setOrderDefault("ASC");
     	p.setSortByDefault("apellido");
     	p.setExpressionList(Agente.
@@ -475,7 +469,7 @@ public class AgentesController extends Controller {
     						.where()
     						.disjunction()
     						.eq("organigrama_id", Usuario.getUsurioSesion().organigrama_id)
-    						.in("id",agentesByOrga)
+    						.in("id",AgenteOrganigrama.getIdsAgentesByOrganigrama(Usuario.getUsurioSesion().organigrama_id))
     						.endJunction()
     						.ilike("apellido", "%" + RequestVar.get("nombre") + "%"));
 		return ok( modalBuscarByOrgranigrama.render(p, form().bindFromRequest()) );
