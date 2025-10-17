@@ -171,7 +171,7 @@ public class Novedad extends Model{
 	public static List<SqlRow> getNovedadesPorAgentePorPlanificaciones(Long planificacion_id) {
 
 
-		String sql = "SELECT a.id,a.apellido as apellido,a.dni as dni,n.habiles as habiles,n.festivas as festivas,sum(n.horas) as horas " +
+		String sql = "SELECT a.id as agente_id,a.apellido as apellido,a.dni as dni,n.habiles as habiles,n.festivas as festivas,sum(n.horas) as horas " +
 				 "FROM novedades n " +
 				 "INNER JOIN agentes a ON a.id = n.agente_id " +
 				 "INNER JOIN planificaciones p ON p.id = n.planificacion_id " +
