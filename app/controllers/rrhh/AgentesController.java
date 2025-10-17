@@ -4,6 +4,7 @@ import static play.data.Form.form;
 
 import java.io.IOException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -21,6 +22,7 @@ import controllers.Secured;
 import controllers.auth.CheckPermiso;
 import models.Agente;
 import models.AgenteNovedad;
+import models.AgenteOrganigrama;
 import models.CertificacionCompra;
 import models.Estado;
 import models.Usuario;
@@ -457,6 +459,13 @@ public class AgentesController extends Controller {
 	}
 
 	public static Result modalBuscarByOrgranigrama() {
+
+		List<AgenteOrganigrama> agentesOrgaList = AgenteOrganigrama.find.where().eq("organigrama_id", Usuario.getUsurioSesion().organigrama_id).findList();
+		List<Long> agentesByOrga = new ArrayList<>();
+		for(AgenteOrganigrama aox: agentesOrgaList) {
+			agentesByOrga.add(aox.agente_id);
+		}
+
     	Pagination<Agente> p = new Pagination<Agente>();
     	p.setOrderDefault("ASC");
     	p.setSortByDefault("apellido");
@@ -464,7 +473,10 @@ public class AgentesController extends Controller {
     						find
     						.fetch("organigrama","nombre")
     						.where()
+    						.disjunction()
     						.eq("organigrama_id", Usuario.getUsurioSesion().organigrama_id)
+    						.in("id",agentesByOrga)
+    						.endJunction()
     						.ilike("apellido", "%" + RequestVar.get("nombre") + "%"));
 		return ok( modalBuscarByOrgranigrama.render(p, form().bindFromRequest()) );
 	}
