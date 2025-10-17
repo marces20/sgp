@@ -5,6 +5,7 @@ import static play.data.Form.form;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.math.BigDecimal;
 import java.nio.file.FileSystems;
 import java.util.ArrayList;
 import java.util.Date;
@@ -17,7 +18,10 @@ import javax.persistence.PersistenceException;
 import org.w3c.dom.Document;
 
 import com.avaje.ebean.Ebean;
+import com.avaje.ebean.ExpressionList;
 import com.avaje.ebean.SqlRow;
+import com.fasterxml.jackson.databind.node.ArrayNode;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.openhtmltopdf.pdfboxout.PdfRendererBuilder;
 
 import controllers.Secured;
@@ -28,6 +32,8 @@ import models.Novedad;
 import models.OrganigramaGuardiaDato;
 import models.Usuario;
 import models.auth.Permiso;
+import models.haberes.LiquidacionTipo;
+import models.haberes.PuestoLaboral;
 import models.novedades.Planificacion;
 import models.recupero.InformeTotal;
 import models.recupero.RecuperoCertificadoDeuda;
@@ -36,6 +42,7 @@ import play.Logger;
 import play.Play;
 import play.data.DynamicForm;
 import play.data.Form;
+import play.libs.Json;
 import play.mvc.Controller;
 import play.mvc.Result;
 import play.mvc.Security;
@@ -43,7 +50,10 @@ import utils.DateUtils;
 import utils.ReportePdf;
 import utils.RequestVar;
 import utils.UriTrack;
+import utils.pagination.Pagination;
 import views.html.sinPermiso;
+import views.html.expediente.expediente.modalBusquedaExpediente;
+import views.html.haberes.liquidacionEmbargos.modalResponseCargaLineaLiquidacion;
 import views.html.novedades.planificaciones.*;
 import views.html.tags.reportePlanilla;
 
@@ -235,6 +245,11 @@ public class PlanificacionesController extends Controller {
 
 			switch ( idEstado.intValue() ) {
 		      case  Estado.PLANIFICIACION_BORRADOR:
+
+		    	  if (rp.estado_id != Estado.PLANIFICIACION_CANCELADO) {
+		  			flash("error", "Debe estar en estado Cancelada para pasar a BORRADOR la planificacion.");
+		  			return redirect(controllers.novedades.routes.PlanificacionesController.ver(rp.id)+ UriTrack.get("&"));
+		  		  }
 		    	  if(!Permiso.check("planificacionPasarBorrador")) {
 					  return ok(sinPermiso.render(request().getHeader("referer")));
 				  }
@@ -247,6 +262,10 @@ public class PlanificacionesController extends Controller {
 		    	  pasarEnCurso(rp.id);
 		    	  break;
 		      case Estado.PLANIFICIACION_APROBADO_SERVICIO:
+		    	  if (rp.estado_id != Estado.PLANIFICIACION_ENCURSO) {
+		  			flash("error", "Debe estar en estado CURSO para pasar a este estado la planificacion.");
+		  			return redirect(controllers.novedades.routes.PlanificacionesController.ver(rp.id)+ UriTrack.get("&"));
+				  }
 		    	  if(!Permiso.check("planificacionPasarAprobadoServicio")) {
 					  return ok(sinPermiso.render(request().getHeader("referer")));
 				  }
@@ -266,12 +285,20 @@ public class PlanificacionesController extends Controller {
 		    	  pasarAprobadoRrhh(rp.id);
 		    	  break;
 		      case Estado.PLANIFICIACION_APROBADO_LIQUIDACIONES:
+		    	  if (rp.estado_id != Estado.PLANIFICIACION_APROBADO_RRHH) {
+		  			flash("error", "Debe estar en estado APROBADO POR RRHH para pasar a este estado la planificacion.");
+		  			return redirect(controllers.novedades.routes.PlanificacionesController.ver(rp.id)+ UriTrack.get("&"));
+			  	  }
 		    	  if(!Permiso.check("planificacionPasarAprobadoLiquidaciones")) {
 					  return ok(sinPermiso.render(request().getHeader("referer")));
 				  }
 		    	  pasarAprobadoLiqui(rp.id);
 		    	  break;
 		      case Estado.PLANIFICIACION_CANCELADO:
+		    	  if (rp.estado_id == Estado.PLANIFICIACION_APROBADO_LIQUIDACIONES) {
+		  			flash("error", "No se puede cancelar una planificacion ya aprobada por LIQUIDACIONES");
+		  			return redirect(controllers.novedades.routes.PlanificacionesController.ver(rp.id)+ UriTrack.get("&"));
+				  }
 		    	  if(!Permiso.check("planificacionPasarCancelado")) {
 					  return ok(sinPermiso.render(request().getHeader("referer")));
 				  }
@@ -386,6 +413,148 @@ public class PlanificacionesController extends Controller {
 		} else {
 			flash("error", "Parámetros incorrectos");
 		}
+	}
+
+	public static Result suggestPlanificacion(String input) {
+
+		ObjectNode rpta = Json.newObject();
+	    ArrayNode plan = rpta.arrayNode();
+
+	    Planificacion ad = new Planificacion();
+
+		for(Planificacion a : ad.getDataSuggest(input, 25)){
+			ObjectNode restJs = Json.newObject();
+	        restJs.put("id", a.id);
+	        restJs.put("value",a.referencia+" - "+a.nombre);
+	        restJs.put("info", "");
+	        plan.add(restJs);
+		}
+
+		ObjectNode response = Json.newObject();
+		response.put("results", plan);
+
+		return ok(response);
+	}
+
+	public static Result get(int id){
+		Planificacion plan = Planificacion.find.select("id, nombre, referencia").where().eq("id", id).findUnique();
+
+		ObjectNode obj = Json.newObject();
+	    ArrayNode nodo = obj.arrayNode();
+		ObjectNode restJs = Json.newObject();
+
+		if(plan == null) {
+			restJs.put("success", false);
+			restJs.put("message", "No se encuentra la planificacion");
+		} else {
+			restJs.put("success", true);
+			restJs.put("id", plan.id);
+			restJs.put("nombre", plan.referencia+"-"+plan.nombre);
+			restJs.put("descripcion", plan.nombre);
+		}
+		nodo.add(restJs);
+		return ok(restJs);
+	}
+
+	public static Result modalBuscar() {
+    	Pagination<Planificacion> p = new Pagination<Planificacion>();
+    	p.setOrderDefault("DESC");
+    	p.setSortByDefault("id");
+
+    	ExpressionList<Planificacion> e = Planificacion.find.where();
+
+    	e = e.disjunction();
+
+    	if(!RequestVar.get("nombre").isEmpty()){
+    		e = e.ilike("nombre", "%"+RequestVar.get("nombre")+"%" );
+    		e = e.ilike("referencia", "%" + RequestVar.get("nombre") + "%");
+    	}
+
+    	e = e.endJunction();
+
+    	p.setExpressionList(e);
+		return ok( modalBusquedaPlanificacion.render(p, form().bindFromRequest()) );
+	}
+
+	@CheckPermiso(key = "planificacionCrearNovedades")
+	public static Result crearNovedades(Long id) {
+
+		Planificacion p = Planificacion.find.byId(id);
+
+
+		List<models.haberes.Novedad> nxNovedad = models.haberes.Novedad.find.where().eq("planificacion_id", id).findList();
+
+		if(nxNovedad.size() > 0) {
+			flash("error", "Existen Novedades con este ID de planificaciones");
+			return redirect(controllers.novedades.routes.PlanificacionesController.ver(p.id)+ UriTrack.get("&"));
+		}
+
+		Ebean.beginTransaction();
+		try {
+
+
+			List<SqlRow> novedades = Novedad.getNovedadesPorAgentePorPlanificaciones(id);
+			int count = 0;
+			for(SqlRow sx :novedades) {
+				//sx.getBoolean("habiles");
+				//sx.getBigDecimal("horas");
+				//sx.getBoolean("festivas");
+
+				OrganigramaGuardiaDato ogd = OrganigramaGuardiaDato.find.where().eq("organigrama_id", p.organigrama_id).eq("activo", true).findUnique();
+				PuestoLaboral pl = PuestoLaboral.find.fetch("legajo").where().eq("activo",true).eq("legajo.agente.id",sx.getLong("agente_id") ).findUnique();
+				Long liquidacion_concepto_id = models.haberes.Novedad.getLiquidacionConceptoByHoraHabilesFestivaOrg(sx.getBigDecimal("horas"),sx.getBoolean("habiles"),sx.getBoolean("festivas"),ogd);
+
+				BigDecimal hh = new BigDecimal(ogd.horasxdia_habiles);
+				Logger.debug("fffffffffffffffffff2 " +sx.getBigDecimal("horas"));
+				Logger.debug("ffffffffffffhhhhhh " +hh);
+
+				BigDecimal cantidad = models.haberes.Novedad.getCantidadByHabilesHoras(sx.getBigDecimal("horas"),sx.getBoolean("habiles"),ogd);
+
+				models.haberes.Novedad n = new models.haberes.Novedad();
+				n.puesto_laboral_id = pl.id;
+				n.liquidacion_concepto_id=liquidacion_concepto_id;
+
+				n.periodo_inicio_id= p.periodo_liquidacion_id.longValue();
+				n.periodo_hasta_id= p.periodo_liquidacion_id.longValue();
+				n.periodo_concepto_id= p.periodo_liquidacion_id.longValue();
+
+				n.organigrama_id= pl.legajo.agente.organigrama_id;
+				n.activo= true;
+				n.fecha_novedad= new Date();;
+				n.importe = BigDecimal.ZERO;
+				n.cantidad = cantidad;
+				n.usuario_id= new Long(Usuario.getUsuarioSesion());
+				if(pl.dobla) {
+					n.liquidacion_tipo_id = LiquidacionTipo.CONCEPTOS_NO_INCLUIDOS;
+				}else {
+					n.liquidacion_tipo_id = LiquidacionTipo.MENSUAL;
+				}
+
+				n.create_date = new Date();
+				n.planificacion_id = p.id;
+				n.save();
+				count++;
+			}
+
+
+
+
+			p.estado_id = new Long(Estado.PLANIFICIACION_CERRADA);
+			p.write_date = new Date();
+			p.write_usuario_id = new Long(Usuario.getUsuarioSesion());
+			p.save();
+
+			Ebean.commitTransaction();
+			flash("success", "Se generaron "+count+" novedades");
+
+		} catch (Exception e) {
+			Ebean.rollbackTransaction();
+			flash("error", "No se pudieron generar las novedades");
+		} finally {
+			Ebean.endTransaction();
+		}
+		return redirect(controllers.novedades.routes.PlanificacionesController.ver(p.id)+ UriTrack.get("&"));
+
 	}
 
 	public static Result imprimirPlanificacion(Long id) {
