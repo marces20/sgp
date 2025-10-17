@@ -122,6 +122,7 @@ public class Planificacion extends Model{
 	public static List<Planificacion> getPlanificacionEnCursoByOrganigrama(){
 		return find.where()
 				.eq("organigrama_id", Usuario.getUsurioSesion().organigrama_id)
+				.eq("estado_id", Estado.PLANIFICIACION_ENCURSO)
 				.orderBy("id desc").findList();
 	}
 
