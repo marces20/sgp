@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -249,13 +250,18 @@ public class Agente extends Model{
 	}
 
 	public List<Agente> getDataSuggestByOrganigramaSesion(String input,Integer limit){
+
 		List<Agente> l = find.where()
-				//.or(Ebean.getExpressionFactory().ilike("apellido", "%" + input + "%"), Ebean.getExpressionFactory().ilike("nombre", "%" + input + "%"))
 				.ilike("apellido", "%" + input + "%")
 				.eq("activo",true)
+				.disjunction()
 				.eq("organigrama_id", Usuario.getUsurioSesion().organigrama_id)
+				.in("id",AgenteOrganigrama.getIdsAgentesByOrganigrama(Usuario.getUsurioSesion().organigrama_id))
+				.endJunction()
 				.setMaxRows(limit).orderBy("id")
 			    .findList();
+
+
 
 		return l;
 	}
