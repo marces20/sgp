@@ -138,6 +138,7 @@
 				<tr>
 					<th width="10"><input type="checkbox" name="checkAll" id="checkAll"/></th>
 					<th width="30">#</th>
+					<th width="">Ref,</th>
 					<th width="">Nombre</th>
 					<th width="">Tipo</th>
 					<th width="">Servicio</th>
@@ -157,6 +158,7 @@
 				<tr class="pointer @getClassEstado(planilla.estado)" data-estado="" data-href="@controllers.novedades.routes.PlanificacionesController.ver(planilla.id)&@UriTrack.encode()">
 					<td><input type="checkbox" name="check_listado[]" value="@planilla.id" class="notSeleccion" id="check-@planilla.id"/></td>
 					<td><a class="btn btn-default btn-xs notSeleccion" href="@controllers.novedades.routes.PlanificacionesController.editar(planilla.id)&@UriTrack.encode()"><i class="glyphicon glyphicon-edit"></i></a></td>
+					<td>@(planilla.referencia)</td>
 					<td>@(planilla.nombre)</td>
 					<td>@(planilla.tipoPlanificacion.nombre)</td>
 					<td>@(planilla.organigrama.nombre)</td>
