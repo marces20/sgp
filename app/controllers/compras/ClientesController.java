@@ -390,7 +390,7 @@ public class ClientesController extends Controller {
     	ExpressionList<Cliente> e = Cliente.find.where().eq("activo", true);
 
     	if(!RequestVar.get("nombre").isEmpty()){
-    		e.like("nombre", "%"+RequestVar.get("nombre")+"%" );
+    		e.ilike("nombre", "%"+RequestVar.get("nombre")+"%" );
     	}
 
     	if(!RequestVar.get("cuit").isEmpty()){
