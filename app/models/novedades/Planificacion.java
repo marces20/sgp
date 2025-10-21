@@ -212,5 +212,4 @@ public class Planificacion extends Model{
 		return fechaBuscar.compareTo(fecha_inicio) >= 0 && fechaBuscar.compareTo(fecha_fin) <= 0;
 	}
 
-
 }

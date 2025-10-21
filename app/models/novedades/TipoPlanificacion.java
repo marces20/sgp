@@ -15,7 +15,7 @@ import play.db.ebean.Model;
 public class TipoPlanificacion extends Model{
 
 	public static final int GUARDIA = 1;
-	public static final int PRODUCCION_STANDAR = 2;
+	public static final int PRODUCCION_GENERAL = 2;
 	public static final int PRODUCCION_IMAGENES = 3;
 
 	private static final long serialVersionUID = 1L;
