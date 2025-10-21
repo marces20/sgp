@@ -34,3 +34,8 @@ GET    /planificacion/modalBuscar				controllers.novedades.PlanificacionesContro
 GET    /planificacion/suggest/:input		 controllers.novedades.PlanificacionesController.suggestPlanificacion(input:String)
 
 GET    /produccionImagenes/index    	controllers.novedades.ProduccionImagenesController.index()
+
+GET     /produccionGeneral/detallesPorAgentePorPlanificacion      controllers.novedades.ProduccionGeneralController.detallesPorAgentePorPlanificacion(idPlanificacion:Long ?= 0)
+
+
+
