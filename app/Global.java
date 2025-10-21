@@ -62,7 +62,7 @@ public class Global extends GlobalSettings {
       Long timeDelayENABLETRIGGRES = null;
       int timeGapBetweenMemoryLogsInMinutesENABLETRIGGRES = 30;
       timeDelayENABLETRIGGRES = getTimeDelay(0, 5, Calendar.AM, 0, 0, 0);// ACTUALIZAR INVENTARIO
-      comprobanteAfip = Akka.system()
+      enableTriggers = Akka.system()
               .scheduler()
               .schedule(Duration.Zero(),
             		    Duration.create(timeGapBetweenMemoryLogsInMinutesENABLETRIGGRES, TimeUnit.MINUTES),
@@ -266,7 +266,7 @@ public class Global extends GlobalSettings {
       // ------------------- JOBS PRELIQUIDAR
 
 
-      timeDelayFromAppStartToLogFirstLogInMs = getTimeDelay(0, 9, Calendar.PM, 20, 0, 0);// PRELIQUIDAR
+      timeDelayFromAppStartToLogFirstLogInMs = getTimeDelay(0, 11, Calendar.PM, 30, 0, 0);// PRELIQUIDAR
 
       Logger.info("Cron Job PRELIQUIDAR ---- " + timeDelayFromAppStartToLogFirstLogInMs);
       jobPreliquidar = Akka.system()
