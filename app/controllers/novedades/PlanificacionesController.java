@@ -212,7 +212,7 @@ public class PlanificacionesController extends Controller {
 					.eq("tipo_planificacion_id",p.tipo_planificacion_id)
 					.findUnique();
 
-			Map<String,Integer> diasHabilesInhabiles = og.getDiasHorasHabilesInhabilesPorPeriodo(p.periodo, p.fecha_inicio, p.fecha_fin);
+			Map<String,Integer> diasHabilesInhabiles = (og != null)? og.getDiasHorasHabilesInhabilesPorPeriodo(p.periodo, p.fecha_inicio, p.fecha_fin):new HashMap<String, Integer>();
 
 
 			List<SqlRow> totalHorarPorDiaPorPlanificacion =  Novedad.getTotalHorarPorDiaPorPlanificacion(p.id);
