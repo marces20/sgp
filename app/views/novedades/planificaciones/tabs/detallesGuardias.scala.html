@@ -1,0 +1,43 @@
+@(planificacion:models.novedades.Planificacion = null,
+diasHabilesInhabiles: java.util.Map[String,Integer])
+@import utils._
+@import helper._
+@import models.auth._
+@implicitFieldConstructor = @{ FieldConstructor(simpleInput.render) }
+
+<div class="row margin-bottom-25">
+	<div class="col-sm-12">
+		<table class="table table-bordered">
+			<thead>
+				<tr>
+					<th colspan="2" style="text-align: center;">Habiles HS</th>
+					<th colspan="2" style="text-align: center;">Inhabiles HS</th>
+				</tr>
+				<tr>
+					<th style="text-align: center;">Dispo</th>
+					<th style="text-align: center;">Cargadas</th>
+					<th style="text-align: center;">Dispo</th>
+					<th style="text-align: center;">Cargadas</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+					<td align="center">@diasHabilesInhabiles.get("habilesHoras")</td>
+					<td align="center">@if(planificacion.horashabiles!= null){@planificacion.horashabiles}else{0}</td>
+					<td align="center">@diasHabilesInhabiles.get("inhabilesHoras")</td>
+					<td align="center">@if(planificacion.horasinhabiles!= null){@planificacion.horasinhabiles}else{0}</td>
+				</tr>
+			</tbody>
+
+		</table>
+		<!-- <h4>:
+			<b>@planificacion.habiles</b>
+		</h4>
+		<h4>Inhabiles:
+			<b>@planificacion.inhabiles</b>
+		</h4> -->
+
+
+
+	</div>
+</div>

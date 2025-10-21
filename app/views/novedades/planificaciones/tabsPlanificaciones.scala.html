@@ -27,8 +27,20 @@ totalHorarPorDiaPorPlanificacion:List[com.avaje.ebean.SqlRow])
 <div class="row">
 	<ul id="recuperoFacturaTab" class="nav nav-tabs">
 		<li class="active"><a class="tabAcciones" href="#contenedorAcciones" data-toggle="tab">Acciones</a></li>
-		<li><a class="tabDetalles" href="#contenedorDetalles" data-toggle="tab">Novedades Detalles</a></li>
-		<li><a class="tabHoras" href="#contenedorHoras" data-toggle="tab">Cantidad Horas</a></li>
+
+		<!-- -------------------PRODUCCION GENERAL----------------------------- -->
+		@if(planificacion.tipo_planificacion_id == models.novedades.TipoPlanificacion.PRODUCCION_GENERAL) {
+
+			<li><a class="tabDetalles" href="#contenedorDetalles" data-toggle="tab">Detalles Por Agente</a></li>
+
+		}
+
+		<!-- -------------------GUARDIAS----------------------------- -->
+		@if(planificacion.tipo_planificacion_id == models.novedades.TipoPlanificacion.GUARDIA) {
+			<li><a class="tabDetalles" href="#contenedorDetalles" data-toggle="tab">Novedades Detalles</a></li>
+			<li><a class="tabHoras" href="#contenedorHoras" data-toggle="tab">Cantidad Horas</a></li>
+		}
+
 		<li><a class="tabNotas" href="#contenedorNotas" data-toggle="tab">Notas Servicio</a></li>
 		<li><a class="tabNotasRrhh" href="#contenedorNotasRrhh" data-toggle="tab">Notas RRHH</a></li>
 		<li><a class="tabNotasNotasLiqui" href="#contenedorNotasLiqui" data-toggle="tab">Notas Liquidaciones</a></li>
@@ -38,51 +50,17 @@ totalHorarPorDiaPorPlanificacion:List[com.avaje.ebean.SqlRow])
 
 		<div class="tab-pane active" id="contenedorAcciones">
 			 <div class="row">
-				<div class="col-sm-6">
-					 <div class="panel panel-default">
-						<div class="panel-heading"><b>Detalles</b></div>
-						<div class="panel-body">
-
-							<div class="row margin-bottom-25">
-								<div class="col-sm-12">
-									<table class="table table-bordered">
-										<thead>
-											<tr>
-												<th colspan="2" style="text-align: center;">Habiles HS</th>
-												<th colspan="2" style="text-align: center;">Inhabiles HS</th>
-											</tr>
-											<tr>
-												<th style="text-align: center;">Dispo</th>
-												<th style="text-align: center;">Cargadas</th>
-												<th style="text-align: center;">Dispo</th>
-												<th style="text-align: center;">Cargadas</th>
-											</tr>
-										</thead>
-										<tbody>
-											<tr>
-												<td align="center">@diasHabilesInhabiles.get("habilesHoras")</td>
-												<td align="center">@if(planificacion.horashabiles!= null){@planificacion.horashabiles}else{0}</td>
-												<td align="center">@diasHabilesInhabiles.get("inhabilesHoras")</td>
-												<td align="center">@if(planificacion.horasinhabiles!= null){@planificacion.horasinhabiles}else{0}</td>
-											</tr>
-										</tbody>
-
-									</table>
-									<!-- <h4>:
-										<b>@planificacion.habiles</b>
-									</h4>
-									<h4>Inhabiles:
-										<b>@planificacion.inhabiles</b>
-									</h4> -->
-
-
-
-								</div>
+			 	<!-- -------------------GUARDIAS----------------------------- -->
+				@if(planificacion.tipo_planificacion_id == models.novedades.TipoPlanificacion.GUARDIA) {
+					<div class="col-sm-6">
+						 <div class="panel panel-default">
+							<div class="panel-heading"><b>Detalles</b></div>
+							<div class="panel-body">
+								@views.html.novedades.planificaciones.tabs.detallesGuardias(planificacion,diasHabilesInhabiles)
 							</div>
-
 						</div>
 					</div>
-				</div>
+				}
 				<div class="col-sm-6">
 					<div class="panel panel-default">
 						<div class="panel-heading"><b>Acciones</b></div>
@@ -146,46 +124,67 @@ totalHorarPorDiaPorPlanificacion:List[com.avaje.ebean.SqlRow])
 				</div>
 			</div>
 		</div>
-		<div class="tab-pane" id="contenedorDetalles">
-			<div class="row">
-				<div class="panel panel-default">
-					<div class="panel-heading"><b>Listado Novedades Detalles</b></div>
-					<div class="panel-body">
-						<div class="col-sm-12">
-							@views.html.novedades.planificaciones.listaNovedades(planificacion)
+		@if(planificacion.tipo_planificacion_id == models.novedades.TipoPlanificacion.PRODUCCION_GENERAL) {
+			<div class="tab-pane" id="contenedorDetalles">
+				<div class="row">
+					<div class="panel panel-default">
+						<div class="panel-heading"><b>Listado Detalles Por Agente</b></div>
+						<div class="panel-body">
+							<div class="col-sm-12">
+								@views.html.novedades.planificaciones.tabs.detallesProduccionGeneral(planificacion)
+							</div>
 						</div>
 					</div>
 				</div>
 			</div>
-		</div>
-		<div class="tab-pane" id="contenedorHoras">
-			<div class="row">
-				<div class="panel panel-default">
-					<div class="panel-heading"><b>Listado Cantidad Por Horas Por dia</b></div>
-					<div class="panel-body">
-						<div class="col-sm-12">
-							<table id="" class="table table-striped table-bordered">
-								<thead>
-									<tr>
-									 	<th>Fecha</th>
-										<th>Horas</th>
-									<tr>
-								</thead>
-								<tbody>
-								@for(sx <- totalHorarPorDiaPorPlanificacion) {
-									<tr data-id="">
-										<td class="fecha">@(utils.DateUtils.formatDate(sx.getDate("fecha")))</td>
-										<td>@sx.getInteger("horas")</td>
+		}
 
-									</tr>
-								}
-								</tbody>
-							</table>
+		<!-- -------------------GUARDIAS----------------------------- -->
+		@if(planificacion.tipo_planificacion_id == models.novedades.TipoPlanificacion.GUARDIA) {
+
+			<div class="tab-pane" id="contenedorDetalles">
+				<div class="row">
+					<div class="panel panel-default">
+						<div class="panel-heading"><b>Listado Novedades Detalles</b></div>
+						<div class="panel-body">
+							<div class="col-sm-12">
+								@views.html.novedades.planificaciones.listaNovedades(planificacion)
+							</div>
 						</div>
 					</div>
 				</div>
 			</div>
-		</div>
+			<div class="tab-pane" id="contenedorHoras">
+				<div class="row">
+					<div class="panel panel-default">
+						<div class="panel-heading"><b>Listado Cantidad Por Horas Por dia</b></div>
+						<div class="panel-body">
+							<div class="col-sm-12">
+								<table id="" class="table table-striped table-bordered">
+									<thead>
+										<tr>
+										 	<th>Fecha</th>
+											<th>Horas</th>
+										<tr>
+									</thead>
+									<tbody>
+									@for(sx <- totalHorarPorDiaPorPlanificacion) {
+										<tr data-id="">
+											<td class="fecha">@(utils.DateUtils.formatDate(sx.getDate("fecha")))</td>
+											<td>@sx.getInteger("horas")</td>
+
+										</tr>
+									}
+									</tbody>
+								</table>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+
+		}<!-- -------------------FIN GUARDIAS----------------------------- -->
+
 		<div class="tab-pane" id="contenedorNotas">
 			<div class="row">
 				<div class="panel panel-default" style="margin: 10px">
@@ -239,10 +238,4 @@ totalHorarPorDiaPorPlanificacion:List[com.avaje.ebean.SqlRow])
 
 	</div>
 </div>
-
-
-
-
-
-
 }
