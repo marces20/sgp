@@ -266,7 +266,7 @@ public class Global extends GlobalSettings {
       // ------------------- JOBS PRELIQUIDAR
 
 
-      timeDelayFromAppStartToLogFirstLogInMs = getTimeDelay(0, 11, Calendar.PM, 30, 0, 0);// PRELIQUIDAR
+      timeDelayFromAppStartToLogFirstLogInMs = getTimeDelay(0, 9, Calendar.PM, 20, 0, 0);// PRELIQUIDAR
 
       Logger.info("Cron Job PRELIQUIDAR ---- " + timeDelayFromAppStartToLogFirstLogInMs);
       jobPreliquidar = Akka.system()
