@@ -36,6 +36,9 @@ GET    /planificacion/suggest/:input		 controllers.novedades.PlanificacionesCont
 GET    /produccionImagenes/index    	controllers.novedades.ProduccionImagenesController.index()
 
 GET     /produccionGeneral/detallesPorAgentePorPlanificacion      controllers.novedades.ProduccionGeneralController.detallesPorAgentePorPlanificacion(idPlanificacion:Long ?= 0)
+GET     /produccionGeneral/detallesProduccionTotalizados      controllers.novedades.ProduccionGeneralController.detallesProduccionTotalizados(idPlanificacion:Long ?= 0)
+
+
 
 
 
