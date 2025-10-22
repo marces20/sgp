@@ -4,6 +4,7 @@ import play.mvc.*;
 import play.libs.WS;
 import play.libs.F.Promise;
 import play.Logger;
+import play.Play;
 import play.libs.F.Function;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -28,8 +29,8 @@ import com.fasterxml.jackson.databind.JsonNode;
 public class ApiController {
 
 	private static final String API_BASE_URL = "http://10.1.4.24/api";
-    private static final String CLIENT_ID = "wuTGCcxiXpPWwLj5gRxnKrHMk1SpsNFO";
-    private static final String CLIENT_SECRET = "yUtoEqk1V0zIYTEq6bOHSGJDs7Pleotk";
+    private static final String CLIENT_ID = Play.application().configuration().getString("rismi.rismi_cliente_id");
+    private static final String CLIENT_SECRET = Play.application().configuration().getString("rismi.cliente_secret");
 
 
 
@@ -296,7 +297,6 @@ public class ApiController {
         String access_token = json.f
 
     	endpoint= "/v1/externos/prestaciones-totalizado";
-    	token = access_token;//"eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJMYXJhdmVsIiwiaWF0IjoxNzYwNzE1Mjc2LCJleHAiOjE3NjA3MTg4NzYsImNsaWVudF9pZCI6Ind1VEdDY3hpWHBQV3dMajVnUnhuS3JITWsxU3BzTkZPIiwidXNlcl9pZCI6NjAxMSwic2Vzc2lvbiI6bnVsbH0.euJfFlLf_1bq8c8MpUUTCgI5V8TzDyIGzu6A4zH6TYE";
     	id_dominio=1&
     	fecha_desde=2025-09-18&
     	fecha_hasta=2025-09-18&
@@ -355,10 +355,9 @@ public class ApiController {
     public static Promise<JsonNode> getPacientes(String endpoint, String token) {
 
     	endpoint= "/v1/externos/persona?id=123";
-    	token = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJMYXJhdmVsIiwiaWF0IjoxNzYwNjY1NDU1LCJleHAiOjE3NjA2NjkwNTUsImNsaWVudF9pZCI6Ind1VEdDY3hpWHBQV3dMajVnUnhuS3JITWsxU3BzTkZPIiwidXNlcl9pZCI6NjAxMSwic2Vzc2lvbiI6bnVsbH0.goAMn56APv11xFmq1HKYzjRiJr01GE2G-HNMRl6bOOM";
-        Promise<WS.Response> promise = WS.url(API_BASE_URL + endpoint)
+    	Promise<WS.Response> promise = WS.url(API_BASE_URL + endpoint)
             .setHeader("Accept", "application/json")
-            .setHeader("Authorization", "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJMYXJhdmVsIiwiaWF0IjoxNzYwNjY2NzY1LCJleHAiOjE3NjA2NzAzNjUsImNsaWVudF9pZCI6Ind1VEdDY3hpWHBQV3dMajVnUnhuS3JITWsxU3BzTkZPIiwidXNlcl9pZCI6NjAxMSwic2Vzc2lvbiI6bnVsbH0.Ylb91JFN-8A5daKp-ycyUxlQ-6cc9HQAPEQD0jtde0I")
+            .setHeader("Authorization","Bearer "+ token)
             .setTimeout(10000).setQueryParameter("id", "123")
             .get();
 
