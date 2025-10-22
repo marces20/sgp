@@ -41,6 +41,7 @@ public class LiquidacionConcepto extends Model{
 	public static final long GUARDIA_ACTIVA_NO_CRITICA_FESTIVA = 807;
 	public static final long GUARDIA_ACTIVA_CRITICA_FESTIVA = 808;
 
+	public static final long ADICIONAL_POR_PRODUCCION = 326;
 
 	@Id
 	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="liquidacion_conceptos_id_seq")
