@@ -1,0 +1,16 @@
+@(planificacion:models.novedades.Planificacion = null)
+@import java.util.List
+
+
+	<script>
+	$( function (){
+		$.get('@controllers.novedades.routes.ProduccionGeneralController.detallesProduccionTotalizados(planificacion.id)', function(data){
+			$('#listaDetallesProduccionTotalizados').parent().html(data);
+		})
+	});
+	</script>
+
+
+<div id="listaDetallesProduccionTotalizados">
+
+</div>
