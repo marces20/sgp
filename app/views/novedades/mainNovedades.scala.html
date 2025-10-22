@@ -7,12 +7,18 @@
 			<ul class="nav nav-pills nav-stacked">
 
 
-				<li class="titulo">Novedades</li>
-				@if(Componente.check("calendario")) {
-					<li><a href="@controllers.novedades.routes.NovedadesController.index()">Calendario</a></li>
-					<li><a href="@controllers.novedades.routes.NovedadesController.indexListaNovedades()">Lista Novedades</a></li>
-					<li><a href="@controllers.novedades.routes.PlanificacionesController.index()">Planificacion</a></li>
+				@if(Componente.check("planificacion")) {
+					<li class="titulo">Guardias</li>
+						@if(Componente.check("calendario")) {
+						<li><a href="@controllers.novedades.routes.NovedadesController.index()">Calendario</a></li>
+						<li><a href="@controllers.novedades.routes.NovedadesController.indexListaNovedades()">Lista Novedades</a></li>
+						}
+						<li><a href="@controllers.novedades.routes.PlanificacionesController.index()">Planificacion</a></li>
+
 				}
+
+				<!-- <li class="titulo">Produccion</li>
+					<li><a href="@controllers.novedades.routes.ProduccionImagenesController.index()">Imagenes</a></li> -->
 
 
 
