@@ -10,30 +10,32 @@ import play.data.validation.Constraints.Required;
 import play.db.ebean.Model;
 import play.db.ebean.Model.Finder;
 
-@Entity 
+@Entity
 @Table(name = "tipo_licencias")
 public class TipoLicencia extends Model{
-	
-	
+
+
 	public static final String TIPO_LICENCIA_DOCENCIA = "DOCENCIA";
 	public static final String TIPO_LICENCIA_PERSONAL = "PERSONAL";
 	public static final String TIPO_LICENCIA_MEDICINA = "MEDICINA";
-	
+
+	public static final Long LICENCIA_ANUAL_REGLAMENTARIA = new Long(5);
+
 	private static final long serialVersionUID = 1L;
-	@Id  
+	@Id
 	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="tipo_licencias_id_seq")
 	public Long id;
 	@Required(message="Debe escribir un nombre")
 	public String nombre;
-	
+
 	public String tipo;
-	
+
 	public Integer dias;
-	
+
 	public Boolean habiles;
-	
+
 	public String articulo;
-	
+
 	public static Finder<Long,TipoLicencia> find = new Finder<Long,TipoLicencia>(Long.class, TipoLicencia.class);
 
 }
