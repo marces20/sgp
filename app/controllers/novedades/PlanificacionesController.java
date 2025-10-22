@@ -179,7 +179,13 @@ public class PlanificacionesController extends Controller {
 	@CheckPermiso(key = "planificacionEliminar")
 	public static Result eliminar(Long id) {
 
+		String refererUrl = request().getHeader("referer");
 		Planificacion planificacion = Ebean.find(Planificacion.class).select("id").setId(id).findUnique();
+
+		if (planificacion.estado_id != Estado.PLANIFICIACION_BORRADOR) {
+  			flash("error", "Debe estar en estado Borrador.");
+  			return redirect(refererUrl);
+  		  }
 
 		if(planificacion == null){
 			flash("error", "No se encuentra la planificacion.");
@@ -195,7 +201,7 @@ public class PlanificacionesController extends Controller {
 			flash("error", "No se ha podido eliminar la planificacion");
 		}
 
-		String refererUrl = request().getHeader("referer");
+
 		return redirect(refererUrl);
 	}
 
