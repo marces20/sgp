@@ -80,7 +80,7 @@ public class ProduccionPuestoPeriodo extends Model{
 	public static List<SqlRow> getProduccionMes(Long planificacion_id){
 
 		String sql = "SELECT " +
-				"p.nombre, a.apellido as apellido, a.organigrama_id, o.nombre, " +
+				"pl.id as puesto_laboral_id,p.nombre, a.apellido as apellido, a.organigrama_id, o.nombre, " +
 				"elm.importe_referencia+ (coalesce(espe.monto_mes,0)*0.80615) monto_tope , " +
 				"coalesce(prod_topes.tope_produccion,1) cant_topes, " +
 				"round(sum(prod_mes.cantidad * prod_nom.valor_ips * coalesce(prod_coef.coeficiente, 60) / 100),2) produccion_mes, " +
@@ -106,7 +106,7 @@ public class ProduccionPuestoPeriodo extends Model{
 				"LEFT JOIN liquidacion_conceptos_especialidad espe ON " +
 				"(espe.especialidad_id = pl.especialidad_id AND prod_mes.periodo_id  BETWEEN espe.periodo_desde_id AND coalesce(espe.periodo_hasta_id, prod_mes.periodo_id)) " +
 				"WHERE prod_mes.planificacion_id = :planificacion_id  " +
-				"GROUP BY o.nombre, a.organigrama_id, prod_mes.puesto_laboral_id, a.apellido, prod_mes.periodo_id, prod_topes.tope_produccion, elm.importe_referencia, espe.monto_mes, p.nombre " +
+				"GROUP BY pl.id,o.nombre, a.organigrama_id, prod_mes.puesto_laboral_id, a.apellido, prod_mes.periodo_id, prod_topes.tope_produccion, elm.importe_referencia, espe.monto_mes, p.nombre " +
 				"order by a.apellido ";
 
 		List<com.avaje.ebean.SqlRow> l = Ebean.createSqlQuery(sql)
