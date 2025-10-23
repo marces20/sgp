@@ -21,8 +21,10 @@ public class CheckPermisoAction extends Action<CheckPermiso>  {
 		}
 
 		if(!Authentication.isSessionValid()) {
-			return F.Promise.pure((SimpleResult) redirect(controllers.routes.Authentication.logout()));//F.Promise.pure((SimpleResult) ok(sinPermiso.render(refererUrl)));
+			//return F.Promise.pure((SimpleResult) redirect(controllers.routes.Authentication.logout()));//F.Promise.pure((SimpleResult) ok(sinPermiso.render(refererUrl)));
 		}
+
+		ctx.session().put("timestamp", String.valueOf(System.currentTimeMillis()));
 
 		if(Permiso.check(configuration.key())){
 			return delegate.call(ctx);
