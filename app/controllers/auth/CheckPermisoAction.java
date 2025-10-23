@@ -1,5 +1,6 @@
 package controllers.auth;
 
+import controllers.Authentication;
 import models.auth.Permiso;
 import views.*;
 import views.html.index;
@@ -16,6 +17,10 @@ public class CheckPermisoAction extends Action<CheckPermiso>  {
 	public F.Promise<SimpleResult> call(Http.Context ctx) throws Throwable {
 
 		if(ctx.session().get("nick") == null || ctx.session().get("id") == null) {
+			return F.Promise.pure((SimpleResult) redirect(controllers.routes.Authentication.logout()));//F.Promise.pure((SimpleResult) ok(sinPermiso.render(refererUrl)));
+		}
+
+		if(!Authentication.isSessionValid()) {
 			return F.Promise.pure((SimpleResult) redirect(controllers.routes.Authentication.logout()));//F.Promise.pure((SimpleResult) ok(sinPermiso.render(refererUrl)));
 		}
 
