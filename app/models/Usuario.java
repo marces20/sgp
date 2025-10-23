@@ -34,56 +34,56 @@ import com.avaje.ebean.SqlRow;
 public class Usuario extends Model {
 
 	private static final long serialVersionUID = 1L;
-	
+
 	@Id
 	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="usuarios_id_seq")
     public Integer id;
-	
+
 	@Required(message="Debe escribir el nombre")
 	public String nombre;
 
 	@Required(message="Debe escribir un nick")
 	public String nick;
-	
+
 	@Required(message="Debe escribir una contraseña")
 	public String password;
-	
+
 	public String email;
-	
+
 	public boolean activo = false;
-	
+
 	@Required(message="Debe setear plan sumar materno")
 	public boolean plansumarmaterno = false;
-	
+
 	@Required(message="Debe setear obera")
 	public boolean obera = false;
-	
-	
+
+
 	@ManyToOne
 	@JoinColumn(name="create_usuario_id", referencedColumnName="id", insertable=false, updatable=false)
-	public Usuario create_usuario; 
+	public Usuario create_usuario;
 	@Column(name="create_usuario_id")
 	public Long create_usuario_id;
-	 
-	public Date create_date; 
-	public Date write_date; 
-	
+
+	public Date create_date;
+	public Date write_date;
+
 	@ManyToOne
 	@JoinColumn(name="write_usuario_id", referencedColumnName="id", insertable=false, updatable=false)
-	public Usuario write_usuario; 
+	public Usuario write_usuario;
 	@Column(name="write_usuario_id")
 	public Long write_usuario_id;
-	
-	@OneToOne        
+
+	@OneToOne
 	@JoinColumn(name="departamento_id", referencedColumnName="id", insertable=false, updatable=false)
 	public Departamento departamento;
 	public Long departamento_id;
-	
-	@OneToOne        
+
+	@OneToOne
 	@JoinColumn(name="organigrama_id", referencedColumnName="id", insertable=false, updatable=false)
 	public Organigrama organigrama;
 	public Long organigrama_id;
-				   
+
 	public static Integer getUsuarioSesion(){
 		try {
 			return Integer.parseInt(Context.current().session().get("id"));
@@ -91,7 +91,7 @@ public class Usuario extends Model {
 			return null;
 		}
 	}
-	
+
 	public static Usuario getUsurioSesion(){
 		try {
 			return find.byId(Integer.parseInt(Context.current().session().get("id")));
@@ -99,14 +99,22 @@ public class Usuario extends Model {
 			return null;
 		}
 	}
-	
+
+	public static String getTimestampSesion(){
+		try {
+			return Context.current().session().get("timestamp");
+		} catch (Exception e) {
+			return null;
+		}
+	}
+
 	public static Model.Finder<Integer,Usuario> find = new Model.Finder<Integer,Usuario>(Integer.class, Usuario.class);
-    
-    public static Pagination<Usuario> page(String nombre, String nick) {    	
+
+    public static Pagination<Usuario> page(String nombre, String nick) {
     	Pagination<Usuario> p = new Pagination<Usuario>();
     	p.setOrderDefault("DESC");
     	p.setSortByDefault("id");
-    	
+
     	ExpressionList<Usuario> e = find.where();
 
     	p.setExpressionList(
@@ -115,25 +123,25 @@ public class Usuario extends Model {
 	                .ilike("nick", "%" + nick + "%")
     			);
 
-    	
+
     	p.setExpressionList(e);
-    	
+
     	return p;
     }
-    
+
 	public static List<Usuario> getDataSuggest(String nombre, Integer limit){
 		return find.where().ilike("nombre", "%" + nombre + "%").setMaxRows(limit).orderBy("nombre").findList();
 	}
-	
+
 	public static List<Object> getUsersPlanSumarMaterno(){
 		 return Usuario.find.where().eq("plansumarmaterno",true).findIds();
 	}
-	
+
 	public static List<Integer> getUsersDepartamentosHijos(Integer deptoId){
-		
-		List<Integer>  luAux = new ArrayList<Integer>(); 
-		List<Integer>  lu = new ArrayList<Integer>(); 
-		
+
+		List<Integer>  luAux = new ArrayList<Integer>();
+		List<Integer>  lu = new ArrayList<Integer>();
+
 		String sql = "WITH RECURSIVE recursetree AS ( "+
 	    " SELECT d.id,d.parent_departamento_id,d.nombre "+
 	    " FROM departamentos d "+
@@ -150,27 +158,27 @@ public class Usuario extends Model {
 		for(SqlRow m : s){
 			luAux.add(new Integer(m.getString("id")));
 		}
-		
+
 		List<Usuario> l =  Usuario.find.where()
 				.disjunction()
 				.in("departamento_id",luAux)
 				.in("departamento_id",deptoId)
 				.endJunction()
 				.findList();
-		
+
 		for(Usuario v : l){
 			lu.add(v.id);
 		}
-		
+
 		return lu;
 	}
-	
-	
+
+
 	public static List<Integer> getUsersOrganigramaHijos(Integer organigramaId){
-		
-		List<Integer>  luAux = new ArrayList<Integer>(); 
-		List<Integer>  lu = new ArrayList<Integer>(); 
-		
+
+		List<Integer>  luAux = new ArrayList<Integer>();
+		List<Integer>  lu = new ArrayList<Integer>();
+
 		String sql = "WITH RECURSIVE recursetree AS ( "+
 	    " SELECT o.id,o.padre_id,o.nombre "+
 	    " FROM organigramas o "+
@@ -187,28 +195,28 @@ public class Usuario extends Model {
 		for(SqlRow m : s){
 			luAux.add(new Integer(m.getString("id")));
 		}
-		
+
 		List<Usuario> l =  Usuario.find.where()
 				.disjunction()
 				.in("organigrama_id",luAux)
 				.in("organigrama_id",organigramaId)
 				.endJunction()
 				.findList();
-		
+
 		for(Usuario v : l){
 			lu.add(v.id);
 		}
-		
+
 		return lu;
 	}
-    
+
     public List<ValidationError> validate() {
         List<ValidationError> errors = new ArrayList<ValidationError>();
         if (find.where().eq("nick", nick).ne("id", id).findRowCount() > 0) {
             errors.add(new ValidationError("nick", "El nick ya es usado."));
         }
         return errors.isEmpty() ? null : errors;
-    }    
-    
-    
+    }
+
+
 }
