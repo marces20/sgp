@@ -32,9 +32,11 @@ import models.Novedad;
 import models.OrganigramaGuardiaDato;
 import models.Usuario;
 import models.auth.Permiso;
+import models.haberes.LiquidacionConcepto;
 import models.haberes.LiquidacionTipo;
 import models.haberes.PuestoLaboral;
 import models.novedades.Planificacion;
+import models.novedades.ProduccionPuestoPeriodo;
 import models.recupero.InformeTotal;
 import models.recupero.RecuperoCertificadoDeuda;
 import models.recupero.RecuperoFactura;
@@ -511,9 +513,6 @@ public class PlanificacionesController extends Controller {
 				Long liquidacion_concepto_id = models.haberes.Novedad.getLiquidacionConceptoByHoraHabilesFestivaOrg(sx.getBigDecimal("horas"),sx.getBoolean("habiles"),sx.getBoolean("festivas"),ogd);
 
 				BigDecimal hh = new BigDecimal(ogd.horasxdia_habiles);
-				Logger.debug("fffffffffffffffffff2 " +sx.getBigDecimal("horas"));
-				Logger.debug("ffffffffffffhhhhhh " +hh);
-
 				BigDecimal cantidad = models.haberes.Novedad.getCantidadByHabilesHoras(sx.getBigDecimal("horas"),sx.getBoolean("habiles"),ogd);
 
 				models.haberes.Novedad n = new models.haberes.Novedad();
@@ -522,11 +521,11 @@ public class PlanificacionesController extends Controller {
 
 				n.periodo_inicio_id= p.periodo_liquidacion_id.longValue();
 				n.periodo_hasta_id= p.periodo_liquidacion_id.longValue();
-				n.periodo_concepto_id= p.periodo_liquidacion_id.longValue();
+				n.periodo_concepto_id= p.periodo_id.longValue();
 
 				n.organigrama_id= pl.legajo.agente.organigrama_id;
 				n.activo= true;
-				n.fecha_novedad= new Date();;
+				n.fecha_novedad= new Date();
 				n.importe = BigDecimal.ZERO;
 				n.cantidad = cantidad;
 				n.usuario_id= new Long(Usuario.getUsuarioSesion());
@@ -540,6 +539,86 @@ public class PlanificacionesController extends Controller {
 				n.planificacion_id = p.id;
 				n.save();
 				count++;
+			}
+
+
+
+
+			p.estado_id = new Long(Estado.PLANIFICIACION_CERRADA);
+			p.write_date = new Date();
+			p.write_usuario_id = new Long(Usuario.getUsuarioSesion());
+			p.save();
+
+			Ebean.commitTransaction();
+			flash("success", "Se generaron "+count+" novedades");
+
+		} catch (Exception e) {
+			Ebean.rollbackTransaction();
+			flash("error", "No se pudieron generar las novedades");
+		} finally {
+			Ebean.endTransaction();
+		}
+		return redirect(controllers.novedades.routes.PlanificacionesController.ver(p.id)+ UriTrack.get("&"));
+
+	}
+
+	@CheckPermiso(key = "planificacionCrearNovedades")
+	public static Result crearNovedadesProduccionGeneral(Long id) {
+
+		Planificacion p = Planificacion.find.byId(id);
+
+		List<models.haberes.Novedad> nxNovedad = models.haberes.Novedad.find.where().eq("planificacion_id", id).findList();
+
+		if(nxNovedad.size() > 0) {
+			flash("error", "Existen Novedades con este ID de planificaciones");
+			return redirect(controllers.novedades.routes.PlanificacionesController.ver(p.id)+ UriTrack.get("&"));
+		}
+
+		Ebean.beginTransaction();
+		try {
+
+
+
+			List<SqlRow> novedades = ProduccionPuestoPeriodo.getProduccionMes(id);
+			int count = 0;
+			for(SqlRow sx :novedades) {
+
+				if(sx.getBigDecimal("total_produccion").compareTo(BigDecimal.ZERO) > 0) {
+
+					PuestoLaboral pl = PuestoLaboral.find.fetch("legajo").where().eq("activo",true).eq("id",sx.getLong("puesto_laboral_id") ).findUnique();
+
+					if(pl == null) {
+						Ebean.rollbackTransaction();
+						flash("error", "No se encuentra el puesto laboral de :"+sx.getString("apellido"));
+						redirect(controllers.novedades.routes.PlanificacionesController.ver(p.id)+ UriTrack.get("&"));
+
+					}
+
+					models.haberes.Novedad n = new models.haberes.Novedad();
+					n.puesto_laboral_id = sx.getLong("puesto_laboral_id");
+					n.liquidacion_concepto_id=LiquidacionConcepto.ADICIONAL_POR_PRODUCCION;
+
+					n.periodo_inicio_id= p.periodo_liquidacion_id.longValue();
+					n.periodo_hasta_id= p.periodo_liquidacion_id.longValue();
+					n.periodo_concepto_id= p.periodo_id.longValue();
+
+					n.organigrama_id= pl.legajo.agente.organigrama_id;
+					n.activo= true;
+					n.fecha_novedad= new Date();
+					n.importe = sx.getBigDecimal("total_produccion");
+					n.cantidad = BigDecimal.ONE;
+					n.usuario_id= new Long(Usuario.getUsuarioSesion());
+					if(pl.dobla) {
+						n.liquidacion_tipo_id = LiquidacionTipo.CONCEPTOS_NO_INCLUIDOS;
+					}else {
+						n.liquidacion_tipo_id = LiquidacionTipo.MENSUAL;
+					}
+
+					n.create_date = new Date();
+					n.planificacion_id = p.id;
+					n.save();
+					count++;
+				}
 			}
 
 
