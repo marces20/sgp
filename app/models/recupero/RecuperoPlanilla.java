@@ -1,5 +1,7 @@
 package models.recupero;
 
+import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -18,9 +20,12 @@ import com.avaje.ebean.ExpressionList;
 import models.Deposito;
 import models.Ejercicio;
 import models.Expediente;
+import models.Feriado;
+import models.Periodo;
 import models.PuntoVenta;
 import models.Usuario;
 import models.auth.Permiso;
+import play.Logger;
 import play.data.format.Formats;
 import play.data.validation.Constraints.Required;
 import play.db.ebean.Model;
@@ -139,5 +144,63 @@ public class RecuperoPlanilla extends Model {
 								.findList();
 
 		return l;
+	}
+
+	public static void correCrearPlanillas (Long periodoId) {
+
+		crearPlanilasByPeriodo(periodoId,new Long(1),227);
+		crearPlanilasByPeriodo(periodoId,new Long(2),227);
+		crearPlanilasByPeriodo(periodoId,new Long(3),227);
+		crearPlanilasByPeriodo(periodoId,new Long(4),227);
+		crearPlanilasByPeriodo(periodoId,new Long(21),165);
+		crearPlanilasByPeriodo(periodoId,new Long(32),227);
+		crearPlanilasByPeriodo(periodoId,new Long(35),227);
+		crearPlanilasByPeriodo(periodoId,new Long(34),21);
+	}
+
+	public static void crearPlanilasByPeriodo(Long periodoId,Long dep,int n) {
+		Periodo p = Periodo.find.byId(periodoId);
+
+		Calendar calendar = Calendar.getInstance();
+		calendar.set(Calendar.YEAR, 2025);
+        calendar.set(Calendar.MONTH, Calendar.NOVEMBER); // Month is 0-indexed
+        calendar.set(Calendar.DAY_OF_MONTH, 4);
+        Date specificDate = calendar.getTime();
+
+		Calendar calendarInicio = Calendar.getInstance();
+		calendarInicio.setTime(p.date_start);
+
+		Calendar calendarFin = Calendar.getInstance();
+		calendarFin.setTime(p.date_stop);
+
+		List<Feriado> f = Feriado.find.findList();
+		ArrayList<Date> feriadosList = new ArrayList<>();
+		for(Feriado fx :f) {
+			feriadosList.add(fx.fecha);
+		}
+
+
+
+
+		while (calendarInicio.before(calendarFin) || calendarInicio.equals(calendarFin)) {
+				Logger.debug(calendarInicio.getTime().toString());
+				if(!feriadosList.contains(calendarInicio.getTime() ) ) {
+					if (calendarInicio.get(Calendar.DAY_OF_WEEK) != Calendar.SUNDAY && calendarInicio.get(Calendar.DAY_OF_WEEK) != Calendar.SATURDAY) {
+			            //se aumentan los dias de diferencia entre min y max
+
+			            RecuperoPlanilla rp = new RecuperoPlanilla();
+			            rp.numero = n;
+			            rp.expediente_id = 50118;
+			            rp.fecha = calendarInicio.getTime();
+			            rp.deposito_id = dep;
+			            rp.save();
+
+			            n++;
+
+					}
+				}
+
+			calendarInicio.add(Calendar.DATE, 1);
+		}
 	}
 }
