@@ -1,8 +1,8 @@
 //
-// Este archivo ha sido generado por la arquitectura JavaTM para la implantación de la referencia de enlace (JAXB) XML v2.2.11 
-// Visite <a href="http://java.sun.com/xml/jaxb">http://java.sun.com/xml/jaxb</a> 
-// Todas las modificaciones realizadas en este archivo se perderán si se vuelve a compilar el esquema de origen. 
-// Generado el: 2022.05.05 a las 12:50:51 PM ART 
+// Este archivo ha sido generado por la arquitectura JavaTM para la implantación de la referencia de enlace (JAXB) XML v2.2.11
+// Visite <a href="http://java.sun.com/xml/jaxb">http://java.sun.com/xml/jaxb</a>
+// Todas las modificaciones realizadas en este archivo se perderán si se vuelve a compilar el esquema de origen.
+// Generado el: 2022.05.05 a las 12:50:51 PM ART
 //
 
 
@@ -17,9 +17,9 @@ import javax.xml.bind.annotation.XmlType;
 
 /**
  * <p>Clase Java para FEDetRequest complex type.
- * 
+ *
  * <p>El siguiente fragmento de esquema especifica el contenido que se espera que haya en esta clase.
- * 
+ *
  * <pre>
  * &lt;complexType name="FEDetRequest"&gt;
  *   &lt;complexContent&gt;
@@ -53,13 +53,14 @@ import javax.xml.bind.annotation.XmlType;
  *   &lt;/complexContent&gt;
  * &lt;/complexType&gt;
  * </pre>
- * 
- * 
+ *
+ *
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "FEDetRequest", propOrder = {
     "concepto",
     "docTipo",
+    "condicionIVAReceptorId",
     "docNro",
     "cbteDesde",
     "cbteHasta",
@@ -92,6 +93,8 @@ public class FEDetRequest {
     protected int concepto;
     @XmlElement(name = "DocTipo")
     protected int docTipo;
+    @XmlElement(name = "CondicionIVAReceptorId")
+    protected int condicionIVAReceptorId;
     @XmlElement(name = "DocNro")
     protected long docNro;
     @XmlElement(name = "CbteDesde")
@@ -135,9 +138,17 @@ public class FEDetRequest {
     @XmlElement(name = "PeriodoAsoc")
     protected Periodo periodoAsoc;
 
+     public int getCondicionIVAReceptorId() {
+        return condicionIVAReceptorId;
+    }
+
+     public void setCondicionIVAReceptorId(int value) {
+        this.condicionIVAReceptorId = value;
+    }
+
     /**
      * Obtiene el valor de la propiedad concepto.
-     * 
+     *
      */
     public int getConcepto() {
         return concepto;
@@ -145,7 +156,7 @@ public class FEDetRequest {
 
     /**
      * Define el valor de la propiedad concepto.
-     * 
+     *
      */
     public void setConcepto(int value) {
         this.concepto = value;
@@ -153,7 +164,7 @@ public class FEDetRequest {
 
     /**
      * Obtiene el valor de la propiedad docTipo.
-     * 
+     *
      */
     public int getDocTipo() {
         return docTipo;
@@ -161,7 +172,7 @@ public class FEDetRequest {
 
     /**
      * Define el valor de la propiedad docTipo.
-     * 
+     *
      */
     public void setDocTipo(int value) {
         this.docTipo = value;
@@ -169,7 +180,7 @@ public class FEDetRequest {
 
     /**
      * Obtiene el valor de la propiedad docNro.
-     * 
+     *
      */
     public long getDocNro() {
         return docNro;
@@ -177,7 +188,7 @@ public class FEDetRequest {
 
     /**
      * Define el valor de la propiedad docNro.
-     * 
+     *
      */
     public void setDocNro(long value) {
         this.docNro = value;
@@ -185,7 +196,7 @@ public class FEDetRequest {
 
     /**
      * Obtiene el valor de la propiedad cbteDesde.
-     * 
+     *
      */
     public long getCbteDesde() {
         return cbteDesde;
@@ -193,7 +204,7 @@ public class FEDetRequest {
 
     /**
      * Define el valor de la propiedad cbteDesde.
-     * 
+     *
      */
     public void setCbteDesde(long value) {
         this.cbteDesde = value;
@@ -201,7 +212,7 @@ public class FEDetRequest {
 
     /**
      * Obtiene el valor de la propiedad cbteHasta.
-     * 
+     *
      */
     public long getCbteHasta() {
         return cbteHasta;
@@ -209,7 +220,7 @@ public class FEDetRequest {
 
     /**
      * Define el valor de la propiedad cbteHasta.
-     * 
+     *
      */
     public void setCbteHasta(long value) {
         this.cbteHasta = value;
@@ -217,11 +228,11 @@ public class FEDetRequest {
 
     /**
      * Obtiene el valor de la propiedad cbteFch.
-     * 
+     *
      * @return
      *     possible object is
      *     {@link String }
-     *     
+     *
      */
     public String getCbteFch() {
         return cbteFch;
@@ -229,11 +240,11 @@ public class FEDetRequest {
 
     /**
      * Define el valor de la propiedad cbteFch.
-     * 
+     *
      * @param value
      *     allowed object is
      *     {@link String }
-     *     
+     *
      */
     public void setCbteFch(String value) {
         this.cbteFch = value;
@@ -241,7 +252,7 @@ public class FEDetRequest {
 
     /**
      * Obtiene el valor de la propiedad impTotal.
-     * 
+     *
      */
     public double getImpTotal() {
         return impTotal;
@@ -249,7 +260,7 @@ public class FEDetRequest {
 
     /**
      * Define el valor de la propiedad impTotal.
-     * 
+     *
      */
     public void setImpTotal(double value) {
         this.impTotal = value;
@@ -257,7 +268,7 @@ public class FEDetRequest {
 
     /**
      * Obtiene el valor de la propiedad impTotConc.
-     * 
+     *
      */
     public double getImpTotConc() {
         return impTotConc;
@@ -265,7 +276,7 @@ public class FEDetRequest {
 
     /**
      * Define el valor de la propiedad impTotConc.
-     * 
+     *
      */
     public void setImpTotConc(double value) {
         this.impTotConc = value;
@@ -273,7 +284,7 @@ public class FEDetRequest {
 
     /**
      * Obtiene el valor de la propiedad impNeto.
-     * 
+     *
      */
     public double getImpNeto() {
         return impNeto;
@@ -281,7 +292,7 @@ public class FEDetRequest {
 
     /**
      * Define el valor de la propiedad impNeto.
-     * 
+     *
      */
     public void setImpNeto(double value) {
         this.impNeto = value;
@@ -289,7 +300,7 @@ public class FEDetRequest {
 
     /**
      * Obtiene el valor de la propiedad impOpEx.
-     * 
+     *
      */
     public double getImpOpEx() {
         return impOpEx;
@@ -297,7 +308,7 @@ public class FEDetRequest {
 
     /**
      * Define el valor de la propiedad impOpEx.
-     * 
+     *
      */
     public void setImpOpEx(double value) {
         this.impOpEx = value;
@@ -305,7 +316,7 @@ public class FEDetRequest {
 
     /**
      * Obtiene el valor de la propiedad impTrib.
-     * 
+     *
      */
     public double getImpTrib() {
         return impTrib;
@@ -313,7 +324,7 @@ public class FEDetRequest {
 
     /**
      * Define el valor de la propiedad impTrib.
-     * 
+     *
      */
     public void setImpTrib(double value) {
         this.impTrib = value;
@@ -321,7 +332,7 @@ public class FEDetRequest {
 
     /**
      * Obtiene el valor de la propiedad impIVA.
-     * 
+     *
      */
     public double getImpIVA() {
         return impIVA;
@@ -329,7 +340,7 @@ public class FEDetRequest {
 
     /**
      * Define el valor de la propiedad impIVA.
-     * 
+     *
      */
     public void setImpIVA(double value) {
         this.impIVA = value;
@@ -337,11 +348,11 @@ public class FEDetRequest {
 
     /**
      * Obtiene el valor de la propiedad fchServDesde.
-     * 
+     *
      * @return
      *     possible object is
      *     {@link String }
-     *     
+     *
      */
     public String getFchServDesde() {
         return fchServDesde;
@@ -349,11 +360,11 @@ public class FEDetRequest {
 
     /**
      * Define el valor de la propiedad fchServDesde.
-     * 
+     *
      * @param value
      *     allowed object is
      *     {@link String }
-     *     
+     *
      */
     public void setFchServDesde(String value) {
         this.fchServDesde = value;
@@ -361,11 +372,11 @@ public class FEDetRequest {
 
     /**
      * Obtiene el valor de la propiedad fchServHasta.
-     * 
+     *
      * @return
      *     possible object is
      *     {@link String }
-     *     
+     *
      */
     public String getFchServHasta() {
         return fchServHasta;
@@ -373,11 +384,11 @@ public class FEDetRequest {
 
     /**
      * Define el valor de la propiedad fchServHasta.
-     * 
+     *
      * @param value
      *     allowed object is
      *     {@link String }
-     *     
+     *
      */
     public void setFchServHasta(String value) {
         this.fchServHasta = value;
@@ -385,11 +396,11 @@ public class FEDetRequest {
 
     /**
      * Obtiene el valor de la propiedad fchVtoPago.
-     * 
+     *
      * @return
      *     possible object is
      *     {@link String }
-     *     
+     *
      */
     public String getFchVtoPago() {
         return fchVtoPago;
@@ -397,11 +408,11 @@ public class FEDetRequest {
 
     /**
      * Define el valor de la propiedad fchVtoPago.
-     * 
+     *
      * @param value
      *     allowed object is
      *     {@link String }
-     *     
+     *
      */
     public void setFchVtoPago(String value) {
         this.fchVtoPago = value;
@@ -409,11 +420,11 @@ public class FEDetRequest {
 
     /**
      * Obtiene el valor de la propiedad monId.
-     * 
+     *
      * @return
      *     possible object is
      *     {@link String }
-     *     
+     *
      */
     public String getMonId() {
         return monId;
@@ -421,11 +432,11 @@ public class FEDetRequest {
 
     /**
      * Define el valor de la propiedad monId.
-     * 
+     *
      * @param value
      *     allowed object is
      *     {@link String }
-     *     
+     *
      */
     public void setMonId(String value) {
         this.monId = value;
@@ -433,7 +444,7 @@ public class FEDetRequest {
 
     /**
      * Obtiene el valor de la propiedad monCotiz.
-     * 
+     *
      */
     public double getMonCotiz() {
         return monCotiz;
@@ -441,7 +452,7 @@ public class FEDetRequest {
 
     /**
      * Define el valor de la propiedad monCotiz.
-     * 
+     *
      */
     public void setMonCotiz(double value) {
         this.monCotiz = value;
@@ -449,11 +460,11 @@ public class FEDetRequest {
 
     /**
      * Obtiene el valor de la propiedad cbtesAsoc.
-     * 
+     *
      * @return
      *     possible object is
      *     {@link ArrayOfCbteAsoc }
-     *     
+     *
      */
     public ArrayOfCbteAsoc getCbtesAsoc() {
         return cbtesAsoc;
@@ -461,11 +472,11 @@ public class FEDetRequest {
 
     /**
      * Define el valor de la propiedad cbtesAsoc.
-     * 
+     *
      * @param value
      *     allowed object is
      *     {@link ArrayOfCbteAsoc }
-     *     
+     *
      */
     public void setCbtesAsoc(ArrayOfCbteAsoc value) {
         this.cbtesAsoc = value;
@@ -473,11 +484,11 @@ public class FEDetRequest {
 
     /**
      * Obtiene el valor de la propiedad tributos.
-     * 
+     *
      * @return
      *     possible object is
      *     {@link ArrayOfTributo }
-     *     
+     *
      */
     public ArrayOfTributo getTributos() {
         return tributos;
@@ -485,11 +496,11 @@ public class FEDetRequest {
 
     /**
      * Define el valor de la propiedad tributos.
-     * 
+     *
      * @param value
      *     allowed object is
      *     {@link ArrayOfTributo }
-     *     
+     *
      */
     public void setTributos(ArrayOfTributo value) {
         this.tributos = value;
@@ -497,11 +508,11 @@ public class FEDetRequest {
 
     /**
      * Obtiene el valor de la propiedad iva.
-     * 
+     *
      * @return
      *     possible object is
      *     {@link ArrayOfAlicIva }
-     *     
+     *
      */
     public ArrayOfAlicIva getIva() {
         return iva;
@@ -509,11 +520,11 @@ public class FEDetRequest {
 
     /**
      * Define el valor de la propiedad iva.
-     * 
+     *
      * @param value
      *     allowed object is
      *     {@link ArrayOfAlicIva }
-     *     
+     *
      */
     public void setIva(ArrayOfAlicIva value) {
         this.iva = value;
@@ -521,11 +532,11 @@ public class FEDetRequest {
 
     /**
      * Obtiene el valor de la propiedad opcionales.
-     * 
+     *
      * @return
      *     possible object is
      *     {@link ArrayOfOpcional }
-     *     
+     *
      */
     public ArrayOfOpcional getOpcionales() {
         return opcionales;
@@ -533,11 +544,11 @@ public class FEDetRequest {
 
     /**
      * Define el valor de la propiedad opcionales.
-     * 
+     *
      * @param value
      *     allowed object is
      *     {@link ArrayOfOpcional }
-     *     
+     *
      */
     public void setOpcionales(ArrayOfOpcional value) {
         this.opcionales = value;
@@ -545,11 +556,11 @@ public class FEDetRequest {
 
     /**
      * Obtiene el valor de la propiedad compradores.
-     * 
+     *
      * @return
      *     possible object is
      *     {@link ArrayOfComprador }
-     *     
+     *
      */
     public ArrayOfComprador getCompradores() {
         return compradores;
@@ -557,11 +568,11 @@ public class FEDetRequest {
 
     /**
      * Define el valor de la propiedad compradores.
-     * 
+     *
      * @param value
      *     allowed object is
      *     {@link ArrayOfComprador }
-     *     
+     *
      */
     public void setCompradores(ArrayOfComprador value) {
         this.compradores = value;
@@ -569,11 +580,11 @@ public class FEDetRequest {
 
     /**
      * Obtiene el valor de la propiedad periodoAsoc.
-     * 
+     *
      * @return
      *     possible object is
      *     {@link Periodo }
-     *     
+     *
      */
     public Periodo getPeriodoAsoc() {
         return periodoAsoc;
@@ -581,11 +592,11 @@ public class FEDetRequest {
 
     /**
      * Define el valor de la propiedad periodoAsoc.
-     * 
+     *
      * @param value
      *     allowed object is
      *     {@link Periodo }
-     *     
+     *
      */
     public void setPeriodoAsoc(Periodo value) {
         this.periodoAsoc = value;
