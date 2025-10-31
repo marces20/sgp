@@ -15,6 +15,7 @@ import controllers.Secured;
 import controllers.auth.CheckPermiso;
 import models.OrdenRubro;
 import models.Periodo;
+import play.Logger;
 import play.mvc.Controller;
 import play.mvc.Result;
 import play.mvc.Security;
@@ -32,7 +33,7 @@ public class InformeLaboratorioController extends Controller {
 		List<Periodo> p = Periodo.find.where().eq("ejercicio_id", ejercicioId).orderBy("id asc").findList();
 
 
-		String sql  = "SELECT o.orden_linea_id as orden_linea_id, cantidad, precio, id, nombre,deposito, recepcionado, udm, pendiente, " +
+		/*String sql  = "SELECT o.orden_linea_id as orden_linea_id, cantidad, precio, id, nombre,deposito, recepcionado, udm, pendiente, " +
 				"	 o.totalRecepcionado totalRecepcionado, anulados,mes FROM ( " +
 				"	  SELECT ol.id as orden_linea_id, " +
 				"	 	 CASE WHEN ola.cantidad IS NOT NULL THEN (ol.cantidad - ola.cantidad) " +
@@ -65,9 +66,30 @@ public class InformeLaboratorioController extends Controller {
 				"	  left join udms u on u.id = ol.udm_id " +
 				"	  left join (select orden_linea_id, SUM(cantidad) cantidad from orden_lineas_anulaciones GROUP BY orden_linea_id) ola on ola.orden_linea_id = ol.id " +
 				"	 " +
-				" 	  WHERE o.orden_subrubro_id = 614 AND linea.mes is not null AND o.deposito_id in(1,3,32)" +
-				"	  group by ol.id, p.id, p.nombre, u.nombre, ola.cantidad,linea.mes,de.nombre  ORDER BY p.nombre ASC " +
-				"	 ) as o";
+				" 	  WHERE   p.id = 31142 and o.orden_subrubro_id = 614 AND linea.mes is not null AND o.deposito_id in(1,3,32)" +
+				"	  group by ol.id, p.id, p.nombre, u.nombre, ola.cantidad,linea.mes,de.nombre  ORDER BY recepcionado desc " +
+				"	 ) as o";*/
+
+		String sql = "SELECT id, nombre,deposito, recepcionado, o.recepcionado totalRecepcionado, mes,deposito FROM ( 	  " +
+				"	SELECT   " +
+				"	p.id,p.nombre,  	   " +
+				"	coalesce(SUM(linea.cantidad),0) recepcionado, 	 	  " +
+				"	linea.mes as mes, 		  " +
+				"	de.nombre as deposito		 	  " +
+				"	from orden_lineas ol 		 	  left join 	  (   		 " +
+				"		select rec.orden_provision_id, SUM(rl.cantidad) cantidad, rl.linea_orden_id, ol.precio,to_char(rem.fecha_remito,'MM/yyyy') as mes		  " +
+				"		from recepciones rec 		  inner join remitos rem on rec.id = rem.recepcion_id 		  " +
+				"		inner join remitos_lineas rl on rem.id = rl.remito_id 		  " +
+				"		inner join orden_lineas ol on ol.id = rl.linea_orden_id 	   	  " +
+				"		GROUP BY rec.orden_provision_id,rl.linea_orden_id, ol.precio,to_char(rem.fecha_remito,'MM/yyyy')	   	  ) " +
+				"	as linea on ol.id = linea.linea_orden_id 	  left join ordenes o on o.id = ol.orden_id  	  left join productos p on p.id = ol.producto_id 	 " +
+				"	left join depositos de on de.id = o.deposito_id  	  left join udms u on u.id = ol.udm_id 	" +
+				"	left join (select orden_linea_id, SUM(cantidad) cantidad from orden_lineas_anulaciones " +
+				"			   GROUP BY orden_linea_id) ola on ola.orden_linea_id = ol.id 	  " +
+				"	WHERE " +
+				"	o.orden_subrubro_id = 614 AND linea.mes is not null AND o.deposito_id in(1,3,32)	  " +
+				"	group by  p.id, p.nombre,   linea.mes,de.nombre  ORDER BY recepcionado desc 	 " +
+				") as o";
 
 		SqlQuery sqlQuery = Ebean.createSqlQuery(sql);
 
@@ -135,6 +157,8 @@ public class InformeLaboratorioController extends Controller {
 			}
 		}
 
+		Logger.debug("xxxxxxxxxxxx "+OrganigramaRubroPeriodoTotal);
+
 		Map<String,Map<String,Map<String,Integer>>> OrganigramaRubroPeriodoTotalTmp = new HashMap<>();
 		for(Map.Entry<String,Map<String,Map<String,Integer>>> rubroPeriodoTotalTmp : OrganigramaRubroPeriodoTotal.entrySet()) {
 
@@ -144,6 +168,9 @@ public class InformeLaboratorioController extends Controller {
 		}
 
 		Map<String,Map<String,Map<String,Integer>>> OrganigramaRubroPeriodoTotalTree = new TreeMap(OrganigramaRubroPeriodoTotalTmp);
+
+
+
 
 		//Map<String,String> ordenRubro = new HashMap<>();
 
