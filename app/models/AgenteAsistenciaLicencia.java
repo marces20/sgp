@@ -348,7 +348,7 @@ public class AgenteAsistenciaLicencia extends Model{
 		return ret;*/
 	}
 
-	public static int setDiasPorPeriodos(Integer idLicencia){
+	public static int setDiasPorPeriodos(Integer idLicencia,boolean licenciaReglamentaria){
 
 		Connection conn = null;
 		PreparedStatement stmt = null;
