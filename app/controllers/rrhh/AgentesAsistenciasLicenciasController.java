@@ -513,7 +513,9 @@ public class AgentesAsistenciasLicenciasController extends Controller {
 
 					if(llx.tipo_licencia_id.compareTo(new Long(5)) == 0) {
 						Logger.debug("222222222222");
-						AgenteAsistenciaLicencia.setDiasPorPeriodos(llx.id.intValue());
+						AgenteAsistenciaLicencia.setDiasPorPeriodos(llx.id.intValue(),true);
+					}else {
+						AgenteAsistenciaLicencia.setDiasPorPeriodos(llx.id.intValue(),false);
 					}
 
 				}
