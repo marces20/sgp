@@ -19,6 +19,7 @@ import models.AgenteAsistenciaLicencia;
 import models.Estado;
 import models.Expediente;
 import models.Periodo;
+import models.TipoLicencia;
 import models.Usuario;
 import models.auth.Permiso;
 import play.data.validation.Constraints.Required;
@@ -98,6 +99,10 @@ public class LiquidacionNovedadLicencia extends Model{
 													   fetch("agenteAsistenciaLicencia.agente","apellido,dni,cuit,tipo_relacion_laboral,activo,organigrama_id,tipo_residencia_id").
 													   fetch("agenteAsistenciaLicencia.agente.organigrama","nombre").
 													   where();
+
+		//SOLOOOOOO LICENCICIAS REGLAMENTARIAS------------------------!!!!!!!!!!!!!!!!!!!!!!!1
+		e.eq("agenteAsistenciaLicencia.tipo_licencia_id",TipoLicencia.LICENCIA_ANUAL_REGLAMENTARIA);
+
 		if(!Permiso.check("verTodoAgentes")){
     		if(Usuario.getUsurioSesion().organigrama != null){
 				e.eq("agenteAsistenciaLicencia.agente.organigrama_id", Usuario.getUsurioSesion().organigrama.id);
@@ -123,6 +128,9 @@ public class LiquidacionNovedadLicencia extends Model{
     			e.isNull("agenteAsistenciaLicencia.agente.tipo_residencia_id");
     		}
 		}
+
+
+
 
 		if(!btnFiltro0.isEmpty() || !btnFiltro1.isEmpty() || !btnFiltro2.isEmpty() || !btnFiltro3.isEmpty() || !btnFiltro4.isEmpty()){
     		e = e.disjunction();
