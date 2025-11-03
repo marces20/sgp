@@ -137,6 +137,7 @@ public class Periodo extends Model{
 
     	p.setExpressionList(
     			find.where()
+    			.eq("activo", true)
                 .ilike("nombre", "%" + nombre + "%")
 	            );
     	return p;
