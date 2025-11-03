@@ -38,6 +38,8 @@ public class Periodo extends Model{
 	public BigDecimal patronal_obrasocial_porcentaje;
 	public BigDecimal patronal_jubilacion_porcentaje;
 
+	public boolean activo = true;
+
 	@ManyToOne
 	public Ejercicio ejercicio;
 
@@ -120,6 +122,7 @@ public class Periodo extends Model{
 	public List<Periodo> getDataSuggest(String input,Integer limit){
 		List<Periodo> l = find.where()
 				.ilike("nombre", "%"+input+"%")
+				.eq("activo", true)
 				.setMaxRows(limit).orderBy("nombre")
 				.order("ejercicio_id desc")
 			    .findList();
