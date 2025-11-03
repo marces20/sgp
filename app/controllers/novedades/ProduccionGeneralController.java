@@ -59,7 +59,7 @@ public class ProduccionGeneralController extends Controller {
 
 	public static void importarPracticasByRismiAndOrganigrama(Long idOrganigrama) {
 
-		Periodo p = Periodo.getPeriodoByDate(new Date());
+		Periodo p = Periodo.find.byId(new Long(172));
 		Organigrama  o = Organigrama.find.byId(idOrganigrama);
 
 
