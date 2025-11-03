@@ -30,13 +30,13 @@ import views.html.expediente.expediente.modalBusquedaExpediente;
 
 @Security.Authenticated(Secured.class)
 public class PeriodosController extends Controller {
-	
+
 	final static Form<Periodo> periodoForm = form(Periodo.class);
-	
+
 	public static Result URL_LISTA_PERIODO = redirect(
 			controllers.contabilidad.routes.PeriodosController.indexPeriodo()
 	);
-	
+
 	@CheckPermiso(key = "periodosGeneral")
 	public static Result indexPeriodo() {
 		DynamicForm d = form().bindFromRequest();
@@ -48,18 +48,18 @@ public class PeriodosController extends Controller {
 								 ),
 								 d));
 	}
-	
+
 	@CheckPermiso(key = "periodosGeneral")
 	public static Result crearPeriodo() {
 		Form<Periodo> periodoForm = form(Periodo.class);
 		return ok(crearPeriodo.render(periodoForm));
 	}
-	
+
 	@CheckPermiso(key = "periodosGeneral")
 	public static Result guardarPeriodo() {
-		
+
 		Form<Periodo> periodoForm = form(Periodo.class).bindFromRequest();
-		
+
 		try {
 			if(periodoForm.field("ejercicio.id").value().isEmpty()){
 				periodoForm.reject("ejercicio.id","El Ejercicio es obligatorio.");
@@ -76,22 +76,22 @@ public class PeriodosController extends Controller {
 			flash("error", "No se ha podido almacenar el periodo");
 			return badRequest(crearPeriodo.render(periodoForm));
 		}
-		
+
 		return URL_LISTA_PERIODO;
 	}
-	
+
 	@CheckPermiso(key = "periodosGeneral")
 	public static Result editarPeriodo(Long id) {
 		Periodo periodo = Ebean.find(Periodo.class, id);
-		
+
 		return ok(editarPeriodo.render(periodoForm.fill(periodo)));
 	}
-	
+
 	@CheckPermiso(key = "periodosGeneral")
 	public static Result actualizarPeriodo(){
-		
+
 		Form<Periodo> periodoForm = form(Periodo.class).bindFromRequest();
-		
+
 		try {
 			if(periodoForm.field("ejercicio.id").value().isEmpty()){
 				periodoForm.reject("ejercicio.id","El Ejercicio es obligatorio.");
@@ -103,7 +103,7 @@ public class PeriodosController extends Controller {
 				periodoForm.get().update(periodoForm.get().id);
 				flash("success", "El periodo se ha actualizado");
 			}
-			
+
 		} catch (PersistenceException pe){
 			play.Logger.error("excepcion", pe);
 			flash("error", "No se ha podido almacenar el periodo");
@@ -111,7 +111,7 @@ public class PeriodosController extends Controller {
 		}
 		return URL_LISTA_PERIODO;
 	}
-	
+
 	@CheckPermiso(key = "periodosGeneral")
 	public static Result eliminarPeriodo(Long id) {
 		try {
@@ -124,14 +124,14 @@ public class PeriodosController extends Controller {
 
 		return URL_LISTA_PERIODO;
 	}
-	
+
 	public static Result suggestPeriodo(String input) {
-		 
+
 		ObjectNode rpta = Json.newObject();
 	    ArrayNode periodo = rpta.arrayNode();
-	    
+
 	    Periodo ad = new Periodo();
-		 
+
 		for(Periodo a : ad.getDataSuggest(input, 25)){
 			ObjectNode restJs = Json.newObject();
 	        restJs.put("id", a.id);
@@ -139,20 +139,20 @@ public class PeriodosController extends Controller {
 	        restJs.put("info", "");
 	        periodo.add(restJs);
 		}
-		
+
 		ObjectNode response = Json.newObject();
 		response.put("results", periodo);
-		 
+
 		return ok(response);
 	}
-	
+
 	public static Result get(int id){
-		Periodo periodo = Periodo.find.select("id, nombre").where().eq("id", id).findUnique();
-		
+		Periodo periodo = Periodo.find.select("id, nombre").where().eq("activo", true).eq("id", id).findUnique();
+
 		ObjectNode obj = Json.newObject();
 	    ArrayNode nodo = obj.arrayNode();
 		ObjectNode restJs = Json.newObject();
-		
+
 		if(periodo == null) {
 			restJs.put("success", false);
 			restJs.put("message", "No se encuentra el periodo");
@@ -164,12 +164,12 @@ public class PeriodosController extends Controller {
 		nodo.add(restJs);
 		return ok(restJs);
 	}
-	
+
 	public static Result modalBuscar() {
     	Pagination<Periodo> p = new Pagination<Periodo>();
     	p.setOrderDefault("DESC");
-    	p.setSortByDefault("id");	
-    	p.setExpressionList(Periodo.find.fetch("ejercicio").where().ilike("nombre", "%" + RequestVar.get("nombre") + "%"));
+    	p.setSortByDefault("id");
+    	p.setExpressionList(Periodo.find.fetch("ejercicio").where().eq("activo", true).ilike("nombre", "%" + RequestVar.get("nombre") + "%"));
 		return ok( modalBusquedaPeriodo.render(p, form().bindFromRequest()) );
 	}
 }
