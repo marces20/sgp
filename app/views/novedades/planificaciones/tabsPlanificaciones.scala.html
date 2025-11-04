@@ -35,6 +35,13 @@ totalHorarPorDiaPorPlanificacion:List[com.avaje.ebean.SqlRow])
 
 		}
 
+		<!-- -------------------PRODUCCION IMAGENES GENERAL----------------------------- -->
+		@if(planificacion.tipo_planificacion_id == models.novedades.TipoPlanificacion.PRODUCCION_IMAGENES) {
+			<li><a class="tabDetalles" href="#contenedorProduccionTotalizados" data-toggle="tab">Produccion Totalizados</a></li>
+
+
+		}
+
 		<!-- -------------------GUARDIAS----------------------------- -->
 		@if(planificacion.tipo_planificacion_id == models.novedades.TipoPlanificacion.GUARDIA) {
 
@@ -161,6 +168,23 @@ totalHorarPorDiaPorPlanificacion:List[com.avaje.ebean.SqlRow])
 				</div>
 			</div>
 		}
+
+		@if(planificacion.tipo_planificacion_id == models.novedades.TipoPlanificacion.PRODUCCION_IMAGENES) {
+			<div class="tab-pane" id="contenedorProduccionTotalizados">
+				<div class="row">
+					<div class="panel panel-default">
+						<div class="panel-heading"><b>Listado Produccion Totalizados Por Agente</b></div>
+						<div class="panel-body">
+							<div class="col-sm-12">
+								@views.html.novedades.planificaciones.tabs.detallesProduccionImagenesTotalizados(planificacion)
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+
+		}
+
 
 		<!-- -------------------GUARDIAS----------------------------- -->
 		@if(planificacion.tipo_planificacion_id == models.novedades.TipoPlanificacion.GUARDIA) {
