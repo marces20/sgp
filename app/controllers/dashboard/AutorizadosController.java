@@ -802,11 +802,10 @@ public class AutorizadosController extends Controller {
 
 		Logger.debug("0000000000000000 " + monto_general);
 		Long idOrden = new Long(idOrdenCompra[0]);
-		// InformeEstadisticoDeudaProveedores iep =
-		// InformeEstadisticoDeudaProveedores.find.where().eq("orden_id",
-		// idOrden).findUnique();
-		InformeDeudaProveedoresMaterializada iep = InformeDeudaProveedoresMaterializada.find.where()
-				.eq("orden_id", idOrden).findUnique();
+		InformeEstadisticoDeudaProveedores iep = InformeEstadisticoDeudaProveedores.find.where().eq("orden_id", idOrden).findUnique();
+
+		//InformeDeudaProveedoresMaterializada iep = InformeDeudaProveedoresMaterializada.find.where().eq("orden_id", idOrden).findUnique();
+
 		BigDecimal restoAutorizar = iep.getRestoAAutorizar();
 
 		if (monto_general != null && monto_general[0] != null && !monto_general[0].isEmpty()) {
@@ -950,8 +949,8 @@ public class AutorizadosController extends Controller {
 				nodo.add(restJs);
 			} else {
 				Ebean.commitTransaction();
-				InformeDeudaProveedoresMaterializada.actualizarVistaMaterializada();
-				InformeDeudaPorActaMaterializada.actualizarVistaMaterializada();
+				//InformeDeudaProveedoresMaterializada.actualizarVistaMaterializada();
+				//InformeDeudaPorActaMaterializada.actualizarVistaMaterializada();
 			}
 			Ebean.endTransaction();
 
@@ -1116,8 +1115,8 @@ public class AutorizadosController extends Controller {
 			} else {
 				Logger.debug("xxxxxxxxxxxxx222222 ") ;
 				Ebean.commitTransaction();
-				InformeDeudaProveedoresMaterializada.actualizarVistaMaterializada();
-				InformeDeudaPorActaMaterializada.actualizarVistaMaterializada();
+				//InformeDeudaProveedoresMaterializada.actualizarVistaMaterializada();
+				//InformeDeudaPorActaMaterializada.actualizarVistaMaterializada();
 			}
 			Ebean.endTransaction();
 		} else {
@@ -1183,11 +1182,8 @@ public class AutorizadosController extends Controller {
 
 		Autorizado autorizado = Autorizado.find.byId(atId);
 		Long ordenId = new Long(idOrdenCompra[0]);
-		// InformeEstadisticoDeudaProveedores iep =
-		// InformeEstadisticoDeudaProveedores.find.where().eq("orden_id",
-		// ordenId).findUnique();
-		InformeDeudaProveedoresMaterializada iep = InformeDeudaProveedoresMaterializada.find.where()
-				.eq("orden_id", ordenId).findUnique();
+		 InformeEstadisticoDeudaProveedores iep = InformeEstadisticoDeudaProveedores.find.where().eq("orden_id", ordenId).findUnique();
+		//InformeDeudaProveedoresMaterializada iep = InformeDeudaProveedoresMaterializada.find.where().eq("orden_id", ordenId).findUnique();
 
 		if (monto_general != null && monto_general[0] != null && !monto_general[0].isEmpty()) {
 			BigDecimal monto_generalBg = new BigDecimal(monto_general[0].replace(",", ".")).setScale(2,
@@ -1252,8 +1248,8 @@ public class AutorizadosController extends Controller {
 				al.save();
 
 			}
-			InformeDeudaProveedoresMaterializada.actualizarVistaMaterializada();
-			InformeDeudaPorActaMaterializada.actualizarVistaMaterializada();
+			//InformeDeudaProveedoresMaterializada.actualizarVistaMaterializada();
+			//InformeDeudaPorActaMaterializada.actualizarVistaMaterializada();
 
 		} else if (tiene_actas != null && monto_general != null && monto_general[0] != null
 				&& !monto_general[0].isEmpty()) {
@@ -1399,8 +1395,8 @@ public class AutorizadosController extends Controller {
 				return ok(restJs);
 			} else {
 				Ebean.commitTransaction();
-				InformeDeudaProveedoresMaterializada.actualizarVistaMaterializada();
-				InformeDeudaPorActaMaterializada.actualizarVistaMaterializada();
+				//InformeDeudaProveedoresMaterializada.actualizarVistaMaterializada();
+				//InformeDeudaPorActaMaterializada.actualizarVistaMaterializada();
 			}
 			Ebean.endTransaction();
 
@@ -1596,8 +1592,8 @@ public class AutorizadosController extends Controller {
 				return ok(restJs);
 			} else {
 				Ebean.commitTransaction();
-				InformeDeudaProveedoresMaterializada.actualizarVistaMaterializada();
-				InformeDeudaPorActaMaterializada.actualizarVistaMaterializada();
+				//InformeDeudaProveedoresMaterializada.actualizarVistaMaterializada();
+				//InformeDeudaPorActaMaterializada.actualizarVistaMaterializada();
 
 			}
 			Ebean.endTransaction();
@@ -1717,10 +1713,9 @@ public class AutorizadosController extends Controller {
 						listaCertificaciones.get(0).base);
 			} else if (id.contains("AC")) {
 				Long idActa = new Long(id.replace("AC", ""));
-				// InformeDeudaPorActa ida = InformeDeudaPorActa.find.where().eq("id",
-				// idActa).findUnique();
-				InformeDeudaPorActaMaterializada ida = InformeDeudaPorActaMaterializada.find.where().eq("id", idActa)
-						.findUnique();
+				 InformeDeudaPorActa ida = InformeDeudaPorActa.find.where().eq("id", idActa).findUnique();
+				 //InformeDeudaPorActaMaterializada ida = InformeDeudaPorActaMaterializada.find.where().eq("id", idActa)
+				 //		.findUnique();
 				errorMontoActasAutorizado = cargarActa(idActa, autorizado, ida.totalDeuda, ida.totalDeuda);
 
 			} else if (id.contains("ANT")) {
@@ -1736,8 +1731,8 @@ public class AutorizadosController extends Controller {
 			return ok(restJs);
 		} else {
 			Ebean.commitTransaction();
-			InformeDeudaProveedoresMaterializada.actualizarVistaMaterializada();
-			InformeDeudaPorActaMaterializada.actualizarVistaMaterializada();
+			//InformeDeudaProveedoresMaterializada.actualizarVistaMaterializada();
+			//InformeDeudaPorActaMaterializada.actualizarVistaMaterializada();
 		}
 		// InformeDeudaProveedoresMaterializada.actualizarVistaMaterializada();
 		// InformeDeudaPorActaMaterializada.actualizarVistaMaterializada();
