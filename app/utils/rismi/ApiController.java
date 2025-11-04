@@ -1,6 +1,7 @@
 package utils.rismi;
 
 import play.mvc.*;
+import utils.DateUtils;
 import play.libs.WS;
 import play.libs.F.Promise;
 import play.Logger;
@@ -29,7 +30,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 public class ApiController {
 
 	private static final String API_BASE_URL = "http://10.1.4.24/api";
-    private static final String CLIENT_ID = Play.application().configuration().getString("rismi.rismi_cliente_id");
+    private static final String CLIENT_ID = Play.application().configuration().getString("rismi.cliente_id");
     private static final String CLIENT_SECRET = Play.application().configuration().getString("rismi.cliente_secret");
 
 
@@ -112,8 +113,8 @@ public class ApiController {
                         .setHeader("Accept", "application/json")
                         .setHeader("Authorization", "Bearer " + token)
                         .setQueryParameter("id_dominio", "1")
-                        .setQueryParameter("fecha_desde", "2025-09-01")
-                        .setQueryParameter("fecha_hasta", "2025-09-30")
+                        .setQueryParameter("fecha_desde", DateUtils.formatDate(pe.date_start,"yyyy-MM-dd"))
+                        .setQueryParameter("fecha_hasta", DateUtils.formatDate(pe.date_stop,"yyyy-MM-dd"))
                         .setQueryParameter("numero_documento", dni)
 
                         .get()
