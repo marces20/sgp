@@ -39,6 +39,8 @@ GET    /produccionImagenes/index    	controllers.novedades.ProduccionImagenesCon
 GET     /produccionGeneral/detallesPorAgentePorPlanificacion      controllers.novedades.ProduccionGeneralController.detallesPorAgentePorPlanificacion(idPlanificacion:Long ?= 0)
 GET     /produccionGeneral/detallesProduccionTotalizados      controllers.novedades.ProduccionGeneralController.detallesProduccionTotalizados(idPlanificacion:Long ?= 0)
 
+GET     /produccionGeneral/detallesProduccionImagenesTotalizados      controllers.novedades.ProduccionImagenesController.detallesProduccionImagenesTotalizados(idPlanificacion:Long ?= 0)
+
 
 
 
