@@ -20,12 +20,14 @@ import models.haberes.PuestoLaboral;
 import models.novedades.Planificacion;
 import models.novedades.ProduccioImagenesPuestoLaboralPeriodo;
 import models.novedades.ProduccionPracticasImagenesRismi;
+import models.novedades.ProduccionPuestoPeriodo;
 import models.novedades.TipoPlanificacion;
 import play.data.DynamicForm;
 import play.mvc.Controller;
 import play.mvc.Result;
 import play.mvc.Security;
 import utils.rismi.ApiController;
+import views.html.novedades.planificaciones.tabs.detallesProduccionImagenesTotalizadosTemplate;
 import views.html.novedades.produccion.imagenes.*;
 
 @Security.Authenticated(Secured.class)
@@ -36,6 +38,17 @@ public class ProduccionImagenesController extends Controller {
 		DynamicForm d = form().bindFromRequest();
 
 		return ok(indexProduccionImagenes.render());
+	}
+
+	public static Result detallesProduccionImagenesTotalizados(Long idPlanificacion) {
+		DynamicForm d = form().bindFromRequest();
+
+
+		List<SqlRow> ppp = ProduccioImagenesPuestoLaboralPeriodo.getProduccionMes(idPlanificacion);
+
+		return ok(detallesProduccionImagenesTotalizadosTemplate.render(ppp));
+
+
 	}
 
 	public static void importarPracticasImagenesByRismiAndOrganigrama(Long idOrganigrama) {
