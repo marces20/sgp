@@ -324,7 +324,7 @@ public class RecuperoPlanillasController  extends Controller {
 		if(!RequestVar.get("puntoventa_id").isEmpty() && !RequestVar.get("fecha").isEmpty()) {
 			Long puntoventa_id = new Long(RequestVar.get("puntoventa_id"));
 
-			if(puntoventa_id.compareTo(new Long(14)) == 0 || puntoventa_id.compareTo(new Long(13)) == 0){
+			if(puntoventa_id.compareTo(new Long(14)) == 0){
 				puntoventa_id = new Long(9);
 			}
 
