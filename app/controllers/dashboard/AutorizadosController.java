@@ -492,8 +492,8 @@ public class AutorizadosController extends Controller {
 	public static Result getListadoDeudasActas() {
 
 		String deuda_mayor = "0";
-		Pagination<InformeDeudaPorActaMaterializada> p = InformeDeudaPorActaMaterializada.page(
-				// Pagination<InformeDeudaPorActa> p = InformeDeudaPorActa.page(
+		//Pagination<InformeDeudaPorActaMaterializada> p = InformeDeudaPorActaMaterializada.page(
+				 Pagination<InformeDeudaPorActa> p = InformeDeudaPorActa.page(
 				RequestVar.get("acta_numero"),
 				RequestVar.get("orden_provision"),
 				RequestVar.get("proveedor_id"),
@@ -516,8 +516,7 @@ public class AutorizadosController extends Controller {
 		// InformeDeudaProveedoresMaterializada.actualizarVistaMaterializada();
 		// InformeDeudaPorActaMaterializada.actualizarVistaMaterializada();
 
-		return ok(
-				contenidoTabCargaActa.render(p, form().bindFromRequest(), new Long(RequestVar.get("idAutorizado")), a));
+		return ok(contenidoTabCargaActa.render(p, form().bindFromRequest(), new Long(RequestVar.get("idAutorizado")), a));
 	}
 
 	public static Result getListadoDeudas() {
@@ -576,10 +575,8 @@ public class AutorizadosController extends Controller {
 
 		List<ActaRecepcion> listaActas = ActaRecepcion.getListaActasDeudas(null, idActa);
 
-		InformeDeudaPorActaMaterializada ida = InformeDeudaPorActaMaterializada.find.where().eq("id", idActa)
-				.findUnique();
-		// InformeDeudaPorActa ida = InformeDeudaPorActa.find.where().eq("id",
-		// idActa).findUnique();
+		//InformeDeudaPorActaMaterializada ida = InformeDeudaPorActaMaterializada.find.where().eq("id", idActa).findUnique();
+		 InformeDeudaPorActa ida = InformeDeudaPorActa.find.where().eq("id", idActa).findUnique();
 
 		// BigDecimal deudaActa = InformeDeudaPorActa.find.where().eq("id",
 		// idActa).findUnique().totalDeuda;
