@@ -1,12 +1,12 @@
-@(listaActas: List[ActaRecepcion],idAutorizado:Long,idOp:Long,idOrdenCompra:Long,ida:models.informes.InformeDeudaPorActaMaterializada,tipo_cuenta_id:Long)
+@(listaActas: List[ActaRecepcion],idAutorizado:Long,idOp:Long,idOrdenCompra:Long,ida:models.informes.InformeDeudaPorActa,tipo_cuenta_id:Long)
 @import java.math.BigDecimal;var monto_t=new java.math.BigDecimal(0);
 <form action="@controllers.dashboard.routes.AutorizadosController.cargarLineasAutorizados()" method="POST" id="formCargarLineasAutorizadosActas">
 
 <input type="hidden" name="idAutorizado" value="@idAutorizado"/>
 <input type="hidden" name="idOp" value="@idOp"/>
 <input type="hidden" name="profe" value=""/>
-<input type="hidden" name="idOrdenCompra" value="@idOrdenCompra"/> 
-<input type="hidden" name="tipo_cuenta_id" value="@tipo_cuenta_id"/> 
+<input type="hidden" name="idOrdenCompra" value="@idOrdenCompra"/>
+<input type="hidden" name="tipo_cuenta_id" value="@tipo_cuenta_id"/>
 
 <table id="tablaAutorizadosActas" class="table table-bordered table-hover">
 	<thead>
@@ -18,7 +18,7 @@
 	 			 <span class="totales" style="font-weight:bold;font-size:14px;">$0.00</span>
 			</th>
  		</tr>
- 		 
+
 		<tr>
 			<th width="30">
 				<input type="checkbox" name="" id="seleccionarTodos"/>
@@ -31,17 +31,17 @@
 			<th width="100">Total Deuda</th>
 			<th width="100">Monto a Cargar</th>
 		</tr>
-		
+
 	</thead>
 	<tbody>
-		
+
 	   		@for(a <- listaActas) {
 				<tr data-id="@a.id" class="seleccionarFila">
 					<td>
 						<input type="checkbox" class="checkFila" name="id[]" value="@a.id"/>
 					</td>
 					<td>@a.numero</td>
-					
+
 					<td align="center">@if(a.fecha != null){@(utils.DateUtils.formatDate(a.fecha))}</td>
 					<td>@if(a.periodo_id != null) {@Periodo.find.byId(a.periodo_id).nombre}</td>
 					<td align="center">
@@ -60,9 +60,9 @@
 						<input type="input" name="monto[]" disabled="disabled" class="monto form-control" />
 						<p class="pErrores" style="font-weight:bold;"></p>
 					</td>
-				</tr>    
+				</tr>
 				@{monto_t= monto_t.add(a.getTotal())}
-		 	}	 	
+		 	}
 		 	<tr>
 					<td colspan="4" align="right"><span style="font-weight:bold;font-size:14px;">Total Actas</span></td>
 					<td align="center">
@@ -70,8 +70,8 @@
 						<input type="hidden" name="monto_t" class="" value="@monto_t"/>
 					</td>
 					<td colspan="3" align="center"></td>
-					 
-			</tr>		
+
+			</tr>
    	</tbody>
    	<tfoot>
    		<tr>
@@ -93,27 +93,27 @@
  		</tr>
 	</tfoot>
    </table>
- </form>  
- 
- 
- 
- 
- 
+ </form>
+
+
+
+
+
 <script>
 $( function(){
 	$(".monto,.monto_general").numeric_input({allowNegative: false});
-	
+
 	$('.monto').focusout( function(){
 		calcularTotal ($("#tablaAutorizados tr"));
 	});
-	
-	$('.checkFila').change( function(){	
+
+	$('.checkFila').change( function(){
 		seleccionAutorizado( $(this).closest('tr') );
 		$("#tablaAutorizadosActas tr").removeClass("alert alert-danger");
 		$(".pErrores").html("");
 		calcularTotal($("#tablaAutorizados tr"));
 	});
-	
+
 	$('#seleccionarTodos').change( function(){
 		var table = $(this).closest('table');
 		table.find("input[name='id[]']").prop("checked", $(this).prop("checked"));
@@ -122,8 +122,8 @@ $( function(){
 		$(".pErrores").html("");
 		calcularTotal ($("#tablaAutorizadosActas tr"));
 	});
-	 
-	
-	
+
+
+
 });
 </script>
