@@ -121,7 +121,7 @@ public class Global extends GlobalSettings {
                 	  		ab.crearComprobantesAutomaticos();
                 	  	}
 
-                  } catch ( IOException e) {
+                  } catch ( Exception e) {
                     e.printStackTrace();
                   }
                 }
@@ -166,7 +166,7 @@ public class Global extends GlobalSettings {
                         eu.setAdds(adds);
                         eu.enviar();
 
-                  } catch (EmailException | IOException | DatatypeConfigurationException e) {
+                  } catch (Exception e) {
                     e.printStackTrace();
                   }
                 }
@@ -197,7 +197,7 @@ public class Global extends GlobalSettings {
                   try {
                 	LiquidacionMes.actualizarVistaMaterializadaPuestosLaborales();
                     InventarioRismi.actualizarInventarioRismi();
-                  } catch (EmailException e) {
+                  } catch (Exception e) {
                     e.printStackTrace();
                   }
                 }
@@ -254,7 +254,7 @@ public class Global extends GlobalSettings {
                     eu2.enviar();
 
 
-                  } catch (EmailException e) {
+                  } catch (Exception e) {
                     e.printStackTrace();
                   }
                 }
@@ -280,7 +280,7 @@ public class Global extends GlobalSettings {
                   System.out.println("Cron Job de liquidaciones");
                   try {
                     LiquidacionMes.preliquidarEspera();
-                  } catch (EmailException e) {
+                  } catch (Exception e) {
                     e.printStackTrace();
                   }
                 }
