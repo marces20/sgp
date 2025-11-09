@@ -1,4 +1,4 @@
-@(listaActas: List[ActaRecepcion],idAutorizado:Long,idOp:Long,idOrdenCompra:Long,ida:models.informes.InformeDeudaPorActaMaterializada,tipo_cuenta_id:Long)
+@(listaActas: List[ActaRecepcion],idAutorizado:Long,idOp:Long,idOrdenCompra:Long,ida:models.informes.InformeDeudaPorActa,tipo_cuenta_id:Long)
 @import java.math.BigDecimal;var monto_t=new java.math.BigDecimal(0);
 <form action="@controllers.dashboard.routes.AutorizadosController.cargarLineasAutorizados()" method="POST" id="formCargarLineasAutorizadosActas">
 

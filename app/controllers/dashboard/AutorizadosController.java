@@ -492,8 +492,8 @@ public class AutorizadosController extends Controller {
 	public static Result getListadoDeudasActas() {
 
 		String deuda_mayor = "0";
-		Pagination<InformeDeudaPorActaMaterializada> p = InformeDeudaPorActaMaterializada.page(
-	//			 Pagination<InformeDeudaPorActa> p = InformeDeudaPorActa.page(
+		//Pagination<InformeDeudaPorActaMaterializada> p = InformeDeudaPorActaMaterializada.page(
+				 Pagination<InformeDeudaPorActa> p = InformeDeudaPorActa.page(
 				RequestVar.get("acta_numero"),
 				RequestVar.get("orden_provision"),
 				RequestVar.get("proveedor_id"),
@@ -514,7 +514,7 @@ public class AutorizadosController extends Controller {
 		// a.tipo_cuenta_id = new Long(RequestVar.get("tipo_cuenta_id"));
 		a.save();
 		// InformeDeudaProveedoresMaterializada.actualizarVistaMaterializada();
-		 InformeDeudaPorActaMaterializada.actualizarVistaMaterializada();
+		// InformeDeudaPorActaMaterializada.actualizarVistaMaterializada();
 
 		return ok(contenidoTabCargaActa.render(p, form().bindFromRequest(), new Long(RequestVar.get("idAutorizado")), a));
 	}
@@ -575,8 +575,8 @@ public class AutorizadosController extends Controller {
 
 		List<ActaRecepcion> listaActas = ActaRecepcion.getListaActasDeudas(null, idActa);
 
-		InformeDeudaPorActaMaterializada ida = InformeDeudaPorActaMaterializada.find.where().eq("id", idActa).findUnique();
-		// InformeDeudaPorActa ida = InformeDeudaPorActa.find.where().eq("id", idActa).findUnique();
+		//InformeDeudaPorActaMaterializada ida = InformeDeudaPorActaMaterializada.find.where().eq("id", idActa).findUnique();
+		 InformeDeudaPorActa ida = InformeDeudaPorActa.find.where().eq("id", idActa).findUnique();
 
 		// BigDecimal deudaActa = InformeDeudaPorActa.find.where().eq("id",
 		// idActa).findUnique().totalDeuda;
@@ -947,7 +947,7 @@ public class AutorizadosController extends Controller {
 			} else {
 				Ebean.commitTransaction();
 				//InformeDeudaProveedoresMaterializada.actualizarVistaMaterializada();
-				InformeDeudaPorActaMaterializada.actualizarVistaMaterializada();
+				//InformeDeudaPorActaMaterializada.actualizarVistaMaterializada();
 			}
 			Ebean.endTransaction();
 
@@ -1113,7 +1113,7 @@ public class AutorizadosController extends Controller {
 				Logger.debug("xxxxxxxxxxxxx222222 ") ;
 				Ebean.commitTransaction();
 				//InformeDeudaProveedoresMaterializada.actualizarVistaMaterializada();
-				InformeDeudaPorActaMaterializada.actualizarVistaMaterializada();
+				//InformeDeudaPorActaMaterializada.actualizarVistaMaterializada();
 			}
 			Ebean.endTransaction();
 		} else {
@@ -1246,7 +1246,7 @@ public class AutorizadosController extends Controller {
 
 			}
 			//InformeDeudaProveedoresMaterializada.actualizarVistaMaterializada();
-			InformeDeudaPorActaMaterializada.actualizarVistaMaterializada();
+			//InformeDeudaPorActaMaterializada.actualizarVistaMaterializada();
 
 		} else if (tiene_actas != null && monto_general != null && monto_general[0] != null
 				&& !monto_general[0].isEmpty()) {
@@ -1393,7 +1393,7 @@ public class AutorizadosController extends Controller {
 			} else {
 				Ebean.commitTransaction();
 				//InformeDeudaProveedoresMaterializada.actualizarVistaMaterializada();
-				InformeDeudaPorActaMaterializada.actualizarVistaMaterializada();
+				//InformeDeudaPorActaMaterializada.actualizarVistaMaterializada();
 			}
 			Ebean.endTransaction();
 
@@ -1590,7 +1590,7 @@ public class AutorizadosController extends Controller {
 			} else {
 				Ebean.commitTransaction();
 				//InformeDeudaProveedoresMaterializada.actualizarVistaMaterializada();
-				InformeDeudaPorActaMaterializada.actualizarVistaMaterializada();
+				//InformeDeudaPorActaMaterializada.actualizarVistaMaterializada();
 
 			}
 			Ebean.endTransaction();
@@ -1710,8 +1710,9 @@ public class AutorizadosController extends Controller {
 						listaCertificaciones.get(0).base);
 			} else if (id.contains("AC")) {
 				Long idActa = new Long(id.replace("AC", ""));
-				//InformeDeudaPorActa ida = InformeDeudaPorActa.find.where().eq("id", idActa).findUnique();
-				 InformeDeudaPorActaMaterializada ida = InformeDeudaPorActaMaterializada.find.where().eq("id", idActa).findUnique();
+				 InformeDeudaPorActa ida = InformeDeudaPorActa.find.where().eq("id", idActa).findUnique();
+				 //InformeDeudaPorActaMaterializada ida = InformeDeudaPorActaMaterializada.find.where().eq("id", idActa)
+				 //		.findUnique();
 				errorMontoActasAutorizado = cargarActa(idActa, autorizado, ida.totalDeuda, ida.totalDeuda);
 
 			} else if (id.contains("ANT")) {
@@ -1728,7 +1729,7 @@ public class AutorizadosController extends Controller {
 		} else {
 			Ebean.commitTransaction();
 			//InformeDeudaProveedoresMaterializada.actualizarVistaMaterializada();
-			InformeDeudaPorActaMaterializada.actualizarVistaMaterializada();
+			//InformeDeudaPorActaMaterializada.actualizarVistaMaterializada();
 		}
 		// InformeDeudaProveedoresMaterializada.actualizarVistaMaterializada();
 		// InformeDeudaPorActaMaterializada.actualizarVistaMaterializada();
