@@ -197,6 +197,12 @@ public class Agente extends Model{
 
 	public Integer limite_guardia;
 
+	@ManyToOne
+	@JoinColumn(name="organigrama_produccion_id", referencedColumnName="id", insertable=false, updatable=false)
+	public Organigrama organigramaProduccion;
+	@Column(name="organigrama_produccion_id")
+	public Long organigrama_produccion_id;
+
 	public static Model.Finder<Long,Agente> find = new Finder<Long,Agente>(Long.class, Agente.class);
 
 	@PostLoad
