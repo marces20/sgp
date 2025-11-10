@@ -57,9 +57,9 @@ public class ProduccionGeneralController extends Controller {
 
 	}
 
-	public static void importarPracticasByRismiAndOrganigrama(Long idOrganigrama) {
+	public static void importarPracticasByRismiAndOrganigrama(Long idOrganigrama,Long periodoId) {
 
-		Periodo p = Periodo.find.byId(new Long(172));
+		Periodo p = Periodo.find.byId(periodoId);
 		Organigrama  o = Organigrama.find.byId(idOrganigrama);
 
 
