@@ -41,7 +41,7 @@ import com.avaje.ebean.SqlQuery;
 import com.avaje.ebean.SqlRow;
 
 @Entity
-@Table(name = "informe_deuda_actas")
+@Table(name = "informe_deuda_actas_claude")
 public class InformeDeudaPorActa extends Model{
 	private static final long serialVersionUID = 1L;
 
@@ -137,8 +137,9 @@ public class InformeDeudaPorActa extends Model{
     	ExpressionList<InformeDeudaPorActa> e = find
     			.fetch("proveedor", "nombre")
     			.fetch("expediente")
+    			.fetch("tipoCuenta","nombre")
     			.fetch("ordenCompra")
-    			.fetch("ordenCompra.deposito")
+    			.fetch("ordenCompra.deposito", "nombre")
     			.fetch("expediente.ejercicio")
     			.fetch("ordenProvision", "numero, orden_compra_id")
     			.where();
@@ -151,6 +152,7 @@ public class InformeDeudaPorActa extends Model{
     		}
     	}
 
+    	e.eq("perimido", false);
 
     	if(autorizado) {
     		e.raw("(totalDeuda > 0.01)");
