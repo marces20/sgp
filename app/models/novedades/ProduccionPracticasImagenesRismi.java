@@ -140,11 +140,13 @@ public class ProduccionPracticasImagenesRismi extends Model{
 
 		Integer minutos = new Integer(0);
 
-
-
-		minutos =diasMes*HORAS_DIAS_MEDICO_PLANTA*60;
-
-
+		if(pl.legajo.agente.puesto.jerarquico) {
+			minutos =diasMes*HORAS_DIAS_JERARQUICO*60;
+		}else if(false) {//HORAS_DIAS_INSTRUCTORES_RESIDENTES
+			minutos =diasMes*HORAS_DIAS_INSTRUCTORES_RESIDENTES*60;
+		}else {
+			minutos =diasMes*HORAS_DIAS_MEDICO_PLANTA*60;
+		}
 
 		return minutos;
 	}
