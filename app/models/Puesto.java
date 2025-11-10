@@ -20,6 +20,9 @@ import utils.pagination.Pagination;
 @Table(name = "puestos")
 public class Puesto extends Model{
 
+
+	public static final long RESPONSABLE_DEPARTAMENTO = new Long(150);
+
 	private static final long serialVersionUID = 1L;
 	@Id
 	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="puestos_id_seq")
@@ -41,6 +44,8 @@ public class Puesto extends Model{
 	public Usuario write_usuario;
 	@Column(name="write_usuario_id")
 	public Long write_usuario_id;
+
+	public boolean jerarquico = false;
 
 	public static Finder<Long,Puesto> find = new Finder<Long,Puesto>(Long.class, Puesto.class);
 
