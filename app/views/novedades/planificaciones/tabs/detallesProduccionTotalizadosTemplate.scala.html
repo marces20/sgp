@@ -20,12 +20,12 @@
 		</thead>
 	<tbody>
 		@for(ppp <- produccionPuestoPeriodo) {
-			@{porcentaje= ppp.getBigDecimal("produccion_mes").multiply(new java.math.BigDecimal(100)).divide(ppp.getBigDecimal("monto_tope"), 2, java.math.RoundingMode.HALF_UP).subtract(new java.math.BigDecimal(100)) }
+			@{porcentaje= ppp.getBigDecimal("produccion_mes").multiply(new java.math.BigDecimal(100)).divide(ppp.getBigDecimal("monto_tope"), 2, java.math.RoundingMode.HALF_UP).subtract(new java.math.BigDecimal(100)).setScale(0, java.math.RoundingMode.HALF_UP) }
 			<tr>
 				<td>@ppp.getString("apellido")</td>
 				<td style="text-align: center;">@utils.NumberUtils.moneda(ppp.getBigDecimal("produccion_mes"))</td>
 				<td style="text-align: right;">@utils.NumberUtils.moneda(ppp.getBigDecimal("total_produccion"))</td>
-				<td style="text-align: right;">
+				<td style="text-align: center;">
 					<b @if(porcentaje.compareTo(java.math.BigDecimal.ZERO) < 0){ style="color:red;"} >@porcentaje %</b>
 				</td>
 			</tr>
