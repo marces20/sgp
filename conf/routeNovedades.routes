@@ -35,6 +35,7 @@ GET    /planificacion/modalBuscar				controllers.novedades.PlanificacionesContro
 GET    /planificacion/suggest/:input		 controllers.novedades.PlanificacionesController.suggestPlanificacion(input:String)
 
 GET    /produccionImagenes/index    	controllers.novedades.ProduccionImagenesController.index()
+GET    /produccionImagenes/detallesPracticasImagenesMinutos    	controllers.novedades.ProduccionImagenesController.detallesPracticasImagenesMinutos(idPlanificacion:Long ?= 0)
 
 GET     /produccionGeneral/detallesPorAgentePorPlanificacion      controllers.novedades.ProduccionGeneralController.detallesPorAgentePorPlanificacion(idPlanificacion:Long ?= 0)
 GET     /produccionGeneral/detallesProduccionTotalizados      controllers.novedades.ProduccionGeneralController.detallesProduccionTotalizados(idPlanificacion:Long ?= 0)
