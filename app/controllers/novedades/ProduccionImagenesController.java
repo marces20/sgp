@@ -28,7 +28,7 @@ import play.mvc.Controller;
 import play.mvc.Result;
 import play.mvc.Security;
 import utils.rismi.ApiController;
-import views.html.novedades.planificaciones.tabs.detallesProduccionImagenesTotalizadosTemplate;
+import views.html.novedades.planificaciones.tabs.*;
 import views.html.novedades.produccion.imagenes.*;
 
 @Security.Authenticated(Secured.class)
@@ -41,6 +41,14 @@ public class ProduccionImagenesController extends Controller {
 		return ok(indexProduccionImagenes.render());
 	}
 
+	public static Result detallesPracticasImagenesMinutos(Long idPlanificacion) {
+		DynamicForm d = form().bindFromRequest();
+
+		List<SqlRow> ppp = ProduccionPracticasImagenesRismi.getDetallesPracticasMinutos(idPlanificacion);
+
+		return ok(detallesPracticasImagenesMinutosTemplate.render(ppp));
+	}
+
 	public static Result detallesProduccionImagenesTotalizados(Long idPlanificacion) {
 		DynamicForm d = form().bindFromRequest();
 
@@ -48,8 +56,6 @@ public class ProduccionImagenesController extends Controller {
 		List<SqlRow> ppp = ProduccioImagenesPuestoLaboralPeriodo.getProduccionMes(idPlanificacion);
 
 		return ok(detallesProduccionImagenesTotalizadosTemplate.render(ppp));
-
-
 	}
 
 	public static void importarPracticasImagenesByRismiAndOrganigrama(Long idOrganigrama) {
@@ -100,11 +106,5 @@ public class ProduccionImagenesController extends Controller {
 				}
 			}
 		}
-
-
-
-
-
-
 	}
 }
