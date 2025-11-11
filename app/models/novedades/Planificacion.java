@@ -214,6 +214,25 @@ public class Planificacion extends Model{
 		return l;
 	}
 
+	public boolean controlPermisoDeposito() {
+		boolean r = true;
+		if(!Permiso.check("verTodoPlanificacion")){
+			if(Usuario.getUsurioSesion().organigrama != null && Usuario.getUsurioSesion().organigrama.deposito != null){
+
+				List<Integer> ol = Organigrama.getOrganigramasIdsHijos(Usuario.getUsurioSesion().organigrama.id);
+
+				if(!ol.contains(organigrama_id)) {
+					r = false;
+				}
+
+			}else {
+				r = false;
+			}
+		}
+
+		return r;
+	}
+
 	public boolean controlFechaEntreRango(Date fechaBuscar) {
 		return fechaBuscar.compareTo(fecha_inicio) >= 0 && fechaBuscar.compareTo(fecha_fin) <= 0;
 	}
