@@ -38,6 +38,7 @@ totalHorarPorDiaPorPlanificacion:List[com.avaje.ebean.SqlRow])
 		<!-- -------------------PRODUCCION IMAGENES GENERAL----------------------------- -->
 		@if(planificacion.tipo_planificacion_id == models.novedades.TipoPlanificacion.PRODUCCION_IMAGENES) {
 			<li><a class="tabDetalles" href="#contenedorProduccionTotalizados" data-toggle="tab">Produccion Totalizados</a></li>
+			<li><a class="tabDetalles" href="#contenedorProduccionImagenesDetalles" data-toggle="tab">Detalles Por Agente</a></li>
 
 
 		}
@@ -177,6 +178,18 @@ totalHorarPorDiaPorPlanificacion:List[com.avaje.ebean.SqlRow])
 						<div class="panel-body">
 							<div class="col-sm-12">
 								@views.html.novedades.planificaciones.tabs.detallesProduccionImagenesTotalizados(planificacion)
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="tab-pane" id="contenedorProduccionImagenesDetalles">
+				<div class="row">
+					<div class="panel panel-default">
+						<div class="panel-heading"><b>Listado Detalles Por Agente</b></div>
+						<div class="panel-body">
+							<div class="col-sm-12">
+								@views.html.novedades.planificaciones.tabs.detallesPracticasImagenesMinutos(planificacion)
 							</div>
 						</div>
 					</div>
