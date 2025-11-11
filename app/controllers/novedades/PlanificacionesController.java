@@ -212,7 +212,8 @@ public class PlanificacionesController extends Controller {
 
 		Planificacion p = Planificacion.find.byId(id);
 
-		if(p != null){
+		if(p != null && p.controlPermisoDeposito()){
+
 
 			OrganigramaGuardiaDato og = OrganigramaGuardiaDato.find.where()
 					.eq("organigrama_id", p.organigrama_id)
