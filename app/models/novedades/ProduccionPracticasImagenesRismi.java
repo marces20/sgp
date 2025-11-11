@@ -248,4 +248,23 @@ public class ProduccionPracticasImagenesRismi extends Model{
 
 		return l;
 	}
+
+	public static List<com.avaje.ebean.SqlRow> getDetallesPracticasMinutos(Long planificacionId){
+
+		String sql = "SELECT ppi.puesto_laboral_id,ag.apellido as apellido, pr.id, pr.nombre as practica, SUM (ppi.practica_rismi_minutos)  as minutos  "+
+		"FROM public.produccion_practicas_imagenes_rismi ppi "+
+		"INNER JOIN produccion_practicas_rismi pr on pr.id = ppi.practica_rismi_id "+
+		"INNER JOIN puestos_laborales pl on pl.id = ppi.puesto_laboral_id  "+
+		"INNER JOIN legajos l on l.id = pl.legajo_id  "+
+		"INNER JOIN agentes ag on ag.id = l.agente_id  "+
+		"WHERE  ppi.puesto_laboral_id in(select puesto_laboral_id from produccion_imagenes_puesto_laboral_periodos where planificacion_id = :planificacion_id) "+
+		"group by ppi.puesto_laboral_id,ag.apellido, pr.id, pr.nombre "+
+		"ORDER BY ag.apellido , pr.nombre ASC";
+
+		List<com.avaje.ebean.SqlRow> l = Ebean.createSqlQuery(sql)
+				.setParameter("planificacion_id", planificacionId)
+				.findList();
+
+		return l;
+	}
 }
