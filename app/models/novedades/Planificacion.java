@@ -144,7 +144,13 @@ public class Planificacion extends Model{
     	ExpressionList<Planificacion> e = find.where();
 
     	if(!Permiso.check("verTodoPlanificacion")){
-    		e.eq("organigrama_id", Usuario.getUsurioSesion().organigrama.id);
+    		//e.eq("organigrama_id", Usuario.getUsurioSesion().organigrama.id);
+
+
+        		List<Integer> ol = Organigrama.getOrganigramasIdsHijos( Usuario.getUsurioSesion().organigrama.id);
+        		e.in("organigrama_id", ol);
+        		//e.eq("organigrama_id", Integer.parseInt(organigrama_id));
+
 		}
 
 
