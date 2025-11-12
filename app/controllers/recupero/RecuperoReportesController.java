@@ -981,9 +981,10 @@ public class RecuperoReportesController extends Controller {
 		Integer celdaNumero 		 = 0;
 		Integer celdaFecha 			 = 1;
 		Integer celdaCliente  		 = 2;
-		Integer celdaTotalFactura	 = 3;
-		Integer celdaTotalPagos		 = 4;
-		Integer celdaTotalDeuda 	 = 5;
+		Integer celdaCuit  		 	 = 3;
+		Integer celdaTotalFactura	 = 4;
+		Integer celdaTotalPagos		 = 5;
+		Integer celdaTotalDeuda 	 = 6;
 
 
 
@@ -1079,6 +1080,11 @@ public class RecuperoReportesController extends Controller {
 				celda.setCellValue( i.cliente.nombre );
 				celda.setCellStyle(comun);
 
+				//Celda Cuit
+				celda = f.createCell(celdaCuit);
+				celda.setCellValue( i.cliente.cuit2 );
+				celda.setCellStyle(comun);
+
 				//Celda total factura
 				celda = f.createCell(celdaTotalFactura);
 				celda.setCellValue(i.totalFactura.doubleValue());
@@ -1102,7 +1108,7 @@ public class RecuperoReportesController extends Controller {
 			}
 
 		    Row f = hoja.createRow(fila);
-		    celda = f.createCell(celdaCliente);
+		    celda = f.createCell(celdaCuit);
 			celda.setCellValue("TOTALES");
 			celda.setCellStyle(comun2);
 
@@ -1185,9 +1191,10 @@ public class RecuperoReportesController extends Controller {
 		Integer celdaNumero 		 = 1;
 		Integer celdaFecha 			 = 2;
 		Integer celdaCliente  		 = 3;
-		Integer celdaTotalFactura	 = 4;
-		Integer celdaTotalPagos		 = 5;
-		Integer celdaTotalDeuda 	 = 6;
+		Integer celdaCuit  		 	 = 4;
+		Integer celdaTotalFactura	 = 5;
+		Integer celdaTotalPagos		 = 6;
+		Integer celdaTotalDeuda 	 = 7;
 
 
 
@@ -1287,6 +1294,11 @@ public class RecuperoReportesController extends Controller {
 				celda.setCellValue( i.cliente.nombre );
 				celda.setCellStyle(comun);
 
+				//Celda Cuit
+				celda = f.createCell(celdaCuit);
+				celda.setCellValue( i.cliente.cuit2 );
+				celda.setCellStyle(comun);
+
 				//Celda total factura
 				celda = f.createCell(celdaTotalFactura);
 				celda.setCellValue(i.totalFactura.doubleValue());
@@ -1312,7 +1324,7 @@ public class RecuperoReportesController extends Controller {
 			}
 
 		    Row f = hoja.createRow(fila);
-		    celda = f.createCell(celdaCliente);
+		    celda = f.createCell(celdaCuit);
 			celda.setCellValue("TOTALES");
 			celda.setCellStyle(comun2);
 
