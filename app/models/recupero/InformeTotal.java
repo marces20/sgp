@@ -112,7 +112,7 @@ public class InformeTotal extends Model {
     	ExpressionList<InformeTotal> e = find
 
     			.fetch("deposito","nombre")
-    			.fetch("cliente","nombre").where();
+    			.fetch("cliente","nombre,cuit2").where();
 
     	if(!cliente.isEmpty()) {
     		e.eq("cliente_id", Integer.parseInt(cliente));
