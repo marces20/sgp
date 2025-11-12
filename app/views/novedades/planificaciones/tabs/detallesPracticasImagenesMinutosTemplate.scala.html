@@ -15,7 +15,7 @@
 			<tfoot>
 				<tr>
 					<td align="right"><b>TOTALES</b></td>
-					<td style="text-align: right;"><b>@utils.NumberUtils.moneda(total)</b></td>
+					<td style="text-align: center;"><b>@xx</b></td>
 				</tr>
 			</tfoot>
 		</table>
@@ -30,14 +30,14 @@
 			<thead>
 
 				<th>Practica</th>
-				<th width="50" style="text-align: center;">Minutos</th>
+				<th width="300" style="text-align: center;">Minutos</th>
 			</thead>
 		<tbody>
 		@{xx= 0;}
 	}
 
 		<tr>
-			<td style="text-align: center;">@ppp.getString("practica")</td>
+			<td style="text-align: left;">@ppp.getString("practica")</td>
 			<td style="text-align: center;">@ppp.getInteger("minutos")</td>
 		</tr>
 		@{xx= xx+ppp.getInteger("minutos")}

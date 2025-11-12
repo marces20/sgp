@@ -4,7 +4,7 @@
 
 	<script>
 	$( function (){
-		$.get('@controllers.novedades.routes.ProduccionImagenesController.detallesPracticasImagenesMinutos(planificacion.id)', function(data){
+		$.get('@controllers.novedades.routes.ProduccionImagenesController.detallesPracticasImagenesMinutos(planificacion.id,planificacion.periodo_id)', function(data){
 			$('#listaDetallesPracticasImagenesMinutos').parent().html(data);
 		})
 	});
