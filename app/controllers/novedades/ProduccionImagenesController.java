@@ -41,10 +41,10 @@ public class ProduccionImagenesController extends Controller {
 		return ok(indexProduccionImagenes.render());
 	}
 
-	public static Result detallesPracticasImagenesMinutos(Long idPlanificacion) {
+	public static Result detallesPracticasImagenesMinutos(Long idPlanificacion,Integer periodo_id) {
 		DynamicForm d = form().bindFromRequest();
 
-		List<SqlRow> ppp = ProduccionPracticasImagenesRismi.getDetallesPracticasMinutos(idPlanificacion);
+		List<SqlRow> ppp = ProduccionPracticasImagenesRismi.getDetallesPracticasMinutos(idPlanificacion,periodo_id.longValue());
 
 		return ok(detallesPracticasImagenesMinutosTemplate.render(ppp));
 	}
