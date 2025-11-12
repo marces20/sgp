@@ -2,7 +2,7 @@
 @import helper._
 @import models.auth._
 @import utils._
-@implicitFieldConstructor = @{ FieldConstructor(simpleInput.render) } 
+@implicitFieldConstructor = @{ FieldConstructor(simpleInput.render) }
 
 @paginadorFicha.setActual(acta.id.toString)
 
@@ -32,10 +32,14 @@
 						@if(Permiso.check("actaRecepcionReporte")) {
 						<li role="presentation"><a role="menuitem" tabindex="-1" href="@controllers.patrimonio.routes.ActasRecepcionReportesController.reporte(acta.id)">Reporte acta de recepción</a></li>
 						<li role="presentation"><a role="menuitem" tabindex="-1" href="@controllers.patrimonio.routes.ActasRecepcionReportesController.reporteActaCierre(acta.id)">Reporte acta de cierre</a></li>
+						<li role="presentation"><a role="menuitem" class="reporteGenerico" tabindex="-1" href="#" data-title="Reporte Planificacion" data-url="@controllers.patrimonio.routes.ActasRecepcionReportesController.imprimirRemitosByActa(acta.id)">Lista Remitos</a>
+
 						}
+
+
 					</ul>
 				</div>
-				
+
 				<div class="dropdown pull-right btn-header">
 				 <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown">
 				 	<i class="glyphicon glyphicon-list-alt"></i>
@@ -43,41 +47,41 @@
 				    <span class="caret"></span>
 				  </button>
 				  <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
-				  	
-				  	
+
+
 				  	@if(Permiso.check("expedientesPasarAOtroServicio")) {
 					  	<li role="presentation">
-					  		<a role="menuitem" id="accionPasarOtroServicio" tabindex="-1" href="#" 
+					  		<a role="menuitem" id="accionPasarOtroServicio" tabindex="-1" href="#"
 					    						   data-url="@controllers.patrimonio.routes.ActasMovimientosController.modalPasarOtroServicioIndividual(acta.id)">
 					    						   Pasar a otro servicio</a>
-					    						   
+
 					 	</li>
-					 	
+
 					 	<li role="presentation">
-					  		<a role="menuitem" id="accionCerrarCircuitoPase" tabindex="-1" href="#" 
+					  		<a role="menuitem" id="accionCerrarCircuitoPase" tabindex="-1" href="#"
 					    						   data-url="@controllers.patrimonio.routes.ActasMovimientosController.modalCierreCircuitoIndividual(acta.id)">
 					    						   Cerrar Circuito Pases</a>
-					    						   
+
 					 	</li>
 				 	}
-				 	
+
 				 	@if(Permiso.check("expedientesCancelarPase")) {
 				    	<li><a id="cancelarPase" href="#" data-url="@controllers.patrimonio.routes.ActasMovimientosController.cancelarPase(acta.id)">Cancelar Pase</a></li>
 				  	}
 				  	@if(Permiso.check("expedientesAsignarMiServicio")) {
 					  	<li role="presentation">
-					  		<a role="menuitem" id="asignarMiServicio" tabindex="-1" href="#" 
+					  		<a role="menuitem" id="asignarMiServicio" tabindex="-1" href="#"
 					    						   data-url="@controllers.patrimonio.routes.ActasMovimientosController.asignarMiServicio(acta.id)">
 					    						   Asignar a Mi Servicio</a>
 					 	</li>
 				 	}
 				  </ul>
 				</div>
-				
+
 			</div>
-		</div>	
+		</div>
 	</div>
-	
+
 	@views.html.tags.successError()
 
 	<div class="row menu-acciones">
@@ -95,7 +99,7 @@
 					<span style="color:green;font-weight:bold;font-size: 18px;">MONEDA EXTRANJERA</span> -
 				}
 			}
-			@if(acta.servicio != null) { 
+			@if(acta.servicio != null) {
 				<span style="color:red;font-weight:bold;font-size: 18px;">Depto/Servicio - @acta.servicio</span>
 			}
 		</div>
@@ -109,7 +113,7 @@
 					<p style="padding-top: 3px" href=""  role="group" class="btn btn-default">@paginadorFicha.posicionActual() de @paginadorFicha.getLista().size()</p>
 					@if(paginadorFicha.hasNext()) {
 						<a  role="group" href="@controllers.patrimonio.routes.ActasRecepcionController.ver(paginadorFicha.next().toLong)@UriTrack.get("&")" class="btn btn-default"><i class="glyphicon glyphicon-chevron-right"></i></a>
-					}  
+					}
 				</div>
 			}
 		</div>
@@ -123,55 +127,55 @@
 			<label class="control-label">Número</label>
 			<p class="form-control-static form-control">@acta.numero</p>
 		</div>
-		
+
 		<div class="col-sm-2">
-			<label class="control-label">Orden de provisión</label> 
+			<label class="control-label">Orden de provisión</label>
 			<p class="form-control-static form-control">
 			@if(acta.ordenProvision != null) {
-				@acta.ordenProvision.numero 
+				@acta.ordenProvision.numero
 			}else{
-				@if(acta.recepciones.size() > 0) { @acta.recepciones.get(0).ordenProvision.numero } 
+				@if(acta.recepciones.size() > 0) { @acta.recepciones.get(0).ordenProvision.numero }
 				@if(acta.certificaciones.size() > 0) { @acta.certificaciones.get(0).ordenProvision.numero }
 			}
 			</p>
 		</div>
-		
+
 		<div class="col-sm-2">
-			<label class="control-label">Orden de compra</label> 
+			<label class="control-label">Orden de compra</label>
 			<p class="form-control-static form-control">
 				@if(acta.ordenProvision.ordenCompra != null) {
 					@acta.ordenProvision.ordenCompra.nombre
 				}else{
-					@if(acta.recepciones.size() > 0) { @acta.recepciones.get(0).ordenProvision.ordenCompra.nombre } 
+					@if(acta.recepciones.size() > 0) { @acta.recepciones.get(0).ordenProvision.ordenCompra.nombre }
 					@if(acta.certificaciones.size() > 0) { @acta.certificaciones.get(0).ordenProvision.ordenCompra.nombre }
 				}
 			</p>
-			
+
 		</div>
-		
+
 		<div class="col-sm-3">
 			<div class="col-sm-6">
-				<label class="control-label">Ejercicio</label> 
+				<label class="control-label">Ejercicio</label>
 				<p class="form-control-static form-control">@if(acta.ejercicio != null) {@acta.ejercicio.nombre}</p>
 			</div>
-			
+
 			<div class="col-sm-6">
-				<label class="control-label">Fecha</label> 
+				<label class="control-label">Fecha</label>
 				<p class="form-control-static form-control">@(DateUtils.formatDate(acta.fecha))</p>
 			</div>
 		</div>
-		
+
 		<div class="col-sm-3">
 			<div class="col-sm-6">
-				<label class="control-label">Tipo</label> 
+				<label class="control-label">Tipo</label>
 				<p class="form-control-static form-control">@if(acta.cierre) { Cierre } else { Parcial }</p>
-			</div>	
+			</div>
 			<div class="col-sm-6">
 				<div class="">
-					<label for="" class="control-label">Cotización</label>	
+					<label for="" class="control-label">Cotización</label>
 					<p class="form-control-static form-control">
 					@if(acta.ordenProvision.ordenCompra.tipo_moneda != null) {
-						@UltimaCotizacion.getMoneda(acta.ordenProvision.ordenCompra.tipo_moneda) 
+						@UltimaCotizacion.getMoneda(acta.ordenProvision.ordenCompra.tipo_moneda)
 						@utils.NumberUtils.moneda(acta.cot_dolar, 2)
 					}
 					</p>
@@ -179,91 +183,91 @@
 			</div>
 		</div>
 	</div>
-	
+
 	<div class="row">
 		<div class="col-sm-2">
-			<label class="control-label">Total</label> 
+			<label class="control-label">Total</label>
 			<p class="form-control-static form-control">@utils.NumberUtils.moneda(acta.getSubTotal())</p>
 		</div>
-		
+
 		<div class="col-sm-2">
-			<label class="control-label">Ajustes</label> 
+			<label class="control-label">Ajustes</label>
 			<p class="form-control-static form-control">@utils.NumberUtils.moneda(acta.getTotalAjustesConLineasAjustes())</p>
 		</div>
-		
+
 		<div class="col-sm-4">
-			<label class="control-label">Proveedor</label> 
+			<label class="control-label">Proveedor</label>
 			<p class="form-control-static form-control">
 				@if(acta.ordenProvision != null) {@acta.ordenProvision.ordenCompra.proveedor.nombre }
 			</p>
 		</div>
-		
+
 		<div class="col-sm-4">
-			<label class="control-label">Responsable</label> 
+			<label class="control-label">Responsable</label>
 			<p class="form-control-static form-control">@acta.create_usuario.nombre</p>
 		</div>
-		
+
 	</div>
 
 	<div class="row">
 		<div class="col-sm-2">
-			<label class="control-label">Periodo</label> 
+			<label class="control-label">Periodo</label>
 			<p class="form-control-static form-control">@if(acta.periodo != null) {@acta.periodo.nombre}</p>
 		</div>
 	</div>
-	
+
 	<div class="row">
 		<div class="col-sm-10">
-			<label class="control-label">Observaciones</label> 
+			<label class="control-label">Observaciones</label>
 			<p class="form-control-static form-control">@acta.observaciones</p>
 		</div>
 	</div>
 	<div class="row">
 		<div class="col-sm-10">
-			<label class="control-label">Nota Interna</label> 
+			<label class="control-label">Nota Interna</label>
 			<p class="form-control-static form-control">@acta.nota_interna</p>
 		</div>
 	</div>
-	
-	
+
+
 
 <hr />
-	
+
 	@views.html.patrimonio.actaRecepcion.tabsActaRecepcion(false, acta)
-	
-	
-	
+
+
+
 
 
 
 	<h4>Estado actual: 	<b>@acta.estado.nombre</b></h4>
 
-	<div class="row margin-bottom-25">	
-	
+	<div class="row margin-bottom-25">
+
 		@if(acta.ordenProvision != null && acta.ordenProvision.ordenCompra.tipo_moneda != null && acta.estado.id == models.Estado.ACTA_ESTADO_ENCURSO && acta.estado.id != models.Estado.ACTA_ESTADO_PRECALCULAR_AJUSTES){
-			
-				
+
+
 				<div class="col-sm-3">
 					<a href="@controllers.patrimonio.routes.ActasRecepcionController.cambiarEstado(acta.id, models.Estado.ACTA_ESTADO_PRECALCULAR_AJUSTES)@UriTrack.get("&")" class="btn btn-default btn-disable-onclick">
 						<i class="glyphicon glyphicon glyphicon-usd" style="color:green;"></i> Precalcular Ajustes
 					</a>
 				</div>
-			
-		}else{		
+
+		}else{
 			@if(acta.estado.id == models.Estado.ACTA_ESTADO_PRECALCULAR_AJUSTES){
 				<div class="col-sm-3">
 					<a href="@controllers.patrimonio.routes.ActasRecepcionController.cambiarEstado(acta.id, Estado.getEstado(Estado.ACTA_ESTADO_APROBADA,Estado.TIPO_ACTA).id.toLong)@UriTrack.get("&")" class="btn btn-default btn-disable-onclick">
 						<i class="glyphicon glyphicon-arrow-right"></i> @Estado.getEstado(Estado.ACTA_ESTADO_APROBADA,Estado.TIPO_ACTA).nombre
 					</a>
-				</div>	
+				</div>
 			}else{
-				@for(estado <- models.Estado.getSiguienteEstadoPorAprobar(acta.estado.orden,models.Estado.TIPO_ACTA)) {	
+				@for(estado <- models.Estado.getSiguienteEstadoPorAprobar(acta.estado.orden,models.Estado.TIPO_ACTA)) {
 					@if(estado.orden <= 4) {
 						<div class="col-sm-3">
 							<a href="@controllers.patrimonio.routes.ActasRecepcionController.cambiarEstado(acta.id, estado.id.toLong)@UriTrack.get("&")" class="btn btn-default btn-disable-onclick">
 								<i class="glyphicon glyphicon-arrow-right"></i> @estado.nombre
 							</a>
-						</div>	
+						</div>
 					}
 				}
 			}
@@ -285,8 +289,8 @@
 
 
 
-	
-	
+
+
 }
 
 

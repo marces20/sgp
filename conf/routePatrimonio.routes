@@ -117,7 +117,7 @@ POST     /remitos-lineas-baul/guardar          	controllers.patrimonio.RemitosLi
 
 GET     /remitos/ver             		controllers.patrimonio.RemitosController.ver(id:Long)
 GET     /remitos/index             		controllers.patrimonio.RemitosController.index()
-GET		/remitos/indexAjax              controllers.patrimonio.RemitosController.indexAjax()	           
+GET		/remitos/indexAjax              controllers.patrimonio.RemitosController.indexAjax()
 GET     /remitos/crear             		controllers.patrimonio.RemitosController.crear(recepcion_id:Long)
 POST    /remitos/guardar             	controllers.patrimonio.RemitosController.guardar()
 GET     /remitos/editar             	controllers.patrimonio.RemitosController.editar(id:Long)
@@ -159,6 +159,7 @@ GET     /actas-recepcion-reporte/reporte     controllers.patrimonio.ActasRecepci
 POST    /actasRecepcion/reporteLineasActas   controllers.patrimonio.ActasRecepcionReportesController.reporteLineasActas()
 POST    /actasRecepcion/reporteGeneralActa   controllers.patrimonio.ActasRecepcionReportesController.reporteGeneralActa()
 GET     /actas-recepcion-reporte/reporteActaCierre     controllers.patrimonio.ActasRecepcionReportesController.reporteActaCierre(id:Long)
+GET     /actas-recepcion-reporte/imprimirRemitosByActa     controllers.patrimonio.ActasRecepcionReportesController.imprimirRemitosByActa(id:Long)
 
 GET     /actas-recepcion-reporte/modalListadoInventariable	controllers.patrimonio.ActasRecepcionReportesController.modalListadoInventariable()
 POST    /actas-recepcion-reporte/informeListadoInventariable	controllers.patrimonio.ActasRecepcionReportesController.informeListadoInventariable()
