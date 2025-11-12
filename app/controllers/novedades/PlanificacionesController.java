@@ -645,18 +645,7 @@ public class PlanificacionesController extends Controller {
 
 	public static Result imprimirPlanificacion(Long id) {
 
-		List<String> originalList = new ArrayList<>();
-        originalList.add("Apple");
-        originalList.add("Banana");
-        originalList.add("Cherry");
-        originalList.add("Date");
-        originalList.add("Elderberry");
 
-        System.out.println("Original List: " + originalList);
-
-        // Create a sublist from index 1 (inclusive) to 4 (exclusive)
-        List<String> sublist = originalList.subList(0, 2);
-        System.out.println("Sublist: " + sublist); // Output
 
 		 try {
 			 Planificacion rf = Planificacion.find.byId(id);
