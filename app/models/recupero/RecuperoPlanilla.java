@@ -1,5 +1,6 @@
 package models.recupero;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -148,14 +149,14 @@ public class RecuperoPlanilla extends Model {
 
 	public static void correCrearPlanillas (Long periodoId) {
 
-		crearPlanilasByPeriodo(periodoId,new Long(1),227);
-		crearPlanilasByPeriodo(periodoId,new Long(2),227);
-		crearPlanilasByPeriodo(periodoId,new Long(3),227);
-		crearPlanilasByPeriodo(periodoId,new Long(4),227);
-		crearPlanilasByPeriodo(periodoId,new Long(21),165);
-		crearPlanilasByPeriodo(periodoId,new Long(32),227);
-		crearPlanilasByPeriodo(periodoId,new Long(35),227);
-		crearPlanilasByPeriodo(periodoId,new Long(34),21);
+		crearPlanilasByPeriodo(periodoId,new Long(1),208);
+		crearPlanilasByPeriodo(periodoId,new Long(2),208);
+		crearPlanilasByPeriodo(periodoId,new Long(3),208);
+		crearPlanilasByPeriodo(periodoId,new Long(4),208);
+		crearPlanilasByPeriodo(periodoId,new Long(21),146);
+		crearPlanilasByPeriodo(periodoId,new Long(32),208);
+		crearPlanilasByPeriodo(periodoId,new Long(35),208);
+		crearPlanilasByPeriodo(periodoId,new Long(34),2);
 	}
 
 	public static void crearPlanilasByPeriodo(Long periodoId,Long dep,int n) {
@@ -165,10 +166,16 @@ public class RecuperoPlanilla extends Model {
 		calendar.set(Calendar.YEAR, 2025);
         calendar.set(Calendar.MONTH, Calendar.NOVEMBER); // Month is 0-indexed
         calendar.set(Calendar.DAY_OF_MONTH, 4);
-        Date specificDate = calendar.getTime();
+        calendar.set(Calendar.HOUR_OF_DAY, 0);
+        calendar.set(Calendar.MINUTE, 0);
+        calendar.set(Calendar.SECOND, 0);
+        calendar.set(Calendar.MILLISECOND, 0);
 
 		Calendar calendarInicio = Calendar.getInstance();
-		calendarInicio.setTime(p.date_start);
+		calendarInicio.setTime(calendar.getTime());
+
+		Calendar calendarInicio2 = Calendar.getInstance();
+		calendarInicio2.setTime(p.date_stop);
 
 		Calendar calendarFin = Calendar.getInstance();
 		calendarFin.setTime(p.date_stop);
@@ -183,7 +190,21 @@ public class RecuperoPlanilla extends Model {
 
 
 		while (calendarInicio.before(calendarFin) || calendarInicio.equals(calendarFin)) {
-				Logger.debug(calendarInicio.getTime().toString());
+
+			Logger.debug(calendarInicio.getTime().toString());
+			Logger.debug(calendarInicio2.getTime().toString());
+
+
+				boolean a = feriadosList.contains(calendarInicio.getTime());
+				Logger.debug((a)?"true":"false");
+				if(!feriadosList.contains(calendarInicio.getTime() ) ) {
+					Logger.debug("yyyyyyyyyyyyyyyyyyyyyyyyyyy");
+					if (calendarInicio.get(Calendar.DAY_OF_WEEK) != Calendar.SUNDAY && calendarInicio.get(Calendar.DAY_OF_WEEK) != Calendar.SATURDAY) {
+						Logger.debug("xxxxxxxxxxxxxxxxxxxxxxx");
+					}
+				}
+
+
 				if(!feriadosList.contains(calendarInicio.getTime() ) ) {
 					if (calendarInicio.get(Calendar.DAY_OF_WEEK) != Calendar.SUNDAY && calendarInicio.get(Calendar.DAY_OF_WEEK) != Calendar.SATURDAY) {
 			            //se aumentan los dias de diferencia entre min y max
