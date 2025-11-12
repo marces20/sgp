@@ -985,6 +985,7 @@ public class RecuperoReportesController extends Controller {
 		Integer celdaTotalFactura	 = 4;
 		Integer celdaTotalPagos		 = 5;
 		Integer celdaTotalDeuda 	 = 6;
+		Integer celdaCertificadoDeuda 	 = 7;
 
 
 
@@ -1100,6 +1101,12 @@ public class RecuperoReportesController extends Controller {
 				celda.setCellValue(i.totalDeuda.doubleValue());
 				celda.setCellStyle(estiloMoneda);
 
+				//Celda celdaCertificadoDeuda
+				celda = f.createCell(celdaCertificadoDeuda);
+				celda.setCellValue( (i.recuperoCertificadoDeuda != null)?i.recuperoCertificadoDeuda.getNombreCompleto():"");
+				celda.setCellStyle(comun2);
+
+
 				totalFactura = totalFactura.add(i.totalFactura);
 				totalPagos = totalPagos.add(i.totalPagos);
 				totalDeuda = totalDeuda.add(i.totalDeuda);
@@ -1195,7 +1202,7 @@ public class RecuperoReportesController extends Controller {
 		Integer celdaTotalFactura	 = 5;
 		Integer celdaTotalPagos		 = 6;
 		Integer celdaTotalDeuda 	 = 7;
-
+		Integer celdaCertificadoDeuda = 8;
 
 
 
@@ -1315,6 +1322,11 @@ public class RecuperoReportesController extends Controller {
 				celda = f.createCell(celdaTotalDeuda);
 				celda.setCellValue(i.totalDeuda.doubleValue());
 				celda.setCellStyle(estiloMoneda);
+
+				//Celda celdaCertificadoDeuda
+				celda = f.createCell(celdaCertificadoDeuda);
+				celda.setCellValue( (i.recuperoCertificadoDeuda != null)?i.recuperoCertificadoDeuda.getNombreCompleto():"");
+				celda.setCellStyle(comun2);
 
 				totalFactura = totalFactura.add(i.totalFactura);
 				totalPagos = totalPagos.add(i.totalPagos);
