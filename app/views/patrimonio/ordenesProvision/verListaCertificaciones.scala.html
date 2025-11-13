@@ -4,7 +4,7 @@
 	var pacientes:String = new String()
 	if(linea != null && linea.ordenLineaCliente != null && linea.ordenLineaCliente.size() > 0){
 		for(olp <- linea.ordenLineaCliente) {
-			pacientes += olp.cliente.nombre.toUpperCase()+" - ID:"+olp.cliente.id_paciente_rismi+"\n" 
+			pacientes += olp.cliente.nombre.toUpperCase()+" - ID:"+olp.cliente.id_paciente_rismi+"\n"
 		}
 	}
 	pacientes
@@ -14,6 +14,7 @@
 @import models.auth._
 @import utils._
 @implicitFieldConstructor = @{ FieldConstructor(simpleInput.render) }
+@import java.math.BigDecimal;var total=new java.math.BigDecimal(0);var certificado=new java.math.BigDecimal(0);var pendiente=new java.math.BigDecimal(0);var anulados=new java.math.BigDecimal(0);
 
 	<ul id="ordenTab" class="nav nav-tabs">
 		<li class="active"><a href="#contenedorSolicitados" data-toggle="tab">Servicios</a></li>
@@ -27,21 +28,22 @@
 		       <div class="well">
 		           <em>No se encuentran resultados</em>
 		       </div>
-		       
+
 		   } else {
-		   	Mostrando @buscador.getDisplayXtoYofZ(" a "," de ") resultado(s). 
-		   
+		   	Mostrando @buscador.getDisplayXtoYofZ(" a "," de ") resultado(s).
+
 			<table class="table table-striped table-bordered table-hover" style="margin-top: 20px">
 				<thead>
 					<tr>
 						<th><input type="checkbox" class="check_all" data-check=".check_productos" /></th>
 						<th>Producto</th>
 						<th width="100">Solicitado</th>
+						<th width="">Pendiente</th>
 						<th>Servicio</th>
 						<th width="50">Udm</th>
 						<th width="80">Total</th>
 						<th width="100">Certificado</th>
-						<th width="100">Pendiente</th>
+						<th width="100">Pendiente $</th>
 						<th width="100">Anulado</th>
 						<th>Pacientes</th>
 					</tr>
@@ -49,9 +51,10 @@
 				<tbody>
 				@for(o <- buscador.getList) {
 					<tr>
-						<th width="30"><input name="check_listado[]" value="@o.orden_linea_id" type="checkbox" class="check_productos notSeleccion" /></th>
+						<td width="30"><input name="check_listado[]" value="@o.orden_linea_id" type="checkbox" class="check_productos notSeleccion" /></td>
 						<td>@o.producto.nombre</td>
 						<td>@o.cantidad</td>
+						<td>@o.pendiente</td>
 						<td>@if(o.departamento != null){@o.departamento}</td>
 						<td>@o.udm</td>
 						<td>@utils.NumberUtils.moneda(o.getTotal())</td>
@@ -64,19 +67,34 @@
 						}
 						</td>
 					</tr>
+
+					@{total = total.add(o.getTotal())}
+					@{certificado = certificado.add(o.getTotalRecepcionado())}
+					@{pendiente = pendiente.add(o.getTotal().subtract(o.getTotalRecepcionado()))}
+					@{anulados = anulados.add(o.getAnuladosMonto())}
+
 				}
 				</tbody>
+				<tfoot>
+					<tr>
+						<td colspan="6"></td>
+						<td>@utils.NumberUtils.moneda(total)</td>
+						<td>@utils.NumberUtils.moneda(certificado)</td>
+						<td>@utils.NumberUtils.moneda(pendiente)</td>
+						<td>@utils.NumberUtils.moneda(anulados)</td>
+					</tr>
+				</tfoot>
 			</table>
 			<div class="pagination pull-right">
 			    @views.html.helpers.paginador(buscador, controllers.patrimonio.routes.OrdenesProvisionController.ver(orden.id))
 			</div>
 		   }
 		</div>
-		
+
 		<div id="contenedorCertificaciones" class="tab-pane">
-			
+
 		</div>
-		
+
 		<div id="contenedorAjusteOrdenCompra" class="contenedor tab-pane">
-			
+
 		</div>
