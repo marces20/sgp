@@ -157,6 +157,7 @@ GET    /reportes/getDetalleDeudaPorAntiguedad      controllers.recupero.Recupero
 GET    /reportes/informeDetalleResumenPagoMensual      controllers.recupero.RecuperoReportesController.informeDetalleResumenPagoMensual(fecha: String,tipoCliente: String,deposito:String,tipo:String)
 
 GET    /archivo/deudas          			  controllers.recupero.RecuperoReportesController.archivoInformeDeuda()
+GET    /archivo/archivoInformePagos           controllers.recupero.RecuperoReportesController.archivoInformePagos()
 GET    /archivo/archivoInformeGeneral         controllers.recupero.RecuperoReportesController.archivoInformeGeneral(soloDeuda:Boolean ?= false)
 
 POST   /recupero/reportes/reportePagosExcel   controllers.recupero.RecuperoReportesController.reportePagosExcel()
