@@ -144,4 +144,21 @@ public class DateUtils {
 	 	    return true;
 	 	}
     }
+
+    /**
+     * Calcula la diferencia en días entre dos fechas
+     * @param fechaInicio Fecha inicial
+     * @param fechaFin Fecha final
+     * @return Número de días de diferencia (puede ser negativo si fechaFin es anterior)
+     */
+    public static long calcularDiferenciaDias(Date fechaInicio, Date fechaFin) {
+        // Obtener la diferencia en milisegundos
+        long diferenciaMs = fechaFin.getTime() - fechaInicio.getTime();
+
+        // Convertir milisegundos a días
+        // 1 día = 24 horas * 60 minutos * 60 segundos * 1000 milisegundos
+        long dias = diferenciaMs / (24 * 60 * 60 * 1000);
+
+        return dias;
+    }
 }
