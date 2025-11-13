@@ -931,6 +931,170 @@ public class RecuperoReportesController extends Controller {
 		return ok(informePagos.render(i, form().bindFromRequest()));
 	}
 
+	public static Result archivoInformePagos() {
+
+			Pagination<InformeTotalPago> informe = InformeTotalPago.page(RequestVar.get("cliente_id"),
+				RequestVar.get("periodo_id"),
+				RequestVar.get("expediente_id"),
+				RequestVar.get("ejercicio"),
+				RequestVar.get("cliente_tipo_id"),
+				RequestVar.get("fecha_pago_desde"),
+				RequestVar.get("fecha_pago_hasta"),
+				RequestVar.get("fecha_factura_desde"),
+				RequestVar.get("fecha_factura_hasta"),
+				RequestVar.get("deposito_id"),
+				RequestVar.get("certificicado_deuda_id")
+				);
+			String dirTemp = System.getProperty("java.io.tmpdir");
+
+			Integer fila = 10;
+
+			Integer celdaInstitucion 	= 0;
+			Integer celdaFactura		= 1;
+			Integer celdaRecibo  		= 2;
+			Integer celdaFecha  		= 3;
+			Integer celdaFechaPago	 	= 4;
+			Integer celdaDias		 	= 5;
+			Integer celdaCliente	 	= 6;
+			Integer celdaTotalFactura 	= 7;
+			Integer celdaTotalPagos 	= 8;
+
+
+
+
+			try {
+				File archivo = new File(dirTemp+"/informe-estadistico.xls");
+				if(archivo.exists()) archivo.delete();
+				FileInputStream file = new FileInputStream(Play.application().getFile("conf/resources/reportes/recupero/informe-pagos.xls"));
+
+				Workbook libro = new HSSFWorkbook(file);
+				FileOutputStream archivoTmp = new FileOutputStream(archivo);
+				Sheet hoja = libro.getSheetAt(0);
+				Cell celda;
+
+
+				CellStyle style = libro.createCellStyle();
+				Font defaultFont = libro.createFont();
+			    defaultFont.setFontHeightInPoints((short)8);
+			    style.setFont(defaultFont);
+				style.setDataFormat(libro.createDataFormat().getFormat("$ #,##0.00"));
+
+				CellStyle comun = libro.createCellStyle();
+				comun.setDataFormat((short) 10);
+				//comun.setVerticalAlignment(CellStyle.VERTICAL_CENTER);
+				//comun.setAlignment(CellStyle.ALIGN_CENTER);
+				comun.setBorderRight(CellStyle.BORDER_THIN);
+				comun.setBorderLeft(CellStyle.BORDER_THIN);
+				comun.setBorderTop(CellStyle.BORDER_THIN);
+				comun.setBorderBottom(CellStyle.BORDER_THIN);
+				comun.setWrapText(true);
+				comun.setAlignment(CellStyle.ALIGN_CENTER);
+				Font font2 = libro.createFont();
+		        font2.setFontHeightInPoints((short) 10);
+		        comun.setFont(font2);
+
+				CellStyle estiloMoneda = libro.createCellStyle();
+				estiloMoneda.setDataFormat((short) 10);
+				//estiloMoneda.setVerticalAlignment(CellStyle.VERTICAL_CENTER);
+				//estiloMoneda.setAlignment(CellStyle.ALIGN_CENTER);
+				estiloMoneda.setBorderRight(CellStyle.BORDER_THIN);
+				estiloMoneda.setBorderLeft(CellStyle.BORDER_THIN);
+				estiloMoneda.setBorderTop(CellStyle.BORDER_THIN);
+				estiloMoneda.setBorderBottom(CellStyle.BORDER_THIN);
+				estiloMoneda.setDataFormat(libro.createDataFormat().getFormat("$ #,##0.00"));
+			    estiloMoneda.setFont(font2);
+
+			    CellStyle estiloMoneda2 = libro.createCellStyle();
+				estiloMoneda2.setDataFormat((short) 10);
+				//estiloMoneda.setVerticalAlignment(CellStyle.VERTICAL_CENTER);
+				//estiloMoneda.setAlignment(CellStyle.ALIGN_CENTER);
+				estiloMoneda2.setBorderRight(CellStyle.BORDER_THIN);
+				estiloMoneda2.setBorderLeft(CellStyle.BORDER_THIN);
+				estiloMoneda2.setBorderTop(CellStyle.BORDER_THIN);
+				estiloMoneda2.setBorderBottom(CellStyle.BORDER_THIN);
+				estiloMoneda2.setDataFormat(libro.createDataFormat().getFormat("$ #,##0.00"));
+				Font font3 = libro.createFont();
+		        font3.setFontHeightInPoints((short) 10);
+		        font3.setBoldweight(Font.BOLDWEIGHT_BOLD);
+		        estiloMoneda2.setFont(font3);
+
+		        CellStyle comun2 = libro.createCellStyle();
+				comun2.setDataFormat((short) 10);
+				comun2.setAlignment(CellStyle.ALIGN_RIGHT);
+				comun2.setBorderRight(CellStyle.BORDER_THIN);
+				comun2.setBorderLeft(CellStyle.BORDER_THIN);
+				comun2.setBorderTop(CellStyle.BORDER_THIN);
+				comun2.setBorderBottom(CellStyle.BORDER_THIN);
+				comun2.setWrapText(true);
+				comun2.setFont(font3);
+
+				BigDecimal  totalFactura = new BigDecimal(0);
+				BigDecimal  totalPagos = new BigDecimal(0);
+				BigDecimal  totalDeuda = new BigDecimal(0);
+
+				for (InformeTotalPago i : informe.getList()) {
+
+					Row f = hoja.createRow(fila);
+
+					celda = f.createCell(celdaInstitucion);
+					celda.setCellValue((i.deposito != null)? i.deposito.sigla:"" );
+					celda.setCellStyle(comun);
+
+					celda = f.createCell(celdaFactura);
+					celda.setCellValue(i.numero);
+					celda.setCellStyle(comun);
+
+					celda = f.createCell(celdaRecibo);
+					celda.setCellValue((i.recuperoRecibo != null)?i.recuperoRecibo.getNumeroRecibo():"");
+					celda.setCellStyle(comun);
+
+					celda = f.createCell(celdaFecha);
+					celda.setCellValue(DateUtils.formatDate(i.fecha));
+					celda.setCellStyle(comun);
+
+					celda = f.createCell(celdaFechaPago);
+					celda.setCellValue(DateUtils.formatDate(i.fecha_pago));
+					celda.setCellStyle(comun);
+
+					celda = f.createCell(celdaDias);
+					celda.setCellValue(DateUtils.calcularDiferenciaDias(i.fecha,i.fecha_pago).toString());
+					celda.setCellStyle(comun);
+
+					celda = f.createCell(celdaCliente);
+					celda.setCellValue(i.cliente.nombre);
+					celda.setCellStyle(comun);
+
+					celda = f.createCell(celdaTotalFactura);
+					celda.setCellValue(i.recupero_factura.getTotal().doubleValue());
+					celda.setCellStyle(estiloMoneda);
+
+					celda = f.createCell(celdaTotalPagos);
+					celda.setCellValue(i.totalPagos.doubleValue());
+					celda.setCellStyle(estiloMoneda);
+
+					totalFactura = totalFactura.add(i.recupero_factura.getTotal());
+					totalPagos = totalPagos.add(i.totalPagos);
+
+					fila++;
+				}
+
+
+
+				libro.write(archivoTmp);
+
+				Writer out = new BufferedWriter(new OutputStreamWriter(archivoTmp, "UTF8"));
+				out.flush();
+				out.close();
+			return ok(archivo);
+
+		} catch (IOException e) {
+		    e.printStackTrace();
+		}
+
+
+		return ok("ddd");
+	}
+
 	public static Result informeDeuda() {
 
 		Pagination<InformeTotal> i = InformeTotal.page(
