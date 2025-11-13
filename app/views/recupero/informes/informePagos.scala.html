@@ -12,12 +12,12 @@
 
 <div class="page-header">
 	<div class="row">
-		<div class="col-sm-4">
+		<div class="col-sm-8">
 			<h1>Informe Pagos</h1>
 		</div>
 
 
-		<div class="col-sm-8">
+
 
 			<!--<div class="dropdown pull-right">
 				<button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown"> <i class="glyphicon glyphicon-list-alt"></i> Reportes <span class="caret"></span></button>
@@ -27,7 +27,19 @@
 			 <div class="pull-right  btn-header">
 				<a id="generarArchivo" href="@controllers.recupero.routes.RecuperoReportesController.archivoInformeGeneral()"  class="btn btn-default"><i class="glyphicon glyphicon-download-alt"></i> Generar archivo</a>
 			</div> -->
-		</div>
+			<div class="col-sm-4">
+				<a id="generarArchivo" href="@controllers.recupero.routes.RecuperoReportesController.archivoInformePagos()"  class="btn btn-default"><i class="glyphicon glyphicon-download-alt"></i> Generar archivo</a>
+			</div>
+<script>
+
+$( function() {
+	var baseUrl = $('#generarArchivo').attr('href')
+	$('#generarArchivo').attr('href', baseUrl + '?descarga=&' + window.location.href.slice(window.location.href.indexOf('?') + 1))
+
+});
+
+</script>
+
 
 	</div>
 </div>
