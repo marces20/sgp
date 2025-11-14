@@ -78,13 +78,19 @@ public class ProduccionGeneralController extends Controller {
 		pla.save();
 
 
-		List<Agente> agenteList = Agente.find.where()
+		/*List<Agente> agenteList = Agente.find.where()
 				.eq("activo",true)
 				.isNull("tipo_residencia_id")
 				.disjunction()
 				.eq("organigrama_id", idOrganigrama)
 				.in("id",AgenteOrganigrama.getIdsAgentesByOrganigrama(idOrganigrama))
 				.endJunction()
+				.orderBy("id")
+			    .findList();*/
+
+		List<Agente> agenteList = Agente.find.where()
+				.eq("activo",true)
+				.eq("organigrama_produccion_id", idOrganigrama)
 				.orderBy("id")
 			    .findList();
 

@@ -58,9 +58,9 @@ public class ProduccionImagenesController extends Controller {
 		return ok(detallesProduccionImagenesTotalizadosTemplate.render(ppp));
 	}
 
-	public static void importarPracticasImagenesByRismiAndOrganigrama(Long idOrganigrama) {
+	public static void importarPracticasImagenesByRismiAndOrganigrama(Long idOrganigrama,Long idPeriodo) {
 
-		Periodo p = Periodo.find.byId(new Long(171));
+		Periodo p = Periodo.find.byId(idPeriodo);
 		Organigrama  o = Organigrama.find.byId(idOrganigrama);
 
 
