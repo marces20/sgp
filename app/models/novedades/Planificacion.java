@@ -104,6 +104,8 @@ public class Planificacion extends Model{
 	public String nota_rrhh;
 	public String nota_liquidaciones;
 
+	public boolean residencia = false;
+
 
 	@Formula(select = "_c${ta}.habiles", join = "left outer join (select planificacion_id, count(*) as habiles from novedades af  WHERE habiles = true group by planificacion_id) as _c${ta} on _c${ta}.planificacion_id = ${ta}.id")
 	public Integer habiles;
