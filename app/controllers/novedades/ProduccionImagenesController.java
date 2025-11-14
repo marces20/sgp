@@ -66,7 +66,7 @@ public class ProduccionImagenesController extends Controller {
 		String residenStr = (residencia)?" RESIDENTES ":"";
 
 		Planificacion pla = new Planificacion();
-		pla.nombre = "PRODUCCION "+residencia+p.getMesAnioStringPeriodo()+" "+o.nombre;
+		pla.nombre = "PRODUCCION "+residenStr+p.getMesAnioStringPeriodo()+" "+o.nombre;
 		pla.organigrama_id = idOrganigrama.intValue();
 		pla.fecha_inicio = p.date_start;
 		pla.fecha_fin= p.date_stop;
