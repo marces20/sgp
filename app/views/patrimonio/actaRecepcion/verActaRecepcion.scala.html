@@ -32,7 +32,7 @@
 						@if(Permiso.check("actaRecepcionReporte")) {
 						<li role="presentation"><a role="menuitem" tabindex="-1" href="@controllers.patrimonio.routes.ActasRecepcionReportesController.reporte(acta.id)">Reporte acta de recepción</a></li>
 						<li role="presentation"><a role="menuitem" tabindex="-1" href="@controllers.patrimonio.routes.ActasRecepcionReportesController.reporteActaCierre(acta.id)">Reporte acta de cierre</a></li>
-						<li role="presentation"><a role="menuitem" class="reporteGenerico" tabindex="-1" href="#" data-title="Reporte Planificacion" data-url="@controllers.patrimonio.routes.ActasRecepcionReportesController.imprimirRemitosByActa(acta.id)">Lista Remitos</a>
+						<li role="presentation"><a role="menuitem" class="reporteGenerico" tabindex="-1" href="#" data-title="Lista Remitos" data-url="@controllers.patrimonio.routes.ActasRecepcionReportesController.imprimirRemitosByActa(acta.id)">Lista Remitos</a>
 
 						}
 
