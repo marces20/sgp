@@ -57,14 +57,17 @@ public class ProduccionGeneralController extends Controller {
 
 	}
 
-	public static void importarPracticasByRismiAndOrganigrama(Long idOrganigrama,Long periodoId) {
+
+
+	public static void importarPracticasByRismiAndOrganigrama(Long idOrganigrama,Long periodoId,boolean residencia) {
 
 		Periodo p = Periodo.find.byId(periodoId);
 		Organigrama  o = Organigrama.find.byId(idOrganigrama);
 
+		String residenStr = (residencia)?" RESIDENTES ":"";
 
 		Planificacion pla = new Planificacion();
-		pla.nombre = "PRODUCCION "+p.getMesAnioStringPeriodo()+" "+o.nombre;
+		pla.nombre = "PRODUCCION "+residenStr+p.getMesAnioStringPeriodo()+" "+o.nombre;
 		pla.organigrama_id = idOrganigrama.intValue();
 		pla.fecha_inicio = p.date_start;
 		pla.fecha_fin= p.date_stop;
@@ -74,26 +77,27 @@ public class ProduccionGeneralController extends Controller {
 		pla.create_usuario_id = new Long(1);
 		pla.create_date = new Date();
 		pla.nota_servicio = "";
+		pla.residencia = residencia;
 
 		pla.save();
-
-
-		/*List<Agente> agenteList = Agente.find.where()
+		List<Agente> agenteList = null;
+		if(residencia) {
+			agenteList = Agente.find.where()
 				.eq("activo",true)
-				.isNull("tipo_residencia_id")
+				.isNotNull("tipo_residencia_id")
 				.disjunction()
 				.eq("organigrama_id", idOrganigrama)
 				.in("id",AgenteOrganigrama.getIdsAgentesByOrganigrama(idOrganigrama))
 				.endJunction()
 				.orderBy("id")
-			    .findList();*/
-
-		List<Agente> agenteList = Agente.find.where()
-				.eq("activo",true)
-				.eq("organigrama_produccion_id", idOrganigrama)
-				.orderBy("id")
 			    .findList();
-
+		}else {
+			agenteList = Agente.find.where()
+					.eq("activo",true)
+					.eq("organigrama_produccion_id", idOrganigrama)
+					.orderBy("id")
+				    .findList();
+		}
 
 		for(Agente ax:agenteList) {
 				PuestoLaboral pl = PuestoLaboral.find.fetch("legajo").where().eq("activo",true).eq("legajo.agente.id",ax.id ).findUnique();

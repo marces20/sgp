@@ -285,7 +285,7 @@ public class PlanificacionesController extends Controller {
 		    	  if(!Permiso.check("planificacionPasarAprobadoAsistencial")) {
 					  return ok(sinPermiso.render(request().getHeader("referer")));
 				  }
-		    	  pasarAprobadoRrhh(rp.id);
+		    	  pasarAprobadoAsistencial(rp.id);
 		    	  break;
 		      case Estado.PLANIFICIACION_APROBADO_RRHH:
 		    	  if(!Permiso.check("planificacionPasarAprobadoRrhh")) {
@@ -374,6 +374,22 @@ public class PlanificacionesController extends Controller {
 			rf.write_usuario_id = new Long(Usuario.getUsuarioSesion());
 			rf.save();
 			flash("success", "Operación exitosa. Estado actual: Aprobado Servicio");
+		} else {
+			flash("error", "Parámetros incorrectos");
+		}
+	}
+
+
+	public static void pasarAprobadoAsistencial(Long idRf){
+
+		Planificacion rf = Ebean.find(Planificacion.class).select("id, estado_id,write_date,write_usuario_id").setId(idRf).findUnique();
+
+		if(rf != null){
+			rf.estado_id = new Long(Estado.PLANIFICIACION_APROBADO_ASISTENCIAL);
+			rf.write_date = new Date();
+			rf.write_usuario_id = new Long(Usuario.getUsuarioSesion());
+			rf.save();
+			flash("success", "Operación exitosa. Estado actual: Aprobado Asistencial");
 		} else {
 			flash("error", "Parámetros incorrectos");
 		}
