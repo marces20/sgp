@@ -85,7 +85,7 @@ public class ProduccionImagenesController extends Controller {
 			if(pix.getLong("puesto_laboral_id") != null) {
 
 				PuestoLaboral pl = PuestoLaboral.find.byId(pix.getLong("puesto_laboral_id"));
-				if(pl.legajo.agente.tipo_residencia_id != null) {
+				if(pl.legajo.agente.tipo_residencia_id != null && residencia) {
 
 						Map<String,String> prod= ProduccionPracticasImagenesRismi.calcularProduccionImages(pl,p);
 
@@ -104,24 +104,27 @@ public class ProduccionImagenesController extends Controller {
 						ppp.create_date = new Date();
 						ppp.save();
 
-				}else if(pl.legajo.agente.organigrama_produccion_id != null && pl.legajo.agente.organigrama_produccion_id.compareTo(idOrganigrama) == 0) {
+				}else {
+					if(!residencia && pl.legajo.agente.organigrama_produccion_id != null && pl.legajo.agente.organigrama_produccion_id.compareTo(idOrganigrama) == 0) {
 
-					Map<String,String> prod= ProduccionPracticasImagenesRismi.calcularProduccionImages(pl,p);
 
-					ProduccioImagenesPuestoLaboralPeriodo ppp = new ProduccioImagenesPuestoLaboralPeriodo();
-					ppp.puesto_laboral_id =pix.getLong("puesto_laboral_id");
-					ppp.periodo_id = p.id.intValue();
-					ppp.planificacion_id = pla.id;
-					ppp.dias_mes = new Integer(prod.get("diasMes"));
-					ppp.minutos_profesional = new Integer(prod.get("minutosProfesional"));
-					ppp.minutos_practicas = new Integer(prod.get("minutosPracticas"));
-					ppp.valor_minuto = new BigDecimal(prod.get("valorMinuto"));
-					ppp.monto_sueldo = new BigDecimal(prod.get("monto_sueldo"));
-					ppp.monto_especialidad = new BigDecimal(prod.get("monto_especialidad"));
-					ppp.minutos_exedentes = new Integer(prod.get("minutosExedentes"));;
-					ppp.produccion = new BigDecimal(prod.get("producccion"));
-					ppp.create_date = new Date();
-					ppp.save();
+						Map<String,String> prod= ProduccionPracticasImagenesRismi.calcularProduccionImages(pl,p);
+
+						ProduccioImagenesPuestoLaboralPeriodo ppp = new ProduccioImagenesPuestoLaboralPeriodo();
+						ppp.puesto_laboral_id =pix.getLong("puesto_laboral_id");
+						ppp.periodo_id = p.id.intValue();
+						ppp.planificacion_id = pla.id;
+						ppp.dias_mes = new Integer(prod.get("diasMes"));
+						ppp.minutos_profesional = new Integer(prod.get("minutosProfesional"));
+						ppp.minutos_practicas = new Integer(prod.get("minutosPracticas"));
+						ppp.valor_minuto = new BigDecimal(prod.get("valorMinuto"));
+						ppp.monto_sueldo = new BigDecimal(prod.get("monto_sueldo"));
+						ppp.monto_especialidad = new BigDecimal(prod.get("monto_especialidad"));
+						ppp.minutos_exedentes = new Integer(prod.get("minutosExedentes"));;
+						ppp.produccion = new BigDecimal(prod.get("producccion"));
+						ppp.create_date = new Date();
+						ppp.save();
+					}
 				}
 			}
 		}
