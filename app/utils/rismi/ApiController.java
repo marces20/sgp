@@ -147,12 +147,18 @@ public class ApiController {
 		                                        	p.puesto_laboral_id = puestoLaboralId;
 		                                        	p.planificacion_id = pla.id;
 		                                        	p.save();
-
-
-
-
-
 		                                        }
+		                                    }else {
+		                                    	ProduccionPuestoPeriodo p = new ProduccionPuestoPeriodo();
+		                                    	p.cantidad = BigDecimal.ZERO;
+
+	                                        	p.codigo_ips = "425004";
+	                                        	p.valor_ips = BigDecimal.ZERO;
+	                                        	p.nombre_rismi =  "CONSULTA SERVICIO CARDIOLOGIA";
+	                                        	p.periodo_id = pe.id.intValue();
+	                                        	p.puesto_laboral_id = puestoLaboralId;
+	                                        	p.planificacion_id = pla.id;
+	                                        	p.save();
 		                                    }
                                 		 } catch (RuntimeException e) {
                                              Logger.error("Error parseando JSON de prestaciones", e);
