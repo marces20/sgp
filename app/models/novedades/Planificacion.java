@@ -145,6 +145,8 @@ public class Planificacion extends Model{
 
     	ExpressionList<Planificacion> e = find.where();
 
+
+
     	if(!Permiso.check("verTodoPlanificacion")){
     		//e.eq("organigrama_id", Usuario.getUsurioSesion().organigrama.id);
 
@@ -154,6 +156,10 @@ public class Planificacion extends Model{
         		//e.eq("organigrama_id", Integer.parseInt(organigrama_id));
 
 		}
+
+    	if(!Permiso.check("verPlanificacionResidencia")){
+    		e.eq("residencia", false);
+    	}
 
 
 		if(!desde.isEmpty()){
