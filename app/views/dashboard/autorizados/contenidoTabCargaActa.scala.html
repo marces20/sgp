@@ -106,6 +106,13 @@
 		</div>
 
 		<div class="col-sm-2">
+			<label class="control-label">
+				Ordenar
+				@select(formBuscador("ordenar"),options(""->"Antiguedad","expediente.nombre"->"Por Expediente"), 'class -> "form-control select")
+			</label>
+		</div>
+
+		<div class="col-sm-2">
 			<div class="form-group">
 			<label for="nombre" class="control-label">&nbsp;</label>
 			<div id="loadingBtnBuscarActa" class="loading hide"></div>
