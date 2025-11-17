@@ -508,7 +508,7 @@ public class AutorizadosController extends Controller {
 				RequestVar.get("tipo_cuenta_id"),
 				RequestVar.get("tipo_moneda"),
 				RequestVar.get("emergencia"),
-				"expediente.nombre"
+				RequestVar.get("ordenar")
 				);
 
 		Autorizado a = Autorizado.find.byId(new Long(RequestVar.get("idAutorizado")));
