@@ -1206,10 +1206,10 @@ public class ActasRecepcionReportesController extends Controller {
 		 		"	<table style=\"width: 100%;    \">\n" +
 		 		"	    <tbody>\n" +
 		 		"		    <tr style=\" \">\n" +
-		 		"				<td style=\"text-align: center;   border:none;\"><b style=\" padding-top:20px; border-top:1px solid #000000;\">Firma y Sello Jefe de Servicio</b></td>\n" +
+		 		"				<td style=\"text-align: center;   border:none;\"><b style=\" padding-top:20px; border-top:1px solid #000000;\">Firma y Sello Servicio Rte</b></td>\n" +
 		 		"		        <td style=\"text-align: center;   border:none;\"><b style=\" padding-top:20px; border-top:1px solid #000000;\"></b></td>\n";
 
-			  ret += "		        <td style=\"text-align: center;  border:none;\"><b style=\" padding-top:20px; border-top:1px solid #000000;\"></b></td>\n";
+			  ret += "		        <td style=\"text-align: center;  border:none;\"><b style=\" padding-top:20px; border-top:1px solid #000000;\">Firma y Sello Servicio Dta</b></td>\n";
 
 		  ret += "			</tr>\n" +
 		 		"		</tbody>\n" +
