@@ -1233,7 +1233,7 @@ public class ActasRecepcionReportesController extends Controller {
 
 			 String body = "";
 
-			 List<Remito> novedades = Remito.find.where().eq("recepcion.acta_id", actaId).orderBy("fecha_remito desc, id asc").findList();
+			 List<Remito> novedades = Remito.find.where().eq("recepcion.acta_id", actaId).orderBy("fecha_remito asc, numero asc, id asc").findList();
 
 			 BigDecimal totalRemitos = BigDecimal.ZERO;
 			 Integer cantRemitos = novedades.size();
