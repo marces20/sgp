@@ -45,7 +45,7 @@
 	<div class="col-sm-3">
 		<div class=" form-group">
 			<label for="@clienteForm("cliente_tipo_id").id" class="control-label">Condicion IVA</label>
-			@select(clienteForm("condicioniva_id"), CondicionIva.find.all().map { p => p.id.toString -> p.descripcion}, 'class -> "form-control select", '_default -> "Seleccionar")
+			@select(clienteForm("condicioniva_id"), CondicionIva.getCondicionIvaActivos.map { p => p.id.toString -> p.descripcion}, 'class -> "form-control select", '_default -> "Seleccionar")
 
 		</div>
 	</div>
