@@ -26,5 +26,8 @@ public class CondicionIva  extends Model{
 
 	public Integer codigo_afip;
 
+	public boolean activo = false;
+
+
 	public static Model.Finder<Long,CondicionIva> find = new Model.Finder<Long,CondicionIva>(Long.class, CondicionIva.class);
 }
