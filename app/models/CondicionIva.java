@@ -24,5 +24,7 @@ public class CondicionIva  extends Model{
 
 	public Integer codigo_macro;
 
+	public Integer codigo_afip;
+
 	public static Model.Finder<Long,CondicionIva> find = new Model.Finder<Long,CondicionIva>(Long.class, CondicionIva.class);
 }
