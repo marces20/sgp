@@ -1,5 +1,7 @@
 package models;
 
+import java.util.List;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -30,4 +32,8 @@ public class CondicionIva  extends Model{
 
 
 	public static Model.Finder<Long,CondicionIva> find = new Model.Finder<Long,CondicionIva>(Long.class, CondicionIva.class);
+
+	public static List<CondicionIva> getCondicionIvaActivos(){
+		return find.where().eq("activo",true).orderBy("id asc").findList();
+	}
 }
