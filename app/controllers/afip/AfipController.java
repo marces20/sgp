@@ -1505,7 +1505,7 @@ public class AfipController {
 	}
 
 	public static void correrFacturaAfip(Long idFactura) throws IOException{
-		if (true) {
+		if (play.Play.isProd()) {
 			try {
 				AfipController ac = new AfipController();
 				ObjectNode ret = ac.setComprobante(idFactura,TipoComprobante.FACTURA);
