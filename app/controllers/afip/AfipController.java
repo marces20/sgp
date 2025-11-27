@@ -807,7 +807,10 @@ public class AfipController {
 
 			        /************SET DETALLE CAE***********************/
 
+			        Integer codigo_afip=  rf.cliente.condicionIva.codigo_afip;
+
 					FECAEDetRequest fECAEDetRequest = new FECAEDetRequest();
+					fECAEDetRequest.setCondicionIVAReceptorId(codigo_afip);
 			        fECAEDetRequest.setConcepto(3);//<ar:Concepto>int</ar:Concepto>
 
 			        fECAEDetRequest.setDocTipo(docTipo);//<ar:DocTipo>int</ar:DocTipo>
@@ -831,6 +834,7 @@ public class AfipController {
 
 			        fECAEDetRequest.setMonId("PES");//<ar:MonId>string</ar:MonId>
 			        fECAEDetRequest.setMonCotiz(1);//<ar:MonCotiz>double</ar:MonCotiz>
+
 			        //fECAEDetRequest.setFchServDesde(value);//<ar:FchServDesde>string</ar:FchServDesde>
 			        //fECAEDetRequest.setFchServHasta(value);//<ar:FchServHasta>string</ar:FchServHasta>
 			        //fECAEDetRequest.setFchVtoPago(value);//<ar:FchVtoPago>string</ar:FchVtoPago>
@@ -908,8 +912,8 @@ public class AfipController {
 			        if(datos2.getFECAESolicitarResult().getErrors() != null) {
 		            	String errores = "";
 		    	        for(Err ax : datos2.getFECAESolicitarResult().getErrors().getErr()) {
-		    	        	errores += ax.getMsg()+" - ";
-		    	        	Logger.debug("eeeeeeeerrrrrrrrrrrrroooooooo a.getMsg();: "+ax.getMsg());
+		    	        	errores += ax.getCode() +"-"+ ax.getMsg()+" - ";
+		    	        	Logger.debug("eeeeeeeerrrrrrrrrrrrroooooooo a.getMsg();: "+ax.getCode() +"-"+ax.getMsg());
 				        }
 				        restJs.put("error", errores);
 				        RecuperoAfipMovimiento ram = new RecuperoAfipMovimiento(null,idFactura.intValue(),null, null,cbteTipo,null,"ERROR",errores,new Date());
@@ -1501,7 +1505,7 @@ public class AfipController {
 	}
 
 	public static void correrFacturaAfip(Long idFactura) throws IOException{
-		if (play.Play.isProd()) {
+		if (true) {
 			try {
 				AfipController ac = new AfipController();
 				ObjectNode ret = ac.setComprobante(idFactura,TipoComprobante.FACTURA);

@@ -60,7 +60,7 @@ import javax.xml.bind.annotation.XmlType;
 @XmlType(name = "FEDetRequest", propOrder = {
     "concepto",
     "docTipo",
-    //"condicionIVAReceptorId",
+    "condicionIVAReceptorId",
     "docNro",
     "cbteDesde",
     "cbteHasta",
@@ -93,8 +93,8 @@ public class FEDetRequest {
     protected int concepto;
     @XmlElement(name = "DocTipo")
     protected int docTipo;
-    //@XmlElement(name = "CondicionIVAReceptorId")
-    //protected int condicionIVAReceptorId;
+    @XmlElement(name = "CondicionIVAReceptorId")
+    protected int condicionIVAReceptorId;
     @XmlElement(name = "DocNro")
     protected long docNro;
     @XmlElement(name = "CbteDesde")
@@ -138,13 +138,13 @@ public class FEDetRequest {
     @XmlElement(name = "PeriodoAsoc")
     protected Periodo periodoAsoc;
 
-    /* public int getCondicionIVAReceptorId() {
+    public int getCondicionIVAReceptorId() {
         return condicionIVAReceptorId;
     }
 
      public void setCondicionIVAReceptorId(int value) {
         this.condicionIVAReceptorId = value;
-    }*/
+    }
 
     /**
      * Obtiene el valor de la propiedad concepto.

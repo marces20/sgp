@@ -769,6 +769,7 @@ public class AfipPartidoController {
 			        /************SET DETALLE CAE***********************/
 
 					FECAEDetRequest fECAEDetRequest = new FECAEDetRequest();
+					fECAEDetRequest.setCondicionIVAReceptorId(5);
 			        fECAEDetRequest.setConcepto(3);//<ar:Concepto>int</ar:Concepto>
 
 			        fECAEDetRequest.setDocTipo(docTipo);//<ar:DocTipo>int</ar:DocTipo>
@@ -796,7 +797,7 @@ public class AfipPartidoController {
 			        //fECAEDetRequest.setFchServHasta(value);//<ar:FchServHasta>string</ar:FchServHasta>
 			        //fECAEDetRequest.setFchVtoPago(value);//<ar:FchVtoPago>string</ar:FchVtoPago>
 
-			       /* ArrayOfCbteAsoc cbteAsocArray = new ArrayOfCbteAsoc();
+			        ArrayOfCbteAsoc cbteAsocArray = new ArrayOfCbteAsoc();
 
 			        System.out.println(ptoVta);
 					System.out.println(docTipo);
@@ -804,14 +805,14 @@ public class AfipPartidoController {
 
 					if(cbteTipo == TipoComprobante.NOTA_CREDITO || cbteTipo == TipoComprobante.NOTA_DEBITO) {
 				        CbteAsoc cbteAsoc = new CbteAsoc();
-				        cbteAsoc.setPtoVta(new Integer(rf.puntoVenta.numero));
+				        cbteAsoc.setPtoVta(new Integer("00003"));
 				        cbteAsoc.setNro(new Integer(rf.numero));
 				        cbteAsoc.setTipo(TipoComprobante.FACTURA);
 				        //cbteAsoc.setCuit(value);
 				        //cbteAsoc.setCbteFch(value);
 				        cbteAsocArray.getCbteAsoc().add(cbteAsoc);
 				        fECAEDetRequest.setCbtesAsoc(cbteAsocArray);
-					}*/
+					}
 
 			        //.getMsg();: El campo  'Importe Total' ImpTotal, debe ser igual  a la  suma de ImpTotConc + ImpNeto + ImpOpEx + ImpTrib + ImpIVA.
 			        //a.getMsg();: Si ImpNeto es mayor a 0 el objeto IVA es obligatorio.
