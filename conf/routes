@@ -11,6 +11,7 @@
 -> /informes    	routeInformes.Routes
 -> /equipo    		routeEquipo.Routes
 -> /novedades    	routeNovedades.Routes
+-> /firmaDigital    	routeFirmaDigital.Routes
 
 GET    /                    controllers.Application.index()
 #GET   /reporte             controllers.Reportes.index()
