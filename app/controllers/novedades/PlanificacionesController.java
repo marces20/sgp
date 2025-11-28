@@ -36,6 +36,7 @@ import models.haberes.LiquidacionConcepto;
 import models.haberes.LiquidacionTipo;
 import models.haberes.PuestoLaboral;
 import models.novedades.Planificacion;
+import models.novedades.ProduccioImagenesPuestoLaboralPeriodo;
 import models.novedades.ProduccionPuestoPeriodo;
 import models.recupero.InformeTotal;
 import models.recupero.RecuperoCertificadoDeuda;
@@ -623,6 +624,94 @@ public class PlanificacionesController extends Controller {
 					n.activo= true;
 					n.fecha_novedad= new Date();
 					n.importe = sx.getBigDecimal("total_produccion");
+					n.cantidad = BigDecimal.ONE;
+					n.usuario_id= new Long(Usuario.getUsuarioSesion());
+					if(pl.dobla) {
+						n.liquidacion_tipo_id = LiquidacionTipo.CONCEPTOS_NO_INCLUIDOS;
+					}else {
+						n.liquidacion_tipo_id = LiquidacionTipo.MENSUAL;
+					}
+
+					n.create_date = new Date();
+					n.planificacion_id = p.id;
+					n.save();
+					count++;
+				}
+			}
+
+
+
+
+			p.estado_id = new Long(Estado.PLANIFICIACION_CERRADA);
+			p.write_date = new Date();
+			p.write_usuario_id = new Long(Usuario.getUsuarioSesion());
+			p.save();
+
+			Ebean.commitTransaction();
+			flash("success", "Se generaron "+count+" novedades");
+
+		} catch (Exception e) {
+			Ebean.rollbackTransaction();
+			flash("error", "No se pudieron generar las novedades");
+		} finally {
+			Ebean.endTransaction();
+		}
+		return redirect(controllers.novedades.routes.PlanificacionesController.ver(p.id)+ UriTrack.get("&"));
+
+	}
+
+	@CheckPermiso(key = "planificacionCrearNovedades")
+	public static Result crearNovedadesProduccionImagenes(Long id) {
+
+		Planificacion p = Planificacion.find.byId(id);
+
+		List<models.haberes.Novedad> nxNovedad = models.haberes.Novedad.find.where().eq("planificacion_id", id).findList();
+
+		if(nxNovedad.size() > 0) {
+			flash("error", "Existen Novedades con este ID de planificaciones");
+			return redirect(controllers.novedades.routes.PlanificacionesController.ver(p.id)+ UriTrack.get("&"));
+		}
+
+		Ebean.beginTransaction();
+		try {
+
+
+
+
+
+			List<ProduccioImagenesPuestoLaboralPeriodo> novedades = ProduccioImagenesPuestoLaboralPeriodo.find.where().eq("planificacion_id",id).findList();
+
+			int count = 0;
+			for(ProduccioImagenesPuestoLaboralPeriodo sx :novedades) {
+
+
+
+
+				if(sx.produccion.compareTo(BigDecimal.ZERO) > 0) {
+					BigDecimal prodTope = sx.monto_sueldo.add(sx.monto_especialidad);
+					BigDecimal prod = (sx.produccion.compareTo(prodTope) > 0)?prodTope:sx.produccion;
+
+					PuestoLaboral pl = PuestoLaboral.find.fetch("legajo").where().eq("activo",true).eq("id",sx.puesto_laboral_id).findUnique();
+
+					if(pl == null) {
+						Ebean.rollbackTransaction();
+						flash("error", "No se encuentra el puesto laboral ID de :"+sx.puesto_laboral_id);
+						redirect(controllers.novedades.routes.PlanificacionesController.ver(p.id)+ UriTrack.get("&"));
+
+					}
+
+					models.haberes.Novedad n = new models.haberes.Novedad();
+					n.puesto_laboral_id = sx.puesto_laboral_id;
+					n.liquidacion_concepto_id=LiquidacionConcepto.ADICIONAL_POR_PRODUCCION;
+
+					n.periodo_inicio_id= p.periodo_liquidacion_id.longValue();
+					n.periodo_hasta_id= p.periodo_liquidacion_id.longValue();
+					n.periodo_concepto_id= p.periodo_id.longValue();
+
+					n.organigrama_id= pl.legajo.agente.organigrama_id;
+					n.activo= true;
+					n.fecha_novedad= new Date();
+					n.importe = prod;
 					n.cantidad = BigDecimal.ONE;
 					n.usuario_id= new Long(Usuario.getUsuarioSesion());
 					if(pl.dobla) {
