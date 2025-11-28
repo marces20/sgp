@@ -107,6 +107,14 @@ totalHorarPorDiaPorPlanificacion:List[com.avaje.ebean.SqlRow])
 														</a>
 													</div>
 												}
+
+												@if(planificacion.tipo_planificacion_id == models.novedades.TipoPlanificacion.PRODUCCION_IMAGENES) {
+													<div class="col-sm-3">
+														<a href="@controllers.novedades.routes.PlanificacionesController.crearNovedadesProduccionImagenes(planificacionForm.field("id").value.toInt)@UriTrack.get("&")" class="btn btn-default">
+															<i class="glyphicon glyphicon glyphicon-share-alt"></i> Crear Novedades
+														</a>
+													</div>
+												}
 											}
 
 										}
