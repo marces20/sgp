@@ -391,14 +391,19 @@ public class RecuperoFacturasController extends Controller {
 
 		RecuperoFactura rf = Ebean.find(RecuperoFactura.class).select("id, estado_id,write_date,write_usuario_id").setId(idRf).findUnique();
 
-		if(rf != null){
-			rf.estado_id = new Long(Estado.RECUPERO_FACTURA_ENCURSO);
-			rf.write_date = new Date();
-			rf.write_usuario_id = new Long(Usuario.getUsuarioSesion());
-			rf.save();
-			flash("success", "Operación exitosa. Estado actual: En Curso");
-		} else {
-			flash("error", "Parámetros incorrectos");
+		if(rf.cliente.condicioniva_id == null) {
+			flash("error", "El cliente no tiene una CONDICION IVA asignada. Debe asignar una.");
+		}else {
+
+			if(rf != null){
+				rf.estado_id = new Long(Estado.RECUPERO_FACTURA_ENCURSO);
+				rf.write_date = new Date();
+				rf.write_usuario_id = new Long(Usuario.getUsuarioSesion());
+				rf.save();
+				flash("success", "Operación exitosa. Estado actual: En Curso");
+			} else {
+				flash("error", "Parámetros incorrectos");
+			}
 		}
 	}
 
