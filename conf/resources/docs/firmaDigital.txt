@@ -1,0 +1,7 @@
+// 5. Cómo generar un certificado de prueba:
+// En la terminal, ejecuta:
+/*
+keytool -genkeypair -alias mykey -keyalg RSA -keysize 2048 \
+        -keystore conf/certificado.p12 -storetype PKCS12 \
+        -validity 365 -storepass password \
+        -dname "CN=Tu Nombre, OU=Tu Departamento, O=Tu Organización, L=Posadas, ST=Misiones, C=AR"

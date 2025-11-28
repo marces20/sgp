@@ -1,0 +1,75 @@
+@()
+@import helper._
+@import utils._
+@import models.auth._
+@implicitFieldConstructor = @{ FieldConstructor(simpleInput.render) }
+@main("Insertar Firma en PDF - ") {
+
+
+
+
+
+
+
+
+ <div class="page-header">
+
+	<div class="row">
+
+ 		<div class="col-sm-4">
+
+			<div class="panel panel-default">
+				<div class="panel-heading"><b>Insertar Firma en PDF</b></div>
+				<div class="panel-body" id="div-datos-puestos">
+					 <form action="@controllers.firmaDigital.routes.FirmaVisualPdfController.uploadAndSign()" method="post" enctype="multipart/form-data">
+
+
+				        <div>
+				            <label>Archivo PDF:</label>
+				            <input type="file" name="pdf" accept=".pdf" required>
+				        </div>
+
+				        <div>
+				            <label>Imagen de Firma:</label>
+				            <input type="file" name="signature" accept="image/*" required>
+				        </div>
+
+				        <div>
+				            <label>Posición X:</label>
+				            <input type="number" name="x" value="400" required>
+				        </div>
+
+				        <div>
+				            <label>Posición Y:</label>
+				            <input type="number" name="y" value="50" required>
+				        </div>
+
+				        <div>
+				            <label>Ancho:</label>
+				            <input type="number" name="width" value="150" required>
+				        </div>
+
+				        <div>
+				            <label>Alto:</label>
+				            <input type="number" name="height" value="75" required>
+				        </div>
+
+				        <div>
+				            <label>Página:</label>
+				            <input type="number" name="page" value="1" min="1" required>
+				        </div>
+
+				        <button type="submit">Firmar PDF</button>
+				    </form>
+				</div>
+			</div>
+		</div>
+
+
+
+
+
+	</div>
+</div>
+
+}

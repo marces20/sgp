@@ -1,0 +1,5 @@
+GET     /firmaDigital/add-signature              controllers.firmaDigital.FirmaVisualPdfController.addSignatureToPdf()
+POST    /firmaDigital/upload-and-sign            controllers.firmaDigital.FirmaVisualPdfController.uploadAndSign()
+POST    /firmaDigital/add-signature-params       controllers.firmaDigital.FirmaVisualPdfController.addSignatureWithParams()
+GET     /firmaDigital/multiple-signatures        controllers.firmaDigital.FirmaVisualPdfController.addMultipleSignatures()
+GET     /							    		 controllers.firmaDigital.FirmaVisualPdfController.index()
