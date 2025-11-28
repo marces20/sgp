@@ -3,3 +3,10 @@ POST    /firmaDigital/upload-and-sign            controllers.firmaDigital.FirmaV
 POST    /firmaDigital/add-signature-params       controllers.firmaDigital.FirmaVisualPdfController.addSignatureWithParams()
 GET     /firmaDigital/multiple-signatures        controllers.firmaDigital.FirmaVisualPdfController.addMultipleSignatures()
 GET     /							    		 controllers.firmaDigital.FirmaVisualPdfController.index()
+
+
+GET     /firmaDigital/sign-digital              controllers.firmaDigital.PdfSignatureController.signPdfDigital()
+GET     /firmaDigital/sign-with-image           controllers.firmaDigital.PdfSignatureController.signPdfWithCustomImage()
+GET     /firmaDigital/sign-invisible            controllers.firmaDigital.PdfSignatureController.signPdfInvisible()
+GET     /firmaDigital/verify/:path              controllers.firmaDigital.PdfSignatureController.verifyPdfSignature(path: String)
+POST    /firmaDigital/upload-sign-digital       controllers.firmaDigital.PdfSignatureController.uploadAndSignDigital()
