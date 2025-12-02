@@ -2,10 +2,13 @@ package models;
 
 import java.util.List;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 import play.data.validation.Constraints.Required;
@@ -26,6 +29,12 @@ public class Profesion extends Model{
 
 
 	public Boolean asistencial = false;
+
+	@ManyToOne
+	@JoinColumn(name="tipo_profesion_id", referencedColumnName="id", insertable=false, updatable=false)
+	public TipoProfesion tipoProfesion;
+	@Column(name="tipo_profesion_id")
+	public Long tipo_profesion_id;
 
 	public static Finder<Long,Profesion> find = new Finder<Long,Profesion>(Long.class, Profesion.class);
 
