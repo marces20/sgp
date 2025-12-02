@@ -81,6 +81,7 @@
 					<th width="30">#</th>
 					<th width="50">Código</th>
 					<th width="">Nombre</th>
+					<th width="">Tipo</th>
 					<th width="">Asistencial</th>
 					<th class="30">#</th>
 				</tr>
@@ -95,6 +96,7 @@
 					</td>
 					<td>@(p.id)</td>
 					<td>@(p.nombre)</td>
+					<td>@if(p.tipoProfesion != null){@p.tipoProfesion.nombre}</td>
 					<td>@if(p.asistencial){SI}else{NO}</td>
 					<td>
 						<a class="btn btn-default btn-xs delete-confirm-link notSeleccion" href="@controllers.rrhh.routes.ProfesionesController.eliminarProfesion(p.id)">

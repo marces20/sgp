@@ -12,11 +12,29 @@
 				}
 			</div>
 		</div>
-		<div class="col-sm-4">
+		<div class="col-sm-2">
 			<div class="checkbox">
 				<label>
 					Asistencial @checkbox(profesionForm("asistencial"))
 				</label>
 			</div>
 		</div>
+
+
+		<div class="col-sm-2">
+			<div class="form-group @if(profesionForm.error("tipo_profesion_id") != null) {has-error}else{has-required}">
+				<label for="@profesionForm("tipo_profesion_id")" class="control-label">Tipo Profesion</label>
+
+				@select(profesionForm("tipo_profesion_id"),
+				TipoProfesion.find.all().map { p => p.id.toString -> p.nombre},
+				'class -> "form-control select", '_default -> "Seleccionar")
+
+				@profesionForm("tipo_profesion_id").error.map{ error =>
+					<div class="text-error">@error.message</div>
+				}
+			</div>
+		</div>
+
+
+
 	</div>
