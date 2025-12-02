@@ -33,6 +33,7 @@ public class Profesion extends Model{
 	@ManyToOne
 	@JoinColumn(name="tipo_profesion_id", referencedColumnName="id", insertable=false, updatable=false)
 	public TipoProfesion tipoProfesion;
+	@Required(message="Debe escribir una profesion")
 	@Column(name="tipo_profesion_id")
 	public Long tipo_profesion_id;
 

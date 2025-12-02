@@ -10,7 +10,7 @@ import play.data.validation.Constraints.Required;
 import play.db.ebean.Model;
 
 @Entity
-@Table(name = "tipo_relacion_laborales")
+@Table(name = "tipo_profesiones")
 public class TipoProfesion extends Model{
 
 	private static final long serialVersionUID = 1L;
