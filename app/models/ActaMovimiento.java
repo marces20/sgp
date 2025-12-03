@@ -365,7 +365,7 @@ public class ActaMovimiento extends Model{
 
 
 				if(creaCopia) {
-					ActaMovimiento fc = new ActaMovimiento();
+					/*ActaMovimiento fc = new ActaMovimiento();
 					fc.descripcion = desc;
 					fc.acta_id = (long) i;
 					fc.organigrama_id = new Long(71);
@@ -378,7 +378,7 @@ public class ActaMovimiento extends Model{
 					fc.copia = true;
 					fc.save();
 
-					f.cierre = true;
+					f.cierre = true;*/
 				}
 
 
