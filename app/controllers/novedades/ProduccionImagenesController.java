@@ -58,7 +58,7 @@ public class ProduccionImagenesController extends Controller {
 		return ok(detallesProduccionImagenesTotalizadosTemplate.render(ppp));
 	}
 
-	public static void importarPracticasImagenesByRismiAndOrganigrama(Long idOrganigrama,Long idPeriodo,boolean residencia) {
+	public static void importarPracticasImagenesByRismiAndOrganigrama(Long idOrganigrama,Long idPeriodo,boolean residencia,boolean ocultas) {
 
 		Periodo p = Periodo.find.byId(idPeriodo);
 		Organigrama  o = Organigrama.find.byId(idOrganigrama);
@@ -77,6 +77,7 @@ public class ProduccionImagenesController extends Controller {
 		pla.create_date = new Date();
 		pla.nota_servicio = "";
 		pla.residencia = residencia;
+		pla.ocultas=ocultas;
 		pla.save();
 
 		List<com.avaje.ebean.SqlRow> pi = ProduccionPracticasImagenesRismi.getPuestosACalcular(p);

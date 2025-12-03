@@ -59,7 +59,7 @@ public class ProduccionGeneralController extends Controller {
 
 
 
-	public static void importarPracticasByRismiAndOrganigrama(Long idOrganigrama,Long periodoId,boolean residencia) {
+	public static void importarPracticasByRismiAndOrganigrama(Long idOrganigrama,Long periodoId,boolean residencia,boolean ocutlas) {
 
 		Periodo p = Periodo.find.byId(periodoId);
 		Organigrama  o = Organigrama.find.byId(idOrganigrama);
@@ -78,6 +78,7 @@ public class ProduccionGeneralController extends Controller {
 		pla.create_date = new Date();
 		pla.nota_servicio = "";
 		pla.residencia = residencia;
+		pla.ocultas = ocutlas;
 
 		pla.save();
 		List<Agente> agenteList = null;
