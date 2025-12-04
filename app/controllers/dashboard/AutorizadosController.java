@@ -557,7 +557,7 @@ public class AutorizadosController extends Controller {
 		a.tipo_cuenta_id = new Long(1);
 		a.save();
 		// InformeDeudaProveedoresMaterializada.actualizarVistaMaterializada();
-		 InformeDeudaPorActaMaterializada.actualizarVistaMaterializada();
+		//InformeDeudaPorActaMaterializada.actualizarVistaMaterializada();
 
 		return ok(contenidoTabCarga.render(p, form().bindFromRequest(), new Long(RequestVar.get("idAutorizado")), a));
 	}
