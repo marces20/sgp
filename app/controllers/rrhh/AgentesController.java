@@ -85,7 +85,7 @@ public class AgentesController extends Controller {
 								 RequestVar.get("fcud_desde"),
 								 RequestVar.get("fcud_hasta"),
 								 RequestVar.get("puesto_id"),
-								 RequestVar.get("organigrama_servicio_id")
+								 RequestVar.get("solo_servicio")
 								 ),
 								 d));
 
