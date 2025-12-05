@@ -95,7 +95,7 @@
 			<form action="" id="formSearchAgentes" method="GET">
 
 				<div class="row" >
-					<div class="col-sm-5 filtrosEstados" id="filtrosEstados">
+					<div class="col-sm-4 filtrosEstados" id="filtrosEstados">
 						<div class="btn-group">
 						  <button type="button" rel="borrador" class="btn btn-default btn-filtros">
 						  	<i class="glyphicon glyphicon-pencil size-14"></i><br>Borrador
@@ -140,9 +140,15 @@
 							</label>
 						</div>
 					</div>
+					<div class="col-sm-1">
+						<label class="control-label">
+							Activo
+							@select(formBuscador("activo"),options(""->"","SI"->"SI","NO"->"NO"), 'class -> "form-control select")
+						</label>
+					</div>
 				</div>
 				<div class="row">
-					<div class="col-sm-4">
+					<div class="col-sm-3">
 						<label for="inputOrgranigrama" class="control-label">Departamento/Servicio</label>
 						<div class="input-group">
 							@inputText(formBuscador("organigrama.nombre"),'class -> "form-control",'id -> "organigrama")
@@ -156,7 +162,13 @@
 			                </span>
 						</div>
 					</div>
-					<div class="col-sm-4">
+						<div class="col-sm-1">
+							<label class="control-label">
+								Solo Servicio
+								@select(formBuscador("solo_servicio"),options(""->"","SI"->"SI","NO"->"NO"), 'class -> "form-control select")
+							</label>
+						</div>
+					<div class="col-sm-2">
 						<label for="inputProfesion" class="control-label">Profesion</label>
 						<div class="input-group">
 							@inputText(formBuscador("profesion.nombre"),'class -> "form-control",'id -> "profesion")
@@ -172,25 +184,38 @@
 					</div>
 
 
+					<div class="col-sm-2">
 
+							<label for="inputEspecialidad" class="control-label">Especialidad</label>
+							<div class="input-group">
+								@inputText(formBuscador("especialidad.nombre"),'class -> "form-control",'id -> "especialidad")
+								@inputText(formBuscador("especialidad_id"),'hidden -> "hidden",'id -> "especialidad_id")
+								<span class="input-group-addon">
+								<a href="#" class="searchModal" id="searchEspecialidad"
+										 	data-title="Selección de Especialidad"
+										 	data-url="@controllers.rrhh.routes.EspecialidadesController.modalBuscar()"
+										 	data-height="650" data-width="700"
+										 	data-listen="modal.seleccion.especialidad.simple"
+										 	data-label="#especialidad" data-field="#especialidad_id">
+								<i class="glyphicon glyphicon-search"></i></a></span>
+							</div>
+					</div>
+					<div class="col-sm-2">
+						<label for="inputPuesto" class="control-label">Puesto</label>
+						<div class="input-group">
 
-						<div class="col-sm-2">
-							<label class="control-label">
-								Activo
-								@select(formBuscador("activo"),options(""->"","SI"->"SI","NO"->"NO"), 'class -> "form-control select")
-							</label>
+							@inputText(formBuscador("puesto.nombre"),'class -> "form-control",'id -> "puesto_nombre")
+							@inputText(formBuscador("puesto_id"),'hidden -> "hidden",'id -> "puesto_id")
+							<span class="input-group-addon">
+			                	<a href="#" id="searchPuesto" data-title="Selección de Puesto"
+			                				data-url="@controllers.rrhh.routes.PuestosController.modalBuscar()"
+			                				data-height="650" data-width="700"
+			                				data-listen="modal.seleccion.puesto.simple"
+			                				data-label="#puesto_nombre" data-field="#puesto_id" /> <i class="glyphicon glyphicon-search"></i></a>
+			                </span>
 						</div>
-						<div class="col-sm-2">
-							<label class="control-label">
-								Asignaciones Familiares
-								@select(formBuscador("asignacion_familiar"),options(""->"","SI"->"SI","NO"->"NO"), 'class -> "form-control select")
-							</label>
-						</div>
 
-
-				</div>
-
-				<div class="row" >
+					</div>
 					<div class="col-sm-2">
 						<div class="form-group">
 							<label for="cuit" class="control-label">Tipo Relacion
@@ -200,7 +225,29 @@
 							</label>
 						</div>
 					</div>
-					<div class="col-sm-2">
+
+
+
+				</div>
+
+				<div class="row" >
+					<div class="col-sm-3">
+					<label class="control-label">Escala</label>
+						<div class="input-group">
+							@inputText(formBuscador("escalaLaboral.nombre"), 'name -> "", 'class -> "form-control", 'id -> "escala_laboral")
+							@inputText(formBuscador("escala_laboral_id"), 'hidden -> "hidden", 'id -> "escala_laboral_id")
+							<span class="input-group-addon">
+							<a href="#" class="searchModal" id="searchEscalaLaboral"
+									 	data-title="Selección de escala"
+									 	data-url="@controllers.haberes.routes.EscalasLaboralesController.modalBuscar()"
+									 	data-height="650" data-width="700"
+									 	data-listen="modal.seleccion.escalaLaboral.simple"
+									 	data-label="#escala_laboral" data-field="#escala_laboral_id">
+							<i class="glyphicon glyphicon-search"></i></a></span>
+						</div>
+					</div>
+
+					<div class="col-sm-1">
 						<label class="control-label">
 							Residente
 							@select(formBuscador("residente"),options(""->"","SI"->"SI","NO"->"NO","basica"->"Basica","posbasica"->"Posbasica"), 'class -> "form-control select")
@@ -230,54 +277,16 @@
 						</div>
 					</div>
 					<div class="col-sm-2">
-						<label for="inputPuesto" class="control-label">Puesto</label>
-						<div class="input-group">
-
-							@inputText(formBuscador("puesto.nombre"),'class -> "form-control",'id -> "puesto_nombre")
-							@inputText(formBuscador("puesto_id"),'hidden -> "hidden",'id -> "puesto_id")
-							<span class="input-group-addon">
-			                	<a href="#" id="searchPuesto" data-title="Selección de Puesto"
-			                				data-url="@controllers.rrhh.routes.PuestosController.modalBuscar()"
-			                				data-height="650" data-width="700"
-			                				data-listen="modal.seleccion.puesto.simple"
-			                				data-label="#puesto_nombre" data-field="#puesto_id" /> <i class="glyphicon glyphicon-search"></i></a>
-			                </span>
-						</div>
-
+						<label class="control-label">
+							Asignaciones Familiares
+							@select(formBuscador("asignacion_familiar"),options(""->"","SI"->"SI","NO"->"NO"), 'class -> "form-control select")
+						</label>
 					</div>
+
 				</div>
 				<div class="row" >
-					<div class="col-sm-3">
-					<label class="control-label">Escala</label>
-						<div class="input-group">
-							@inputText(formBuscador("escalaLaboral.nombre"), 'name -> "", 'class -> "form-control", 'id -> "escala_laboral")
-							@inputText(formBuscador("escala_laboral_id"), 'hidden -> "hidden", 'id -> "escala_laboral_id")
-							<span class="input-group-addon">
-							<a href="#" class="searchModal" id="searchEscalaLaboral"
-									 	data-title="Selección de escala"
-									 	data-url="@controllers.haberes.routes.EscalasLaboralesController.modalBuscar()"
-									 	data-height="650" data-width="700"
-									 	data-listen="modal.seleccion.escalaLaboral.simple"
-									 	data-label="#escala_laboral" data-field="#escala_laboral_id">
-							<i class="glyphicon glyphicon-search"></i></a></span>
-						</div>
-					</div>
-					<div class="col-sm-3">
 
-							<label for="inputEspecialidad" class="control-label">Especialidad</label>
-							<div class="input-group">
-								@inputText(formBuscador("especialidad.nombre"),'class -> "form-control",'id -> "especialidad")
-								@inputText(formBuscador("especialidad_id"),'hidden -> "hidden",'id -> "especialidad_id")
-								<span class="input-group-addon">
-								<a href="#" class="searchModal" id="searchEspecialidad"
-										 	data-title="Selección de Especialidad"
-										 	data-url="@controllers.rrhh.routes.EspecialidadesController.modalBuscar()"
-										 	data-height="650" data-width="700"
-										 	data-listen="modal.seleccion.especialidad.simple"
-										 	data-label="#especialidad" data-field="#especialidad_id">
-								<i class="glyphicon glyphicon-search"></i></a></span>
-							</div>
-					</div>
+
 
 					<div class="col-sm-2">
 						<div class="form-group">
