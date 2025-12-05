@@ -41,7 +41,8 @@ public class ResidentesController extends Controller {
 								 RequestVar.get("especialidad_id"),
 								 RequestVar.get("fcud_desde"),
 								 RequestVar.get("fcud_hasta"),
-								 RequestVar.get("puesto_id")
+								 RequestVar.get("puesto_id"),
+								 RequestVar.get("organigrama_servicio_id")
 								 ),
 								 d));
 	}
