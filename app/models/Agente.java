@@ -318,7 +318,8 @@ public class Agente extends Model{
 										  String especialidad_id,
 										  String fcud_desde,
 										  String fcud_hasta,
-										  String puesto_id
+										  String puesto_id,
+										  String organigrama_servicio_id
 										  ) {
     	Pagination<Agente> p = new Pagination<Agente>();
     	p.setOrderDefault("ASC");
@@ -422,6 +423,10 @@ public class Agente extends Model{
     		List<Integer> ol = Organigrama.getOrganigramasIdsHijos(Integer.parseInt(organigrama_id));
     		e.in("organigrama_id", ol);
     		//e.eq("organigrama_id", Integer.parseInt(organigrama_id));
+    	}
+
+    	if(!organigrama_servicio_id.isEmpty()){
+    		e.eq("organigrama_id", Integer.parseInt(organigrama_id));
     	}
 
     	if(!especialidad_id.isEmpty()){
