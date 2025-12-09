@@ -160,6 +160,7 @@ POST    /actasRecepcion/reporteLineasActas   controllers.patrimonio.ActasRecepci
 POST    /actasRecepcion/reporteGeneralActa   controllers.patrimonio.ActasRecepcionReportesController.reporteGeneralActa()
 GET     /actas-recepcion-reporte/reporteActaCierre     controllers.patrimonio.ActasRecepcionReportesController.reporteActaCierre(id:Long)
 GET     /actas-recepcion-reporte/imprimirRemitosByActa     controllers.patrimonio.ActasRecepcionReportesController.imprimirRemitosByActa(id:Long)
+GET     /actas-recepcion-reporte/imprimirCertificacionByActa     controllers.patrimonio.ActasRecepcionReportesController.imprimirCertificacionByActa(id:Long)
 
 GET     /actas-recepcion-reporte/modalListadoInventariable	controllers.patrimonio.ActasRecepcionReportesController.modalListadoInventariable()
 POST    /actas-recepcion-reporte/informeListadoInventariable	controllers.patrimonio.ActasRecepcionReportesController.informeListadoInventariable()
