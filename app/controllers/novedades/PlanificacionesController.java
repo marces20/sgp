@@ -805,7 +805,33 @@ public class PlanificacionesController extends Controller {
 				 qpag ++;
 			 }
 
-			 List<SqlRow> novedades = Novedad.getNovedadesPorAgentePorPlanificaciones(id);
+			 List<SqlRow> novedadesTmp = Novedad.getNovedadesPorAgentePorPlanificaciones(id);
+			 Map<Integer,Integer> agenteHabiles = new HashMap<>();
+			 Map<Integer,Integer> agenteInhabiles = new HashMap<>();
+			 Map<Integer,Integer> agenteFestivas = new HashMap<>();
+			 Map<Integer,String> agenteNombre = new HashMap<>();
+			 Map<Integer,String> agenteDni = new HashMap<>();
+			 List<Integer> novedades = new ArrayList<>();
+			 for(SqlRow sx :novedadesTmp) {
+
+				 if(!novedades.contains(sx.getInteger("agente_id"))) {
+					 novedades.add(sx.getInteger("agente_id"));
+				 }
+				 agenteNombre.put(sx.getInteger("agente_id"),sx.getString("apellido"));
+				 agenteDni.put(sx.getInteger("agente_id"),sx.getString("dni"));
+
+				 if(sx.getBoolean("festivas")) {
+					 agenteFestivas.put(sx.getInteger("agente_id"), sx.getInteger("horas"));
+				 }else {
+					 if(sx.getBoolean("habiles") ) {
+						 agenteHabiles.put(sx.getInteger("agente_id"), sx.getInteger("horas"));
+					}else {
+						agenteInhabiles.put(sx.getInteger("agente_id"), sx.getInteger("horas"));
+					}
+				 }
+			 }
+
+			 //List<SqlRow> novedades = Novedad.getNovedadesPorAgentePorPlanificaciones(id);
 			 /*List<SqlRow> novedadestt = new ArrayList<SqlRow>();
 			 for (int i = 0; i < 4; i++) {
 				 for(SqlRow sx :novedades) {
@@ -818,7 +844,7 @@ public class PlanificacionesController extends Controller {
 
 
 
-			 List<List<SqlRow>> subsNovedades = new ArrayList<>();
+			 List<List<Integer>> subsNovedades = new ArrayList<>();
 			 int fin = (novedades.size() < 20)?novedades.size():20;
 			 subsNovedades.add(novedades.subList(0,fin));
 
@@ -845,7 +871,7 @@ public class PlanificacionesController extends Controller {
 					 fin = fin+25;
 					 fin = (fin > novedades.size())?novedades.size():fin;
 
-					 List<SqlRow> listTmp = novedades.subList(inicio,fin);
+					 List<Integer> listTmp = novedades.subList(inicio,fin);
 					 subsNovedades.add(listTmp);
 					 inicio = inicio+25;
 				 }
@@ -858,19 +884,19 @@ public class PlanificacionesController extends Controller {
 
 			 //PAAAGEEEEESSSS
 			 int pag = 1;
-			 for(List<SqlRow> sbx : subsNovedades) {
+			 for(List<Integer> sbx : subsNovedades) {
 
 				 String textInicial = (pag == 1)?texto:"";
 
 				 String novedadesTr ="";
 
-				 for(SqlRow sx :sbx) {
+				 for(Integer sx :sbx) {
 
 					 int horasHab = 0;
 					 int horasInh = 0;
 					 int horasFes = 0;
 
-					 if(sx.getBoolean("festivas") ) {
+					 /*if(sx.getBoolean("festivas") ) {
 						 horasFes = sx.getInteger("horas");
 					 }else {
 
@@ -879,11 +905,24 @@ public class PlanificacionesController extends Controller {
 						 }else {
 							 horasInh = sx.getInteger("horas");
 						 }
+					 }*/
+
+
+					 if(agenteHabiles.get(sx) != null) {
+						 horasHab = agenteHabiles.get(sx);
+					 }
+					 if(agenteInhabiles.get(sx) != null) {
+						 horasInh = agenteInhabiles.get(sx);
+					 }
+					 if(agenteFestivas.get(sx) != null) {
+						 horasFes = agenteFestivas.get(sx);
 					 }
 
+
+
 					 novedadesTr  += "<tr>" +
-							    		"   <td style='text-align:left;border:1px solid black; padding:5px; margin:0px;'><b>"+sx.getString("apellido")+"</b></td>" +
-							    		"   <td style='text-align: center;border:1px solid black; margin:0px;'>"+sx.getString("dni")+"</td>" +
+							    		"   <td style='text-align:left;border:1px solid black; padding:5px; margin:0px;'><b>"+agenteNombre.get(sx)+"</b></td>" +
+							    		"   <td style='text-align: center;border:1px solid black; margin:0px;'>"+agenteDni.get(sx)+"</td>" +
 							    		"	<td style='text-align: center;border:1px solid black; margin:0px;'>"+horasHab+" Hs</td>" +
 							      		"	<td style='text-align: center;border:1px solid black; margin:0px;'>"+horasInh+" Hs</td>" +
 							      		"	<td style='text-align: center;border:1px solid black; margin:0px;'>"+horasFes+" Hs</td>" +
