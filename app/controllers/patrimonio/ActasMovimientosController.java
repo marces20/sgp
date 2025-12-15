@@ -48,56 +48,56 @@ import utils.DateUtils;
 import utils.RequestVar;
 import utils.UriTrack;
 import utils.pagination.PaginadorFicha;
-import utils.pagination.Pagination; 
+import utils.pagination.Pagination;
 import views.html.patrimonio.actasMovimientos.*;
 import views.html.patrimonio.actasMovimientos.acciones.*;
 
 @Security.Authenticated(Secured.class)
 public class ActasMovimientosController extends Controller {
-	
+
 final static Form<ActaMovimiento> lineaForm = form(ActaMovimiento.class);
-	
+
 	public static Result indexPasesPorUsuario() {
-		
+
 		Map<String,String> p = new HashMap<String, String>();
 		String organigrama_id = RequestVar.get("organigrama_id");
 		DynamicForm d = form().bindFromRequest();
-		
+
 		PaginadorFicha pf = new PaginadorFicha(UriTrack.encodeUri());
-		
-		
+
+
 		//if(Usuario.getUsurioSesion().id !=132 && Usuario.getUsurioSesion().organigrama != null && RequestVar.getValueOrNull("organigrama_id") == null){
-			
+
 			// p.put("organigrama_id", Usuario.getUsurioSesion().organigrama_id.toString());
 			// d = form().bind(p);
 			// organigrama_id = Usuario.getUsurioSesion().organigrama_id.toString();
 		//}
-		
-		
+
+
 		Pagination<ActaMovimiento> lineas = ActaMovimiento.pagePasesPorUsuario(Usuario.getUsurioSesion().id.toString(),
 				RequestVar.get("numero"),
 				RequestVar.get("expediente_id"));
-	
+
 		return ok(indexPasesPorUsuario.render(lineas,d,pf));
 	}
 
 	public static Result indexGeneral() {
-		
+
 		Map<String,String> p = new HashMap<String, String>();
 		String organigrama_id = RequestVar.get("organigrama_id");
 		DynamicForm d = form().bindFromRequest();
-		
+
 		PaginadorFicha pf = new PaginadorFicha(UriTrack.encodeUri());
-		
+
 		if(RequestVar.getValueOrNull("organigrama_id") == null){
-			
+
 			 p.put("organigrama_id", Usuario.getUsurioSesion().organigrama_id.toString());
 			 d = form().bind(p);
 			 organigrama_id = Usuario.getUsurioSesion().organigrama_id.toString();
 		}
-		
-		 
-		
+
+
+
 		Logger.debug("swssssssssssssssssss "+ organigrama_id);
 		Pagination<ActaMovimiento> lineas = ActaMovimiento.pageGeneral(organigrama_id,
 																		RequestVar.get("numero"),
@@ -111,14 +111,14 @@ final static Form<ActaMovimiento> lineaForm = form(ActaMovimiento.class);
 
 		return ok(indexGeneralActaMovimiento.render(lineas,d,pf));
 	}
-	
+
 	public static Result index(Long actaId) {
-		
+
 		Pagination<ActaMovimiento> lineas = ActaMovimiento.page(actaId);
 
 		return ok(indexActaMovimiento.render(lineas,false));
 	}
-	
+
 	public static Result crear(String actaId) {
 		flash().clear();
 		Map<String,String> b = new HashMap<String, String>();
@@ -127,21 +127,21 @@ final static Form<ActaMovimiento> lineaForm = form(ActaMovimiento.class);
 		linea.discardErrors();
 		return ok(crearActaMovimiento.render(linea));
 	}
-	
+
 	public static Result eliminar(Long id) {
 		ObjectNode restJs = Json.newObject();
-		
+
 		try {
 			ActaMovimiento.find.byId(id).delete();
 		} catch (PersistenceException pe) {
 			play.Logger.error("excepcion", pe);
 			restJs.put("succes", false);
 		}
-		
+
 		restJs.put("success", true);
 		return ok(restJs);
 	}
-	
+
 	public static Result guardar() {
 		Form<ActaMovimiento> lineaForm = form(ActaMovimiento.class).bindFromRequest();
 
@@ -150,9 +150,9 @@ final static Form<ActaMovimiento> lineaForm = form(ActaMovimiento.class);
 				flash("error", "Error en formulario");
 				return ok(crearActaMovimiento.render(lineaForm));
 			} else {
-				
+
 				ActaMovimiento f = lineaForm.get();
-				
+
 				if(Usuario.getUsurioSesion().organigrama == null){
 					flash("error", "Este usuario no tiene asignado un Servicio/Depto");
 					return ok(crearActaMovimiento.render(lineaForm));
@@ -161,22 +161,22 @@ final static Form<ActaMovimiento> lineaForm = form(ActaMovimiento.class);
 					flash("error", "No puede realizar el pase por que pertence a otro servicio.");
 					return ok(crearActaMovimiento.render(lineaForm));
 				}
-				
+
 				Date ahora = new Date();
 				Integer codigo = ActaMovimiento.getSecuenciaActaMovimientoCodigo();
-				
+
 				f.usuario_id = new Long(Usuario.getUsuarioSesion());
 				f.fecha_llegada = ahora;
 				f.cancelado = false;
 				f.codigo = codigo;
 				f.save();
-				
+
 				ActaMovimiento ma = ActaMovimiento.getMovimientoAnterior(f);
 				if(ma != null){
 					ma.fecha_salida = ahora;
 					ma.update();
 				}
-				
+
 				flash("success", "El registro se almacenó correctamente.");
 			}
 		} catch (Exception e){
@@ -184,7 +184,7 @@ final static Form<ActaMovimiento> lineaForm = form(ActaMovimiento.class);
 			flash("error", "No se ha podido almacenar el registro."+e);
 			return ok(crearActaMovimiento.render(lineaForm));
 		}
-		
+
 		ActaMovimiento linea = ActaMovimiento.find.where().eq("id", lineaForm.get().id).findUnique();
 		Object c = verActaMovimiento.render(linea);
 		ObjectNode restJs = Json.newObject();
@@ -193,24 +193,24 @@ final static Form<ActaMovimiento> lineaForm = form(ActaMovimiento.class);
 		restJs.put("html", c.toString());
 		return ok(restJs);
 	}
-	
+
 	public static Result editar(Long id) {
 		flash().clear();
 		ActaMovimiento linea = ActaMovimiento.find.byId(id);
 		return ok(editarActaMovimiento.render(lineaForm.fill(linea)));
 	}
-	
+
 	public static Result actualizar() {
 
 		Form<ActaMovimiento> lineaForm = form(ActaMovimiento.class).bindFromRequest();
-		
+
 		try {
 			if(lineaForm.hasErrors()) {
 				flash("error", "Error en formulario");
 				return ok(editarActaMovimiento.render(lineaForm));
 			} else {
 				ActaMovimiento fl = lineaForm.get();
-				 
+
 				fl.update(fl.id);
 			}
 		} catch (Exception e){
@@ -218,7 +218,7 @@ final static Form<ActaMovimiento> lineaForm = form(ActaMovimiento.class);
 			flash("error", "No se ha podido almacenar el registro.");
 			return ok(editarActaMovimiento.render(lineaForm));
 		}
-		
+
 		ActaMovimiento linea = ActaMovimiento.find.where().eq("id", lineaForm.get().id).findUnique();
 		Object c = verActaMovimiento.render(linea);
 		ObjectNode restJs = Json.newObject();
@@ -227,14 +227,14 @@ final static Form<ActaMovimiento> lineaForm = form(ActaMovimiento.class);
 		restJs.put("html", c.toString());
 		return ok(restJs);
 	}
-	
+
 	public static List<Integer> getSeleccionados(){
 		String[] checks = null;
 		try {
 			checks = request().body().asFormUrlEncoded().get("check_listado[]");
 		} catch (NullPointerException e) {
 		}
-		
+
 		List<Integer> ids = new ArrayList<Integer>();
 		if(checks != null) {
 			for (String id : checks) {
@@ -243,32 +243,32 @@ final static Form<ActaMovimiento> lineaForm = form(ActaMovimiento.class);
 		}
 		return ids;
 	}
-	
+
 	public static Result modalCierreCircuitoIndividual(Long id) {
 		return ok(modalCierreCircuito.render(form().bindFromRequest(),id,null));
 	}
-	
+
 	public static Result modalCierreCircuito() {
 		return ok(modalCierreCircuito.render(form().bindFromRequest(),null,null));
 	}
-	
+
 	public static Result modalPasarOtroServicioIndividual(Long id) {
 		return ok(modalPasarOtroServicio.render(form().bindFromRequest(),id,null));
 	}
-	
+
 	public static Result modalPasarOtroServicio() {
 		return ok(modalPasarOtroServicio.render(form().bindFromRequest(),null,null));
 	}
-	
+
 	@CheckPermiso(key = "expedientesPasarAOtroServicio")
 	public static Result cierreCircuito() {
 		DynamicForm d = form().bindFromRequest();
 		d.discardErrors();
-		
+
 		List<Integer> actasSeleccionados = getSeleccionados();
-		
+
 		Long idActa = null;
-		
+
 		if(request().body().asFormUrlEncoded().get("idActa") != null){
 			String idActaString =request().body().asFormUrlEncoded().get("idActa")[0];
 			idActa =  new Long(idActaString);
@@ -277,43 +277,44 @@ final static Form<ActaMovimiento> lineaForm = form(ActaMovimiento.class);
 				actasSeleccionados.add(idActa.intValue());
 			}
 		}
-		
-		
+
+
 		if(actasSeleccionados.isEmpty()) {
 			flash("error", "Seleccione al menos un acta.");
 			return ok(modalCierreCircuito.render(d,idActa,null));
 		}
-		
-		 
-		
+
+
+
 		if(Usuario.getUsurioSesion().organigrama == null) {
 			flash("error", "No tienes un servicio asignado a tu usuarios. Debes solicitar que se te asignen uno.");
 			return ok(modalCierreCircuito.render(d,idActa,null));
 		}
-		
-		
+
+
 		String descripcion = request().body().asFormUrlEncoded().get("descripcion")[0];
-		
+
 		List<Long> soloDeMiServicio = soloDeMiServicio(actasSeleccionados);
-		
+
 		if(soloDeMiServicio.size() > 0) {
 			String error = "Solo se puede modificar realizar movimientos que se encuentren en mi servicio "+Usuario.getUsurioSesion().organigrama.nombre+" <br>";
-			
+
 			error += "Actas que no se encuentan en mi servicio:<br>";
-			
+
 			for(Long x :soloDeMiServicio){
 				ActaRecepcion e = ActaRecepcion.find.byId(x);
 				error += "- "+e.getNombre()+"\n";
 			}
-			
+
 			flash("error", error);
 			return ok(modalCierreCircuito.render(d,idActa,null));
 		}
-		
+
+
 		List<Long> soloAbiertas = ActaMovimiento.getStringIsNotMovimientoCierre(actasSeleccionados);
-		
+
 		Logger.debug("++++++++++++++++ "+soloAbiertas.size());
-		
+
 		if(soloAbiertas.size() > 0) {
 			String error = "NO SE PUEDE CAMBIAR ACTAS CON EL CIRCUITO CERRADO<br>";
 			error += "Actas que se encuentan CERRADAS:<br>";
@@ -321,85 +322,85 @@ final static Form<ActaMovimiento> lineaForm = form(ActaMovimiento.class);
 				ActaRecepcion e = ActaRecepcion.find.byId(x);
 				error += "- "+e.getNombre()+"\n";
 			}
-			
+
 			flash("error", error);
 			return ok(modalCierreCircuito.render(d,idActa,null));
 		}
-		
+
 		List<ActaRecepcion> act = ActaRecepcion.find.where().ne("estado_id",Estado.ACTA_ESTADO_APROBADA).in("id",actasSeleccionados).findList();
 		if(act.size() > 0) {
 			flash("error", "Solo se pueden realizar Pases en Actas en estado APROBADAS.");
 			return ok(modalPasarOtroServicio.render(d,idActa,null));
 		}
-		
+
 		if(d.hasErrors())
 			return ok(modalCierreCircuito.render(d,idActa,null));
 
 		ObjectNode result = Json.newObject();
 		try {
-			
+
 			Long organigramaId = new Long(91);
-			
-			
-			
+
+
+
 			Integer count = ActaMovimiento.pasarOtroServicioMasivo(actasSeleccionados, organigramaId, descripcion,true);
 			result.put("success", true);
 			flash("success", "Se actualizaron " + count + " registros de "+ actasSeleccionados.size() +" seleccionados.");
-			
-			
+
+
 			String dirTemp = System.getProperty("java.io.tmpdir");
 			File archivo = new File(dirTemp+"/paseActas.odt");
-			List<String> listaErrores = new ArrayList<String>(); 
+			List<String> listaErrores = new ArrayList<String>();
 			File archivoPdf = new File(dirTemp+"/paseActa-"+Usuario.getUsuarioSesion()+".pdf");
-			try {	
-				
+			try {
+
 				InputStream in = Play.application().resourceAsStream("resources/reportes/patrimonio/actasRecepcion/paseActas.odt");
 				IXDocReport report = XDocReportRegistry.getRegistry().loadReport( in, TemplateEngineKind.Velocity );
 				IContext context = report.createContext();
-				
+
 				List<ActaMovimiento> x = new ArrayList<ActaMovimiento>();
 				for(Integer z : actasSeleccionados){
 					ActaMovimiento um = ActaMovimiento.getLastMovimiento(z.longValue());
 					ActaMovimiento ma = ActaMovimiento.getMovimientoAnterior(um);
 					x.add(um);
 				}
-				
+
 				context.put("um",x);
 				context.put("util",new DateUtils());
 				context.put("user",Usuario.getUsurioSesion());
 				context.put("ActaMovimiento",new ActaMovimiento());
-				
-				
-				
+
+
+
 				//OutputStream out = new FileOutputStream(archivo);
 				//report.process(context, out);
-				
+
 		        OutputStream out = new FileOutputStream(archivoPdf);
 				Options options = Options.getTo(ConverterTypeTo.PDF).via(ConverterTypeVia.ODFDOM);
 				report.convert(context, options, out);
-		        
-		        
+
+
 			} catch (IOException e) {
 				e.printStackTrace();
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
-			
-			
+
+
 			result.put("html", modalCierreCircuito.render(d,idActa,archivoPdf.getPath()).toString());
 			return ok(result);
 		} catch (Exception e){
 			flash("error", "No se puede modificar los registros.");
 			return ok(modalCierreCircuito.render(d,idActa,null));
-		}		
+		}
 	}
-	
-	
+
+
 	@CheckPermiso(key = "expedientesPasarAOtroServicio")
 	public static Result pasarOtroServicio() {
 		DynamicForm d = form().bindFromRequest();
 		d.discardErrors();
-		
+
 		List<Integer> actasSeleccionados = getSeleccionados();
 
 		Long idActa = null;
@@ -452,21 +453,22 @@ final static Form<ActaMovimiento> lineaForm = form(ActaMovimiento.class);
 			flash("error", error);
 			return ok(modalPasarOtroServicio.render(d,idActa,null));
 		}
+		if(!Permiso.check("pasarActasCerradas")){
+			List<Long> soloAbiertas = ActaMovimiento.getStringIsNotMovimientoCierre(actasSeleccionados);
 
-		List<Long> soloAbiertas = ActaMovimiento.getStringIsNotMovimientoCierre(actasSeleccionados);
+			Logger.debug("++++++++++++++++ "+soloAbiertas.size());
 
-		Logger.debug("++++++++++++++++ "+soloAbiertas.size());
+			if(soloAbiertas.size() > 0) {
+				String error = "NO SE PUEDE CAMBIAR ACTAS CON EL CIRCUITO CERRADO<br>";
+				error += "Actas que se encuentan CERRADAS:<br>";
+				for(Long x :soloAbiertas){
+					ActaRecepcion e = ActaRecepcion.find.byId(x);
+					error += "- "+e.getNombre()+"\n";
+				}
 
-		if(soloAbiertas.size() > 0) {
-			String error = "NO SE PUEDE CAMBIAR ACTAS CON EL CIRCUITO CERRADO<br>";
-			error += "Actas que se encuentan CERRADAS:<br>";
-			for(Long x :soloAbiertas){
-				ActaRecepcion e = ActaRecepcion.find.byId(x);
-				error += "- "+e.getNombre()+"\n";
+				flash("error", error);
+				return ok(modalPasarOtroServicio.render(d,idActa,null));
 			}
-
-			flash("error", error);
-			return ok(modalPasarOtroServicio.render(d,idActa,null));
 		}
 
 		List<ActaRecepcion> act = ActaRecepcion.find.where().ne("estado_id",Estado.ACTA_ESTADO_APROBADA).in("id",actasSeleccionados).findList();
@@ -532,7 +534,7 @@ final static Form<ActaMovimiento> lineaForm = form(ActaMovimiento.class);
 			return ok(modalPasarOtroServicio.render(d,idActa,null));
 		}
 	}
-	
+
 	public static List<Long> soloDeMiServicio(List<Integer> actasSeleccionados) {
 
 		List<Long> ret = ActaMovimiento.getStringIsNotMovimientoServicioUsuario(actasSeleccionados, Usuario.getUsurioSesion().organigrama_id);
