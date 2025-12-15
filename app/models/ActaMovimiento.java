@@ -26,6 +26,7 @@ import com.avaje.ebean.ExpressionList;
 import com.avaje.ebean.SqlRow;
 import com.avaje.ebean.SqlUpdate;
 
+import models.auth.Permiso;
 import play.Logger;
 import play.data.format.Formats;
 import play.data.validation.Constraints.Required;
@@ -380,10 +381,16 @@ public class ActaMovimiento extends Model{
 
 					f.cierre = true;*/
 				}
-
-				if(organigramaId.compareTo(new Long(91)) == 0 ) {
-					f.cierre = true;
+				if(!Permiso.check("pasarActasCerradas")){
+					if(organigramaId.compareTo(new Long(91)) == 0 ) {
+						f.cierre = true;
+					}
+				}else {
+					if(organigramaId.compareTo(new Long(91)) != 0 ) {
+						f.cierre = false;
+					}
 				}
+
 
 				f.descripcion = desc;
 				f.acta_id = (long) i;
