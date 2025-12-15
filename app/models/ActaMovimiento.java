@@ -381,6 +381,9 @@ public class ActaMovimiento extends Model{
 					f.cierre = true;*/
 				}
 
+				if(organigramaId.compareTo(new Long(91)) == 0 ) {
+					f.cierre = true;
+				}
 
 				f.descripcion = desc;
 				f.acta_id = (long) i;
