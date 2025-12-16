@@ -161,6 +161,7 @@ public class Planificacion extends Model{
     	if(!Permiso.check("verPlanificacionResidencia")){
     		e.eq("residencia", false);
     	}
+
     	if(!Permiso.check("verPlanificacionOcultas")){
     		e.eq("ocultas", false);
     	}
