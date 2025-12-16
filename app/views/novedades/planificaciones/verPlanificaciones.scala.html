@@ -25,7 +25,7 @@ totalHorarPorDiaPorPlanificacion:List[com.avaje.ebean.SqlRow])
 			  </button>
 			  <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
 				<li role="presentation">
-				@if(planificacion.tipo_planificacion_id == models.novedades.TipoPlanificacion.GUARDIA) {
+				@if(planificacion.tipo_planificacion_id == models.novedades.TipoPlanificacion.GUARDIA || planificacion.tipo_planificacion_id == models.novedades.TipoPlanificacion.HS_FARMACIA_ADMINISTRATIVOS) {
 				<a role="menuitem" class="reporteGenerico" tabindex="-1" href="#" data-title="Reporte Planificacion" data-url="@controllers.novedades.routes.PlanificacionesController.imprimirPlanificacion(planificacion.id)">Imprimir Reporte</a>
 			  	}
 			  	</li>
