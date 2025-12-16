@@ -382,11 +382,11 @@ public class ActaMovimiento extends Model{
 					f.cierre = true;*/
 				}
 				if(!Permiso.check("pasarActasCerradas")){
-					if(organigramaId.compareTo(new Long(91)) == 0 ) {
+					if(organigramaId.compareTo(new Long(71)) == 0 ) {
 						f.cierre = true;
 					}
 				}else {
-					if(organigramaId.compareTo(new Long(91)) != 0 ) {
+					if(organigramaId.compareTo(new Long(71)) != 0 ) {
 						f.cierre = false;
 					}
 				}
