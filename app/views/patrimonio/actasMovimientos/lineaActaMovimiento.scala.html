@@ -13,7 +13,7 @@
 	<td>@utils.DateUtils.formatDate(linea.fecha_llegada,"dd/MM/yyyy HH:mm:ss")</td>
 	<td>@utils.DateUtils.formatDate(linea.fecha_salida,"dd/MM/yyyy HH:mm:ss")</td>
 	<td>@ActaMovimiento.tiempoEnMovimiento(linea)</td>
-	<td>@if(linea.estado !=  null){@linea.estado.nombre}  @if(linea.cierre != null && linea.cierre){- CERRADO} </td>
+	<td>@if(linea.estado !=  null){@linea.estado.nombre}  @if(linea.cierre){- CERRADO} </td>
 	<td>@if(linea.cancelado){CANCELADO}</td>
 
 
