@@ -381,7 +381,14 @@ public class ActaMovimiento extends Model{
 
 					f.cierre = true;*/
 				}
-				if(!Permiso.check("pasarActasCerradas")){
+
+				if(organigramaId.compareTo(new Long(71)) == 0 ) {
+					f.cierre = true;
+				}else {
+					f.cierre = false;
+				}
+
+				/*if(!Permiso.check("pasarActasCerradas")){
 					if(organigramaId.compareTo(new Long(71)) == 0 ) {
 						f.cierre = true;
 					}
@@ -389,7 +396,7 @@ public class ActaMovimiento extends Model{
 					if(organigramaId.compareTo(new Long(71)) != 0 ) {
 						f.cierre = false;
 					}
-				}
+				}*/
 
 
 				f.descripcion = desc;
