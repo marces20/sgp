@@ -1245,8 +1245,8 @@ public class ActasRecepcionReportesController extends Controller {
  		"					  <b>Exp: </b>"+rf.ordenProvision.ordenCompra.expediente.getExpedienteEjercicio()+" - " +
  		"					  <b>Proveedor: </b>"+rf.ordenProvision.ordenCompra.proveedor.nombre+"  </br> "+
 
- 		"					  <b>INSTITUCION: </b>"+rf.ordenProvision.ordenCompra.deposito.nombre+" " +
- 		"					  <b>Total: </b>"+utils.NumberUtils.moneda(totalRemitos)+" / <b>Cantidad:</b> "+cantRemitos+textoConDolar+"</p>" +
+ 		"					  <b>INSTITUCION: </b>"+rf.ordenProvision.ordenCompra.deposito.nombre+" - <b>CUENTA:</b>" +rf.ordenProvision.ordenCompra.tipoCuenta.nombre+
+ 		"					  <b> - Total: </b>"+utils.NumberUtils.moneda(totalRemitos)+" / <b>Cantidad:</b> "+cantRemitos+textoConDolar+"</p>" +
 
  		"					  </div>"+
  		"                 </td>\n" +
