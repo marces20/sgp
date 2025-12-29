@@ -44,7 +44,7 @@ totalHorarPorDiaPorPlanificacion:List[com.avaje.ebean.SqlRow])
 		}
 
 		<!-- -------------------GUARDIAS----------------------------- -->
-		@if(planificacion.tipo_planificacion_id == models.novedades.TipoPlanificacion.GUARDIA) {
+		@if(planificacion.tipo_planificacion_id == models.novedades.TipoPlanificacion.GUARDIA || planificacion.tipo_planificacion_id == models.novedades.TipoPlanificacion.HS_FARMACIA_ADMINISTRATIVOS) {
 
 			<li><a class="tabDetalles" href="#contenedorDetalles" data-toggle="tab">Novedades Detalles</a></li>
 			<li><a class="tabHoras" href="#contenedorHoras" data-toggle="tab">Cantidad Horas</a></li>
@@ -208,7 +208,7 @@ totalHorarPorDiaPorPlanificacion:List[com.avaje.ebean.SqlRow])
 
 
 		<!-- -------------------GUARDIAS----------------------------- -->
-		@if(planificacion.tipo_planificacion_id == models.novedades.TipoPlanificacion.GUARDIA) {
+		@if(planificacion.tipo_planificacion_id == models.novedades.TipoPlanificacion.GUARDIA  || planificacion.tipo_planificacion_id == models.novedades.TipoPlanificacion.HS_FARMACIA_ADMINISTRATIVOS) {
 
 			<div class="tab-pane" id="contenedorDetalles">
 				<div class="row">
