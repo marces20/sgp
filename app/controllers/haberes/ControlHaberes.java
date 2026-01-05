@@ -80,7 +80,7 @@ public class ControlHaberes extends Controller {
 
 		sql += "and lc.control_guardia = true " +
 				"group by a.id,a.apellido,o.nombre,p.nombre,COALESCE(a.limite_guardia,0) "
-				+ "order by a.apellido,o.nombre ";
+				+ "order by total desc , a.apellido asc ,o.nombre asc  ";
 
 		SqlQuery sqlQuery = Ebean.createSqlQuery(sql);
 
