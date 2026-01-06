@@ -49,7 +49,7 @@ public class NovedadesController extends Controller {
 
 
 		return ok(indexListaNovedades.render(Novedad.page(RequestVar.get("agente_id"),
-											RequestVar.get("servicio_id"),
+											Usuario.getUsurioSesion().organigrama_id.toString(),
 											RequestVar.get("desde"),
 											RequestVar.get("hasta"),
 											RequestVar.get("planificacion_id"),
