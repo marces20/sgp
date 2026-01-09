@@ -112,7 +112,7 @@ public class InformeEstadisticoPagoProveedoresController extends Controller {
 		if(!RequestVar.get("proveedor_id").isEmpty()){
 			Long z = new Long(RequestVar.get("proveedor_id"));
 			if(z.compareTo(Proveedor.RA) == 0) {
-				where += " AND proveedor_id in (";
+				where += " AND al.proveedor_id in (";
 
 				List<Long> ll = Proveedor.getProveedoresDestacadosRA();
 
@@ -122,7 +122,7 @@ public class InformeEstadisticoPagoProveedoresController extends Controller {
 				where = where.substring(0, where.length() - 1);
 				where += ") ";
 			}else {
-				where += " AND proveedor_id = "+Integer.parseInt(RequestVar.get("proveedor_id"));
+				where += " AND al.proveedor_id = "+Integer.parseInt(RequestVar.get("proveedor_id"));
 			}
 		}
 
@@ -134,13 +134,13 @@ public class InformeEstadisticoPagoProveedoresController extends Controller {
 
 		if(where != "1 = 1 ") {
 			String sql = "SELECT p.nombre as proveedor,SUM(monto) as total "+
-					"FROM autorizados a "+
-					"INNER JOIN autorizado_lineas al ON al.autorizado_id = a.id "+
-					"INNER JOIN proveedores p ON p.id = al.proveedor_id "+
-					"INNER JOIN ordenes o ON o.id = al.orden_id "+
-					"WHERE "+where+
-					"GROUP BY al.proveedor_id,p.nombre "+
-					"ORDER BY p.nombre";
+					" FROM autorizados a "+
+					" INNER JOIN autorizado_lineas al ON al.autorizado_id = a.id "+
+					" INNER JOIN proveedores p ON p.id = al.proveedor_id "+
+					" INNER JOIN ordenes o ON o.id = al.orden_id "+
+					" WHERE "+where+
+					" GROUP BY al.proveedor_id,p.nombre "+
+					" ORDER BY p.nombre";
 
 			s = Ebean.createSqlQuery(sql)
 					.setParameter("finicio", fi)
