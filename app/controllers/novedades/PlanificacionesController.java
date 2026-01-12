@@ -528,10 +528,88 @@ public class PlanificacionesController extends Controller {
 
 				OrganigramaGuardiaDato ogd = OrganigramaGuardiaDato.find.where().eq("organigrama_id", p.organigrama_id).eq("activo", true).findUnique();
 				PuestoLaboral pl = PuestoLaboral.find.fetch("legajo").where().eq("activo",true).eq("legajo.agente.id",sx.getLong("agente_id") ).findUnique();
-				Long liquidacion_concepto_id = models.haberes.Novedad.getLiquidacionConceptoByHoraHabilesFestivaOrg(sx.getBigDecimal("horas"),sx.getBoolean("habiles"),sx.getBoolean("festivas"),ogd);
+				Long liquidacion_concepto_id = models.haberes.Novedad.getLiquidacionConceptoGuardiaByHoraHabilesFestivaOrg(sx.getBigDecimal("horas"),sx.getBoolean("habiles"),sx.getBoolean("festivas"),ogd);
 
 				BigDecimal hh = new BigDecimal(ogd.horasxdia_habiles);
 				BigDecimal cantidad = models.haberes.Novedad.getCantidadByHabilesHoras(sx.getBigDecimal("horas"),sx.getBoolean("habiles"),ogd);
+
+				models.haberes.Novedad n = new models.haberes.Novedad();
+				n.puesto_laboral_id = pl.id;
+				n.liquidacion_concepto_id=liquidacion_concepto_id;
+
+				n.periodo_inicio_id= p.periodo_liquidacion_id.longValue();
+				n.periodo_hasta_id= p.periodo_liquidacion_id.longValue();
+				n.periodo_concepto_id= p.periodo_id.longValue();
+
+				n.organigrama_id= pl.legajo.agente.organigrama_id;
+				n.activo= true;
+				n.fecha_novedad= new Date();
+				n.importe = BigDecimal.ZERO;
+				n.cantidad = cantidad;
+				n.usuario_id= new Long(Usuario.getUsuarioSesion());
+				if(pl.dobla) {
+					n.liquidacion_tipo_id = LiquidacionTipo.CONCEPTOS_NO_INCLUIDOS;
+				}else {
+					n.liquidacion_tipo_id = LiquidacionTipo.MENSUAL;
+				}
+
+				n.create_date = new Date();
+				n.planificacion_id = p.id;
+				n.save();
+				count++;
+			}
+
+
+
+
+			p.estado_id = new Long(Estado.PLANIFICIACION_CERRADA);
+			p.write_date = new Date();
+			p.write_usuario_id = new Long(Usuario.getUsuarioSesion());
+			p.save();
+
+			Ebean.commitTransaction();
+			flash("success", "Se generaron "+count+" novedades");
+
+		} catch (Exception e) {
+			Ebean.rollbackTransaction();
+			flash("error", "No se pudieron generar las novedades");
+		} finally {
+			Ebean.endTransaction();
+		}
+		return redirect(controllers.novedades.routes.PlanificacionesController.ver(p.id)+ UriTrack.get("&"));
+
+	}
+
+	@CheckPermiso(key = "planificacionCrearNovedades")
+	public static Result crearNovedadesHora(Long id) {
+
+		Planificacion p = Planificacion.find.byId(id);
+
+
+		List<models.haberes.Novedad> nxNovedad = models.haberes.Novedad.find.where().eq("planificacion_id", id).findList();
+
+		if(nxNovedad.size() > 0) {
+			flash("error", "Existen Novedades con este ID de planificaciones");
+			return redirect(controllers.novedades.routes.PlanificacionesController.ver(p.id)+ UriTrack.get("&"));
+		}
+
+		Ebean.beginTransaction();
+		try {
+
+
+			List<SqlRow> novedades = Novedad.getNovedadesPorAgentePorPlanificaciones(id);
+			int count = 0;
+			for(SqlRow sx :novedades) {
+				//sx.getBoolean("habiles");
+				//sx.getBigDecimal("horas");
+				//sx.getBoolean("festivas");
+
+				OrganigramaGuardiaDato ogd = OrganigramaGuardiaDato.find.where().eq("organigrama_id", p.organigrama_id).eq("activo", true).findUnique();
+				PuestoLaboral pl = PuestoLaboral.find.fetch("legajo").where().eq("activo",true).eq("legajo.agente.id",sx.getLong("agente_id") ).findUnique();
+				Long liquidacion_concepto_id = models.haberes.Novedad.getLiquidacionConceptoHorasExtrasByHoraHabilesFestivaOrg(sx.getBigDecimal("horas"),sx.getBoolean("habiles"),sx.getBoolean("festivas"),ogd);
+
+				BigDecimal hh = new BigDecimal(ogd.horasxdia_habiles);
+				BigDecimal cantidad = sx.getBigDecimal("horas");
 
 				models.haberes.Novedad n = new models.haberes.Novedad();
 				n.puesto_laboral_id = pl.id;
@@ -821,7 +899,15 @@ public class PlanificacionesController extends Controller {
 				 agenteDni.put(sx.getInteger("agente_id"),sx.getString("dni"));
 
 				 if(sx.getBoolean("festivas")) {
-					 agenteFestivas.put(sx.getInteger("agente_id"), sx.getInteger("horas"));
+					 if(agenteFestivas.containsKey(sx.getInteger("agente_id"))) {
+
+						 Integer hTmp = agenteFestivas.get(sx.getInteger("agente_id"))+sx.getInteger("horas");
+						 agenteFestivas.put(sx.getInteger("agente_id"),hTmp);
+
+					 }else {
+						 agenteFestivas.put(sx.getInteger("agente_id"), sx.getInteger("horas"));
+					 }
+
 				 }else {
 					 if(sx.getBoolean("habiles") ) {
 						 agenteHabiles.put(sx.getInteger("agente_id"), sx.getInteger("horas"));
