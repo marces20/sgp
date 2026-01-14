@@ -342,7 +342,7 @@ $( function() {
 		    		$(this).dialog( "destroy" );
 		    	},
 			    open: function( event, ui ) {
-					$.get(url, getCheckFacturaSeleccionados(), function(data){
+					$.post(url, getCheckFacturaSeleccionados(), function(data){
 						dialogo.html(data);
 					});
 			    }
