@@ -250,7 +250,7 @@ public class Novedad extends Model{
 		return ret;
 	}
 
-	public static Long getLiquidacionConceptoByHoraHabilesFestivaOrg(BigDecimal horas,Boolean habiles,Boolean festivas,OrganigramaGuardiaDato ogd) {
+	public static Long getLiquidacionConceptoGuardiaByHoraHabilesFestivaOrg(BigDecimal horas,Boolean habiles,Boolean festivas,OrganigramaGuardiaDato ogd) {
 		Long ret = null;
 
 		if(festivas) {
@@ -276,6 +276,36 @@ public class Novedad extends Model{
 				}
 			}
 		}
+
+		return ret;
+	}
+
+	public static Long getLiquidacionConceptoHorasExtrasByHoraHabilesFestivaOrg(BigDecimal horas,Boolean habiles,Boolean festivas,OrganigramaGuardiaDato ogd) {
+		Long ret = null;
+
+		/*if(festivas) {
+			if(ogd.critica) {
+				ret = LiquidacionConcepto.GUARDIA_ACTIVA_CRITICA_FESTIVA;
+			}else {
+				ret = LiquidacionConcepto.GUARDIA_ACTIVA_NO_CRITICA_FESTIVA;
+			}
+		}else {
+
+			if(habiles) {
+				if(ogd.critica) {
+					 ret = LiquidacionConcepto.GUARDIA_CRITICA_DÍA_HÁBIL;
+				}else {
+					 ret = LiquidacionConcepto.GUARDIA_ACTIVA_DÍA_HÁBIL;
+				}
+
+			}else {
+				if(ogd.critica) {
+					ret = LiquidacionConcepto.GUARDIA_CRITICA_DÍA_INHÁBIL;
+				}else {
+					ret = LiquidacionConcepto.GUARDIA_ACTIVA_DÍA_INHÁBIL;
+				}
+			}
+		}*/
 
 		return ret;
 	}
