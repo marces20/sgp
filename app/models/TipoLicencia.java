@@ -36,6 +36,7 @@ public class TipoLicencia extends Model{
 
 	public Boolean habiles_produccion;
 
+
 	public String articulo;
 
 	public static Finder<Long,TipoLicencia> find = new Finder<Long,TipoLicencia>(Long.class, TipoLicencia.class);
