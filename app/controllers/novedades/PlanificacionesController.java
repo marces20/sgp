@@ -531,7 +531,7 @@ public class PlanificacionesController extends Controller {
 				Long liquidacion_concepto_id = models.haberes.Novedad.getLiquidacionConceptoGuardiaByHoraHabilesFestivaOrg(sx.getBigDecimal("horas"),sx.getBoolean("habiles"),sx.getBoolean("festivas"),ogd);
 
 				BigDecimal hh = new BigDecimal(ogd.horasxdia_habiles);
-				BigDecimal cantidad = models.haberes.Novedad.getCantidadByHabilesHoras(sx.getBigDecimal("horas"),sx.getBoolean("habiles"),ogd);
+				BigDecimal cantidad = models.haberes.Novedad.getCantidadByHabilesHoras(sx.getBigDecimal("horas"),sx.getBoolean("habiles"),ogd,sx.getBoolean("festivas"));
 
 				models.haberes.Novedad n = new models.haberes.Novedad();
 				n.puesto_laboral_id = pl.id;
