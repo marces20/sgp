@@ -101,7 +101,7 @@ public class LiquidacionNovedadLicencia extends Model{
 													   where();
 
 		//SOLOOOOOO LICENCICIAS REGLAMENTARIAS------------------------!!!!!!!!!!!!!!!!!!!!!!!1
-		e.eq("agenteAsistenciaLicencia.tipo_licencia_id",TipoLicencia.LICENCIA_ANUAL_REGLAMENTARIA);
+		//e.eq("agenteAsistenciaLicencia.tipo_licencia_id",TipoLicencia.LICENCIA_ANUAL_REGLAMENTARIA);
 
 		if(!Permiso.check("verTodoAgentes")){
     		if(Usuario.getUsurioSesion().organigrama != null){
