@@ -40,6 +40,7 @@ public class OrganigramaGuardiaDato extends Model {
 	public Integer inhabiles_horas;
 	public Integer horasxdia_habiles;
 	public Integer horasxdia_inhabiles;
+	public Integer horasxdia_festivas;
 	public Boolean activo = false;
 	public Boolean critica = false;
 
