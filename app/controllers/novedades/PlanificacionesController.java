@@ -38,6 +38,7 @@ import models.haberes.PuestoLaboral;
 import models.novedades.Planificacion;
 import models.novedades.ProduccioImagenesPuestoLaboralPeriodo;
 import models.novedades.ProduccionPuestoPeriodo;
+import models.novedades.TipoPlanificacion;
 import models.recupero.InformeTotal;
 import models.recupero.RecuperoCertificadoDeuda;
 import models.recupero.RecuperoFactura;
@@ -606,7 +607,16 @@ public class PlanificacionesController extends Controller {
 
 				OrganigramaGuardiaDato ogd = OrganigramaGuardiaDato.find.where().eq("organigrama_id", p.organigrama_id).eq("activo", true).findUnique();
 				PuestoLaboral pl = PuestoLaboral.find.fetch("legajo").where().eq("activo",true).eq("legajo.agente.id",sx.getLong("agente_id") ).findUnique();
-				Long liquidacion_concepto_id = models.haberes.Novedad.getLiquidacionConceptoHorasExtrasByHoraHabilesFestivaOrg(sx.getBigDecimal("horas"),sx.getBoolean("habiles"),sx.getBoolean("festivas"),ogd);
+
+				Long liquidacion_concepto_id = null;
+
+				if(p.tipo_planificacion_id.compareTo(TipoPlanificacion.HS_FARMACIA_ADMINISTRATIVOS) == 0) {
+					liquidacion_concepto_id = models.haberes.Novedad.getLiquidacionConceptoHorasExtrasAdminitrativosByHoraHabilesFestivaOrg(sx.getBigDecimal("horas"),sx.getBoolean("habiles"),sx.getBoolean("festivas"),ogd);
+				}else if(p.tipo_planificacion_id.compareTo(TipoPlanificacion.HS_NOCTURNIDAD_FARMACIA_ADMINISTRATIVOS) == 0) {
+					liquidacion_concepto_id = models.haberes.Novedad.getLiquidacionConceptoHorasExtrasAdminitrativosNocturnidadByHoraHabilesFestivaOrg(sx.getBigDecimal("horas"),sx.getBoolean("habiles"),sx.getBoolean("festivas"),ogd);
+
+				}
+
 
 				BigDecimal hh = new BigDecimal(ogd.horasxdia_habiles);
 				BigDecimal cantidad = sx.getBigDecimal("horas");
