@@ -129,7 +129,7 @@ public class Planificacion extends Model{
 				.orderBy("id desc").findList();
 	}
 
-	public static Pagination<Planificacion> page(String organigrama_id ,
+	public static Pagination<Planificacion> page(String numero ,
 			String desde,
 			String hasta,
 			String btnFiltro0,
@@ -139,14 +139,18 @@ public class Planificacion extends Model{
 			String btnFiltro4,
 			String btnFiltro5,
 			String btnFiltro6,
-			String cliente_id) {
+			String cliente_id,
+			String organigrama_id) {
+
     	Pagination<Planificacion> p = new Pagination<Planificacion>();
     	p.setOrderDefault("DESC");
     	p.setSortByDefault("id");
 
     	ExpressionList<Planificacion> e = find.where();
 
-
+    	if(!numero.isEmpty()){
+    		e.ilike("referencia", "%" + numero + "%");
+    	}
 
     	if(!Permiso.check("verTodoPlanificacion")){
     		//e.eq("organigrama_id", Usuario.getUsurioSesion().organigrama.id);
@@ -156,6 +160,10 @@ public class Planificacion extends Model{
         		e.in("organigrama_id", ol);
         		//e.eq("organigrama_id", Integer.parseInt(organigrama_id));
 
+		}else {
+			if(!organigrama_id.isEmpty()){
+	    		e.eq("organigrama_id", Integer.parseInt(organigrama_id));
+	    	}
 		}
 
     	if(!Permiso.check("verPlanificacionResidencia")){

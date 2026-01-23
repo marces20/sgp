@@ -84,8 +84,8 @@ public class PlanificacionesController extends Controller {
 		return ok(indexPlanificaciones.render(
 				Planificacion.page(
 												  		RequestVar.get("numero"),
-												  		RequestVar.get("expediente_id"),
 												  		RequestVar.get("fecha_desde"),
+												  		RequestVar.get("fecha_hasta"),
 												  		RequestVar.get("btnFiltro[0]"),//borrador
 												  		RequestVar.get("btnFiltro[1]"),
 												  		RequestVar.get("btnFiltro[2]"),
@@ -93,7 +93,8 @@ public class PlanificacionesController extends Controller {
 												  		RequestVar.get("btnFiltro[4]"),
 												  		RequestVar.get("btnFiltro[5]"),
 												  		RequestVar.get("btnFiltro[6]"),
-												  		RequestVar.get("cliente_id")
+												  		RequestVar.get("cliente_id"),
+												  		RequestVar.get("organigrama_id")
 												  		),d));
 	}
 
