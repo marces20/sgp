@@ -165,9 +165,10 @@ public class RemitosController extends Controller {
 		}
 
 
+
 		if(rec.ordenProvision.ordenCompra.fecha_presupueso != null ) {
 
-			if(!r.sin_control_fecha && r.fecha_remito.before(rec.ordenProvision.ordenCompra.fecha_presupueso)) {
+			if(!rec.ordenProvision.ordenCompra.expediente.pago && !r.sin_control_fecha && r.fecha_remito.before(rec.ordenProvision.ordenCompra.fecha_presupueso)) {
 	        	flash("error", "La Fecha no puede ser menor a la fecha de PRESUPUESTO.");
 				return ok(crearRemito.render(rForm));
 	        }
@@ -175,7 +176,7 @@ public class RemitosController extends Controller {
 		}
 
 		Date dt =  rec.ordenProvision.ordenCompra.expediente.fecha;
-		if(!r.sin_control_fecha && r.fecha_remito.before(dt)) {
+		if(!rec.ordenProvision.ordenCompra.expediente.pago && !r.sin_control_fecha && r.fecha_remito.before(dt)) {
         	flash("error", "La Fecha no puede ser menor a la fecha de Expediente.");
 			return ok(crearRemito.render(rForm));
         }
@@ -265,7 +266,7 @@ public class RemitosController extends Controller {
 
 		if(r.recepcion.ordenProvision.ordenCompra.fecha_presupueso != null ) {
 
-			if( !r.sin_control_fecha   && r.fecha_remito.before(r.recepcion.ordenProvision.ordenCompra.fecha_presupueso)) {
+			if(!r.recepcion.ordenProvision.ordenCompra.expediente.pago && !r.sin_control_fecha   && r.fecha_remito.before(r.recepcion.ordenProvision.ordenCompra.fecha_presupueso)) {
 	        	flash("error", "La Fecha no puede ser menor a la fecha de PRESUPUESTO.");
 				return ok(editarRemito.render(rForm,r));
 	        }
@@ -274,7 +275,7 @@ public class RemitosController extends Controller {
 
 		Date dt =  r.recepcion.ordenProvision.ordenCompra.expediente.fecha;
         //Date fechaExpedienteMas7Dias = new Date(dt.getTime() + (7000 * 60 * 60 * 24));
-		if(!rf.sin_control_fecha && rf.fecha_remito.before(dt)) {
+		if(!r.recepcion.ordenProvision.ordenCompra.expediente.pago && !rf.sin_control_fecha && rf.fecha_remito.before(dt)) {
         	flash("error", "La Fecha no puede ser menor a la fecha de Expediente.");
         	return badRequest(editarRemito.render(rForm,r));
         }
