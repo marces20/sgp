@@ -863,6 +863,7 @@ public class PlanificacionesController extends Controller {
 			 		"					  <div style=\"text-align: center;\">" +
 			 		"					  <p style=\"font-size:12px;\"><b>Planificacion N° "+rf.id+"</b> - \n" +
 			 		"					  <b>Servicio: </b>"+rf.organigrama.nombre+" - \n" +
+			 		"					  </p><p style=\"font-size:12px;\"><b>Tipo: </b>"+rf.tipoPlanificacion.nombre+" - \n" +
 			 		"					  <b>Periodo: </b>"+rf.periodo.nombre+"</p>\n" +
 			 		"					  </div>"+
 			 		"                 </td>\n" +
@@ -874,7 +875,8 @@ public class PlanificacionesController extends Controller {
 
 			 String periodo =rf.periodo.getMesAnioStringPeriodo();
 
-			 String texto = "<p style=\"font-size:20px;\">Por medio de la presente se <b>CERTIFICA</b> que los profesionales, cuyo detalle obra a continuación, han cumplimentado en forma real y efectiva las prestaciones profesionales extraordinarias durante el período de "+periodo+".</p>\n";
+			 String texto = "<p style=\"font-size:20px;\">Por medio de la presente se <b>CERTIFICA</b> que los agentes, cuyo detalle obra a continuación, "
+			 		+ "han cumplimentado en forma real y efectiva las prestaciones extraordinarias durante el período de "+periodo+".</p>\n";
 
 			 String footer = "<footer clase=\"footer\" style=\"\">\n" +
 				 		"	<table style=\"width: 100%;    \">\n" +
@@ -1029,7 +1031,7 @@ public class PlanificacionesController extends Controller {
 				 String novedadesTabla = "<table class=\"tabla-uno\" style=\"border:1px solid #000000;font-size:14px;width: 100%;text-align: center;\" cellspacing=\"2\" cellpadding=\"2\">\n" +
 				 		"        <thead style=\"background-color: #BDBDBD;\">\n" +
 				 		"            <tr>\n" +
-				 		"            	<th style=\"border: 1px solid;\">Apellido</th>\n" +
+				 		"            	<th style=\"border: 1px solid;\">Agente</th>\n" +
 				 		"               <th style=\"border: 1px solid;width:50px;\">DNI</th>\n" +
 				 		"               <th style=\"border: 1px solid;width:45px;\">Hab.</th>\n" +
 				 		"               <th style=\"border: 1px solid;width:45px;\">Inh.</th>\n" +
