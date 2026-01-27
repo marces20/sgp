@@ -254,33 +254,45 @@
 						</label>
 					</div>
 
-					<div class="col-sm-2">
+
+					<div class="col-sm-3">
+						<div class="col-sm-6 input-group">
+							<label class="control-label">Fecha Ingreso</label>
+							<div>
+								@inputText(formBuscador("fingreso_desde"), 'class -> "form-control inputDateMascara", 'id -> "fingreso_desde", 'placeholder -> "Desde")
+								@inputText(formBuscador("fingreso_hasta"), 'class -> "form-control inputDateMascara", 'id -> "fingreso_hasta", 'placeholder -> "Hasta")
+							</div>
+						</div>
+						<div class="col-sm-6 input-group">
+							<label class="control-label">Fecha CUD</label>
+							<div>
+								@inputText(formBuscador("fcud_desde"), 'class -> "form-control inputDateMascara", 'id -> "cud_desde", 'placeholder -> "Desde")
+								@inputText(formBuscador("fcud_hasta"), 'class -> "form-control inputDateMascara", 'id -> "cud_hasta", 'placeholder -> "Hasta")
+							</div>
+						</div>
+					</div>
+					<div class="col-sm-3">
+						<div class="col-sm-6">
+							<label class="control-label">
+								Asignaciones Familiares
+								@select(formBuscador("asignacion_familiar"),options(""->"","SI"->"SI","NO"->"NO"), 'class -> "form-control select")
+							</label>
+						</div>
+						<div class="col-sm-6">
+							<label class="control-label">
+								Asistencial
+								@select(formBuscador("asistencial"),options(""->"","SI"->"SI","NO"->"NO"), 'class -> "form-control select")
+							</label>
+						</div>
+					</div>
+
+					<div class="col-sm-1">
 						<div class="checkbox">
 							<label class="control-label">
 								Con RUL
 								@checkbox(formBuscador("con_rul"))
 							</label>
 						</div>
-					</div>
-					<div class="col-sm-2 input-group">
-						<label class="control-label">Fecha Ingreso</label>
-						<div>
-							@inputText(formBuscador("fingreso_desde"), 'class -> "form-control inputDateMascara", 'id -> "fingreso_desde", 'placeholder -> "Desde")
-							@inputText(formBuscador("fingreso_hasta"), 'class -> "form-control inputDateMascara", 'id -> "fingreso_hasta", 'placeholder -> "Hasta")
-						</div>
-					</div>
-					<div class="col-sm-2 input-group">
-						<label class="control-label">Fecha CUD</label>
-						<div>
-							@inputText(formBuscador("fcud_desde"), 'class -> "form-control inputDateMascara", 'id -> "cud_desde", 'placeholder -> "Desde")
-							@inputText(formBuscador("fcud_hasta"), 'class -> "form-control inputDateMascara", 'id -> "cud_hasta", 'placeholder -> "Hasta")
-						</div>
-					</div>
-					<div class="col-sm-2">
-						<label class="control-label">
-							Asignaciones Familiares
-							@select(formBuscador("asignacion_familiar"),options(""->"","SI"->"SI","NO"->"NO"), 'class -> "form-control select")
-						</label>
 					</div>
 
 				</div>
