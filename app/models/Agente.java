@@ -319,7 +319,8 @@ public class Agente extends Model{
 										  String fcud_desde,
 										  String fcud_hasta,
 										  String puesto_id,
-										  String solo_servicio
+										  String solo_servicio,
+										  String asistencial
 										  ) {
     	Pagination<Agente> p = new Pagination<Agente>();
     	p.setOrderDefault("ASC");
@@ -415,6 +416,14 @@ public class Agente extends Model{
     			e = e.isNull("asignacion_familiar");
     			e = e.eq("asignacion_familiar", false);
     			e = e.endJunction();
+    		}
+    	}
+
+    	if(!asistencial.isEmpty()){
+    		if(asignacion_familiar.compareToIgnoreCase("SI") == 0){
+    			e.eq("profesion.tipoProfesion.asistencial", true);
+    		}else if(asignacion_familiar.compareToIgnoreCase("NO") == 0){
+    			e.eq("profesion.tipoProfesion.asistencial", false);
     		}
     	}
 
