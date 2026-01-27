@@ -235,17 +235,22 @@ public class Novedad extends Model{
     	return p;
     }
 
-	public static BigDecimal getCantidadByHabilesHoras(BigDecimal horas,Boolean habiles,OrganigramaGuardiaDato ogd) {
-		BigDecimal ret = BigDecimal.ZERO;
+	public static BigDecimal getCantidadByHabilesHoras(BigDecimal horas,Boolean habiles,OrganigramaGuardiaDato ogd,Boolean festivas) {
 
-		if(habiles) {
-			BigDecimal hh = new BigDecimal(ogd.horasxdia_habiles);
-			ret = (horas).divide(hh, 2, RoundingMode.HALF_UP).setScale(2, BigDecimal.ROUND_HALF_UP);
+		BigDecimal ret = BigDecimal.ZERO;
+		BigDecimal hh = new BigDecimal(24);
+
+		if(festivas) {
+			 hh = new BigDecimal(ogd.horasxdia_festivas);
 		}else {
-			BigDecimal hh = new BigDecimal(ogd.horasxdia_inhabiles);
-			ret = (horas).divide(hh, 2, RoundingMode.HALF_UP).setScale(2, BigDecimal.ROUND_HALF_UP);
+			if(habiles) {
+				hh = new BigDecimal(ogd.horasxdia_habiles);
+			}else {
+				hh = new BigDecimal(ogd.horasxdia_inhabiles);
+			}
 		}
 
+		ret = (horas).divide(hh, 2, RoundingMode.HALF_UP).setScale(2, BigDecimal.ROUND_HALF_UP);
 
 		return ret;
 	}
@@ -280,35 +285,32 @@ public class Novedad extends Model{
 		return ret;
 	}
 
-	public static Long getLiquidacionConceptoHorasExtrasByHoraHabilesFestivaOrg(BigDecimal horas,Boolean habiles,Boolean festivas,OrganigramaGuardiaDato ogd) {
+	public static Long getLiquidacionConceptoHorasExtrasAdminitrativosByHoraHabilesFestivaOrg(BigDecimal horas,Boolean habiles,Boolean festivas,OrganigramaGuardiaDato ogd) {
 		Long ret = null;
 
-		/*if(festivas) {
-			if(ogd.critica) {
-				ret = LiquidacionConcepto.GUARDIA_ACTIVA_CRITICA_FESTIVA;
-			}else {
-				ret = LiquidacionConcepto.GUARDIA_ACTIVA_NO_CRITICA_FESTIVA;
-			}
+		if(festivas) {
+			 ret = LiquidacionConcepto.HORAS_ADMINISTRATIVAS_PASIVAS_DIA_FESTIVO;
 		}else {
 
 			if(habiles) {
-				if(ogd.critica) {
-					 ret = LiquidacionConcepto.GUARDIA_CRITICA_DÍA_HÁBIL;
-				}else {
-					 ret = LiquidacionConcepto.GUARDIA_ACTIVA_DÍA_HÁBIL;
-				}
-
+				ret = LiquidacionConcepto.ADICIONAL_MAYOR_CARGAR_HORARIA;
 			}else {
-				if(ogd.critica) {
-					ret = LiquidacionConcepto.GUARDIA_CRITICA_DÍA_INHÁBIL;
-				}else {
-					ret = LiquidacionConcepto.GUARDIA_ACTIVA_DÍA_INHÁBIL;
-				}
+				ret = LiquidacionConcepto.GUARDIA_ACTIVA_DÍA_INHÁBIL;
 			}
-		}*/
+		}
 
 		return ret;
 	}
+
+	public static Long getLiquidacionConceptoHorasExtrasAdminitrativosNocturnidadByHoraHabilesFestivaOrg(BigDecimal horas,Boolean habiles,Boolean festivas,OrganigramaGuardiaDato ogd) {
+		Long ret = null;
+
+		ret = LiquidacionConcepto.NOCTURNIDAD_EMERGUER_COVID;
+
+		return ret;
+	}
+
+
 
 	/*
 	public Boolean comprobarPeriodoUnico() {
