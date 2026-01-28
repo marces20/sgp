@@ -342,11 +342,12 @@ public class PlanificacionesController extends Controller {
 
 	public static void pasarEnCurso(Long idRf){
 
-		Planificacion rf = Ebean.find(Planificacion.class).select("id,tipo_planificacion_id,periodo_id, estado_id,write_date,write_usuario_id").setId(idRf).findUnique();
+		Planificacion rf = Ebean.find(Planificacion.class).select("id,tipo_planificacion_id,periodo_id, estado_id,write_date,write_usuario_id,organigrama_id").setId(idRf).findUnique();
 
 		List<Planificacion> listPlanificacionControl = Planificacion.find.where()
 														.eq("tipo_planificacion_id", rf.tipo_planificacion_id)
 														.eq("periodo_id", rf.periodo_id)
+														.eq("organigrama_id", rf.organigrama_id)
 														.ne("estado_id", Estado.PLANIFICIACION_CANCELADO)
 														.ne("id",rf.id)
 														.findList();
