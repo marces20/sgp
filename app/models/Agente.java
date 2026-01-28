@@ -420,9 +420,9 @@ public class Agente extends Model{
     	}
 
     	if(!asistencial.isEmpty()){
-    		if(asignacion_familiar.compareToIgnoreCase("SI") == 0){
+    		if(asistencial.compareToIgnoreCase("SI") == 0){
     			e.eq("profesion.tipoProfesion.asistencial", true);
-    		}else if(asignacion_familiar.compareToIgnoreCase("NO") == 0){
+    		}else if(asistencial.compareToIgnoreCase("NO") == 0){
     			e.eq("profesion.tipoProfesion.asistencial", false);
     		}
     	}
