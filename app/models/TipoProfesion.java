@@ -20,6 +20,8 @@ public class TipoProfesion extends Model{
 	@Required(message="Debe escribir un nombre")
 	public String nombre;
 
+	public Boolean asistencial = false;
+
 	public static Model.Finder<Long,TipoProfesion> find = new Model.Finder<Long,TipoProfesion>(Long.class, TipoProfesion.class);
 
 }
