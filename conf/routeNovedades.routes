@@ -29,6 +29,7 @@ GET    /planificacion/ver   		controllers.novedades.PlanificacionesController.ve
 GET    /planificacion/cambiarEstado	controllers.novedades.PlanificacionesController.cambiarEstado(id:Long, idEstado: Long)
 GET    /planificacion/imprimirPlanificacion   		controllers.novedades.PlanificacionesController.imprimirPlanificacion(id:Long ?= 0)
 GET    /planificacion/crearNovedades	controllers.novedades.PlanificacionesController.crearNovedades(id:Long)
+GET    /planificacion/crearNovedadesHora	controllers.novedades.PlanificacionesController.crearNovedadesHora(id:Long)
 GET    /planificacion/crearNovedadesProduccionGeneral controllers.novedades.PlanificacionesController.crearNovedadesProduccionGeneral(id:Long)
 GET    /planificacion/crearNovedadesProduccionImagenes controllers.novedades.PlanificacionesController.crearNovedadesProduccionImagenes(id:Long)
 GET    /planificacion/get           			controllers.novedades.PlanificacionesController.get(id:Int ?= 0)
