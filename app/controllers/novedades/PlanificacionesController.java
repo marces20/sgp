@@ -599,8 +599,15 @@ public class PlanificacionesController extends Controller {
 		Ebean.beginTransaction();
 		try {
 
+			List<SqlRow> novedades = null;
 
-			List<SqlRow> novedades = Novedad.getNovedadesPorAgentePorPlanificaciones(id);
+			if(p.tipo_planificacion_id.compareTo(TipoPlanificacion.HS_FARMACIA_ADMINISTRATIVOS) == 0) {
+				novedades = Novedad.getNovedadesPorAgentePorPlanificacionesSinHabiles(id);
+			}else {
+				novedades = Novedad.getNovedadesPorAgentePorPlanificaciones(id);
+			}
+
+
 			int count = 0;
 			for(SqlRow sx :novedades) {
 				//sx.getBoolean("habiles");
@@ -613,7 +620,7 @@ public class PlanificacionesController extends Controller {
 				Long liquidacion_concepto_id = null;
 
 				if(p.tipo_planificacion_id.compareTo(TipoPlanificacion.HS_FARMACIA_ADMINISTRATIVOS) == 0) {
-					liquidacion_concepto_id = models.haberes.Novedad.getLiquidacionConceptoHorasExtrasAdminitrativosByHoraHabilesFestivaOrg(sx.getBigDecimal("horas"),sx.getBoolean("habiles"),sx.getBoolean("festivas"),ogd);
+					liquidacion_concepto_id = models.haberes.Novedad.getLiquidacionConceptoHorasExtrasAdminitrativosByHoraHabilesFestivaOrg(sx.getBigDecimal("horas"),sx.getBoolean("festivas"),ogd);
 				}else if(p.tipo_planificacion_id.compareTo(TipoPlanificacion.HS_NOCTURNIDAD_FARMACIA_ADMINISTRATIVOS) == 0) {
 					liquidacion_concepto_id = models.haberes.Novedad.getLiquidacionConceptoHorasExtrasAdminitrativosNocturnidadByHoraHabilesFestivaOrg(sx.getBigDecimal("horas"),sx.getBoolean("habiles"),sx.getBoolean("festivas"),ogd);
 
