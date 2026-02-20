@@ -285,18 +285,18 @@ public class Novedad extends Model{
 		return ret;
 	}
 
-	public static Long getLiquidacionConceptoHorasExtrasAdminitrativosByHoraHabilesFestivaOrg(BigDecimal horas,Boolean habiles,Boolean festivas,OrganigramaGuardiaDato ogd) {
+	public static Long getLiquidacionConceptoHorasExtrasAdminitrativosByHoraHabilesFestivaOrg(BigDecimal horas,Boolean festivas,OrganigramaGuardiaDato ogd) {
 		Long ret = null;
 
 		if(festivas) {
-			 ret = LiquidacionConcepto.HORAS_ADMINISTRATIVAS_PASIVAS_DIA_FESTIVO;
+			 ret = LiquidacionConcepto.HORAS_ADMINISTRATIVAS_FESTIVAS;
 		}else {
+			ret = LiquidacionConcepto.ADICIONAL_MAYOR_CARGAR_HORARIA;
+			/*if(habiles) {
 
-			if(habiles) {
-				ret = LiquidacionConcepto.ADICIONAL_MAYOR_CARGAR_HORARIA;
 			}else {
 				ret = LiquidacionConcepto.GUARDIA_ACTIVA_DÍA_INHÁBIL;
-			}
+			}*/
 		}
 
 		return ret;
