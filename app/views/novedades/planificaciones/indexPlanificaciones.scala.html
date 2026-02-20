@@ -12,6 +12,9 @@
 	var classEstado:String = new String()
 	if(i != null && i.id == 140){
 		classEstado = "borrador"
+	}else if(i != null && i.id == 143){
+		classEstado = "ordenPrecurso"
+
 	}else if(i != null && i.id == 145){
 		classEstado = "autorizado"
 	}else if(i != null && i.id == 142){
@@ -81,7 +84,8 @@
 				</div>
 			</div>
 
-
+		</div>
+		<div class="row">
 			<div class="col-sm-2">
 				<div class="form-group">
 					<label for="nombre" class="control-label">Numero
@@ -90,6 +94,20 @@
 				</div>
 			</div>
 
+			<div class="col-sm-3">
+				<label for="inputOrgranigrama" class="control-label">Departamento/Servicio</label>
+				<div class="input-group">
+					@inputText(formBuscador("organigrama.nombre"),'class -> "form-control",'id -> "organigrama")
+					@inputText(formBuscador("organigrama_id"),'hidden -> "hidden",'id -> "organigrama_id")
+					<span class="input-group-addon">
+	                	<a href="#" id="searchOrganigrama" data-title="Selección de Departamento/Servicio"
+	                				data-url="@controllers.administracion.routes.OrganigramasController.modalBuscarServicios()"
+	                				data-height="650" data-width="700"
+	                				data-listen="modal.seleccion.servicio.simple"
+	                				data-label="#organigrama" data-field="#organigrama_id" /> <i class="glyphicon glyphicon-search"></i></a>
+	                </span>
+				</div>
+			</div>
 
 
 			<div class="col-sm-2 input-group">
@@ -145,6 +163,7 @@
 					<th width="">Fecha Inicio</th>
 					<th width="">Fecha Fin</th>
 					<th width="">Periodo</th>
+					<th width="">Periodo Liq.</th>
 
 					<th width="30">Hs Habiles</th>
 					<th width="30">Hs Inhabiles</th>
@@ -165,6 +184,9 @@
 					<td class="fecha">@if(planilla.fecha_inicio != null){@(utils.DateUtils.formatDate(planilla.fecha_inicio))}</td>
 					<td class="fecha">@if(planilla.fecha_fin != null){@(utils.DateUtils.formatDate(planilla.fecha_fin))}</td>
 					<td>@if(planilla.periodo != null){@(planilla.periodo.nombre)}</td>
+
+					<td>@if(planilla.periodoLiquidacion != null){@(planilla.periodoLiquidacion.nombre)}</td>
+
 					<td>@if(planilla.horashabiles != null){@(planilla.horashabiles)}</td>
 					<td>@if(planilla.horasinhabiles != null){@(planilla.horasinhabiles)}</td>
 					<td class="estado" align="center">@if(planilla.estado != null){ @(planilla.estado.nombre)}</td>
