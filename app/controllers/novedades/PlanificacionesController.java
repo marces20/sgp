@@ -146,7 +146,7 @@ public class PlanificacionesController extends Controller {
 		if(planificacion  == null){
 			flash("error", "No se encuentra la planificaciones.");
 			return redirect(controllers.novedades.routes.PlanificacionesController.index()+UriTrack.get("?"));
-		}else if(planificacion.estado_id != Estado.PLANIFICIACION_BORRADOR){
+		}else if(planificacion.estado_id != Estado.PLANIFICIACION_BORRADOR && !Permiso.check("planificacionEditarEnCurso")){
 			flash("error", "La planificacion no se puede editar en este Estado. Debe cambiar su estado a borrador.");
 			return redirect(request().getHeader("referer"));
 
@@ -297,6 +297,11 @@ public class PlanificacionesController extends Controller {
 		    	  pasarAprobadoRrhh(rp.id);
 		    	  break;
 		      case Estado.PLANIFICIACION_APROBADO_LIQUIDACIONES:
+		    	  if (rp.periodo_liquidacion_id == null) {
+		    		  flash("error", "Debe ingresar un periodo de liquidacion");
+			  		return redirect(controllers.novedades.routes.PlanificacionesController.ver(rp.id)+ UriTrack.get("&"));
+		    	  }
+
 		    	  if (rp.estado_id != Estado.PLANIFICIACION_APROBADO_RRHH) {
 		  			flash("error", "Debe estar en estado APROBADO POR RRHH para pasar a este estado la planificacion.");
 		  			return redirect(controllers.novedades.routes.PlanificacionesController.ver(rp.id)+ UriTrack.get("&"));
