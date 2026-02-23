@@ -39,7 +39,7 @@
 		</div>
 	</div>
 
-	<div class="col-sm-2">
+	<div class="col-sm-1">
 		<label class="control-label">Fecha Inicio</label>
 		<div class="form-group @if(planificacionesForm.error("fecha_inicio")  != null) {has-error}else{has-required}">
 			@inputText(planificacionesForm("fecha_inicio"),'class -> "form-control date", 'autocomplete -> "off",'id-> "fecha_inicio")
@@ -49,7 +49,7 @@
 		}
 	</div>
 
-	<div class="col-sm-2">
+	<div class="col-sm-1">
 		<label class="control-label">Fecha Fin</label>
 		<div class="form-group @if(planificacionesForm.error("fecha_fin")  != null) {has-error}else{has-required}">
 			@inputText(planificacionesForm("fecha_fin"),'class -> "form-control date", 'autocomplete -> "off",'id-> "fecha_fin")
@@ -58,6 +58,7 @@
 			<div class="text-error">@error.message</div>
 		}
 	</div>
+
 	<div class="col-sm-2">
 		<div class="form-group @if(planificacionesForm.error("periodo_id") != null) {has-error}else{has-required}">
 			<label for="periodo" class="control-label">Periodo</label>
@@ -84,4 +85,31 @@
 			}
 		</div>
 	</div>
+	<div class="col-sm-2">
+		<div class="form-group @if(planificacionesForm.error("periodo_liquidacion_id") != null) {has-error}else{has-required}">
+			<label for="periodo" class="control-label">Periodo Liquidacion</label>
+
+			<div class="input-group">
+				@inputText(planificacionesForm("periodoLiquidacion.nombre"), 'class -> "form-control", 'id -> "periodoLiquidacion")
+				@inputText(planificacionesForm("periodo_liquidacion_id"),'hidden -> "hidden", 'id -> "periodo_liquidacion_id")
+				<span class="input-group-addon">
+					<a href="#" class="searchModal"
+								id="searchPeriodoLiquidacion"
+								data-title="Selección de Periodo Liquidacion"
+								data-url="@controllers.contabilidad.routes.PeriodosController.modalBuscar()"
+								data-height="650"
+								data-width="700"
+								data-listen="modal.seleccion.periodo.simple"
+								data-label="#periodoLiquidacion"
+								data-field="#periodo_liquidacion_id">
+						<i class="glyphicon glyphicon-search"></i>
+					</a>
+				</span>
+			</div>
+			@planificacionesForm("periodo_liquidacion_id").error.map{ error =>
+				<div class="text-error">@error.message</div>
+			}
+		</div>
 	</div>
+
+</div>
