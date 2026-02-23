@@ -1,6 +1,6 @@
 $( function(){
 
-	$('#buscarAgente,#buscarServicio,#searchAgente,#searchPeriodo,#searchOrganigrama').modalSearch();
+	$('#buscarAgente,#buscarServicio,#searchAgente,#searchPeriodo,#searchOrganigrama,#searchPeriodoLiquidacion').modalSearch();
 
 	$('#filtrosEstados button').click( function() {
 		var checkbox = $(this).find(':checkbox');
