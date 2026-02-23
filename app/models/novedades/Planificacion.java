@@ -146,7 +146,13 @@ public class Planificacion extends Model{
     	p.setOrderDefault("DESC");
     	p.setSortByDefault("id");
 
-    	ExpressionList<Planificacion> e = find.where();
+    	ExpressionList<Planificacion> e = find
+    			.fetch("organigrama", "nombre")
+    			.fetch("tipoPlanificacion", "nombre")
+    			.fetch("estado", "nombre")
+				.fetch("periodo", "nombre")
+    			.fetch("periodoLiquidacion", "nombre")
+    			.where();
 
     	if(!numero.isEmpty()){
     		e.ilike("referencia", "%" + numero + "%");
