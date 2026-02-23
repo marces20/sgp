@@ -599,6 +599,19 @@ $(document).ready(function(){
 			};
 		var as_json = new bsn.AutoSuggest('periodo', options);
 	}
+	if($("#periodoLiquidacion").length){
+		var options = {
+				script:"/contabilidad/suggestPeriodo/",
+				varname:"",
+				json:true,
+				shownoresults:true,
+				maxresults:6,
+				callback: function (obj) {
+											$("#periodo_liquidacion_id").val(obj.id);
+										 }
+			};
+		var as_json = new bsn.AutoSuggest('periodoLiquidacion', options);
+	}
 	if($("#responsable").length){
 		var options = {
 				script:"/administracion/usuarios/suggest/",
