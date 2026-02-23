@@ -11,6 +11,9 @@ import java.io.OutputStreamWriter;
 import java.io.Writer;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.ArrayList;
@@ -662,7 +665,7 @@ public class FacturasAccionesController  extends Controller {
 	}
 
 	@CheckPermiso(key = "facturasPasarEstadoAprobado")
-	public static Result pasarAprobadoMasivo() {
+	public static Result pasarAprobadoMasivo() throws SQLException {
 		DynamicForm d = form().bindFromRequest();
 		d.discardErrors();
 
@@ -782,7 +785,19 @@ public class FacturasAccionesController  extends Controller {
 		}else{
 
 			ObjectNode result = Json.newObject();
+			Connection conn = null;
+		    PreparedStatement stmt = null;
+
+			Ebean.beginTransaction();
+
 			try {
+				conn = play.db.DB.getConnection();
+				int xx = 0;
+
+				stmt = conn.prepareStatement("alter table pagos disable trigger actualiza_total_orden");
+			    xx = stmt.executeUpdate();
+			    stmt.close();
+
 				Integer count = Factura.modificarEstadoAndFechaAprobacionMasivo(Estado.FACTURA_ESTADO_APROBADO,new Date(), facturasSeleccionados);
 
 				result.put("success", true);
@@ -790,8 +805,23 @@ public class FacturasAccionesController  extends Controller {
 				result.put("html", modalPasarAprobado.render(d).toString());
 				return ok(result);
 			} catch (Exception e){
+				Ebean.rollbackTransaction();
+				stmt = conn.prepareStatement("alter table pagos enable trigger actualiza_total_orden");
+				stmt.executeUpdate();
+			    stmt.close();
+
 				flash("error", "No se puede modificar los registros.");
 				return ok(modalPasarAprobado.render(d));
+			} finally {
+
+				stmt = conn.prepareStatement("alter table pagos enable trigger actualiza_total_orden");
+				stmt.executeUpdate();
+			    stmt.close();
+
+			    stmt = conn.prepareStatement("select actualiza_totales_ordenes_pagos(null)");
+			    stmt.execute();
+			    stmt.close();
+				Ebean.endTransaction();
 			}
 		}
 	}
