@@ -813,7 +813,7 @@ public class FacturasAccionesController  extends Controller {
 				flash("error", "No se puede modificar los registros.");
 				return ok(modalPasarAprobado.render(d));
 			} finally {
-
+				Ebean.endTransaction();
 				stmt = conn.prepareStatement("alter table pagos enable trigger actualiza_total_orden");
 				stmt.executeUpdate();
 			    stmt.close();
@@ -821,7 +821,20 @@ public class FacturasAccionesController  extends Controller {
 			    stmt = conn.prepareStatement("select actualiza_totales_ordenes_pagos(null)");
 			    stmt.execute();
 			    stmt.close();
-				Ebean.endTransaction();
+			    if (stmt != null){
+		          try {
+		            stmt.close();
+		          } catch (Exception e) {
+		          }
+			    }
+
+		        if (conn != null) {
+		          try {
+		            conn.close();
+		          } catch (Exception e) {
+		          }
+		        }
+
 			}
 		}
 	}
