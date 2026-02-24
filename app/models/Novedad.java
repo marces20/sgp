@@ -168,6 +168,27 @@ public class Novedad extends Model{
 		return s;
 	}
 
+	public static List<SqlRow> getNovedadesPorAgentePorPlanificacionesSinHabiles(Long planificacion_id) {
+
+
+		String sql = "SELECT a.id as agente_id,a.apellido as apellido,a.dni as dni,n.festivas as festivas,sum(n.horas) as horas " +
+				 "FROM novedades n " +
+				 "INNER JOIN agentes a ON a.id = n.agente_id " +
+				 "INNER JOIN planificaciones p ON p.id = n.planificacion_id " +
+				 "WHERE 1 = 1 ";
+
+		if (planificacion_id != null) {
+			sql += " AND planificacion_id = "+planificacion_id ;
+		}
+
+		sql +=  "GROUP BY a.id,a.apellido,a.dni,n.festivas ORDER BY  a.apellido asc";
+
+
+		List<SqlRow> s = Ebean.createSqlQuery(sql).findList();
+
+		return s;
+	}
+
 	public static List<SqlRow> getNovedadesPorAgentePorPlanificaciones(Long planificacion_id) {
 
 
