@@ -789,7 +789,7 @@ public class FacturasAccionesController  extends Controller {
 		    PreparedStatement stmt = null;
 
 			Ebean.beginTransaction();
-
+			Logger.debug("nnn11111111111111111111111111111111");
 			try {
 				conn = play.db.DB.getConnection();
 				int xx = 0;
@@ -799,12 +799,14 @@ public class FacturasAccionesController  extends Controller {
 			    stmt.close();
 
 				Integer count = Factura.modificarEstadoAndFechaAprobacionMasivo(Estado.FACTURA_ESTADO_APROBADO,new Date(), facturasSeleccionados);
-
+				Logger.debug("nnn2222222222222222222222222");
+				Ebean.commitTransaction();
 				result.put("success", true);
 				flash("success", "Se actualizaron " + count + " registros de "+ facturasSeleccionados.size() +" seleccionados.<br>"+aviso);
 				result.put("html", modalPasarAprobado.render(d).toString());
 				return ok(result);
 			} catch (Exception e){
+				Logger.debug("nnn3333333333333333333333 "+e);
 				Ebean.rollbackTransaction();
 				stmt = conn.prepareStatement("alter table pagos enable trigger actualiza_total_orden");
 				stmt.executeUpdate();
@@ -813,6 +815,7 @@ public class FacturasAccionesController  extends Controller {
 				flash("error", "No se puede modificar los registros.");
 				return ok(modalPasarAprobado.render(d));
 			} finally {
+				Logger.debug("nnn34444444444444444444444 ");
 				Ebean.endTransaction();
 				stmt = conn.prepareStatement("alter table pagos enable trigger actualiza_total_orden");
 				stmt.executeUpdate();
