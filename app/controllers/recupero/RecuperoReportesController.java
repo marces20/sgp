@@ -657,10 +657,10 @@ public class RecuperoReportesController extends Controller {
 
 
 		Periodo px = Periodo.getPeriodoByDate(new Date());
-		int periodo6meses = px.id.intValue() -5 ;
+		int periodo6meses = px.id.intValue() -1 ;
 		List<Periodo> p = Periodo.find.where().ge("id", periodo6meses).le("id", px.id).orderBy("id asc").findList();
 
-		String sql = "SELECT " +
+		/*String sql2 = "SELECT " +
 				"    round(sum(COALESCE(pa.total, 0::double precision)))  - round(sum(COALESCE(tc.total, 0::double precision))) "+
 				"	 AS total, " +
 				"    ct.nombre AS tipo_cliente, " +
@@ -681,7 +681,19 @@ public class RecuperoReportesController extends Controller {
 
 
 				"	where f.fecha >= ?  "+//&BETWEEN '2024-09-01' and '2024-09-30' " +
-				"   group by c.nombre,d.nombre,tipo_cliente,to_char(f.fecha,'MM/yyyy') ";
+				"   group by c.nombre,d.nombre,tipo_cliente,to_char(f.fecha,'MM/yyyy') ";*/
+
+		String sql = "SELECT " +
+				"	 round(sum(COALESCE(pa.total_pagos, 0::double precision))) as total, " +
+				"    pa.tipo_cliente AS tipo_cliente, " +
+				"    pa.cliente_nombre AS cliente_nombre, " +
+				"    pa.deposito_nombre AS deposito, " +
+				"	to_char(pa.fecha_pago,'MM/yyyy') as periodo " +
+				"   FROM informe_pagos_recupero pa "+
+				"	where pa.fecha_pago >= ?  "+   //&BETWEEN '2024-09-01' and '2024-09-30'
+				"   group by pa.cliente_nombre,pa.deposito_nombre,pa.tipo_cliente,to_char(pa.fecha_pago,'MM/yyyy') ";
+
+
 
 		SqlQuery sqlQuery = Ebean.createSqlQuery(sql);
 		sqlQuery.setParameter(1, p.get(0).date_start);
@@ -704,8 +716,14 @@ public class RecuperoReportesController extends Controller {
 			String rubro = sr.getString("tipo_cliente");
 			String periodo = sr.getString("periodo");
 			BigDecimal total = sr.getBigDecimal("total");
+			BigDecimal totalTmp = new BigDecimal(0);
 
-
+			if(depo.compareTo("HOSPITAL ESCUELA DE AGUDOS") == 0 && periodo.compareTo("01/2026") == 0 && rubro.compareTo("Obras sociales") == 0) {
+				Logger.debug("=====depo========11 "+depo);
+				Logger.debug("======rubro=======11 "+rubro);
+				Logger.debug("=====periodo========11 "+periodo);
+				Logger.debug("======total=======11 "+total.toString());
+			}
 
 			if(OrganigramaRubroPeriodoTotal.containsKey(depo)) {// si esta el organigrama
 
@@ -715,7 +733,17 @@ public class RecuperoReportesController extends Controller {
 					OrganigramaRubroPeriodoTotalTmp = OrganigramaRubroPeriodoTotal;
 
 					periodoTotalTmp = rubroPeriodoTotalTmp.get(rubro);
-					periodoTotalTmp.put(periodo, total);
+
+					if(periodoTotalTmp.containsKey(periodo)) {
+						totalTmp = periodoTotalTmp.get(periodo);
+						total = totalTmp.add(total);
+						periodoTotalTmp.put(periodo, total);
+
+					}else {
+						periodoTotalTmp.put(periodo, total);
+					}
+
+
 
 					rubroPeriodoTotalTmp.put(rubro,periodoTotalTmp);
 
@@ -747,11 +775,14 @@ public class RecuperoReportesController extends Controller {
 
 		}
 
+
+		Logger.debug("==============11 "+OrganigramaRubroPeriodoTotal.toString());
+
 		Map<String,Map<String,Map<String,BigDecimal>>> OrganigramaRubroPeriodoTotalTmp = new HashMap<>();
 
 		/////////////////////////////////////////////PARQUEEEEEEEEEEEEEEEEEEEE///////////////////////////
 
-		String sqlParque = "SELECT " +
+		/*String sqlParque2 = "SELECT " +
 				"    round(sum(COALESCE(pa.total, 0::double precision)))  - round(sum(COALESCE(tc.total, 0::double precision))) "+
 				"	 AS total, " +
 				"    ct.nombre AS tipo_cliente, " +
@@ -766,9 +797,16 @@ public class RecuperoReportesController extends Controller {
 				"	   FROM recupero_notas_creditos " +
 				"	  GROUP BY recupero_notas_creditos.recupero_factura_id) tc ON tc.recupero_factura_id = f.id " +
 				"	where f.fecha >= ?  "+//&BETWEEN '2024-09-01' and '2024-09-30' " +
-				"   group by  tipo_cliente,to_char(f.fecha,'MM/yyyy') ";
+				"   group by  tipo_cliente,to_char(f.fecha,'MM/yyyy') ";*/
 
 
+		String sqlParque = "SELECT " +
+				"	 round(sum(COALESCE(pa.total_pagos, 0::double precision))) as total, " +
+				"    pa.tipo_cliente AS tipo_cliente, " +
+				"	to_char(pa.fecha_pago,'MM/yyyy') as periodo " +
+				"   FROM informe_pagos_recupero pa "+
+				"	where pa.fecha_pago >= ?  "+   //&BETWEEN '2024-09-01' and '2024-09-30'
+				"   group by pa.tipo_cliente,to_char(pa.fecha_pago,'MM/yyyy') ";
 
 		SqlQuery sqlQueryParque = Ebean.createSqlQuery(sqlParque);
 		sqlQueryParque.setParameter(1, p.get(0).date_start);
@@ -788,6 +826,7 @@ public class RecuperoReportesController extends Controller {
 			String rubro = sr.getString("tipo_cliente");
 			String periodo = sr.getString("periodo");
 			BigDecimal total = sr.getBigDecimal("total");
+			BigDecimal totalTmp = new BigDecimal(0);
 
 			if(OrganigramaRubroPeriodoTotalParque.containsKey(depo)) {// si esta el organigrama
 
@@ -796,8 +835,16 @@ public class RecuperoReportesController extends Controller {
 				if(OrganigramaRubroPeriodoTotalParque.get(depo).containsKey(rubro)) {// si tiene el rubro el organigrama
 					OrganigramaRubroPeriodoTotalTmp = OrganigramaRubroPeriodoTotalParque;
 
-					periodoTotalTmp = rubroPeriodoTotalTmp.get(rubro);
-					periodoTotalTmp.put(periodo, total);
+
+
+					if(periodoTotalTmp.containsKey(periodo)) {
+						totalTmp = periodoTotalTmp.get(periodo);
+						total = totalTmp.add(total);
+						periodoTotalTmp.put(periodo, total);
+
+					}else {
+						periodoTotalTmp.put(periodo, total);
+					}
 
 					rubroPeriodoTotalTmp.put(rubro,periodoTotalTmp);
 
@@ -844,6 +891,7 @@ public class RecuperoReportesController extends Controller {
 			clienteRubro.put(orx.orden, orx.nombre);
 		}
 
+		Logger.debug("============== "+OrganigramaRubroPeriodoTotalTree.toString());
 
 		return ok(informeResumenMensual.render(p,clienteRubro,OrganigramaRubroPeriodoTotalTree,"Resumen Mensual Cobranzas","pagos"));
 
@@ -3410,8 +3458,8 @@ order by nc.numero
 	    datos.put("tipo_pago",recupero_tipo_pago);
 
 
-	    	datos.put("cuittitulo", "DNI:");
-	    	datos.put("cuit", rf.dni);
+    	datos.put("cuittitulo", "CUIT:");
+    	datos.put("cuit", rf.cuit);
 
 	    datos.put("razon_social", rf.nombre);
 
@@ -3431,14 +3479,14 @@ order by nc.numero
 			    		"            </tr>";
 
 			    lineas += 			"<tr>" +
-			    		"        		<td style='text-align: left'><b>En concepto de:</b> Aporte Partidario período Enero/2024 a Diciembre/2024, con destino a Desenvolvimiento Institucional, Capacitación e Investigación y otros, Campaña Local o Campaña Nacional, a consideración de la Conducción Partidaria </td>" +
+			    		"        		<td style='text-align: left'><b>En concepto de:</b> Aporte Partidario período Enero/2025 a Diciembre/2025, con destino a Desenvolvimiento Institucional, Capacitación e Investigación y otros, Campaña Local o Campaña Nacional, a consideración de la Conducción Partidaria </td>" +
 			    		"            </tr>";
 
 
 		datos.put("lineas",lineas);
 
 
-	    String qrBase =  generarJsonQr(rf.id,rf.fecha,"00003",TipoComprobante.RECIBO_C,rf.numero,rf.getMonto().doubleValue(),96,new Long(rf.dni),rf.cae);
+	    String qrBase =  generarJsonQrPartido(rf.id,rf.fecha,"00003",TipoComprobante.RECIBO_C,rf.numero,rf.getMonto().doubleValue(),96,new Long(rf.dni),rf.cae);
 	    String qr ="<img height='140' width='140'  src='data:image/png;base64,"+qrBase+"'>";
 	    datos.put("qr",qr);
 
@@ -3808,6 +3856,49 @@ order by nc.numero
 	    }
 
 	    return new W3CDom().fromJsoup(doc);
+	}
+
+	public static String generarJsonQrPartido(Long id,Date fecha,String puntoVenta,int tipoComprobante,String nroCmp,double importe,int docTipo,Long doc,String cae) throws Exception {
+
+
+
+		//ObjectNode restJs = Json.newObject();
+		Map<String, Object> restJs = new HashMap<>();
+		restJs.put("ver", 1);
+		restJs.put("fecha", utils.DateUtils.formatDate(fecha, "yyyy-MM-dd"));//XXXXXXXXXXXX
+		restJs.put("cuit", new Long("30709807133"));
+		restJs.put("ptoVta", new Integer(puntoVenta));
+		restJs.put("tipoCmp", tipoComprobante);
+		restJs.put("nroCmp", new Integer(nroCmp));
+		restJs.put("importe", importe);
+		restJs.put("moneda", "PES");
+		restJs.put("ctz", 1);
+		restJs.put("tipoDocRec", docTipo);
+		restJs.put("nroDocRec", doc);
+		restJs.put("tipoCodAut", "E");
+		restJs.put("codAut", new Long(cae));
+
+		ObjectMapper mapper = new ObjectMapper();
+
+		JsonNode node = mapper.convertValue(restJs, JsonNode.class);
+
+
+		byte[] bytes = node.toString().getBytes();
+
+		String base64Encoded = DatatypeConverter.printBase64Binary(bytes);
+	    System.out.println("Encoded Json---------------:\n"+node.toString());
+	    System.out.println(base64Encoded + "\n");
+
+
+		String url= "https://www.afip.gob.ar/fe/qr/?p="+base64Encoded;
+
+		String ret = generateQR(url, 140,140);
+
+		return ret;
+
+
+
+		//{"ver":1,"fecha":"2020-10-13","cuit":30000000007,"ptoVta":10,"tipoCmp":1,"nroCmp":94,"importe":12100,"moneda":"DOL","ctz":65,"tipoDocRec":80,"nroDocRec":20000000001,"tipoCodAut":"E","codAut":70417054367476}
 	}
 
 
