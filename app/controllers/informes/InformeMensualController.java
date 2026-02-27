@@ -518,6 +518,7 @@ public class InformeMensualController extends Controller {
 			Integer rubroOrden = sr.getInteger("rubroOrden");
 			String periodo = sr.getString("periodo");
 			BigDecimal total = sr.getBigDecimal("total");
+			BigDecimal totalTmp = new BigDecimal(0);
 
 
 			if(OrganigramaRubroPeriodoTotal.containsKey(depo)) {// si esta el organigrama
@@ -531,6 +532,19 @@ public class InformeMensualController extends Controller {
 
 					periodoTotalTmp = rubroPeriodoTotalTmp.get(rubroOrden);
 					periodoTotalTmp.put(periodo, total);
+
+
+					if(periodoTotalTmp.containsKey(periodo)) {
+						totalTmp = periodoTotalTmp.get(periodo);
+						total = totalTmp.add(total);
+						periodoTotalTmp.put(periodo, total);
+
+					}else {
+						periodoTotalTmp.put(periodo, total);
+					}
+
+
+
 
 					rubroPeriodoTotalTmp.put(rubroOrden,periodoTotalTmp);
 
