@@ -249,7 +249,7 @@ public class ClientesController extends Controller {
 							List<Cliente> cl = Cliente.find.where().eq("id_paciente_rismi",p.id_paciente_rismi).ne("id",p.id).findList();
 
 							if(cl.size() > 0){
-								flash("error", "Ya existe un Cliente con este ID PACIENTE.");
+								flash("error", "Ya existe un Cliente con este ID PACIENTE1.");
 								return badRequest(editarCliente.render(clienteForm));
 							}
 						}
@@ -260,7 +260,7 @@ public class ClientesController extends Controller {
 						}*/
 						if(p.cie == null || p.cie.isEmpty()){
 							flash("error", "Debe ingresar un CIE para este tipo de cliente EXTRANJEROS.");
-							return badRequest(crearCliente.render(clienteForm));
+							return badRequest(editarCliente.render(clienteForm));
 						}
 						if(p.id_paciente_rismi == null || p.id_paciente_rismi.isEmpty()){
 							flash("error", "Debe ingresar un ID PACIENTE para este tipo de cliente.");
@@ -268,7 +268,7 @@ public class ClientesController extends Controller {
 						}else{
 							List<Cliente> cl = Cliente.find.where().eq("id_paciente_rismi",p.id_paciente_rismi).ne("id",p.id).findList();
 							if(cl.size() > 0){
-								flash("error", "Ya existe un Cliente con este ID PACIENTE.");
+								flash("error", "Ya existe un Cliente con este ID PACIENTE2.");
 								return badRequest(editarCliente.render(clienteForm));
 							}
 						}
