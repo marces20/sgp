@@ -657,7 +657,7 @@ public class RecuperoReportesController extends Controller {
 
 
 		Periodo px = Periodo.getPeriodoByDate(new Date());
-		int periodo6meses = px.id.intValue() -1 ;
+		int periodo6meses = px.id.intValue() -6 ;
 		List<Periodo> p = Periodo.find.where().ge("id", periodo6meses).le("id", px.id).orderBy("id asc").findList();
 
 		/*String sql2 = "SELECT " +
@@ -718,18 +718,13 @@ public class RecuperoReportesController extends Controller {
 			BigDecimal total = sr.getBigDecimal("total");
 			BigDecimal totalTmp = new BigDecimal(0);
 
-			if(depo.compareTo("HOSPITAL ESCUELA DE AGUDOS") == 0 && periodo.compareTo("01/2026") == 0 && rubro.compareTo("Obras sociales") == 0) {
-				Logger.debug("=====depo========11 "+depo);
-				Logger.debug("======rubro=======11 "+rubro);
-				Logger.debug("=====periodo========11 "+periodo);
-				Logger.debug("======total=======11 "+total.toString());
-			}
+
 
 			if(OrganigramaRubroPeriodoTotal.containsKey(depo)) {// si esta el organigrama
 
 				rubroPeriodoTotalTmp = OrganigramaRubroPeriodoTotal.get(depo);// traigo el organigrama
 
-				if(OrganigramaRubroPeriodoTotal.get(depo).containsKey(rubro)) {// si tiene el rubro el organigrama
+				if(rubroPeriodoTotalTmp.containsKey(rubro)) {// si tiene el rubro el organigrama
 					OrganigramaRubroPeriodoTotalTmp = OrganigramaRubroPeriodoTotal;
 
 					periodoTotalTmp = rubroPeriodoTotalTmp.get(rubro);
@@ -745,11 +740,13 @@ public class RecuperoReportesController extends Controller {
 
 
 
+
 					rubroPeriodoTotalTmp.put(rubro,periodoTotalTmp);
 
 					OrganigramaRubroPeriodoTotalTmp.put(depo,rubroPeriodoTotalTmp);
 
 					OrganigramaRubroPeriodoTotal = OrganigramaRubroPeriodoTotalTmp;
+
 				}else {
 					periodoTotalTmp.put(periodo, total);
 
@@ -832,10 +829,10 @@ public class RecuperoReportesController extends Controller {
 
 				rubroPeriodoTotalTmp = OrganigramaRubroPeriodoTotalParque.get(depo);// traigo el organigrama
 
-				if(OrganigramaRubroPeriodoTotalParque.get(depo).containsKey(rubro)) {// si tiene el rubro el organigrama
+				if(rubroPeriodoTotalTmp.containsKey(rubro)) {// si tiene el rubro el organigrama
 					OrganigramaRubroPeriodoTotalTmp = OrganigramaRubroPeriodoTotalParque;
 
-
+					periodoTotalTmp = rubroPeriodoTotalTmp.get(rubro);
 
 					if(periodoTotalTmp.containsKey(periodo)) {
 						totalTmp = periodoTotalTmp.get(periodo);
