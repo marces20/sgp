@@ -41,6 +41,8 @@ public class Organigrama extends Model {
 
 	public String color;
 
+	public String sigla;
+
 	@ManyToOne
 	@JoinColumn(name="padre_id", referencedColumnName="id", insertable=false, updatable=false)
 	public Organigrama organigramaPadre;
