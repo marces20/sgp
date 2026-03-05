@@ -1,0 +1,442 @@
+@(organigramaId:Long,totales:java.util.Map[String,Integer])
+@import helper._
+
+@scripts = {
+
+<link rel="stylesheet" media="screen" href="@routes.Assets.at("stylesheets/css-rrhh-claude.css")">
+}
+
+
+@main("RRHH",scripts)  {
+
+
+
+<input type="hidden" id="organigramaId" value="@if(organigramaId != 0) {@organigramaId}" />
+<!-- MAIN -->
+<div class="main">
+
+
+
+  <!-- CONTENT -->
+  <div class="content">
+
+    <div class="page-title">Parque de la Salud <b style="color: red;">(SUJETO A REVISION)</b></div>
+    <div class="page-breadcrumb">Inicio / <span>Informes Recursos Humanos</span> / Parque de la Salud</div>
+
+    <!-- KPI CARDS -->
+    <div class="kpi-grid">
+      <div class="kpi-card">
+     	<div class="kpi-icon"> <i class="fas fa-user-check"></i></div>
+        <div>
+          <div class="kpi-val">@totales.get("total")</div>
+          <div class="kpi-lbl">Total Agentes</div>
+          <div class="kpi-delta up"><i class="fas fa-arrow-up"></i> +4 este mes</div>
+          <div class="kpi-delta down"><i class="fas fa-arrow-down"></i> +1 este mes</div>
+        </div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-icon"><!-- <i class="fas fa-users"></i> --> <img src="/assets/images/logo.png" width="60" height="50"/></div>
+        <div>
+          <div class="kpi-val">@totales.get("parque")</div>
+          <div class="kpi-lbl">Total Parque</div>
+          <!--  <div class="kpi-delta up"><i class="fas fa-arrow-up"></i> 90.1%</div>-->
+          <div class="kpi-delta up"><i class="fas fa-arrow-up"></i> +4 este mes</div>
+          <div class="kpi-delta down"><i class="fas fa-arrow-down"></i> +1 este mes</div>
+        </div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-icon"><!-- <i class="fas fa-users"></i> --> <img src="/assets/images/misiones-salud-55nu1cgetv00.jpg" width="60" height="50"/></div>
+        <div>
+          <div class="kpi-val">@totales.get("convenio")</div>
+          <div class="kpi-lbl">Total Convenio</div>
+          <!--  <div class="kpi-delta up"><i class="fas fa-arrow-up"></i> 90.1%</div>-->
+          <div class="kpi-delta up"><i class="fas fa-arrow-up"></i> +4 este mes</div>
+          <div class="kpi-delta down"><i class="fas fa-arrow-down"></i> +1 este mes</div>
+        </div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-icon"><!-- <i class="fas fa-users"></i> --> <img src="/assets/images/logo-provincia.jpeg" width="60" height="50"/></div>
+        <div>
+        	<div class="kpi-val">@totales.get("otro")</div>
+          <div class="kpi-lbl">Total Otros</div>
+          <!--  <div class="kpi-delta up"><i class="fas fa-arrow-up"></i> 90.1%</div>-->
+          <div class="kpi-delta up"><i class="fas fa-arrow-up"></i> +4 este mes</div>
+          <div class="kpi-delta down"><i class="fas fa-arrow-down"></i> +1 este mes</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- DEPT SECTION LABEL -->
+    <div class="section-title"><i class="fas fa-chart-bar"></i> Agentes por Institución</div>
+
+    <!-- DEPT COUNTER CARDS -->
+    <div class="dept-counter-grid" id="deptCounters"></div>
+
+    <!-- CHARTS ROW -->
+    <div class="charts-row">
+      <!-- BAR CHART -->
+      <div class="chart-card">
+        <div class="chart-card-title"><i class="fas fa-chart-bar"></i> Distribución</div>
+        <div class="bar-chart" id="barChart"></div>
+      </div>
+
+      <!-- DONUT CHART -->
+      <div class="chart-card">
+        <div class="chart-card-title"><i class="fas fa-chart-pie"></i> Proporción</div>
+        <div class="donut-wrap">
+          <svg class="donut-svg" id="donutSvg" width="150" height="150" viewBox="0 0 150 150"></svg>
+          <div class="donut-legend" id="donutLegend"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- DEPT SUMMARY TABLE -->
+    <div class="card" style="margin-bottom:22px;animation-delay:.2s">
+      <div class="card-header">
+        <i class="fas fa-table" style="color:var(--primary)"></i>
+        <div class="card-title">Resumen por Institución</div>
+      </div>
+      <div class="table-wrap">
+        <table class="dept-summary-table" id="deptSummaryTable">
+          <thead>
+          	<tr>
+              <th></th>
+              <th colspan="3" align="center">Asistencial</th>
+              <th align="center" colspan="2">Administración</th>
+			  <th align="center" colspan="3"></th>
+            </tr>
+            <tr>
+              <th>Institución</th>
+              <th>Medicos</th>
+              <th>Prof./Enfer.</th>
+              <th>Tec./Aux.</th>
+
+              <th>Admin.</th>
+              <th>Prof.</th>
+
+              <th>Total</th>
+              <th>% del Total</th>
+              <th>Distribución</th>
+            </tr>
+          </thead>
+          <tbody id="deptSummaryBody"></tbody>
+        </table>
+      </div>
+    </div>
+
+    	<!-- DEPT RELACION TABLE -->
+	    <div class="card" style="margin-bottom:22px;animation-delay:.2s">
+	      <div class="card-header">
+	        <i class="fas fa-table" style="color:var(--primary)"></i>
+	        <div class="card-title">Resumen por Relacion Laboral</div>
+	      </div>
+	      <div class="table-wrap">
+	        <table class="dept-summary-table" id="deptSummaryTable">
+	          <thead>
+				<tr>
+	              <th>Institución</th>
+	              <th>Parque</th>
+	              <th>Convenio</th>
+	              <th>Ministerio</th>
+	              <th>Adc. Otros</th>
+				  <th>Otros</th>
+				  <th>Total</th>
+				  <th>% del Total</th>
+                  <th>Distribución</th>
+	            </tr>
+	          </thead>
+	          <tbody id="deptRelacionBody"></tbody>
+	        </table>
+	      </div>
+	    </div>
+
+	    <!-- TABLE CARD
+	    <div class="card">
+	      <div class="card-header">
+	        <i class="fas fa-table" style="color:var(--primary)"></i>
+	        <div class="card-title">Directorio de Empleados</div>
+	        <div class="card-action">
+	          <button class="btn btn-outline"><i class="fas fa-filter"></i> Filtrar</button>
+	          <button class="btn btn-outline"><i class="fas fa-file-export"></i> Exportar</button>
+	          <button class="btn btn-primary"><i class="fas fa-plus"></i> Nuevo Empleado</button>
+	        </div>
+	      </div>
+	    </div>-->
+	</div>
+</div>
+
+
+<script>
+
+
+var url = '/dashboard/rrhhResumenGeneral/getDataPorOrganigramaId';
+
+var data = 'organigramaId='+$("#organigramaId").val();
+
+$.post(url, data, function(data){
+
+	var labels = [];
+	var dataEscalaParque = [0,0,0,0,0];
+	var totalEscalaParque = 0;
+
+
+	const depts = [];
+
+	/*const depts = [
+		{ name: 'Hsp. Escuela Agudos',  medicos: 11,enfermero: 22,tecnicos: 33,adminitrativo: 44,profesion: 55,total: 66, color: '#d83b3b' },
+	    { name: 'Hsp. de Fatima', medicos: 11,enfermero: 22,tecnicos: 33,adminitrativo: 44,profesion: 55,total: 66, color: '#3b7dd8' },
+	    { name: 'Hsp. Obera', medicos: 11,enfermero: 22,tecnicos: 33,adminitrativo: 44,profesion: 55,total: 66, color: '#10b981' },
+	    { name: 'LACMI',  medicos: 11,enfermero: 22,tecnicos: 33,adminitrativo: 44,profesion: 55,total: 66, color: '#f59e0b' },
+	    { name: 'U. Traslado', medicos: 11,enfermero: 22,tecnicos: 33,adminitrativo: 44,profesion: 55,total: 66,color: '#d8c83b' },
+	    { name: 'Hsp Favaloro', medicos: 11,enfermero: 22,tecnicos: 33,adminitrativo: 44,profesion: 55,total: 66, color: '#8b5cf6' },
+	    { name: 'IMC', medicos: 11,enfermero: 22,tecnicos: 33,adminitrativo: 44,profesion: 55,total: 66, color: '#0ea5e9' },
+	    { name: 'IGH', medicos: 11,enfermero: 22,tecnicos: 33,adminitrativo: 44,profesion: 55,total: 66,color: '#ec4899' },
+	    { name: 'G. Maternal Evita', medicos: 11,enfermero: 22,tecnicos: 33,adminitrativo: 44,profesion: 55,total: 66, color: '#14b8a6' },
+	  ];*/
+
+
+	if(data.success) {
+
+		$.each(data.results, function(idx,valor) {
+
+
+			$.each(valor, function(valor1,valor2) {
+				const v = JSON.parse(valor2);
+
+
+				depts.push({
+			        name:          v.name,
+
+			        medicos:       v.medicos,
+			        enfermero:     v.profesionAsistencia+v.enfermero,
+			        tecnicos:      v.tecnicoAsistencial+v.auxiliaresAsistencial+v.adminitrativoAsistencial,
+
+			        adminitrativo: v.tecnicos+v.adminitrativo+v.auxiliares,
+			        profesion:     v.profesion,
+
+			        total:         v.medicos+v.profesionAsistencia+v.enfermero+v.tecnicoAsistencial+v.auxiliaresAsistencial+v.adminitrativoAsistencial+v.tecnicos+v.adminitrativo+v.auxiliares,
+			        color:         v.color
+			      });
+			});
+
+		});
+
+
+
+		//setDataEscalaParque(dataEscalaParque);
+
+	  /* TABLA
+	 const depts = [
+			{ name: 'Hsp. Escuela Agudos',  medicos: 11,enfermero: 22,tecnicos: 33,adminitrativo: 44,profesion: 55,total: 66, color: '#d83b3b' },
+		    { name: 'Hsp. de Fatima', medicos: 11,enfermero: 22,tecnicos: 33,adminitrativo: 44,profesion: 55,total: 66, color: '#3b7dd8' },
+		    { name: 'Hsp. Obera', medicos: 11,enfermero: 22,tecnicos: 33,adminitrativo: 44,profesion: 55,total: 66, color: '#10b981' },
+		    { name: 'LACMI',  medicos: 11,enfermero: 22,tecnicos: 33,adminitrativo: 44,profesion: 55,total: 66, color: '#f59e0b' },
+		    { name: 'U. Traslado', medicos: 11,enfermero: 22,tecnicos: 33,adminitrativo: 44,profesion: 55,total: 66,color: '#d8c83b' },
+		    { name: 'Hsp Favaloro', medicos: 11,enfermero: 22,tecnicos: 33,adminitrativo: 44,profesion: 55,total: 66, color: '#8b5cf6' },
+		    { name: 'IMC', medicos: 11,enfermero: 22,tecnicos: 33,adminitrativo: 44,profesion: 55,total: 66, color: '#0ea5e9' },
+		    { name: 'IGH', medicos: 11,enfermero: 22,tecnicos: 33,adminitrativo: 44,profesion: 55,total: 66,color: '#ec4899' },
+		    { name: 'G. Maternal Evita', medicos: 11,enfermero: 22,tecnicos: 33,adminitrativo: 44,profesion: 55,total: 66, color: '#14b8a6' },
+		  ];*/
+	  const grandTotal = depts.reduce((s, d) => s + d.total, 0);
+	  const maxTotal   = Math.max(...depts.map(d => d.total));
+
+	  /* Counter Cards */
+	  const countersEl = document.getElementById('deptCounters'); //CUADROS DE ARRIBA
+	  depts.forEach((d, i) => {
+	    const pct = ((d.total / grandTotal) * 100).toFixed(1);
+	    const card = document.createElement('div');
+	    card.className = 'dept-counter';
+	    card.style.cssText = 'border-top-color:' + d.color + ';animation-delay:' + (i * 0.06) + 's';
+	    card.innerHTML =
+	      '<div class="dept-counter-num" style="color:' + d.color + '">' + d.total + '</div>' +
+	      '<div class="dept-counter-name">' + d.name + '</div>' +
+	      '<div class="dept-counter-pct">' + pct + '% del total</div>';
+	    countersEl.appendChild(card);
+	  });
+
+	  /* Bar Chart */
+	  const barEl = document.getElementById('barChart');//BARRITA EN LAS TD QUE MUESTRA PORCENTAJE
+	  depts.forEach(d => {
+	    const barH = Math.round((d.total / maxTotal) * 110);
+	    const wrap = document.createElement('div');
+	    wrap.className = 'bar-wrap';
+	    wrap.innerHTML =
+	      '<span class="bar-val">' + d.total + '</span>' +
+	      '<div class="bar-body" style="height:' + barH + 'px;background:' + d.color + '" title="' + d.name + ': ' + d.total + '"></div>' +
+	      '<span class="bar-lbl">' + d.name.substring(0,6) + '</span>';
+	    barEl.appendChild(wrap);
+	  });
+
+	  /* Donut Chart */
+	  const cx = 75, cy = 75, R = 58, r = 34;
+	  function polar(angle, radius) {
+	    return [
+	      cx + radius * Math.cos((angle - 90) * Math.PI / 180),
+	      cy + radius * Math.sin((angle - 90) * Math.PI / 180)
+	    ];
+	  }
+	  const svg = document.getElementById('donutSvg');
+	  const legend = document.getElementById('donutLegend');
+	  let startAngle = 0;
+	  depts.forEach(d => {
+	    const slice = (d.total / grandTotal) * 360;
+	    const endAngle = startAngle + slice;
+	    const [x1, y1] = polar(startAngle, R);
+	    const [x2, y2] = polar(endAngle,   R);
+	    const [ix1,iy1]= polar(startAngle, r);
+	    const [ix2,iy2]= polar(endAngle,   r);
+	    const large = slice > 180 ? 1 : 0;
+	    const path = document.createElementNS('http://www.w3.org/2000/svg','path');
+	    path.setAttribute('d',
+	      'M ' + x1 + ' ' + y1 + ' A ' + R + ' ' + R + ' 0 ' + large + ' 1 ' + x2 + ' ' + y2 +
+	      ' L ' + ix2 + ' ' + iy2 + ' A ' + r + ' ' + r + ' 0 ' + large + ' 0 ' + ix1 + ' ' + iy1 + ' Z');
+	    path.setAttribute('fill', d.color);
+	    path.style.cursor = 'pointer';
+	    path.style.transition = 'opacity .18s';
+	    path.onmouseenter = function(){ this.style.opacity = '.75'; };
+	    path.onmouseleave = function(){ this.style.opacity = '1'; };
+	    svg.appendChild(path);
+	    startAngle = endAngle;
+
+	    const pct = ((d.total / grandTotal) * 100).toFixed(1);
+	    const li = document.createElement('div');
+	    li.className = 'legend-item';
+	    li.innerHTML =
+	      '<span class="legend-dot" style="background:' + d.color + '"></span>' +
+	      '<span class="legend-name">' + d.name + '</span>' +
+	      '<span class="legend-val">' + d.total + '</span>' +
+	      '<span class="legend-pct">' + pct + '%</span>';
+	    legend.appendChild(li);
+	  });
+
+	  /* Summary Table */
+	  const tbody = document.getElementById('deptSummaryBody');
+	  let medicos = 0;
+	  let enfermero = 0;
+	  let tecnicos = 0;
+	  let adminitrativo = 0;
+	  let profesion =  0;
+	  let total = 0;
+
+	  depts.slice().sort((a, b) => b.total - a.total).forEach(d => {
+	    const pct = ((d.total / grandTotal) * 100).toFixed(1);
+
+	    console.log(medicos);
+
+	    medicos += d.medicos;
+	    enfermero += d.enfermero;
+	    tecnicos += d.tecnicos;
+	    adminitrativo += d.adminitrativo;
+	    profesion +=  d.profesion;
+	    total += d.total;
+
+
+
+	    const tr = document.createElement('tr');
+	    tr.innerHTML =
+	      '<td style="text-align: left;"><span class="dept-color-dot" style="background:' + d.color + '"></span><strong>' + d.name + '</strong></td>' +
+	      '<td>' + d.medicos + '</td>' +
+	      '<td>' + d.enfermero + '</td>' +
+	      '<td>' + d.tecnicos + '</td>' +
+	      '<td>' + d.adminitrativo + '</td>' +
+	      '<td>' + d.profesion + '</td>' +
+	      '<td><strong>' + d.total + '</strong></td>' +
+	      '<td>' + pct + '%</td>' +
+	      '<td><div class="mini-bar-wrap"><div class="mini-bar"><div class="mini-bar-fill" style="width:' + pct + '%;background:' + d.color + '"></div></div><span class="mini-bar-num">' + pct + '%</span></div></td>';
+	    tbody.appendChild(tr);
+
+
+	  });
+
+	  const tr = document.createElement('tr');
+	    tr.innerHTML =
+	    	'<td style="text-align: right;"><strong>TOTAL</strong></td>' +
+		      '<td><strong>' + medicos + '</strong></td>' +
+		      '<td><strong>' + enfermero + '</strong></td>' +
+		      '<td><strong>' + tecnicos + '</strong></td>' +
+		      '<td><strong>' + adminitrativo + '</strong></td>' +
+		      '<td><strong>' +profesion + '</strong></td>' +
+		      '<td><strong>' + total + '</strong></td>' +
+		      '<td></td>' +
+		      '<td></td>';
+	    tbody.appendChild(tr);
+	}
+});
+
+
+  /* const depts = [
+	{ name: 'Hsp. Escuela Agudos',   total: 28, activos: 25, remotos: 10, vacaciones: 2, inactivos: 1, color: '#d83b3b' },
+    { name: 'Hsp. de Fatima',   total: 28, activos: 25, remotos: 10, vacaciones: 2, inactivos: 1, color: '#3b7dd8' },
+    { name: 'Hsp. Obera',     total: 18, activos: 16, remotos: 6,  vacaciones: 1, inactivos: 1, color: '#10b981' },
+    { name: 'LACMI',    total: 15, activos: 12, remotos: 4,  vacaciones: 2, inactivos: 1, color: '#f59e0b' },
+    { name: 'U. Traslado',  total: 24, activos: 21, remotos: 2,  vacaciones: 2, inactivos: 1, color: '#d8c83b' },
+    { name: 'Hsp Favaloro',         total: 12, activos: 11, remotos: 3,  vacaciones: 1, inactivos: 0, color: '#8b5cf6' },
+    { name: 'IMC',        total:  9, activos:  8, remotos: 2,  vacaciones: 1, inactivos: 0, color: '#0ea5e9' },
+    { name: 'IGH',       total: 22, activos: 20, remotos: 8,  vacaciones: 0, inactivos: 2, color: '#ec4899' },
+    { name: 'G. Maternal Evita',    total: 14, activos: 12, remotos: 1,  vacaciones: 0, inactivos: 2, color: '#14b8a6' },
+  ];*/
+
+
+
+  //deptsRelacion
+
+  const deptsRelacion = [
+		{ name: 'Hsp. Escuela Agudos',   total: 28, contratoParque: 25, convenio: 10, ministerio: 2, adscrito: 1,otros: 1, color: '#d83b3b' },
+	    { name: 'Hsp. de Fatima',   total: 28, contratoParque: 25, convenio: 10, ministerio: 2, adscrito: 1,otros: 1, color: '#3b7dd8' },
+	    { name: 'Hsp. Obera',     total: 18, contratoParque: 16, convenio: 6,  ministerio: 1, adscrito: 1,otros: 1, color: '#10b981' },
+	    { name: 'LACMI',    total: 15, contratoParque: 12, convenio: 4,  ministerio: 2, adscrito: 1,otros: 1, color: '#f59e0b' },
+	    { name: 'U. Traslado',  total: 24, contratoParque: 21, convenio: 2,  ministerio: 2, adscrito: 1,otros: 1, color: '#d8c83b' },
+	    { name: 'Hsp Favaloro', total: 12, contratoParque: 11, convenio: 3,  ministerio: 1, adscrito: 0,otros: 1, color: '#8b5cf6' },
+	    { name: 'IMC',        total:  9, contratoParque:  8, convenio: 2,  ministerio: 1, adscrito: 0,otros: 1, color: '#0ea5e9' },
+	    { name: 'IGH',       total: 22, contratoParque: 20, convenio: 8,  ministerio: 0, adscrito: 2,otros: 1, color: '#ec4899' },
+	    { name: 'G. Maternal Evita',    total: 14, contratoParque: 12, convenio: 1,  ministerio: 0, adscrito: 2,otros: 1, color: '#14b8a6' },
+	  ];
+  const grandTotalRelacion = deptsRelacion.reduce((s, d) => s + d.total, 0);
+  const maxTotalRelacion   = Math.max(...deptsRelacion.map(d => d.total));
+
+  /* Summary Table */
+  const tbodyRelacion = document.getElementById('deptRelacionBody');
+  deptsRelacion.slice().sort((a, b) => b.total - a.total).forEach(d => {
+    const pct = ((d.total / grandTotalRelacion) * 100).toFixed(1);
+    const tr = document.createElement('tr');
+    tr.innerHTML =
+      '<td style="text-align: left;"><span class="dept-color-dot" style="background:' + d.color + '"></span><strong>' + d.name + '</strong></td>' +
+      '<td>' + d.contratoParque + '</td>' +
+      '<td>' + d.convenio + '</td>' +
+      '<td>' + d.ministerio + '</td>' +
+      '<td>' + d.adscrito + '</td>' +
+      '<td>' + d.otros + '</td>' +
+      '<td><strong>' + d.total + '</strong></td>' +
+      '<td>' + pct + '%</td>' +
+      '<td><div class="mini-bar-wrap"><div class="mini-bar"><div class="mini-bar-fill" style="width:' + pct + '%;background:' + d.color + '"></div></div><span class="mini-bar-num">' + pct + '%</span></div></td>';
+      tbodyRelacion.appendChild(tr);
+  });
+
+
+
+
+
+
+  /*const ns = 'http://www.w3.org/2000/svg';
+  const txt = document.createElementNS(ns,'text');
+  txt.setAttribute('x', cx); txt.setAttribute('y', cy - 6);
+  txt.setAttribute('text-anchor','middle');
+  txt.setAttribute('font-size','20'); txt.setAttribute('font-weight','800');
+  txt.setAttribute('fill','#1f2937'); txt.setAttribute('font-family','Nunito,sans-serif');
+  txt.textContent = grandTotal;
+
+  const sub = document.createElementNS(ns,'text');
+  sub.setAttribute('x', cx); sub.setAttribute('y', cy + 10);
+  sub.setAttribute('text-anchor','middle');
+  sub.setAttribute('font-size','9'); sub.setAttribute('fill','#6b7280');
+  sub.setAttribute('font-family','Nunito,sans-serif');
+  sub.textContent = 'empleados';
+  svg.appendChild(txt); svg.appendChild(sub);*/
+
+
+
+
+
+</script>
+
+}
