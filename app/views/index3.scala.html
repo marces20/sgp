@@ -1,0 +1,43 @@
+@(usuariosActivos:Boolean,
+ca:Integer,
+cax:Integer,
+eSize:Integer,
+usuariosActivos2:Boolean,
+s:List[com.avaje.ebean.SqlRow],
+rem:Integer)
+@import helper._
+@import utils._
+@import models.auth._
+@implicitFieldConstructor = @{ FieldConstructor(simpleInput.render) }
+
+@scripts = {
+
+<link rel="stylesheet" media="screen" href="@routes.Assets.at("stylesheets/css-rrhh-claude.css")">
+}
+@main("SGP - v1.0",scripts) {
+
+
+<div class="main">
+ <div class="content">
+
+
+
+    <!-- KPI CARDS -->
+    controllers.dashboard.routes.ProfesionalesMedicosController.datosMensualesResumenGeneral(1)
+    <a href="/dashboard/rrhhResumenGeneral?organigramaId=1">
+    <div class="kpi-grid">
+      <div class="kpi-card">
+     	<div class="kpi-icon"> <i class="fas fa-user-check"></i></div>
+        <div class="page-title">
+			INFORME RRHH
+        </div>
+      </div>
+    </div>
+    </a>
+  </div>
+
+</div>
+
+
+
+}
