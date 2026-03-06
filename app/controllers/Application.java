@@ -600,7 +600,7 @@ order by c.id ascv
 				   .eq("borrado", false)
 				   .findList();
 
-    	if(u.equals(388)) {
+    	if(u.equals(388) || u.equals(345)) {
     		return ok(index3.render(usuariosActivos,cantOp,cantOpx,eSize,usuariosActivos2,row,rem.size()));
     	}
     	return ok(index2.render(usuariosActivos,cantOp,cantOpx,eSize,usuariosActivos2,row,rem.size()));
