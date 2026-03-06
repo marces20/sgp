@@ -25,7 +25,10 @@ GET  /estadoDeudaMonotributoExcelProfe 			controllers.dashboard.HonorariosContro
 
 
 GET  /honorariosNew 					controllers.dashboard.HonorariosNewController.index()
-GET  /profesionalesMedicos 					controllers.dashboard.ProfesionalesMedicosController.index()
+GET  /profesionalesMedicos 				controllers.dashboard.ProfesionalesMedicosController.index()
+GET  /rrhhResumenGeneral 				controllers.dashboard.ProfesionalesMedicosController.datosMensualesResumenGeneral(organigramaId:Long ?= 0)
+POST /rrhhResumenGeneral/getDataPorOrganigramaIdPorTipoProfesion 				controllers.dashboard.ProfesionalesMedicosController.getDataPorOrganigramaIdPorTipoProfesion()
+POST /rrhhResumenGeneral/getDataPorOrganigramaIdPorTipoRelacionLaboral 				controllers.dashboard.ProfesionalesMedicosController.getDataPorOrganigramaIdPorTipoRelacionLaboral()
 
 GET  /listadoHonorariosReporte 			controllers.dashboard.HonorariosNewController.listadoHonorariosReporte(id:Int)
 GET  /informeHonorarioPorPeriodo		controllers.dashboard.HonorariosNewReportesController.informeHonorarioPorPeriodo()

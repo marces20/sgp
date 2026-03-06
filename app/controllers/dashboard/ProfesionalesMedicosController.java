@@ -13,6 +13,7 @@ import models.Estado;
 import models.Organigrama;
 import models.haberes.LiquidacionMes;
 import models.informes.ResponseInformeOrganigramaTipoProfesion;
+import models.informes.ResponseInformeOrganigramaTipoRelacionLaboral;
 
 import com.avaje.ebean.Ebean;
 import com.avaje.ebean.SqlRow;
@@ -93,6 +94,110 @@ public class ProfesionalesMedicosController  extends Controller {
 
 		return ok( datosMensualesResumenGeneral.render(organigramaId,totales) );
 	}
+
+	public static Result getDataPorOrganigramaIdPorTipoRelacionLaboral(){
+		ObjectNode rpta = Json.newObject();
+	    ArrayNode results = rpta.arrayNode();
+	    ObjectNode response = Json.newObject();
+
+	    Long organigramaId = null;
+	    Boolean convenio = null;
+
+	    if(request().body().asFormUrlEncoded().get("organigramaId")[0] != null && !request().body().asFormUrlEncoded().get("organigramaId")[0].isEmpty()) {
+	    	organigramaId = new Long(request().body().asFormUrlEncoded().get("organigramaId")[0]);
+	    }
+	    if(organigramaId != null ){
+
+		    try {
+				List<SqlRow> res =getDataPorTipoRelacionLaboral(organigramaId);
+				Logger.debug("=================================");
+				Logger.debug(res.toString());
+				Logger.debug("=================================");
+				ObjectNode restJs = Json.newObject();
+
+
+				List<ResponseInformeOrganigramaTipoRelacionLaboral> lr = new ArrayList<>();
+
+				String organigramaTmp = "";
+
+				Map<String, Map<String,Integer>> dataTmp = new HashMap<>();
+				 Map<String,Integer> dt = new HashMap<>();
+
+				for (SqlRow sr : res) {
+
+					if(dataTmp.containsKey((sr.getString("organigrama_id")))) {
+
+						dt = dataTmp.get(sr.getString("organigrama_id"));
+
+						dt.put(sr.getString("idtiporelacionlaboral"), sr.getInteger("cantidad_total"));
+
+						dataTmp.put(sr.getString("organigrama_id"), dt);
+
+					}else {
+
+						Map<String,Integer> data = new HashMap<>();
+						data.put(sr.getString("idtiporelacionlaboral"), sr.getInteger("cantidad_total"));
+						dataTmp.put(sr.getString("organigrama_id"), data);
+
+					}
+				}
+
+
+
+				for (Map.Entry<String, Map<String,Integer>> entry : dataTmp.entrySet()) {
+					String clave = entry.getKey();
+					Logger.debug("================== "+clave);
+					Map<String,Integer> valor = entry.getValue();
+					Logger.debug("================== "+valor.toString());
+
+					ResponseInformeOrganigramaTipoRelacionLaboral rp = new ResponseInformeOrganigramaTipoRelacionLaboral();
+
+					Long idOrga = new Long(clave);
+					Organigrama oo = Organigrama.find.byId(idOrga);
+
+					rp.name = oo.sigla;
+					rp.color = oo.color;
+
+					for (Map.Entry<String,Integer> entryValue : entry.getValue().entrySet()) {
+						String claveValue = entryValue.getKey();
+
+
+						switch (claveValue) {
+							case "1":	rp.contratoRelacionParque = entryValue.getValue(); break;//contratoRelacionParque
+							case "2":	rp.contratoSinRelacionParque = entryValue.getValue(); break;//contratoSinRelacionParque
+
+							case "3":	rp.contratoRelacionConvenioMinisterio = entryValue.getValue(); break;//contratoRelacionConvenioMinisterio
+
+							case "4":	rp.plantaPermanenteOtrasEntidades = entryValue.getValue(); break;//plantaPermanenteOtrasEntidades
+							case "5":	rp.contratoRelacionOtrasEntidades = entryValue.getValue(); break;//contratoRelacionOtrasEntidades
+							case "6":	rp.adscriptoOtrasEntidades = entryValue.getValue(); break;//adscriptoOtrasEntidades
+							case "7":	rp.contratoConvenioNacion = entryValue.getValue(); break;//contratoConvenioNacion
+							case "8":	rp.plantaTemporariaOtrasEntidades = entryValue.getValue(); break;//plantaTemporariaOtrasEntidades
+							case "9":	rp.otro = entryValue.getValue(); break;//otro
+
+
+							default:
+								break;
+						}
+					}
+
+					ObjectMapper mapper = new ObjectMapper();
+					restJs.put(clave,mapper.writeValueAsString(rp));
+				}
+
+				results.add(restJs);
+
+				response.put("success", true);
+				response.put("results", results);
+		    }catch (Exception e) {
+		    	response.put("success", false);
+			}
+	    }
+
+		return ok(response);
+	}
+
+
 
 
 	public static Result getDataPorOrganigramaIdPorTipoProfesion(){
@@ -247,6 +352,45 @@ public class ProfesionalesMedicosController  extends Controller {
 				"FROM conteos_base cb  " +
 				"INNER JOIN organigramas o ON o.id = cb.organigrama_id " +
 				"ORDER BY o.id, cantidad_total DESC;";
+
+		List<SqlRow> todos = Ebean.createSqlQuery(sql).setParameter("organigramaId",  organigramaId).findList();
+		return todos;
+	}
+
+	private static List<SqlRow> getDataPorTipoRelacionLaboral(Long organigramaId) {
+
+		String sql = "WITH RECURSIVE recursetree AS (  " +
+				"				    SELECT id, padre_id, id AS nodo_nivel2 " +
+				"				    FROM organigramas " +
+				"				    WHERE padre_id = :organigramaId " +
+				"				    UNION ALL " +
+				"				    SELECT t.id, t.padre_id, rt.nodo_nivel2 " +
+				"				    FROM organigramas t  " +
+				"				    JOIN recursetree rt ON rt.id = t.padre_id " +
+				"				),  " +
+				"				conteos_base AS ( " +
+				"				    SELECT  " +
+				"				        rt.nodo_nivel2  AS organigrama_id, " +
+				"				        p.id           AS idTipoRelacionLaboral, " +
+				"					    p.nombre       AS tipoRelacionLaboral, " +
+				"				        COUNT(a.id)     AS cantidad  " +
+				"				    FROM agentes a " +
+				"				    INNER JOIN recursetree rt       ON a.organigrama_id = rt.id " +
+				"				    INNER JOIN organigramas o       ON a.organigrama_id = o.id " +
+				"					" +
+				"				    INNER JOIN tipo_relacion_laborales p ON CAST(a.tipo_relacion_laboral AS INTEGER) = p.id  " +
+				"				    WHERE a.activo = true " +
+				"				    GROUP BY rt.nodo_nivel2, p.id, p.nombre " +
+				"				)   "+
+				"				SELECT " +
+				"				    o.id            AS organigrama_id, " +
+				"				    o.nombre        AS organigrama, " +
+				"				    cb.idTipoRelacionLaboral, " +
+				"				    cb.tipoRelacionLaboral, " +
+				"				    cb.cantidad     AS cantidad_total " +
+				"				FROM conteos_base cb  " +
+				"				INNER JOIN organigramas o ON o.id = cb.organigrama_id  " +
+				"				ORDER BY o.id, cantidad_total DESC;";
 
 		List<SqlRow> todos = Ebean.createSqlQuery(sql).setParameter("organigramaId",  organigramaId).findList();
 		return todos;

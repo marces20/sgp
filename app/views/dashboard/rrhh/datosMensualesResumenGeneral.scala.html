@@ -169,11 +169,132 @@
 <script>
 
 
-var url = '/dashboard/rrhhResumenGeneral/getDataPorOrganigramaId';
-
+var urlTipoProfesion = '/dashboard/rrhhResumenGeneral/getDataPorOrganigramaIdPorTipoProfesion';
+var urlTipoRelacionLaboral = '/dashboard/rrhhResumenGeneral/getDataPorOrganigramaIdPorTipoRelacionLaboral';
 var data = 'organigramaId='+$("#organigramaId").val();
 
-$.post(url, data, function(data){
+
+$.post(urlTipoRelacionLaboral, data, function(data){
+
+	var labels = [];
+	var dataEscalaParque = [0,0,0,0,0];
+	var totalEscalaParque = 0;
+
+
+	const deptsRelacion = [];
+
+	/*const depts = [
+		{ name: 'Hsp. Escuela Agudos',  medicos: 11,enfermero: 22,tecnicos: 33,adminitrativo: 44,profesion: 55,total: 66, color: '#d83b3b' },
+	    { name: 'Hsp. de Fatima', medicos: 11,enfermero: 22,tecnicos: 33,adminitrativo: 44,profesion: 55,total: 66, color: '#3b7dd8' },
+	    { name: 'Hsp. Obera', medicos: 11,enfermero: 22,tecnicos: 33,adminitrativo: 44,profesion: 55,total: 66, color: '#10b981' },
+	    { name: 'LACMI',  medicos: 11,enfermero: 22,tecnicos: 33,adminitrativo: 44,profesion: 55,total: 66, color: '#f59e0b' },
+	    { name: 'U. Traslado', medicos: 11,enfermero: 22,tecnicos: 33,adminitrativo: 44,profesion: 55,total: 66,color: '#d8c83b' },
+	    { name: 'Hsp Favaloro', medicos: 11,enfermero: 22,tecnicos: 33,adminitrativo: 44,profesion: 55,total: 66, color: '#8b5cf6' },
+	    { name: 'IMC', medicos: 11,enfermero: 22,tecnicos: 33,adminitrativo: 44,profesion: 55,total: 66, color: '#0ea5e9' },
+	    { name: 'IGH', medicos: 11,enfermero: 22,tecnicos: 33,adminitrativo: 44,profesion: 55,total: 66,color: '#ec4899' },
+	    { name: 'G. Maternal Evita', medicos: 11,enfermero: 22,tecnicos: 33,adminitrativo: 44,profesion: 55,total: 66, color: '#14b8a6' },
+	  ];*/
+
+
+	if(data.success) {
+
+		$.each(data.results, function(idx,valor) {
+
+
+			$.each(valor, function(valor1,valor2) {
+				const v = JSON.parse(valor2);
+
+
+				deptsRelacion.push({
+			        name:          v.name,
+
+			        contratoParque:       v.contratoRelacionParque+v.contratoSinRelacionParque,
+			        convenio:     v.contratoRelacionConvenioMinisterio,
+
+			        ministerio:      v.plantaPermanenteOtrasEntidades+v.contratoRelacionOtrasEntidades,
+
+			        adscrito: v.adscriptoOtrasEntidades,
+			        otros:     v.contratoConvenioNacion+v.plantaTemporariaOtrasEntidades+v.otro,
+
+			        total:         v.contratoRelacionParque+v.contratoSinRelacionParque+v.contratoRelacionConvenioMinisterio+v.plantaPermanenteOtrasEntidades+v.contratoRelacionOtrasEntidades+v.adscriptoOtrasEntidades+v.contratoConvenioNacion+v.plantaTemporariaOtrasEntidades+v.otro,
+			        color:         v.color
+			      });
+			});
+
+		});
+
+		console.log(deptsRelacion)
+
+		 /* const deptsRelacion = [
+				{ name: 'Hsp. Escuela Agudos',   total: 28, contratoParque: 25, convenio: 10, ministerio: 2, adscrito: 1,otros: 1, color: '#d83b3b' },
+			    { name: 'Hsp. de Fatima',   total: 28, contratoParque: 25, convenio: 10, ministerio: 2, adscrito: 1,otros: 1, color: '#3b7dd8' },
+			    { name: 'Hsp. Obera',     total: 18, contratoParque: 16, convenio: 6,  ministerio: 1, adscrito: 1,otros: 1, color: '#10b981' },
+			    { name: 'LACMI',    total: 15, contratoParque: 12, convenio: 4,  ministerio: 2, adscrito: 1,otros: 1, color: '#f59e0b' },
+			    { name: 'U. Traslado',  total: 24, contratoParque: 21, convenio: 2,  ministerio: 2, adscrito: 1,otros: 1, color: '#d8c83b' },
+			    { name: 'Hsp Favaloro', total: 12, contratoParque: 11, convenio: 3,  ministerio: 1, adscrito: 0,otros: 1, color: '#8b5cf6' },
+			    { name: 'IMC',        total:  9, contratoParque:  8, convenio: 2,  ministerio: 1, adscrito: 0,otros: 1, color: '#0ea5e9' },
+			    { name: 'IGH',       total: 22, contratoParque: 20, convenio: 8,  ministerio: 0, adscrito: 2,otros: 1, color: '#ec4899' },
+			    { name: 'G. Maternal Evita',    total: 14, contratoParque: 12, convenio: 1,  ministerio: 0, adscrito: 2,otros: 1, color: '#14b8a6' },
+			  ];*/
+
+
+		  const grandTotalRelacion = deptsRelacion.reduce((s, d) => s + d.total, 0);
+		  const maxTotalRelacion   = Math.max(...deptsRelacion.map(d => d.total));
+
+		  /* Summary Table */
+		  const tbodyRelacion = document.getElementById('deptRelacionBody');
+
+		  let contratoParque = 0;
+		  let convenio = 0;
+		  let ministerio = 0;
+		  let adscrito = 0;
+		  let otros = 0;
+		  let total = 0;
+
+		  deptsRelacion.slice().sort((a, b) => b.total - a.total).forEach(d => {
+
+			contratoParque += d.contratoParque;
+			convenio += d.convenio;
+			ministerio += d.ministerio;
+			adscrito += d.adscrito;
+			otros += d.otros;
+			total += d.total;
+
+		    const pct = ((d.total / grandTotalRelacion) * 100).toFixed(1);
+		    const tr = document.createElement('tr');
+		    tr.innerHTML =
+		      '<td style="text-align: left;"><span class="dept-color-dot" style="background:' + d.color + '"></span><strong>' + d.name + '</strong></td>' +
+		      '<td>' + d.contratoParque + '</td>' +
+		      '<td>' + d.convenio + '</td>' +
+		      '<td>' + d.ministerio + '</td>' +
+		      '<td>' + d.adscrito + '</td>' +
+		      '<td>' + d.otros + '</td>' +
+		      '<td><strong>' + d.total + '</strong></td>' +
+		      '<td>' + pct + '%</td>' +
+		      '<td><div class="mini-bar-wrap"><div class="mini-bar"><div class="mini-bar-fill" style="width:' + pct + '%;background:' + d.color + '"></div></div><span class="mini-bar-num">' + pct + '%</span></div></td>';
+		      tbodyRelacion.appendChild(tr);
+		  });
+
+
+
+	  const tr = document.createElement('tr');
+	    tr.innerHTML =
+	    	'<td style="text-align: right;"><strong>TOTAL</strong></td>' +
+
+		      '<td><strong>' + contratoParque + '</strong></td>' +
+		      '<td><strong>' + convenio + '</strong></td>' +
+		      '<td><strong>' + ministerio + '</strong></td>' +
+		      '<td><strong>' + adscrito + '</strong></td>' +
+		      '<td><strong>' +otros + '</strong></td>' +
+		      '<td><strong>' + total + '</strong></td>' +
+		      '<td></td>' +
+		      '<td></td>';
+	tbodyRelacion.appendChild(tr);
+	}
+});
+
+
+$.post(urlTipoProfesion, data, function(data){
 
 	var labels = [];
 	var dataEscalaParque = [0,0,0,0,0];
@@ -321,7 +442,6 @@ $.post(url, data, function(data){
 	  depts.slice().sort((a, b) => b.total - a.total).forEach(d => {
 	    const pct = ((d.total / grandTotal) * 100).toFixed(1);
 
-	    console.log(medicos);
 
 	    medicos += d.medicos;
 	    enfermero += d.enfermero;
@@ -378,39 +498,7 @@ $.post(url, data, function(data){
 
 
 
-  //deptsRelacion
 
-  const deptsRelacion = [
-		{ name: 'Hsp. Escuela Agudos',   total: 28, contratoParque: 25, convenio: 10, ministerio: 2, adscrito: 1,otros: 1, color: '#d83b3b' },
-	    { name: 'Hsp. de Fatima',   total: 28, contratoParque: 25, convenio: 10, ministerio: 2, adscrito: 1,otros: 1, color: '#3b7dd8' },
-	    { name: 'Hsp. Obera',     total: 18, contratoParque: 16, convenio: 6,  ministerio: 1, adscrito: 1,otros: 1, color: '#10b981' },
-	    { name: 'LACMI',    total: 15, contratoParque: 12, convenio: 4,  ministerio: 2, adscrito: 1,otros: 1, color: '#f59e0b' },
-	    { name: 'U. Traslado',  total: 24, contratoParque: 21, convenio: 2,  ministerio: 2, adscrito: 1,otros: 1, color: '#d8c83b' },
-	    { name: 'Hsp Favaloro', total: 12, contratoParque: 11, convenio: 3,  ministerio: 1, adscrito: 0,otros: 1, color: '#8b5cf6' },
-	    { name: 'IMC',        total:  9, contratoParque:  8, convenio: 2,  ministerio: 1, adscrito: 0,otros: 1, color: '#0ea5e9' },
-	    { name: 'IGH',       total: 22, contratoParque: 20, convenio: 8,  ministerio: 0, adscrito: 2,otros: 1, color: '#ec4899' },
-	    { name: 'G. Maternal Evita',    total: 14, contratoParque: 12, convenio: 1,  ministerio: 0, adscrito: 2,otros: 1, color: '#14b8a6' },
-	  ];
-  const grandTotalRelacion = deptsRelacion.reduce((s, d) => s + d.total, 0);
-  const maxTotalRelacion   = Math.max(...deptsRelacion.map(d => d.total));
-
-  /* Summary Table */
-  const tbodyRelacion = document.getElementById('deptRelacionBody');
-  deptsRelacion.slice().sort((a, b) => b.total - a.total).forEach(d => {
-    const pct = ((d.total / grandTotalRelacion) * 100).toFixed(1);
-    const tr = document.createElement('tr');
-    tr.innerHTML =
-      '<td style="text-align: left;"><span class="dept-color-dot" style="background:' + d.color + '"></span><strong>' + d.name + '</strong></td>' +
-      '<td>' + d.contratoParque + '</td>' +
-      '<td>' + d.convenio + '</td>' +
-      '<td>' + d.ministerio + '</td>' +
-      '<td>' + d.adscrito + '</td>' +
-      '<td>' + d.otros + '</td>' +
-      '<td><strong>' + d.total + '</strong></td>' +
-      '<td>' + pct + '%</td>' +
-      '<td><div class="mini-bar-wrap"><div class="mini-bar"><div class="mini-bar-fill" style="width:' + pct + '%;background:' + d.color + '"></div></div><span class="mini-bar-num">' + pct + '%</span></div></td>';
-      tbodyRelacion.appendChild(tr);
-  });
 
 
 
