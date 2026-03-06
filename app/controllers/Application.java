@@ -64,7 +64,7 @@ public class Application extends Controller {
 
 
 
-		Logger.debug("aaaaaaaaaaaaaaaaaaaa "+Usuario.hashPassword("asdasdasd"));
+		//Logger.debug("aaaaaaaaaaaaaaaaaaaa "+Usuario.hashPassword("asdasdasd"));
 
 		/*List<AgenteAsistenciaLicencia> ll = AgenteAsistenciaLicencia.find.where().eq("ejercicio_id", new  Long(16)).ne("tipo_licencia_id",5).findList();
 
