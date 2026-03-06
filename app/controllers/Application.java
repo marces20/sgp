@@ -39,6 +39,7 @@ import play.mvc.Result;
 import play.mvc.Security;
 import utils.NumeroALetra;
 import views.html.index2;
+import views.html.index3;
 
 @Security.Authenticated(Secured.class)
 public class Application extends Controller {
@@ -46,18 +47,70 @@ public class Application extends Controller {
 	public static Result index() throws EmailException, IOException, XDocReportException  {
 
 
-		//ActualizarProductosIps a = new ActualizarProductosIps();
+		//ActualizarProductosIps a = new ActualizarProduct osIps();
 		//a.actualizar();
+		//LiquidacionMes.preliquidarEspera();
+
+		//RecuperoReportesController.envioMailsResumenDeudaCliente();
+
+		//ApiController.login();
+		//ApiController.getPacientes("d","d");
+
+		//ProduccionGeneralController.importarPracticasByRismiAndOrganigrama(new Long(53),new Long(175),false,false);//CARDIOLOGIA
+		//ProduccionGeneralController.importarPracticasByRismiAndOrganigrama(new Long(38),new Long(173),false,true);//OFTALMO
+		//ProduccionGeneralController.importarPracticasByRismiAndOrganigrama(new Long(43),new Long(175),false,true);//CLINICA
+
+		//ProduccionImagenesController.importarPracticasImagenesByRismiAndOrganigrama(new Long(185),new Long(175),false,false); //IMAGENES
 
 
 
+		Logger.debug("aaaaaaaaaaaaaaaaaaaa "+Usuario.hashPassword("asdasdasd"));
+
+		/*List<AgenteAsistenciaLicencia> ll = AgenteAsistenciaLicencia.find.where().eq("ejercicio_id", new  Long(16)).ne("tipo_licencia_id",5).findList();
+
+		for(AgenteAsistenciaLicencia llx :ll) {
+			Logger.debug("aaaaaaaaaaaaaaaaaaaa ",llx.id);
+			AgenteAsistenciaLicencia.setDiasPorPeriodos(llx.id.intValue(),false);
+		}*/
+
+			//ControlAsistencias.licenciasNoAprobadasMail("MEDICINA");
+		//ControlAsistencias.licenciasNoAprobadasMail("DOCENCIA");
+		//ControlAsistencias.licenciasNoAprobadasMail("PERSONAL");
 
 
-		//AfipController a = new AfipController();
+		//RecuperoPlanilla.correCrearPlanillas(new Long(177));
+
 		//RecuperoNotaCredito rc  = RecuperoNotaCredito.find.byId(new Long(5079));
-		//a.getUltimoComprobanteNew( new Integer(rc.puntoVenta.numero),TipoComprobante.NOTA_CREDITO);
+		//AfipPartidoController a = new AfipPartidoController();
+		//a.getUltimoComprobanteNew( new Integer(3),TipoComprobante.NOTA_CREDITO);
 
-		//AfipController a = new AfipController();
+
+
+
+
+
+		/*List<RecuperoPartido> rf = RecuperoPartido.find.where()
+				.disjunction()
+				.eq("id", 246)
+				.eq("id", 44)
+				.eq("id", 1059)
+				.eq("id",2086)
+				.endJunction()
+				.order("id asc").findList();
+
+		for(RecuperoPartido rp : rf) {
+			Logger.debug(rp.id.toString());
+			//AfipPartidoController.correrFacturaAfip(rp.id);
+			RecuperoReportesController.imprimirReciboPartido(rp.id);
+
+		}*/
+
+		//
+
+		//AfipPartidoController ac = new AfipPartidoController();
+		//ac.setComprobanteNC(new Long(1),TipoComprobante.NOTA_CREDITO);
+
+		//
 		//a.getAuth();
 
 		//a.crearComprobantesAutomaticos();
@@ -284,7 +337,7 @@ order by c asc
 
 
 	    scp sgp-020820181210.gz administrador@10.1.2.240:/home/administrador/
-	 	gunzip -c /home/marce/sgp-240920210810.gz | psql -U postgres -d sgp-1310
+	 	gunzip -c /home/marce/sgp-240920210810.gz | psql -U postgres -d sgp-0902
 
 	    INSERT INTO lineas_creditos_presupuestarios( credito_presupuestario_id, monto, cuenta_analitica_id)
     	VALUES (550, 7000,  726);
@@ -361,27 +414,73 @@ alter table solicitudes disable trigger all;
 update solicitudes set departamento_id =244 where expediente_id = 26240;
 alter table solicitudes enable trigger all;
 
-
 alter table ordenes disable trigger all;
-update ordenes set tipo_orden='servicio' where id in(135121);
+update ordenes set tipo_orden= 'servicio' where id in(140848);
 alter table ordenes enable trigger all;
 
 
 
+
+
 alter table ordenes disable trigger all;
-update ordenes set fecha_presupuesto= '2024-04-09' where id in(129449);
+update ordenes set fecha_presupuesboludo= '2025-08-12' where id in(150407);
 alter table ordenes enable trigger all;
 
 
 alter table ordenes_provision disable trigger all;
-update ordenes_provision set numero = 1996
-where orden_compra_id in(select id from ordenes where expediente_id = 45235);
+update ordenes_provision set numero =31 where orden_compra_id in(select id from ordenes where expediente_id = 53480);
 alter table ordenes_provision enable trigger all;
+
+alter table ordenes  disable trigger all;
+update ordenes set numero_orden_provision =31 where     expediente_id = 53480;
+alter table ordenes enable trigger all;
+
+alter table ordenes  disable trigger all;
+update ordenes set fecha_fin = '2026-09-30' where     id = 152903;
+alter table ordenes enable trigger all;
+
+alter table ordenes  disable trigger all;
+update ordenes set fecha_presupueso = '2025-09-01' where id = 152977;
+alter table ordenes enable trigger all;
 
 
 
 0029
 36807
+
+CONTROLLLL DOBLAAA NOVEDADEES
+select ag.apellido
+from liquidacion_puestos lp
+inner join puestos_laborales pl on pl.id = lp.puesto_laboral_id
+inner join liquidacion_detalles ld on ld.liquidacion_puesto_id = lp.id
+inner join legajos l on l.id = pl.legajo_id
+inner join agentes ag on ag.id = l.agente_id
+where pl.dobla = true
+and lp.liquidacion_mes_id in(1611,1612)
+and ld.liquidacion_concepto_id in (
+	select id from liquidacion_conceptos where
+liquidacion_concepto_clasificacion_id in (2,3))
+group by ag.apellido
+
+CONTROLLL LIQUIDACION DETALLE DUPLICADOO
+select lm.liquidacion_tipo_id, pl.id, a.apellido, lc.denominacion --, a.fingreso
+, ld.liquidacion_concepto_id
+, count(ld.liquidacion_concepto_id)
+from agentes a
+join legajos l on a.id = l.agente_id
+join puestos_laborales pl on (l.id = pl.legajo_id and pl.activo is true)
+join liquidacion_puestos lp on pl.id = lp.puesto_laboral_id
+JOIN liquidacion_detalles ld on lp.id = ld.liquidacion_puesto_id
+join liquidacion_conceptos lc on ld.liquidacion_concepto_id = lc.id
+JOIN liquidacion_meses lm on lp.liquidacion_mes_id = lm.id
+--extract(month from a.fingreso) = 1 and extract(year from a.fingreso) = 2025
+--and ln.liquidacion_concepto_id = 855
+group by pl.id, a.apellido, ld.liquidacion_concepto_id, lc.denominacion,
+lm.periodo_id, lm.liquidacion_tipo_id
+having
+lm.periodo_id = 163
+and count(ld.liquidacion_concepto_id) > 1
+order by a.apellido, count(ld.liquidacion_concepto_id) desc
 
 
 alter table orden_lineas disable trigger all;
@@ -501,7 +600,9 @@ order by c.id ascv
 				   .eq("borrado", false)
 				   .findList();
 
-
+    	if(u.equals(388)) {
+    		return ok(index3.render(usuariosActivos,cantOp,cantOpx,eSize,usuariosActivos2,row,rem.size()));
+    	}
     	return ok(index2.render(usuariosActivos,cantOp,cantOpx,eSize,usuariosActivos2,row,rem.size()));
 
 
