@@ -23,6 +23,10 @@
     <div class="page-title">Parque de la Salud <b style="color: red;">(SUJETO A REVISION)</b></div>
     <div class="page-breadcrumb">Inicio / <span>Informes Recursos Humanos</span> / Parque de la Salud</div>
 
+	 <!-- DEPT SECTION LABEL -->
+    <div class="section-title"><i class="fas fa-chart-bar"></i> Agentes por Contrato</div>
+
+
     <!-- KPI CARDS -->
     <div class="kpi-grid">
       <div class="kpi-card">
@@ -38,7 +42,7 @@
         <div class="kpi-icon"><!-- <i class="fas fa-users"></i> --> <img src="/assets/images/logo.png" width="60" height="50"/></div>
         <div>
           <div class="kpi-val">@totales.get("parque")</div>
-          <div class="kpi-lbl">Total Parque</div>
+          <div class="kpi-lbl">Total Contratos Parque Salud</div>
           <!--  <div class="kpi-delta up"><i class="fas fa-arrow-up"></i> 90.1%</div>-->
           <div class="kpi-delta up"><i class="fas fa-arrow-up"></i> +4 este mes</div>
           <div class="kpi-delta down"><i class="fas fa-arrow-down"></i> +1 este mes</div>
@@ -48,7 +52,7 @@
         <div class="kpi-icon"><!-- <i class="fas fa-users"></i> --> <img src="/assets/images/misiones-salud-55nu1cgetv00.jpg" width="60" height="50"/></div>
         <div>
           <div class="kpi-val">@totales.get("convenio")</div>
-          <div class="kpi-lbl">Total Convenio</div>
+          <div class="kpi-lbl">Total Contratos Convenio Msp</div>
           <!--  <div class="kpi-delta up"><i class="fas fa-arrow-up"></i> 90.1%</div>-->
           <div class="kpi-delta up"><i class="fas fa-arrow-up"></i> +4 este mes</div>
           <div class="kpi-delta down"><i class="fas fa-arrow-down"></i> +1 este mes</div>
@@ -58,7 +62,7 @@
         <div class="kpi-icon"><!-- <i class="fas fa-users"></i> --> <img src="/assets/images/logo-provincia.jpeg" width="60" height="50"/></div>
         <div>
         	<div class="kpi-val">@totales.get("otro")</div>
-          <div class="kpi-lbl">Total Otros</div>
+          <div class="kpi-lbl">Total Contratos Otros</div>
           <!--  <div class="kpi-delta up"><i class="fas fa-arrow-up"></i> 90.1%</div>-->
           <div class="kpi-delta up"><i class="fas fa-arrow-up"></i> +4 este mes</div>
           <div class="kpi-delta down"><i class="fas fa-arrow-down"></i> +1 este mes</div>
@@ -290,6 +294,9 @@ $.post(urlTipoRelacionLaboral, data, function(data){
 		      '<td></td>' +
 		      '<td></td>';
 	tbodyRelacion.appendChild(tr);
+	}else{
+
+		console.log(data.results)
 	}
 });
 
@@ -320,6 +327,24 @@ $.post(urlTipoProfesion, data, function(data){
 
 		$.each(data.results, function(idx,valor) {
 
+			/*
+			case "1":	rp.medicos = entryValue.getValue(); break;//"Medicos"
+
+			case "2":	rp.profesionAsistencia = entryValue.getValue(); break;//""Profesionales (Asistencial)" B
+			case "5":	rp.enfermero = entryValue.getValue(); break;//""Enfermeria" B
+
+			case "3":	rp.tecnicoAsistencial = entryValue.getValue(); break;//""Tecnicos (Asistencial)" C
+			case "4":	rp.auxiliaresAsistencial = entryValue.getValue(); break;//""Auxiliares (Asistencial)" C
+			case "9":	rp.adminitrativoAsistencial = entryValue.getValue(); break;//""Administrativos  (Asistencial)"
+
+
+			case "6":	rp.profesion = entryValue.getValue(); break;//""Profesionales"
+			case "7":	rp.tecnicos = entryValue.getValue(); break;//""Tecnicos"
+			case "8":	rp.adminitrativo = entryValue.getValue(); break;//""Administrativos"
+			case "10":	rp.auxiliares = entryValue.getValue(); break;//""Auxiliares"
+
+			*/
+
 
 			$.each(valor, function(valor1,valor2) {
 				const v = JSON.parse(valor2);
@@ -335,7 +360,7 @@ $.post(urlTipoProfesion, data, function(data){
 			        adminitrativo: v.tecnicos+v.adminitrativo+v.auxiliares,
 			        profesion:     v.profesion,
 
-			        total:         v.medicos+v.profesionAsistencia+v.enfermero+v.tecnicoAsistencial+v.auxiliaresAsistencial+v.adminitrativoAsistencial+v.tecnicos+v.adminitrativo+v.auxiliares,
+			        total:         v.medicos+v.profesionAsistencia+v.enfermero+v.tecnicoAsistencial+v.auxiliaresAsistencial+v.adminitrativoAsistencial+v.tecnicos+v.adminitrativo+v.auxiliares+v.profesion,
 			        color:         v.color
 			      });
 			});
