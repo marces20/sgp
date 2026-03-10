@@ -109,10 +109,7 @@ public class ProfesionalesMedicosController  extends Controller {
 	    if(organigramaId != null ){
 
 		    try {
-				List<SqlRow> res =getDataPorTipoRelacionLaboral(organigramaId);
-				Logger.debug("=================================");
-				Logger.debug(res.toString());
-				Logger.debug("=================================");
+
 				ObjectNode restJs = Json.newObject();
 
 
@@ -121,8 +118,33 @@ public class ProfesionalesMedicosController  extends Controller {
 				String organigramaTmp = "";
 
 				Map<String, Map<String,Integer>> dataTmp = new HashMap<>();
-				 Map<String,Integer> dt = new HashMap<>();
+				Map<String,Integer> dt = new HashMap<>();
 
+
+				List<SqlRow> resDataUnico =getDataPorUnicoOrganigramaTipoRelacionLaboral(organigramaId,false);
+				for (SqlRow sr : resDataUnico) {
+
+					if(dataTmp.containsKey((sr.getString("organigrama_id")))) {
+
+						dt = dataTmp.get(sr.getString("organigrama_id"));
+
+						dt.put(sr.getString("idTipoRelacionLaboral"), sr.getInteger("cantidad_total"));
+
+						dataTmp.put(sr.getString("organigrama_id"), dt);
+
+					}else {
+
+						Map<String,Integer> data = new HashMap<>();
+						data.put(sr.getString("idTipoRelacionLaboral"), sr.getInteger("cantidad_total"));
+						dataTmp.put(sr.getString("organigrama_id"), data);
+
+					}
+				}
+
+				List<SqlRow> res =getDataPorTipoRelacionLaboral(organigramaId,false);
+				Logger.debug("=================================");
+				Logger.debug(res.toString());
+				Logger.debug("=================================");
 				for (SqlRow sr : res) {
 
 					if(dataTmp.containsKey((sr.getString("organigrama_id")))) {
@@ -140,6 +162,29 @@ public class ProfesionalesMedicosController  extends Controller {
 						dataTmp.put(sr.getString("organigrama_id"), data);
 
 					}
+				}
+
+				if(organigramaId.compareTo(new Long(1))==0) {
+					List<SqlRow> resGeneral =getDataPorTipoRelacionLaboral(organigramaId,true);
+					for (SqlRow sr : resGeneral) {
+
+						if(dataTmp.containsKey((sr.getString("organigrama_id")))) {
+
+							dt = dataTmp.get(sr.getString("organigrama_id"));
+
+							dt.put(sr.getString("idtiporelacionlaboral"), sr.getInteger("cantidad_total"));
+
+							dataTmp.put(sr.getString("organigrama_id"), dt);
+
+						}else {
+
+							Map<String,Integer> data = new HashMap<>();
+							data.put(sr.getString("idtiporelacionlaboral"), sr.getInteger("cantidad_total"));
+							dataTmp.put(sr.getString("organigrama_id"), data);
+
+						}
+					}
+
 				}
 
 
@@ -191,6 +236,7 @@ public class ProfesionalesMedicosController  extends Controller {
 				response.put("results", results);
 		    }catch (Exception e) {
 		    	response.put("success", false);
+
 			}
 	    }
 
@@ -214,10 +260,8 @@ public class ProfesionalesMedicosController  extends Controller {
 	    if(organigramaId != null ){
 
 		    try {
-				List<SqlRow> res =getDataPorTipoProfesion(organigramaId);
-				Logger.debug("=================================");
-				Logger.debug(res.toString());
-				Logger.debug("=================================");
+
+
 				ObjectNode restJs = Json.newObject();
 				/*
 
@@ -240,8 +284,32 @@ public class ProfesionalesMedicosController  extends Controller {
 				String organigramaTmp = "";
 
 				Map<String, Map<String,Integer>> dataTmp = new HashMap<>();
-				 Map<String,Integer> dt = new HashMap<>();
+				Map<String,Integer> dt = new HashMap<>();
 
+				List<SqlRow> resDataUnico =getDataPorUnicoOrganigramaTipoProfesion(organigramaId,false);
+				for (SqlRow sr : resDataUnico) {
+
+					if(dataTmp.containsKey((sr.getString("organigrama_id")))) {
+
+						dt = dataTmp.get(sr.getString("organigrama_id"));
+
+						dt.put(sr.getString("idtipoprofesion"), sr.getInteger("cantidad_total"));
+
+						dataTmp.put(sr.getString("organigrama_id"), dt);
+
+					}else {
+
+						Map<String,Integer> data = new HashMap<>();
+						data.put(sr.getString("idtipoprofesion"), sr.getInteger("cantidad_total"));
+						dataTmp.put(sr.getString("organigrama_id"), data);
+
+					}
+				}
+
+				List<SqlRow> res =getDataPorTipoProfesion(organigramaId,false);
+				Logger.debug("=================================");
+				Logger.debug(res.toString());
+				Logger.debug("=================================");
 				for (SqlRow sr : res) {
 
 					if(dataTmp.containsKey((sr.getString("organigrama_id")))) {
@@ -261,6 +329,28 @@ public class ProfesionalesMedicosController  extends Controller {
 					}
 				}
 
+				if(organigramaId.compareTo(new Long(1))==0) {
+					List<SqlRow> resGeneral =getDataPorTipoProfesion(organigramaId,true);
+					for (SqlRow sr : resGeneral) {
+
+						if(dataTmp.containsKey((sr.getString("organigrama_id")))) {
+
+							dt = dataTmp.get(sr.getString("organigrama_id"));
+
+							dt.put(sr.getString("idtipoprofesion"), sr.getInteger("cantidad_total"));
+
+							dataTmp.put(sr.getString("organigrama_id"), dt);
+
+						}else {
+
+							Map<String,Integer> data = new HashMap<>();
+							data.put(sr.getString("idtipoprofesion"), sr.getInteger("cantidad_total"));
+							dataTmp.put(sr.getString("organigrama_id"), data);
+
+						}
+					}
+
+				}
 
 
 				for (Map.Entry<String, Map<String,Integer>> entry : dataTmp.entrySet()) {
@@ -307,24 +397,57 @@ public class ProfesionalesMedicosController  extends Controller {
 					restJs.put(clave,mapper.writeValueAsString(rp));
 				}
 
+
+
+
 				results.add(restJs);
 
 				response.put("success", true);
 				response.put("results", results);
 		    }catch (Exception e) {
 		    	response.put("success", false);
+
 			}
 	    }
 
 		return ok(response);
 	}
 
-	private static List<SqlRow> getDataPorTipoProfesion(Long organigramaId) {
+
+
+	private static List<SqlRow> getDataPorUnicoOrganigramaTipoProfesion(Long organigramaId,Boolean parqueGeneral) {
+
+		String sql = "SELECT  " +
+					"	 o.id 			 as organigrama_id,"+
+					"    tp.id           AS idTipoProfesion, " +
+					"    tp.nombre       AS tipoProfesion,  " +
+					"    COUNT(a.id)     AS cantidad_total  " +
+					"    FROM agentes a   " +
+					"    INNER JOIN organigramas o       ON a.organigrama_id = o.id " +
+					"    INNER JOIN profesiones p        ON a.profesion_id   = p.id   " +
+					"    INNER JOIN tipo_profesiones tp  ON p.tipo_profesion_id = tp.id    " +
+					"    WHERE a.activo = true  AND o.id = :organigramaId" +
+					"    GROUP BY   o.id ,tp.id, tp.nombre  ";
+
+		List<SqlRow> todos = Ebean.createSqlQuery(sql).setParameter("organigramaId",  organigramaId).findList();
+
+		return todos;
+	}
+
+	private static List<SqlRow> getDataPorTipoProfesion(Long organigramaId,Boolean parqueGeneral) {
 		String sql = "WITH RECURSIVE recursetree AS ( " +
 				"    SELECT id, padre_id, id AS nodo_nivel2 " +
-				"    FROM organigramas " +
-				"    WHERE padre_id = :organigramaId " +
-				"    UNION ALL " +
+				"    FROM organigramas ";
+
+		sql += "    WHERE 1 = 1 ";
+
+		if (parqueGeneral) {
+			sql += "  AND padre_id is null AND id <> :organigramaId ";
+		}else {
+			sql += "  AND padre_id = :organigramaId  ";
+		}
+
+		sql += 		"    UNION ALL " +
 				"    SELECT t.id, t.padre_id, rt.nodo_nivel2  " +
 				"    FROM organigramas t " +
 				"    JOIN recursetree rt ON rt.id = t.padre_id " +
@@ -357,13 +480,41 @@ public class ProfesionalesMedicosController  extends Controller {
 		return todos;
 	}
 
-	private static List<SqlRow> getDataPorTipoRelacionLaboral(Long organigramaId) {
+	private static List<SqlRow> getDataPorUnicoOrganigramaTipoRelacionLaboral(Long organigramaId,Boolean parqueGeneral) {
+
+		String sql = "SELECT  " +
+					"	 o.id 			 as organigrama_id,"+
+					"    p.id           AS idTipoRelacionLaboral, " +
+					"    p.nombre       AS tipoRelacionLaboral,  " +
+					"    COUNT(a.id)     AS cantidad_total  " +
+					"    FROM agentes a   " +
+					"    INNER JOIN organigramas o       ON a.organigrama_id = o.id " +
+					"    INNER JOIN tipo_relacion_laborales p ON CAST(a.tipo_relacion_laboral AS INTEGER) = p.id "+
+
+
+					"    WHERE a.activo = true  AND o.id = :organigramaId " +
+					"    GROUP BY   o.id ,p.id, p.nombre  ";
+
+		List<SqlRow> todos = Ebean.createSqlQuery(sql).setParameter("organigramaId",  organigramaId).findList();
+
+		return todos;
+	}
+
+	private static List<SqlRow> getDataPorTipoRelacionLaboral(Long organigramaId,boolean parqueGeneral) {
 
 		String sql = "WITH RECURSIVE recursetree AS (  " +
 				"				    SELECT id, padre_id, id AS nodo_nivel2 " +
-				"				    FROM organigramas " +
-				"				    WHERE padre_id = :organigramaId " +
-				"				    UNION ALL " +
+				"				    FROM organigramas ";
+
+		sql += "    WHERE 1 = 1 ";
+
+				if (parqueGeneral) {
+					sql += "  AND padre_id is null AND id <> :organigramaId ";
+				}else {
+					sql += "  AND padre_id = :organigramaId  ";
+				}
+
+				sql += "				    UNION ALL " +
 				"				    SELECT t.id, t.padre_id, rt.nodo_nivel2 " +
 				"				    FROM organigramas t  " +
 				"				    JOIN recursetree rt ON rt.id = t.padre_id " +
