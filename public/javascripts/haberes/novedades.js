@@ -2,7 +2,7 @@ $( function() {
 
 	$("#desde, #hasta").mask("99/99/9999");
 
-	$("#importe_tope,#importe").numeric_input();
+	$("#importe_tope,#importe").numeric_input({allowNegative: true});
 	$("#cantidad").numeric_input({allowNegative: true});
 
 	$('#searchPlanificacion,#searchPuestoLaboral, #searchPeriodoInicio,#searchPeriodoConcepto, #searchPeriodoFin, #searchConcepto,#searchOrganigrama').modalSearch();
