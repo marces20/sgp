@@ -172,7 +172,7 @@ public class ProduccionPracticasImagenesRismi extends Model{
 		"LEFT JOIN ( "+
 		"		SELECT alic.agente_id, lnl.periodo_id, coalesce(sum(lnl.dias),0) dias_lic "+
 		"		FROM agente_asistencia_licencias alic "+
-		"		JOIN liquidacion_novedad_licencias lnl on (alic.id = lnl.agente_asistencia_licencia_id  and lnl.estado_id = 119) "+
+		"		JOIN liquidacion_novedad_licencias lnl on (alic.id = lnl.agente_asistencia_licencia_id  and (lnl.estado_id = 119 or lnl.estado_id = 118)) "+
 		"	group by alic.agente_id,lnl.periodo_id) AS licencia_dias ON (licencia_dias.periodo_id = p.id and licencia_dias.agente_id = a.id) "+
 		"LEFT JOIN tipo_residencias tr ON a.tipo_residencia_id = tr.id "+
 		"WHERE pl.id = :puesto_laboral_id and p.id = :periodo_id ";
