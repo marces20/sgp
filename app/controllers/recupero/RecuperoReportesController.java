@@ -1413,7 +1413,7 @@ public class RecuperoReportesController extends Controller {
 		Integer celdaTotalDeuda 	 = 7;
 		Integer celdaCertificadoDeuda = 8;
 		Integer celdajudicial = 9;
-
+		Integer celdaTipoCliente = 10;
 
 
 		try {
@@ -1541,6 +1541,11 @@ public class RecuperoReportesController extends Controller {
 				//Celda judicial
 				celda = f.createCell(celdajudicial);
 				celda.setCellValue( (i.judicializado)?"SI":"NO");
+				celda.setCellStyle(comun2);
+
+				//Celda judicial
+				celda = f.createCell(celdaTipoCliente);
+				celda.setCellValue( (i.cliente_tipo != null)?i.cliente_tipo.nombre:"");
 				celda.setCellStyle(comun2);
 
 				totalFactura = totalFactura.add(i.totalFactura);
