@@ -1003,6 +1003,8 @@ public class RecuperoReportesController extends Controller {
 			Integer celdaCliente	 	= 6;
 			Integer celdaTotalFactura 	= 7;
 			Integer celdaTotalPagos 	= 8;
+			Integer celdaTipoCliente 	= 9;
+
 
 
 
@@ -1116,6 +1118,11 @@ public class RecuperoReportesController extends Controller {
 					celda = f.createCell(celdaTotalPagos);
 					celda.setCellValue(i.totalPagos.doubleValue());
 					celda.setCellStyle(estiloMoneda);
+
+					//Celda
+					celda = f.createCell(celdaTipoCliente);
+					celda.setCellValue( (i.cliente_tipo != null)?i.cliente_tipo.nombre:"");
+					celda.setCellStyle(comun2);
 
 					totalFactura = totalFactura.add(i.recupero_factura.getTotal());
 					totalPagos = totalPagos.add(i.totalPagos);

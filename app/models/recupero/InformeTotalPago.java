@@ -105,8 +105,13 @@ public class InformeTotalPago extends Model {
 
 				ExpressionList<InformeTotalPago> e = find
 
-				.fetch("deposito","nombre")
-				.fetch("cliente","nombre").where();
+				.fetch("deposito")
+				.fetch("cliente","nombre")
+				.fetch("recuperoRecibo")
+				.fetch("recupero_factura")
+				.fetch("cliente_tipo")
+				.where();
+
 				if(!cliente.isEmpty()) {
 		    		e.eq("cliente_id", Integer.parseInt(cliente));
 		    	}
