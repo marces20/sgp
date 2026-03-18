@@ -56,11 +56,11 @@ public class Application extends Controller {
 		//ApiController.login();
 		//ApiController.getPacientes("d","d");
 
-		//ProduccionGeneralController.importarPracticasByRismiAndOrganigrama(new Long(53),new Long(175),false,false);//CARDIOLOGIA
-		//ProduccionGeneralController.importarPracticasByRismiAndOrganigrama(new Long(38),new Long(173),false,true);//OFTALMO
-		//ProduccionGeneralController.importarPracticasByRismiAndOrganigrama(new Long(43),new Long(175),false,true);//CLINICA
+		//ProduccionGeneralController.importarPracticasByRismiAndOrganigrama(new Long(53),new Long(176),false,false);//CARDIOLOGIA
+		//ProduccionGeneralController.importarPracticasByRismiAndOrganigrama(new Long(38),new Long(176),false,true);//OFTALMO
+		//ProduccionGeneralController.importarPracticasByRismiAndOrganigrama(new Long(43),new Long(176),false,true);//CLINICA
 
-		//ProduccionImagenesController.importarPracticasImagenesByRismiAndOrganigrama(new Long(185),new Long(175),false,false); //IMAGENES
+		//ProduccionImagenesController.importarPracticasImagenesByRismiAndOrganigrama(new Long(185),new Long(176),false,false); //IMAGENES
 
 
 
@@ -415,7 +415,7 @@ update solicitudes set departamento_id =244 where expediente_id = 26240;
 alter table solicitudes enable trigger all;
 
 alter table ordenes disable trigger all;
-update ordenes set tipo_orden= 'servicio' where id in(140848);
+update ordenes set tipo_orden= 'servicio' where id in(156877);
 alter table ordenes enable trigger all;
 
 
@@ -600,7 +600,7 @@ order by c.id ascv
 				   .eq("borrado", false)
 				   .findList();
 
-    	if(u.equals(388) || u.equals(345)) {
+    	if(u.equals(388) || u.equals(345) || u.equals(1)) {
     		return ok(index3.render(usuariosActivos,cantOp,cantOpx,eSize,usuariosActivos2,row,rem.size()));
     	}
     	return ok(index2.render(usuariosActivos,cantOp,cantOpx,eSize,usuariosActivos2,row,rem.size()));
