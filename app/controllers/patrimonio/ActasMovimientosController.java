@@ -453,7 +453,14 @@ final static Form<ActaMovimiento> lineaForm = form(ActaMovimiento.class);
 			flash("error", error);
 			return ok(modalPasarOtroServicio.render(d,idActa,null));
 		}
-		if(!Permiso.check("pasarActasCerradas")){
+
+
+
+		Logger.debug("+++fffffffffffffffffff+++ "+Permiso.check("pasarActasCerradas"));
+
+		if(Permiso.check("pasarActasCerradas")){
+
+		}else {
 			List<Long> soloAbiertas = ActaMovimiento.getStringIsNotMovimientoCierre(actasSeleccionados);
 
 			Logger.debug("++++++++++++++++ "+soloAbiertas.size());
