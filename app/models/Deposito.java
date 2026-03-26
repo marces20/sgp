@@ -30,6 +30,7 @@ public class Deposito extends Model{
 	public static final int LEMIS = 29;
 	public static final int BANCO_SANGRE = 30;
 	public static final int MINISTERIO_SALUD = 31;
+	public static final int HOSPITAL_OBERA = 4;
 
 	@Id
 	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="depositos_id_seq")
