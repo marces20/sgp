@@ -478,7 +478,7 @@ public class OrdenesProvisionController extends Controller {
 		return ok(modalCrearActasDeAjustes.render(form().bindFromRequest(), ordenId, actaForm));
 	}
 
-	@CheckPermiso(key = "anulacionRecepcionProductosCrear")
+	@CheckPermiso(key = "crearActasDeAjustes")
 	public static Result crearActasDeAjustes() {
 		DynamicForm d = form().bindFromRequest();
 		d.discardErrors();
