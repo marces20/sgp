@@ -27,6 +27,7 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 
 import controllers.Secured;
 import controllers.auth.CheckPermiso;
+import models.Deposito;
 import models.DireccionProveedor;
 import models.Dispo;
 import models.EnvioMail;
@@ -358,12 +359,42 @@ public class OrdenesAccionesController extends Controller {
     ObjectNode result = Json.newObject();
     try {
       Integer count = Orden.editarFechaProvision(idOrden, fecha);
+
+
+      if(o.deposito_id.compareTo(new Long(Deposito.HOSPITAL_OBERA)) == 0) {
+	      String textoMail = "<html><p></p>";
+	      textoMail += "<p>Estimados Buenos D&iacute;as.</p>";
+	      textoMail += "<p>Se ha asignado la fecha a la OP N&deg;"+o.numero_orden_provision+" con fecha "+utils.DateUtils.formatDate(fecha)+" , expediente "+o.expediente.getInstitucionExpedienteEjercicio()+". "
+	      		+ "La misma es para que tomen conocimiento.</p>";
+	      textoMail += "<p>Saludos cordiales.-</p></br></br></br>";
+	      textoMail += "<p style='font-weight: bold;font-size: 10px;'>"+Usuario.getUsurioSesion().nombre+"</p>";
+	      textoMail += "<p style='font-weight: bold;font-size: 10px;'>Parque de la Salud de la Provincia de Misiones</p>";
+	      textoMail += "<p style='font-weight: bold;font-size: 10px;'>CUIT N&deg; 30-71222430-0</p>";
+	      textoMail += "<p style='font-weight: bold;font-size: 10px;'>Tel: 0376-4443700 - interno 2431</p>";
+	      textoMail += "<p style='font-weight: bold;font-size: 10px;'>Posadas - Misiones</p>";
+	      textoMail += "</html>";
+
+	      EmailUtilis eu = new EmailUtilis();
+	      eu.setFrom("compras@parquesaludmnes.org.ar");
+	      eu.setSubject("PARQUE DE LA SALUD - ORDEN DE PROVISION N° " + o.numero_orden_provision);
+	      eu.setHtmlMsg(textoMail);
+
+	      List<String> adds = new ArrayList<>();
+
+	      adds.add("comprassamicobera@gmail.com");
+	      eu.setAdds(adds);
+	      eu.enviar();
+      }
+
+
+
+
       result.put("success", true);
       flash("success", "Se actualizo la orden");
       result.put("html", modalEditarFechaProvision.render(d, idOrden, o).toString());
       return ok(result);
     } catch (Exception e) {
-      flash("error", "No se puede modificar los registros.");
+      flash("error", "No se puede modificar los registros." +e);
       return ok(modalEditarFechaProvision.render(d, idOrden, o));
     }
 
