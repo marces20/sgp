@@ -777,6 +777,9 @@ GET     /presupuesto/controlAnulacionProductosAutomaticosExcel 	controllers.pres
 
 GET     /presupuesto/movimientosSaldoPreventivo 		controllers.presupuesto.ControlPresupuestarioController.movimientosSaldoPreventivo()
 GET     /presupuesto/movimientosSaldoPreventivoExcel 	controllers.presupuesto.ControlPresupuestarioController.movimientosSaldoPreventivoExcel()
+
+GET     /presupuesto/movimientosCargaDeCreditos 		controllers.presupuesto.ControlPresupuestarioController.movimientosCargaDeCreditos()
+
 #-----------------------------FIN MODULO PRESUPUESTO ---------------------------------
 
 #-----------------------------MODULO RENDICIONES ---------------------------------
