@@ -15,13 +15,14 @@
 						<li><a href="@controllers.presupuesto.routes.BalancePresupuestarioController.index()">Balance presupuestario</a></li>
 					}
 					@if(Componente.check("balancePresupuestario")) {
-						
+
 						<li><a href="@controllers.presupuesto.routes.BalancePresupuestarioController.balancePresupuestarioPorExpediente()">Presupuesto control</a></li>
 					}
 					@if(Componente.check("balancePresupuestario")) {
-						
+
 						<li><a href="@controllers.presupuesto.routes.ControlPresupuestarioController.controlAnulacionProductosAutomaticos()">Control Anulacion Automatica</a></li>
 						<li><a href="@controllers.presupuesto.routes.ControlPresupuestarioController.movimientosSaldoPreventivo()">Movimientos Saldos/Preventivo</a></li>
+						<li><a href="@controllers.presupuesto.routes.ControlPresupuestarioController.movimientosCargaDeCreditos()">Movimientos Saldos/Modificaciones</a></li>
 					}
 				</ul>
 			</div>
