@@ -45,11 +45,7 @@
 		</div>
 	</div>
 
-	@if(flash.containsKey("error")) {
-		<div class="alert alert-danger">
-			@flash.get("error")
-		</div>
-	}
+	@views.html.tags.successError()
 
 
 	@helper.form(action = controllers.recupero.routes.RecuperoCertificadoDeudaController.actualizar(certificado.id)) {
