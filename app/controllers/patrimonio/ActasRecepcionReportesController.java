@@ -1184,12 +1184,12 @@ public class ActasRecepcionReportesController extends Controller {
 		if( rf.ordenProvision.ordenCompra.cot_dolar != null &&  rf.ordenProvision.ordenCompra.cot_dolar.compareTo(BigDecimal.ZERO) > 0) {
 			BigDecimal cot = new BigDecimal(1);
 
-			if(rf.ejercicio_id > rf.ordenProvision.ordenCompra.expediente.ejercicio_id) {
+			/*if(rf.ejercicio_id > rf.ordenProvision.ordenCompra.expediente.ejercicio_id) {
 	    		cot = UltimaCotizacion.getUltimaCotizacionAnualDelExpediente(rf.ordenProvision.ordenCompra.expediente.ejercicio_id, rf.ordenProvision.ordenCompra.tipo_moneda.longValue());
 	    	}else if(rf.cot_dolar != null){
 	    		cot = rf.cot_dolar;
-	    	}
-
+	    	}*/
+			cot = rf.cot_dolar;
 	    	BigDecimal total = rf.getTotal().divide(cot, 2, RoundingMode.HALF_UP);
 
 	    	TipoMoneda tm = TipoMoneda.find.byId(rf.ordenProvision.ordenCompra.tipo_moneda.longValue());
