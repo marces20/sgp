@@ -97,10 +97,14 @@ public class RecuperoCertificadoDeudaController  extends Controller {
 												  		RequestVar.get("numero"),
 												  		RequestVar.get("expediente_id"),
 												  		RequestVar.get("fecha_desde"),
+												  		RequestVar.get("fecha_hasta"),
+												  		RequestVar.get("cliente_id"),
 												  		RequestVar.get("btnFiltro[0]"),//borrador
 												  		RequestVar.get("btnFiltro[1]"),
-												  		RequestVar.get("cliente_id")
+												  		RequestVar.get("btnFiltro[2]"),
+												  		RequestVar.get("btnFiltro[3]")
 												  		),d));
+
 	}
 
 	@CheckPermiso(key = "certificadoDeudaVer")
