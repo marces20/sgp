@@ -4,7 +4,7 @@
 @import models.auth._
 @implicitFieldConstructor = @{ FieldConstructor(simpleInput.render) }
 @scripts = {
-	<script src="@routes.Assets.at("javascripts/recupero/planilla.js")" type="text/javascript"></script>
+	<script src="@routes.Assets.at("javascripts/recupero/recuperoFactura.js")" type="text/javascript"></script>
 }
 
 @getClassEstado(i:Estado) = @{
@@ -52,9 +52,27 @@
 </div>
 @views.html.tags.successError()
 	<div id="actions">
-		<form action="" id="formSearchPlanillas" method="GET">
+		<form action="" id="formSearchRecuperoFacturas" method="GET">
 
 		<div class="row">
+			<div class="col-sm-3 filtrosEstados" id="filtrosEstados">
+			 	<div class="btn-group">
+				  <button type="button" id="btn-filtro-borrador" rel="borrador" class="btn btn-default btn-filtros"><i class="glyphicon glyphicon-pencil"></i><br>Borrador
+				 	@checkbox(formBuscador("btnFiltro[0]"), 'hidden -> "hidden")
+				  </button>
+				  <button type="button" id="btn-filtro-aprobado" rel="aprobado" class="btn btn-default btn-filtros"><i class="glyphicon glyphicon-ok"></i><br>Aprobado
+				  	@checkbox(formBuscador("btnFiltro[1]"), 'hidden -> "hidden")
+				  </button>
+				  <button type="button" rel="pagada" class="btn btn-default btn-filtros">
+				  	<i class="glyphicon glyphicon-usd glyphicon-usd-green"></i><br>Pagada
+				  	@checkbox(formBuscador("btnFiltro[2]"), 'hidden -> "hidden")
+				  </button>
+				  <button type="button" id="btn-filtro-cancelado" rel="cancelado" class="btn btn-default btn-filtros"><i class="glyphicon glyphicon-minus-sign"></i><br>Cancelado
+				  	@checkbox(formBuscador("btnFiltro[3]"), 'hidden -> "hidden")
+				  </button>
+				</div>
+			</div>
+
 
 			<div class="col-sm-2">
 				<div class="form-group">
