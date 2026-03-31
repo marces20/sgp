@@ -274,6 +274,8 @@ public class RecuperoFactura extends Model {
     										.fetch("estado")
     										.fetch("periodo")
     										.fetch("cliente")
+    										.fetch("create_usuario")
+    										.fetch("recuperoTipoPago")
     										.where();
 
     	if(!planilla_id.isEmpty()) {

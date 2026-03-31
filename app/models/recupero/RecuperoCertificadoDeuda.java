@@ -27,6 +27,7 @@ import play.data.format.Formats;
 import play.data.validation.Constraints.Required;
 import play.db.ebean.Model;
 import play.db.ebean.Model.Finder;
+import utils.DateUtils;
 import utils.NumberUtils;
 import utils.formatters.DecimalComa;
 import utils.pagination.Pagination;
@@ -124,10 +125,14 @@ public class RecuperoCertificadoDeuda extends Model {
 
 	public static Pagination<RecuperoCertificadoDeuda> page(String numero,
 															String expediente_id,
-															String fecha,
+															String desde,
+															String hasta,
+															String cliente_id,
 															String filtroBorrador,
 															String filtroAprobada,
-															String cliente_id){
+															String filtroPagado,
+															String filtroCancelada
+															){
 
 		Pagination<RecuperoCertificadoDeuda> p = new Pagination<RecuperoCertificadoDeuda>();
     	p.setOrderDefault("DESC");
@@ -135,6 +140,8 @@ public class RecuperoCertificadoDeuda extends Model {
 
     	ExpressionList<RecuperoCertificadoDeuda> e = find
 				.fetch("expediente")
+				.fetch("estado")
+				.fetch("cliente")
 				.where();
 
     	if(!numero.isEmpty()) {
@@ -145,7 +152,17 @@ public class RecuperoCertificadoDeuda extends Model {
     		e.eq("cliente_id", Integer.parseInt(cliente_id));
     	}
 
-    	if(  !filtroBorrador.isEmpty() || !filtroAprobada.isEmpty() ) {
+    	if(!desde.isEmpty()){
+    		Date fd = DateUtils.formatDate(desde, "dd/MM/yyyy");
+    		e.ge("fecha", fd);
+    	}
+
+		if(!hasta.isEmpty()){
+    		Date fh = DateUtils.formatDate(hasta, "dd/MM/yyyy");
+    		e.le("fecha", fh);
+    	}
+
+    	if(  !filtroBorrador.isEmpty() || !filtroAprobada.isEmpty() || !filtroCancelada.isEmpty()  || !filtroPagado.isEmpty()) {
     		e = e.disjunction();
 
 
@@ -157,11 +174,22 @@ public class RecuperoCertificadoDeuda extends Model {
 	   			 e = e.eq("estado_id", Estado.RECUPERO_CERTIFICADO_DEUDA_BORRADOR);
 	   		}
 
+	   		if(!filtroCancelada.isEmpty()){
+	   			 e = e.eq("estado_id", Estado.RECUPERO_CERTIFICADO_DEUDA_CANCELADO);
+	   		}
+
+	   		if(!filtroPagado.isEmpty()){
+	   			 e = e.eq("estado_id", Estado.RECUPERO_CERTIFICADO_DEUDA_PAGADO);
+	   		}
+
 
 
 	   		e = e.endJunction();
     		p.parcheCountAllFormula = true;
     	}
+
+    	if(p.parcheCountAllFormula)
+    		p.setTotalRowCount(e.findList().size());
 
     	p.setExpressionList(e);
     	return p;
