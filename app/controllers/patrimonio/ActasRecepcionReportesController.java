@@ -595,7 +595,7 @@ public class ActasRecepcionReportesController extends Controller {
 		    Calendar cal = Calendar.getInstance();
 	        cal.setTime(  ar.fecha );
 
-			context.put("actaEjercicio", cal.get(Calendar.YEAR));
+			context.put("actaEjercicio", ar.ejercicio.nombre);
 			context.put("esServicio", (ar.ordenProvision.ordenCompra.tipo_orden.equals("servicio"))?true:false);
 
 			context.put("proveedor", ar.ordenProvision.ordenCompra.proveedor.nombre);
@@ -1006,7 +1006,7 @@ public class ActasRecepcionReportesController extends Controller {
 		    Calendar cal = Calendar.getInstance();
 	        cal.setTime(  ar.fecha );
 
-			context.put("actaEjercicio", cal.get(Calendar.YEAR));
+			context.put("actaEjercicio", ar.ejercicio.nombre);
 			context.put("esServicio", (ar.ordenProvision.ordenCompra.tipo_orden.equals("servicio"))?true:false);
 
 			context.put("proveedor", ar.ordenProvision.ordenCompra.proveedor.nombre);
