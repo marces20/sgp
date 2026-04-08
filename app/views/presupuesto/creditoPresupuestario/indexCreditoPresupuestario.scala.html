@@ -86,6 +86,7 @@
 					<th style="text-align:center">Total Recurso</th>
 					<th style="text-align:center">Plan Sumar</th>
 					<th style="text-align:center">Afecta</th>
+					<th style="text-align:center">Tipo</th>
 					<th style="text-align:center">Estado</th>
 					<th class="50">#</th>
 				</tr>
@@ -110,6 +111,14 @@
 					<td align="center">@utils.NumberUtils.moneda(credito.getTotalRecursos())</td>
 					<td align="center">@if(credito.plan_sumar == true){SI}else{NO}</td>
 					<td align="center">@if(credito.afecta == true){SI}else{NO}</td>
+					<td align="center">
+						@credito.tipo match {
+					    	case "otro" => {Otro}
+					    	case "ficticio" => {Ficticio}
+					    	case "inicial" => {Inicial}
+					    	case _ => {}
+						}
+					</td>
 					<td align="center">@(credito.estado)</td>
 
 					<td>

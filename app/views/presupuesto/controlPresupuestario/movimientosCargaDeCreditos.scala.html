@@ -1,6 +1,7 @@
 @(formBuscador: DynamicForm,
 s:List[com.avaje.ebean.SqlRow],
-mov:java.util.Map[Integer,java.math.BigDecimal])
+mov:java.util.Map[String,java.util.Map[Integer,java.math.BigDecimal]],
+encabezado:List[String])
 
 @import helper._
 @import models.auth._
@@ -20,7 +21,9 @@ mov:java.util.Map[Integer,java.math.BigDecimal])
 			 		<i class="glyphicon glyphicon-list-alt"></i> Reportes<span class="caret"></span>
 				</button>
 				<ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
-					<li></li>
+					<li>
+						<a id="generarArchivo" href="@controllers.dashboard.routes.InformeEstadisticoDeudaProveedoresController.archivoEstadistico()"  class="btn btn-default"><i class="glyphicon glyphicon-download-alt"></i> Exportar</a>
+					</li>
 
 				</ul>
 			</div>
@@ -67,7 +70,12 @@ mov:java.util.Map[Integer,java.math.BigDecimal])
 					<tr>
 						<th>Cuenta</th>
 					 	<th>Saldo Inicial</th>
-						<th>Modificaciones</th>
+
+					 	@for(c <- encabezado){
+					 		<th>@c</th>
+					 	}
+
+
 						<th>Total</th>
 					<tr>
 				</thead>
@@ -81,10 +89,25 @@ mov:java.util.Map[Integer,java.math.BigDecimal])
 						@{modificacion=new java.math.BigDecimal(0);}
 
 						@if(mov.get(sx.getInteger("cuenta_analitica_id")) !=null){
-							@{modificacion = mov.get(sx.getInteger("cuenta_analitica_id"))}
+							{modificacion = mov.get(sx.getInteger("cuenta_analitica_id"))}
 						}
 
-						<td align="right">@utils.NumberUtils.moneda(modificacion)</td>
+						@for(c <- encabezado){
+							@if(mov.get(c) !=null){
+
+								@if(mov.get(c).get(sx.getInteger("cuenta_analitica_id")) !=null){
+
+									@{modificacion = mov.get(c).get(sx.getInteger("cuenta_analitica_id"))}
+
+									<td align="right">@utils.NumberUtils.moneda(modificacion)</td>
+								}else{
+									<td align="right">$0,00</td>
+								}
+							}
+						}
+
+
+						<!--  <td align="right">@utils.NumberUtils.moneda(modificacion)</td>-->
 						<td align="right">@utils.NumberUtils.moneda(sx.getBigDecimal("monto").add(modificacion))</td>
 					</tr>
 
@@ -105,7 +128,8 @@ mov:java.util.Map[Integer,java.math.BigDecimal])
 $(function(){
 	$('#searchCuentaAnalitica').modalSearch();
 
-
+	var baseUrl = $('#generarArchivo').attr('href')
+	$('#generarArchivo').attr('href', baseUrl + '?descarga=&' + window.location.href.slice(window.location.href.indexOf('?') + 1))
 
 
 });

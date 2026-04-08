@@ -65,7 +65,7 @@
 				}
 			</div>
 		</div>
-		<div class="col-sm-6">
+		<div class="col-sm-3">
 			<div class="form-group @if(creditoForm.error("afecta") != null) {has-error}else{has-required}">
 				<label class="control-label">
 					AFECTA
@@ -74,6 +74,16 @@
 				@creditoForm("afecta").error.map{ error =>
 					<div class="text-error">@error.message</div>
 				}
+			</div>
+		</div>
+		<div class="col-sm-3">
+			<div class="form-group @if(creditoForm.error("tipo") != null) {has-error}">
+				<label class="control-label">Tipo</label>
+				@select(creditoForm("tipo"), options("otro" -> "Otro",
+														"ficticio" -> "Ficticio",
+														"inicial"  -> "Inicial"
+														),
+				'class -> "form-control select")
 			</div>
 		</div>
 	</div>
