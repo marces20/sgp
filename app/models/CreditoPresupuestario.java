@@ -51,6 +51,12 @@ public class CreditoPresupuestario extends Model{
 	@Required(message="Requiere Afecta")
 	public Boolean afecta = false;
 
+
+	public Boolean presupuesto_inicial = false;
+
+	public String tipo = "otro";
+
+
 	@ManyToOne
 	@JoinColumn(name="create_usuario_id", referencedColumnName="id", insertable=false, updatable=false)
 	public Usuario create_usuario;
