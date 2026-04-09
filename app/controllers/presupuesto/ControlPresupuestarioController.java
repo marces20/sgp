@@ -39,6 +39,7 @@ import models.BalancePresupuestario;
 import models.Ejercicio;
 import models.Factura;
 import models.OrdenLineaAjuste;
+import models.Usuario;
 import models.informes.InformeEstadisticoDeudaProveedores;
 import controllers.Secured;
 import groovy.util.logging.Log;
@@ -55,6 +56,47 @@ import views.html.presupuesto.controlPresupuestario.*;
 @Security.Authenticated(Secured.class)
 public class ControlPresupuestarioController extends Controller {
 
+	public static Result archivoMovimientosCargaDeCreditos() {
+
+		String dirTemp = System.getProperty("java.io.tmpdir");
+
+		DynamicForm d = form().bindFromRequest();
+
+		try {
+			File archivo = new File(dirTemp+"/informe-movimientos-creditos-"+Usuario.getUsuarioSesion()+".xls");
+			if(archivo.exists()) archivo.delete();
+			FileInputStream file = new FileInputStream(Play.application().getFile("conf/resources/reportes/dashboard/informe-estadistico.xls"));
+
+			Workbook libro = new HSSFWorkbook(file);
+			FileOutputStream archivoTmp = new FileOutputStream(archivo);
+			Sheet hoja = libro.getSheetAt(0);
+			Cell celda;
+
+
+			CellStyle style = libro.createCellStyle();
+			Font defaultFont = libro.createFont();
+		    defaultFont.setFontHeightInPoints((short)8);
+		    style.setFont(defaultFont);
+			style.setDataFormat(libro.createDataFormat().getFormat("$ #,##0.00"));
+
+			libro.write(archivoTmp);
+
+			Writer out = new BufferedWriter(new OutputStreamWriter(archivoTmp, "UTF8"));
+			out.flush();
+			out.close();
+
+
+			return ok(archivo);
+
+		} catch (IOException e) {
+		    e.printStackTrace();
+		}
+
+
+		return ok();
+
+	}
+
 	public static Result movimientosCargaDeCreditos() {
 
 		DynamicForm d = form().bindFromRequest();
@@ -63,7 +105,7 @@ public class ControlPresupuestarioController extends Controller {
 				"from lineas_creditos_presupuestarios l " +
 				"inner join creditos_presupuestarios p on p.id = l.credito_presupuestario_id " +
 				"inner join cuentas_analiticas ca on ca.id = l.cuenta_analitica_id " +
-				"where p.ejercicio_id = :idEjercicio and p.presupuesto_inicial = true " +
+				"where p.ejercicio_id = :idEjercicio and p.tipo = 'inicial' " +
 				"group by l.id,l.cuenta_analitica_id,ca.nombre " +
 				"order by l.cuenta_analitica_id asc ";
 
@@ -80,12 +122,12 @@ public class ControlPresupuestarioController extends Controller {
 				.findList();
 
 
-		String sql2 = "select sum(monto) as monto,l.cuenta_analitica_id as cuenta_analitica_id,ca.nombre "+
+		String sql2 = "select sum(monto) as monto,l.cuenta_analitica_id as cuenta_analitica_id,ca.nombre,TO_CHAR(p.fecha, 'dd-mm-yyyy') as fecha "+
 				"from lineas_creditos_presupuestarios l " +
 				"inner join creditos_presupuestarios p on p.id = l.credito_presupuestario_id " +
 				"inner join cuentas_analiticas ca on ca.id = l.cuenta_analitica_id " +
-				"where p.ejercicio_id = :idEjercicio and p.presupuesto_inicial = false " +
-				"group by l.cuenta_analitica_id,ca.nombre " +
+				"where p.ejercicio_id = :idEjercicio and p.tipo = 'otro' and p.plan_sumar = false " +
+				"group by l.cuenta_analitica_id,ca.nombre,TO_CHAR(p.fecha, 'dd-mm-yyyy') " +
 				"order by l.cuenta_analitica_id asc ";
 
 
@@ -94,14 +136,42 @@ public class ControlPresupuestarioController extends Controller {
 				.setParameter("idEjercicio",idEjercicio)
 				.findList();
 
-		Map<Integer,BigDecimal> retMov = new HashMap<>();
+
+
+		Map<String,Map<Integer,BigDecimal>> fechaEncabezadoDatos = new HashMap<>();
+
+		List<String> fechaEncabezado = new ArrayList<>();
 
 		for(SqlRow mov : movimientos) {
+			Map<Integer,BigDecimal> retMov = new HashMap<>();
+			if (!fechaEncabezado.contains(mov.getString("fecha"))) {
+				fechaEncabezado.add(mov.getString("fecha"));
+			}
+
+
 			retMov.put(mov.getInteger("cuenta_analitica_id"), mov.getBigDecimal("monto"));
+
+			if(fechaEncabezadoDatos.containsKey(mov.getString("fecha"))) {
+				//Map<Integer,BigDecimal> tmp =
+				fechaEncabezadoDatos.get(mov.getString("fecha")).put(mov.getInteger("cuenta_analitica_id"), mov.getBigDecimal("monto"));
+
+
+			}else {
+				fechaEncabezadoDatos.put(mov.getString("fecha"), retMov);
+			}
+
+			play.Logger.debug("1111111 :"+mov.getString("fecha"));
+			play.Logger.debug("1111111 :"+fechaEncabezadoDatos);
+
+
 		}
 
+		/*for(SqlRow mov : movimientos) {
+			retMov.put(mov.getInteger("cuenta_analitica_id"), mov.getBigDecimal("monto"));
+		}*/
 
-		return ok(movimientosCargaDeCreditos.render(d,saldosIniciales,retMov));
+
+		return ok(movimientosCargaDeCreditos.render(d,saldosIniciales,fechaEncabezadoDatos,fechaEncabezado));
 	}
 
 	public static Result controlAnulacionProductosAutomaticosExcel() {
