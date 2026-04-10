@@ -1189,8 +1189,9 @@ public class ActasRecepcionReportesController extends Controller {
 	    	}else if(rf.cot_dolar != null){
 	    		cot = rf.cot_dolar;
 	    	}*/
+
 			cot = rf.cot_dolar;
-	    	BigDecimal total = rf.getTotal().divide(cot, 2, RoundingMode.HALF_UP);
+			BigDecimal total = rf.getTotal().divide(cot, 2, RoundingMode.HALF_UP);
 
 	    	TipoMoneda tm = TipoMoneda.find.byId(rf.ordenProvision.ordenCompra.tipo_moneda.longValue());
 
@@ -1246,7 +1247,8 @@ public class ActasRecepcionReportesController extends Controller {
  		"					  <b>Proveedor: </b>"+rf.ordenProvision.ordenCompra.proveedor.nombre+"  </br> "+
 
  		"					  <b>INSTITUCION: </b>"+rf.ordenProvision.ordenCompra.deposito.nombre+" - <b>CUENTA:</b>" +rf.ordenProvision.ordenCompra.tipoCuenta.nombre+
- 		"					  <b> - Total: </b>"+utils.NumberUtils.moneda(totalRemitos)+" / <b>Cantidad:</b> "+cantRemitos+textoConDolar+"</p>" +
+ 		"					  <b> - Total Remito: </b>"+utils.NumberUtils.moneda(totalRemitos)+" / <b>Cantidad:</b> "+cantRemitos+textoConDolar+"" +
+ 		"					  <b> - Total Acta: </b>"+utils.NumberUtils.moneda(rf.getTotal())+"</p>" +
 
  		"					  </div>"+
  		"                 </td>\n" +

@@ -1648,8 +1648,8 @@ public class PagosReportesController extends Controller  {
 
 
 				//out.append(getDataIva(l,p)).append("\r\n");
-				out.append(getDataIvaNew(l,p)).append("\r\n");
-
+				//out.append(getDataIvaNew(l,p)).append("\r\n");
+				out.append(getDataIvaNew(l,p));
 			}
 
 
