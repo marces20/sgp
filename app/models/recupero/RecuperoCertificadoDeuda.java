@@ -171,7 +171,7 @@ public class RecuperoCertificadoDeuda extends Model {
 	   		}
 
 	   		if(!filtroAprobada.isEmpty()){
-	   			 e = e.eq("estado_id", Estado.RECUPERO_CERTIFICADO_DEUDA_BORRADOR);
+	   			 e = e.eq("estado_id", Estado.RECUPERO_CERTIFICADO_DEUDA_APROBADO);
 	   		}
 
 	   		if(!filtroCancelada.isEmpty()){
