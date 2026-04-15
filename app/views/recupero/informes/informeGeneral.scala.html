@@ -93,58 +93,67 @@ $( function() {
 				@select(formBuscador("cliente_tipo_id"), ClienteTipo.find.all().map { p => p.id.toString -> p.nombre}, 'class -> "form-control select", '_default -> "Seleccionar")
 			</div>
 		</div>
-		<div class="col-sm-2">
-			<label for="inputPeriodo" class="control-label">Periodo</label>
-			<div class="input-group">
-
-				@inputText(formBuscador("periodo"),'class -> "form-control",'id -> "periodo")
-				@inputText(formBuscador("periodo_id"),'hidden -> "hidden",'id -> "periodo_id")
-				<span class="input-group-addon">
-				<a href="#" class="searchModal"
-							id="searchPeriodo"
-							data-title="Selección de Periodo"
-							data-url="@controllers.contabilidad.routes.PeriodosController.modalBuscar()"
-							data-height="650"
-							data-width="700"
-							data-listen="modal.seleccion.periodo.simple"
-							data-label="#periodo"
-							data-field="#periodo_id">
-					<i class="glyphicon glyphicon-search"></i>
-				</a>
-				</span>
-			</div>
-		</div>
-
-
-		<div class="col-sm-2">
-			<label class="control-label">Expediente
+		<div class="col-sm-3">
+			<div class="col-sm-6">
+				<label for="inputPeriodo" class="control-label">Periodo</label>
 				<div class="input-group">
-					@inputText(formBuscador("expediente.nombre"), 'name -> "", 'class -> "form-control", 'id -> "expediente")
-					@inputText(formBuscador("expediente_id"), 'hidden -> "hidden", 'id -> "expediente_id")
 
+					@inputText(formBuscador("periodo"),'class -> "form-control",'id -> "periodo")
+					@inputText(formBuscador("periodo_id"),'hidden -> "hidden",'id -> "periodo_id")
 					<span class="input-group-addon">
-						<a href="#" class="searchModal"
-									id="searchExpediente"
-									data-title="Selección de expediente"
-									data-url="@controllers.expediente.routes.ExpedientesController.modalBuscar()"
-									data-height="650"
-									data-width="700"
-									data-listen="modal.seleccion.expediente.simple"
-									data-label="#expediente"
-									data-field="#expediente_id">
-							<i class="glyphicon glyphicon-search"></i>
-						</a>
+					<a href="#" class="searchModal"
+								id="searchPeriodo"
+								data-title="Selección de Periodo"
+								data-url="@controllers.contabilidad.routes.PeriodosController.modalBuscar()"
+								data-height="650"
+								data-width="700"
+								data-listen="modal.seleccion.periodo.simple"
+								data-label="#periodo"
+								data-field="#periodo_id">
+						<i class="glyphicon glyphicon-search"></i>
+					</a>
 					</span>
 				</div>
-			</label>
-		</div>
-		<div class="col-sm-2">
-			<label class="control-label">
-				Judicial
-				@select(formBuscador("judicializado"),options(""->"","SI"->"SI","NO"->"NO"), 'class -> "form-control select")
-			</label>
-		</div>
+			</div>
 
+
+			<div class="col-sm-6">
+				<label class="control-label">Expediente
+					<div class="input-group">
+						@inputText(formBuscador("expediente.nombre"), 'name -> "", 'class -> "form-control", 'id -> "expediente")
+						@inputText(formBuscador("expediente_id"), 'hidden -> "hidden", 'id -> "expediente_id")
+
+						<span class="input-group-addon">
+							<a href="#" class="searchModal"
+										id="searchExpediente"
+										data-title="Selección de expediente"
+										data-url="@controllers.expediente.routes.ExpedientesController.modalBuscar()"
+										data-height="650"
+										data-width="700"
+										data-listen="modal.seleccion.expediente.simple"
+										data-label="#expediente"
+										data-field="#expediente_id">
+								<i class="glyphicon glyphicon-search"></i>
+							</a>
+						</span>
+					</div>
+				</label>
+			</div>
+		</div>
+		<div class="col-sm-3">
+			<div class="col-sm-6">
+				<label class="control-label">
+					Judicial
+					@select(formBuscador("judicializado"),options(""->"","SI"->"SI","NO"->"NO"), 'class -> "form-control select")
+				</label>
+			</div>
+			<div class="col-sm-6">
+				<label class="control-label">
+					Certificado
+					@select(formBuscador("certificado"),options(""->"","SI"->"SI","NO"->"NO"), 'class -> "form-control select")
+				</label>
+			</div>
+		</div>
 	</div>
 	<div class="row">
 

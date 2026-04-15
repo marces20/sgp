@@ -102,7 +102,8 @@ public class InformeTotal extends Model {
 												String deposito,
 												String certificicado_deuda_id,
 												Boolean pagina20000,
-												String judicializado) {
+												String judicializado,
+												String certificado) {
     	Pagination<InformeTotal> p = new Pagination<InformeTotal>();
     	p.setOrderDefault("ASC");
     	p.setSortByDefault("fecha");
@@ -170,6 +171,14 @@ public class InformeTotal extends Model {
     			e.eq("judicializado", true);
     		}else{
     			e.eq("judicializado", false);
+    		}
+    	}
+
+		if(!certificado.isEmpty()){
+    		if(certificado.compareToIgnoreCase("SI") == 0){
+    			e.isNotNull("recupero_certificado_deuda_id");
+    		}else{
+    			e.isNull("recupero_certificado_deuda_id");
     		}
     	}
 

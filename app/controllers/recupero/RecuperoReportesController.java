@@ -950,7 +950,8 @@ public class RecuperoReportesController extends Controller {
 				RequestVar.get("deposito_id"),
 				RequestVar.get("certificicado_deuda_id"),
 				false,
-				RequestVar.get("judicializado")
+				RequestVar.get("judicializado"),
+				RequestVar.get("certificado")
 				);
 
 		return ok(informeGeneral.render(i, form().bindFromRequest()));
@@ -1164,7 +1165,8 @@ public class RecuperoReportesController extends Controller {
 													RequestVar.get("deposito_id"),
 													RequestVar.get("certificicado_deuda_id"),
 													false,
-													RequestVar.get("judicializado")
+													RequestVar.get("judicializado"),
+													RequestVar.get("certificado")
 				);
 
 		return ok(deudas.render(i, form().bindFromRequest()));
@@ -1186,7 +1188,8 @@ public class RecuperoReportesController extends Controller {
 				RequestVar.get("deposito_id"),
 				RequestVar.get("certificicado_deuda_id"),
 				false,
-				RequestVar.get("judicializado")
+				RequestVar.get("judicializado"),
+				RequestVar.get("certificado")
 				);
 
 
@@ -1384,7 +1387,9 @@ public class RecuperoReportesController extends Controller {
 					"",
 					RequestVar.get("deposito_id"),
 					"",true,
-					RequestVar.get("judicializado"));
+					RequestVar.get("judicializado"),
+					RequestVar.get("certificado")
+					);
 
 		}else {
 
@@ -1403,7 +1408,8 @@ public class RecuperoReportesController extends Controller {
 					RequestVar.get("deposito_id"),
 					RequestVar.get("certificicado_deuda_id"),
 					false,
-					RequestVar.get("judicializado")
+					RequestVar.get("judicializado"),
+					RequestVar.get("certificado")
 					);
 		}
 
