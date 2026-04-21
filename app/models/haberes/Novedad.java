@@ -235,6 +235,23 @@ public class Novedad extends Model{
     	return p;
     }
 
+	public static BigDecimal getCantidadByMaternoUTIO(BigDecimal horas) {
+
+		//UTIO - 7 GUARDIAS --  24HS CORRESPONDE A 1 GUARDIA
+		//7      2 INHABILES
+		//3
+		BigDecimal hh = new BigDecimal(24);
+		BigDecimal cantidadGuardias = horas.divide(hh, 2, RoundingMode.HALF_UP).setScale(2, RoundingMode.HALF_DOWN);
+		BigDecimal valorEstablecidoA = new BigDecimal(7);
+		BigDecimal valorEstablecidoB = new BigDecimal(2);
+
+		BigDecimal ret = BigDecimal.ZERO;
+
+		ret = (cantidadGuardias).multiply(valorEstablecidoB).divide(valorEstablecidoA, 2, RoundingMode.HALF_UP).setScale(2, BigDecimal.ROUND_HALF_UP);
+
+		return ret;
+	}
+
 	public static BigDecimal getCantidadByHabilesHoras(BigDecimal horas,Boolean habiles,OrganigramaGuardiaDato ogd,Boolean festivas) {
 
 		BigDecimal ret = BigDecimal.ZERO;
@@ -259,7 +276,7 @@ public class Novedad extends Model{
 		Long ret = null;
 
 		if(festivas) {
-			if(ogd.critica) {
+			if(ogd != null && ogd.critica) {
 				ret = LiquidacionConcepto.GUARDIA_ACTIVA_CRITICA_FESTIVA;
 			}else {
 				ret = LiquidacionConcepto.GUARDIA_ACTIVA_NO_CRITICA_FESTIVA;
@@ -267,14 +284,14 @@ public class Novedad extends Model{
 		}else {
 
 			if(habiles) {
-				if(ogd.critica) {
+				if(ogd != null && ogd.critica) {
 					 ret = LiquidacionConcepto.GUARDIA_CRITICA_DÍA_HÁBIL;
 				}else {
 					 ret = LiquidacionConcepto.GUARDIA_ACTIVA_DÍA_HÁBIL;
 				}
 
 			}else {
-				if(ogd.critica) {
+				if(ogd != null && ogd.critica) {
 					ret = LiquidacionConcepto.GUARDIA_CRITICA_DÍA_INHÁBIL;
 				}else {
 					ret = LiquidacionConcepto.GUARDIA_ACTIVA_DÍA_INHÁBIL;
