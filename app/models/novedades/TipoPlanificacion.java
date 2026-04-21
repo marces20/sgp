@@ -18,8 +18,8 @@ public class TipoPlanificacion extends Model{
 	public static final int PRODUCCION_GENERAL = 2;
 	public static final int PRODUCCION_IMAGENES = 3;
 	public static final int HS_FARMACIA_ADMINISTRATIVOS  = 4;
-	public static final int MATERNO_GUARDIAS_PROFESIONALES_RESIDENTES  = 5;
-	public static final int HS_NOCTURNIDAD_FARMACIA_ADMINISTRATIVOS  = 6;
+	public static final int HS_NOCTURNIDAD_FARMACIA_ADMINISTRATIVOS = 5;
+	public static final int MATERNO_GUARDIAS_PROFESIONALES_RESIDENTES = 6;
 	public static final int MATERNO_GUARDIAS_UTIO = 7;
 	public static final int MATERNO_GUARDIAS_AMBULANCIA  = 8;
 
