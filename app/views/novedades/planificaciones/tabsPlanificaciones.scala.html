@@ -92,7 +92,7 @@ totalHorarPorDiaPorPlanificacion:List[com.avaje.ebean.SqlRow])
 										}
 										@if(planificacion.estado.id == models.Estado.PLANIFICIACION_APROBADO_LIQUIDACIONES) {
 											@if(Permiso.check("planificacionCrearNovedades")) {
-												@if(planificacion.tipo_planificacion_id != models.novedades.TipoPlanificacion.PRODUCCION_IMAGENES && planificacion.tipo_planificacion_id != models.novedades.TipoPlanificacion.PRODUCCION_GENERAL) {
+												@if(planificacion.tipo_planificacion_id != models.novedades.TipoPlanificacion.MATERNO_GUARDIAS_UTIO && planificacion.tipo_planificacion_id != models.novedades.TipoPlanificacion.PRODUCCION_IMAGENES && planificacion.tipo_planificacion_id != models.novedades.TipoPlanificacion.PRODUCCION_GENERAL) {
 
 													@if(planificacion.tipo_planificacion_id == models.novedades.TipoPlanificacion.HS_FARMACIA_ADMINISTRATIVOS || planificacion.tipo_planificacion_id == models.novedades.TipoPlanificacion.HS_NOCTURNIDAD_FARMACIA_ADMINISTRATIVOS) {
 														<div class="col-sm-3">
@@ -107,6 +107,16 @@ totalHorarPorDiaPorPlanificacion:List[com.avaje.ebean.SqlRow])
 															</a>
 														</div>
 													}
+												}
+
+
+
+												@if(planificacion.tipo_planificacion_id == models.novedades.TipoPlanificacion.MATERNO_GUARDIAS_UTIO) {
+													<div class="col-sm-3">
+														<a href="@controllers.novedades.routes.PlanificacionesController.crearNovedadesMaternoUTIO(planificacionForm.field("id").value.toInt)@UriTrack.get("&")" class="btn btn-default">
+															<i class="glyphicon glyphicon glyphicon-share-alt"></i> Crear Novedades UTIO
+														</a>
+													</div>
 												}
 
 												@if(planificacion.tipo_planificacion_id == models.novedades.TipoPlanificacion.PRODUCCION_GENERAL) {
