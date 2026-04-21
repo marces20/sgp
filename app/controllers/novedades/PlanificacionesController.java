@@ -511,6 +511,88 @@ public class PlanificacionesController extends Controller {
 	}
 
 	@CheckPermiso(key = "planificacionCrearNovedades")
+	public static Result crearNovedadesMaternoUTIO(Long id) {
+
+		Planificacion p = Planificacion.find.byId(id);
+
+
+		List<models.haberes.Novedad> nxNovedad = models.haberes.Novedad.find.where().eq("planificacion_id", id).findList();
+
+		if(nxNovedad.size() > 0) {
+			flash("error", "Existen Novedades con este ID de planificaciones");
+			return redirect(controllers.novedades.routes.PlanificacionesController.ver(p.id)+ UriTrack.get("&"));
+		}
+
+		Ebean.beginTransaction();
+		try {
+
+
+			List<SqlRow> novedades = Novedad.getNovedadesTotalHorasPorAgentePorPlanificaciones(id);
+
+			int count = 0;
+			for(SqlRow sx :novedades) {
+				//sx.getBoolean("habiles");
+				//sx.getBigDecimal("horas");
+				//sx.getBoolean("festivas");
+
+				//OrganigramaGuardiaDato ogd = OrganigramaGuardiaDato.find.where().eq("organigrama_id", p.organigrama_id).eq("activo", true).findUnique();
+
+				PuestoLaboral pl = PuestoLaboral.find.fetch("legajo").where().eq("activo",true).eq("legajo.agente.id",sx.getLong("agente_id") ).findUnique();
+
+				Long liquidacion_concepto_id = models.haberes.Novedad.getLiquidacionConceptoGuardiaByHoraHabilesFestivaOrg(sx.getBigDecimal("horas"),new Boolean(false),new Boolean(false),null);
+
+
+
+				BigDecimal cantidad = models.haberes.Novedad.getCantidadByMaternoUTIO(sx.getBigDecimal("horas"));
+
+				models.haberes.Novedad n = new models.haberes.Novedad();
+				n.puesto_laboral_id = pl.id;
+				n.liquidacion_concepto_id=liquidacion_concepto_id;
+
+				n.periodo_inicio_id= p.periodo_liquidacion_id.longValue();
+				n.periodo_hasta_id= p.periodo_liquidacion_id.longValue();
+				n.periodo_concepto_id= p.periodo_id.longValue();
+
+				n.organigrama_id= pl.legajo.agente.organigrama_id;
+				n.activo= true;
+				n.fecha_novedad= new Date();
+				n.importe = BigDecimal.ZERO;
+				n.cantidad = cantidad;
+				n.usuario_id= new Long(Usuario.getUsuarioSesion());
+				if(pl.dobla) {
+					n.liquidacion_tipo_id = LiquidacionTipo.CONCEPTOS_NO_INCLUIDOS;
+				}else {
+					n.liquidacion_tipo_id = LiquidacionTipo.MENSUAL;
+				}
+
+				n.create_date = new Date();
+				n.planificacion_id = p.id;
+				n.save();
+				count++;
+			}
+
+
+
+
+			p.estado_id = new Long(Estado.PLANIFICIACION_CERRADA);
+			p.write_date = new Date();
+			p.write_usuario_id = new Long(Usuario.getUsuarioSesion());
+			p.save();
+
+			Ebean.commitTransaction();
+			flash("success", "Se generaron "+count+" novedades");
+
+		} catch (Exception e) {
+			Ebean.rollbackTransaction();
+			flash("error", "No se pudieron generar las novedades");
+		} finally {
+			Ebean.endTransaction();
+		}
+		return redirect(controllers.novedades.routes.PlanificacionesController.ver(p.id)+ UriTrack.get("&"));
+
+	}
+
+	@CheckPermiso(key = "planificacionCrearNovedades")
 	public static Result crearNovedades(Long id) {
 
 		Planificacion p = Planificacion.find.byId(id);
@@ -580,7 +662,7 @@ public class PlanificacionesController extends Controller {
 
 		} catch (Exception e) {
 			Ebean.rollbackTransaction();
-			flash("error", "No se pudieron generar las novedades");
+			flash("error", "No se pudieron generar las novedades "+e);
 		} finally {
 			Ebean.endTransaction();
 		}
