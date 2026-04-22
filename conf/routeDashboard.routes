@@ -30,6 +30,13 @@ GET  /rrhhResumenGeneral 				controllers.dashboard.ProfesionalesMedicosControlle
 POST /rrhhResumenGeneral/getDataPorOrganigramaIdPorTipoProfesion 				controllers.dashboard.ProfesionalesMedicosController.getDataPorOrganigramaIdPorTipoProfesion()
 POST /rrhhResumenGeneral/getDataPorOrganigramaIdPorTipoRelacionLaboral 				controllers.dashboard.ProfesionalesMedicosController.getDataPorOrganigramaIdPorTipoRelacionLaboral()
 
+GET  /rismi/datosMensualesResumenGeneral 	controllers.dashboard.FacturacionRismiController.datosMensualesResumenGeneral()
+GET  /rismi/index       					controllers.dashboard.FacturacionRismiController.index()
+GET  /rismi/ver     						controllers.dashboard.FacturacionRismiController.ver(id:Long)
+GET  /rismi/modalImportarFacturas 			controllers.dashboard.FacturacionRismiController.modalImportarFacturas()
+POST /rismi/importarFacturas 				controllers.dashboard.FacturacionRismiController.importarFacturas()
+
+
 GET  /listadoHonorariosReporte 			controllers.dashboard.HonorariosNewController.listadoHonorariosReporte(id:Int)
 GET  /informeHonorarioPorPeriodo		controllers.dashboard.HonorariosNewReportesController.informeHonorarioPorPeriodo()
 
