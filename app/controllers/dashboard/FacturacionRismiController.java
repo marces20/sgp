@@ -20,7 +20,7 @@ import org.apache.poi.ss.usermodel.Row;
 import com.avaje.ebean.Ebean;
 import com.avaje.ebean.SqlRow;
 
-
+import models.Periodo;
 import models.Usuario;
 import models.rismi.RismiFactura;
 import models.rismi.RismiFacturaDetalle;
@@ -179,6 +179,60 @@ public class FacturacionRismiController  extends Controller {
 
 	public static Result datosMensualesResumenGeneral() {
 
-		return ok( facturacion.render() );
+		Periodo px = Periodo.getPeriodoByDate(new Date());
+
+		String sql2 = "SELECT count(*) as total " +
+				"FROM rismi_facturas rf " +
+				"where rf.fecha_egreso  BETWEEN :fdesde AND :fhasta ";
+
+		SqlRow tt = Ebean.createSqlQuery(sql2)
+							 .setParameter("fdesde", px.date_start)
+							 .setParameter("fhasta", px.date_stop).findUnique();
+
+
+		String sql = "SELECT count(*),round(sum(monto),2) as total,producto " +
+				"FROM rismi_factura_detalle rd " +
+				"inner join rismi_facturas rf on rf.id = rd.rismi_factura_id " +
+				"where rf.fecha_egreso  BETWEEN :fdesde AND :fhasta " +
+				"group by producto  ";
+
+		List<SqlRow> todos = Ebean.createSqlQuery(sql)
+							 .setParameter("fdesde", px.date_start)
+							 .setParameter("fhasta", px.date_stop)
+							 .findList();
+
+		BigDecimal diasCama = BigDecimal.ZERO;
+		BigDecimal prestaciones = BigDecimal.ZERO;
+		BigDecimal farmacos = BigDecimal.ZERO;
+		BigDecimal total = BigDecimal.ZERO;
+
+		for(SqlRow x:todos) {
+			total = total.add(x.getBigDecimal("total"));
+			switch (x.getString("producto")) {
+
+			case "Total Días Cama"://"
+				diasCama = x.getBigDecimal("total");
+				break;
+			case "Total Prestaciones"://"
+				prestaciones = x.getBigDecimal("total");
+				break;
+			case "Total Fármacos":
+				farmacos = x.getBigDecimal("total");
+				break;
+
+			default:
+				break;
+			}
+		}
+
+		Map<String, BigDecimal> totales = new HashMap<String, BigDecimal>();
+		totales.put("diasCama", diasCama);
+		totales.put("prestaciones", prestaciones);
+		totales.put("farmacos", farmacos);
+		totales.put("total", total);
+
+		Integer totalPacientes = tt.getInteger("total");
+
+		return ok( facturacion.render(totales,totalPacientes) );
 	}
 }
