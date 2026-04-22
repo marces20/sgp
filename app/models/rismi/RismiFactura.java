@@ -1,5 +1,6 @@
 package models.rismi;
 
+import java.math.BigDecimal;
 import java.util.Date;
 
 import javax.persistence.Entity;
@@ -9,6 +10,7 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 import com.avaje.ebean.ExpressionList;
+import com.avaje.ebean.annotation.Formula;
 
 import models.recupero.RecuperoFactura;
 import play.data.format.Formats;
@@ -36,6 +38,16 @@ public class RismiFactura extends Model {
 
 	@Formats .DateTime(pattern="dd/MM/yyyy")
 	public Date fecha_egreso;
+
+	public BigDecimal total_total;
+
+	@Formula(select = "_c${ta}.total", join = "left outer join (select rismi_factura_id, round(sum(monto)::numeric,2) as total from rismi_factura_detalle group by rismi_factura_id) as _c${ta} on _c${ta}.rismi_factura_id = ${ta}.id")
+	public BigDecimal total;//total
+	public BigDecimal getTotal(){
+		if (total == null)
+			return new BigDecimal(0);
+		return total;
+	}
 
 	public static Model.Finder<Long,RismiFactura> find = new Finder<Long,RismiFactura>(Long.class, RismiFactura.class);
 
