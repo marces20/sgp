@@ -9,14 +9,35 @@ rem:Integer)
 @import utils._
 @import models.auth._
 @implicitFieldConstructor = @{ FieldConstructor(simpleInput.render) }
-@main("SGP - v1.0") {
+
+@scripts = {
+
+<link rel="stylesheet" media="screen" href="@routes.Assets.at("stylesheets/css-rrhh-claude.css")">
+}
+@main("SGP - v1.0",scripts) {
 
 
+<div class="main">
+ 	<div class="content">
 
+		<div class="row">
 
+				 	<div class="page-header">
+					@if(Permiso.check("informeRISMIIndex")) {
+				    	<a href="/dashboard/rismi/datosMensualesResumenGeneral">
+						    <div class="kpi-grid">
+						      <div class="kpi-card">
+						     	<div class="kpi-icon"> <i class="fa-solid fa-file-medical"></i></div>
+						        <div class="page-title">
+									FACTURACION RISMI
+						        </div>
+						      </div>
+						    </div>
+				    	</a>
+				    	}
+				    </div>
 
- <div class="page-header">
-
+		</div>
 	<div class="row">
 		@if(usuariosActivos){
 
@@ -115,6 +136,7 @@ rem:Integer)
 		}
 
 	</div>
-</div>
 
+	</div>
+</div>
 }

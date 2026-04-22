@@ -18,21 +18,37 @@ rem:Integer)
 
 
 <div class="main">
- <div class="content">
+ 	<div class="content">
 
 
 
     <!-- KPI CARDS -->
-    <a href="/dashboard/rrhhResumenGeneral?organigramaId=1">
-    <div class="kpi-grid">
-      <div class="kpi-card">
-     	<div class="kpi-icon"> <i class="fas fa-user-check"></i></div>
-        <div class="page-title">
-			INFORME RRHH
-        </div>
-      </div>
-    </div>
-    </a>
+    	@if(Permiso.check("informeRRHHindex")) {
+    	<a href="/dashboard/rrhhResumenGeneral?organigramaId=1">
+		    <div class="kpi-grid">
+		      <div class="kpi-card">
+		     	<div class="kpi-icon"> <i class="fas fa-user-check"></i></div>
+		        <div class="page-title">
+					INFORME RRHH
+		        </div>
+		      </div>
+		    </div>
+    	</a>
+    	}
+
+
+		@if(Permiso.check("informeRISMIIndex")) {
+    	<a href="/dashboard/rismi/datosMensualesResumenGeneral">
+		    <div class="kpi-grid">
+		      <div class="kpi-card">
+		     	<div class="kpi-icon"> <i class="fa-solid fa-file-medical"></i></div>
+		        <div class="page-title">
+					FACTURACION RISMI
+		        </div>
+		      </div>
+		    </div>
+    	</a>
+    	}
   </div>
 
 </div>
