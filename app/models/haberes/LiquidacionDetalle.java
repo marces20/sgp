@@ -1,6 +1,8 @@
 package models.haberes;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -71,7 +73,19 @@ public class LiquidacionDetalle  extends Model{
 
 	public String getDenominacionConceptoPeriodo(){
 		String ret = liquidacionConcepto.denominacion;
-		if(liquidacionConcepto.id.compareTo(LiquidacionConcepto.DIFERENCIAL_VACACIONES) == 0 || liquidacionConcepto.id.compareTo(LiquidacionConcepto.AJUSTE_DIFERENCIAL_VACACIONES) == 0 ){
+
+		List<Long> ids = new ArrayList<>();
+		ids.add(LiquidacionConcepto.GUARDIA_ACTIVA_DÍA_HÁBIL);
+		ids.add(LiquidacionConcepto.GUARDIA_ACTIVA_DÍA_INHÁBIL);
+		ids.add(LiquidacionConcepto.GUARDIA_CRITICA_DÍA_HÁBIL);
+		ids.add(LiquidacionConcepto.GUARDIA_CRITICA_DÍA_INHÁBIL);
+		ids.add(LiquidacionConcepto.GUARDIA_ACTIVA_NO_CRITICA_FESTIVA);
+		ids.add(LiquidacionConcepto.GUARDIA_ACTIVA_CRITICA_FESTIVA);
+		ids.add(LiquidacionConcepto.DIFERENCIAL_VACACIONES);
+		ids.add(LiquidacionConcepto.AJUSTE_DIFERENCIAL_VACACIONES);
+		ids.add(LiquidacionConcepto.ADICIONAL_MAYOR_CARGAR_HORARIA);
+
+		if(ids.contains(liquidacionConcepto.id)) {
 			if(periodo_id != null){
 				ret += " - ("+ (periodo.nombre)+")";
 			}
