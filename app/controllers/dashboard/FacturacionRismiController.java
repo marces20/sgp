@@ -4,6 +4,7 @@ import static play.data.Form.form;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -15,7 +16,11 @@ import java.util.Map;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.poifs.filesystem.POIFSFileSystem;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
 
 import com.avaje.ebean.Ebean;
 import com.avaje.ebean.SqlRow;
@@ -34,10 +39,9 @@ import play.mvc.Http.MultipartFormData.FilePart;
 import utils.DateUtils;
 import utils.RequestVar;
 import utils.UriTrack;
-import views.html.compras.solicitudes.modales.modalImportarListaProductosCantidades;
 import views.html.dashboard.rismi.*;
 import views.html.dashboard.rismi.rismiFactura.*;
-import views.html.recupero.recuperoFactura.verRecuperoFactura;
+import views.html.recupero.recuperoFactura.*;
 
 public class FacturacionRismiController  extends Controller {
 
@@ -59,6 +63,213 @@ public class FacturacionRismiController  extends Controller {
 			return redirect(controllers.dashboard.routes.FacturacionRismiController.index()+UriTrack.get("?"));
 		}
 	}
+
+	public static Result reportesDatosFacturas() {
+		DynamicForm d = form().bindFromRequest();
+		String error = "";
+		Boolean hayError = false;
+		String dirTemp = System.getProperty("java.io.tmpdir");
+		File archivo = new File(dirTemp+"/listado_facturas.xls");
+
+
+		List<Integer> fIds = getSeleccionados();
+
+		if(fIds.size() <= 0){
+			flash("error", "Debe seleccionar una factura.");
+			return ok(modalDatosFactura.render(null,d));
+		}
+
+		try {
+
+			if(archivo.exists()) archivo.delete();
+			archivo.createNewFile();
+
+			Workbook libro = new HSSFWorkbook();
+			FileOutputStream archivoTmp = new FileOutputStream(archivo);
+
+			CellStyle comun = libro.createCellStyle();
+			comun.setBorderRight(CellStyle.BORDER_THIN);
+			comun.setBorderLeft(CellStyle.BORDER_THIN);
+			comun.setBorderTop(CellStyle.BORDER_THIN);
+			comun.setBorderBottom(CellStyle.BORDER_THIN);
+
+			CellStyle estiloMoneda = libro.createCellStyle();
+			estiloMoneda.setDataFormat((short) 7);
+			estiloMoneda.setBorderRight(CellStyle.BORDER_THIN);
+			estiloMoneda.setBorderLeft(CellStyle.BORDER_THIN);
+			estiloMoneda.setBorderTop(CellStyle.BORDER_THIN);
+			estiloMoneda.setBorderBottom(CellStyle.BORDER_THIN);
+
+			Sheet hoja = libro.createSheet("Seguro de Sepelio");
+
+			List<RismiFactura> lp = new RismiFactura().find.where().in("id",fIds).orderBy("fecha_egreso,id").findList();
+
+			if(lp.size() > 0){
+				int x = 0;
+				Row fila = hoja.createRow(x);
+				Cell celda0 = fila.createCell(0);
+				celda0.setCellValue("Datos");
+				celda0.setCellStyle(comun);
+				x++;
+
+				x = 0;
+
+				fila = hoja.createRow(x);
+				celda0 = fila.createCell(0);
+				celda0.setCellValue("Paciente");
+				celda0.setCellStyle(comun);
+				celda0 = fila.createCell(1);
+				celda0.setCellValue("Episodio");
+				celda0.setCellStyle(comun);
+				celda0 = fila.createCell(2);
+				celda0.setCellValue("Fecha Ingreso");
+				celda0.setCellStyle(comun);
+				celda0 = fila.createCell(3);
+				celda0.setCellValue("Fecha Egreso");
+				celda0.setCellStyle(comun);
+				celda0 = fila.createCell(4);
+				celda0.setCellValue("Dominio");
+				celda0.setCellStyle(comun);
+
+				celda0 = fila.createCell(5);
+				celda0.setCellValue("Total Prestaciones");
+				celda0.setCellStyle(comun);
+
+				celda0 = fila.createCell(6);
+				celda0.setCellValue("Total Dias Cama");
+				celda0.setCellStyle(comun);
+
+				celda0 = fila.createCell(7);
+				celda0.setCellValue("Total Farmacos");
+				celda0.setCellStyle(comun);
+
+				celda0 = fila.createCell(8);
+				celda0.setCellValue("Total");
+				celda0.setCellStyle(comun);
+
+
+				x++;
+
+
+
+				BigDecimal totalHaberes =  new BigDecimal(0);
+
+				BigDecimal totalPrestaciones =  new BigDecimal(0);
+				BigDecimal totalCama =  new BigDecimal(0);
+				BigDecimal totalFarmacos =  new BigDecimal(0);
+				BigDecimal totalTotal =  new BigDecimal(0);
+				for (RismiFactura l: lp) {
+
+					List<RismiFacturaDetalle> rfd = new RismiFacturaDetalle().find.where().eq("rismi_factura_id",l.id).findList();
+
+
+					fila = hoja.createRow(x);
+
+					celda0 = fila.createCell(0);
+					celda0.setCellValue(l.nombre_paciente);
+					celda0.setCellStyle(comun);
+
+					celda0 = fila.createCell(1);
+					celda0.setCellValue(l.episodio_id);
+					celda0.setCellStyle(comun);
+
+					celda0 = fila.createCell(2);
+					celda0.setCellValue((l.fecha_ingreso != null)? utils.DateUtils.formatDate(l.fecha_ingreso):"");
+					celda0.setCellStyle(comun);
+
+					celda0 = fila.createCell(3);
+					celda0.setCellValue((l.fecha_egreso != null)? utils.DateUtils.formatDate(l.fecha_egreso):"");
+					celda0.setCellStyle(comun);
+
+					celda0 = fila.createCell(4);
+					celda0.setCellValue((l.dominio != null)?l.dominio:"");
+					celda0.setCellStyle(comun);
+
+					BigDecimal total =  new BigDecimal(0);
+
+					for(RismiFacturaDetalle rfdx : rfd) {
+
+						switch (rfdx.producto) {
+						case "Total Prestaciones":
+
+							celda0 = fila.createCell(5);
+							celda0.setCellType(Cell.CELL_TYPE_NUMERIC);
+							celda0.setCellValue(rfdx.monto.doubleValue());
+							celda0.setCellStyle(estiloMoneda);
+							totalPrestaciones =totalPrestaciones.add(rfdx.monto);
+							break;
+						case "Total Días Cama":
+
+							celda0 = fila.createCell(6);
+							celda0.setCellType(Cell.CELL_TYPE_NUMERIC);
+							celda0.setCellValue(rfdx.monto.doubleValue());
+							celda0.setCellStyle(estiloMoneda);
+							totalCama = totalCama.add(rfdx.monto);
+							break;
+						case "Total Fármacos":
+
+							celda0 = fila.createCell(7);
+							celda0.setCellType(Cell.CELL_TYPE_NUMERIC);
+							celda0.setCellValue(rfdx.monto.doubleValue());
+							celda0.setCellStyle(estiloMoneda);
+							totalFarmacos = totalFarmacos.add(rfdx.monto);
+							break;
+						}
+
+						total= total.add(rfdx.monto);
+					}
+
+
+
+
+
+					celda0 = fila.createCell(8);
+					celda0.setCellType(Cell.CELL_TYPE_NUMERIC);
+					celda0.setCellValue(total.doubleValue());
+					celda0.setCellStyle(estiloMoneda);
+
+					totalTotal = totalTotal.add(total);
+					x++;
+
+				}
+
+				fila = hoja.createRow(x);
+				celda0 = fila.createCell(4);
+				celda0.setCellValue("TOTALES");
+				celda0.setCellStyle(comun);
+
+				celda0 = fila.createCell(5);
+				celda0.setCellType(Cell.CELL_TYPE_NUMERIC);
+				celda0.setCellValue(totalPrestaciones.doubleValue());
+				celda0.setCellStyle(estiloMoneda);
+
+				celda0 = fila.createCell(6);
+				celda0.setCellType(Cell.CELL_TYPE_NUMERIC);
+				celda0.setCellValue(totalCama.doubleValue());
+				celda0.setCellStyle(estiloMoneda);
+
+				celda0 = fila.createCell(7);
+				celda0.setCellType(Cell.CELL_TYPE_NUMERIC);
+				celda0.setCellValue(totalFarmacos.doubleValue());
+				celda0.setCellStyle(estiloMoneda);
+
+				celda0 = fila.createCell(8);
+				celda0.setCellType(Cell.CELL_TYPE_NUMERIC);
+				celda0.setCellValue(totalTotal.doubleValue());
+				celda0.setCellStyle(estiloMoneda);
+
+
+			}
+
+			libro.write(archivoTmp);
+		} catch (IOException e) {
+			e.printStackTrace();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return ok(modalDatosFactura.render(archivo.getPath(),d));
+	}
+
 
 	public static Result modalImportarFacturas() {
 		return ok(modalImportarFacturas.render(form().bindFromRequest()));
@@ -235,6 +446,22 @@ public class FacturacionRismiController  extends Controller {
 		Integer totalPacientes = tt.getInteger("total");
 
 		return ok( facturacion.render(totales,totalPacientes) );
+	}
+
+	public static List<Integer> getSeleccionados(){
+		String[] checks = null;
+		try {
+			checks = request().body().asFormUrlEncoded().get("check_listado[]");
+		} catch (NullPointerException e) {
+		}
+
+		List<Integer> ids = new ArrayList<Integer>();
+		if(checks != null) {
+			for (String id : checks) {
+				ids.add(Integer.valueOf(id));
+			}
+		}
+		return ids;
 	}
 
 	/*
