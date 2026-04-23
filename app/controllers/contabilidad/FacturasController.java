@@ -81,7 +81,9 @@ public class FacturasController extends Controller {
 
 		return ok(vistaFacturasCargadas.render(FacturaDato.pageListado( RequestVar.get("expediente.id"),
 																		RequestVar.get("proveedor.id"),
-																		RequestVar.get("ordenPago.id")
+																		RequestVar.get("ordenPago.id"),
+																		RequestVar.get("fecha_desde"),
+																		RequestVar.get("fecha_hasta")
 																		),d, pf) );
 
 	}
