@@ -39,6 +39,9 @@ public class RismiFactura extends Model {
 	@Formats .DateTime(pattern="dd/MM/yyyy")
 	public Date fecha_egreso;
 
+	@Formats .DateTime(pattern="dd/MM/yyyy")
+	public Date create_date;
+
 	public BigDecimal total_total;
 
 	@Formula(select = "_c${ta}.total", join = "left outer join (select rismi_factura_id, round(sum(monto)::numeric,2) as total from rismi_factura_detalle group by rismi_factura_id) as _c${ta} on _c${ta}.rismi_factura_id = ${ta}.id")
