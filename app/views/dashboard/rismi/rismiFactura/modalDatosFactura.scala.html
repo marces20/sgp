@@ -1,57 +1,12 @@
-@(rismiFacturaForm: Form[models.rismi.RismiFactura], rismiFactura: models.rismi.RismiFactura)
-@import utils._
+@(url: String = null,formBuscador: DynamicForm)
 @import helper._
 @implicitFieldConstructor = @{ FieldConstructor(simpleInput.render) }
-@scripts = {
-
-}
-
-@views.html.dashboard.mainDashboard("Lista de Facturas Rismi", scripts) {
-
-	<div class="page-header">
-		<div class="row">
-			<div class="col-sm-3">
-				<h1>Vista de factura</h1>
-			</div>
-			<div class="col-sm-5">
-
-			</div>
-			<div class="col-sm-4">
-				<div class="dropdown pull-right">
-				 <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown">
-				 	<i class="glyphicon glyphicon-list-alt"></i>
-				    Reportes
-				    <span class="caret"></span>
-				  </button>
-				  <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
-					<li role="presentation">
-
-					</li>
-				  </ul>
-				</div>
-
-				<div class="dropdown pull-right btn-header">
-				 <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown">
-				 	<i class="glyphicon glyphicon-cog"></i>
-				    Acciones
-				    <span class="caret"></span>
-				  </button>
-				  <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
-
-				  </ul>
-				</div>
-
-			</div>
-		</div>
-	</div>
-
 @views.html.tags.successError()
-@inputText(rismiFacturaForm("id"), 'type -> "hidden", 'id -> "rismiFacturaId")
-	<div class="row">
-		<div class="col-sm-2">
-			<label class="control-label">Nombre Paciente</label>
-			<p class="form-control-static form-control">@rismiFactura.nombre_paciente</p>
+@if(url) {
+	<div class="panel panel-default">
+		<div class="panel-body">
+	    	<i class="glyphicon glyphicon-save"></i> <a href="@controllers.contabilidad.routes.FacturasAccionesController.descargar322(url)">Descargar archivo de informe</a>
 		</div>
 	</div>
-
 }
+@flash().clear()

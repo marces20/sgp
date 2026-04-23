@@ -35,8 +35,8 @@
 			    <span class="caret"></span>
 			  </button>
 			  <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
-
-
+			  	<li role="presentation"><a data-title="Datos Facturas"  href="#" role="menuitem" tabindex="-1"
+			  	data-url="@controllers.dashboard.routes.FacturacionRismiController.reportesDatosFacturas()" id="modalDatosFacturas">Datos Facturas</a></li>
 			  </ul>
 			</div>
 
@@ -191,6 +191,34 @@ $( function (){
 	    	},
 		    open: function( event, ui ) {
 				$.get(url, function(data){
+					dialogo.html(data);
+				});
+		    }
+	    });
+	});
+
+	$('#modalDatosFacturas').click( function() {
+
+		var url = $(this).attr("data-url");
+		var dialogo = $('<div></div>');
+
+		dialogo.dialog({
+			title: "Datos Facturas",
+	    	resizable: false,
+			autoOpen: true,
+			modal: true,
+			height: 250,
+			width:750,
+	        buttons: {
+		          Cerrar: function() {
+		            $( this ).dialog( "destroy" );
+		          }
+		    },
+	    	close: function(event, ui ){
+	    		$(this).dialog( "destroy" );
+	    	},
+		    open: function( event, ui ) {
+				$.post(url, getCheckSeleccionados(), function(data){
 					dialogo.html(data);
 				});
 		    }
