@@ -63,7 +63,13 @@
 		<form action="" id="formSearchAutorizafos" method="GET">
 
 		<div class="row">
-
+			<div class="col-sm-2 input-group">
+				<label class="control-label">Fecha Egreso</label>
+				<div>
+					@inputText(formBuscador("fecha_factura_desde"), 'class -> "form-control inputDateMascara", 'id -> "fecha_factura_desde", 'placeholder -> "Desde")
+					@inputText(formBuscador("fecha_factura_hasta"), 'class -> "form-control inputDateMascara", 'id -> "fecha_factura_hasta", 'placeholder -> "Hasta")
+				</div>
+			</div>
 			<div class="col-sm-2">
 				<div class="form-group">
 				<label for="nombre" class="control-label">&nbsp;</label>
@@ -97,13 +103,13 @@
 		        </tr>
 				<tr>
 					<th width="30"><input type="checkbox" name="checkAll" id="checkAll"/></th>
-					<th width="30">#</th>
 
-					<th width="80">Paciente</th>
+
+					<th width="200">Paciente</th>
 					<th width="40">Episodio</th>
 					<th width="70">Fecha Ingreso</th>
 					<th width="70">Fecha Egreso</th>
-					<th width="95">Total</th>
+					<th width="200" style="text-align: center">Total</th>
 					<th width="30">#</th>
 				</tr>
 			</thead>
@@ -112,13 +118,13 @@
 
 				<tr class="pointer" data-estado="" data-href="@controllers.dashboard.routes.FacturacionRismiController.ver(a.id)&@UriTrack.encode()">
 					<td><input type="checkbox" name="check_listado[]" value="@a.id" class="notSeleccion" id="check-@a.id"/></td>
-					<td></td>
+
 					<td>@(a.nombre_paciente)</td>
 					<td>@(a.episodio_id)</td>
 					<td class="fecha">@if(a.fecha_ingreso != null){@(utils.DateUtils.formatDate(a.fecha_ingreso))}</td>
 					<td class="fecha">@if(a.fecha_egreso != null){@(utils.DateUtils.formatDate(a.fecha_egreso))}</td>
 
-					<td class="total" rel="@a.getTotal()">@(utils.NumberUtils.moneda(a.getTotal()))</td>
+					<td class="total" rel="@a.getTotal()" style="text-align: center">@(utils.NumberUtils.moneda(a.getTotal()))</td>
 
 					<td></td>
 				</tr>
@@ -127,7 +133,7 @@
 			</tbody>
 	        <tfoot>
 		        <tr>
-			        <td colspan="6">&nbsp</td>
+			        <td colspan="5">&nbsp</td>
 			        <td><b>Total:</b> <span class="totalFooter"></span></td>
 			        <td colspan="1">&nbsp</td>
 		        </tr>
