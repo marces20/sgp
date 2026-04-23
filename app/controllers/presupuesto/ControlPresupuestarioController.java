@@ -128,7 +128,7 @@ public class ControlPresupuestarioController extends Controller {
 				"inner join cuentas_analiticas ca on ca.id = l.cuenta_analitica_id " +
 				"where p.ejercicio_id = :idEjercicio and p.tipo = 'otro' and p.plan_sumar = false " +
 				"group by l.cuenta_analitica_id,ca.nombre,TO_CHAR(p.fecha, 'dd-mm-yyyy') " +
-				"order by p.fecha asc ";
+				"order by fecha asc ";
 
 
 
