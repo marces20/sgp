@@ -35,7 +35,7 @@ GET  /rismi/index       					controllers.dashboard.FacturacionRismiController.in
 GET  /rismi/ver     						controllers.dashboard.FacturacionRismiController.ver(id:Long)
 GET  /rismi/modalImportarFacturas 			controllers.dashboard.FacturacionRismiController.modalImportarFacturas()
 POST /rismi/importarFacturas 				controllers.dashboard.FacturacionRismiController.importarFacturas()
-
+POST /rismi/reportesDatosFacturas 				controllers.dashboard.FacturacionRismiController.reportesDatosFacturas()
 
 GET  /listadoHonorariosReporte 			controllers.dashboard.HonorariosNewController.listadoHonorariosReporte(id:Int)
 GET  /informeHonorarioPorPeriodo		controllers.dashboard.HonorariosNewReportesController.informeHonorarioPorPeriodo()
