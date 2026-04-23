@@ -132,6 +132,7 @@ public class FacturacionRismiController  extends Controller {
 							rf.nombre_paciente = NOMBREPACIENTE;
 							rf.paciente_id =IDPACIENTE.toString();
 							rf.total_total = new BigDecimal(totalTotal).setScale(2, BigDecimal.ROUND_HALF_UP);
+							rf.create_date = new Date();
 							rf.save();
 
 							RismiFacturaDetalle rdf = new RismiFacturaDetalle();
@@ -235,4 +236,180 @@ public class FacturacionRismiController  extends Controller {
 
 		return ok( facturacion.render(totales,totalPacientes) );
 	}
+
+	/*
+	  1. Estadísticas generales
+	  WITH base AS (
+  SELECT
+    rf.id AS factura_id,
+    MAX(CASE WHEN rd.producto = 'Total Prestaciones' THEN rd.monto ELSE 0 END) AS total_prestaciones,
+    MAX(CASE WHEN rd.producto = 'Total Fármacos'     THEN rd.monto ELSE 0 END) AS total_farmacos,
+    MAX(CASE WHEN rd.producto = 'Total Días Cama'    THEN rd.monto ELSE 0 END) AS total_dias_cama
+  FROM rismi_factura_detalle rd
+  INNER JOIN rismi_facturas rf ON rf.id = rd.rismi_factura_id
+  GROUP BY rf.id
+)
+SELECT
+  -- PRESTACIONES
+  ROUND(AVG(total_prestaciones)::numeric, 2)                                                      AS avg_prestaciones,
+  ROUND(PERCENTILE_CONT(0.5) WITHIN GROUP (ORDER BY total_prestaciones)::numeric, 2)              AS mediana_prestaciones,
+  ROUND(MIN(total_prestaciones)::numeric, 2)                                                      AS min_prestaciones,
+  ROUND(MAX(total_prestaciones)::numeric, 2)                                                      AS max_prestaciones,
+  ROUND(STDDEV(total_prestaciones)::numeric, 2)                                                   AS desvio_prestaciones,
+  -- FÁRMACOS
+  ROUND(AVG(total_farmacos)::numeric, 2)                                                          AS avg_farmacos,
+  ROUND(PERCENTILE_CONT(0.5) WITHIN GROUP (ORDER BY total_farmacos)::numeric, 2)                  AS mediana_farmacos,
+  ROUND(MIN(total_farmacos)::numeric, 2)                                                          AS min_farmacos,
+  ROUND(MAX(total_farmacos)::numeric, 2)                                                          AS max_farmacos,
+  ROUND(STDDEV(total_farmacos)::numeric, 2)                                                       AS desvio_farmacos,
+  -- DÍAS CAMA
+  ROUND(AVG(total_dias_cama)::numeric, 2)                                                         AS avg_dias_cama,
+  ROUND(PERCENTILE_CONT(0.5) WITHIN GROUP (ORDER BY total_dias_cama)::numeric, 2)                 AS mediana_dias_cama,
+  ROUND(MIN(total_dias_cama)::numeric, 2)                                                         AS min_dias_cama,
+  ROUND(MAX(total_dias_cama)::numeric, 2)                                                         AS max_dias_cama,
+  ROUND(STDDEV(total_dias_cama)::numeric, 2)                                                      AS desvio_dias_cama
+FROM base;
+
+2. Participación porcentual (pie/donut chart)
+WITH base AS (
+  SELECT
+    rf.id AS factura_id,
+    MAX(CASE WHEN rd.producto = 'Total Prestaciones' THEN rd.monto ELSE 0 END) AS total_prestaciones,
+    MAX(CASE WHEN rd.producto = 'Total Fármacos'     THEN rd.monto ELSE 0 END) AS total_farmacos,
+    MAX(CASE WHEN rd.producto = 'Total Días Cama'    THEN rd.monto ELSE 0 END) AS total_dias_cama
+  FROM rismi_factura_detalle rd
+  INNER JOIN rismi_facturas rf ON rf.id = rd.rismi_factura_id
+  GROUP BY rf.id
+)
+SELECT
+  ROUND(SUM(total_prestaciones)::numeric, 2)                                                      AS sum_prestaciones,
+  ROUND(SUM(total_farmacos)::numeric, 2)                                                          AS sum_farmacos,
+  ROUND(SUM(total_dias_cama)::numeric, 2)                                                         AS sum_dias_cama,
+  ROUND((SUM(total_prestaciones + total_farmacos + total_dias_cama))::numeric, 2)                 AS gran_total,
+  ROUND(SUM(total_prestaciones) * 100.0 / NULLIF(SUM(total_prestaciones + total_farmacos + total_dias_cama), 0), 2) AS pct_prestaciones,
+  ROUND(SUM(total_farmacos)     * 100.0 / NULLIF(SUM(total_prestaciones + total_farmacos + total_dias_cama), 0), 2) AS pct_farmacos,
+  ROUND(SUM(total_dias_cama)    * 100.0 / NULLIF(SUM(total_prestaciones + total_farmacos + total_dias_cama), 0), 2) AS pct_dias_cama
+FROM base;
+
+3. Distribución por rangos / histograma
+WITH base AS (
+  SELECT
+    rf.id AS factura_id,
+    MAX(CASE WHEN rd.producto = 'Total Prestaciones' THEN rd.monto ELSE 0 END) AS total_prestaciones,
+    MAX(CASE WHEN rd.producto = 'Total Fármacos'     THEN rd.monto ELSE 0 END) AS total_farmacos,
+    MAX(CASE WHEN rd.producto = 'Total Días Cama'    THEN rd.monto ELSE 0 END) AS total_dias_cama
+  FROM rismi_factura_detalle rd
+  INNER JOIN rismi_facturas rf ON rf.id = rd.rismi_factura_id
+  GROUP BY rf.id
+),
+rangos AS (
+  SELECT
+    factura_id,
+    CASE
+      WHEN total_prestaciones = 0                          THEN '1 - Sin costo'
+      WHEN total_prestaciones BETWEEN 1 AND 100000         THEN '2 - Hasta 100k'
+      WHEN total_prestaciones BETWEEN 100001 AND 500000    THEN '3 - 100k a 500k'
+      WHEN total_prestaciones BETWEEN 500001 AND 1000000   THEN '4 - 500k a 1M'
+      WHEN total_prestaciones BETWEEN 1000001 AND 5000000  THEN '5 - 1M a 5M'
+      ELSE                                                      '6 - Más de 5M'
+    END AS rango_prestaciones,
+    CASE
+      WHEN total_farmacos = 0                              THEN '1 - Sin costo'
+      WHEN total_farmacos BETWEEN 1 AND 100000             THEN '2 - Hasta 100k'
+      WHEN total_farmacos BETWEEN 100001 AND 500000        THEN '3 - 100k a 500k'
+      WHEN total_farmacos BETWEEN 500001 AND 1000000       THEN '4 - 500k a 1M'
+      WHEN total_farmacos BETWEEN 1000001 AND 5000000      THEN '5 - 1M a 5M'
+      ELSE                                                      '6 - Más de 5M'
+    END AS rango_farmacos,
+    CASE
+      WHEN total_dias_cama = 0                             THEN '1 - Sin costo'
+      WHEN total_dias_cama BETWEEN 1 AND 100000            THEN '2 - Hasta 100k'
+      WHEN total_dias_cama BETWEEN 100001 AND 500000       THEN '3 - 100k a 500k'
+      WHEN total_dias_cama BETWEEN 500001 AND 1000000      THEN '4 - 500k a 1M'
+      WHEN total_dias_cama BETWEEN 1000001 AND 5000000     THEN '5 - 1M a 5M'
+      ELSE                                                      '6 - Más de 5M'
+    END AS rango_dias_cama
+  FROM base
+)
+-- Cambiá rango_prestaciones por rango_farmacos o rango_dias_cama según el gráfico
+SELECT
+  rango_prestaciones                                       AS rango,
+  COUNT(*)                                                 AS cantidad,
+  ROUND(COUNT(*) * 100.0 / SUM(COUNT(*)) OVER (), 2)      AS porcentaje
+FROM rangos
+GROUP BY 1
+ORDER BY 1;
+
+4. Percentiles / box plot
+WITH base AS (
+  SELECT
+    rf.id AS factura_id,
+    MAX(CASE WHEN rd.producto = 'Total Prestaciones' THEN rd.monto ELSE 0 END) AS total_prestaciones,
+    MAX(CASE WHEN rd.producto = 'Total Fármacos'     THEN rd.monto ELSE 0 END) AS total_farmacos,
+    MAX(CASE WHEN rd.producto = 'Total Días Cama'    THEN rd.monto ELSE 0 END) AS total_dias_cama
+  FROM rismi_factura_detalle rd
+  INNER JOIN rismi_facturas rf ON rf.id = rd.rismi_factura_id
+  GROUP BY rf.id
+)
+SELECT concepto, q1, mediana, q3, p90, p95 FROM (
+
+  SELECT 'Prestaciones' AS concepto,
+    ROUND(PERCENTILE_CONT(0.25) WITHIN GROUP (ORDER BY total_prestaciones)::numeric, 2) AS q1,
+    ROUND(PERCENTILE_CONT(0.50) WITHIN GROUP (ORDER BY total_prestaciones)::numeric, 2) AS mediana,
+    ROUND(PERCENTILE_CONT(0.75) WITHIN GROUP (ORDER BY total_prestaciones)::numeric, 2) AS q3,
+    ROUND(PERCENTILE_CONT(0.90) WITHIN GROUP (ORDER BY total_prestaciones)::numeric, 2) AS p90,
+    ROUND(PERCENTILE_CONT(0.95) WITHIN GROUP (ORDER BY total_prestaciones)::numeric, 2) AS p95
+  FROM base
+
+  UNION ALL
+
+  SELECT 'Fármacos',
+    ROUND(PERCENTILE_CONT(0.25) WITHIN GROUP (ORDER BY total_farmacos)::numeric, 2),
+    ROUND(PERCENTILE_CONT(0.50) WITHIN GROUP (ORDER BY total_farmacos)::numeric, 2),
+    ROUND(PERCENTILE_CONT(0.75) WITHIN GROUP (ORDER BY total_farmacos)::numeric, 2),
+    ROUND(PERCENTILE_CONT(0.90) WITHIN GROUP (ORDER BY total_farmacos)::numeric, 2),
+    ROUND(PERCENTILE_CONT(0.95) WITHIN GROUP (ORDER BY total_farmacos)::numeric, 2)
+  FROM base
+
+  UNION ALL
+
+  SELECT 'Días Cama',
+    ROUND(PERCENTILE_CONT(0.25) WITHIN GROUP (ORDER BY total_dias_cama)::numeric, 2),
+    ROUND(PERCENTILE_CONT(0.50) WITHIN GROUP (ORDER BY total_dias_cama)::numeric, 2),
+    ROUND(PERCENTILE_CONT(0.75) WITHIN GROUP (ORDER BY total_dias_cama)::numeric, 2),
+    ROUND(PERCENTILE_CONT(0.90) WITHIN GROUP (ORDER BY total_dias_cama)::numeric, 2),
+    ROUND(PERCENTILE_CONT(0.95) WITHIN GROUP (ORDER BY total_dias_cama)::numeric, 2)
+  FROM base
+
+) t;
+5. Top facturas por costo total (bar chart / Pareto)
+WITH base AS (
+  SELECT
+    rf.id AS factura_id,
+    MAX(CASE WHEN rd.producto = 'Total Prestaciones' THEN rd.monto ELSE 0 END) AS total_prestaciones,
+    MAX(CASE WHEN rd.producto = 'Total Fármacos'     THEN rd.monto ELSE 0 END) AS total_farmacos,
+    MAX(CASE WHEN rd.producto = 'Total Días Cama'    THEN rd.monto ELSE 0 END) AS total_dias_cama
+  FROM rismi_factura_detalle rd
+  INNER JOIN rismi_facturas rf ON rf.id = rd.rismi_factura_id
+  GROUP BY rf.id
+)
+SELECT
+  factura_id,
+  total_prestaciones,
+  total_farmacos,
+  total_dias_cama,
+  ROUND((total_prestaciones + total_farmacos + total_dias_cama)::numeric, 2)  AS total_fila,
+  ROUND(
+    (total_prestaciones + total_farmacos + total_dias_cama) * 100.0
+    / SUM(total_prestaciones + total_farmacos + total_dias_cama) OVER ()
+  , 2)                                                                         AS pct_sobre_total,
+  ROUND(SUM(total_prestaciones + total_farmacos + total_dias_cama)
+    OVER (ORDER BY (total_prestaciones + total_farmacos + total_dias_cama) DESC) * 100.0
+    / SUM(total_prestaciones + total_farmacos + total_dias_cama) OVER ()
+  , 2)                                                                         AS pct_acumulado  -- útil para curva de Pareto
+FROM base
+ORDER BY total_fila DESC
+LIMIT 50;
+	 *
+	 */
 }
