@@ -19,6 +19,7 @@ import play.data.format.Formats;
 import play.data.validation.Constraints.Required;
 import play.db.ebean.Model;
 import play.db.ebean.Model.Finder;
+import utils.DateUtils;
 import utils.formatters.DecimalComa;
 import utils.pagination.Pagination;
 
@@ -84,13 +85,18 @@ public class FacturaDato extends Model{
 
 	public static Pagination<FacturaDato> pageListado(String expediente,
 													  String proveedor,
-													  String orden_pago){
+													  String orden_pago,
+													  String fecha_desde,
+													  String fecha_hasta){
 		Pagination<FacturaDato> p = new Pagination<FacturaDato>();
     	p.setOrderDefault("ASC");
     	p.setSortByDefault("id");
 
 
-    	ExpressionList<FacturaDato> e = find.fetch("factura.proveedor", "nombre")
+    	ExpressionList<FacturaDato> e = find
+    			.fetch("orden")
+    			.fetch("factura")
+    			.fetch("factura.proveedor", "nombre")
     			.fetch("factura.expediente", "nombre, id")
     			.fetch("factura.expediente.ejercicio", "nombre")
     			.fetch("factura.expediente.parent.ejercicio", "nombre")
@@ -104,6 +110,16 @@ public class FacturaDato extends Model{
 
     	if(!proveedor.isEmpty()){
     		e.eq("factura.proveedor_id", Integer.parseInt(proveedor));
+    	}
+
+    	if(!fecha_desde.isEmpty()){
+    		Date fod = DateUtils.formatDate(fecha_desde, "dd/MM/yyyy");
+    		e.ge("factura.fecha_pago", fod);
+    	}
+
+		if(!fecha_hasta.isEmpty()){
+    		Date foh = DateUtils.formatDate(fecha_hasta, "dd/MM/yyyy");
+    		e.le("factura.fecha_pago", foh);
     	}
 
     	if(!expediente.isEmpty()){
