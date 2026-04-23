@@ -16,6 +16,7 @@ import models.recupero.RecuperoFactura;
 import play.data.format.Formats;
 import play.db.ebean.Model;
 import play.db.ebean.Model.Finder;
+import utils.DateUtils;
 import utils.pagination.Pagination;
 
 @Entity
@@ -54,14 +55,24 @@ public class RismiFactura extends Model {
 
 	public static Model.Finder<Long,RismiFactura> find = new Finder<Long,RismiFactura>(Long.class, RismiFactura.class);
 
-	public static Pagination<RismiFactura> page(String nombre){
+	public static Pagination<RismiFactura> page(String fecha_desde,String fecha_hasta){
 
 		Pagination<RismiFactura> p = new Pagination<RismiFactura>();
-    	p.setOrderDefault("DESC");
-    	p.setSortByDefault("id");
+    	p.setOrderDefault("ASC");
+    	p.setSortByDefault("fecha_egreso,id");
 
     	ExpressionList<RismiFactura> e = find
 				.where();
+
+    	if(!fecha_desde.isEmpty()){
+    		Date fod = DateUtils.formatDate(fecha_desde, "dd/MM/yyyy");
+    		e.ge("fecha_egreso", fod);
+    	}
+
+		if(!fecha_hasta.isEmpty()){
+    		Date foh = DateUtils.formatDate(fecha_hasta, "dd/MM/yyyy");
+    		e.le("fecha_egreso", foh);
+    	}
 
     	if(p.parcheCountAllFormula)
     		p.setTotalRowCount(e.findList().size());
