@@ -50,7 +50,7 @@ public class FacturacionRismiController  extends Controller {
 		DynamicForm d = form().bindFromRequest();
 
 		return ok(indexRismiFactura.render(
-				RismiFactura.page(RequestVar.get("fecha_factura_desde"),RequestVar.get("fecha_factura_hasta")),d));
+				RismiFactura.page(RequestVar.get("fecha_factura_desde"),RequestVar.get("fecha_factura_hasta"),RequestVar.get("organigrama_id")),d));
 	}
 
 	public static Result ver(Long id) {

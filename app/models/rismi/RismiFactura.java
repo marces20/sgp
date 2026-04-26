@@ -2,6 +2,7 @@ package models.rismi;
 
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -67,7 +68,7 @@ public class RismiFactura extends Model {
 
 	public static Model.Finder<Long,RismiFactura> find = new Finder<Long,RismiFactura>(Long.class, RismiFactura.class);
 
-	public static Pagination<RismiFactura> page(String fecha_desde,String fecha_hasta){
+	public static Pagination<RismiFactura> page(String fecha_desde,String fecha_hasta,String organigrama_id){
 
 		Pagination<RismiFactura> p = new Pagination<RismiFactura>();
     	p.setOrderDefault("ASC");
@@ -75,6 +76,10 @@ public class RismiFactura extends Model {
 
     	ExpressionList<RismiFactura> e = find
 				.where();
+
+    	if(!organigrama_id.isEmpty()){
+    		e.eq("organigrama_id", Integer.parseInt(organigrama_id));
+    	}
 
     	if(!fecha_desde.isEmpty()){
     		Date fod = DateUtils.formatDate(fecha_desde, "dd/MM/yyyy");
