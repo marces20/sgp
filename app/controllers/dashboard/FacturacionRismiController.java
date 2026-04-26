@@ -129,7 +129,7 @@ public class FacturacionRismiController  extends Controller {
 				celda0.setCellValue("Fecha Egreso");
 				celda0.setCellStyle(comun);
 				celda0 = fila.createCell(4);
-				celda0.setCellValue("Dominio");
+				celda0.setCellValue("Organigrama");
 				celda0.setCellStyle(comun);
 
 				celda0 = fila.createCell(5);
@@ -183,7 +183,7 @@ public class FacturacionRismiController  extends Controller {
 					celda0.setCellStyle(comun);
 
 					celda0 = fila.createCell(4);
-					celda0.setCellValue((l.dominio != null)?l.dominio:"");
+					celda0.setCellValue((l.organigrama_id != null)?l.organigrama.nombre:"");
 					celda0.setCellStyle(comun);
 
 					BigDecimal total =  new BigDecimal(0);
