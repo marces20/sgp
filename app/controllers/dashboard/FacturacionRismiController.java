@@ -25,6 +25,7 @@ import org.apache.poi.ss.usermodel.Workbook;
 import com.avaje.ebean.Ebean;
 import com.avaje.ebean.SqlRow;
 
+import models.Organigrama;
 import models.Periodo;
 import models.Usuario;
 import models.rismi.RismiFactura;
@@ -344,6 +345,17 @@ public class FacturacionRismiController  extends Controller {
 							rf.paciente_id =IDPACIENTE.toString();
 							rf.total_total = new BigDecimal(totalTotal).setScale(2, BigDecimal.ROUND_HALF_UP);
 							rf.create_date = new Date();
+
+							switch (rf.dominio) {
+							case "HOSPITAL MADARIAGA":
+								rf.organigrama_id = Organigrama.HEARM;
+								break;
+							case "INSTITUTO MISIONERO DEL CANCER - IMC":
+								rf.organigrama_id = Organigrama.IMC;
+								break;
+							}
+
+
 							rf.save();
 
 							RismiFacturaDetalle rdf = new RismiFacturaDetalle();
