@@ -31,6 +31,7 @@ public class Organigrama extends Model {
 	public static final long RENDICIONES = 116;
 	public static final long HEARM = 1;
 	public static final long MINISTERIO_SALUD = 109;
+	public static final long IMC = 180;
 
 	@Id
 	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="organigramas_id_seq")
