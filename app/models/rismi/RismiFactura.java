@@ -3,17 +3,22 @@ package models.rismi;
 import java.math.BigDecimal;
 import java.util.Date;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 import com.avaje.ebean.ExpressionList;
 import com.avaje.ebean.annotation.Formula;
 
+import models.Organigrama;
 import models.recupero.RecuperoFactura;
 import play.data.format.Formats;
+import play.data.validation.Constraints.Required;
 import play.db.ebean.Model;
 import play.db.ebean.Model.Finder;
 import utils.DateUtils;
@@ -44,6 +49,13 @@ public class RismiFactura extends Model {
 	public Date create_date;
 
 	public BigDecimal total_total;
+
+	@ManyToOne
+	@JoinColumn(name="organigrama_id", referencedColumnName="id", insertable=false, updatable=false)
+	public Organigrama organigrama;
+	@Column(name="organigrama_id")
+	@Required(message="Debe seleccionar un departamento/servicio")
+	public Long organigrama_id;
 
 	@Formula(select = "_c${ta}.total", join = "left outer join (select rismi_factura_id, round(sum(monto)::numeric,2) as total from rismi_factura_detalle group by rismi_factura_id) as _c${ta} on _c${ta}.rismi_factura_id = ${ta}.id")
 	public BigDecimal total;//total
