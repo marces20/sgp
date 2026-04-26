@@ -66,6 +66,8 @@ public class Organigrama extends Model {
 
 	public Integer limite_guardia;
 
+	public boolean rismi_reporte = false;
+
 	public static Model.Finder<Long,Organigrama> find = new Model.Finder<Long,Organigrama>(Long.class, Organigrama.class);
 
 	public List<Organigrama> getDataSuggest(String input,Integer limit){
