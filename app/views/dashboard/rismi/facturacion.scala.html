@@ -1,6 +1,10 @@
-@( totales:java.util.Map[String,java.util.Map[String,java.math.BigDecimal]],orgaColor:java.util.Map[String,String])
+@( totales:java.util.Map[String,java.util.Map[String,java.math.BigDecimal]],
+orgaColor:java.util.Map[String,String],
+totalesRangosFacturas:java.util.Map[String,List[com.avaje.ebean.SqlRow]]
+)
 @import helper._
-
+@import java.lang.String;var color1 ="";var color2 ="";var color3 ="";
+@import java.lang.Integer;var totalRangosCantidad = 0;
 @scripts = {
 
 <link rel="stylesheet" media="screen" href="@routes.Assets.at("stylesheets/css-rrhh-claude.css")">
@@ -67,6 +71,72 @@
 	        </div>
 	      </div>
 	    </div>
+<!-- ------------------------------------ -->
+		<div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; align-items: start;">
+
+			<div class="card">
+			  <div class="card-header">
+			    <span class="card-title">Rangos de Facturación por Episodio</span>
+			  </div>
+			  <div class="table-wrap" style="padding:10px;">
+			    <table class="dept-summary-table" style="font-size:15px;">
+			      <thead>
+			        <tr>
+			          <th style="text-align:left; width:110px;">Rango</th>
+			          <th style="">Episodios</th>
+			          <th style="">Promedio</th>
+					  <th style="">Distribución</th>
+			        </tr>
+			      </thead>
+			      <tbody>
+
+
+						 @for(dataRangos <- totalesRangosFacturas.get("TODOS")){
+
+							 @dataRangos.getString("rango") match {
+							    case "Hasta 100k" => { @{color1 ="#dbeafe"} @{color2 ="#374151"} @{color3 ="#9ca3af"}  }
+								case "100k a 500k" => { @{color1 ="#d1fae5"} @{color2 ="#065f46"} @{color3 ="#10b981"} }
+							    case "500k a 1M" => { @{color1 ="#fef3c7"}   @{color2 ="#92400e"} @{color3 ="#f59e0b"} }
+							    case "1M a 5M" => { @{color1 ="#ede9fe"}     @{color2 ="#5b21b6"} @{color3 ="#8b5cf6"} }
+							    case "Más de 5M" => { @{color1 ="#fee2e2"} @{color2 ="#991b1b"}   @{color3 ="#ef4444"}  }
+
+							}
+
+
+						 	<tr>
+					          <td style="text-align:left;"><span class="badge" style="background:@color1;color:@color2;">@dataRangos.getString("rango")</span></td>
+					          <td>@dataRangos.getInteger("cantidad_facturas")</td>
+					          <td style="font-family:'Fira Mono',monospace;">@(utils.NumberUtils.moneda(dataRangos.getBigDecimal("promedio"),0))</td>
+
+					          <td>
+					            <div class="mini-bar-wrap">
+					              <div class="mini-bar"><div class="mini-bar-fill" style="width:@dataRangos.getInteger("porcentaje")%;background:@color3;"></div></div>
+					              <span class="mini-bar-num">@dataRangos.getInteger("porcentaje") %</span>
+					            </div>
+					          </td>
+					        </tr>
+
+							@{totalRangosCantidad = totalRangosCantidad+dataRangos.getInteger("cantidad_facturas")}
+						 }
+
+
+
+
+			      </tbody>
+			      <tfoot>
+			        <tr style="background:var(--body-bg); font-weight:800; font-size:13px;">
+			          <td style="text-align:left; padding:10px 14px;">Total</td>
+			          <td style="text-align:center; padding:10px 14px;">@totalRangosCantidad</td>
+			          <td style="text-align:center; padding:10px 14px; font-family:'Fira Mono',monospace;"></td>
+
+			          <td></td>
+			        </tr>
+			      </tfoot>
+			    </table>
+			  </div>
+			</div>
+		</div>
+
 
 <div class="section-title"><i class="fas fa-chart-bar"></i> Datos por Organigrama</div>
 
@@ -89,6 +159,14 @@
 			        <div>
 			          <div class="kpi-val-sm">@totales.get(key).get("totalEpisodios")</div>
 			          <div class="kpi-lbl-sm">Episodios</div>
+			        </div>
+			      </div>
+			      <div class="kpi-card-sm">
+			        <div class="kpi-icon-sm"><i class="fas fa-user-check"></i></div>
+			        <div class="kpi-icon-sm"><i class="fa-solid fa-hand-holding-dollar"></i></div>
+			        <div>
+			          <div class="kpi-val-sm">@(utils.NumberUtils.moneda(totales.get(key).get("promedio_total_factura"),0))</div>
+			          <div class="kpi-lbl-sm">Episodios/Total</div>
 			        </div>
 			      </div>
 			      <div class="kpi-card-sm">
@@ -127,5 +205,9 @@
 			</div><!-- /org-grid -->
 		}
 	}
+ </div>
+ </div>
+ </div>
+ </div>
 
 }

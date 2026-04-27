@@ -737,7 +737,7 @@
 /* KPIs en versión compacta para dentro del org-card */
 .kpi-grid-org {
   display: grid;
-  grid-template-columns: repeat(5, 1fr);
+  grid-template-columns: repeat(6, 1fr);
   gap: 1px;
   background: var(--border); /* hace efecto de separador entre celdas */
 }
@@ -766,3 +766,20 @@
 
 .kpi-val-sm  { font-size: 18px; font-weight: 800; line-height: 1.2; }
 .kpi-lbl-sm  { font-size: 13px; color: var(--muted); font-weight: 600; margin-top: 2px; }
+
+/* Tamaño reducido para tabla de distribución */
+.dist-table-sm {
+  font-size: 13px;
+}
+.dist-table-sm .dept-summary-table th {
+  font-size: 11px;
+  padding: 7px 10px;
+}
+.dist-table-sm .dept-summary-table td {
+  padding: 8px 10px;
+}
+
+
+
+
+

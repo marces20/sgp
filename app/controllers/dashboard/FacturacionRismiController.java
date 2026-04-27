@@ -405,6 +405,7 @@ public class FacturacionRismiController  extends Controller {
 	public static Result datosMensualesResumenGeneral() {
 
 		Map<String, Map<String, BigDecimal>> totalesTotales = new HashMap<String, Map<String, BigDecimal>>();
+		Map<String, List<SqlRow>> totalesRangosFacturas = new HashMap<String,List<SqlRow>>();
 		Map<String,String> orgaColor =  new HashMap<String,String>();
 
 		List<Organigrama> lo = Organigrama.find.where()
@@ -417,12 +418,81 @@ public class FacturacionRismiController  extends Controller {
 		}
 
 		totalesTotales.put("TODOS", datosMensualesResumenGeneralMap(null,null));
+		totalesRangosFacturas.put("TODOS",  datosRangosFacturacionMap(null,null));
 
 
 
 
+		return ok( facturacion.render(totalesTotales,orgaColor,totalesRangosFacturas));
+	}
 
-		return ok( facturacion.render(totalesTotales,orgaColor));
+	private static List<SqlRow> datosRangosFacturacionMap(Organigrama o,Periodo pxx) {
+
+		Periodo px = Periodo.getPeriodoByDate(new Date());
+
+		if(pxx != null) {
+			 px = pxx;
+		}
+
+		String sql = "SELECT * FROM ( " +
+				"    SELECT  " +
+				"        rango, " +
+				"        cantidad_facturas, " +
+				"        ROUND(cantidad_facturas * 100.0 / SUM(cantidad_facturas) OVER (), 1) AS porcentaje, " +
+				"        total_facturado, " +
+				"        promedio " +
+				"    FROM ( " +
+				"        SELECT  " +
+				"            CASE  " +
+				"                WHEN total_detalle = 0                         THEN 'Sin costo' " +
+				"                WHEN total_detalle BETWEEN 1 AND 100000        THEN 'Hasta 100k' " +
+				"                WHEN total_detalle BETWEEN 100001 AND 500000   THEN '100k a 500k' " +
+				"                WHEN total_detalle BETWEEN 500001 AND 1000000  THEN '500k a 1M' " +
+				"                WHEN total_detalle BETWEEN 1000001 AND 5000000 THEN '1M a 5M' " +
+				"                ELSE                                                'Más de 5M' " +
+				"            END AS rango, " +
+				"            COUNT(*)                    AS cantidad_facturas, " +
+				"            SUM(total_detalle)          AS total_facturado, " +
+				"            ROUND(AVG(total_detalle),2) AS promedio " +
+				"        FROM ( " +
+				"            SELECT rismi_factura_id, SUM(monto) AS total_detalle " +
+				"            FROM rismi_factura_detalle rd " +
+				"			inner join rismi_facturas rf on rf.id = rd.rismi_factura_id  " +
+				"			where rf.fecha_egreso  BETWEEN :fdesde AND :fhasta ";
+
+				if(o  != null) {
+					sql += "AND rf.organigrama_id = :organigrama_id ";
+				}
+
+				sql += "            GROUP BY rismi_factura_id " +
+				"        ) totales " +
+				"        GROUP BY rango " +
+				"    ) dist " +
+				") final " +
+				"ORDER BY " +
+				"    CASE rango " +
+				"        WHEN 'Sin costo'   THEN 1 " +
+				"        WHEN 'Hasta 100k'  THEN 2 " +
+				"        WHEN '100k a 500k' THEN 3 " +
+				"        WHEN '500k a 1M'   THEN 4 " +
+				"        WHEN '1M a 5M'     THEN 5 " +
+				"        ELSE                    6 " +
+				"    END";
+
+
+
+
+				SqlQuery sqlQuery = Ebean.createSqlQuery(sql);
+				sqlQuery.setParameter("fdesde", px.date_start);
+				sqlQuery.setParameter("fhasta", px.date_stop);
+				if(o  != null) {
+					sqlQuery.setParameter("organigrama_id", o.id);
+				}
+
+
+				List<SqlRow>  todos = sqlQuery.findList();
+
+		return todos;
 	}
 
 
@@ -451,7 +521,7 @@ public class FacturacionRismiController  extends Controller {
 				}
 
 				SqlRow tt=	 ttQuery.findUnique();
-
+//--------------------------------------------------------------------------------
 
 		String sql = "SELECT count(*),round(sum(monto),2) as total,producto,ROUND(SUM(monto) * 100.0 / SUM(SUM(monto)) OVER (), 2) AS porcentaje " +
 				"FROM rismi_factura_detalle rd " +
@@ -471,7 +541,28 @@ public class FacturacionRismiController  extends Controller {
 
 
 		List<SqlRow>  todos = sqlQuery.findList();
+//---------------------------------------------------------------------------------
+		//promedio_dias_internacion - promedio_total_factura
+		String sql3 = "SELECT " +
+	    "ROUND(AVG(f.fecha_egreso - f.fecha_ingreso), 1) AS promedio_dias_internacion,  " +
+	    "ROUND(AVG(f.total_total), 2) AS promedio_total_factura  " +
+		"FROM rismi_facturas f  " +
+		"WHERE f.fecha_egreso IS NOT NULL AND f.fecha_ingreso IS NOT NULL " +
+		"AND  f.fecha_egreso  BETWEEN :fdesde AND :fhasta  ";
 
+		if(o  != null) {
+			sql3 += "AND f.organigrama_id = :organigrama_id ";
+		}
+
+		sql3 += "ORDER BY promedio_total_factura DESC  ";
+
+		SqlQuery sqlQuery3 = Ebean.createSqlQuery(sql3);
+		sqlQuery3.setParameter("fdesde", px.date_start);
+		sqlQuery3.setParameter("fhasta", px.date_stop);
+		if(o  != null) {
+			sqlQuery3.setParameter("organigrama_id", o.id);
+		}
+		SqlRow promedio_total_factura=	 sqlQuery3.findUnique();
 
 		BigDecimal diasCama = BigDecimal.ZERO;
 		BigDecimal prestaciones = BigDecimal.ZERO;
@@ -516,6 +607,9 @@ public class FacturacionRismiController  extends Controller {
 		totales.put("diasCamaPorcentaje", diasCamaPorcentaje);
 		totales.put("prestacionesPorcentaje", prestacionesPorcentaje);
 		totales.put("farmacosPorcentaje", farmacosPorcentaje);
+		totales.put("promedio_total_factura", promedio_total_factura.getBigDecimal("promedio_total_factura"));
+
+
 
 		Integer totalPacientes = tt.getInteger("total");
 		totales.put("totalEpisodios",new BigDecimal(totalPacientes));
