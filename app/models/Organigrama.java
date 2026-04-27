@@ -29,7 +29,7 @@ public class Organigrama extends Model {
 	public static final long TESORERIA = 71;
 	public static final long CONTABILIDAD = 72;
 	public static final long RENDICIONES = 116;
-	public static final long HEARM = 1;
+	public static final long HEARM = 3;
 	public static final long MINISTERIO_SALUD = 109;
 	public static final long IMC = 180;
 
