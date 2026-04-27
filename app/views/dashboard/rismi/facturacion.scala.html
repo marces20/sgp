@@ -1,4 +1,4 @@
-@( totales:java.util.Map[String,java.math.BigDecimal],totalPacientes:Integer)
+@( totales:java.util.Map[String,java.util.Map[String,java.math.BigDecimal]],orgaColor:java.util.Map[String,String])
 @import helper._
 
 @scripts = {
@@ -33,52 +33,99 @@
 	      <div class="kpi-card">
 	     	<div class="kpi-icon"> <i class="fas fa-user-check"></i></div>
 	        <div>
-	          <div class="kpi-val">@totalPacientes</div>
-	          <div class="kpi-lbl">Total Pacientes</div>
-	          <!-- <div class="kpi-delta up"><i class="fas fa-arrow-up"></i> +4 este mes</div>
-	          <div class="kpi-delta down"><i class="fas fa-arrow-down"></i> +1 este mes</div> -->
+	          <div class="kpi-val">@totales.get("TODOS").get("totalEpisodios")</div>
+	          <div class="kpi-lbl">Total Espisodios</div>
 	        </div>
 
 	      </div>
 	      <div class="kpi-card">
 	        <div class="kpi-icon"> <i class="fa-solid fa-hand-holding-dollar"></i></div>
 	        <div>
-	          <div class="kpi-val">@(utils.NumberUtils.moneda(totales.get("total"),0))</div>
+	          <div class="kpi-val">@(utils.NumberUtils.moneda(totales.get("TODOS").get("total"),0))</div>
 	          <div class="kpi-lbl">Total</div>
-	          <!-- <div class="kpi-delta up"><i class="fas fa-arrow-up"></i> +4 este mes</div>
-	          <div class="kpi-delta down"><i class="fas fa-arrow-down"></i> +1 este mes</div> -->
 	        </div>
 	      </div>
 	      <div class="kpi-card">
 	        <div class="kpi-icon"><i class="fa-solid fa-book-medical"></i></div>
 	        <div>
-	          <div class="kpi-val">@(utils.NumberUtils.moneda(totales.get("prestaciones"),0))</div>
-	          <div class="kpi-lbl">Total Prestaciones</div>
-	          <!--  <div class="kpi-delta up"><i class="fas fa-arrow-up"></i> 90.1%</div>-->
-	          <!-- <div class="kpi-delta up"><i class="fas fa-arrow-up"></i> +4 este mes</div>
-	          <div class="kpi-delta down"><i class="fas fa-arrow-down"></i> +1 este mes</div> -->
+	          <div class="kpi-val">@(utils.NumberUtils.moneda(totales.get("TODOS").get("prestaciones"),0))</div>
+	          <div class="kpi-lbl">Total Prestaciones (@totales.get("TODOS").get("prestacionesPorcentaje") %)</div>
 	        </div>
 	      </div>
 	      <div class="kpi-card">
 	        <div class="kpi-icon"><i class="fa-solid fa-bed"></i></div>
 	        <div>
-	          <div class="kpi-val">@(utils.NumberUtils.moneda(totales.get("diasCama"),0))</div>
-	          <div class="kpi-lbl">Total Dias Cama</div>
-	          <!--  <div class="kpi-delta up"><i class="fas fa-arrow-up"></i> 90.1%</div>-->
-	          <!-- <div class="kpi-delta up"><i class="fas fa-arrow-up"></i> +4 este mes</div>
-	          <div class="kpi-delta down"><i class="fas fa-arrow-down"></i> +1 este mes</div> -->
+	          <div class="kpi-val">@(utils.NumberUtils.moneda(totales.get("TODOS").get("diasCama"),0))</div>
+	          <div class="kpi-lbl">Total Dias Cama (@totales.get("TODOS").get("diasCamaPorcentaje") %)</div>
 	        </div>
 	      </div>
 	      <div class="kpi-card">
 	        <div class="kpi-icon"><i class="fa-solid fa-syringe"></i></div>
 	        <div>
-	        	<div class="kpi-val">@(utils.NumberUtils.moneda(totales.get("farmacos"),0))</div>
-	          <div class="kpi-lbl">Total Farmacos</div>
-	          <!--  <div class="kpi-delta up"><i class="fas fa-arrow-up"></i> 90.1%</div>-->
-	          <!-- <div class="kpi-delta up"><i class="fas fa-arrow-up"></i> +4 este mes</div>
-	          <div class="kpi-delta down"><i class="fas fa-arrow-down"></i> +1 este mes</div> -->
+	        	<div class="kpi-val">@(utils.NumberUtils.moneda(totales.get("TODOS").get("farmacos"),0))</div>
+	          <div class="kpi-lbl">Total Farmacos (@totales.get("TODOS").get("farmacosPorcentaje") %)</div>
 	        </div>
 	      </div>
 	    </div>
+
+<div class="section-title"><i class="fas fa-chart-bar"></i> Datos por Organigrama</div>
+
+	@for((key,value) <- totales){
+		@if(key != "TODOS"){
+
+
+			<!-- Grid de 2 columnas, una por organigrama -->
+			<div class="org-grid">
+
+			  <!-- ORGANIGRAMA 1 -->
+			  <div class="org-card">
+			    <div class="org-card-header" style="background: @orgaColor.get(key);">
+			      <i class="fas fa-hospital"></i>
+			      <span>@key</span>
+			    </div>
+			    <div class="kpi-grid-org">
+			      <div class="kpi-card-sm">
+			        <div class="kpi-icon-sm"><i class="fas fa-user-check"></i></div>
+			        <div>
+			          <div class="kpi-val-sm">@totales.get(key).get("totalEpisodios")</div>
+			          <div class="kpi-lbl-sm">Episodios</div>
+			        </div>
+			      </div>
+			      <div class="kpi-card-sm">
+			        <div class="kpi-icon-sm"><i class="fa-solid fa-hand-holding-dollar"></i></div>
+			        <div>
+			          <div class="kpi-val-sm">@(utils.NumberUtils.moneda(totales.get(key).get("total"),0))</div>
+			          <div class="kpi-lbl-sm">Total</div>
+			        </div>
+			      </div>
+			      <div class="kpi-card-sm">
+			        <div class="kpi-icon-sm"><i class="fa-solid fa-book-medical"></i></div>
+			        <div>
+			          <div class="kpi-val-sm">@(utils.NumberUtils.moneda(totales.get(key).get("prestaciones"),0))</div>
+			          <div class="kpi-lbl-sm">Prestaciones (@totales.get(key).get("prestacionesPorcentaje") %)</div>
+			        </div>
+			      </div>
+			      <div class="kpi-card-sm">
+			        <div class="kpi-icon-sm"><i class="fa-solid fa-bed"></i></div>
+			        <div>
+			          <div class="kpi-val-sm">@(utils.NumberUtils.moneda(totales.get(key).get("diasCama"),0))</div>
+			          <div class="kpi-lbl-sm">Días Cama (@totales.get(key).get("diasCamaPorcentaje") %)</div>
+			        </div>
+			      </div>
+			      <div class="kpi-card-sm">
+			        <div class="kpi-icon-sm"><i class="fa-solid fa-syringe"></i></div>
+			        <div>
+			          <div class="kpi-val-sm">@(utils.NumberUtils.moneda(totales.get(key).get("farmacos"),0))</div>
+			          <div class="kpi-lbl-sm">Fármacos (@totales.get(key).get("farmacosPorcentaje") %)</div>
+			        </div>
+			      </div>
+			    </div>
+			  </div>
+
+
+
+			</div><!-- /org-grid -->
+		}
+	}
 
 }

@@ -23,6 +23,7 @@ import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 
 import com.avaje.ebean.Ebean;
+import com.avaje.ebean.SqlQuery;
 import com.avaje.ebean.SqlRow;
 
 import models.Organigrama;
@@ -403,45 +404,101 @@ public class FacturacionRismiController  extends Controller {
 
 	public static Result datosMensualesResumenGeneral() {
 
+		Map<String, Map<String, BigDecimal>> totalesTotales = new HashMap<String, Map<String, BigDecimal>>();
+		Map<String,String> orgaColor =  new HashMap<String,String>();
+
+		List<Organigrama> lo = Organigrama.find.where()
+								.eq("rismi_reporte",true).orderBy("id ASC")
+								.findList();
+
+		for(Organigrama oo :lo) {
+			totalesTotales.put(oo.sigla, datosMensualesResumenGeneralMap(oo,null));
+			orgaColor.put(oo.sigla, (oo.color != null)?oo.color:"#000000");
+		}
+
+		totalesTotales.put("TODOS", datosMensualesResumenGeneralMap(null,null));
+
+
+
+
+
+		return ok( facturacion.render(totalesTotales,orgaColor));
+	}
+
+
+	private static Map<String, BigDecimal> datosMensualesResumenGeneralMap(Organigrama o,Periodo pxx) {
+
 		Periodo px = Periodo.getPeriodoByDate(new Date());
+
+		if(pxx != null) {
+			 px = pxx;
+		}
+
+
 
 		String sql2 = "SELECT count(*) as total " +
 				"FROM rismi_facturas rf " +
 				"where rf.fecha_egreso  BETWEEN :fdesde AND :fhasta ";
+		if(o  != null) {
+			sql2 += "AND rf.organigrama_id = :organigrama_id ";
+		}
 
-		SqlRow tt = Ebean.createSqlQuery(sql2)
-							 .setParameter("fdesde", px.date_start)
-							 .setParameter("fhasta", px.date_stop).findUnique();
+		SqlQuery ttQuery = Ebean.createSqlQuery(sql2);
+				ttQuery.setParameter("fdesde", px.date_start);
+				ttQuery.setParameter("fhasta", px.date_stop);
+				if(o  != null) {
+					ttQuery.setParameter("organigrama_id", o.id);
+				}
+
+				SqlRow tt=	 ttQuery.findUnique();
 
 
-		String sql = "SELECT count(*),round(sum(monto),2) as total,producto " +
+		String sql = "SELECT count(*),round(sum(monto),2) as total,producto,ROUND(SUM(monto) * 100.0 / SUM(SUM(monto)) OVER (), 2) AS porcentaje " +
 				"FROM rismi_factura_detalle rd " +
 				"inner join rismi_facturas rf on rf.id = rd.rismi_factura_id " +
-				"where rf.fecha_egreso  BETWEEN :fdesde AND :fhasta " +
-				"group by producto  ";
+				"where rf.fecha_egreso  BETWEEN :fdesde AND :fhasta ";
+				if(o  != null) {
+					sql += "AND rf.organigrama_id = :organigrama_id ";
+				}
+				sql += "group by producto  ";
 
-		List<SqlRow> todos = Ebean.createSqlQuery(sql)
-							 .setParameter("fdesde", px.date_start)
-							 .setParameter("fhasta", px.date_stop)
-							 .findList();
+		SqlQuery sqlQuery = Ebean.createSqlQuery(sql);
+		sqlQuery.setParameter("fdesde", px.date_start);
+		sqlQuery.setParameter("fhasta", px.date_stop);
+		if(o  != null) {
+			sqlQuery.setParameter("organigrama_id", o.id);
+		}
+
+
+		List<SqlRow>  todos = sqlQuery.findList();
+
 
 		BigDecimal diasCama = BigDecimal.ZERO;
 		BigDecimal prestaciones = BigDecimal.ZERO;
 		BigDecimal farmacos = BigDecimal.ZERO;
 		BigDecimal total = BigDecimal.ZERO;
 
+		BigDecimal diasCamaPorcentaje = BigDecimal.ZERO;
+		BigDecimal prestacionesPorcentaje = BigDecimal.ZERO;
+		BigDecimal farmacosPorcentaje = BigDecimal.ZERO;
+		int totalEpisodios = 0;
+
 		for(SqlRow x:todos) {
 			total = total.add(x.getBigDecimal("total"));
+			totalEpisodios ++;
 			switch (x.getString("producto")) {
 
 			case "Total Días Cama"://"
 				diasCama = x.getBigDecimal("total");
+				diasCamaPorcentaje = x.getBigDecimal("porcentaje");
 				break;
 			case "Total Prestaciones"://"
 				prestaciones = x.getBigDecimal("total");
+				prestacionesPorcentaje = x.getBigDecimal("porcentaje");
 				break;
 			case "Total Fármacos":
 				farmacos = x.getBigDecimal("total");
+				farmacosPorcentaje = x.getBigDecimal("porcentaje");
 				break;
 
 			default:
@@ -449,16 +506,23 @@ public class FacturacionRismiController  extends Controller {
 			}
 		}
 
+
+
 		Map<String, BigDecimal> totales = new HashMap<String, BigDecimal>();
 		totales.put("diasCama", diasCama);
 		totales.put("prestaciones", prestaciones);
 		totales.put("farmacos", farmacos);
 		totales.put("total", total);
+		totales.put("diasCamaPorcentaje", diasCamaPorcentaje);
+		totales.put("prestacionesPorcentaje", prestacionesPorcentaje);
+		totales.put("farmacosPorcentaje", farmacosPorcentaje);
 
 		Integer totalPacientes = tt.getInteger("total");
+		totales.put("totalEpisodios",new BigDecimal(totalPacientes));
 
-		return ok( facturacion.render(totales,totalPacientes) );
+		return totales;
 	}
+
 
 	public static List<Integer> getSeleccionados(){
 		String[] checks = null;
