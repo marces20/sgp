@@ -117,35 +117,45 @@ public class FacturacionRismiController  extends Controller {
 				x = 0;
 
 				fila = hoja.createRow(x);
+
 				celda0 = fila.createCell(0);
+				celda0.setCellValue("ID");
+				celda0.setCellStyle(comun);
+
+
+				celda0 = fila.createCell(1);
 				celda0.setCellValue("Paciente");
 				celda0.setCellStyle(comun);
-				celda0 = fila.createCell(1);
+
+				celda0 = fila.createCell(2);
 				celda0.setCellValue("Episodio");
 				celda0.setCellStyle(comun);
-				celda0 = fila.createCell(2);
+
+				celda0 = fila.createCell(3);
 				celda0.setCellValue("Fecha Ingreso");
 				celda0.setCellStyle(comun);
-				celda0 = fila.createCell(3);
-				celda0.setCellValue("Fecha Egreso");
-				celda0.setCellStyle(comun);
+
 				celda0 = fila.createCell(4);
-				celda0.setCellValue("Organigrama");
+				celda0.setCellValue("Fecha Egreso");
 				celda0.setCellStyle(comun);
 
 				celda0 = fila.createCell(5);
-				celda0.setCellValue("Total Prestaciones");
+				celda0.setCellValue("Organigrama");
 				celda0.setCellStyle(comun);
 
 				celda0 = fila.createCell(6);
-				celda0.setCellValue("Total Dias Cama");
+				celda0.setCellValue("Total Prestaciones");
 				celda0.setCellStyle(comun);
 
 				celda0 = fila.createCell(7);
-				celda0.setCellValue("Total Farmacos");
+				celda0.setCellValue("Total Dias Cama");
 				celda0.setCellStyle(comun);
 
 				celda0 = fila.createCell(8);
+				celda0.setCellValue("Total Farmacos");
+				celda0.setCellStyle(comun);
+
+				celda0 = fila.createCell(9);
 				celda0.setCellValue("Total");
 				celda0.setCellStyle(comun);
 
@@ -168,22 +178,26 @@ public class FacturacionRismiController  extends Controller {
 					fila = hoja.createRow(x);
 
 					celda0 = fila.createCell(0);
-					celda0.setCellValue(l.nombre_paciente);
+					celda0.setCellValue(l.id.toString());
 					celda0.setCellStyle(comun);
 
 					celda0 = fila.createCell(1);
-					celda0.setCellValue(l.episodio_id);
+					celda0.setCellValue(l.nombre_paciente);
 					celda0.setCellStyle(comun);
 
 					celda0 = fila.createCell(2);
-					celda0.setCellValue((l.fecha_ingreso != null)? utils.DateUtils.formatDate(l.fecha_ingreso):"");
+					celda0.setCellValue(l.episodio_id);
 					celda0.setCellStyle(comun);
 
 					celda0 = fila.createCell(3);
-					celda0.setCellValue((l.fecha_egreso != null)? utils.DateUtils.formatDate(l.fecha_egreso):"");
+					celda0.setCellValue((l.fecha_ingreso != null)? utils.DateUtils.formatDate(l.fecha_ingreso):"");
 					celda0.setCellStyle(comun);
 
 					celda0 = fila.createCell(4);
+					celda0.setCellValue((l.fecha_egreso != null)? utils.DateUtils.formatDate(l.fecha_egreso):"");
+					celda0.setCellStyle(comun);
+
+					celda0 = fila.createCell(5);
 					celda0.setCellValue((l.organigrama_id != null)?l.organigrama.nombre:"");
 					celda0.setCellStyle(comun);
 
@@ -194,7 +208,7 @@ public class FacturacionRismiController  extends Controller {
 						switch (rfdx.producto) {
 						case "Total Prestaciones":
 
-							celda0 = fila.createCell(5);
+							celda0 = fila.createCell(6);
 							celda0.setCellType(Cell.CELL_TYPE_NUMERIC);
 							celda0.setCellValue(rfdx.monto.doubleValue());
 							celda0.setCellStyle(estiloMoneda);
@@ -202,7 +216,7 @@ public class FacturacionRismiController  extends Controller {
 							break;
 						case "Total Días Cama":
 
-							celda0 = fila.createCell(6);
+							celda0 = fila.createCell(7);
 							celda0.setCellType(Cell.CELL_TYPE_NUMERIC);
 							celda0.setCellValue(rfdx.monto.doubleValue());
 							celda0.setCellStyle(estiloMoneda);
@@ -210,7 +224,7 @@ public class FacturacionRismiController  extends Controller {
 							break;
 						case "Total Fármacos":
 
-							celda0 = fila.createCell(7);
+							celda0 = fila.createCell(8);
 							celda0.setCellType(Cell.CELL_TYPE_NUMERIC);
 							celda0.setCellValue(rfdx.monto.doubleValue());
 							celda0.setCellStyle(estiloMoneda);
@@ -225,7 +239,7 @@ public class FacturacionRismiController  extends Controller {
 
 
 
-					celda0 = fila.createCell(8);
+					celda0 = fila.createCell(9);
 					celda0.setCellType(Cell.CELL_TYPE_NUMERIC);
 					celda0.setCellValue(total.doubleValue());
 					celda0.setCellStyle(estiloMoneda);
@@ -236,26 +250,26 @@ public class FacturacionRismiController  extends Controller {
 				}
 
 				fila = hoja.createRow(x);
-				celda0 = fila.createCell(4);
+				celda0 = fila.createCell(5);
 				celda0.setCellValue("TOTALES");
 				celda0.setCellStyle(comun);
 
-				celda0 = fila.createCell(5);
+				celda0 = fila.createCell(6);
 				celda0.setCellType(Cell.CELL_TYPE_NUMERIC);
 				celda0.setCellValue(totalPrestaciones.doubleValue());
 				celda0.setCellStyle(estiloMoneda);
 
-				celda0 = fila.createCell(6);
+				celda0 = fila.createCell(7);
 				celda0.setCellType(Cell.CELL_TYPE_NUMERIC);
 				celda0.setCellValue(totalCama.doubleValue());
 				celda0.setCellStyle(estiloMoneda);
 
-				celda0 = fila.createCell(7);
+				celda0 = fila.createCell(8);
 				celda0.setCellType(Cell.CELL_TYPE_NUMERIC);
 				celda0.setCellValue(totalFarmacos.doubleValue());
 				celda0.setCellStyle(estiloMoneda);
 
-				celda0 = fila.createCell(8);
+				celda0 = fila.createCell(9);
 				celda0.setCellType(Cell.CELL_TYPE_NUMERIC);
 				celda0.setCellValue(totalTotal.doubleValue());
 				celda0.setCellStyle(estiloMoneda);
