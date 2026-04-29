@@ -354,6 +354,12 @@ public class FacturacionRismiController  extends Controller {
 							case "INSTITUTO MISIONERO DEL CANCER - IMC":
 								rf.organigrama_id = Organigrama.IMC;
 								break;
+							case "LACMI":
+								rf.organigrama_id = Organigrama.IMC;
+								break;
+							case "PET":
+								rf.organigrama_id = new Long(114);
+								break;
 							}
 
 
@@ -407,14 +413,16 @@ public class FacturacionRismiController  extends Controller {
 		Map<String, Map<String, BigDecimal>> totalesTotales = new HashMap<String, Map<String, BigDecimal>>();
 		Map<String, List<SqlRow>> totalesRangosFacturas = new HashMap<String,List<SqlRow>>();
 		Map<String,String> orgaColor =  new HashMap<String,String>();
+		Map<String,String> orgaSigal =  new HashMap<String,String>();
 
 		List<Organigrama> lo = Organigrama.find.where()
 								.eq("rismi_reporte",true).orderBy("id ASC")
 								.findList();
 
 		for(Organigrama oo :lo) {
-			totalesTotales.put(oo.sigla, datosMensualesResumenGeneralMap(oo,null));
-			orgaColor.put(oo.sigla, (oo.color != null)?oo.color:"#000000");
+			totalesTotales.put(oo.id.toString(), datosMensualesResumenGeneralMap(oo,null));
+			orgaColor.put(oo.id.toString(), (oo.color != null)?oo.color:"#000000");
+			orgaSigal.put(oo.id.toString(), (oo.sigla != null)?oo.sigla:oo.nombre);
 		}
 
 		totalesTotales.put("TODOS", datosMensualesResumenGeneralMap(null,null));
@@ -423,7 +431,7 @@ public class FacturacionRismiController  extends Controller {
 
 
 
-		return ok( facturacion.render(totalesTotales,orgaColor,totalesRangosFacturas));
+		return ok( facturacion.render(totalesTotales,orgaColor,totalesRangosFacturas,orgaSigal));
 	}
 
 	private static List<SqlRow> datosRangosFacturacionMap(Organigrama o,Periodo pxx) {
