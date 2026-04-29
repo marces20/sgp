@@ -51,6 +51,8 @@ public class RismiFactura extends Model {
 
 	public BigDecimal total_total;
 
+	public boolean activo = true;
+
 	@ManyToOne
 	@JoinColumn(name="organigrama_id", referencedColumnName="id", insertable=false, updatable=false)
 	public Organigrama organigrama;
