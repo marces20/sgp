@@ -346,6 +346,7 @@ public class FacturacionRismiController  extends Controller {
 							rf.paciente_id =IDPACIENTE.toString();
 							rf.total_total = new BigDecimal(totalTotal).setScale(2, BigDecimal.ROUND_HALF_UP);
 							rf.create_date = new Date();
+							rf.activo = true;
 
 							switch (rf.dominio) {
 							case "HOSPITAL MADARIAGA":
@@ -466,7 +467,7 @@ public class FacturacionRismiController  extends Controller {
 				"            SELECT rismi_factura_id, SUM(monto) AS total_detalle " +
 				"            FROM rismi_factura_detalle rd " +
 				"			inner join rismi_facturas rf on rf.id = rd.rismi_factura_id  " +
-				"			where rf.fecha_egreso  BETWEEN :fdesde AND :fhasta ";
+				"			where rf.activo = true AND rf.fecha_egreso  BETWEEN :fdesde AND :fhasta ";
 
 				if(o  != null) {
 					sql += "AND rf.organigrama_id = :organigrama_id ";
@@ -516,7 +517,7 @@ public class FacturacionRismiController  extends Controller {
 
 		String sql2 = "SELECT count(*) as total " +
 				"FROM rismi_facturas rf " +
-				"where rf.fecha_egreso  BETWEEN :fdesde AND :fhasta ";
+				"where rf.activo = true AND rf.fecha_egreso  BETWEEN :fdesde AND :fhasta ";
 		if(o  != null) {
 			sql2 += "AND rf.organigrama_id = :organigrama_id ";
 		}
@@ -534,7 +535,7 @@ public class FacturacionRismiController  extends Controller {
 		String sql = "SELECT count(*),round(sum(monto),2) as total,producto,ROUND(SUM(monto) * 100.0 / SUM(SUM(monto)) OVER (), 2) AS porcentaje " +
 				"FROM rismi_factura_detalle rd " +
 				"inner join rismi_facturas rf on rf.id = rd.rismi_factura_id " +
-				"where rf.fecha_egreso  BETWEEN :fdesde AND :fhasta ";
+				"where rf.activo = true AND rf.fecha_egreso  BETWEEN :fdesde AND :fhasta ";
 				if(o  != null) {
 					sql += "AND rf.organigrama_id = :organigrama_id ";
 				}
@@ -555,7 +556,7 @@ public class FacturacionRismiController  extends Controller {
 	    "ROUND(AVG(f.fecha_egreso - f.fecha_ingreso), 1) AS promedio_dias_internacion,  " +
 	    "ROUND(AVG(f.total_total), 2) AS promedio_total_factura  " +
 		"FROM rismi_facturas f  " +
-		"WHERE f.fecha_egreso IS NOT NULL AND f.fecha_ingreso IS NOT NULL " +
+		"WHERE f.activo = true AND f.fecha_egreso IS NOT NULL AND f.fecha_ingreso IS NOT NULL " +
 		"AND  f.fecha_egreso  BETWEEN :fdesde AND :fhasta  ";
 
 		if(o  != null) {
