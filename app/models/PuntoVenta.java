@@ -48,6 +48,7 @@ public class PuntoVenta extends Model {
 			List<Integer> ids = new ArrayList<Integer>();
 			ids.add(9);
 			ids.add(13);
+			ids.add(14);
 			return find.where().in("id", ids).orderBy("numero asc").findList();
 		}else {
 
