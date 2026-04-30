@@ -373,7 +373,7 @@ public class FacturacionRismiController  extends Controller {
 								rf.organigrama_id = Organigrama.IMC;
 								break;
 							case "PET":
-								rf.organigrama_id = new Long(114);
+								rf.organigrama_id = new Long(182);
 								break;
 							}
 
