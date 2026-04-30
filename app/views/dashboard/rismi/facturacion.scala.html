@@ -1,6 +1,6 @@
 @( totales:java.util.Map[String,java.util.Map[String,java.math.BigDecimal]],
 orgaColor:java.util.Map[String,String],
-totalesRangosFacturas:java.util.Map[String,List[com.avaje.ebean.SqlRow]]
+totalesRangosFacturas:java.util.Map[String,List[com.avaje.ebean.SqlRow]],orgaSigla:java.util.Map[String,String]
 )
 @import helper._
 @import java.lang.String;var color1 ="";var color2 ="";var color3 ="";
@@ -151,7 +151,7 @@ totalesRangosFacturas:java.util.Map[String,List[com.avaje.ebean.SqlRow]]
 			  <div class="org-card">
 			    <div class="org-card-header" style="background: @orgaColor.get(key);">
 			      <i class="fas fa-hospital"></i>
-			      <span>@key</span>
+			      <span>@orgaSigla.get(key)</span>
 			    </div>
 			    <div class="kpi-grid-org">
 			      <div class="kpi-card-sm">
