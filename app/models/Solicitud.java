@@ -319,7 +319,11 @@ public class Solicitud extends Model {
     			l = Usuario.getUsersDepartamentosHijos(deptoId);
     		}
     		Logger.debug("xxxxxxxxxxxxxxxxxxxxxxxxxxx"+l.size());
-    		if(l.size() > 0 && Usuario.getUsurioSesion().organigrama.deposito_id.compareTo(Organigrama.HEARM) == 0){
+    		Logger.debug("xxxxxxxxxxxxxxxxxxxxxxxxxxx00000000000000 "+ Usuario.getUsurioSesion().organigrama.deposito_id);
+    		Logger.debug("xxxxxxxxxxxxxxxxxxxxxxxxxxx00000000000000 "+ l.size());
+
+    		if(l.size() > 0 && Usuario.getUsurioSesion().organigrama.deposito_id.compareTo((long)Deposito.HEARM) == 0){
+    			Logger.debug("xxxxxxxxxxxxxxxxxxxxxxxxxxx1111111111111111"+l.size());
     			if(Usuario.getUsuarioSesion().equals(20)){//von der heyde
     				/*if(!profe.isEmpty()){
     		    		if(profe.compareToIgnoreCase("SI") > 0){
@@ -344,7 +348,7 @@ public class Solicitud extends Model {
     				e = e.in("create_usuario_id", l);
     			}
     		}else{
-
+    			Logger.debug("xxxxxxxxxxxxxxxxxxxxxxxxxxx22222222222222222"+l.size());
 
     				e = e.disjunction();
         			e = e.in("deposito_id",Usuario.getUsurioSesion().organigrama.deposito_id.intValue());
