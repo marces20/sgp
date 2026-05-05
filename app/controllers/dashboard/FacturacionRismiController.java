@@ -302,7 +302,7 @@ public class FacturacionRismiController  extends Controller {
 
 		Logger.debug("xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx");
 
-
+		try{
 
 
 					Ebean.beginTransaction();
@@ -410,6 +410,13 @@ public class FacturacionRismiController  extends Controller {
 						error += "<p class='responseError'>- No se encuentra el archivo a procesar.</p>";
 					}
 					Ebean.commitTransaction();
+		}catch(Exception e){
+			Logger.debug("xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx21 "+e);
+			  flash("error", "No se pudo crear las facturas " + e);
+		      Ebean.rollbackTransaction();
+		}finally {
+		      Ebean.endTransaction();
+	    }
 
 		String ret = error+ok;
 		return ok(ret);
