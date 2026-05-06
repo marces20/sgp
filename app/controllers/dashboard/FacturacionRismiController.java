@@ -302,10 +302,8 @@ public class FacturacionRismiController  extends Controller {
 
 		Logger.debug("xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx");
 
-		try{
 
 
-					Ebean.beginTransaction();
 
 
 
@@ -340,6 +338,8 @@ public class FacturacionRismiController  extends Controller {
 							Double totalCama = row.getCell(8).getNumericCellValue();
 							Double totalTotal = row.getCell(9).getNumericCellValue();
 
+							String OB = (row.getCell(10).getStringCellValue() != null)?row.getCell(10).getStringCellValue():"NO";// OB
+
 
 							String ff = FECHAEGRESO;
 							Date fechaEgreso = DateUtils.formatDate(ff, "dd/MM/yyyy");
@@ -361,6 +361,8 @@ public class FacturacionRismiController  extends Controller {
 							rf.total_total = new BigDecimal(totalTotal).setScale(2, BigDecimal.ROUND_HALF_UP);
 							rf.create_date = new Date();
 							rf.activo = true;
+							rf.obrasocial = (OB.compareTo("SI") == 0)?true:false;
+
 
 							switch (rf.dominio) {
 							case "HOSPITAL MADARIAGA":
@@ -409,14 +411,7 @@ public class FacturacionRismiController  extends Controller {
 					} else {
 						error += "<p class='responseError'>- No se encuentra el archivo a procesar.</p>";
 					}
-					Ebean.commitTransaction();
-		}catch(Exception e){
-			Logger.debug("xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx21 "+e);
-			  flash("error", "No se pudo crear las facturas " + e);
-		      Ebean.rollbackTransaction();
-		}finally {
-		      Ebean.endTransaction();
-	    }
+
 
 		String ret = error+ok;
 		return ok(ret);
