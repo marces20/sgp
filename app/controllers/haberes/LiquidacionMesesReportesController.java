@@ -501,10 +501,17 @@ public class LiquidacionMesesReportesController extends Controller  {
 							return ok(modalDatosAfipGanancias.render(null,d));
 						}
 
+						Ejercicio ej = Ejercicio.getEjercicioByFecha(new Date());
+
+
+
+						Periodo px = Periodo.find.where().eq("mes", "DICIEMBRE").eq("ejercicio_id", ej.id.intValue() -1).findUnique();
+						String fe = utils.DateUtils.formatDate(px.date_stop);
+
 						if(ld.liquidacionConcepto.id.compareTo(new Long(584)) == 0) {// codigo 61
-							data +=  Strings.padEnd("30/12/2023",10,'0');//fecha emision retencion
+							data +=  Strings.padEnd(fe,10,'0');//fecha emision retencion
 						}else if(ld.liquidacionConcepto.id.compareTo(new Long(591)) == 0) {//codigo 62
-							data +=  Strings.padEnd("30/12/2023",10,'0');//fecha emision retencion
+							data +=  Strings.padEnd(fe,10,'0');//fecha emision retencion
 						}else {
 							data +=  Strings.padEnd(DateUtils.formatDate(lp.liquidacionMes.fecha_pago),10,'0');//fecha emision retencion
 						}
