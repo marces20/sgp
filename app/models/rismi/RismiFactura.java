@@ -53,6 +53,8 @@ public class RismiFactura extends Model {
 
 	public boolean activo = true;
 
+	public boolean obrasocial = false;
+
 	@ManyToOne
 	@JoinColumn(name="organigrama_id", referencedColumnName="id", insertable=false, updatable=false)
 	public Organigrama organigrama;
