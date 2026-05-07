@@ -231,6 +231,9 @@ public class Remito extends Model {
 
 	public static Integer cambiarRecepcion(Integer id, List<Integer> remitorSeleccionados){
 
+		SqlUpdate update1 = Ebean.createSqlUpdate("alter table remitos disable trigger all");
+		update1.execute();
+
 		SqlUpdate update = Ebean.createSqlUpdate("UPDATE remitos " +
 				"SET recepcion_id = :id,write_date = :write_date,write_usuario_id = :write_usuario_id " +
 				"WHERE id IN (:ids)");
@@ -238,8 +241,12 @@ public class Remito extends Model {
 		update.setParameter("write_date",new Date());
 		update.setParameter("write_usuario_id",new Long(Usuario.getUsuarioSesion()));
 		update.setParameter("ids", remitorSeleccionados);
+		update.execute();
 
-		return update.execute();
+		SqlUpdate update2 = Ebean.createSqlUpdate("alter table remitos enable trigger all");
+
+
+		return update2.execute();
 	}
 
 	public boolean controlPermisoDeposito() {
