@@ -226,10 +226,16 @@ public class RemitosController extends Controller {
 
 		Remito r = Remito.find.byId(id);
 
-		if(r.recepcion.acta_id != null && (r.recepcion.acta.estado_id == Estado.ACTA_ESTADO_APROBADA || r.recepcion.acta.estado_id == Estado.ACTA_ESTADO_ENCURSO || r.recepcion.acta.estado_id == Estado.ACTA_ESTADO_CANCELADA)){
-			flash("error", "El remito solo se puede aprobar cuando el acta se encuentra en estado borrador.");
+		/*if(r.recepcion.acta_id != null && (r.recepcion.acta.estado_id == Estado.ACTA_ESTADO_APROBADA || r.recepcion.acta.estado_id == Estado.ACTA_ESTADO_ENCURSO || r.recepcion.acta.estado_id == Estado.ACTA_ESTADO_CANCELADA)){
+			flash("error", "El remito solo se puede editar cuando el acta se encuentra en estado borrador.");
+			return redirect(request().getHeader("referer"));
+		}*/
+
+		if(r.recepcion.acta_id != null){
+			flash("error", "El remito solo se puede editar cuando no tiene el acta asignada.");
 			return redirect(request().getHeader("referer"));
 		}
+
 		if(!r.controlPermisoDeposito()) {
 			flash("error", "El remito de la orden no corresponde a su institucion asignada.");
 			return redirect(controllers.patrimonio.routes.RemitosController.index()+UriTrack.get("?"));
