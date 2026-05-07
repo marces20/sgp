@@ -462,8 +462,7 @@ public class FacturacionRismiController  extends Controller {
 				"    FROM ( " +
 				"        SELECT  " +
 				"            CASE  " +
-				"                WHEN total_detalle = 0                         THEN 'Sin costo' " +
-				"                WHEN total_detalle BETWEEN 1 AND 100000        THEN 'Hasta 100k' " +
+				"                WHEN ((total_detalle BETWEEN 1 AND 100000) OR (total_detalle = 0 )) THEN 'Hasta 100k' " +
 				"                WHEN total_detalle BETWEEN 100001 AND 500000   THEN '100k a 500k' " +
 				"                WHEN total_detalle BETWEEN 500001 AND 1000000  THEN '500k a 1M' " +
 				"                WHEN total_detalle BETWEEN 1000001 AND 5000000 THEN '1M a 5M' " +
@@ -492,7 +491,6 @@ public class FacturacionRismiController  extends Controller {
 				") final " +
 				"ORDER BY " +
 				"    CASE rango " +
-				"        WHEN 'Sin costo'   THEN 1 " +
 				"        WHEN 'Hasta 100k'  THEN 2 " +
 				"        WHEN '100k a 500k' THEN 3 " +
 				"        WHEN '500k a 1M'   THEN 4 " +
