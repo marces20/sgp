@@ -1678,8 +1678,35 @@ public class PagosReportesController extends Controller  {
 		String newLine = System.getProperty("line.separator");
 		String data = "";
 
+		data +=StringUtils.numerico("100", 4);//Version
+		data +=StringUtils.alfanumerico("", 36); //CÓDIGO DE TRAZABILIDAD 36
+		data +=StringUtils.numerico("216", 3);//IMPUESTO
+		data +=StringUtils.numerico("831", 3);//RÉGIMEN
+		data +=DateUtils.formatDate(p.fecha_pago);//FECHA RETENCIÓN
+		data +=StringUtils.numerico("01", 2);//CONDICIÓN
+		data +=StringUtils.alfanumerico("0", 1); //CÓDIGO DE TRAZABILIDAD 36//IMPOSIBILIDAD DE RETENCIÓN
+		data +=StringUtils.alfanumerico("",30);//NO RETENCIÓN MOTIVO
+		data +=StringUtils.numerico(p.total.toString(), 14);//importe retencion
+		data +=StringUtils.numerico(p.factura.getBase().toString(), 14);//importe comprobante
+		data +=StringUtils.alfanumerico("0", 1);//RÉGIMEN DE EXCLUSIÓN
+		data +=StringUtils.alfanumerico("",6);//PORCENTAJE DE EXCLUSIÓN
+		data +=StringUtils.alfanumerico("",10);//FECHA PUBLICACIÓN O FINALIZACIÓN DE LA 10 VIGENCIA
+		data +=StringUtils.numerico("5", 2);//TIPO COMPROBANTE
+		data +=DateUtils.formatDate(p.factura.fecha_orden_pago);//FECHA COMPROBANT
+		data +=StringUtils.alfanumerico(p.ordenPago.numero.toString(),16);//NRO COMPROBANTE
+		data +=StringUtils.alfanumerico("",12);//COE
+		data +=StringUtils.alfanumerico("",12);//COE ORIGINAL
+		data +=StringUtils.alfanumerico("",14);//CAE
+		data +=StringUtils.numerico(p.factura.getBase().toString(), 14);//MPORTE COMPROBANTE
+		data +=StringUtils.alfanumerico("",30);//MOTIVO EMISIÓN DE NOTA DE CRÉDITO/AJUSTE
+		data +=StringUtils.numerico(p.factura.proveedor.cuit.toString(), 11);//CuitAgente
+		data +=StringUtils.alfanumerico("",25);//CERTIFICADO ORIGINAL NRO 25
+		data +=StringUtils.alfanumerico("",10);//CERTIFICADO ORIGINAL FECHA RETEN 10
+		data +=StringUtils.alfanumerico("",14);//CERTIFICADO ORIGINAL IMPORTE 14
+		data +=StringUtils.alfanumerico("",1);// MOTIVO DE LA ANULACIÓN 1
+		data +=newLine;
 
-		data +=StringUtils.numerico("2005", 4);//Formulario
+		/*data +=StringUtils.numerico("2005", 4);//Formulario
 		data +=StringUtils.numerico("100", 4);//Version
 		data +=StringUtils.alfanumerico("",10);//Cod Trazabilidad
 		data +=StringUtils.numerico("30712224300", 11);//CuitAgente
@@ -1696,7 +1723,7 @@ public class PagosReportesController extends Controller  {
 		data +="          ";//Fecha retencion certificado
 		data +=StringUtils.numerico("0.00", 14);//importe certificado original
 		data +=StringUtils.alfanumerico("",30);//otros datos
-		data +=newLine;
+		data +=newLine;*/
 
 		return data;
 	}
