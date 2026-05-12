@@ -849,6 +849,7 @@ GET 	/reportes/formulario649-2022   controllers.haberes.PuestosLaboralesReportes
 GET 	/reportes/formulario649-2023   controllers.haberes.PuestosLaboralesReportesController.formulario6492023(id:Long, ejercicio_id:Int)
 GET 	/reportes/formulario649-2024   controllers.haberes.PuestosLaboralesReportesController.formulario6492024(id:Long, ejercicio_id:Int)
 GET 	/reportes/formulario649-2025   controllers.haberes.PuestosLaboralesReportesController.formulario6492025(id:Long, ejercicio_id:Int)
+GET 	/reportes/formulario649-2026   controllers.haberes.PuestosLaboralesReportesController.formulario6492026(id:Long, ejercicio_id:Int)
 
 GET     /haberes/liquidacionConcepto         			controllers.haberes.LiquidacionConceptosController.index()
 GET     /haberes/liquidacionConcepto/crear        		controllers.haberes.LiquidacionConceptosController.crear()
