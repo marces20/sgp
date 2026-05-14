@@ -104,6 +104,12 @@ public class PagosController extends Controller {
 	@CheckPermiso(key = "pagosVer")
 	public static Result ver(Long id) {
 		Pago pago = Pago.find.byId(id);
+
+		if(!pago.controlPermisoDeposito()) {
+			flash("error", "La institucion del pago no corresponde a su institucion asignada.");
+			return URL_LISTA_PAGO_PROVEEDOR;
+		}
+
 		if (!Permiso.check("verExpedientesGuardiasMonotributo")
 				&& ArrayUtils.contains(Expediente.EXP_GUARDIA_MONOTRIBUTOS, pago.expediente_id)) {
 			return URL_LISTA_PAGO_PROVEEDOR;
@@ -495,10 +501,10 @@ public class PagosController extends Controller {
 
 			/*
 			 * if(pago.fecha_pago != null){
-			 * 
+			 *
 			 * Ejercicio ejActual = Ejercicio.getEjercicioByFecha(new Date());
 			 * Ejercicio ejOp = Ejercicio.getEjercicioByFecha(pago.fecha_pago);
-			 * 
+			 *
 			 * if(ejOp.id.compareTo(ejActual.id) < 0 &&
 			 * !Usuario.getUsurioSesion().id.equals(401)) {
 			 * flash("error", "La fecha de OP no debe ser menor al ejercicio actual");
@@ -581,10 +587,10 @@ public class PagosController extends Controller {
 
 			/*
 			 * if(pago.fecha_pago != null) {
-			 * 
+			 *
 			 * Ejercicio ejActual = Ejercicio.getEjercicioByFecha(new Date());
 			 * Ejercicio ejOp = Ejercicio.getEjercicioByFecha(pago.fecha_pago);
-			 * 
+			 *
 			 * if(ejOp.id.compareTo(ejActual.id) < 0 &&
 			 * !Usuario.getUsurioSesion().id.equals(401)) {
 			 * flash("error", "La fecha de OP no debe ser menor al ejercicio actual");
