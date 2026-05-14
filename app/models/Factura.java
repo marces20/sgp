@@ -346,6 +346,19 @@ public class Factura extends Model {
     			.fetch("ordenPago.ejercicio", "nombre")
     			.where();
 
+    	if(!Permiso.check("verTodoFacturas")){
+
+    		if(Usuario.getUsurioSesion().organigrama != null && Usuario.getUsurioSesion().organigrama.deposito != null){
+    			e = e.disjunction();
+    			e = e.eq("orden.deposito_id", Usuario.getUsurioSesion().organigrama.deposito_id.intValue());
+    			e = e.eq("create_usuario_id", Usuario.getUsurioSesion().id.intValue());
+    			e = e.endJunction();
+    		}else{
+    			e.eq("create_usuario_id", Usuario.getUsurioSesion().id.intValue());
+    		}
+
+    	}
+
 
     	if(Usuario.getUsurioSesion().plansumarmaterno) {
 			e = e.eq("tipo_cuenta_id",TipoCuenta.FONDO_PERMANENTE_MATERNO);
