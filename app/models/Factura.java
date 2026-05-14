@@ -1625,4 +1625,19 @@ public class Factura extends Model {
 
 		return f;
 	}
+
+	public boolean controlPermisoDeposito() {
+		boolean r = true;
+		if(!Permiso.check("verTodoFacturas")){
+			if(Usuario.getUsurioSesion().organigrama != null && Usuario.getUsurioSesion().organigrama.deposito != null){
+				if(Usuario.getUsurioSesion().organigrama.deposito_id.compareTo(orden.deposito_id) != 0) {
+					r = false;
+				}
+			}else {
+				r = false;
+			}
+		}
+
+		return r;
+	}
 }
