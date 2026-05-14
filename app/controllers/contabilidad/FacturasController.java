@@ -140,6 +140,10 @@ public class FacturasController extends Controller {
 
 		try {
 			factura = loadFactura(id);
+			if(!factura.controlPermisoDeposito()) {
+				flash("error", "La institucion de la factura no corresponde a su institucion asignada.");
+				return URL_LISTA_FACTURA_PROVEEDOR;
+			}
 			if(!Permiso.check("verExpedientesGuardiasMonotributo") && ArrayUtils.contains(Expediente.EXP_GUARDIA_MONOTRIBUTOS, factura.expediente_id)){
 				return URL_LISTA_FACTURA_PROVEEDOR;
 			}
@@ -1119,6 +1123,7 @@ public class FacturasController extends Controller {
 		nodo.add(restJs);
 		return ok(restJs);
 	}
+
 
 
 }
