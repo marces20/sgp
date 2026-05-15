@@ -115,7 +115,7 @@ public class PuestosLaboralesReportesController extends Controller  {
 
 			File archivo = new File(nombreArchivo);
 			if(archivo.exists()) archivo.delete();
-			FileInputStream file = new FileInputStream(Play.application().getFile("conf/resources/reportes/ganancias/formulario649-2026.xls"));
+			FileInputStream file = new FileInputStream(Play.application().getFile("conf/resources/reportes/ganancias/formulario649-2025.xls"));
 
 			Workbook libro = new HSSFWorkbook(file);
 			FileOutputStream archivoTmp = new FileOutputStream(archivo);
