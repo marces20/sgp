@@ -32,8 +32,14 @@
 		@for(ppp <- produccionPuestoPeriodo) {
 			@{minutos_practicas =new java.math.BigDecimal(ppp.getInteger("minutos_practicas"))}
 			@{minutos_profesional = new java.math.BigDecimal(ppp.getInteger("minutos_profesional"))}
-			@{porcentaje= minutos_practicas.multiply(new java.math.BigDecimal(100)).divide(minutos_profesional, 2, java.math.RoundingMode.HALF_UP).subtract(new java.math.BigDecimal(100)).setScale(0, java.math.RoundingMode.HALF_UP) }
 
+			@if(minutos_profesional.compareTo(java.math.BigDecimal.ZERO) == 0){
+				@{porcentaje= java.math.BigDecimal.ZERO; }
+
+			}else{
+
+				@{porcentaje= minutos_practicas.multiply(new java.math.BigDecimal(100)).divide(minutos_profesional, 2, java.math.RoundingMode.HALF_UP).subtract(new java.math.BigDecimal(100)).setScale(0, java.math.RoundingMode.HALF_UP) }
+			}
 
 
 
