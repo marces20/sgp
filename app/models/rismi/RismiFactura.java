@@ -55,6 +55,18 @@ public class RismiFactura extends Model {
 
 	public boolean obrasocial = false;
 
+	public String numero_factura;
+	public String id_dominio;
+	public String estado;
+	public String tipo_documento;
+	public String numero_documento;
+	public String id_programa_medico;
+	public String nombre_programa_medico;
+	public String fecha_creacion;
+	public String tipo;
+	public String id_servicio_cargo;
+	public String nombre_servicio_cargo;
+
 	@ManyToOne
 	@JoinColumn(name="organigrama_id", referencedColumnName="id", insertable=false, updatable=false)
 	public Organigrama organigrama;
