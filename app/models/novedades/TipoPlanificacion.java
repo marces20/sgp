@@ -31,5 +31,7 @@ public class TipoPlanificacion extends Model{
 	@Required(message="Debe escribir un nombre")
 	public String nombre;
 
+	public String color;
+
 	public static Model.Finder<Long,TipoPlanificacion> find = new Model.Finder<Long,TipoPlanificacion>(Long.class, TipoPlanificacion.class);
 }
