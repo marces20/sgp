@@ -86,7 +86,14 @@ public class Novedad extends Model{
 
 	public static Model.Finder<Long,Novedad> find = new Finder<Long,Novedad>(Long.class, Novedad.class);
 
-	public static Pagination<Novedad> page(String agente, String servicio, String desde, String hasta,String idPlanificacion,String orderBy,String pageSize) {
+	public static Pagination<Novedad> page(String agente,
+											String servicio,
+											String desde,
+											String hasta,
+											String idPlanificacion,
+											String orderBy,
+											String pageSize,
+											String tipoPlanificacionId) {
     	Pagination<Novedad> p = new Pagination<Novedad>();
 
     	if (pageSize != null) {
@@ -100,11 +107,18 @@ public class Novedad extends Model{
     		p.setOrderDefault("DESC");
     		p.setSortByDefault("id");
     	}
+
     	ExpressionList<Novedad> e = find
-    			.fetch("agente","apellido").where();
+    								.fetch("planificacion")
+					    			.fetch("agente","apellido")
+					    			.where();
 
 		if(!agente.isEmpty()){
 			 e.eq("agente_id", Integer.parseInt(agente));
+		}
+
+		if(!tipoPlanificacionId.isEmpty()){
+			 e.eq("planificacion.tipo_planificacion_id", Integer.parseInt(tipoPlanificacionId));
 		}
 
 		if(!servicio.isEmpty()){

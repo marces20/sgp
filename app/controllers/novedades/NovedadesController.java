@@ -54,7 +54,8 @@ public class NovedadesController extends Controller {
 											RequestVar.get("hasta"),
 											RequestVar.get("planificacion_id"),
 											"fecha_inicio ASC",
-											null
+											null,
+											""
 											)
 											,d));
 
@@ -70,7 +71,8 @@ public class NovedadesController extends Controller {
 															"",
 															idPlanificacion.toString(),
 															"fecha_inicio ASC",
-															null)
+															null,
+															"")
 															,d));
 
 
@@ -130,8 +132,19 @@ public class NovedadesController extends Controller {
 		p.put("servicio.nombre",Usuario.getUsurioSesion().organigrama.nombre);
 		p.put("servicio_id",Usuario.getUsurioSesion().organigrama_id.toString());
 
+		if(!RequestVar.get("agente_id").isEmpty()) {
+			p.put("agente.nombre",RequestVar.get("agente.nombre"));
+			p.put("agente_id",RequestVar.get("agente_id"));
+		}
+
+		if(!RequestVar.get("tipo_planificacion_id").isEmpty()) {
+			p.put("tipo_planificacion_id",RequestVar.get("tipo_planificacion_id"));
+		}
+
+
+
 		DynamicForm d = form().bindFromRequest().bind(p);
-		d.discardErrors();
+
 
 		return ok(indexNovedades.render(d));
 
@@ -156,9 +169,12 @@ public class NovedadesController extends Controller {
 		    									   //Usuario.getUsurioSesion().organigrama_id.toString(),
 		    										servicioId.toString(),
 		    									   RequestVar.get("desde"),
-		    									   RequestVar.get("hasta"),RequestVar.get("planificacion_id"),
+		    									   RequestVar.get("hasta"),
+		    									   RequestVar.get("planificacion_id"),
 		    									   "fecha_inicio ASC",
-		    									   "500000").getList();
+		    									   "500000",
+		    									   RequestVar.get("tipo_planificacion_id")
+		    									   ).getList();
 
 		    Logger.debug("xxxxxxxxxxxxxxxxxxxxxxxxxxxx "+Usuario.getUsurioSesion().organigrama_id.toString());
 
