@@ -179,11 +179,13 @@ public class NovedadesController extends Controller {
 		    Logger.debug("xxxxxxxxxxxxxxxxxxxxxxxxxxxx "+Usuario.getUsurioSesion().organigrama_id.toString());
 
 		    for (Novedad n : novedades) {
-			    ObjectNode e = Json.newObject();
+		    	String color = (n.planificacion.tipoPlanificacion.color != null)?n.planificacion.tipoPlanificacion.color:n.servicio.color;
+
+		    	ObjectNode e = Json.newObject();
 			    e.put("id", n.id.toString());
 			    e.put("title", n.horas+"HS - "+n.agente.apellido);
 			    e.put("start", utils.DateUtils.formatDate(n.fecha_inicio, "yyyy-MM-dd"));
-			    e.put("color", n.servicio.color);
+			    e.put("color", color);
 				s.add(e);
 			}
 		}
