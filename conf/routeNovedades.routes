@@ -31,6 +31,7 @@ GET    /planificacion/imprimirPlanificacion   		controllers.novedades.Planificac
 GET    /planificacion/crearNovedades	controllers.novedades.PlanificacionesController.crearNovedades(id:Long)
 GET    /planificacion/crearNovedadesHora	controllers.novedades.PlanificacionesController.crearNovedadesHora(id:Long)
 GET    /planificacion/crearNovedadesMaternoUTIO		controllers.novedades.PlanificacionesController.crearNovedadesMaternoUTIO(id:Long)
+GET    /planificacion/crearNovedadesMaternoResidentes		controllers.novedades.PlanificacionesController.crearNovedadesMaternoResidentes(id:Long)
 GET    /planificacion/crearNovedadesProduccionGeneral controllers.novedades.PlanificacionesController.crearNovedadesProduccionGeneral(id:Long)
 GET    /planificacion/crearNovedadesProduccionImagenes controllers.novedades.PlanificacionesController.crearNovedadesProduccionImagenes(id:Long)
 GET    /planificacion/get           			controllers.novedades.PlanificacionesController.get(id:Int ?= 0)
