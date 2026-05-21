@@ -93,6 +93,9 @@ public class RismiFactura extends Model {
     	ExpressionList<RismiFactura> e = find
 				.where();
 
+    	e.eq("activo", true);
+
+
     	if(!organigrama_id.isEmpty()){
     		e.eq("organigrama_id", Integer.parseInt(organigrama_id));
     	}
