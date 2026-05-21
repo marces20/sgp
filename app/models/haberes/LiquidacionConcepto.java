@@ -53,6 +53,8 @@ public class LiquidacionConcepto extends Model{
 
 	public static final long ADICIONAL_POR_PRODUCCION = 326;
 
+	public static final long COMPENSADOR_TAREAS = 3;
+
 	@Id
 	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="liquidacion_conceptos_id_seq")
 	public Long id;
