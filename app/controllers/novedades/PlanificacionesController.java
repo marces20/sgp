@@ -604,11 +604,11 @@ public class PlanificacionesController extends Controller {
 				//sx.getBigDecimal("horas");
 				//sx.getBoolean("festivas");
 
-				//OrganigramaGuardiaDato ogd = OrganigramaGuardiaDato.find.where().eq("organigrama_id", p.organigrama_id).eq("activo", true).findUnique();
+				OrganigramaGuardiaDato ogd = OrganigramaGuardiaDato.find.where().eq("organigrama_id", p.organigrama_id).eq("activo", true).findUnique();
 
 				PuestoLaboral pl = PuestoLaboral.find.fetch("legajo").where().eq("activo",true).eq("legajo.agente.id",sx.getLong("agente_id") ).findUnique();
 
-				Long liquidacion_concepto_id = models.haberes.Novedad.getLiquidacionConceptoGuardiaByHoraHabilesFestivaOrg(sx.getBigDecimal("horas"),new Boolean(false),new Boolean(false),null);
+				Long liquidacion_concepto_id = models.haberes.Novedad.getLiquidacionConceptoGuardiaByHoraHabilesFestivaOrg(sx.getBigDecimal("horas"),new Boolean(false),new Boolean(false),ogd);
 
 
 
