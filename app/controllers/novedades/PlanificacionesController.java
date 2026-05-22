@@ -439,6 +439,14 @@ public class PlanificacionesController extends Controller {
 		Planificacion rf = Ebean.find(Planificacion.class).select("id, estado_id,write_date,write_usuario_id").setId(idRf).findUnique();
 
 		if(rf != null){
+			List<models.haberes.Novedad> n = new models.haberes.Novedad().find.where().eq("planificacion_id", rf.id).findList();
+
+			for(models.haberes.Novedad nx :n) {
+					nx.delete();
+			}
+
+
+
 			rf.estado_id = new Long(Estado.PLANIFICIACION_CANCELADO);
 			rf.write_date = new Date();
 			rf.write_usuario_id = new Long(Usuario.getUsuarioSesion());
