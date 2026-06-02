@@ -281,7 +281,7 @@ public class LiquidacionMesesController extends Controller {
 	    	  if(!Permiso.check("liquidacionMesPasarAAprobado")) {
 				  return ok(sinPermiso.render(request().getHeader("referer")));
 			  }
-	    	  pasarLiquidado(idLiquidacion);
+	    	 // pasarLiquidado(idLiquidacion);
 	      break;
 	      case Estado.LIQUIDACION_MES_APROBADO:
 
