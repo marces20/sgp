@@ -4,12 +4,13 @@
 @import models.auth._
 @implicitFieldConstructor = @{ FieldConstructor(simpleInput.render) }
 @main("SGP - v1.0") {
- 
 
-@if(usuariosActivos){	    
+
+
+@if(usuariosActivos){
 <div class="page-header">
 	<div class="row">
-	
+
 		<div class="col-sm-4">
 			<div class="panel panel-default">
 				<div class="panel-heading"><b>Top 20 de Deuda por Proveedor</b>
@@ -20,7 +21,7 @@
 							<tr>
 								<td><b>Proveedor</b></td>
 								<td><b>Deuda Total</b></td>
-							</tr>	
+							</tr>
 						</thead>
 						<tbody>
 							@for(el <- ll){
@@ -30,11 +31,11 @@
 							</tr>
 							}
 						</tbody>
-					</table>			
+					</table>
 				</div>
-			</div>	
+			</div>
 		</div>
-		
+
 		<div class="col-sm-4">
 			<div class="panel panel-default">
 				<div class="panel-heading"><b>Top 20 de Deuda por Rubro</b>
@@ -45,7 +46,7 @@
 							<tr>
 								<td><b>Rubro</b></td>
 								<td><b>Deuda Total</b></td>
-							</tr>	
+							</tr>
 						</thead>
 						<tbody>
 							@for(el <- lr){
@@ -55,11 +56,11 @@
 							</tr>
 							}
 						</tbody>
-					</table>			
+					</table>
 				</div>
-			</div>	
+			</div>
 		</div>
-		
+
 		<div class="col-sm-4">
 			<div class="panel panel-default">
 				<div class="panel-heading"><b>Top 20 de Deuda por Servicio</b>
@@ -70,7 +71,7 @@
 							<tr>
 								<td><b>Servicio</b></td>
 								<td><b>Deuda Total</b></td>
-							</tr>	
+							</tr>
 						</thead>
 						<tbody>
 							@for(el <- ls){
@@ -80,13 +81,13 @@
 							</tr>
 							}
 						</tbody>
-					</table>			
+					</table>
 				</div>
-			</div>	
+			</div>
 		</div>
-		
+
 	</div>
-</div>	
-}			 
-		
+</div>
+}
+
 }
