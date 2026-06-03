@@ -219,7 +219,7 @@ public class LiquidacionAccionesController extends Controller {
 		Writer out = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(archivo), Charset.forName( "UTF8")));
 		Writer outError = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(errorOPG), Charset.forName( "UTF8")));
 
-		try {
+
 
 			List<LiquidacionDetalle> liquidacionDetalle = LiquidacionDetalle.find
 					.fetch("liquidacionPuesto.puestoLaboral")
@@ -236,87 +236,102 @@ public class LiquidacionAccionesController extends Controller {
 			int contador = 0;
 			boolean listo = false;
 
+			int estado  = Estado.LIQUIDACION_EMBARGO_APROBADO;
+			if(!aprobado) {
+				estado  = Estado.LIQUIDACION_EMBARGO_POST_ESPERA;
+			}
+
 			for(LiquidacionDetalle ld : liquidacionDetalle) {
 
-				Proveedor p  = ld.liquidacionEmbargoDetalle.liquidacionEmbargo.proveedor;
-				CuentaBancaria cb = p.getCuentaBancaria();
-				if(cb.banco_id.compareTo(new Long(1)) !=0) {
-					if(p.cuit == null) {
-						error += "El CUIT del proveedor " + p.nombre + " no se encuentra definido" + newLine;
-					}
+				if(ld.liquidacionEmbargoDetalle.liquidacionEmbargo.estado_id.compareTo((long) estado) == 0) {
 
-					if(!error.isEmpty()) {
-						outError.append(error);
-						hayError = true;
-					}
+					Proveedor p  = ld.liquidacionEmbargoDetalle.liquidacionEmbargo.proveedor;
+					CuentaBancaria cb = p.getCuentaBancaria();
+					if(cb == null) {
 
-					try {
+							error += "El proveedor " + p.nombre + " no tiene cuenta" + newLine;
 
-						String nombreProveedor = p.nombre;
-						//String[] split = nombreProveedor.split(",");
-
-						if(!listo){
-
-							StringBuilder sb = new StringBuilder();
-
-							for (int n = 0; n < nombreProveedor.length (); n ++){
-								char c = nombreProveedor.charAt(n);
-
-								if(!listo) {
-									listo= true;
-									if(c == 'A') {
-										c = 'Á';
-									}else if(c == 'E') {
-										c = 'É';
-									}else if(c == 'I') {
-										c = 'Í';
-									}else if(c == 'O') {
-										c = 'Ó';
-									}else if(c == 'U') {
-										c = 'O';
-									}else {
-										listo= false;
-									}
-
-								}
-								sb.append(c);
+						if(!error.isEmpty()) {
+							outError.append(error);
+							hayError = true;
+						}
+					}else {
+						if(cb.banco_id.compareTo(new Long(1)) !=0) {
+							if(p.cuit == null) {
+								error += "El CUIT del proveedor " + p.nombre + " no se encuentra definido" + newLine;
 							}
-							nombreProveedor = sb.toString();
-						}else {
-							nombreProveedor = p.nombre;
+
+							if(!error.isEmpty()) {
+								outError.append(error);
+								hayError = true;
+							}
+
+							try {
+
+								String nombreProveedor = p.nombre;
+								//String[] split = nombreProveedor.split(",");
+
+								if(!listo){
+
+									StringBuilder sb = new StringBuilder();
+
+									for (int n = 0; n < nombreProveedor.length (); n ++){
+										char c = nombreProveedor.charAt(n);
+
+										if(!listo) {
+											listo= true;
+											if(c == 'A') {
+												c = 'Á';
+											}else if(c == 'E') {
+												c = 'É';
+											}else if(c == 'I') {
+												c = 'Í';
+											}else if(c == 'O') {
+												c = 'Ó';
+											}else if(c == 'U') {
+												c = 'O';
+											}else {
+												listo= false;
+											}
+
+										}
+										sb.append(c);
+									}
+									nombreProveedor = sb.toString();
+								}else {
+									nombreProveedor = p.nombre;
+								}
+
+								BigDecimal importe = ld.liquidacionEmbargoDetalle.importe;
+								if(importe == null || importe.compareTo(BigDecimal.ZERO) <= 0) {
+									error += "El importe del proveedor " + p.nombre + " no se encuentra definido" + newLine;
+									hayError = true;
+								}
+								Logger.debug("------------------- "+importe );
+
+
+
+								if(cb.numero_cuenta.isEmpty()) {
+									outError.append("El número de cuenta del agente " + p.nombre+ " no se encuentra definido."+newLine);
+									hayError = true;
+								}else if(cb.banco_id.compareTo(new Long(1)) ==0){
+									outError.append("El Banco de la cuenta del agente " + p.nombre+ " NO debe ser BANCO MACRO para pagos no externos."+newLine);
+									hayError = true;
+								}
+
+								out.append(crearLineaOPGEmbargoExterno(cb, nombreProveedor,ld.liquidacionEmbargoDetalle.importe));
+
+							} catch (Exception e) {
+								outError.append(e.toString()+ newLine);
+								hayError = true;
+							}
+							contador ++;
 						}
-
-						BigDecimal importe = ld.liquidacionEmbargoDetalle.importe;
-						if(importe == null || importe.compareTo(BigDecimal.ZERO) <= 0) {
-							error += "El importe del proveedor " + p.nombre + " no se encuentra definido" + newLine;
-							hayError = true;
-						}
-						Logger.debug("------------------- "+importe );
-
-
-
-						if(cb.numero_cuenta.isEmpty()) {
-							outError.append("El número de cuenta del agente " + p.nombre+ " no se encuentra definido."+newLine);
-							hayError = true;
-						}else if(cb.banco_id.compareTo(new Long(1)) ==0){
-							outError.append("El Banco de la cuenta del agente " + p.nombre+ " NO debe ser BANCO MACRO para pagos no externos."+newLine);
-							hayError = true;
-						}
-
-						out.append(crearLineaOPGEmbargoExterno(cb, nombreProveedor,ld.liquidacionEmbargoDetalle.importe));
-
-					} catch (Exception e) {
-						outError.append(e.toString()+ newLine);
-						hayError = true;
 					}
-					contador ++;
 				}
 			}
 
-		}catch (Exception e) {
-			outError.append(e.toString()+ newLine);
-			hayError = true;
-		}
+
 
 		out.flush();
 		out.close();
