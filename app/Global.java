@@ -19,6 +19,7 @@ import org.xml.sax.SAXException;
 
 import akka.actor.Cancellable;
 import controllers.afip.AfipController;
+import controllers.dashboard.FacturacionRismiController;
 import jobs.DeudasInformesMails;
 import models.InventarioRismi;
 import models.OrdenProvision;
@@ -326,6 +327,14 @@ public class Global extends GlobalSettings {
                 public void run() {
                   Logger.info("Cron Job de MAIL INFORME PAGADO NO ENTREGADO");
                   new DeudasInformesMails().envioMailsPagadoNoEntregado();
+
+                  try {
+					FacturacionRismiController.importarFacturasDesdeRismi();
+                  } catch (IOException | EmailException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+                  }
+
                 }
               },
               Akka.system().dispatcher());
