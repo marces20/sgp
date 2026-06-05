@@ -8,11 +8,13 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.mail.EmailException;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.poifs.filesystem.POIFSFileSystem;
@@ -25,6 +27,7 @@ import org.apache.poi.ss.usermodel.Workbook;
 import com.avaje.ebean.Ebean;
 import com.avaje.ebean.SqlQuery;
 import com.avaje.ebean.SqlRow;
+import com.fasterxml.jackson.databind.JsonNode;
 
 import models.Organigrama;
 import models.Periodo;
@@ -34,13 +37,16 @@ import models.rismi.RismiFacturaDetalle;
 import play.Logger;
 import play.data.DynamicForm;
 import play.data.Form;
+import play.libs.F.Promise;
 import play.mvc.Controller;
 import play.mvc.Result;
 import play.mvc.Http.MultipartFormData;
 import play.mvc.Http.MultipartFormData.FilePart;
 import utils.DateUtils;
+import utils.EmailUtilis;
 import utils.RequestVar;
 import utils.UriTrack;
+import utils.rismi.ApiController;
 import views.html.dashboard.rismi.*;
 import views.html.dashboard.rismi.rismiFactura.*;
 import views.html.recupero.recuperoFactura.*;
@@ -417,6 +423,165 @@ public class FacturacionRismiController  extends Controller {
 		return ok(ret);
 	}
 
+	public static Boolean importarFacturasDesdeRismi() throws IOException, EmailException{
+
+		boolean ret = false;
+		List<String> adds = new ArrayList<>();
+		adds.add("marces2000@gmail.com");
+
+		try {
+
+
+			String  login = ApiController.loginBloqueante();
+
+			session("access_token_rismi", login);
+	        Logger.debug("json jsoxxxxxxxxxxxxxxxxxxn: "+session("access_token_rismi"));
+
+	        Calendar cal = Calendar.getInstance();
+			cal.add(Calendar.DAY_OF_MONTH, -1);
+			Date yesterday = cal.getTime();
+
+			String yesterdayStr = DateUtils.formatDate(yesterday, "yyyy-MM-dd");
+
+			Logger.debug("########################### "+yesterdayStr);
+
+	        String fdesde = yesterdayStr;
+	        String fhasta = yesterdayStr;
+
+	        List<String> dominios = new ArrayList<>();
+	        dominios.add("1");
+	        dominios.add("82");
+	        dominios.add("22");
+
+	        for(String d : dominios) {
+		        Integer page = 1;
+
+		        JsonNode jn = ApiController.getCostoInternacionBloqueante(login,page.toString(),d,fdesde,fdesde);
+		        int last_page = 1;
+
+
+		        while (page <= last_page) {
+
+		        	jn = ApiController.getCostoInternacionBloqueante(login,page.toString(),d,fdesde,fdesde);
+		            last_page = jn.get("meta").get("last_page").asInt();
+
+
+		        	for(JsonNode jnx : jn.get("data")) {
+
+		        		Logger.debug("id_episodio: "+jnx.get("dominio"));
+		        		Logger.debug("total: "+jnx.get("total"));
+
+		        		Long proximaSec = Ebean.createSqlQuery("SELECT nextval('rismi_facturas_id_seq') id").findUnique().getLong("id");
+						RismiFactura rf = new RismiFactura();
+						rf.id = proximaSec;
+						rf.dominio = jnx.get("dominio").asText();
+						rf.episodio_id = jnx.get("id_episodio").asText();
+
+						String ff = jnx.get("fecha_egreso").asText();
+						Date fechaEgreso = DateUtils.formatDate(ff, "yyyy-MM-dd");
+						rf.fecha_egreso =fechaEgreso;
+
+						String ff2 = jnx.get("fecha_ingreso").asText();
+						Date fechaIngreso = DateUtils.formatDate(ff2, "yyyy-MM-dd");
+						rf.fecha_ingreso = fechaIngreso;
+
+						rf.nombre_paciente = jnx.get("nombre_apellido").asText();
+						rf.paciente_id =jnx.get("id_paciente").asText();
+
+						Logger.debug("total: "+jnx.get("total").toString().replace(".", ","));
+						BigDecimal tot = new BigDecimal(jnx.get("total").asText()).setScale(2, BigDecimal.ROUND_HALF_UP);
+
+						rf.total_total = tot;
+						rf.create_date = new Date();
+						rf.activo = true;
+						rf.obrasocial = (jnx.get("obra_social").toString().compareToIgnoreCase("SI") == 0)?true:false;
+						rf.numero_factura = jnx.get("numero_factura").asText();//: 1,
+						rf.id_dominio = jnx.get("id_dominio").asText();//: 1,
+						rf.estado = jnx.get("estado").asText();//: "A",
+						rf.tipo_documento = jnx.get("tipo_documento").asText();//: "DNI",
+						rf.numero_documento = jnx.get("numero_documento").asText();//: "30524860",
+						rf.id_programa_medico = jnx.get("id_programa_medico").asText();//: 574,
+						rf.nombre_programa_medico = jnx.get("nombre_programa_medico").asText();//: "PLAN SUMAR",
+						rf.fecha_creacion = jnx.get("fecha_creacion").asText();//: "2026-05-12 17:43:33",
+						rf.tipo = jnx.get("tipo").asText();//: "internacion",
+						rf.id_servicio_cargo = jnx.get("id_servicio_cargo").asText();//: 149,
+						rf.nombre_servicio_cargo = jnx.get("nombre_servicio_cargo").asText();//: "AREA DE HEMODIALISIS",
+
+
+						switch (rf.dominio) {
+						case "HOSPITAL MADARIAGA":
+							rf.organigrama_id = Organigrama.HEARM;
+							break;
+						case "INSTITUTO MISIONERO DEL CANCER - IMC":
+							rf.organigrama_id = Organigrama.IMC;
+							break;
+						case "LACMI":
+							rf.organigrama_id = Organigrama.LACMI;
+							break;
+						case "PET":
+							rf.organigrama_id = new Long(182);
+							break;
+						case "HOSPITAL DE FATIMA":
+							rf.organigrama_id = new Long(92);
+							break;
+						}
+
+
+						rf.save();
+
+						RismiFacturaDetalle rdf = new RismiFacturaDetalle();
+						rdf.monto = new BigDecimal(jnx.get("total_prestaciones").asText()).setScale(2, BigDecimal.ROUND_HALF_UP);
+						rdf.producto = "Total Prestaciones";
+						rdf.rismi_factura_id  = proximaSec;
+						rdf.save();
+
+						RismiFacturaDetalle rdf2 = new RismiFacturaDetalle();
+						rdf2.monto = new BigDecimal(jnx.get("total_farmacos").asText()).setScale(2, BigDecimal.ROUND_HALF_UP);
+						rdf2.producto = "Total Fármacos";
+						rdf2.rismi_factura_id  = proximaSec;
+						rdf2.save();
+
+						RismiFacturaDetalle rdf3 = new RismiFacturaDetalle();
+						rdf3.monto = new BigDecimal(jnx.get("total_dias_cama").asText()).setScale(2, BigDecimal.ROUND_HALF_UP);
+						rdf3.producto = "Total Días Cama";
+						rdf3.rismi_factura_id  = proximaSec;
+						rdf3.save();
+
+		        	}
+
+		        	Logger.debug("page: "+page);
+		        	page++;
+		        }
+	        }
+
+	        EmailUtilis eu = new EmailUtilis();
+
+	        eu.setSubject("MIGRACION DATOS ATENCION RISMI OK - " + yesterdayStr);
+	        eu.setHtmlMsg("MIGRACION DATOS ATENCION RISMI OK - " + yesterdayStr);
+	        eu.setFrom("admin@parquesaludmnes.org.ar");
+	        eu.setAdds(adds);
+	        eu.enviar();
+
+		}catch (Exception e) {
+
+			EmailUtilis eu = new EmailUtilis();
+
+	        eu.setSubject("MIGRACION DATOS ATENCION RISMI ERROR - " + e);
+	        eu.setHtmlMsg("MIGRACION DATOS ATENCION RISMI ERROR - " + e);
+	        eu.setFrom("admin@parquesaludmnes.org.ar");
+	        eu.setAdds(adds);
+	        eu.enviar();
+		}
+
+
+
+
+
+        Logger.debug("==============================================");
+
+
+		return ret;
+	}
 
 	public static Result datosMensualesResumenGeneral() {
 
