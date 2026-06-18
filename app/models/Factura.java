@@ -361,7 +361,10 @@ public class Factura extends Model {
 
 
     	if(Usuario.getUsurioSesion().plansumarmaterno) {
+    		e = e.disjunction();
 			e = e.eq("tipo_cuenta_id",TipoCuenta.FONDO_PERMANENTE_MATERNO);
+			e = e.eq("tipo_cuenta_id",TipoCuenta.PLAN_SUMAR_MATERNO);
+			e = e.endJunction();
     	}
 
     	if(Usuario.getUsurioSesion().obera) {
