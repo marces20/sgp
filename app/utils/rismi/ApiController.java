@@ -27,7 +27,7 @@ import java.util.Map;
 
 import com.fasterxml.jackson.databind.JsonNode;
 
-public class ApiController {
+public class ApiController extends Controller {
 
 	private static final String API_BASE_URL = "http://10.1.4.24/api";
     private static final String CLIENT_ID = Play.application().configuration().getString("rismi.cliente_id");
@@ -204,6 +204,24 @@ public class ApiController {
         });
     }
 
+    public static String loginBloqueante() {
+    	String formBody = "client_id=" + urlEncode(CLIENT_ID) +
+                "&client_secret=" + urlEncode(CLIENT_SECRET);
+
+    	WS.Response response = WS.url(API_BASE_URL + "/login")
+        	    .setHeader("Accept", "application/json")
+        	    .setHeader("Content-Type", "application/x-www-form-urlencoded")
+        	    .setTimeout(5000)
+        	    .post(formBody)
+        	    .get(5000); // bloquea hasta obtener respuesta, timeout en ms
+
+        	JsonNode json = response.asJson();
+        	String token = json.get("access_token").asText();
+        return 	token;
+    }
+
+
+
 
     public static Promise<JsonNode> login() {
         String formBody = "client_id=" + urlEncode(CLIENT_ID) +
@@ -215,6 +233,9 @@ public class ApiController {
             .setTimeout(5000)
             .post(formBody);
 
+        //promise.get(5000);
+
+
         return promise.map(new Function<WS.Response, JsonNode>() {
             public JsonNode apply(WS.Response response) {
                 int status = response.getStatus();
@@ -222,8 +243,11 @@ public class ApiController {
                 if (status == 200) {
 
 
-                	Logger.debug("LOGIINNN RISMI: "+response.asJson());
-                    return response.asJson();
+                	JsonNode json = response.asJson(); // leer UNA sola vez
+                    Logger.debug("LOGIINNN RISMI access_token: " + json.get("access_token"));
+                    String access_token = json.get("access_token").asText();
+                    session("access_token_rismi", access_token);
+                    return json; // retornar la variable, no llamar asJson() de nuevo
                 } else {
                     // Retorna JSON de error
                     ObjectNode errorJson = Json.newObject();
@@ -359,6 +383,64 @@ public class ApiController {
         });
     }*/
 
+    public static JsonNode getCostoInternacionBloqueante(String token,String page,String dominio,String fdesde,String fhasta) {
+
+    	//token = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJMYXJhdmVsIiwiaWF0IjoxNzc4NzcwMjg2LCJleHAiOjE3Nzg3NzM4ODYsImNsaWVudF9pZCI6Ind1VEdDY3hpWHBQV3dMajVnUnhuS3JITWsxU3BzTkZPIiwidXNlcl9pZCI6NjAxMSwic2Vzc2lvbiI6bnVsbH0.0mC88aDVcNGglMTqU2LdbPVW7QkQaXwZw-6Zl_t5Jd0";
+    	///api/v1/externos/tablero-comandos/costo-internacion
+
+
+    	String endpoint= "/v1/externos/tablero-comandos/costo-internacion?";
+
+    	WS.Response response  = WS.url(API_BASE_URL + endpoint)
+            .setHeader("Accept", "application/json")
+            .setHeader("Authorization","Bearer "+ token)
+            .setTimeout(10000)
+            .setQueryParameter("fecha_alta_desde", fdesde)
+            .setQueryParameter("fecha_alta_hasta", fhasta)
+            .setQueryParameter("id_dominio", dominio)
+            .setQueryParameter("page", page)
+            .setQueryParameter("estado", "A")
+            .get()
+            .get(5000);
+
+    	JsonNode json = response.asJson();
+
+
+    	return json;
+
+
+
+        /*return promise.map(new Function<WS.Response, JsonNode>() {
+            public JsonNode apply(WS.Response response) {
+
+            	System.out.println("=== DEBUG GET REQUEST ===");
+                System.out.println("URL: " + API_BASE_URL + "/v1/externos/internacion?id=123");
+                System.out.println("Status: " + response.getStatus());
+                System.out.println("Response Body: " + response.getBody());
+                System.out.println("========================");
+
+                if (response.getStatus() == 200) {
+                	Logger.debug("LOGIINNN RISMI: "+response.asJson());
+                    return response.asJson();
+                } else {
+                    ObjectNode errorJson = Json.newObject();
+                    errorJson.put("error", true);
+                    errorJson.put("status", response.getStatus());
+                    errorJson.put("message", "Error en request GET");
+                    Logger.debug("errorJson RISMI: "+errorJson);
+                    try {
+                        JsonNode errorFromApi = response.asJson();
+                        errorJson.put("apiError", errorFromApi);
+                    } catch (Exception e) {
+                        errorJson.put("rawError", response.getBody());
+                    }
+
+                    return errorJson;
+                }
+            }
+        });*/
+    }
+
     public static Promise<JsonNode> getPacientes(String endpoint, String token) {
 
     	endpoint= "/v1/externos/persona?id=123";
@@ -437,6 +519,8 @@ public class ApiController {
             }
         });
     }
+
+
 
     private static String urlEncode(String value) {
         try {
