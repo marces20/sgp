@@ -373,6 +373,12 @@ public class CertificacionesServiciosController extends Controller {
 			return redirect(request().getHeader("referer"));
 		}
 
+		if (cert.acta_id != null) {
+			flash("error", "No se puede cambiar el estado a una certificación con acta asignada.");
+			return redirect(controllers.patrimonio.routes.CertificacionesServiciosController.ver(cert.id)+ UriTrack.get("&"));
+		}
+
+
 		if (cert.acta_id != null && cert.estado_id == Estado.CERTIFICACION_SERVICIO_CERTIFICADA
 				&& idEstado == Estado.CERTIFICACION_SERVICIO_CANCELADA) {
 			if (cert.acta.estado_id.compareTo((long) Estado.ACTA_ESTADO_APROBADA) == 0) {
