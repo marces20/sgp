@@ -566,8 +566,12 @@ public class FacturacionRismiController  extends Controller {
 
 			EmailUtilis eu = new EmailUtilis();
 
-	        eu.setSubject("MIGRACION DATOS ATENCION RISMI ERROR - " + e);
-	        eu.setHtmlMsg("MIGRACION DATOS ATENCION RISMI ERROR - " + e);
+			StackTraceElement origin = e.getStackTrace()[0];
+		    String x = "Exception at {"+origin.getFileName()+"}:{"+origin.getLineNumber()+"} — {"+e.getMessage()+"}";
+
+
+	        eu.setSubject("MIGRACION DATOS ATENCION RISMI ERROR - " + x);
+	        eu.setHtmlMsg("MIGRACION DATOS ATENCION RISMI ERROR - " + x);
 	        eu.setFrom("admin@parquesaludmnes.org.ar");
 	        eu.setAdds(adds);
 	        eu.enviar();
