@@ -237,7 +237,7 @@ public class LiquidacionPuestosController extends Controller {
 		Boolean permiso = false;
 
 		LiquidacionPuesto lc = LiquidacionPuesto.find.where().eq("id", idLiquidacionPuesto).findUnique();
-		if(lc.liquidacionMes.estado_id != Estado.LIQUIDACION_MES_APROBADO) {
+		if(lc.liquidacionMes.estado_id != Estado.LIQUIDACION_MES_APROBADO && lc.liquidacionMes.estado_id != Estado.LIQUIDACION_MES_CERRADA) {
 			switch ( idEstado.intValue() ) {
 		      case  Estado.LIQUIDACION_PUESTOS_BORRADOR:
 		    	  if(!Permiso.check("liquidacionPuestoPasarABorrador")) {
