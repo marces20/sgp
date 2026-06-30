@@ -331,7 +331,7 @@ public class Global extends GlobalSettings {
 
                   try {
                 	  RismiFactura.importarFacturasDesdeRismi();
-                  } catch (IOException | EmailException e) {
+                  } catch (Exception e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
                   }
