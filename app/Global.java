@@ -27,6 +27,7 @@ import models.TipoComprobante;
 import models.Usuario;
 import models.haberes.LiquidacionMes;
 import models.informes.HistorialDeudaProveedores;
+import models.rismi.RismiFactura;
 import play.Application;
 import play.GlobalSettings;
 import play.Logger;
@@ -329,7 +330,7 @@ public class Global extends GlobalSettings {
                   new DeudasInformesMails().envioMailsPagadoNoEntregado();
 
                   try {
-					FacturacionRismiController.importarFacturasDesdeRismi();
+                	  RismiFactura.importarFacturasDesdeRismi();
                   } catch (IOException | EmailException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
