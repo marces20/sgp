@@ -152,7 +152,6 @@ public class RismiFactura extends Model {
 			Logger.debug("########################### "+yesterdayStr);
 
 	        String fdesde = yesterdayStr;
-	        fdesde = "2026-06-29";
 	        String fhasta = yesterdayStr;
 
 	        List<String> dominios = new ArrayList<>();
