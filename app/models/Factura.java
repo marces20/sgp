@@ -919,6 +919,28 @@ public class Factura extends Model {
 		return r;
 	}
 
+	public static boolean existeNumeroFacturaCargadoMismoProveedor(String nfactura,Integer proveedor_id){
+
+		boolean r = false;
+
+		String sql = "SELECT * " +
+				"FROM factura_datos fd " +
+				"inner join facturas f on f.id = fd.factura_id " +
+				"where proveedor_id = :proveedor_id and upper(REPLACE(numero_factura,'-','')) =  upper(REPLACE(:nfactura,'-','')) ";
+
+
+		List<SqlRow> s = Ebean.createSqlQuery(sql)
+				   .setParameter("nfactura", nfactura)
+				   .setParameter("proveedor_id", proveedor_id)
+				   .findList();
+
+		if(s.size() > 0){
+			r = true;
+		}
+
+		return r;
+	}
+
 
 	public static boolean existeNumeroFacturaCargadoDesdeOrden(Long idOrden,String nfactura){
 

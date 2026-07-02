@@ -1255,6 +1255,13 @@ public class FacturasAccionesController  extends Controller {
 			return ok(modalModificarNumeroFactura.render(d,id,f));
 		}
 
+		if(Factura.existeNumeroFacturaCargadoMismoProveedor(numero_factura,f.proveedor_id)) {
+			flash("error", "Ya existe este numero de factura cargado para este proveedor.");
+			return ok(modalModificarNumeroFactura.render(d,id,f));
+		}
+
+
+
 
 		BigDecimal montoACargar = new BigDecimal(monto.replace(",","."));
 		BigDecimal montoCargado = Factura.getTotalMontoFacturasCargadas(f.id);
