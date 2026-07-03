@@ -152,12 +152,14 @@ public class RismiFactura extends Model {
 			Logger.debug("########################### "+yesterdayStr);
 
 	        String fdesde = yesterdayStr;
+	        //fdesde = "2026-07-02";
 	        String fhasta = yesterdayStr;
 
 	        List<String> dominios = new ArrayList<>();
-	        dominios.add("1");
-	        dominios.add("82");
-	        dominios.add("22");
+	        dominios.add("1");//madariaga
+	        dominios.add("82");//imc
+	        dominios.add("22");//fatima?
+	        dominios.add("2");//materno
 
 	        for(String d : dominios) {
 		        Integer page = 1;
@@ -230,6 +232,10 @@ public class RismiFactura extends Model {
 						case "HOSPITAL DE FATIMA":
 							rf.organigrama_id = new Long(92);
 							break;
+						case "HOSPITAL MATERNO NEONATAL":
+							rf.organigrama_id = Organigrama.HM;
+							break;
+
 						}
 
 
