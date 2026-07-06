@@ -926,7 +926,7 @@ public class Factura extends Model {
 		String sql = "SELECT * " +
 				"FROM factura_datos fd " +
 				"inner join facturas f on f.id = fd.factura_id " +
-				"where proveedor_id = :proveedor_id and upper(REPLACE(numero_factura,'-','')) =  upper(REPLACE(:nfactura,'-','')) ";
+				"where proveedor_id = :proveedor_id and upper(REPLACE(fd.numero_factura,'-','')) =  upper(REPLACE(:nfactura,'-','')) ";
 
 
 		List<SqlRow> s = Ebean.createSqlQuery(sql)
