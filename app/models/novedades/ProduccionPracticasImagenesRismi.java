@@ -162,7 +162,7 @@ public class ProduccionPracticasImagenesRismi extends Model{
 
 		"((extract(day from age(p.date_stop , p.date_start)) + 1)- "+
 		"(SELECT COUNT(*)FROM generate_series( p.date_start, p.date_stop, interval '1 day') AS d(fecha) WHERE EXTRACT(DOW FROM fecha) IN (0, 6))- "+
-		"(SELECT COUNT(*) FROM feriados where fecha between p.date_start and p.date_stop) - "+
+		"(SELECT COUNT(*) FROM feriados where (fecha between p.date_start and p.date_stop) AND EXTRACT(DOW FROM fecha) not IN (0, 6)) - "+
 		"coalesce(licencia_dias.dias_lic,0)) as dias "+
 
 		"FROM agentes a "+
