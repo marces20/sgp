@@ -47,30 +47,33 @@
 					}
 
 
-					@if(Componente.check("cuentasBancarias")) {
-						<li class="titulo">Cuentas bancarias</li>
+					@if(Componente.check("cuentasBancarias") || Componente.check("cuentas")) {
+						<li class="titulo">Cuentas</li>
 
 						@if(Componente.check("cuentasBancarias")) {
 							<li><a href="@controllers.contabilidad.routes.CuentaBancariasController.indexCuentaBancaria()">Cuentas bancarias</a></li>
-						}
-						<li class="titulo">Configuración</li>
-						@if(Componente.check("bancos")) {
-							<li><a href="@controllers.contabilidad.routes.BancosController.indexBanco()">Bancos</a></li>
-						}
-						@if(Componente.check("bancosSucursales")) {
-							<li><a href="@controllers.contabilidad.routes.SucursalBancosController.indexSucursalBanco()">Sucursal bancos</a></li>
-						}
-						@if(Componente.check("ejercicio")) {
-							<li><a href="@controllers.contabilidad.routes.EjerciciosController.indexEjercicio()">Ejercicios</a></li>
-						}
-						@if(Componente.check("periodos")) {
-							<li><a href="@controllers.contabilidad.routes.PeriodosController.indexPeriodo()">Periodos</a></li>
+
+							<li class="titulo">Configuración</li>
+							@if(Componente.check("bancos")) {
+								<li><a href="@controllers.contabilidad.routes.BancosController.indexBanco()">Bancos</a></li>
+							}
+							@if(Componente.check("bancosSucursales")) {
+								<li><a href="@controllers.contabilidad.routes.SucursalBancosController.indexSucursalBanco()">Sucursal bancos</a></li>
+							}
 						}
 						@if(Componente.check("cuentas")) {
-							<li><a href="@controllers.contabilidad.routes.CuentasController.index()">Cuentas</a></li>
-						}
-						@if(Componente.check("cuentasPresupuestarias")) {
-							<li><a href="@controllers.contabilidad.routes.CuentasAnaliticasController.index()">Cuentas presupuestarias</a></li>
+							@if(Componente.check("ejercicio")) {
+								<li><a href="@controllers.contabilidad.routes.EjerciciosController.indexEjercicio()">Ejercicios</a></li>
+							}
+							@if(Componente.check("periodos")) {
+								<li><a href="@controllers.contabilidad.routes.PeriodosController.indexPeriodo()">Periodos</a></li>
+							}
+							@if(Componente.check("cuentas")) {
+								<li><a href="@controllers.contabilidad.routes.CuentasController.index()">Cuentas</a></li>
+							}
+							@if(Componente.check("cuentasPresupuestarias")) {
+								<li><a href="@controllers.contabilidad.routes.CuentasAnaliticasController.index()">Cuentas presupuestarias</a></li>
+							}
 						}
 					}
 				</ul>
