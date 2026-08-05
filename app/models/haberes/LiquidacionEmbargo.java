@@ -17,7 +17,7 @@ import com.avaje.ebean.annotation.Formula;
 import models.Estado;
 import models.Periodo;
 import models.Proveedor;
-import models.TipoEmbargo;
+import models.haberes.TipoEmbargos;
 import models.Usuario;
 import play.data.format.Formats;
 import play.data.validation.Constraints.Required;
@@ -62,7 +62,7 @@ public class LiquidacionEmbargo  extends Model{
 
 	@ManyToOne
 	@JoinColumn(name="tipo_embargo_id", referencedColumnName="id", insertable=false, updatable=false)
-	public TipoEmbargo tipoEmbargo;
+	public TipoEmbargos tipoEmbargo;
 	@Required(message = "Requiere tipo embargo")
 	public Long tipo_embargo_id;
 
