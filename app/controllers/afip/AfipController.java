@@ -16,7 +16,12 @@ import java.security.Security;
 import java.security.cert.CertStore;
 import java.security.cert.CollectionCertStoreParameters;
 import java.security.cert.X509Certificate;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
@@ -426,6 +431,7 @@ public class AfipController {
 
 		Date GenTime = new Date();
 		GregorianCalendar gentime = new GregorianCalendar();
+		gentime.add(Calendar.MINUTE, -5);
 		GregorianCalendar exptime = new GregorianCalendar();
 		String UniqueId = new Long(GenTime.getTime() / 1000).toString();
 
@@ -438,10 +444,33 @@ public class AfipController {
 		//XMLGregorianCalendarImpl XMLExpTime = new XMLGregorianCalendarImpl(exptime);
 		XMLGregorianCalendar XMLGenTime = javax.xml.datatype.DatatypeFactory.newInstance().newXMLGregorianCalendar(gentime);
 		XMLGregorianCalendar XMLExpTime = javax.xml.datatype.DatatypeFactory.newInstance().newXMLGregorianCalendar(exptime);
+/*
+		// Definir la zona horaria oficial de Argentina
+        ZoneId zoneId = ZoneId.of("America/Argentina/Buenos_Aires");
+        // Obtener la hora actual del servidor en esa zona y truncar milisegundos
+        ZonedDateTime now = ZonedDateTime.now(zoneId).truncatedTo(ChronoUnit.SECONDS);
+
+        // Formatear al estándar requerido: AAAA-MM-DDTHH:MM:SS-03:00
+        String generationTime = now.format(DateTimeFormatter.ISO_OFFSET_DATE_TIME);
+        // El expirationTime suele ser +12 horas (o el valor que uses, máximo 24hs)
+        String expirationTime = now.plusHours(8).format(DateTimeFormatter.ISO_OFFSET_DATE_TIME);
+
+        System.out.println("generationTime: " + generationTime);
+        System.out.println("expirationTime: " + expirationTime);
+        ex = Date.from(now.plusHours(8).toInstant());
+        Cache.set("exptime", ex);
+        System.out.println("exexexexexex: " + ex);
 
 		System.out.println("XMLGenTime: " + XMLGenTime);
 		System.out.println("XMLExpTime: " + XMLExpTime);
 		System.out.println("exptime: " + Cache.get("exptime"));
+
+		System.out.println("=========================================================: ");
+		System.out.println("generationTime: " + generationTime);
+        System.out.println("expirationTime: " + expirationTime);
+        System.out.println("XMLGenTime: " + XMLGenTime);
+		System.out.println("XMLExpTime: " + XMLExpTime);
+		System.out.println("=========================================================: ");*/
 
 		LoginTicketRequest_xml = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>"
 						+"<loginTicketRequest version=\"1.0\">"
