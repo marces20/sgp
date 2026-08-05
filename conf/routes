@@ -980,6 +980,15 @@ GET     /haberes/escalaLaboral/get               	controllers.haberes.EscalasLab
 GET     /haberes/escalaLaboral/ver        			controllers.haberes.EscalasLaboralesController.ver(id:Long)
 GET     /haberes/escalaLaboral/suggestEscalaLaboral/:input        controllers.haberes.EscalasLaboralesController.suggestEscalaLaboral(input:String)
 
+GET     /haberes/tipoEmbargos	         			controllers.haberes.TipoEmbargosController.index()
+GET     /haberes/tipoEmbargos/crear        			controllers.haberes.TipoEmbargosController.crear()
+POST    /haberes/tipoEmbargos/guardar      			controllers.haberes.TipoEmbargosController.guardar()
+GET     /haberes/tipoEmbargos/editar       			controllers.haberes.TipoEmbargosController.editar(id:Long)
+GET     /haberes/tipoEmbargos/eliminar     			controllers.haberes.TipoEmbargosController.eliminar(id:Long)
+POST    /haberes/tipoEmbargos/actualizar   			controllers.haberes.TipoEmbargosController.actualizar()
+GET     /haberes/tipoEmbargos/get               	controllers.haberes.TipoEmbargosController.get(id:Int ?= 0)
+GET     /haberes/tipoEmbargos/ver        			controllers.haberes.TipoEmbargosController.ver(id:Long)
+
 GET     /haberes/convenioBanco	         			controllers.haberes.ConveniosBancosController.index()
 GET     /haberes/convenioBanco/crear        		controllers.haberes.ConveniosBancosController.crear()
 POST    /haberes/convenioBanco/guardar      		controllers.haberes.ConveniosBancosController.guardar()
