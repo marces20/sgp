@@ -28,7 +28,7 @@ public class LiquidacionEmbargoMinimos extends Model{
 
 	@ManyToOne
 	@JoinColumn(name="liquidacion_embargo_concepto_tipo_id_minimo", referencedColumnName="id", insertable=false, updatable=false)
-	public LiquidacionEmbargoConceptoTipos liquidacionEmbargoConceptoTipo;
+	public LiquidacionEmbargoConceptoTipo liquidacionEmbargoConceptoTipo;
 	@Required(message="Debe tener una Liquidacion asociada")
 	public Long liquidacion_embargo_concepto_tipo_id_minimo;
 

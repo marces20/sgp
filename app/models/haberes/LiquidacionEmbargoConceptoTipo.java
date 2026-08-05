@@ -16,7 +16,7 @@ import utils.pagination.Pagination;
 
 @Entity
 @Table(name = "liquidacion_embargo_concepto_tipos")
-public class LiquidacionEmbargoConceptoTipos extends Model{
+public class LiquidacionEmbargoConceptoTipo  extends Model{
 
 	private static final long serialVersionUID = 1L;
 	@Id
@@ -26,15 +26,15 @@ public class LiquidacionEmbargoConceptoTipos extends Model{
 	@Required(message="Debe escribir una denominacion")
 	public String nombre;
 
-	public static Model.Finder<Long,LiquidacionEmbargoConceptoTipos> find = new Model.Finder<Long,LiquidacionEmbargoConceptoTipos>(Long.class, LiquidacionEmbargoConceptoTipos.class);
+	public static Model.Finder<Long,LiquidacionEmbargoConceptoTipo> find = new Model.Finder<Long,LiquidacionEmbargoConceptoTipo>(Long.class, LiquidacionEmbargoConceptoTipo.class);
 
-	public static Pagination<LiquidacionEmbargoConceptoTipos> page(String nombre){
+	public static Pagination<LiquidacionEmbargoConceptoTipo> page(String nombre){
 
-		Pagination<LiquidacionEmbargoConceptoTipos> p = new Pagination<LiquidacionEmbargoConceptoTipos>();
+		Pagination<LiquidacionEmbargoConceptoTipo> p = new Pagination<LiquidacionEmbargoConceptoTipo>();
 		p.setOrderDefault("ASC");
 		p.setSortByDefault("nombre");
 
-		ExpressionList<LiquidacionEmbargoConceptoTipos> e = find.where();
+		ExpressionList<LiquidacionEmbargoConceptoTipo> e = find.where();
 
 		if(!nombre.isEmpty()){
 			e.ilike("nombre", "%" + nombre + "%");
@@ -44,8 +44,8 @@ public class LiquidacionEmbargoConceptoTipos extends Model{
 		return p;
 	}
 
-	public List<LiquidacionEmbargoConceptoTipos> getDataSuggest(String input,Integer limit){
-		List<LiquidacionEmbargoConceptoTipos> l = find.where()
+	public List<LiquidacionEmbargoConceptoTipo> getDataSuggest(String input,Integer limit){
+		List<LiquidacionEmbargoConceptoTipo> l = find.where()
 				.ilike("nombre", "%"+input+"%")
 				.setMaxRows(limit).orderBy("nombre")
 			    .findList();
