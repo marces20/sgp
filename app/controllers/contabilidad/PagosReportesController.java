@@ -1558,7 +1558,7 @@ public class PagosReportesController extends Controller  {
 		data += Strings.padEnd("06", 2, '0');
 
 		data +=  Strings.padEnd(DateUtils.formatDate(p.factura.fecha_orden_pago),10,'0');//fecha emision
-		data += Strings.padStart(l.factura.ordenPago.getNombreCompleto().replace(" ", ""), 16, '0');//numero comprobante
+		data += Strings.padStart(l.factura.ordenPago.getNombreCompleto().replace(" ", "").replace("/", ""), 16, '0');//numero comprobante
 
 		String importeComprobante = new DecimalFormat("###.##").format(p.factura.getBase());
 		data += Strings.padStart(importeComprobante.replace('.', ','), 16, ' '); // importeComprobante
