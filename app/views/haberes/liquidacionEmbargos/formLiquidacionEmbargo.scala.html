@@ -124,7 +124,7 @@ $( function(){ $('.searchModal').modalSearch();})
 		<div class="col-sm-2">
 			<div class="form-group @if(baseForm.error("tipo_embargo_id") != null) {has-error}">
 				<label class="control-label">Tipo Cuenta</label>
-				@select(baseForm("tipo_embargo_id"),TipoEmbargo.find.all().map { p => p.id.toString -> p.nombre}, 'class -> "form-control select", '_default -> "Seleccionar")
+				@select(baseForm("tipo_embargo_id"),models.haberes.TipoEmbargos.find.all().map { p => p.id.toString -> p.nombre}, 'class -> "form-control select", '_default -> "Seleccionar")
 				@baseForm("tipo_embargo_id").error.map{ error =>
 					<div class="text-error">@error.message</div>
 				}
