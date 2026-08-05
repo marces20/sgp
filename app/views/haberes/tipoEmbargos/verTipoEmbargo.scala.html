@@ -1,0 +1,43 @@
+@(lcForm: Form[models.haberes.TipoEmbargos],lc:models.haberes.TipoEmbargos)
+@import helper._
+@import utils._
+@scripts = {
+}
+@implicitFieldConstructor = @{ FieldConstructor(simpleInput.render) }
+
+@views.html.haberes.mainHaberes("Vista Tipo Embargo",scripts) {
+	<div class="page-header">
+		<div class="row">
+			<div class="col-sm-7">
+				<h1>Vista Tipo Embargo</h1>
+			</div>
+			<div class="col-sm-5">
+
+			</div>
+		</div>
+	</div>
+	<div class="row menu-acciones">
+		<div class="col-sm-10">
+			<a href="@controllers.haberes.routes.TipoEmbargosController.crear()"  class="btn btn-default"><i class="glyphicon glyphicon-plus-sign"></i> Nueva Tipo</a>
+			<a href="@controllers.haberes.routes.TipoEmbargosController.editar(lc.id)@UriTrack.get("&")"  class="btn btn-default"><i class="glyphicon glyphicon-edit"></i> Editar</a>
+			<a href="@controllers.haberes.routes.TipoEmbargosController.eliminar(lc.id)@UriTrack.get("&")"  class="btn btn-default delete-confirm-link"><i class="glyphicon glyphicon-trash icono-eliminar"></i> Eliminar</a>
+		</div>
+		<div class="col-sm-2">
+			<a href="@UriTrack.getOnNull(controllers.haberes.routes.TipoEmbargosController.index().absoluteURL())" class="btn btn-default"><i class="glyphicon glyphicon-list"></i></a>
+		</div>
+	</div>
+
+	<input type="hidden" id="tipoEmbargoId" name="tipoEmbargoId" value="@lc.id"/>
+	<div class="row">
+
+		 <div class="col-sm-5">
+			<div class="form-group">
+				<label class="control-label">Nombre</label>
+				<p class="form-control-static form-control">@lcForm.field("nombre").value</p>
+			</div>
+		</div>
+
+	</div>
+
+}
+
