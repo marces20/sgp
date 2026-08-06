@@ -14,6 +14,7 @@ import javax.persistence.Table;
 import com.avaje.ebean.ExpressionList;
 import com.avaje.ebean.annotation.Formula;
 
+import models.Agente;
 import models.Estado;
 import models.Periodo;
 import models.Proveedor;
@@ -74,6 +75,16 @@ public class LiquidacionEmbargo  extends Model{
 
 	@DecimalComa(value="")
 	public BigDecimal importe;
+
+	public BigDecimal porcentaje_afectacion;
+
+	@ManyToOne
+	@JoinColumn(name="agente_id", referencedColumnName="id", insertable=false, updatable=false)
+	public Agente agente;
+	@Required(message="Requiere agente")
+	public Long agente_id;
+
+	public String oficio;
 
 	@Formula(
       select = "_b${ta}.total",
