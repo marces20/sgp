@@ -20,7 +20,7 @@ public class LiquidacionEmbargoConceptoTipo  extends Model{
 
 	private static final long serialVersionUID = 1L;
 	@Id
-	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="liquidacion_embargo_conceptos_id_seq")
+	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="liquidacion_embargo_concepto_tipos_id_seq")
 	public Long id;
 
 	@Required(message="Debe escribir una denominacion")

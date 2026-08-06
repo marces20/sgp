@@ -980,6 +980,16 @@ GET     /haberes/escalaLaboral/get               	controllers.haberes.EscalasLab
 GET     /haberes/escalaLaboral/ver        			controllers.haberes.EscalasLaboralesController.ver(id:Long)
 GET     /haberes/escalaLaboral/suggestEscalaLaboral/:input        controllers.haberes.EscalasLaboralesController.suggestEscalaLaboral(input:String)
 
+GET     /haberes/liquidacionEmbargosConceptoTipo         			controllers.haberes.LiquidacionEmbargosConceptoTiposController.index()
+GET     /haberes/liquidacionEmbargosConceptoTipo/crear        		controllers.haberes.LiquidacionEmbargosConceptoTiposController.crear()
+POST    /haberes/liquidacionEmbargosConceptoTipo/guardar      		controllers.haberes.LiquidacionEmbargosConceptoTiposController.guardar()
+GET     /haberes/liquidacionEmbargosConceptoTipo/editar       		controllers.haberes.LiquidacionEmbargosConceptoTiposController.editar(id:Long)
+GET     /haberes/liquidacionEmbargosConceptoTipo/eliminar     		controllers.haberes.LiquidacionEmbargosConceptoTiposController.eliminar(id:Long)
+POST    /haberes/liquidacionEmbargosConceptoTipo/actualizar   		controllers.haberes.LiquidacionEmbargosConceptoTiposController.actualizar()
+GET     /haberes/liquidacionEmbargosConceptoTipo/modalBuscar		controllers.haberes.LiquidacionEmbargosConceptoTiposController.modalBuscar()
+GET     /haberes/liquidacionEmbargosConceptoTipo/get               	controllers.haberes.LiquidacionEmbargosConceptoTiposController.get(id:Int ?= 0)
+GET     /haberes/liquidacionEmbargosConceptoTipo/ver        		controllers.haberes.LiquidacionEmbargosConceptoTiposController.ver(id:Long)
+
 GET     /haberes/tipoEmbargos	         			controllers.haberes.TipoEmbargosController.index()
 GET     /haberes/tipoEmbargos/crear        			controllers.haberes.TipoEmbargosController.crear()
 POST    /haberes/tipoEmbargos/guardar      			controllers.haberes.TipoEmbargosController.guardar()
