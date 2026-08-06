@@ -175,3 +175,15 @@ $( function(){ $('.searchModal').modalSearch();})
 		</div>
 
 	</div>
+	<div class="row">
+		<div class="col-sm-4">
+			<label class="control-label">Oficio</label>
+			<div class="form-group">
+				@if(formularioEditar){
+					@inputText(baseForm("oficio"), 'class -> "form-control", 'id -> "importe")
+				}else{
+					@inputText(baseForm("oficio"), 'class -> "form-control", 'id -> "importe",'readOnly -> "readOnly")
+				}
+			</div>
+		</div>
+	</div>
