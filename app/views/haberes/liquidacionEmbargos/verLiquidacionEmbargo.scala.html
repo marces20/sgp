@@ -35,17 +35,24 @@
 	<div class="row">
 		<div class="col-sm-4">
 			<div class="form-group">
+				<label class="control-label">Agente</label>
+				<p class="form-control-static form-control">@lcForm.field("agente.apellido").value
+			</div>
+		</div>
+		<div class="col-sm-4">
+			<div class="form-group">
 				<label class="control-label">Puesto Laboral</label>
 				<p class="form-control-static form-control">@lcForm.field("puestoLaboral.legajo.agente.apellido").value</p>
 			</div>
 		</div>
-		<div class="col-sm-8">
+		<div class="col-sm-4">
 			<div class="form-group">
 				<label class="control-label">Contraparte</label>
 				<p class="form-control-static form-control">@lcForm.field("proveedor.nombre").value -
 				@if(lc.proveedor.getCuentaBancaria() != null){CUENTA: @lc.proveedor.getCuentaBancaria().numero_cuenta - CBU: @lc.proveedor.getCuentaBancaria().cbu}else{NO TIENE CUENTA CARGADA!!}</p>
 			</div>
 		</div>
+
 	</div>
 	<div class="row">
 		<div class="col-sm-2">
@@ -69,8 +76,22 @@
 		</div>
 		<div class="col-sm-2">
 			<div class="form-group">
+				<label for="fecha_factura" class="control-label">Porcentaje</label>
+				<p class="form-control-static form-control">@lcForm.field("porcentaje_afectacion").value</p>
+			</div>
+		</div>
+		<div class="col-sm-2">
+			<div class="form-group">
 				<label class="control-label">Tipo Cuenta</label>
 				<p class="form-control-static form-control">@lcForm.field("tipoEmbargo.nombre").value</p>
+			</div>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-sm-4">
+			<div class="form-group">
+				<label class="control-label">Oficio</label>
+				<p class="form-control-static form-control">@lcForm.field("oficio").value</p>
 			</div>
 		</div>
 	</div>

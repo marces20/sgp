@@ -21,6 +21,28 @@ $( function(){ $('.searchModal').modalSearch();})
 	@inputText(baseForm("id"), 'type -> "hidden", 'id -> "liquidacionEmbargoId")
 	<div class="row">
 		<div class="col-sm-4">
+			<div class="form-group @if(baseForm.error("agente_id") != null) {has-error}else{has-required}">
+				<label class="control-label">Agente</label>
+				<div class="input-group">
+					@if(formularioEditar){
+						@inputText(baseForm("agente.apellido"), 'name -> "", 'class -> "form-control", 'id -> "agente")
+						@inputText(baseForm("agente_id"), 'hidden -> "hidden", 'id -> "agente_id")
+						<span class="input-group-addon">
+							<a href="#" class="searchModal" id="searchAgente"
+										data-title="Selección de agente"
+										data-url="@controllers.rrhh.routes.AgentesController.modalBuscar()"
+										data-height="650" data-width="700" data-listen="modal.seleccion.agente.simple"
+										data-label="#agente" data-field="#agente_id">
+										<i class="glyphicon glyphicon-search"></i></a></span>
+					}else{
+						@inputText(baseForm("agente.apellido"),'class -> "form-control", 'id -> "agente",'readOnly -> "readOnly")
+						@inputText(baseForm("agente_id"),'hidden -> "hidden", 'id -> "agente_id")
+						<span class="input-group-addon"></span>
+					}
+				</div>
+			</div>
+		</div>
+		<div class="col-sm-4">
 				<div class="form-group @if(baseForm.error("puesto_laboral_id") != null) {has-error}else{has-required}">
 					<label for="puestoLaboral" class="control-label">Puesto Laboral</label>
 
@@ -86,6 +108,7 @@ $( function(){ $('.searchModal').modalSearch();})
 
 			</div>
 		</div>
+
 	</div>
 	<div class="row">
 		<div class="col-sm-2">
@@ -108,7 +131,7 @@ $( function(){ $('.searchModal').modalSearch();})
 				@if(formularioEditar){
 					@inputText(baseForm("fecha_fin"),'class -> "form-control date", 'id -> "fecha_fin")
 				}else{
-
+					@inputText(baseForm("fecha_fin"),'class -> "form-control date", 'id -> "fecha_fin",'readOnly -> "readOnly")
 				}
 				@baseForm("fecha_fin").error.map{ error =>
 					<div class="text-error">@error.message</div>
@@ -118,16 +141,37 @@ $( function(){ $('.searchModal').modalSearch();})
 		<div class="col-sm-2">
 		<label class="control-label">Importe Tope</label>
 			<div class="form-group">
-				@inputText(baseForm("importe"), 'class -> "form-control", 'id -> "importe")
-			</div>
-		</div>
-		<div class="col-sm-2">
-			<div class="form-group @if(baseForm.error("tipo_embargo_id") != null) {has-error}">
-				<label class="control-label">Tipo Cuenta</label>
-				@select(baseForm("tipo_embargo_id"),models.haberes.TipoEmbargos.find.all().map { p => p.id.toString -> p.nombre}, 'class -> "form-control select", '_default -> "Seleccionar")
-				@baseForm("tipo_embargo_id").error.map{ error =>
-					<div class="text-error">@error.message</div>
+				@if(formularioEditar){
+					@inputText(baseForm("importe"), 'class -> "form-control", 'id -> "importe")
+				}else{
+					@inputText(baseForm("importe"), 'class -> "form-control", 'id -> "importe",'readOnly -> "readOnly")
 				}
 			</div>
 		</div>
+
+		<div class="col-sm-2">
+		<label class="control-label">Porcentaje</label>
+			<div class="form-group">
+				@if(formularioEditar){
+					@inputText(baseForm("porcentaje_afectacion"), 'class -> "form-control", 'id -> "importe")
+				}else{
+					@inputText(baseForm("porcentaje_afectacion"), 'class -> "form-control", 'id -> "importe",'readOnly -> "readOnly")
+				}
+			</div>
+		</div>
+
+		<div class="col-sm-2">
+			<div class="form-group @if(baseForm.error("tipo_embargo_id") != null) {has-error}">
+				<label class="control-label">Tipo Cuenta</label>
+				@if(formularioEditar){
+					@select(baseForm("tipo_embargo_id"),models.haberes.TipoEmbargos.find.all().map { p => p.id.toString -> p.nombre}, 'class -> "form-control select", '_default -> "Seleccionar")
+					@baseForm("tipo_embargo_id").error.map{ error =>
+						<div class="text-error">@error.message</div>
+					}
+				}else{
+					<p class="form-control-static form-control">@baseForm.field("tipoEmbargo.nombre").value</p>
+				}
+			</div>
+		</div>
+
 	</div>
