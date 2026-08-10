@@ -3556,16 +3556,20 @@ order by nc.numero
 
 	    datos.put("tipo_pago",recupero_tipo_pago);
 
-	    /*if(rf.cliente.cie != null && !rf.cliente.cie.isEmpty()) {
+	    String direccion = rf.cliente.getFirstDireccion();
+
+	    if(rf.cliente.cie != null && !rf.cliente.cie.isEmpty()) {
 	    	datos.put("cuittitulo", "CIE:");
 	    	datos.put("cuit", rf.cliente.cie);
-	    	datos.put("direccion", "Paraguay");
-	    }else {*/
+	    	datos.put("direccion", direccion);
+	    }else {
 	    	datos.put("cuittitulo", "CUIT:");
 	    	datos.put("cuit", rf.cliente.cuit2);
-	    	String direccion = rf.cliente.getFirstDireccion();
+
 	 	    datos.put("direccion", direccion);
-	    //}
+	    }
+
+
 
 	    datos.put("razon_social", rf.cliente.nombre);
 
@@ -3740,16 +3744,16 @@ order by nc.numero
 
 	    datos.put("tipo_pago",((rf.recupero_tipo_pago_id != null)?rf.recuperoTipoPago.nombre:"Contado"));
 
-	    /*if(rf.cliente.cie != null && !rf.cliente.cie.isEmpty()) {
+	    if(rf.cliente.cie != null && !rf.cliente.cie.isEmpty()) {
 	    	datos.put("cuittitulo", "CIE:");
 	    	datos.put("cuit", rf.cliente.cie);
-	    	datos.put("direccion", "Paraguay");
-	    }else {*/
+	    	datos.put("direccion", "direccion");
+	    }else {
 	    	datos.put("cuittitulo", "CUIT:");
 	    	datos.put("cuit", rf.cliente.cuit2);
 	    	String direccion = rf.cliente.getFirstDireccion();
 	 	    datos.put("direccion", direccion);
-	   // }
+	    }
 
 
 	    datos.put("razon_social", rf.cliente.nombre);
@@ -3823,17 +3827,17 @@ order by nc.numero
 
 	    datos.put("tipo_pago",((rf.recupero_tipo_pago_id != null)?rf.recuperoTipoPago.nombre:"Contado"));
 
-
-	    /*if(rf.cliente.cie != null && !rf.cliente.cie.isEmpty()) {
+	    String direccion = rf.cliente.getFirstDireccion();
+	    if(rf.cliente.cie != null && !rf.cliente.cie.isEmpty()) {
 	    	datos.put("cuittitulo", "CIE:");
 	    	datos.put("cuit", rf.cliente.cie);
-	    	datos.put("direccion", "Paraguay");
-	    }else {*/
+	    	datos.put("direccion", direccion);
+	    }else {
 	    	datos.put("cuittitulo", "CUIT:");
 	    	datos.put("cuit", rf.cliente.cuit2);
-	    	String direccion = rf.cliente.getFirstDireccion();
+
 	 	    datos.put("direccion", direccion);
-	    //}
+	    }
 
 	    datos.put("razon_social", rf.cliente.nombre);
 
@@ -4169,15 +4173,16 @@ order by nc.numero
 
 
 	    Cliente cc = it.get(0).cliente;
+	    String direccion = cc.getFirstDireccion();
 
 	    if(cc.cie != null && !cc.cie.isEmpty()) {
 	    	datos.put("cuittitulo", "CIE:");
 	    	datos.put("cuit", cc.cie);
-	    	datos.put("direccion", "Paraguay");
+	    	datos.put("direccion", direccion);
 	    }else {
 	    	datos.put("cuittitulo", "CUIT:");
 	    	datos.put("cuit", cc.cuit2);
-	    	String direccion = cc.getFirstDireccion();
+
 	 	    datos.put("direccion", direccion);
 	    }
 
