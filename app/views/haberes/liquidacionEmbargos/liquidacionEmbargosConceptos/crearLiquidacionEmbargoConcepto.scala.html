@@ -1,0 +1,8 @@
+@(detalleForm: Form[models.haberes.LiquidacionEmbargoConcepto])
+@import helper._
+@implicitFieldConstructor = @{ FieldConstructor(simpleInput.render) }
+
+@helper.form(action = controllers.haberes.routes.LiquidacionEmbargosConceptosController.guardar()) {
+	@views.html.haberes.liquidacionEmbargos.liquidacionEmbargosConceptos.formLiquidacionEmbargoConcepto(detalleForm)
+
+}

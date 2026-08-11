@@ -1,0 +1,22 @@
+@(detalle: models.haberes.LiquidacionEmbargoConcepto, editable: Boolean)
+
+
+<tr data-id="@detalle.id">
+
+	<td class="accion-editar">
+		@if(editable){
+			<a class="btn btn-default btn-xs modificarLiquidacionEmbargoConcepto" href="@controllers.haberes.routes.LiquidacionEmbargosConceptosController.editar(detalle.id)">
+			<i class="glyphicon glyphicon-edit"></i></a>
+		}
+	</td>
+	<td align="center">@if(detalle.liquidacionEmbargoConceptoTipo != null){@detalle.liquidacionEmbargoConceptoTipo.nombre}</td>
+	<td align="center">@detalle.cantidad</td>
+	<td align="center">@utils.NumberUtils.formatNumber(detalle.valor_dato.doubleValue())</td>
+	<td align="center">@if(detalle.porcentaje_afectacion != null){@detalle.porcentaje_afectacion}</td>
+	<td>
+	@if(editable){
+		<a class="btn btn-default btn-xs eliminarLiquidacionEmbargoConcepto" href="@controllers.haberes.routes.LiquidacionEmbargosConceptosController.eliminar(detalle.id)"><i class="glyphicon glyphicon-trash icono-eliminar"></i></a>
+	}
+	</td>
+
+</tr>

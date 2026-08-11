@@ -1,0 +1,124 @@
+@(paginador:  utils.pagination.Pagination[models.haberes.LiquidacionEmbargoConcepto], editable: Boolean,lc:models.haberes.LiquidacionEmbargo)
+@import helper._
+@import utils._
+@import models.auth._
+
+<div id="listaLiquidacionEmbargoConceptos" class="contenedorPaginador ajaxPaginador">
+
+	<p>
+		@if(editable && Permiso.check("liquidacionEmbargoConceptoAgregar")){
+			<a class="btn btn-default btn-xs" href="#" id="nuevoLiquidacionEmbargoConcepto"><i class="glyphicon glyphicon-plus"></i> Nuevo</a>
+		}
+	</p>
+	<table id="listaDeLiquidacionEmbargoConceptos" class="table table-striped table-bordered">
+		<thead>
+			<tr>
+				<th class="accion-editar">#</th>
+				<th>Concepto</th>
+				<th>Cantidad</th>
+				<th>Valor</th>
+				<th>Porcentaje</th>
+				<th></th>
+			<tr>
+		</thead>
+		<tbody>
+		@for(detalle <- paginador.getList) {
+			@views.html.haberes.liquidacionEmbargos.liquidacionEmbargosConceptos.lineaLiquidacionEmbargoConcepto(detalle, editable)
+		}
+		</tbody>
+
+
+	</table>
+</div>
+
+<script>
+$( function(){
+	/*
+	 * Ventana de carga linea de productos en ordenes
+	 */
+
+	var contenedor2 = $("#listaLiquidacionEmbargoConceptos");
+
+	contenedor2.on('click', '#nuevoLiquidacionEmbargoConcepto', function(){
+		urlContenidoModal = '/haberes/liquidacionEmbargoConcepto/crear?liquidacionEmbargoId='+$('#liquidacionEmbargoId').val();
+		mostrarModal2(urlContenidoModal);
+		return false;
+	});
+
+	contenedor2.on('click', '.modificarLiquidacionEmbargoConcepto', function(){
+		lineaParaEditar = $(this).closest('tr');
+		var modal = mostrarModal($(this).attr('href'));
+		modal.dialog('option', 'title', 'Editar Concepto');
+		return false;
+	});
+
+	contenedor2.on('click', '.eliminarLiquidacionEmbargoConcepto', function(){
+		var url = $(this).attr('href');
+		var mensaje = "¿Confirma que desea eliminar el registro?";
+		if(confirm(mensaje)){
+			$this = $(this);
+			$.get(url, function(data){
+				if(data.success){
+					$this.closest("tr").remove();
+				} else {
+					alert("No se puedo eliminar el registro.");
+				}
+			});
+		}
+		return false;
+	});
+
+	function mostrarModal2(url){
+		modalCargaProductos = $('<div></div>').dialog({
+			resizable: false,
+		    title: "Cargar Concepto",
+		    height: 400,
+		    width: 750,
+		    modal: true,
+		    open: function( event, ui ) {
+				$.get(url, function(data){
+					modalCargaProductos.html(data);
+				});
+		    },
+		    close: function(event, ui ){
+		    	modalCargaProductos.dialog('destroy');
+			}
+		  });
+
+		modalCargaProductos.on('click', '.cancelar', function(){
+			modalCargaProductos.dialog('destroy');
+			return false;
+		});
+
+		modalCargaProductos.on('submit', function(e){
+			var href = $(e.target).attr('action');
+			var data = $(e.target).serialize();
+			$.post(href, data, function(resultado){
+				if(resultado.success && resultado.nuevo){
+					$('#listaDeLiquidacionEmbargoConceptos tbody').prepend(resultado.html);
+					modalCargaProductos.dialog( "destroy" );
+				} else if(resultado.success && resultado.modificar){
+					$(lineaParaEditar).replaceWith(resultado.html);
+					modalCargaProductos.dialog( "destroy" );
+				} else {
+					modalCargaProductos.html(resultado);
+				}
+			});
+			return false;
+		});
+
+
+		return modalCargaProductos;
+	}
+
+
+	contenedor2.find('form').on('submit', function(){
+		var url = $(this).attr("action");
+		var query = $(this).serialize();
+		$.get(url+"?"+query, function(data){
+			contenedor.parent().html(data);
+		});
+		return false;
+	});
+});
+</script>

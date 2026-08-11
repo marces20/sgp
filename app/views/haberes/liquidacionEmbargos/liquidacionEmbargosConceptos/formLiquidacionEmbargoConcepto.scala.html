@@ -1,0 +1,70 @@
+@(detalleForm: Form[models.haberes.LiquidacionEmbargoConcepto])
+@import helper._
+@import utils._
+@import models.auth._
+@import models.haberes._
+@implicitFieldConstructor = @{ FieldConstructor(simpleInput.render) }
+
+@if(flash.containsKey("error")) {
+	<div class="alert alert-danger">
+		<i class="glyphicon glyphicon-remove-sign"></i> @flash.get("error")
+	</div>
+}
+<script>
+$(function(){
+	$('.searchModal').modalSearch();
+	$("#cantidad,#valor_dato,#porcentaje_afectacion").numeric_input();
+	$("#importe").numeric_input({allowNegative: true});
+});
+</script>
+<div class="row">
+	@inputText(detalleForm("liquidacion_embargo_id"), 'type -> "hidden")
+
+	<div class="form-group @if(detalleForm.error("liquidacionEmbargoConceptoTipo") != null) {has-error}else{has-required}">
+			<label for="@detalleForm("liquidacionEmbargoConceptoTipo")" class="control-label">Concepto</label>
+			@select(detalleForm("liquidacion_embargo_concepto_tipo_id"),
+			LiquidacionEmbargoConceptoTipo.find.all().map { p => p.id.toString -> p.nombre},
+			'class -> "form-control select", '_default -> "Seleccionar"),
+
+			@detalleForm("liquidacion_embargo_concepto_tipo_id").error.map{ error =>
+				<div class="text-error">@error.message</div>
+			}
+		</div>
+
+	<div class="col-sm-3">
+		<label class="control-label">Cantidad</label>
+		<div class="form-group @if(detalleForm.error("cantidad") != null) {has-error} else {has-required}">
+			@inputText(detalleForm("cantidad"), 'class -> "form-control", 'id -> "importe")
+			@detalleForm("cantidad").error.map{ error => <div class="text-error">@error.message</div>}
+		</div>
+	</div>
+
+	<div class="col-sm-3">
+		<label class="control-label">Valor</label>
+		<div class="form-group @if(detalleForm.error("valor_dato") != null) {has-error} else {has-required}">
+			@inputText(detalleForm("valor_dato"), 'class -> "form-control", 'id -> "valor_dato")
+			@detalleForm("valor_dato").error.map{ error => <div class="text-error">@error.message</div>}
+		</div>
+	</div>
+
+	<div class="col-sm-3">
+		<label class="control-label">Porcentaje</label>
+		<div class="form-group @if(detalleForm.error("porcentaje_afectacion") != null) {has-error} else {has-required}">
+			@inputText(detalleForm("porcentaje_afectacion"), 'class -> "form-control", 'id -> "porcentaje_afectacion")
+			@detalleForm("porcentaje_afectacion").error.map{ error => <div class="text-error">@error.message</div>}
+		</div>
+	</div>
+
+
+</div>
+<div class="row">
+	<div class="row form-actions">
+	    <div class="col-lg-offset-4 col-lg-8">
+	      <button type="submit" class="btn btn-default"><i class="glyphicon glyphicon-floppy-disk"></i>Guardar</button>
+	      <a href="" class="btn btn-default cancelar"><i class="glyphicon glyphicon-floppy-remove"></i>Cancelar</a>
+	    </div>
+	</div>
+</div>
+<script>
+
+</script>
