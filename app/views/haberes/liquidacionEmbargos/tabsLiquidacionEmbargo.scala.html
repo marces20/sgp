@@ -4,13 +4,18 @@
 
 	<ul id="facturaTab" class="nav nav-tabs">
 		<li class="active"><a class="tabDetalle" href="#contenedorDetalles" data-toggle="tab">Retenciones</a></li>
+		<li><a class="tabConcepto" href="#contenedorConceptos" data-toggle="tab">Conceptos</a></li>
 
 	</ul>
 	<div class="tab-content margin-bottom-25">
 		<div class="tab-pane active" id="contenedorDetalles">
 			@views.html.haberes.liquidacionEmbargos.contenidoTabDetalle(formularioCarga, lpForm)
 		</div>
-
+		<div class="tab-pane" id="contenedorConceptos">
+			@views.html.haberes.liquidacionEmbargos.contenidoTabConceptos(formularioCarga, lpForm)
+		</div>
 	</div>
+
+
 
 	<hr />
