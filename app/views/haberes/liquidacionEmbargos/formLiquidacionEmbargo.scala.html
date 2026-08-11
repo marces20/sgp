@@ -160,7 +160,7 @@ $( function(){ $('.searchModal').modalSearch();})
 			</div>
 		</div>
 
-		<div class="col-sm-2">
+		<div class="col-sm-4">
 			<div class="form-group @if(baseForm.error("tipo_embargo_id") != null) {has-error}">
 				<label class="control-label">Tipo Cuenta</label>
 				@if(formularioEditar){
@@ -169,7 +169,8 @@ $( function(){ $('.searchModal').modalSearch();})
 						<div class="text-error">@error.message</div>
 					}
 				}else{
-					<p class="form-control-static form-control">@baseForm.field("tipoEmbargo.nombre").value</p>
+					@select(baseForm("tipo_embargo_id"),models.haberes.TipoEmbargos.find.all().map { p => p.id.toString -> p.nombre}, 'class -> "form-control select",'disabled -> "disabled")
+					@inputText(baseForm("tipo_embargo_id"), 'type -> "hidden")
 				}
 			</div>
 		</div>
