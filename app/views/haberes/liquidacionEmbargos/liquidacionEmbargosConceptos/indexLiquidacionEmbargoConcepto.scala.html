@@ -47,7 +47,7 @@ $( function(){
 
 	contenedor2.on('click', '.modificarLiquidacionEmbargoConcepto', function(){
 		lineaParaEditar = $(this).closest('tr');
-		var modal = mostrarModal($(this).attr('href'));
+		var modal = mostrarModal2($(this).attr('href'));
 		modal.dialog('option', 'title', 'Editar Concepto');
 		return false;
 	});

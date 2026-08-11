@@ -20,7 +20,7 @@ $(function(){
 <div class="row">
 	@inputText(detalleForm("liquidacion_embargo_id"), 'type -> "hidden")
 
-	<div class="form-group @if(detalleForm.error("liquidacionEmbargoConceptoTipo") != null) {has-error}else{has-required}">
+	<div class="col-sm-3" class="form-group @if(detalleForm.error("liquidacionEmbargoConceptoTipo") != null) {has-error}else{has-required}">
 			<label for="@detalleForm("liquidacionEmbargoConceptoTipo")" class="control-label">Concepto</label>
 			@select(detalleForm("liquidacion_embargo_concepto_tipo_id"),
 			LiquidacionEmbargoConceptoTipo.find.all().map { p => p.id.toString -> p.nombre},
