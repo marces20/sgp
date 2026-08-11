@@ -1119,6 +1119,13 @@ POST    /haberes/liquidacionEmbargoDetalle/guardar        	controllers.haberes.L
 POST    /haberes/liquidacionEmbargoDetalle/actualizar     	controllers.haberes.LiquidacionEmbargosDetallesController.actualizar()
 GET     /haberes/liquidacionEmbargoDetalle/eliminar       	controllers.haberes.LiquidacionEmbargosDetallesController.eliminar(id:Long)
 
+GET     /haberes/liquidacionEmbargoConcepto/index       	controllers.haberes.LiquidacionEmbargosConceptosController.index(id:Long ?= 0, editable:Boolean ?= false)
+GET     /haberes/liquidacionEmbargoConcepto/crear         	controllers.haberes.LiquidacionEmbargosConceptosController.crear(liquidacionEmbargoId:String)
+GET     /haberes/liquidacionEmbargoConcepto/editar         	controllers.haberes.LiquidacionEmbargosConceptosController.editar(id:Long)
+POST    /haberes/liquidacionEmbargoConcepto/guardar        	controllers.haberes.LiquidacionEmbargosConceptosController.guardar()
+POST    /haberes/liquidacionEmbargoConcepto/actualizar     	controllers.haberes.LiquidacionEmbargosConceptosController.actualizar()
+GET     /haberes/liquidacionEmbargoConcepto/eliminar       	controllers.haberes.LiquidacionEmbargosConceptosController.eliminar(id:Long)
+
 #-----------------------------FIN MODULO HABERES ---------------------------------
 
 GET    /suggestInstitucionExterna/:input	controllers.rrhh.InstitucionExternaController.suggestInstitucionExterna(input: String)
