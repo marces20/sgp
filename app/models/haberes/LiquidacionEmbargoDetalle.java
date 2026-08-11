@@ -63,7 +63,7 @@ public class LiquidacionEmbargoDetalle  extends Model{
     	p.setOrderDefault("DESC");
     	p.setSortByDefault("periodo_id");
 
-    	p.setExpressionList(find.where().eq("liquidacion_embargo_id", liquidacionEmbargoId));
+    	p.setExpressionList(find.fetch("liquidacionConcepto").fetch("periodo").fetch("liquidacionTipo").where().eq("liquidacion_embargo_id", liquidacionEmbargoId));
     	return p;
 	}
 }
