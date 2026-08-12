@@ -118,8 +118,8 @@ public class ActualizarBalance extends Controller {
 
 		try {
 
-			Date fd = DateUtils.formatDate("01/01/2025", "dd/MM/yyyy");
-			Date fh = DateUtils.formatDate("31/03/2025", "dd/MM/yyyy");
+			Date fd = DateUtils.formatDate("01/01/2026", "dd/MM/yyyy");
+			Date fh = DateUtils.formatDate("30/04/2026", "dd/MM/yyyy");
 
 
 			conn2 = Configuracion2.get2().getConnection2();
@@ -243,8 +243,8 @@ public class ActualizarBalance extends Controller {
 
 		try {
 
-			Date fd = DateUtils.formatDate("01/01/2025", "dd/MM/yyyy");
-			Date fh = DateUtils.formatDate("31/03/2025", "dd/MM/yyyy");
+			Date fd = DateUtils.formatDate("01/01/2026", "dd/MM/yyyy");
+			Date fh = DateUtils.formatDate("30/04/2026", "dd/MM/yyyy");
 
 
 			conn2 = Configuracion2.get2().getConnection2();
@@ -371,8 +371,8 @@ public class ActualizarBalance extends Controller {
 
 		try {
 
-			Date fd = DateUtils.formatDate("01/01/2025", "dd/MM/yyyy");
-			Date fh = DateUtils.formatDate("31/03/2025", "dd/MM/yyyy");
+			Date fd = DateUtils.formatDate("01/01/2026", "dd/MM/yyyy");
+			Date fh = DateUtils.formatDate("30/04/2026", "dd/MM/yyyy");
 
 
 			conn2 = Configuracion2.get2().getConnection2();
@@ -490,8 +490,8 @@ public class ActualizarBalance extends Controller {
 
 		try {
 
-			Date fd = DateUtils.formatDate("01/01/2025", "dd/MM/yyyy");
-			Date fh = DateUtils.formatDate("31/03/2025", "dd/MM/yyyy");
+			Date fd = DateUtils.formatDate("01/01/2026", "dd/MM/yyyy");
+			Date fh = DateUtils.formatDate("30/04/2026", "dd/MM/yyyy");
 
 
 			conn2 = Configuracion2.get2().getConnection2();
@@ -609,8 +609,8 @@ public class ActualizarBalance extends Controller {
 
 		try {
 
-			Date fd = DateUtils.formatDate("01/06/2025", "dd/MM/yyyy");
-			Date fh = DateUtils.formatDate("30/06/2025", "dd/MM/yyyy");
+			Date fd = DateUtils.formatDate("01/01/2026", "dd/MM/yyyy");
+			Date fh = DateUtils.formatDate("31/01/2026", "dd/MM/yyyy");
 
 
 			conn2 = Configuracion2.get2().getConnection2();
@@ -1408,7 +1408,7 @@ public class ActualizarBalance extends Controller {
 					}
 
 
-
+					/*
 					//LIMPIEZA Pindoi
 					if(idProveedor.equals(1592)) {//Proveedor: Constructora Pindoi S.R.L./
 
@@ -1455,6 +1455,58 @@ public class ActualizarBalance extends Controller {
 						}
 
 						//"2";"LACMI	Transferencia LACMI
+						if(fl.factura.orden.deposito_id.equals((long)3)) {
+							cuentaId = new Long(595);
+						}
+					}*/
+
+					//LIMPIEZA GRUPO CBA S.A.S.
+					if(idProveedor.equals(18419)) {//GRUPO CBA S.A.S.
+
+						cuentaId = new Long(546);
+
+
+						//HOSPITAL ESCUELA DE AGUDOS	4.2.2.02.06 Servicio Limpieza x
+						if(fl.factura.orden.deposito_id.equals((long)1)) {
+							cuentaId = new Long(502);
+						}
+
+						//INSTITUTO MISIONERO DEL CANCER	4.2.2.05.02 Servicio Limpieza IMCx
+						if(fl.factura.orden.deposito_id.equals((long)34)) {
+							cuentaId = new Long(576);
+						}
+
+						//HOSPITAL FAVALORO	4.2.2.02.44 Transferencia a Favaloro x
+						if(fl.factura.orden.deposito_id.equals((long)21)) {
+							cuentaId = new Long(604);
+						}
+
+						//HOSPITAL PEDIATRICO	4.2.2.07.02 Servicio Limpieza Pediatrico x
+						if(fl.factura.orden.deposito_id.equals((long)25)) {
+							cuentaId = new Long(581);
+						}
+
+						//HOSPITAL FATIMA	4.2.2.06.02 Servicio Limpieza Fatima x
+						if(fl.factura.orden.deposito_id.equals((long)32)) {
+							cuentaId = new Long(577);
+						}
+
+						//"2";"HOSPITAL MATERNO NEONATAL" 4.2.2.08.02 Servicio Limpieza Materno x
+						if(fl.factura.orden.deposito_id.equals((long)2)) {
+							cuentaId = new Long(582);
+						}
+
+						//BANCO DE SANGRE	4.2.2.02.27 Transferencia Bco Sangrex
+						if(fl.factura.orden.deposito_id.equals((long)30)) {
+							cuentaId = new Long(523);
+						}
+
+						//"27";"UNIDAD DE TRASLADO" 4.2.2.02.37 Servicio Limpieza Ud Traslado x
+						if(fl.factura.orden.deposito_id.equals((long)27)) {
+							cuentaId = new Long(557);
+						}
+
+						//"2";"LACMI	Transferencia LACMI "4.2.2.09.01 Transferencia a LACMI"" x
 						if(fl.factura.orden.deposito_id.equals((long)3)) {
 							cuentaId = new Long(595);
 						}
@@ -1967,6 +2019,11 @@ public class ActualizarBalance extends Controller {
 	public static Long getCuentaTransferencia(Long idInstitucion) {
 		Long ret= new Long(521); //4.2.2.02.25 Transferencias a otras Instituciones
 
+
+		//HOSPITAL FAVALORO 4.2.2.02.44 Transferencia a Transferencia a Favaloro
+		if(idInstitucion.equals((long)21)) {// 21	"HOSPITAL FAVALORO"
+			ret = new Long(604);
+		}
 
 		//IMC 4.2.2.05.01 Transferencia a IMC
 		if(idInstitucion.equals((long)34)) {// IMC
