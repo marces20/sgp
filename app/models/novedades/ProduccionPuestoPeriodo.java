@@ -132,21 +132,21 @@ public class ProduccionPuestoPeriodo extends Model{
 			"JOIN organigramas o on a.organigrama_id = o.id " +
 			"JOIN periodos p on p.id = prod_mes.periodo_id " +
 			"JOIN produccion_ips_nomencladores prod_nom ON (prod_mes.codigo_ips = prod_nom.codigo_ips and prod_mes.periodo_id between prod_nom.periodo_desde_id and coalesce(prod_nom.periodo_hasta_id,prod_mes.periodo_id)) " +
-			
+
 			"LEFT JOIN produccion_puesto_laboral_coeficientes prod_coef ON  " +
 				"(prod_coef.puesto_laboral_id = prod_mes.puesto_laboral_id  " +
 				"AND prod_coef.codigo_ips = prod_mes.codigo_ips  " +
 				"AND prod_mes.periodo_id between prod_coef.periodo_desde_id  " +
 				"and coalesce(prod_coef.periodo_hasta_id, prod_mes.periodo_id) " +
 				"and prod_coef.organigrama_id = a.organigrama_produccion_id) " +
-			
+
 			"LEFT JOIN produccion_profesional_topes prod_topes ON  " +
 				"(prod_mes.puesto_laboral_id = prod_topes.puesto_laboral_id AND prod_mes.periodo_id BETWEEN prod_topes.periodo_desde_id AND COALESCE(prod_topes.periodo_hasta_id, prod_mes.periodo_id)) " +
-			
+
 			"LEFT JOIN escalas_laborales_montos elm ON " +
 				"(elm.escala_laboral_id = pl.escala_laboral_id AND elm.liquidacion_concepto_id = 15 AND " +
-					"prod_mes.periodo_id BETWEEN elm.periodo_desde_id and coalesce(elm.periodo_hasta_id, prod_mes.periodo_id)) " +
-			
+					"prod_nom.periodo_desde_id BETWEEN elm.periodo_desde_id and coalesce(elm.periodo_hasta_id, prod_nom.periodo_desde_id)) " +
+
 			"LEFT JOIN liquidacion_conceptos_especialidad espe ON " +
 				"(espe.especialidad_id = pl.especialidad_id AND prod_mes.periodo_id  BETWEEN espe.periodo_desde_id AND coalesce(espe.periodo_hasta_id, prod_mes.periodo_id)) " +
 			"WHERE prod_mes.planificacion_id = :planificacion_id " +
