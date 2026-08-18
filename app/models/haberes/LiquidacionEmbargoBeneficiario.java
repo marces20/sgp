@@ -36,20 +36,14 @@ public class LiquidacionEmbargoBeneficiario extends Model{
 
 	public static Model.Finder<Long,LiquidacionEmbargoBeneficiario> find = new Model.Finder<Long,LiquidacionEmbargoBeneficiario>(Long.class, LiquidacionEmbargoBeneficiario.class);
 
-	public static Pagination<LiquidacionEmbargoBeneficiario> page(String nombre){
+	public static Pagination<LiquidacionEmbargoBeneficiario> page(Long liquidacionEmbargoId) {
 
-		Pagination<LiquidacionEmbargoBeneficiario> p = new Pagination<LiquidacionEmbargoBeneficiario>();
-		p.setOrderDefault("ASC");
-		p.setSortByDefault("id");
+    	Pagination<LiquidacionEmbargoBeneficiario> p = new Pagination<LiquidacionEmbargoBeneficiario>();
+    	p.setOrderDefault("DESC");
+    	p.setSortByDefault("id");
 
-		ExpressionList<LiquidacionEmbargoBeneficiario> e = find.where();
-
-		if(!nombre.isEmpty()){
-			e.ilike("nombre", "%" + nombre + "%");
-		}
-
-		p.setExpressionList(e);
-		return p;
+    	p.setExpressionList(find.where().eq("liquidacion_embargo_id", liquidacionEmbargoId));
+    	return p;
 	}
 
 	public List<LiquidacionEmbargoBeneficiario> getDataSuggest(String input,Integer limit){
