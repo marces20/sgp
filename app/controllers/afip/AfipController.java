@@ -130,7 +130,7 @@ public class AfipController {
 		///////////GENERACION P12//////////////
 		// openssl genrsa -out privada 2048
 		// el archvio  privada y PARQUESALUD_53794c62e26a1a54.crt  te lo tienen q pasar desde la afip para poder generar el .p12
-		// openssl pkcs12 -export -inkey privada -in PARQUESALUD_53794c62e26a1a54.crt -name parquesalud -out PARQUESALUD_53794c62e26a1a54.p12
+		// openssl pkcs12 -export -inkey privada -in PARQUESALUD_102f48808d36f078.crt -name parquesalud -out PARQUESALUD_102f48808d36f078.p12
 		//name es singer y el password lo q se genera
 
 
@@ -169,20 +169,20 @@ public class AfipController {
 
 		// Create LoginTicketRequest_xml_cms
 
-		InputStream in = Play.application().resourceAsStream("resources/PARQUESALUD_3b136ff81224f993.p12");
+		InputStream in = Play.application().resourceAsStream("resources/PARQUESALUD_102f48808d36f078.p12");
 
 		String dirTemp = System.getProperty("java.io.tmpdir");
 		File archivo = null;
 		if (play.Play.isProd()) {
 			dirTemp ="/home/administrador/";
-			archivo = new File(dirTemp+"/PARQUESALUD_3b136ff81224f993.p12");
+			archivo = new File(dirTemp+"/PARQUESALUD_102f48808d36f078.p12");
 			/*Files.copy(in, archivo.toPath(), StandardCopyOption.COPY_ATTRIBUTES.REPLACE_EXISTING);
 			archivo.setExecutable(true);
 			archivo.setReadable(true);
 			archivo.setWritable(true);*/
 
 		}else {
-			archivo = new File(dirTemp+"/PARQUESALUD_3b136ff81224f993.p12");
+			archivo = new File(dirTemp+"/PARQUESALUD_102f48808d36f078.p12");
 			Files.copy(in, archivo.toPath(), StandardCopyOption.COPY_ATTRIBUTES.REPLACE_EXISTING);
 			archivo.setExecutable(true);
 			archivo.setReadable(true);
