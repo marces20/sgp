@@ -43,7 +43,7 @@ public class LiquidacionEmbargoConcepto extends Model{
 
 	@DecimalComa(value="")
 	@Required(message="Debe tener un valor_dato")
-	public BigDecimal valor_dato;
+	public BigDecimal valor_dato  = new BigDecimal(0);
 
 	@DecimalComa(value="")
 	public BigDecimal porcentaje_afectacion;
