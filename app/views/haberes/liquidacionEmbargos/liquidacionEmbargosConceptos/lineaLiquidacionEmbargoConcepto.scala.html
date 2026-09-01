@@ -10,8 +10,8 @@
 		}
 	</td>
 	<td align="center">@if(detalle.liquidacionEmbargoConceptoTipo != null){@detalle.liquidacionEmbargoConceptoTipo.nombre}</td>
-	<td align="center">@detalle.cantidad</td>
-	<td align="center">@utils.NumberUtils.formatNumber(detalle.valor_dato.doubleValue())</td>
+	<td align="center">@if(detalle.cantidad != null){@detalle.cantidad}</td>
+	<td align="center">@if(detalle.valor_dato != null){@utils.NumberUtils.formatNumber(detalle.valor_dato.doubleValue())}</td>
 	<td align="center">@if(detalle.porcentaje_afectacion != null){@detalle.porcentaje_afectacion}</td>
 	<td>
 	@if(editable){
