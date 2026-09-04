@@ -29,8 +29,8 @@ public class ActualizarBalancePagos {
 		Connection conn2 = null;
 		try {
 
-			Date fd = DateUtils.formatDate("01/12/2024", "dd/MM/yyyy");
-			Date fh = DateUtils.formatDate("31/12/2024", "dd/MM/yyyy");
+			Date fd = DateUtils.formatDate("01/04/2026", "dd/MM/yyyy");
+			Date fh = DateUtils.formatDate("30/04/2026", "dd/MM/yyyy");
 			System.out.println("Tffffffffffffffffffffffffffffffffffffff");
 			List<Integer> idsExpLiq = new ArrayList<Integer>();
 			idsExpLiq.add(34720);
@@ -64,7 +64,7 @@ public class ActualizarBalancePagos {
 			List<Long> idsPagosCargadas = new ArrayList<Long>();
 			List<Long> listaOpSueldo = new ArrayList<Long>();
 			List<Long> listaOpSueldoConvenio = new ArrayList<Long>();
-
+			idsfacturaCargadas.add(100357);
 			System.out.println("Tffffffffffffffffffffffffffffffffffffff "+lf.size());
 
 			for(Pago f:lf) {// ACA VOY A TENER TODOS LOS PAGOS
@@ -716,6 +716,8 @@ public class ActualizarBalancePagos {
 				break;
 			case 9:
 				r = 13;
+			case 10:
+				r = 14;
 			default:
 				break;
 		}

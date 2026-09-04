@@ -609,8 +609,8 @@ public class ActualizarBalance extends Controller {
 
 		try {
 
-			Date fd = DateUtils.formatDate("01/01/2026", "dd/MM/yyyy");
-			Date fh = DateUtils.formatDate("31/01/2026", "dd/MM/yyyy");
+			Date fd = DateUtils.formatDate("01/05/2026", "dd/MM/yyyy");
+			Date fh = DateUtils.formatDate("31/05/2026", "dd/MM/yyyy");
 
 
 			conn2 = Configuracion2.get2().getConnection2();
@@ -2254,6 +2254,8 @@ TIPOS DE CUENTAS
 				break;
 			case 9:
 				r = 13;
+			case 10:
+				r = 14;
 			default:
 				break;
 		}
