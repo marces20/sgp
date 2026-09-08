@@ -1199,7 +1199,7 @@ public class OrdenesReportesController extends Controller {
 	}
 
 	/*COMPARATIVOS DE PRODUCTOS
-	select o.id, ol.producto_id producto_id,p.nombre, precio,e.nombre,ej.nombre
+	select o.id, ol.producto_id producto_id,p.nombre, precio,e.nombre,ej.nombre, to_char(e.fecha,'dd-MM-YYYY')
 	from ordenes o
 	inner join orden_lineas ol on o.id = ol.orden_id
 	inner join productos p on p.id = ol.producto_id
