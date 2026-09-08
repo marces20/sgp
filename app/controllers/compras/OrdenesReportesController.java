@@ -1198,6 +1198,18 @@ public class OrdenesReportesController extends Controller {
 
 	}
 
+	/*COMPARATIVOS DE PRODUCTOS
+	select o.id, ol.producto_id producto_id,p.nombre, precio,e.nombre,ej.nombre
+	from ordenes o
+	inner join orden_lineas ol on o.id = ol.orden_id
+	inner join productos p on p.id = ol.producto_id
+	inner join expedientes e on e.id = o.expediente_id
+	 inner join ejercicios ej on ej.id = e.ejercicio_id
+	where o.proveedor_id = 14733 and ej.id= 17 and o.state_id =11 order by p.nombre
+	*/
+
+
+
 	@CheckPermiso(key = "ordenesCompraCuadroComparativo")
 	public static Result cuadroComparativoPrecios() {
 
