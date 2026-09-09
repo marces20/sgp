@@ -12,6 +12,7 @@ import javax.persistence.Table;
 
 import com.avaje.ebean.ExpressionList;
 
+import models.AgenteFamilia;
 import play.data.validation.Constraints.Required;
 import play.db.ebean.Model;
 import utils.pagination.Pagination;
@@ -31,8 +32,13 @@ public class LiquidacionEmbargoBeneficiario extends Model{
 	@Required(message="Debe tener una Liquidacion asociada")
 	public Long liquidacion_embargo_id;
 
-	@Required(message="Debe escribir un beneficiario_dni")
-	public String beneficiario_dni;
+	@ManyToOne
+	@JoinColumn(name="agente_familia_id", referencedColumnName="id", insertable=false, updatable=false)
+	public AgenteFamilia agenteFamilia;
+	@Required(message="Debe tener un agente familia asociada")
+	public Long agente_familia_id;
+
+
 
 	public static Model.Finder<Long,LiquidacionEmbargoBeneficiario> find = new Model.Finder<Long,LiquidacionEmbargoBeneficiario>(Long.class, LiquidacionEmbargoBeneficiario.class);
 
