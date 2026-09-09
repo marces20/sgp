@@ -3,6 +3,7 @@ package controllers.haberes;
 import static play.data.Form.form;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.persistence.PersistenceException;
@@ -52,6 +53,10 @@ public class LiquidacionEmbargosBeneficiariosController extends Controller {
 		Form<LiquidacionEmbargoBeneficiario> detalleForm = form(LiquidacionEmbargoBeneficiario.class).bindFromRequest();
 		LiquidacionEmbargo le = LiquidacionEmbargo.find.byId(detalleForm.get().liquidacion_embargo_id);
 
+
+
+
+
 		try {
 			if(detalleForm.hasErrors()) {
 				System.out.println(detalleForm.errors());
@@ -59,6 +64,13 @@ public class LiquidacionEmbargosBeneficiariosController extends Controller {
 				return ok(crearLiquidacionEmbargoBeneficiario.render(detalleForm,le.agente_id));
 			} else {
 				LiquidacionEmbargoBeneficiario f = detalleForm.get();
+
+				List<LiquidacionEmbargoBeneficiario> controlBeneficiario = LiquidacionEmbargoBeneficiario.find.where().eq("agente_familia_id", detalleForm.get().agente_familia_id).findList();
+				if(controlBeneficiario.size() > 0) {
+					flash("error", "Este beneficiario ya se encuentra cargado.");
+					return ok(crearLiquidacionEmbargoBeneficiario.render(detalleForm,le.agente_id));
+				}
+
 				//f.create_usuario_id = new Long(Usuario.getUsuarioSesion());
 				//f.create_date = new Date();
 				f.save();
@@ -102,6 +114,13 @@ public class LiquidacionEmbargosBeneficiariosController extends Controller {
 				return ok(editarLiquidacionEmbargoBeneficiario.render(detalleForm,le.agente_id));
 			} else {
 				LiquidacionEmbargoBeneficiario fl = detalleForm.get();
+
+				List<LiquidacionEmbargoBeneficiario> controlBeneficiario = LiquidacionEmbargoBeneficiario.find.where().ne("id", detalleForm.get().id).eq("agente_familia_id", detalleForm.get().agente_familia_id).findList();
+				if(controlBeneficiario.size() > 0) {
+					flash("error", "Este beneficiario ya se encuentra cargado.");
+					return ok(editarLiquidacionEmbargoBeneficiario.render(detalleForm,le.agente_id));
+				}
+
 				//fl.write_usuario_id = new Long(Usuario.getUsuarioSesion());
 				//fl.write_date = new Date();
 				fl.update(fl.id);
