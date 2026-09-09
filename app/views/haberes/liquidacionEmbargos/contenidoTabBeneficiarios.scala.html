@@ -1,0 +1,18 @@
+@(formularioCarga: Boolean, lpForm: Form[models.haberes.LiquidacionEmbargo] = null)
+@import java.util.List
+
+@if(lpForm.field("id").value == null || lpForm.field("id").value == ""){
+	<p><i class="glyphicon glyphicon-info-sign"></i> Para cargar beneficiario primero debe dar de alta la Retencion</p>
+} else {
+	<script>
+		$( function (){
+			$.get('@controllers.haberes.routes.LiquidacionEmbargosBeneficiariosController.index(lpForm.field("id").value.toLong, formularioCarga)', function(data){
+				$('#listaLiquidacionEmbargoBeneficiarios').parent().html(data);
+			})
+		});
+	</script>
+}
+
+<div id="listaLiquidacionEmbargoBeneficiarios">
+
+</div>
