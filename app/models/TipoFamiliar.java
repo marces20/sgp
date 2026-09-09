@@ -9,16 +9,18 @@ import javax.persistence.Table;
 import play.data.validation.Constraints.Required;
 import play.db.ebean.Model;
 
-@Entity 
+@Entity
 @Table(name = "tipo_familiares")
 public class TipoFamiliar extends Model{
-	
+
+	public static final long HIJO = 1;
+
 	private static final long serialVersionUID = 1L;
-	@Id  														 
+	@Id
 	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="tipo_familiares_id_seq")
 	public Long id;
 	@Required(message="Debe escribir un nombre")
 	public String nombre;
-	
+
 	public static Model.Finder<Long,TipoFamiliar> find = new Model.Finder<Long,TipoFamiliar>(Long.class, TipoFamiliar.class);
 }
