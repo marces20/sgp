@@ -3,7 +3,9 @@ package models;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -149,6 +151,27 @@ public class AgenteFamilia extends Model{
 
 		return r;
 	}
+
+	public static  Map<String, String> getHijos(Long id){
+
+		Map<String, String> ret = new HashMap<String, String>();
+
+		List<AgenteFamilia> r = new ArrayList<AgenteFamilia>();
+
+		if(id != null){
+			r = find.where().eq("tipo_familia_id", TipoFamiliar.HIJO).eq("agente_id",id).findList();
+		}
+
+		for(AgenteFamilia x:r) {
+
+			ret.put(x.id.toString(), x.nombre );
+
+		}
+
+		return ret;
+	}
+
+
 
 	public static Finder<Long,AgenteFamilia> find = new Finder<Long,AgenteFamilia>(Long.class, AgenteFamilia.class);
 
