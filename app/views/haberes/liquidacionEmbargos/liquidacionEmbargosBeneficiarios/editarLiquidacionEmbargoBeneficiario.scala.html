@@ -1,0 +1,9 @@
+@(detalleForm: Form[models.haberes.LiquidacionEmbargoBeneficiario],agenteId:Long)
+@import helper._
+@implicitFieldConstructor = @{ FieldConstructor(simpleInput.render) }
+
+@helper.form(action = controllers.haberes.routes.LiquidacionEmbargosBeneficiariosController.actualizar()) {
+	@views.html.haberes.liquidacionEmbargos.liquidacionEmbargosBeneficiarios.formLiquidacionEmbargoBeneficiario(detalleForm,agenteId)
+	@inputText(detalleForm("id"), 'hidden -> "hidden")
+
+}

@@ -1,0 +1,21 @@
+@(detalle: models.haberes.LiquidacionEmbargoBeneficiario, editable: Boolean)
+
+
+<tr data-id="@detalle.id">
+
+	<td class="accion-editar">
+		@if(editable){
+			<a class="btn btn-default btn-xs modificarLiquidacionEmbargoBeneficiario" href="@controllers.haberes.routes.LiquidacionEmbargosBeneficiariosController.editar(detalle.id)">
+			<i class="glyphicon glyphicon-edit"></i></a>
+		}
+	</td>
+	<td align="center">@if(detalle.agenteFamilia != null){@detalle.agenteFamilia.nombre}</td>
+	<td align="center">@if(detalle.agenteFamilia != null){@detalle.agenteFamilia.dni}</td>
+	<td align="center">@if(detalle.agenteFamilia != null){@detalle.agenteFamilia.tipoFamiliar.nombre}</td>
+	<td>
+	@if(editable){
+		<a class="btn btn-default btn-xs eliminarLiquidacionEmbargoBeneficiario" href="@controllers.haberes.routes.LiquidacionEmbargosBeneficiariosController.eliminar(detalle.id)"><i class="glyphicon glyphicon-trash icono-eliminar"></i></a>
+	}
+	</td>
+
+</tr>
