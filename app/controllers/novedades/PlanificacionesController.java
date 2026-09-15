@@ -33,6 +33,8 @@ import models.OrganigramaGuardiaDato;
 import models.Usuario;
 import models.auth.Permiso;
 import models.haberes.LiquidacionConcepto;
+import models.haberes.LiquidacionDetalle;
+import models.haberes.LiquidacionNovedadLicencia;
 import models.haberes.LiquidacionTipo;
 import models.haberes.PuestoLaboral;
 import models.novedades.Planificacion;
@@ -438,22 +440,35 @@ public class PlanificacionesController extends Controller {
 
 		Planificacion rf = Ebean.find(Planificacion.class).select("id, estado_id,write_date,write_usuario_id").setId(idRf).findUnique();
 
-		if(rf != null){
-			List<models.haberes.Novedad> n = new models.haberes.Novedad().find.where().eq("planificacion_id", rf.id).findList();
 
-			for(models.haberes.Novedad nx :n) {
-					nx.delete();
+		List<Novedad > ldn = Novedad.find.where().eq("planificacion_id", rf.id).findList();
+
+		if(ldn.size() > 0) {
+			flash("error", "No se puede cancelar Existen novedades con esta planificacion asignada.");
+		}else {
+
+			List<LiquidacionDetalle> ld = LiquidacionDetalle.find.where().eq("liquidacionNovedad.planificacion_id", rf.id).findList();
+
+			if(ld.size() > 0) {
+				flash("error", "No se puede cancelar Existen Liquidacion con esta planificacion asignada.");
+			}else {
+
+				if(rf != null){
+					List<models.haberes.Novedad> n = new models.haberes.Novedad().find.where().eq("planificacion_id", rf.id).findList();
+
+					for(models.haberes.Novedad nx :n) {
+							nx.delete();
+					}
+
+					rf.estado_id = new Long(Estado.PLANIFICIACION_CANCELADO);
+					rf.write_date = new Date();
+					rf.write_usuario_id = new Long(Usuario.getUsuarioSesion());
+					rf.save();
+					flash("success", "Operación exitosa. Estado actual: Cancelado");
+				} else {
+					flash("error", "Parámetros incorrectos");
+				}
 			}
-
-
-
-			rf.estado_id = new Long(Estado.PLANIFICIACION_CANCELADO);
-			rf.write_date = new Date();
-			rf.write_usuario_id = new Long(Usuario.getUsuarioSesion());
-			rf.save();
-			flash("success", "Operación exitosa. Estado actual: Cancelado");
-		} else {
-			flash("error", "Parámetros incorrectos");
 		}
 	}
 
