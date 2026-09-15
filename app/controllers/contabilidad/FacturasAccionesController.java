@@ -1250,12 +1250,12 @@ public class FacturasAccionesController  extends Controller {
 
 		}
 
-		if(Factura.existeNumeroFacturaCargado(f.id, numero_factura)) {
+		if(Factura.existeNumeroFacturaCargado(f.id, numero_factura,tipo_comprobante_str)) {
 			flash("error", "Ya existe este numero de factura cargado.");
 			return ok(modalModificarNumeroFactura.render(d,id,f));
 		}
 
-		if(Factura.existeNumeroFacturaCargadoMismoProveedor(numero_factura,f.proveedor_id)) {
+		if(Factura.existeNumeroFacturaCargadoMismoProveedor(numero_factura,f.proveedor_id,tipo_comprobante_str)) {
 			flash("error", "Ya existe este numero de factura cargado para este proveedor.");
 			return ok(modalModificarNumeroFactura.render(d,id,f));
 		}

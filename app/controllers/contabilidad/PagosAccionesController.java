@@ -361,7 +361,7 @@ public class PagosAccionesController extends Controller {
 
 		}
 
-		if(Factura.existeNumeroFacturaCargado(f.id, numero_factura)) {
+		if(Factura.existeNumeroFacturaCargado(f.id, numero_factura,"1")) {
 			flash("error", "Ya existe este numero de factura cargado.");
 			return ok(modalModificarNumeroFactura.render(d,id,p));
 		}
