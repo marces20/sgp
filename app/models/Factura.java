@@ -898,18 +898,20 @@ public class Factura extends Model {
 		return r;
 	}
 
-	public static boolean existeNumeroFacturaCargado(Long idFactura,String nfactura){
+	public static boolean existeNumeroFacturaCargado(Long idFactura,String nfactura,String tipo_comprobante_id){
 
 		boolean r = false;
 
 		String sql = "SELECT * "+
 				"FROM factura_datos fd "+
 				"WHERE fd.orden_id =(select orden_id from facturas where id =:f_id) "+
-				"and upper(REPLACE(numero_factura,'-','')) =  upper(REPLACE(:nfactura,'-',''))";
+				"and upper(REPLACE(numero_factura,'-','')) =  upper(REPLACE(:nfactura,'-','')) "+
+				"and tipo_comprobante_id = :tipo_comprobante_id ";
 
 		List<SqlRow> s = Ebean.createSqlQuery(sql)
 				   .setParameter("f_id", idFactura)
 				   .setParameter("nfactura", nfactura)
+				   .setParameter("tipo_comprobante_id", tipo_comprobante_id)
 				   .findList();
 
 		if(s.size() > 0){
@@ -919,19 +921,22 @@ public class Factura extends Model {
 		return r;
 	}
 
-	public static boolean existeNumeroFacturaCargadoMismoProveedor(String nfactura,Integer proveedor_id){
+	public static boolean existeNumeroFacturaCargadoMismoProveedor(String nfactura,Integer proveedor_id,String tipo_comprobante_id){
 
 		boolean r = false;
 
 		String sql = "SELECT * " +
 				"FROM factura_datos fd " +
 				"inner join facturas f on f.id = fd.factura_id " +
-				"where proveedor_id = :proveedor_id and upper(REPLACE(fd.numero_factura,'-','')) =  upper(REPLACE(:nfactura,'-','')) ";
+				"where proveedor_id = :proveedor_id "+
+				"and upper(REPLACE(fd.numero_factura,'-','')) =  upper(REPLACE(:nfactura,'-','')) "+
+				"and tipo_comprobante_id = :tipo_comprobante_id ";
 
 
 		List<SqlRow> s = Ebean.createSqlQuery(sql)
 				   .setParameter("nfactura", nfactura)
 				   .setParameter("proveedor_id", proveedor_id)
+				   .setParameter("tipo_comprobante_id", tipo_comprobante_id)
 				   .findList();
 
 		if(s.size() > 0){
