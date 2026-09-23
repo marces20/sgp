@@ -29,8 +29,8 @@ public class ActualizarBalancePagos {
 		Connection conn2 = null;
 		try {
 
-			Date fd = DateUtils.formatDate("01/04/2026", "dd/MM/yyyy");
-			Date fh = DateUtils.formatDate("30/04/2026", "dd/MM/yyyy");
+			Date fd = DateUtils.formatDate("01/06/2026", "dd/MM/yyyy");
+			Date fh = DateUtils.formatDate("30/06/2026", "dd/MM/yyyy");
 			System.out.println("Tffffffffffffffffffffffffffffffffffffff");
 			List<Integer> idsExpLiq = new ArrayList<Integer>();
 			idsExpLiq.add(34720);
@@ -716,8 +716,10 @@ public class ActualizarBalancePagos {
 				break;
 			case 9:
 				r = 13;
+				break;
 			case 10:
 				r = 14;
+				break;
 			default:
 				break;
 		}

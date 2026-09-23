@@ -118,8 +118,8 @@ public class ActualizarBalance extends Controller {
 
 		try {
 
-			Date fd = DateUtils.formatDate("01/01/2026", "dd/MM/yyyy");
-			Date fh = DateUtils.formatDate("30/04/2026", "dd/MM/yyyy");
+			Date fd = DateUtils.formatDate("01/05/2026", "dd/MM/yyyy");
+			Date fh = DateUtils.formatDate("30/06/2026", "dd/MM/yyyy");
 
 
 			conn2 = Configuracion2.get2().getConnection2();
@@ -243,8 +243,8 @@ public class ActualizarBalance extends Controller {
 
 		try {
 
-			Date fd = DateUtils.formatDate("01/01/2026", "dd/MM/yyyy");
-			Date fh = DateUtils.formatDate("30/04/2026", "dd/MM/yyyy");
+			Date fd = DateUtils.formatDate("01/05/2026", "dd/MM/yyyy");
+			Date fh = DateUtils.formatDate("30/06/2026", "dd/MM/yyyy");
 
 
 			conn2 = Configuracion2.get2().getConnection2();
@@ -371,8 +371,8 @@ public class ActualizarBalance extends Controller {
 
 		try {
 
-			Date fd = DateUtils.formatDate("01/01/2026", "dd/MM/yyyy");
-			Date fh = DateUtils.formatDate("30/04/2026", "dd/MM/yyyy");
+			Date fd = DateUtils.formatDate("01/05/2026", "dd/MM/yyyy");
+			Date fh = DateUtils.formatDate("30/06/2026", "dd/MM/yyyy");
 
 
 			conn2 = Configuracion2.get2().getConnection2();
@@ -490,8 +490,8 @@ public class ActualizarBalance extends Controller {
 
 		try {
 
-			Date fd = DateUtils.formatDate("01/01/2026", "dd/MM/yyyy");
-			Date fh = DateUtils.formatDate("30/04/2026", "dd/MM/yyyy");
+			Date fd = DateUtils.formatDate("01/05/2026", "dd/MM/yyyy");
+			Date fh = DateUtils.formatDate("30/06/2026", "dd/MM/yyyy");
 
 
 			conn2 = Configuracion2.get2().getConnection2();
@@ -609,8 +609,8 @@ public class ActualizarBalance extends Controller {
 
 		try {
 
-			Date fd = DateUtils.formatDate("01/05/2026", "dd/MM/yyyy");
-			Date fh = DateUtils.formatDate("31/05/2026", "dd/MM/yyyy");
+			Date fd = DateUtils.formatDate("01/06/2026", "dd/MM/yyyy");
+			Date fh = DateUtils.formatDate("30/06/2026", "dd/MM/yyyy");
 
 
 			conn2 = Configuracion2.get2().getConnection2();
@@ -1610,6 +1610,11 @@ public class ActualizarBalance extends Controller {
 						if(fl.factura.orden.deposito_id.equals((long)4)) {
 							cuentaId = new Long(560);
 						}
+
+						//FAVALORO	4.2.2.02.40 Transferencias a SAMIC Obera
+						if(fl.factura.orden.deposito_id.equals((long)21)) {
+							cuentaId = new Long(604);
+						}
 					}
 
 					//COMPAÑIA MISIONERA DE SEGURIDAD S.R.L.
@@ -2123,6 +2128,8 @@ public class ActualizarBalance extends Controller {
 		}else if(id.equals((long)4)) {//HOSPITAL SAMIC DE OBERA
 			ret= true;
 		}else if(id.equals((long)30)) {//BANCO DE SANGRE
+			ret= true;
+		}else if(id.equals((long)33)) {//BANCO DE PROTESIS
 			ret= true;
 		}
 		return ret ;
