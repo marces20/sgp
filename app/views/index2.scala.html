@@ -21,6 +21,18 @@ rem:Integer)
  	<div class="content">
 
 		<div class="row">
+					@if(Permiso.check("informeRRHHindex")) {
+			    	<a href="/dashboard/rrhhResumenGeneral?organigramaId=1">
+					    <div class="kpi-grid">
+					      <div class="kpi-card">
+					     	<div class="kpi-icon"> <i class="fas fa-user-check"></i></div>
+					        <div class="page-title">
+								INFORME RRHH
+					        </div>
+					      </div>
+					    </div>
+			    	</a>
+			    	}
 
 				 	<div class="page-header">
 					@if(Permiso.check("informeRISMIIndex")) {
