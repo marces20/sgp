@@ -21,6 +21,7 @@ import akka.actor.Cancellable;
 import controllers.afip.AfipController;
 import controllers.dashboard.FacturacionRismiController;
 import jobs.DeudasInformesMails;
+import models.Agente;
 import models.InventarioRismi;
 import models.OrdenProvision;
 import models.TipoComprobante;
@@ -244,6 +245,20 @@ public class Global extends GlobalSettings {
                     // ----------------------------------------
                     HistorialDeudaProveedores.insertHistorialDeuda();
                     // ----------------------------------------
+                    int dayOfMonth = calendar.get(Calendar.DAY_OF_MONTH); // 1–31
+                    if(dayOfMonth == 1) {
+                    	 Agente.insertHistorialAgente();
+
+                    	 EmailUtilis eu3 = new EmailUtilis();
+                    	 eu3.setSubject("AGENTE HISTORIAL:");
+                    	 eu3.setHtmlMsg("TAGENTE HISTORIAL:");
+                    	 eu3.setFrom("marces2000@gmail.com");
+
+
+                    	 eu3.setAdds(adds);
+                    	 eu3.enviar();
+                    }
+
 
 
                     EmailUtilis eu2 = new EmailUtilis();
