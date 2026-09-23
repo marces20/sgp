@@ -1,6 +1,10 @@
 package models;
 
 import java.math.BigDecimal;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -20,8 +24,11 @@ import javax.persistence.PostLoad;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
+import org.apache.commons.mail.EmailException;
+
 import models.auth.Permiso;
 import models.haberes.Legajo;
+import play.Logger;
 import play.data.format.Formats;
 import play.data.validation.Constraints.Required;
 import play.db.ebean.Model;
@@ -498,5 +505,47 @@ public class Agente extends Model{
 		update.setParameter("ids", agentesSeleccionados);
 
 		return update.execute();
+	}
+
+	public static boolean insertHistorialAgente() throws EmailException {
+		Connection conn = null;
+		PreparedStatement stmt = null;
+		PreparedStatement stmt2 = null;
+		ResultSet rs = null;
+
+		try {
+
+
+
+			conn = play.db.DB.getConnection();
+			stmt = conn.prepareStatement("INSERT INTO public.agentes_historial(" +
+					"	apellido, nombre, dni, sexo, fnacimiento, estado_civil, fingreso, departamento_id, tipo_documento, especialidad_id, puesto_id, pin, cuenta_bancaria, cuit, localidad_id, telefono, "
+					+ "usuario_id, create_usuario_id, create_date, write_date, write_usuario_id, planta, activo, calle, numero, zip, email, mobile, fax, estado_id, conyugue_dni, conyugue_nombre, piso, depto, "
+					+ "finicio_matrimonio, organigrama_id, profesion_id, r, tipo_relacion_laboral, nro_legajo_externo, tipo_residencia_id, fbaja, asignacion_familiar, write_email_date, fingresooriginal, calle_banco, "
+					+ "flicencia_conducir, tipo_licencia_conducir_id, cud, limite_guardia, organigrama_produccion_id, fecha) " +
+					"	"
+					+ "SELECT apellido, nombre, dni, sexo, fnacimiento, estado_civil, fingreso, departamento_id, tipo_documento, especialidad_id, puesto_id, pin, cuenta_bancaria, cuit, localidad_id, telefono, "
+					+ "usuario_id, create_usuario_id, create_date, write_date, write_usuario_id, planta, activo, calle, numero, zip, email, mobile, fax, estado_id, conyugue_dni, conyugue_nombre, piso, depto, "
+					+ "finicio_matrimonio, organigrama_id, profesion_id, r, tipo_relacion_laboral, nro_legajo_externo, tipo_residencia_id, fbaja, asignacion_familiar, write_email_date, fingresooriginal, calle_banco, "
+					+ "flicencia_conducir, tipo_licencia_conducir_id, cud, limite_guardia, organigrama_produccion_id, now() " +
+					"  FROM public.agentes");
+			stmt.executeUpdate();
+
+
+
+
+
+
+
+
+		}catch (SQLException e) {
+			Logger.error("Error duplicar: "+e);
+        } finally {
+        	if (stmt != null) try { stmt.close(); } catch (Exception e) { }
+        	if (stmt2 != null) try { stmt2.close(); } catch (Exception e) { }
+        	if (rs != null) try { rs.close(); } catch (Exception e) { }
+            if (conn != null) try { conn.close(); } catch (Exception e) { }
+        }
+		return true;
 	}
 }
