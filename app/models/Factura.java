@@ -911,7 +911,7 @@ public class Factura extends Model {
 		List<SqlRow> s = Ebean.createSqlQuery(sql)
 				   .setParameter("f_id", idFactura)
 				   .setParameter("nfactura", nfactura)
-				   .setParameter("tipo_comprobante_id", tipo_comprobante_id)
+				   .setParameter("tipo_comprobante_id", new Integer(tipo_comprobante_id))
 				   .findList();
 
 		if(s.size() > 0){
@@ -936,7 +936,7 @@ public class Factura extends Model {
 		List<SqlRow> s = Ebean.createSqlQuery(sql)
 				   .setParameter("nfactura", nfactura)
 				   .setParameter("proveedor_id", proveedor_id)
-				   .setParameter("tipo_comprobante_id", tipo_comprobante_id)
+				   .setParameter("tipo_comprobante_id",  new Integer(tipo_comprobante_id))
 				   .findList();
 
 		if(s.size() > 0){
@@ -947,18 +947,20 @@ public class Factura extends Model {
 	}
 
 
-	public static boolean existeNumeroFacturaCargadoDesdeOrden(Long idOrden,String nfactura){
+	public static boolean existeNumeroFacturaCargadoDesdeOrden(Long idOrden,String nfactura,String tipo_comprobante_id){
 
 		boolean r = false;
 
 		String sql = "SELECT * "+
 				"FROM factura_datos fd "+
 				"WHERE fd.orden_id =:f_id "+
-				"and upper(REPLACE(numero_factura,'-','')) =  upper(REPLACE(:nfactura,'-',''))";
+				"and upper(REPLACE(numero_factura,'-','')) =  upper(REPLACE(:nfactura,'-',''))"+
+				"and tipo_comprobante_id = :tipo_comprobante_id ";
 
 		List<SqlRow> s = Ebean.createSqlQuery(sql)
 				   .setParameter("f_id", idOrden)
 				   .setParameter("nfactura", nfactura)
+				   .setParameter("tipo_comprobante_id",  new Integer(tipo_comprobante_id))
 				   .findList();
 
 		if(s.size() > 0){
