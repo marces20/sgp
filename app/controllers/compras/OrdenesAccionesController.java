@@ -1348,6 +1348,7 @@ public class OrdenesAccionesController extends Controller {
 
 	String numero_factura =request().body().asFormUrlEncoded().get("numero_factura")[0];
 	String monto =request().body().asFormUrlEncoded().get("monto")[0];
+	String tipo_comprobante_str =request().body().asFormUrlEncoded().get("tipo_comprobante_id")[0];
 	Long id = new Long(request().body().asFormUrlEncoded().get("id")[0]);
 	Orden f = Orden.find.byId(id);
 
@@ -1374,7 +1375,7 @@ public class OrdenesAccionesController extends Controller {
 
 
 
-	if(Factura.existeNumeroFacturaCargadoDesdeOrden(f.id, numero_factura)) {
+	if(Factura.existeNumeroFacturaCargadoDesdeOrden(f.id, numero_factura,tipo_comprobante_str)) {
 		flash("error", "Ya existe este numero de factura cargado.");
 		return ok(modalModificarNumeroFactura.render(d,id,f));
 	}
@@ -1395,6 +1396,7 @@ public class OrdenesAccionesController extends Controller {
 		//Integer count = Pago.modificarNumeroFactura(numero_factura, id);
 		List<Factura> ff = Factura.find.where().isNotNull("factura_principal_id").eq("orden_id", id).findList();
 		Long idFact = null;
+		Integer tipo_comprobante_id = new Integer (tipo_comprobante_str);
 
 		if(ff.size() > 0) {
 
@@ -1409,7 +1411,7 @@ public class OrdenesAccionesController extends Controller {
 		}
 
 
-		Orden.guardarNumeroFactura(ff.get(0).id,new BigDecimal(monto.replace(",",".")),numero_factura,id);
+		Orden.guardarNumeroFactura(ff.get(0).id,new BigDecimal(monto.replace(",",".")),numero_factura,id,tipo_comprobante_id);
 
 		result.put("success", true);
 		flash("success", "Se actualizado el Numero de factura");
