@@ -645,7 +645,7 @@ public class Orden extends Model {
 		return r;
 	}
 
-	public static int guardarNumeroFactura(Long factura_id, BigDecimal monto,String numero_factura,Long orden_id) {
+	public static int guardarNumeroFactura(Long factura_id, BigDecimal monto,String numero_factura,Long orden_id,Integer tipo_comprobante_id) {
 	    ResultSet rssi = null;
 	    PreparedStatement stmtsi = null;
 	    Connection conn2 = null;
@@ -662,12 +662,13 @@ public class Orden extends Model {
 
 
 	      stmt2 = conn2.prepareStatement(
-	          "INSERT INTO factura_datos(factura_id, monto, numero_factura, create_usuario_id, create_date,orden_id) VALUES (?, ?, ?, ?, now(), ?)");
+	          "INSERT INTO factura_datos(factura_id, monto, numero_factura, create_usuario_id, create_date,orden_id, tipo_comprobante_id) VALUES (?, ?, ?, ?, now(), ?, ?)");
 	      stmt2.setLong(1, factura_id);
 	      stmt2.setBigDecimal(2, monto);
 	      stmt2.setString(3, numero_factura);
 	      stmt2.setInt(4, Usuario.getUsuarioSesion());
 	      stmt2.setLong(5, orden_id);
+	      stmt2.setInt(6, tipo_comprobante_id);
 	      stmt2.executeUpdate();
 
 	    } catch (SQLException e) {
