@@ -208,6 +208,7 @@ public class AgentesController extends Controller {
 					return badRequest(editarAgente.render(agenteForm,a));
 				}
 
+
 				List<Agente> aec = Agente.find.where().eq("cuit", a.cuit).ne("id",a.id).findList();
 				if(aec.size() > 0){
 					agenteForm.reject("cuit","Ya existe una persona con el mismo CUIT.");
