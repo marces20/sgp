@@ -519,15 +519,15 @@ public class Agente extends Model{
 
 			conn = play.db.DB.getConnection();
 			stmt = conn.prepareStatement("INSERT INTO public.agentes_historial(" +
-					"	apellido, nombre, dni, sexo, fnacimiento, estado_civil, fingreso, departamento_id, tipo_documento, especialidad_id, puesto_id, pin, cuenta_bancaria, cuit, localidad_id, telefono, "
+					" agente_id, apellido, nombre, dni, sexo, fnacimiento, estado_civil, fingreso, departamento_id, tipo_documento, especialidad_id, puesto_id, pin, cuenta_bancaria, cuit, localidad_id, telefono, "
 					+ "usuario_id, create_usuario_id, create_date, write_date, write_usuario_id, planta, activo, calle, numero, zip, email, mobile, fax, estado_id, conyugue_dni, conyugue_nombre, piso, depto, "
 					+ "finicio_matrimonio, organigrama_id, profesion_id, r, tipo_relacion_laboral, nro_legajo_externo, tipo_residencia_id, fbaja, asignacion_familiar, write_email_date, fingresooriginal, calle_banco, "
 					+ "flicencia_conducir, tipo_licencia_conducir_id, cud, limite_guardia, organigrama_produccion_id, fecha) " +
 					"	"
-					+ "SELECT apellido, nombre, dni, sexo, fnacimiento, estado_civil, fingreso, departamento_id, tipo_documento, especialidad_id, puesto_id, pin, cuenta_bancaria, cuit, localidad_id, telefono, "
+					+ "SELECT id, apellido, nombre, dni, sexo, fnacimiento, estado_civil, fingreso, departamento_id, tipo_documento, especialidad_id, puesto_id, pin, cuenta_bancaria, cuit, localidad_id, telefono, "
 					+ "usuario_id, create_usuario_id, create_date, write_date, write_usuario_id, planta, activo, calle, numero, zip, email, mobile, fax, estado_id, conyugue_dni, conyugue_nombre, piso, depto, "
 					+ "finicio_matrimonio, organigrama_id, profesion_id, r, tipo_relacion_laboral, nro_legajo_externo, tipo_residencia_id, fbaja, asignacion_familiar, write_email_date, fingresooriginal, calle_banco, "
-					+ "flicencia_conducir, tipo_licencia_conducir_id, cud, limite_guardia, organigrama_produccion_id, now() " +
+					+ "flicencia_conducir, tipo_licencia_conducir_id, cud, limite_guardia, organigrama_produccion_id, '2026-10-01' " +
 					"  FROM public.agentes");
 			stmt.executeUpdate();
 
