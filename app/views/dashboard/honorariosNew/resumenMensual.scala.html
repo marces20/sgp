@@ -1,0 +1,219 @@
+@(listTotalAgrupadoPorTipoRelacion:List[com.avaje.ebean.SqlRow],
+listTotalAdscritos:List[com.avaje.ebean.SqlRow],
+listTotalAgrupadoPorEscalaParquePeriodo:List[com.avaje.ebean.SqlRow])
+@import helper._
+@import java.lang.String;var color1 ="";var color2 ="";var color3 ="";var tipo ="";
+@import java.lang.Integer;var totalCantidad = 0;
+
+@import java.math.BigDecimal;var totalMonto = new java.math.BigDecimal(0);
+
+
+@scripts = {
+
+<link rel="stylesheet" media="screen" href="@routes.Assets.at("stylesheets/css-rrhh-claude.css")">
+<script src="@routes.Assets.at("plugins/pdf/html2canvas.min.js")" type="text/javascript"></script>
+<script src="@routes.Assets.at("plugins/pdf/jspdf.umd.min.js")" type="text/javascript"></script>
+<script src="@routes.Assets.at("javascripts/exportar-pdf-rrhh.js")" type="text/javascript"></script>
+}
+
+
+@main("HABERES",scripts)  {
+<!-- MAIN -->
+<div class="main">
+
+
+
+  <!-- CONTENT -->
+ <div class="content">
+
+
+
+    	<div class="page-title">Parque de la Salud - HABERES <!-- <button id="btnExportarPDF" onclick="exportarPDF()" class="btn btn-primary"> <i class="fas fa-file-pdf"></i> Exportar PDF </button></div> -->
+	    	<div class="page-breadcrumb">Inicio / <span>Informes Haberes</span> / Parque de la Salud
+	    	</div>
+
+	    	<div style="display: grid; grid-template-columns: repeat(1, 1fr); gap: 18px; align-items: start;">
+
+		    	<div class="card">
+				  <div class="card-header">
+				    <span class="card-title">TIPO DE RELACIÓN LABORAL</span>
+				  </div>
+				  <div class="table-wrap" style="padding:10px;">
+				    <table class="dept-summary-table" style="font-size:15px;">
+				      <thead>
+				        <tr>
+				          <th style="text-align:left; width:110px;">Contrato</th>
+				          <th style="">Q</th>
+				          <th style="">$</th>
+				          <th style="">%</th>
+						  <th style="">Tipo</th>
+				        </tr>
+				      </thead>
+				      <tbody>
+
+						 @for(data <- listTotalAgrupadoPorTipoRelacion){
+
+								 @data.getString("nombre") match {
+								    case "Contrato Relacion Parque de la salud" => { @{color1 ="#dbeafe"} @{color2 ="#374151"} @{color3 ="#9ca3af"} @{tipo ="PARQUE"} }
+									case "Contrato Relacion Convenio Ministerio Salud" => { @{color1 ="#d1fae5"} @{color2 ="#065f46"} @{color3 ="#10b981"} @{tipo ="MINISTERIO"} }
+								    case "Adscripto Otras Entidades" => { @{color1 ="#fef3c7"}   @{color2 ="#92400e"} @{color3 ="#f59e0b"}  @{tipo ="ADSCRIPTOS"}}
+								    case "Contrato Relacion - Otras Entidades" => { @{color1 ="#ede9fe"}     @{color2 ="#5b21b6"} @{color3 ="#8b5cf6"} @{tipo ="RESIDENTES MINISTERIO"} }
+								    case "Contrato Convenio Nacion" => { @{color1 ="#fee2e2"} @{color2 ="#991b1b"}   @{color3 ="#ef4444"}  @{tipo ="RESIDENTES NACION"} }
+								    case "Otro" => { @{color1 ="#fee2e2"} @{color2 ="#991b1b"}   @{color3 ="#ef4444"}  @{tipo ="SIN DATOS"} }
+									case _ => { @{color1 ="#d1fae5"} @{color2 ="#065f46"} @{color3 ="#10b981"}  }
+								}
+
+
+
+							 	<tr>
+						          <td style="text-align:left;"><span class="badge" style="background:@color1;color:@color2;">@data.getString("nombre")</span></td>
+						          <td>@data.getInteger("cantidadEmpleados")</td>
+								  <td style="font-family:'Fira Mono',monospace;">@(utils.NumberUtils.moneda(data.getBigDecimal("t"),0))</td>
+						          <td>
+						            <div class="mini-bar-wrap">
+						              <div class="mini-bar"><div class="mini-bar-fill" style="width:@data.getInteger("porcentaje")%;background:@color3;"></div></div>
+						              <span class="mini-bar-num">@data.getInteger("porcentaje") %</span>
+						            </div>
+						          </td>
+						          <td>@tipo</td>
+						        </tr>
+							    @{
+								 	totalCantidad = data.getInteger("total_empleados")
+						        	totalMonto = data.getBigDecimal("total_t")
+						        }
+
+						}
+
+
+
+
+				      </tbody>
+				      <tfoot>
+				        <tr style="background:var(--body-bg); font-weight:800; font-size:20px;">
+				          <td style="text-align:left; padding:10px 14px;">Total</td>
+				          <td style="text-align:center; padding:10px 14px;">@totalCantidad</td>
+				          <td style="text-align:center; padding:10px 14px;">@(utils.NumberUtils.moneda(totalMonto,0))</td>
+				          <td style="text-align:center; padding:10px 14px; font-family:'Fira Mono',monospace;"></td>
+
+				          <td></td>
+				        </tr>
+				      </tfoot>
+				    </table>
+				  </div>
+				</div>
+	    	</div>
+	    		</br>
+		<div style="display: grid; grid-template-columns: repeat(1, 1fr); gap: 18px; align-items: start;">
+				<div class="card">
+				  <div class="card-header">
+				    <span class="card-title">CONTRATO RELACION PARQUE ESCALAS</span>
+				  </div>
+				  <div class="table-wrap" style="padding:10px;">
+				    <table class="dept-summary-table" style="font-size:15px;">
+				      <thead>
+				        <tr>
+				          <th style="text-align:left; width:110px;">Escala</th>
+				          <th style="">Q</th>
+				          <th style="">$</th>
+				          <th style="">Promedio Sueldos</th>
+				        </tr>
+				      </thead>
+				      <tbody>
+				       @for(datax <- listTotalAgrupadoPorEscalaParquePeriodo){
+
+								@datax.getString("abreviatura") match {
+								    case "I" => { @{color1 ="#fee2e2"} @{color2 ="#991b1b"}   @{color3 ="#ef4444"}}
+								    case "II" => { @{color1 ="#ede9fe"}     @{color2 ="#5b21b6"} @{color3 ="#8b5cf6"}}
+								    case "III" => { @{color1 ="#fef3c7"}   @{color2 ="#92400e"} @{color3 ="#f59e0b"}}
+								    case "IV" => { @{color1 ="#d1fae5"} @{color2 ="#065f46"} @{color3 ="#10b981"}}
+									case "V" => { @{color1 ="#dbeafe"} @{color2 ="#374151"} @{color3 ="#9ca3af"}}
+								}
+
+							 	<tr>
+						          <td style="text-align:left;"><span class="badge" style="background:@color1;color:@color2;">@datax.getString("escala")</span></td>
+						          <td>@datax.getInteger("cantidadEmpleados")</td>
+								  <td style="font-family:'Fira Mono',monospace;">@(utils.NumberUtils.moneda(datax.getBigDecimal("t"),0))</td>
+								  <td style="font-family:'Fira Mono',monospace;">@(utils.NumberUtils.moneda(datax.getBigDecimal("promedio_t"),0))</td>
+								</tr>
+
+								@{
+								 	totalCantidad = datax.getInteger("total_empleados")
+						        	totalMonto = datax.getBigDecimal("total_t")
+						        }
+				       }
+
+
+
+				      </tbody>
+				      <tfoot>
+				        <tr style="background:var(--body-bg); font-weight:800; font-size:20px;">
+				          <td style="text-align:left; padding:10px 14px;">Total</td>
+				          <td style="text-align:center; padding:10px 14px;">@totalCantidad</td>
+				          <td style="text-align:center; padding:10px 14px;">@(utils.NumberUtils.moneda(totalMonto,0))</td>
+							<td></td>
+				        </tr>
+				      </tfoot>
+				    </table>
+				  </div>
+				</div>
+
+	    	</div>
+	</br>
+
+	    	<div style="display: grid; grid-template-columns: repeat(1, 1fr); gap: 18px; align-items: start;">
+
+		    	<div class="card">
+				  <div class="card-header">
+				    <span class="card-title">Adscripto Otras Entidades</span>
+				  </div>
+				  <div class="table-wrap" style="padding:10px;">
+				    <table class="dept-summary-table" style="font-size:15px;">
+				      <thead>
+				        <tr>
+				          <th style="text-align:left; width:110px;">Institucion</th>
+				          <th style="">Q</th>
+				          <th style="">$</th>
+				        </tr>
+				      </thead>
+				      <tbody>
+				       @for(datax <- listTotalAdscritos){
+
+								 @datax.getString("organigrama") match {
+								    case "Ministerio de Salud" => { @{color1 ="#fef3c7"}   @{color2 ="#92400e"} @{color3 ="#f59e0b"}  @{tipo ="ADSCRIPTOS"}}
+									case _ => { @{color1 ="#fee2e2"} @{color2 ="#991b1b"}   @{color3 ="#ef4444"}  @{tipo ="SIN DATOS"} }
+
+								}
+
+							 	<tr>
+						          <td style="text-align:left;"><span class="badge" style="background:@color1;color:@color2;">@datax.getString("organigrama")</span></td>
+						          <td>@datax.getInteger("cantidadEmpleados")</td>
+								  <td style="font-family:'Fira Mono',monospace;">@(utils.NumberUtils.moneda(datax.getBigDecimal("t"),0))</td>
+
+
+						        </tr>
+
+
+				       }
+
+
+
+				      </tbody>
+				      <tfoot>
+				        <tr style="background:var(--body-bg); font-weight:800; font-size:20px;">
+				          <td style="text-align:left; padding:10px 14px;">Total</td>
+				          <td style="text-align:center; padding:10px 14px;">@totalCantidad</td>
+				          <td style="text-align:center; padding:10px 14px;">@(utils.NumberUtils.moneda(totalMonto,0))</td>
+
+				        </tr>
+				      </tfoot>
+				    </table>
+				  </div>
+				</div>
+			</div>
+
+
+ 		</div>
+ </div>
+</div>
+
+}
