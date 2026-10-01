@@ -538,6 +538,32 @@ public class Agente extends Model{
 
 
 
+
+
+		}catch (SQLException e) {
+			Logger.error("Error duplicar: "+e);
+        } finally {
+        	if (stmt != null) try { stmt.close(); } catch (Exception e) { }
+        	if (stmt2 != null) try { stmt2.close(); } catch (Exception e) { }
+        	if (rs != null) try { rs.close(); } catch (Exception e) { }
+            if (conn != null) try { conn.close(); } catch (Exception e) { }
+        }
+
+		try {
+			conn = play.db.DB.getConnection();
+			stmt = conn.prepareStatement("select  organigrama_id,agente_id from agente_novedades where agente_id in(select id from agentes) and activo= true and organigrama_id is not null ");
+			rs = stmt.executeQuery();
+			while (rs.next()) {
+
+				stmt2 = conn.prepareStatement("update agentes_historial set organigrama_h = ? where agente_id = ?");
+
+				stmt2.setInt(1,rs.getInt(1));
+		        stmt2.setInt(2, rs.getInt(2));
+
+				stmt2.executeUpdate();
+
+			}
+
 		}catch (SQLException e) {
 			Logger.error("Error duplicar: "+e);
         } finally {
