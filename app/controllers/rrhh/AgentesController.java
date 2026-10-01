@@ -218,7 +218,7 @@ public class AgentesController extends Controller {
 
 
 				if(a.activo == false) {
-					List<PuestoLaboral> pl = PuestoLaboral.find.where().eq("legajo.agente_id", a.id).isNotNull("fecha_baja").findList();
+					List<PuestoLaboral> pl = PuestoLaboral.find.where().eq("legajo.agente_id", a.id).isNull("fecha_baja").findList();
 					if(pl.size() > 0) {
 						agenteForm.reject("activo","Tiene un Puesto Activo.");
 						flash("error", "No se puede poner el Agente como INACTIVO ya que existen Puestos Laborales del Agente ACTIVOS.");
