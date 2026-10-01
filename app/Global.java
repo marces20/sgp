@@ -246,7 +246,8 @@ public class Global extends GlobalSettings {
                     HistorialDeudaProveedores.insertHistorialDeuda();
                     // ----------------------------------------
                     int dayOfMonth = calendar.get(Calendar.DAY_OF_MONTH); // 1–31
-                    if(dayOfMonth == 1) {
+                    int LastdayOfMonth = calendar.getActualMaximum(Calendar.DAY_OF_MONTH); // 1–31
+                    if(dayOfMonth == LastdayOfMonth) {
                     	 Agente.insertHistorialAgente();
 
                     	 EmailUtilis eu3 = new EmailUtilis();
