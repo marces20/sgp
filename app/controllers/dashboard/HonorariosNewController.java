@@ -1365,7 +1365,7 @@ public class HonorariosNewController extends Controller {
 
 		SqlQuery sqlQuery = Ebean.createSqlQuery(sql);
 		sqlQuery.setParameter("periodo_id",p.id);
-		sqlQuery.setParameter("afecha",pAgente.date_start);
+		sqlQuery.setParameter("afecha",p.date_start);
 
 		List<SqlRow>  row = sqlQuery.findList();
 		return row;
@@ -1419,7 +1419,7 @@ public class HonorariosNewController extends Controller {
 
 		SqlQuery sqlQuery = Ebean.createSqlQuery(sql);
 		sqlQuery.setParameter("periodo_id",p.id);
-		sqlQuery.setParameter("afecha",pAgente.date_start);
+		sqlQuery.setParameter("afecha",p.date_start);
 
 		List<SqlRow>  row = sqlQuery.findList();
 		return row;
@@ -1475,7 +1475,7 @@ public class HonorariosNewController extends Controller {
 
 		SqlQuery sqlQuery = Ebean.createSqlQuery(sql);
 		sqlQuery.setParameter("periodo_id",p.id);
-		sqlQuery.setParameter("afecha",pAgente.date_start);
+		sqlQuery.setParameter("afecha",p.date_start);
 
 		List<SqlRow>  row = sqlQuery.findList();
 		return row;
