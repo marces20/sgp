@@ -77,22 +77,24 @@
 
 				}
 				@if(Componente.check("dashboardInforme")) {
-					<li class="titulo">Informes Deudas/Compromiso</li>
+					@if(Permiso.check("dashboardInformeDeudaProveedores")) {
+						<li class="titulo">Informes Deudas/Compromiso</li>
 
-					@if(Permiso.check("dashboardInformeDeudaProveedores")) {
-					<li><a href="@controllers.dashboard.routes.InformeEstadisticoDeudaProveedoresController.index()">Informe Deuda por proveedor</a></li>
-					}
-					@if(Permiso.check("dashboardInformeDeudaPorActas")) {
-					<li><a href="@controllers.dashboard.routes.InformeDeudaPorActasController.index()">Deuda por actas</a></li>
-					}
-					@if(Permiso.check("dashboardInformeDeudaProveedores")) {
-					<li><a href="@controllers.dashboard.routes.DeudasGlobalizadasController.index()">Deudas/comprom. reportes</a></li>
-					}
-					@if(Permiso.check("dashboardInformeDeudaProveedores")) {
-						<li><a href="@controllers.dashboard.routes.DeudasPorAntiguedadController.index()">Deudas/comprom. reportes por Antiguedad</a></li>
-					}
-					@if(Permiso.check("dashboardInformeDeudaProveedores")) {
-						<li><a href="@controllers.dashboard.routes.ControlDeudaController.index()">Control Deudas</a></li>
+						@if(Permiso.check("dashboardInformeDeudaProveedores")) {
+						<li><a href="@controllers.dashboard.routes.InformeEstadisticoDeudaProveedoresController.index()">Informe Deuda por proveedor</a></li>
+						}
+						@if(Permiso.check("dashboardInformeDeudaPorActas")) {
+						<li><a href="@controllers.dashboard.routes.InformeDeudaPorActasController.index()">Deuda por actas</a></li>
+						}
+						@if(Permiso.check("dashboardInformeDeudaProveedores")) {
+						<li><a href="@controllers.dashboard.routes.DeudasGlobalizadasController.index()">Deudas/comprom. reportes</a></li>
+						}
+						@if(Permiso.check("dashboardInformeDeudaProveedores")) {
+							<li><a href="@controllers.dashboard.routes.DeudasPorAntiguedadController.index()">Deudas/comprom. reportes por Antiguedad</a></li>
+						}
+						@if(Permiso.check("dashboardInformeDeudaProveedores")) {
+							<li><a href="@controllers.dashboard.routes.ControlDeudaController.index()">Control Deudas</a></li>
+						}
 					}
 				}
 
@@ -105,34 +107,38 @@
 				}
 
 				@if(Componente.check("dashboardInforme")) {
-					<li class="titulo">Informes Deudas</li>
-
-					@if(Permiso.check("dashboardInformeDeudaProveedores082023")) {
-						<li><a href="@controllers.dashboard.routes.DeudasGlobalizadasController.resumen082023()"><b>Deudas reportes NUEVO !!</b></a></li>
-					}
 					@if(Permiso.check("dashboardInformeDeudaProveedores")) {
-						<li><a href="@controllers.dashboard.routes.DeudasGlobalizadasController.index(true)">Deudas reportes</a></li>
-					 	<li><a href="@controllers.dashboard.routes.DeudasPorAntiguedadController.index()">Deudas reportes por Antiguedad</a></li>
+						<li class="titulo">Informes Deudas</li>
+
+						@if(Permiso.check("dashboardInformeDeudaProveedores082023")) {
+							<li><a href="@controllers.dashboard.routes.DeudasGlobalizadasController.resumen082023()"><b>Deudas reportes NUEVO !!</b></a></li>
+						}
+						@if(Permiso.check("dashboardInformeDeudaProveedores")) {
+							<li><a href="@controllers.dashboard.routes.DeudasGlobalizadasController.index(true)">Deudas reportes</a></li>
+						 	<li><a href="@controllers.dashboard.routes.DeudasPorAntiguedadController.index()">Deudas reportes por Antiguedad</a></li>
+						}
 					}
 
 				}
 
 				@if(Componente.check("dashboardInforme")) {
-					<li class="titulo">Informes Pagos</li>
-
 					@if(Permiso.check("dashboardInformeDeudaProveedores")) {
-					<li><a href="@controllers.dashboard.routes.InformeEstadisticoPagoProveedoresController.index()">Informe Pago por proveedor</a></li>
-					}
-					@if(Permiso.check("dashboardInformeDeudaProveedores")) {
-					<li><a href="@controllers.dashboard.routes.InformeEstadisticoPagoProveedoresController.informePeriodoProveedor()">Informe Pago Periodo/Proveedores</a></li>
-					}
+						<li class="titulo">Informes Pagos</li>
 
-					@if(Permiso.check("dashboardMovimientoCuenta")) {
-					<li><a href="@controllers.dashboard.routes.MovimientosCuentasController.index()">Movimientos Cuentas</a></li>
-					}
+						@if(Permiso.check("dashboardInformeDeudaProveedores")) {
+						<li><a href="@controllers.dashboard.routes.InformeEstadisticoPagoProveedoresController.index()">Informe Pago por proveedor</a></li>
+						}
+						@if(Permiso.check("dashboardInformeDeudaProveedores")) {
+						<li><a href="@controllers.dashboard.routes.InformeEstadisticoPagoProveedoresController.informePeriodoProveedor()">Informe Pago Periodo/Proveedores</a></li>
+						}
 
-					@if(Permiso.check("dashboardInformeDeudaProveedores")) {
-					<li><a href="@controllers.dashboard.routes.InformeEstadisticoPagoProveedoresController.autorizadosPorFechaProveedor()">Autorizados por Fecha</a></li>
+						@if(Permiso.check("dashboardMovimientoCuenta")) {
+						<li><a href="@controllers.dashboard.routes.MovimientosCuentasController.index()">Movimientos Cuentas</a></li>
+						}
+
+						@if(Permiso.check("dashboardInformeDeudaProveedores")) {
+						<li><a href="@controllers.dashboard.routes.InformeEstadisticoPagoProveedoresController.autorizadosPorFechaProveedor()">Autorizados por Fecha</a></li>
+						}
 					}
 				}
 
