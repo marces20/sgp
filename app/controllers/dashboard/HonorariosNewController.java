@@ -16,10 +16,7 @@ import play.Logger;
 import play.mvc.Controller;
 import play.mvc.Result;
 import play.mvc.Security;
-import views.html.dashboard.honorariosNew.index;
-import views.html.dashboard.honorariosNew.listadoHonorariosReporte;
-import views.html.dashboard.honorariosNew.listadoHonorariosReporte2;
-import views.html.dashboard.honorariosNew.listadoHonorariosReporte3;
+import views.html.dashboard.honorariosNew.*;
 
 import com.avaje.ebean.Ebean;
 import com.avaje.ebean.SqlQuery;
@@ -29,21 +26,37 @@ import controllers.Secured;
 
 @Security.Authenticated(Secured.class)
 public class HonorariosNewController extends Controller {
-	
+
 	//@CheckPermiso(key = "dashboardHonorariosNuevo")
+
+	public static Result honorariosResumenMensual() {
+
+		List<SqlRow> listTotalAgrupadoPorTipoRelacion = getTotalAgrupadoPorTipoRelacionPeriodo(new Long(183));
+
+		List<SqlRow> listTotalAdscritos = getTotalAdscritos(new Long(183));
+
+		List<SqlRow> listTotalAgrupadoPorEscalaParquePeriodo = getTotalAgrupadoPorEscalaParquePeriodo(new Long(183));
+
+
+
+
+		return ok(resumenMensual.render(listTotalAgrupadoPorTipoRelacion,listTotalAdscritos,listTotalAgrupadoPorEscalaParquePeriodo));
+	}
+
+
 	public static Result index() {
 		return ok(index.render());
 	}
-	
-	
+
+
 	public static Result listadoHonorariosReporte(Integer id) {
-		
+
 		List<Periodo> lp = Periodo.find.where()
 							//.eq("ejercicio_id",4)
 							//.eq("id",76)
 							.le("date_start",new Date())
 							.order("id asc").findList();
-		
+
 		Periodo lastPeridos = Periodo.find.where()
 							//.eq("ejercicio_id",4)
 							//.eq("id",76)
@@ -51,9 +64,9 @@ public class HonorariosNewController extends Controller {
 							.order("id desc")
 							.setMaxRows(1)
 							.findUnique();
-		
+
 		Logger.debug("--------------------------------------- "+lastPeridos.id);
-		
+
 		List<EscalaLaboral> el = EscalaLaboral.find.where().order("id asc").findList();
 		List<LiquidacionConceptoClasificacion> lcc = LiquidacionConceptoClasificacion.find.where().order("id asc").findList();
 		Map<String,Map<String,String>> lls = new HashMap<String,Map<String,String>>();
@@ -63,42 +76,42 @@ public class HonorariosNewController extends Controller {
 		Map<String,Map<String,String>> escalasCmList = new HashMap<String,Map<String,String>>();
 		Map<String,Map<String,BigDecimal>> escalasProfesionNoCmList = new HashMap<String,Map<String,BigDecimal>>();
 		Map<String,Map<String,BigDecimal>> escalasProfesionCmList = new HashMap<String,Map<String,BigDecimal>>();
-		
+
 		Map<String,Map<String,BigDecimal>> escalasAsistencialProfesionNoCmList = new HashMap<String,Map<String,BigDecimal>>();
 		Map<String,Map<String,BigDecimal>> escalasNoAsistencialProfesionNoCmList = new HashMap<String,Map<String,BigDecimal>>();
 		Map<String,Map<String,BigDecimal>> escalasAsistencialProfesionCmList = new HashMap<String,Map<String,BigDecimal>>();
 		Map<String,Map<String,BigDecimal>> escalasNoAsistencialProfesionCmList = new HashMap<String,Map<String,BigDecimal>>();
-		
+
 		Map<String,Map<String,String>> escalasLiquidacionesNoCmList = new HashMap<String,Map<String,String>>();
 		Map<String,Map<String,String>> escalasLiquidacionesCmList = new HashMap<String,Map<String,String>>();
-		
+
 		Map<String,Integer> servicioNoCmList = new HashMap<String,Integer>();
 		Map<String,Integer> servicioCmList = new HashMap<String,Integer>();
 		Map<String,Map<String,BigDecimal>> costoTotalList = new HashMap<String,Map<String,BigDecimal>>();
 		Map<String,Map<String,BigDecimal>> costoTotalSinSacList = new HashMap<String,Map<String,BigDecimal>>();
 		Map<String,Map<String,BigDecimal>> costoTipoConceptoNoCmList = new HashMap<String,Map<String,BigDecimal>>();
 		Map<String,Map<String,BigDecimal>> costoTipoConceptoCmList = new HashMap<String,Map<String,BigDecimal>>();
-		
+
 		Map<String,Map<String,BigDecimal>> costoTipoConceptoNoCmListSinSac = new HashMap<String,Map<String,BigDecimal>>();
 		Map<String,Map<String,BigDecimal>> costoTipoConceptoCmListSinSac = new HashMap<String,Map<String,BigDecimal>>();
-		
+
 		List<String> tipoConceptos = new ArrayList<String>();
 		Map<String,Map<String,String>> costoTotalPorClasificacionConceptosNoCmList = new HashMap<String,Map<String,String>>();
 		Map<String,Map<String,String>> costoTotalPorClasificacionConceptosCmList = new HashMap<String,Map<String,String>>();
-		
+
 		Map<String,Map<String,String>> costoTotalPorEscalaNoCmList = new HashMap<String,Map<String,String>>();
 		Map<String,Map<String,String>> costoTotalPorEscalaCmList = new HashMap<String,Map<String,String>>();
 		Map<String,Map<String,String>> costoTotalPorEscalaNoCmListSinSac = new HashMap<String,Map<String,String>>();
 		Map<String,Map<String,String>> costoTotalPorEscalaCmListSinSac = new HashMap<String,Map<String,String>>();
-		
-		
+
+
 		Map<String,Map<String,String>> costoHcaPorEscalaNoCmList = new HashMap<String,Map<String,String>>();
 		Map<String,Map<String,String>> costoHcaPorEscalaCmList = new HashMap<String,Map<String,String>>();
 		Map<String,Map<String,String>> costoHsaPorEscalaNoCmList = new HashMap<String,Map<String,String>>();
 		Map<String,Map<String,String>> costoHsaPorEscalaCmList = new HashMap<String,Map<String,String>>();
 		Map<String,Map<String,String>> costoRetPorEscalaNoCmList = new HashMap<String,Map<String,String>>();
 		Map<String,Map<String,String>> costoRetPorEscalaCmList = new HashMap<String,Map<String,String>>();
-		
+
 		List<SqlRow> escalasProfesionNoCmTmp = LiquidacionMes.getCountPorProfesion(lastPeridos.id,false);
 		if(escalasProfesionNoCmTmp.size() > 0){
 			for(SqlRow sr:escalasProfesionNoCmTmp){
@@ -113,8 +126,8 @@ public class HonorariosNewController extends Controller {
 					escalasProfesionNoCmList.put(sr.getString("escala"), f);
 				}
 			}
-		} 
-		
+		}
+
 		List<SqlRow> escalasProfesionCmTmp = LiquidacionMes.getCountPorProfesion(lastPeridos.id,true);
 		if(escalasProfesionCmTmp.size() > 0){
 			for(SqlRow sr:escalasProfesionCmTmp){
@@ -129,9 +142,9 @@ public class HonorariosNewController extends Controller {
 					escalasProfesionCmList.put(sr.getString("escala"), f);
 				}
 			}
-		} 
-		
-		
+		}
+
+
 		List<SqlRow> escalasAsistencialProfesionNoCmTmp = LiquidacionMes.getCountPorProfesionAsistencial(lastPeridos.id,false,true);
 		if(escalasAsistencialProfesionNoCmTmp.size() > 0){
 			for(SqlRow sr:escalasAsistencialProfesionNoCmTmp){
@@ -146,7 +159,7 @@ public class HonorariosNewController extends Controller {
 					escalasAsistencialProfesionNoCmList.put(sr.getString("escala"), f);
 				}
 			}
-		} 
+		}
 		List<SqlRow> escalasNoAsistencialProfesionNoCmTmp = LiquidacionMes.getCountPorProfesionAsistencial(lastPeridos.id,false,false);
 		if(escalasNoAsistencialProfesionNoCmTmp.size() > 0){
 			for(SqlRow sr:escalasNoAsistencialProfesionNoCmTmp){
@@ -161,8 +174,8 @@ public class HonorariosNewController extends Controller {
 					escalasNoAsistencialProfesionNoCmList.put(sr.getString("escala"), f);
 				}
 			}
-		} 
-		
+		}
+
 		List<SqlRow> escalasAsistencialProfesionCmTmp = LiquidacionMes.getCountPorProfesionAsistencial(lastPeridos.id,true,true);
 		if(escalasAsistencialProfesionCmTmp.size() > 0){
 			for(SqlRow sr:escalasAsistencialProfesionCmTmp){
@@ -177,8 +190,8 @@ public class HonorariosNewController extends Controller {
 					escalasAsistencialProfesionCmList.put(sr.getString("escala"), f);
 				}
 			}
-		} 
-		
+		}
+
 		List<SqlRow> escalasNoAsistencialProfesionCmTmp = LiquidacionMes.getCountPorProfesionAsistencial(lastPeridos.id,true,false);
 		if(escalasNoAsistencialProfesionCmTmp.size() > 0){
 			for(SqlRow sr:escalasNoAsistencialProfesionCmTmp){
@@ -193,35 +206,35 @@ public class HonorariosNewController extends Controller {
 					escalasNoAsistencialProfesionCmList.put(sr.getString("escala"), f);
 				}
 			}
-		} 
-		
+		}
+
 		List<SqlRow> servicioNoCmTmp = LiquidacionMes.getCountPorServicio(lastPeridos.id,false);
-		
+
 		if(servicioNoCmTmp.size() > 0){
 			for(SqlRow sr:servicioNoCmTmp){
 				servicioNoCmList.put(sr.getString("nombre"),sr.getInteger("count"));
 			}
 			servicioNoCmList = utils.MapUtils.sortByValueDesc( servicioNoCmList );
 		}
-		
+
 		List<SqlRow> servicioCmTmp = LiquidacionMes.getCountPorServicio(lastPeridos.id,true);
-		
+
 		if(servicioCmTmp.size() > 0){
 			for(SqlRow sr:servicioCmTmp){
 				servicioCmList.put(sr.getString("nombre"),sr.getInteger("count"));
 			}
 			servicioCmList = utils.MapUtils.sortByValueDesc( servicioCmList );
 		}
-		
+
 		List<SqlRow> totalFinalUnicoPeriodoPorEscalaNoCmTmp = getTotalFinalUnicoPeriodoPorEscala(lastPeridos.id,false,false);
 		List<SqlRow> totalFinalUnicoPeriodoPorEscalaCmTmp = getTotalFinalUnicoPeriodoPorEscala(lastPeridos.id,true,false);
 		List<SqlRow> totalFinalUnicoPeriodoPorEscalaNoCmTmpSinSac = getTotalFinalUnicoPeriodoPorEscala(lastPeridos.id,false,true);
-		List<SqlRow> totalFinalUnicoPeriodoPorEscalaCmTmpSinSac = getTotalFinalUnicoPeriodoPorEscala(lastPeridos.id,true,true); 
-		
-		
+		List<SqlRow> totalFinalUnicoPeriodoPorEscalaCmTmpSinSac = getTotalFinalUnicoPeriodoPorEscala(lastPeridos.id,true,true);
+
+
 		for(Periodo p : lp){
-			
-			
+
+
 			List<SqlRow> lsTmp = getCountRelacionPorPeriodo(p.id);
 			if(lsTmp.size() > 0){
 				for(SqlRow sr:lsTmp){
@@ -244,11 +257,11 @@ public class HonorariosNewController extends Controller {
 					}
 				}
 			}
-			
+
 			List<SqlRow> altasTmp = getCountAltasPorPeriodo(p.id);
 			if(altasTmp.size() > 0){
 				for(SqlRow sr:altasTmp){
-					
+
 					if(altaList.containsKey(p.nombre)){
 						Map<String,String> sstmp2 =  altaList.get(p.nombre);
 						if(sr.getBoolean("cm")){
@@ -268,7 +281,7 @@ public class HonorariosNewController extends Controller {
 					}
 				}
 			}
-			
+
 			List<SqlRow> bajasTmp = getCountBajasPorPeriodo(p.id);
 			if(bajasTmp.size() > 0){
 				for(SqlRow sr:bajasTmp){
@@ -291,7 +304,7 @@ public class HonorariosNewController extends Controller {
 					}
 				}
 			}
-			
+
 			List<SqlRow> escalasNoCmTmp = getCountPorEscala(p.id,false);
 			if(escalasNoCmTmp.size() > 0){
 				for(SqlRow sr:escalasNoCmTmp){
@@ -305,8 +318,8 @@ public class HonorariosNewController extends Controller {
 						escalasNoCmList.put(p.nombre, sstmp);
 					}
 				}
-			}	
-			
+			}
+
 			List<SqlRow> escalasCmTmp = getCountPorEscala(p.id,true);
 			if(escalasCmTmp.size() > 0){
 				for(SqlRow sr:escalasCmTmp){
@@ -320,8 +333,8 @@ public class HonorariosNewController extends Controller {
 						escalasCmList.put(p.nombre, sstmp);
 					}
 				}
-			}	
-			
+			}
+
 			List<SqlRow> escalasLiquidacionesCmTmp = getCountPorEscalaEnLiquidaciones(p.id,true);
 			if(escalasLiquidacionesCmTmp.size() > 0){
 				for(SqlRow sr:escalasLiquidacionesCmTmp){
@@ -336,7 +349,7 @@ public class HonorariosNewController extends Controller {
 					}
 				}
 			}
-			
+
 			List<SqlRow> escalasLiquidacionesNoCmTmp = getCountPorEscalaEnLiquidaciones(p.id,false);
 			if(escalasLiquidacionesNoCmTmp.size() > 0){
 				for(SqlRow sr:escalasLiquidacionesNoCmTmp){
@@ -351,7 +364,7 @@ public class HonorariosNewController extends Controller {
 					}
 				}
 			}
-			
+
 			List<SqlRow> costoTotalTmp = getCostoTotalPorPeriodo(p.id);
 			if(costoTotalTmp.size() > 0){
 				for(SqlRow sr:costoTotalTmp){
@@ -374,7 +387,7 @@ public class HonorariosNewController extends Controller {
 					}
 				}
 			}
-			
+
 			List<SqlRow> costoTotalSinSacTmp = getCostoTotalPorPeriodoSinSac(p.id);
 			if(costoTotalSinSacTmp.size() > 0){
 				for(SqlRow sr:costoTotalSinSacTmp){
@@ -397,7 +410,7 @@ public class HonorariosNewController extends Controller {
 					}
 				}
 			}
-			
+
 			List<SqlRow> costoTipoConceptoNoCmTmp = getCostoTotalPorTipoConcepto(p.id,false);
 			if(costoTipoConceptoNoCmTmp.size() > 0){
 				for(SqlRow sr:costoTipoConceptoNoCmTmp){
@@ -406,23 +419,23 @@ public class HonorariosNewController extends Controller {
 					}else if(sr.getInteger("tipo").equals(2)){tipo = "Haberes sin Aporte";
 					}else if(sr.getInteger("tipo").equals(3)){tipo = "Retenciones";
 					}else if(sr.getInteger("tipo").equals(5)){tipo = "Contribuciones Patronales";}
-					
+
 					if(!tipoConceptos.contains(tipo)){tipoConceptos.add(tipo);}
-					
+
 					if(costoTipoConceptoNoCmList.containsKey(p.nombre)){
 						Map<String,BigDecimal> sstmp2 =  costoTipoConceptoNoCmList.get(p.nombre);
 						sstmp2.put(tipo,sr.getBigDecimal("monto"));
-						
+
 						costoTipoConceptoNoCmList.put(p.nombre, sstmp2);
 					}else{
 						Map<String,BigDecimal> sstmp = new HashMap<String,BigDecimal>();
 						sstmp.put(tipo,sr.getBigDecimal("monto"));
-						
+
 						costoTipoConceptoNoCmList.put(p.nombre, sstmp);
 					}
 				}
 			}
-			
+
 			List<SqlRow> costoTipoConceptoCmTmp = getCostoTotalPorTipoConcepto(p.id,true);
 			if(costoTipoConceptoCmTmp.size() > 0){
 				for(SqlRow sr:costoTipoConceptoCmTmp){
@@ -431,9 +444,9 @@ public class HonorariosNewController extends Controller {
 					}else if(sr.getInteger("tipo").equals(2)){tipo = "Haberes sin Aporte";
 					}else if(sr.getInteger("tipo").equals(3)){tipo = "Retenciones";
 					}else if(sr.getInteger("tipo").equals(5)){tipo = "Contribuciones Patronales";}
-					
+
 					if(!tipoConceptos.contains(tipo)){tipoConceptos.add(tipo);}
-					
+
 					if(costoTipoConceptoCmList.containsKey(p.nombre)){
 						Map<String,BigDecimal> sstmp2 =  costoTipoConceptoCmList.get(p.nombre);
 						sstmp2.put(tipo,sr.getBigDecimal("monto"));
@@ -441,7 +454,7 @@ public class HonorariosNewController extends Controller {
 					}else{
 						Map<String,BigDecimal> sstmp = new HashMap<String,BigDecimal>();
 						sstmp.put(tipo,sr.getBigDecimal("monto"));
-						
+
 						costoTipoConceptoCmList.put(p.nombre, sstmp);
 					}
 				}
@@ -455,23 +468,23 @@ public class HonorariosNewController extends Controller {
 					}else if(sr.getInteger("tipo").equals(2)){tipo = "Haberes sin Aporte";
 					}else if(sr.getInteger("tipo").equals(3)){tipo = "Retenciones";
 					}else if(sr.getInteger("tipo").equals(5)){tipo = "Contribuciones Patronales";}
-					
+
 					if(!tipoConceptos.contains(tipo)){tipoConceptos.add(tipo);}
-					
+
 					if(costoTipoConceptoNoCmListSinSac.containsKey(p.nombre)){
 						Map<String,BigDecimal> sstmp2 =  costoTipoConceptoNoCmListSinSac.get(p.nombre);
 						sstmp2.put(tipo,sr.getBigDecimal("monto"));
-						
+
 						costoTipoConceptoNoCmListSinSac.put(p.nombre, sstmp2);
 					}else{
 						Map<String,BigDecimal> sstmp = new HashMap<String,BigDecimal>();
 						sstmp.put(tipo,sr.getBigDecimal("monto"));
-						
+
 						costoTipoConceptoNoCmListSinSac.put(p.nombre, sstmp);
 					}
 				}
 			}
-			
+
 			List<SqlRow> costoTipoConceptoCmTmpSinSca = getCostoTotalPorTipoConceptoSinSac(p.id,true);
 			if(costoTipoConceptoCmTmpSinSca.size() > 0){
 				for(SqlRow sr:costoTipoConceptoCmTmpSinSca){
@@ -480,9 +493,9 @@ public class HonorariosNewController extends Controller {
 					}else if(sr.getInteger("tipo").equals(2)){tipo = "Haberes sin Aporte";
 					}else if(sr.getInteger("tipo").equals(3)){tipo = "Retenciones";
 					}else if(sr.getInteger("tipo").equals(5)){tipo = "Contribuciones Patronales";}
-					
+
 					if(!tipoConceptos.contains(tipo)){tipoConceptos.add(tipo);}
-					
+
 					if(costoTipoConceptoCmListSinSac.containsKey(p.nombre)){
 						Map<String,BigDecimal> sstmp2 =  costoTipoConceptoCmListSinSac.get(p.nombre);
 						sstmp2.put(tipo,sr.getBigDecimal("monto"));
@@ -490,13 +503,13 @@ public class HonorariosNewController extends Controller {
 					}else{
 						Map<String,BigDecimal> sstmp = new HashMap<String,BigDecimal>();
 						sstmp.put(tipo,sr.getBigDecimal("monto"));
-						
+
 						costoTipoConceptoCmListSinSac.put(p.nombre, sstmp);
 					}
 				}
 			}
 			//////////////////////////SINSAC
-			
+
 			List<SqlRow> costoTotalPorClasificacionConceptoNoCmTmp = getCostoTotalPorClasificacionConcepto(p.id,false);
 			if(costoTotalPorClasificacionConceptoNoCmTmp.size() > 0){
 				for(SqlRow sr:costoTotalPorClasificacionConceptoNoCmTmp){
@@ -510,8 +523,8 @@ public class HonorariosNewController extends Controller {
 						costoTotalPorClasificacionConceptosNoCmList.put(p.nombre, sstmp);
 					}
 				}
-			}	
-			
+			}
+
 			List<SqlRow> costoTotalPorClasificacionConceptoCmTmp = getCostoTotalPorClasificacionConcepto(p.id,true);
 			if(costoTotalPorClasificacionConceptoCmTmp.size() > 0){
 				for(SqlRow sr:costoTotalPorClasificacionConceptoCmTmp){
@@ -525,8 +538,8 @@ public class HonorariosNewController extends Controller {
 						costoTotalPorClasificacionConceptosCmList.put(p.nombre, sstmp);
 					}
 				}
-			}	
-			
+			}
+
 			/////////////////////////////////POR ESCALA ////////////////////////////////
 			List<SqlRow> costoHcaPorEscalaNoCmTmp = getCostoHcaPorEscala(p.id,false);
 			if(costoHcaPorEscalaNoCmTmp.size() > 0){
@@ -541,8 +554,8 @@ public class HonorariosNewController extends Controller {
 						costoHcaPorEscalaNoCmList.put(p.nombre, sstmp);
 					}
 				}
-			}	
-			
+			}
+
 			List<SqlRow> costoHcaPorEscalaCmTmp = getCostoHcaPorEscala(p.id,true);
 			if(costoHcaPorEscalaCmTmp.size() > 0){
 				for(SqlRow sr:costoHcaPorEscalaCmTmp){
@@ -556,8 +569,8 @@ public class HonorariosNewController extends Controller {
 						costoHcaPorEscalaCmList.put(p.nombre, sstmp);
 					}
 				}
-			}	
-			
+			}
+
 			List<SqlRow> costoHsaPorEscalaNoCmTmp = getCostoHsaPorEscala(p.id,false);
 			if(costoHsaPorEscalaNoCmTmp.size() > 0){
 				for(SqlRow sr:costoHsaPorEscalaNoCmTmp){
@@ -571,8 +584,8 @@ public class HonorariosNewController extends Controller {
 						costoHsaPorEscalaNoCmList.put(p.nombre, sstmp);
 					}
 				}
-			}	
-			
+			}
+
 			List<SqlRow> costoHsaPorEscalaCmTmp = getCostoHsaPorEscala(p.id,true);
 			if(costoHsaPorEscalaCmTmp.size() > 0){
 				for(SqlRow sr:costoHsaPorEscalaCmTmp){
@@ -587,7 +600,7 @@ public class HonorariosNewController extends Controller {
 					}
 				}
 			}
-			
+
 			List<SqlRow> costoRetPorEscalaNoCmTmp = getCostoRetPorEscala(p.id,false);
 			if(costoRetPorEscalaNoCmTmp.size() > 0){
 				for(SqlRow sr:costoRetPorEscalaNoCmTmp){
@@ -601,8 +614,8 @@ public class HonorariosNewController extends Controller {
 						costoRetPorEscalaNoCmList.put(p.nombre, sstmp);
 					}
 				}
-			}	
-			
+			}
+
 			List<SqlRow> costoRetPorEscalaCmTmp = getCostoRetPorEscala(p.id,true);
 			if(costoRetPorEscalaCmTmp.size() > 0){
 				for(SqlRow sr:costoRetPorEscalaCmTmp){
@@ -616,8 +629,8 @@ public class HonorariosNewController extends Controller {
 						costoRetPorEscalaCmList.put(p.nombre, sstmp);
 					}
 				}
-			} 
-			
+			}
+
 			List<SqlRow> costoTotalPorEscalaNoCmTmp = getCostoTotalPorEscala(p.id,false,false);
 			if(costoTotalPorEscalaNoCmTmp.size() > 0){
 				for(SqlRow sr:costoTotalPorEscalaNoCmTmp){
@@ -631,8 +644,8 @@ public class HonorariosNewController extends Controller {
 						costoTotalPorEscalaNoCmList.put(p.nombre, sstmp);
 					}
 				}
-			}	
-			
+			}
+
 			List<SqlRow> costoTotalPorEscalaCmTmp = getCostoTotalPorEscala(p.id,true,false);
 			if(costoTotalPorEscalaCmTmp.size() > 0){
 				for(SqlRow sr:costoTotalPorEscalaCmTmp){
@@ -646,8 +659,8 @@ public class HonorariosNewController extends Controller {
 						costoTotalPorEscalaCmList.put(p.nombre, sstmp);
 					}
 				}
-			}	
-			
+			}
+
 			List<SqlRow> costoTotalPorEscalaNoCmTmpSinSac = getCostoTotalPorEscala(p.id,false,true);
 			if(costoTotalPorEscalaNoCmTmpSinSac.size() > 0){
 				for(SqlRow sr:costoTotalPorEscalaNoCmTmpSinSac){
@@ -662,8 +675,8 @@ public class HonorariosNewController extends Controller {
 					}
 				}
 			}
-			
-			
+
+
 			List<SqlRow> costoTotalPorEscalaCmTmpSinSac = getCostoTotalPorEscala(p.id,true,true);
 			if(costoTotalPorEscalaCmTmpSinSac.size() > 0){
 				for(SqlRow sr:costoTotalPorEscalaCmTmpSinSac){
@@ -678,50 +691,50 @@ public class HonorariosNewController extends Controller {
 					}
 				}
 			}
-			
+
 			///////////////////////////////FIN POR ESCALA ////////////////////////////////
 		}
-		
+
 		TreeMap<String,Map<String,String>> countAgentes = new TreeMap<String,Map<String,String>>(lls);
 		TreeMap<String,Map<String,String>> countAltas = new TreeMap<String,Map<String,String>>(altaList);
 		TreeMap<String,Map<String,String>> countBajas = new TreeMap<String,Map<String,String>>(bajaList);
 		TreeMap<String,Map<String,String>> countEscalasNoCm = new TreeMap<String,Map<String,String>>(escalasNoCmList);
 		TreeMap<String,Map<String,String>> countEscalasCm = new TreeMap<String,Map<String,String>>(escalasCmList);
-		
+
 		TreeMap<String,Map<String,String>> countEscalasLiquidacionesNoCm = new TreeMap<String,Map<String,String>>(escalasLiquidacionesNoCmList);
 		TreeMap<String,Map<String,String>> countEscalasLiquidacionesCm = new TreeMap<String,Map<String,String>>(escalasLiquidacionesCmList);
-		
+
 		TreeMap<String,Map<String,BigDecimal>> countEscalasProfesionNoCm = new TreeMap<String,Map<String,BigDecimal>>(escalasProfesionNoCmList);
 		TreeMap<String,Map<String,BigDecimal>> countEscalasProfesionCm = new TreeMap<String,Map<String,BigDecimal>>(escalasProfesionCmList);
-		
+
 		TreeMap<String,Map<String,BigDecimal>> countEscalasAsistencialProfesionNoCmList = new TreeMap<String,Map<String,BigDecimal>>(escalasAsistencialProfesionNoCmList);
 		TreeMap<String,Map<String,BigDecimal>> countEscalasNoAsistencialProfesionNoCmList = new TreeMap<String,Map<String,BigDecimal>>(escalasNoAsistencialProfesionNoCmList);
 		TreeMap<String,Map<String,BigDecimal>> countEscalasAsistencialProfesionCmList = new TreeMap<String,Map<String,BigDecimal>>(escalasAsistencialProfesionCmList);
 		TreeMap<String,Map<String,BigDecimal>> countEscalasNoAsistencialProfesionCmList = new TreeMap<String,Map<String,BigDecimal>>(escalasNoAsistencialProfesionCmList);
-		
+
 		TreeMap<String,Map<String,BigDecimal>> countCostoTotal = new TreeMap<String,Map<String,BigDecimal>>(costoTotalList);
 		TreeMap<String,Map<String,BigDecimal>> countCostoSinSacTotal = new TreeMap<String,Map<String,BigDecimal>>(costoTotalSinSacList);
 		TreeMap<String,Map<String,BigDecimal>> countTipoConceptoNoCmTotal = new TreeMap<String,Map<String,BigDecimal>>(costoTipoConceptoNoCmList);
 		TreeMap<String,Map<String,BigDecimal>> countTipoConceptoCmTotal = new TreeMap<String,Map<String,BigDecimal>>(costoTipoConceptoCmList);
-		
+
 		TreeMap<String,Map<String,BigDecimal>> countTipoConceptoNoCmTotalSinSac = new TreeMap<String,Map<String,BigDecimal>>(costoTipoConceptoNoCmListSinSac);
 		TreeMap<String,Map<String,BigDecimal>> countTipoConceptoCmTotalSinSac = new TreeMap<String,Map<String,BigDecimal>>(costoTipoConceptoCmListSinSac);
-		
+
 		TreeMap<String,Map<String,String>> countCostoTotalPorClasificacionConceptosNoCm = new TreeMap<String,Map<String,String>>(costoTotalPorClasificacionConceptosNoCmList);
 		TreeMap<String,Map<String,String>> countCostoTotalPorClasificacionConceptosCm = new TreeMap<String,Map<String,String>>(costoTotalPorClasificacionConceptosCmList);
 		TreeMap<String,Map<String,String>> countCostoTotalPorEscalaNoCm = new TreeMap<String,Map<String,String>>(costoTotalPorEscalaNoCmList);
 		TreeMap<String,Map<String,String>> countCostoTotalPorEscalaCm = new TreeMap<String,Map<String,String>>(costoTotalPorEscalaCmList);
 		TreeMap<String,Map<String,String>> countCostoTotalPorEscalaNoCmSinSac = new TreeMap<String,Map<String,String>>(costoTotalPorEscalaNoCmListSinSac);
 		TreeMap<String,Map<String,String>> countCostoTotalPorEscalaCmSinSac = new TreeMap<String,Map<String,String>>(costoTotalPorEscalaCmListSinSac);
-	
-		
+
+
 		TreeMap<String,Map<String,String>> countCostoHcaPorEscalaNoCm = new TreeMap<String,Map<String,String>>(costoHcaPorEscalaNoCmList);
 		TreeMap<String,Map<String,String>> countCostoHcaPorEscalaCm = new TreeMap<String,Map<String,String>>(costoHcaPorEscalaCmList);
 		TreeMap<String,Map<String,String>> countCostoHsaPorEscalaNoCm = new TreeMap<String,Map<String,String>>(costoHsaPorEscalaNoCmList);
 		TreeMap<String,Map<String,String>> countCostoHsaPorEscalaCm = new TreeMap<String,Map<String,String>>(costoHsaPorEscalaCmList);
 		TreeMap<String,Map<String,String>> countCostoRetPorEscalaNoCm = new TreeMap<String,Map<String,String>>(costoRetPorEscalaNoCmList);
 		TreeMap<String,Map<String,String>> countCostoRetPorEscalaCm = new TreeMap<String,Map<String,String>>(costoRetPorEscalaCmList);
-	 
+
 		if(id == 2){
 			return ok(listadoHonorariosReporte2.render(
 					el,
@@ -733,8 +746,8 @@ public class HonorariosNewController extends Controller {
 					totalFinalUnicoPeriodoPorEscalaCmTmp,
 					totalFinalUnicoPeriodoPorEscalaNoCmTmpSinSac,
 					totalFinalUnicoPeriodoPorEscalaCmTmpSinSac
-				));		
-		}else if(id == 3){	
+				));
+		}else if(id == 3){
 			return ok(listadoHonorariosReporte3.render(
 					el,
 					countEscalasLiquidacionesNoCm,
@@ -743,8 +756,8 @@ public class HonorariosNewController extends Controller {
 					countEscalasNoAsistencialProfesionNoCmList,
 					countEscalasAsistencialProfesionCmList,
 					countEscalasNoAsistencialProfesionCmList
-				));		
-		}else{	
+				));
+		}else{
 			return ok(listadoHonorariosReporte.render(
 				countAgentes,
 				countAltas,
@@ -766,13 +779,13 @@ public class HonorariosNewController extends Controller {
 				lcc,
 				countCostoTotalPorClasificacionConceptosNoCm,
 				countCostoTotalPorClasificacionConceptosCm
-				
+
 				));
-		}	
+		}
 	}
-	
+
 	public static List<SqlRow> getDataPorConcepto(Long idLiquidacion){
-		
+
 		String sql = "SELECT count(*) cantidad,round(sum(ld.cantidad),0) totalCantidad,sum(ld.cantidad*ld.importe) importe," +
 				"lc.codigo codigo,lc.denominacion deno,lc.liquidacion_concepto_tipo_id tipo " +
 				"FROM liquidacion_detalles ld " +
@@ -781,83 +794,83 @@ public class HonorariosNewController extends Controller {
 				"WHERE lp.liquidacion_mes_id = :idLiquidacion " +
 				"GROUP BY lc.codigo,lc.denominacion,lc.liquidacion_concepto_tipo_id " +
 				"ORDER BY lc.codigo";
-				
+
 		List<SqlRow> s = Ebean.createSqlQuery(sql)
 				.setParameter("idLiquidacion", idLiquidacion)
 				.findList();
-		
+
 		return s;
 	}
-	
+
 	public static List<SqlRow> getCostoHcaPorEscala(Long idPeriodo,boolean cm){
 		Periodo p = Periodo.find.byId(idPeriodo);
-		
+
 		String sql = "SELECT round(sum(ld.cantidad*ld.importe)) monto ,el.nombre nombre "+
-				     " 	FROM puestos_laborales pl "+     
-				     " 	INNER JOIN escalas_laborales el on el.id = pl.escala_laboral_id "+  
-				     " 	INNER JOIN liquidacion_puestos lp on pl.id = lp.puesto_laboral_id "+   
+				     " 	FROM puestos_laborales pl "+
+				     " 	INNER JOIN escalas_laborales el on el.id = pl.escala_laboral_id "+
+				     " 	INNER JOIN liquidacion_puestos lp on pl.id = lp.puesto_laboral_id "+
 				     " 	INNER JOIN liquidacion_detalles ld on lp.id = ld.liquidacion_puesto_id "+
 				     " 	INNER JOIN liquidacion_conceptos lc on lc.id = ld.liquidacion_concepto_id "+
-				     " 	INNER JOIN liquidacion_meses lm on lm.id = lp.liquidacion_mes_id "+ 
-				     " 	WHERE lm.periodo_id = :periodo_id "+ 
+				     " 	INNER JOIN liquidacion_meses lm on lm.id = lp.liquidacion_mes_id "+
+				     " 	WHERE lm.periodo_id = :periodo_id "+
 				     " 	AND lm.convenio_ministerio =  :cm  AND lc.liquidacion_concepto_tipo_id in(1,4) "+
 				     " 	GROUP BY lm.convenio_ministerio,el.nombre ";
-		
+
 		SqlQuery sqlQuery = Ebean.createSqlQuery(sql);
 		sqlQuery.setParameter("periodo_id",p.id);
 		sqlQuery.setParameter("cm",cm);
 		List<SqlRow>  row = sqlQuery.findList();
-		
+
 		return row;
 	}
-	
+
 	public static List<SqlRow> getCostoHsaPorEscala(Long idPeriodo,boolean cm){
 		Periodo p = Periodo.find.byId(idPeriodo);
-		
+
 		String sql = "SELECT round(sum(ld.cantidad*ld.importe)) monto ,el.nombre nombre "+
-				     " 	FROM puestos_laborales pl "+     
-				     " 	INNER JOIN escalas_laborales el on el.id = pl.escala_laboral_id "+  
-				     " 	INNER JOIN liquidacion_puestos lp on pl.id = lp.puesto_laboral_id "+   
+				     " 	FROM puestos_laborales pl "+
+				     " 	INNER JOIN escalas_laborales el on el.id = pl.escala_laboral_id "+
+				     " 	INNER JOIN liquidacion_puestos lp on pl.id = lp.puesto_laboral_id "+
 				     " 	INNER JOIN liquidacion_detalles ld on lp.id = ld.liquidacion_puesto_id "+
 				     " 	INNER JOIN liquidacion_conceptos lc on lc.id = ld.liquidacion_concepto_id "+
-				     " 	INNER JOIN liquidacion_meses lm on lm.id = lp.liquidacion_mes_id "+ 
-				     " 	WHERE lm.periodo_id = :periodo_id "+ 
+				     " 	INNER JOIN liquidacion_meses lm on lm.id = lp.liquidacion_mes_id "+
+				     " 	WHERE lm.periodo_id = :periodo_id "+
 				     " 	AND lm.convenio_ministerio =  :cm  AND lc.liquidacion_concepto_tipo_id in(2) "+
 				     " 	GROUP BY lm.convenio_ministerio,el.nombre ";
-		
+
 		SqlQuery sqlQuery = Ebean.createSqlQuery(sql);
 		sqlQuery.setParameter("periodo_id",p.id);
 		sqlQuery.setParameter("cm",cm);
 		List<SqlRow>  row = sqlQuery.findList();
-		
+
 		return row;
 	}
-	
+
 	public static List<SqlRow> getCostoRetPorEscala(Long idPeriodo,boolean cm){
 		Periodo p = Periodo.find.byId(idPeriodo);
-		
+
 		String sql = "SELECT round(sum(ld.cantidad*ld.importe)) monto ,el.nombre nombre "+
-				     " 	FROM puestos_laborales pl "+     
-				     " 	INNER JOIN escalas_laborales el on el.id = pl.escala_laboral_id "+  
-				     " 	INNER JOIN liquidacion_puestos lp on pl.id = lp.puesto_laboral_id "+   
+				     " 	FROM puestos_laborales pl "+
+				     " 	INNER JOIN escalas_laborales el on el.id = pl.escala_laboral_id "+
+				     " 	INNER JOIN liquidacion_puestos lp on pl.id = lp.puesto_laboral_id "+
 				     " 	INNER JOIN liquidacion_detalles ld on lp.id = ld.liquidacion_puesto_id "+
 				     " 	INNER JOIN liquidacion_conceptos lc on lc.id = ld.liquidacion_concepto_id "+
-				     " 	INNER JOIN liquidacion_meses lm on lm.id = lp.liquidacion_mes_id "+ 
-				     " 	WHERE lm.periodo_id = :periodo_id "+ 
+				     " 	INNER JOIN liquidacion_meses lm on lm.id = lp.liquidacion_mes_id "+
+				     " 	WHERE lm.periodo_id = :periodo_id "+
 				     " 	AND lm.convenio_ministerio =  :cm  AND lc.liquidacion_concepto_tipo_id in(3) "+
 				     " 	GROUP BY lm.convenio_ministerio,el.nombre ";
-		
+
 		SqlQuery sqlQuery = Ebean.createSqlQuery(sql);
 		sqlQuery.setParameter("periodo_id",p.id);
 		sqlQuery.setParameter("cm",cm);
 		List<SqlRow>  row = sqlQuery.findList();
-		
+
 		return row;
 	}
-	
+
 	public static List<SqlRow> getCostoTotalPorEscala(Long idPeriodo,boolean cm,boolean sinsac){
 		Periodo p = Periodo.find.byId(idPeriodo);
-		
+
 		String sql = "SELECT " +
 					 //"	round(sum(ld.cantidad*ld.importe),2) monto ," +
 					 " round(COALESCE(SUM(CASE WHEN lc.liquidacion_concepto_tipo_id = 4 OR lc.liquidacion_concepto_tipo_id = 1 THEN round(ld.cantidad*ld.importe,2) ELSE 0 END ),0) " +
@@ -866,196 +879,196 @@ public class HonorariosNewController extends Controller {
 					 " - " +
 					 " COALESCE(SUM(CASE WHEN lc.liquidacion_concepto_tipo_id = 3 THEN round(ld.cantidad*ld.importe,2) ELSE 0 END ),0)) monto, " +
 					 "	el.nombre nombre "+
-				     " 	FROM puestos_laborales pl "+     
-				     " 	INNER JOIN escalas_laborales el on el.id = pl.escala_laboral_id "+  
-				     " 	INNER JOIN liquidacion_puestos lp on pl.id = lp.puesto_laboral_id "+   
+				     " 	FROM puestos_laborales pl "+
+				     " 	INNER JOIN escalas_laborales el on el.id = pl.escala_laboral_id "+
+				     " 	INNER JOIN liquidacion_puestos lp on pl.id = lp.puesto_laboral_id "+
 				     " 	INNER JOIN liquidacion_detalles ld on lp.id = ld.liquidacion_puesto_id " +
-				     "  INNER JOIN liquidacion_conceptos lc on lc.id = ld.liquidacion_concepto_id " + 
-				     " 	INNER JOIN liquidacion_meses lm on lm.id = lp.liquidacion_mes_id "+ 
-				     " 	WHERE lm.periodo_id = :periodo_id "+ 
+				     "  INNER JOIN liquidacion_conceptos lc on lc.id = ld.liquidacion_concepto_id " +
+				     " 	INNER JOIN liquidacion_meses lm on lm.id = lp.liquidacion_mes_id "+
+				     " 	WHERE lm.periodo_id = :periodo_id "+
 				     " 	AND lm.convenio_ministerio =  :cm ";
 					if(sinsac){
 						sql += " AND lm.liquidacion_tipo_id in(1,4)";
-					}	
+					}
 					sql += " 	GROUP BY lm.convenio_ministerio,el.nombre ";
-		
+
 		SqlQuery sqlQuery = Ebean.createSqlQuery(sql);
 		sqlQuery.setParameter("periodo_id",p.id);
 		sqlQuery.setParameter("cm",cm);
 		List<SqlRow>  row = sqlQuery.findList();
-		
+
 		return row;
 	}
-	
-	
-	
+
+
+
 	public static List<SqlRow> getCostoTotalPorClasificacionConcepto(Long idPeriodo,boolean cm){
 		Periodo p = Periodo.find.byId(idPeriodo);
-		
+
 		String sql = "SELECT round(sum(ld.cantidad*ld.importe)) monto ,lcc.nombre nombre "+
-				" 	FROM puestos_laborales pl "+     
-				" 	INNER JOIN liquidacion_puestos lp on pl.id = lp.puesto_laboral_id "+   
+				" 	FROM puestos_laborales pl "+
+				" 	INNER JOIN liquidacion_puestos lp on pl.id = lp.puesto_laboral_id "+
 				" 	INNER JOIN liquidacion_detalles ld on lp.id = ld.liquidacion_puesto_id "+
 				" 	inner join liquidacion_conceptos lc on ld.liquidacion_concepto_id = lc.id "+
 				" 	inner join liquidacion_concepto_clasificaciones lcc on lcc.id = lc.liquidacion_concepto_clasificacion_id "+
-				" 	INNER JOIN liquidacion_meses lm on lm.id = lp.liquidacion_mes_id "+ 
-				" 	WHERE lm.periodo_id = :periodo_id "+  
+				" 	INNER JOIN liquidacion_meses lm on lm.id = lp.liquidacion_mes_id "+
+				" 	WHERE lm.periodo_id = :periodo_id "+
 				"   AND lm.liquidacion_tipo_id in(1,4)"+
 				" 	AND lm.convenio_ministerio =  :cm "+
 				" 	GROUP BY lm.convenio_ministerio,lcc.nombre ";
-		
+
 		SqlQuery sqlQuery = Ebean.createSqlQuery(sql);
 		sqlQuery.setParameter("periodo_id",p.id);
 		sqlQuery.setParameter("cm",cm);
 		List<SqlRow>  row = sqlQuery.findList();
-		
+
 		return row;
 	}
-	
+
 	public static List<SqlRow> getCostoTotalPorTipoConceptoSinSac(Long idPeriodo,boolean cm){
 		Periodo p = Periodo.find.byId(idPeriodo);
 		String sql = " SELECT round(sum(ld.cantidad*ld.importe)) monto, lc.liquidacion_concepto_tipo_id tipo "+
-				" 	FROM puestos_laborales pl "+ 
-				" 	INNER JOIN liquidacion_puestos lp ON pl.id = lp.puesto_laboral_id "+ 
+				" 	FROM puestos_laborales pl "+
+				" 	INNER JOIN liquidacion_puestos lp ON pl.id = lp.puesto_laboral_id "+
 				" 	INNER JOIN liquidacion_detalles ld ON lp.id = ld.liquidacion_puesto_id "+
 				" 	INNER JOIN liquidacion_conceptos lc ON ld.liquidacion_concepto_id = lc.id "+
 				" 	INNER JOIN liquidacion_meses lm ON lm.id = lp.liquidacion_mes_id "+
-				" 	WHERE lm.periodo_id = :periodo_id "+ 
+				" 	WHERE lm.periodo_id = :periodo_id "+
 				" 	AND lm.convenio_ministerio =  :cm AND lm.liquidacion_tipo_id in(1,4) "+
 				" 	GROUP BY lm.convenio_ministerio,lc.liquidacion_concepto_tipo_id ";
-		
+
 		SqlQuery sqlQuery = Ebean.createSqlQuery(sql);
 		sqlQuery.setParameter("periodo_id",p.id);
 		sqlQuery.setParameter("cm",cm);
 		List<SqlRow>  row = sqlQuery.findList();
-		
+
 		return row;
 	}
-	
+
 	public static List<SqlRow> getCostoTotalPorTipoConcepto(Long idPeriodo,boolean cm){
 		Periodo p = Periodo.find.byId(idPeriodo);
 		String sql = " SELECT round(sum(ld.cantidad*ld.importe)) monto, lc.liquidacion_concepto_tipo_id tipo "+
-				" 	FROM puestos_laborales pl "+ 
-				" 	INNER JOIN liquidacion_puestos lp ON pl.id = lp.puesto_laboral_id "+ 
+				" 	FROM puestos_laborales pl "+
+				" 	INNER JOIN liquidacion_puestos lp ON pl.id = lp.puesto_laboral_id "+
 				" 	INNER JOIN liquidacion_detalles ld ON lp.id = ld.liquidacion_puesto_id "+
 				" 	INNER JOIN liquidacion_conceptos lc ON ld.liquidacion_concepto_id = lc.id "+
 				" 	INNER JOIN liquidacion_meses lm ON lm.id = lp.liquidacion_mes_id "+
-				" 	WHERE lm.periodo_id = :periodo_id "+ 
+				" 	WHERE lm.periodo_id = :periodo_id "+
 				" 	AND lm.convenio_ministerio =  :cm "+
 				" 	GROUP BY lm.convenio_ministerio,lc.liquidacion_concepto_tipo_id ";
-		
+
 		SqlQuery sqlQuery = Ebean.createSqlQuery(sql);
 		sqlQuery.setParameter("periodo_id",p.id);
 		sqlQuery.setParameter("cm",cm);
 		List<SqlRow>  row = sqlQuery.findList();
-		
+
 		return row;
 	}
-	
+
 	public static List<SqlRow> getCostoTotalPorPeriodo(Long idPeriodo){
-		
+
 		Periodo p = Periodo.find.byId(idPeriodo);
-		
-		String sql = " SELECT round(sum(ld.cantidad*ld.importe)) monto,lm.convenio_ministerio cm " + 
-					 " 	FROM puestos_laborales pl " +     
-					 " 	INNER JOIN liquidacion_puestos lp on pl.id = lp.puesto_laboral_id " +    
-					 " 	INNER JOIN liquidacion_detalles ld on lp.id = ld.liquidacion_puesto_id " + 
-					 " 	INNER JOIN liquidacion_meses lm on lm.id = lp.liquidacion_mes_id " +  
+
+		String sql = " SELECT round(sum(ld.cantidad*ld.importe)) monto,lm.convenio_ministerio cm " +
+					 " 	FROM puestos_laborales pl " +
+					 " 	INNER JOIN liquidacion_puestos lp on pl.id = lp.puesto_laboral_id " +
+					 " 	INNER JOIN liquidacion_detalles ld on lp.id = ld.liquidacion_puesto_id " +
+					 " 	INNER JOIN liquidacion_meses lm on lm.id = lp.liquidacion_mes_id " +
 					 " 	WHERE lm.periodo_id = :periodo_id " +
 					 "	GROUP BY lm.convenio_ministerio ";
-		
+
 		SqlQuery sqlQuery = Ebean.createSqlQuery(sql);
 		sqlQuery.setParameter("periodo_id",p.id);
 		List<SqlRow>  row = sqlQuery.findList();
-		
+
 		return row;
-		
+
 	}
-	
+
 	public static List<SqlRow> getCostoTotalPorPeriodoSinSac(Long idPeriodo){
-		
+
 		Periodo p = Periodo.find.byId(idPeriodo);
-		
-		String sql = " SELECT round(sum(ld.cantidad*ld.importe)) monto,lm.convenio_ministerio cm " + 
-					 " 	FROM puestos_laborales pl " +     
-					 " 	INNER JOIN liquidacion_puestos lp on pl.id = lp.puesto_laboral_id " +    
-					 " 	INNER JOIN liquidacion_detalles ld on lp.id = ld.liquidacion_puesto_id " + 
-					 " 	INNER JOIN liquidacion_meses lm on lm.id = lp.liquidacion_mes_id " +  
+
+		String sql = " SELECT round(sum(ld.cantidad*ld.importe)) monto,lm.convenio_ministerio cm " +
+					 " 	FROM puestos_laborales pl " +
+					 " 	INNER JOIN liquidacion_puestos lp on pl.id = lp.puesto_laboral_id " +
+					 " 	INNER JOIN liquidacion_detalles ld on lp.id = ld.liquidacion_puesto_id " +
+					 " 	INNER JOIN liquidacion_meses lm on lm.id = lp.liquidacion_mes_id " +
 					 " 	WHERE lm.periodo_id = :periodo_id AND lm.liquidacion_tipo_id in(1,4) " +
 					 "	GROUP BY lm.convenio_ministerio ";
-		
+
 		SqlQuery sqlQuery = Ebean.createSqlQuery(sql);
 		sqlQuery.setParameter("periodo_id",p.id);
 		List<SqlRow>  row = sqlQuery.findList();
-		
+
 		return row;
-		
+
 	}
-	
-	
+
+
 	public static List<SqlRow> getCountPorServicio(Long idPeriodo,boolean cm){
-		
+
 		Periodo p = Periodo.find.byId(idPeriodo);
-		
-		String sql = "SELECT COUNT(distinct(a.id)) count,organigrama_id,nombre  from ( " + 
-				" 	SELECT  pl.convenio_ministerio cm,lp.puesto_laboral_id,lp.organigrama_id organigrama_id,o.nombre nombre " + 
-				" 	FROM puestos_laborales pl " +   
-				"   INNER JOIN liquidacion_puestos lp on pl.id = lp.puesto_laboral_id " + 
+
+		String sql = "SELECT COUNT(distinct(a.id)) count,organigrama_id,nombre  from ( " +
+				" 	SELECT  pl.convenio_ministerio cm,lp.puesto_laboral_id,lp.organigrama_id organigrama_id,o.nombre nombre " +
+				" 	FROM puestos_laborales pl " +
+				"   INNER JOIN liquidacion_puestos lp on pl.id = lp.puesto_laboral_id " +
 				" 	INNER JOIN organigramas o on o.id = lp.organigrama_id " +
 				"	INNER JOIN liquidacion_meses lm on lm.id = lp.liquidacion_mes_id " +
 				" inner join legajos l on l.id = pl.legajo_id    " +
 				" inner join agentes a on a.id = l.agente_id  " +
 				" 	WHERE lm.periodo_id = :periodo_id " +
-				"	AND pl.convenio_ministerio = :cm " + 
-				" 	GROUP BY pl.convenio_ministerio,lp.puesto_laboral_id,lp.organigrama_id,o.nombre " +  
+				"	AND pl.convenio_ministerio = :cm " +
+				" 	GROUP BY pl.convenio_ministerio,lp.puesto_laboral_id,lp.organigrama_id,o.nombre " +
 				" ) as coiu group by organigrama_id,nombre ";
-		
+
 		SqlQuery sqlQuery = Ebean.createSqlQuery(sql);
 		sqlQuery.setParameter("periodo_id",p.id);
 		sqlQuery.setParameter("cm",cm);
 		List<SqlRow>  row = sqlQuery.findList();
-		
+
 		return row;
-		
+
 	}
-	
-	
+
+
 	public static List<SqlRow> getCountPorProfesion(Long idPeriodo,boolean cm){
-		
+
 		Periodo p = Periodo.find.byId(idPeriodo);
-		
-		String sql = "SELECT COUNT(distinct(a.id)) count,pl.convenio_ministerio cm,el.id,el.nombre escala,p.id ,p.nombre profesion " + 
-				" FROM puestos_laborales pl " + 
+
+		String sql = "SELECT COUNT(distinct(a.id)) count,pl.convenio_ministerio cm,el.id,el.nombre escala,p.id ,p.nombre profesion " +
+				" FROM puestos_laborales pl " +
 				" INNER JOIN legajos l on l.id = pl.legajo_id " +
 				" INNER JOIN agentes a on a.id = l.agente_id " +
-				" LEFT JOIN profesiones p on p.id = a.profesion_id " + 
+				" LEFT JOIN profesiones p on p.id = a.profesion_id " +
 				" INNER JOIN escalas_laborales el on el.id = pl.escala_laboral_id " +
-				" INNER JOIN liquidacion_puestos lp on pl.id = lp.puesto_laboral_id " + 
+				" INNER JOIN liquidacion_puestos lp on pl.id = lp.puesto_laboral_id " +
 				" INNER JOIN liquidacion_meses lm on lm.id = lp.liquidacion_mes_id " +
 				" WHERE " +
 				" lm.periodo_id = :periodo_id " +
-				" AND pl.convenio_ministerio = :cm " +    
+				" AND pl.convenio_ministerio = :cm " +
 				" GROUP BY pl.convenio_ministerio,el.id,el.nombre,p.id ,p.nombre " +
 				" order by el.id,count ";
-		
+
 		SqlQuery sqlQuery = Ebean.createSqlQuery(sql);
 		//sqlQuery.setParameter("date_stop",p.date_stop);
 		//sqlQuery.setParameter("date_start",p.date_start);
 		sqlQuery.setParameter("periodo_id",p.id);
 		sqlQuery.setParameter("cm",cm);
 		List<SqlRow>  row = sqlQuery.findList();
-		
+
 		return row;
-		
+
 	}
-	
+
 	public static List<SqlRow> getCountPorEscala(Long idPeriodo,boolean cm){
-		
+
 		Periodo p = Periodo.find.byId(idPeriodo);
 		String sql = "SELECT COUNT(distinct(a.id)) count,pl.convenio_ministerio cm,el.id,el.nombre nombre " +
 				" FROM puestos_laborales pl " +
 				" INNER JOIN escalas_laborales el on el.id = pl.escala_laboral_id " +
-				" INNER JOIN liquidacion_puestos lp on pl.id = lp.puesto_laboral_id " + 
+				" INNER JOIN liquidacion_puestos lp on pl.id = lp.puesto_laboral_id " +
 				" INNER JOIN liquidacion_meses lm on lm.id = lp.liquidacion_mes_id " +
 				" inner join legajos l on l.id = pl.legajo_id    " +
 				" inner join agentes a on a.id = l.agente_id  " +
@@ -1064,26 +1077,26 @@ public class HonorariosNewController extends Controller {
 				" AND pl.convenio_ministerio = :cm  " +
 				" AND lm.liquidacion_tipo_id in(1,4) "+
 				" GROUP BY pl.convenio_ministerio,el.id,el.nombre order by el.id ";
-		
+
 		SqlQuery sqlQuery = Ebean.createSqlQuery(sql);
 		//sqlQuery.setParameter("date_stop",p.date_stop);
 		//sqlQuery.setParameter("date_start",p.date_start);
 		sqlQuery.setParameter("periodo_id",p.id);
 		sqlQuery.setParameter("cm",cm);
 		List<SqlRow>  row = sqlQuery.findList();
-		
+
 		return row;
-		
+
 	}
-	
+
 	public static List<SqlRow> getCountPorEscalaEnLiquidaciones(Long idPeriodo,boolean cm){
-		
+
 		Periodo p = Periodo.find.byId(idPeriodo);
 		String sql = "SELECT  COUNT(DISTINCT a.id) count,pl.convenio_ministerio cm,el.id,el.nombre nombre "+
 				" FROM liquidacion_puestos lp " +
 				" INNER JOIN liquidacion_meses lm ON lm.id = lp.liquidacion_mes_id " +
 				" INNER JOIN puestos_laborales pl ON pl.id = lp.puesto_laboral_id " +
-				" INNER JOIN escalas_laborales el ON el.id = pl.escala_laboral_id " + 
+				" INNER JOIN escalas_laborales el ON el.id = pl.escala_laboral_id " +
 				" inner join legajos l on l.id = pl.legajo_id    " +
 				" inner join agentes a on a.id = l.agente_id  " +
 				" WHERE " +
@@ -1091,23 +1104,23 @@ public class HonorariosNewController extends Controller {
 				" AND pl.convenio_ministerio = :cm " +
 				" GROUP BY pl.convenio_ministerio,el.id,el.nombre " +
 				" order by el.id ";
-		
+
 		SqlQuery sqlQuery = Ebean.createSqlQuery(sql);
 		sqlQuery.setParameter("periodo_id",p.id);
 		sqlQuery.setParameter("cm",cm);
 		List<SqlRow>  row = sqlQuery.findList();
-		
+
 		return row;
-		
+
 	}
-	
-	
+
+
 	public static List<SqlRow> getCountRelacionPorPeriodo(Long idPeriodo){
-		
+
 		Periodo p = Periodo.find.byId(idPeriodo);
 		String sql = "SELECT COUNT(distinct(a.id)) count,pl.convenio_ministerio cm " +
 				" FROM puestos_laborales pl 	" +
-				" INNER JOIN liquidacion_puestos lp on pl.id = lp.puesto_laboral_id " + 
+				" INNER JOIN liquidacion_puestos lp on pl.id = lp.puesto_laboral_id " +
 				" INNER JOIN liquidacion_meses lm on lm.id = lp.liquidacion_mes_id "+
 				" inner join legajos l on l.id = pl.legajo_id    " +
 				" inner join agentes a on a.id = l.agente_id  " +
@@ -1115,19 +1128,19 @@ public class HonorariosNewController extends Controller {
 				" lm.periodo_id = :periodo_id " +
 				" AND lm.liquidacion_tipo_id in(1,4) " +
 				" GROUP BY pl.convenio_ministerio";
-		
+
 		SqlQuery sqlQuery = Ebean.createSqlQuery(sql);
 		//sqlQuery.setParameter("date_stop",p.date_stop);
 		//sqlQuery.setParameter("date_start",p.date_start);
 		sqlQuery.setParameter("periodo_id",p.id);
 		List<SqlRow>  row = sqlQuery.findList();
-		
+
 		return row;
-		
+
 	}
-	
+
 	public static List<SqlRow> getCountAltasPorPeriodo(Long idPeriodo){
-		
+
 		Periodo p = Periodo.find.byId(idPeriodo);
 		String sql = "SELECT COUNT(distinct(a.id)) count,pl.convenio_ministerio cm " +
 				" FROM puestos_laborales pl 	" +
@@ -1140,17 +1153,17 @@ public class HonorariosNewController extends Controller {
 				" inner join legajos l on l.id = pl.legajo_id " +
 				" WHERE pl.fecha_posesion BETWEEN :date_start AND :date_stop" +
 				" GROUP BY pl.convenio_ministerio";*/
-		
+
 		SqlQuery sqlQuery = Ebean.createSqlQuery(sql);
 		sqlQuery.setParameter("date_start",p.date_start);
 		sqlQuery.setParameter("date_stop",p.date_stop);
 		List<SqlRow>  row = sqlQuery.findList();
 		/*Map<String,Map<String,String>> altaList = new HashMap<String, Map<String,String>>();
-		
+
 		for(SqlRow sr :row){
-			
+
 			if(altaList.containsKey(p.nombre)){
-				
+
 				Map<String,String> sstmp2 =  altaList.get(p.nombre);
 				if(sr.getBoolean("cm")){
 					if(sstmp2.containsKey("cm")){
@@ -1158,13 +1171,13 @@ public class HonorariosNewController extends Controller {
 					}else{
 						sstmp2.put("cm",sr.getString("count"));
 					}
-					
+
 				}else{
 					sstmp2.put("nocm",sr.getString("count"));
 				}
 				altaList.put(p.nombre, sstmp2);
-			
-			
+
+
 			}else{
 				Map<String,String> sstmp = new HashMap<String,String>();
 				if(sr.getBoolean("cm")){
@@ -1175,16 +1188,16 @@ public class HonorariosNewController extends Controller {
 				altaList.put(p.nombre, sstmp);
 			}
 		}*/
-		
-		
+
+
 		return row;
-		
+
 	}
-	
+
 	public static List<SqlRow> getCountBajasPorPeriodo(Long idPeriodo){
-		
+
 		Periodo p = Periodo.find.byId(idPeriodo);
-		
+
 		String sql = "SELECT COUNT(distinct(a.id)) count,pl.convenio_ministerio cm " +
 				" FROM puestos_laborales pl 	" +
 				" inner join legajos l on l.id = pl.legajo_id " +
@@ -1192,42 +1205,42 @@ public class HonorariosNewController extends Controller {
 				" WHERE pl.fecha_baja BETWEEN :date_start AND :date_stop   " +
 				//" WHERE pl.fecha_baja BETWEEN '2016-01-01' AND '2016-01-31'   " +
 				" GROUP BY pl.convenio_ministerio";
-		
+
 		SqlQuery sqlQuery = Ebean.createSqlQuery(sql);
 		sqlQuery.setParameter("date_start",p.date_start);
 		sqlQuery.setParameter("date_stop",p.date_stop);
 		List<SqlRow>  row = sqlQuery.findList();
-		
+
 		return row;
-		
+
 	}
-	
+
 	public static List<SqlRow> getTotalFinalUnicoPeriodoPorEscala(Long idPeriodo,boolean cm,boolean sinsac){
 		Periodo p = Periodo.find.byId(idPeriodo);
 		String sql = /*" SELECT " +
-				" round(COALESCE(SUM(CASE WHEN lc.liquidacion_concepto_tipo_id = 4 OR lc.liquidacion_concepto_tipo_id = 1 THEN round(ld.cantidad*ld.importe,2) ELSE 0 END ),0)) hca, " + 
-				
+				" round(COALESCE(SUM(CASE WHEN lc.liquidacion_concepto_tipo_id = 4 OR lc.liquidacion_concepto_tipo_id = 1 THEN round(ld.cantidad*ld.importe,2) ELSE 0 END ),0)) hca, " +
+
 				" round(COALESCE(SUM(CASE WHEN lc.liquidacion_concepto_tipo_id = 2 THEN round(ld.cantidad*ld.importe,2) ELSE 0 END ),0)) hsa, " +
-				
+
 				" round(COALESCE(SUM(CASE WHEN lc.id = 5 OR lc.id = 204 THEN round(ld.cantidad*ld.importe,2) ELSE 0 END ),0)) jubilacion, " +
 				" round(COALESCE(SUM(CASE WHEN lc.id = 4 OR lc.id = 203 THEN round(ld.cantidad*ld.importe,2) ELSE 0 END ),0)) os, " +
 				" round(COALESCE(SUM(CASE WHEN lc.id = 6 OR lc.id = 205 THEN round(ld.cantidad*ld.importe,2) ELSE 0 END ),0)) sv, " +
 				" round(COALESCE(SUM(CASE WHEN lc.id = 7 OR lc.id = 206 THEN round(ld.cantidad*ld.importe,2) ELSE 0 END ),0)) ss, " +
 				" round(COALESCE(SUM(CASE WHEN lc.id = 548 OR lc.id = 562 THEN round(ld.cantidad*ld.importe,2) ELSE 0 END ),0)) ig, " +
 				" round(COALESCE(SUM(CASE WHEN lc.id = 20 OR lc.id = 427 OR lc.id = 466 OR lc.id = 488 OR lc.id = 508 OR lc.id = 509 THEN round(ld.cantidad*ld.importe,2) ELSE 0 END ),0)) oi, " +
-				
+
 				" round(COALESCE(SUM(CASE WHEN lc.liquidacion_concepto_tipo_id = 3 AND lc.id <> 20 THEN round(ld.cantidad*ld.importe,2) ELSE 0 END ),0)) totalret, " +
-				
+
 				" round(COALESCE(SUM(CASE WHEN lc.liquidacion_concepto_tipo_id = 4 OR lc.liquidacion_concepto_tipo_id = 1 THEN round(ld.cantidad*ld.importe,2) ELSE 0 END ),0) " +
 				" + " +
 				" COALESCE(SUM(CASE WHEN lc.liquidacion_concepto_tipo_id = 2 THEN round(ld.cantidad*ld.importe,2) ELSE 0 END ),0) " +
 				" - " +
 				" COALESCE(SUM(CASE WHEN lc.liquidacion_concepto_tipo_id = 3 THEN round(ld.cantidad*ld.importe,2) ELSE 0 END ),0)) neto, " +
-				
+
 				" round(COALESCE(SUM(CASE WHEN lc.liquidacion_concepto_tipo_id = 4 OR lc.liquidacion_concepto_tipo_id = 1 THEN round(ld.cantidad*ld.importe,2) ELSE 0 END ),0) * 0.1) hpjub, " +
 				" round(COALESCE(SUM(CASE WHEN ((lc.liquidacion_concepto_tipo_id = 4 OR lc.liquidacion_concepto_tipo_id = 1) AND  lm.liquidacion_tipo_id in(1,4)) THEN round(ld.cantidad*ld.importe,2) ELSE 0 END ),0) * 0.02) hpos, " +
-				
-				" round(round(COALESCE(SUM(CASE WHEN lc.liquidacion_concepto_tipo_id = 4 OR lc.liquidacion_concepto_tipo_id = 1 THEN round(ld.cantidad*ld.importe,2) ELSE 0 END ),0),2) " + 
+
+				" round(round(COALESCE(SUM(CASE WHEN lc.liquidacion_concepto_tipo_id = 4 OR lc.liquidacion_concepto_tipo_id = 1 THEN round(ld.cantidad*ld.importe,2) ELSE 0 END ),0),2) " +
 				" + " +
 				" round(COALESCE(SUM(CASE WHEN lc.liquidacion_concepto_tipo_id = 2 THEN round(ld.cantidad*ld.importe,2) ELSE 0 END ),0),2) " +
 				" + " +
@@ -1236,13 +1249,13 @@ public class HonorariosNewController extends Controller {
 				" round(COALESCE(SUM(CASE WHEN lc.liquidacion_concepto_tipo_id = 4 OR lc.liquidacion_concepto_tipo_id = 1 THEN round(ld.cantidad*ld.importe,2) ELSE 0 END ),0) * 0.02,2) " +
 				" + " +
 				" round(COALESCE(SUM(CASE WHEN lc.liquidacion_concepto_tipo_id = 3 AND lc.id <> 20 THEN round(ld.cantidad*ld.importe,2) ELSE 0 END ),0))) bruto, " +
-				" el.nombre nombre " + 
-				" FROM puestos_laborales pl " +     
+				" el.nombre nombre " +
+				" FROM puestos_laborales pl " +
 				" INNER JOIN escalas_laborales el on el.id = pl.escala_laboral_id " +
-				" INNER JOIN liquidacion_puestos lp on pl.id = lp.puesto_laboral_id " +  
-				" INNER JOIN liquidacion_detalles ld on lp.id = ld.liquidacion_puesto_id " + 
-				" INNER JOIN liquidacion_conceptos lc on lc.id = ld.liquidacion_concepto_id " + 
-				" INNER JOIN liquidacion_meses lm on lm.id = lp.liquidacion_mes_id " + 
+				" INNER JOIN liquidacion_puestos lp on pl.id = lp.puesto_laboral_id " +
+				" INNER JOIN liquidacion_detalles ld on lp.id = ld.liquidacion_puesto_id " +
+				" INNER JOIN liquidacion_conceptos lc on lc.id = ld.liquidacion_concepto_id " +
+				" INNER JOIN liquidacion_meses lm on lm.id = lp.liquidacion_mes_id " +
 				" WHERE " +
 				" lm.periodo_id =:periodo_id AND " +
 				" lm.convenio_ministerio = :cm ";
@@ -1250,27 +1263,27 @@ public class HonorariosNewController extends Controller {
 				if(sinsac){
 					sql += " AND lm.liquidacion_tipo_id in(1,4)";
 				}*/
-				
+
 				"SELECT  " +
-				" round(COALESCE(SUM(CASE WHEN lc.liquidacion_concepto_tipo_id = 4 OR lc.liquidacion_concepto_tipo_id = 1 THEN round(ld.cantidad*ld.importe,2) ELSE 0 END ),0)) hca, " +  
-				" round(COALESCE(SUM(CASE WHEN lc.liquidacion_concepto_tipo_id = 2 THEN round(ld.cantidad*ld.importe,2) ELSE 0 END ),0)) hsa, " + 
-				" round(COALESCE(SUM(CASE WHEN lc.id = 5 OR lc.id = 204 THEN round(ld.cantidad*ld.importe,2) ELSE 0 END ),0)) jubilacion, " + 
-				" round(COALESCE(SUM(CASE WHEN lc.id = 4 OR lc.id = 203 THEN round(ld.cantidad*ld.importe,2) ELSE 0 END ),0)) os, " + 
-				" round(COALESCE(SUM(CASE WHEN lc.id = 6 OR lc.id = 205 THEN round(ld.cantidad*ld.importe,2) ELSE 0 END ),0)) sv, " +  
-				" round(COALESCE(SUM(CASE WHEN lc.id = 7 OR lc.id = 206 THEN round(ld.cantidad*ld.importe,2) ELSE 0 END ),0)) ss, " +  
-				" round(COALESCE(SUM(CASE WHEN lc.id = 548 OR lc.id = 591 OR lc.id = 562 OR lc.id = 584 THEN round(ld.cantidad*ld.importe,2) ELSE 0 END ),0)) ig, " + 
-				" round(COALESCE(SUM(CASE WHEN lc.id = 20 OR lc.id = 427 OR lc.id = 466 OR lc.id = 488 OR lc.id = 508 OR lc.id = 509 THEN round(ld.cantidad*ld.importe,2) ELSE 0 END ),0)) oi, " + 
+				" round(COALESCE(SUM(CASE WHEN lc.liquidacion_concepto_tipo_id = 4 OR lc.liquidacion_concepto_tipo_id = 1 THEN round(ld.cantidad*ld.importe,2) ELSE 0 END ),0)) hca, " +
+				" round(COALESCE(SUM(CASE WHEN lc.liquidacion_concepto_tipo_id = 2 THEN round(ld.cantidad*ld.importe,2) ELSE 0 END ),0)) hsa, " +
+				" round(COALESCE(SUM(CASE WHEN lc.id = 5 OR lc.id = 204 THEN round(ld.cantidad*ld.importe,2) ELSE 0 END ),0)) jubilacion, " +
+				" round(COALESCE(SUM(CASE WHEN lc.id = 4 OR lc.id = 203 THEN round(ld.cantidad*ld.importe,2) ELSE 0 END ),0)) os, " +
+				" round(COALESCE(SUM(CASE WHEN lc.id = 6 OR lc.id = 205 THEN round(ld.cantidad*ld.importe,2) ELSE 0 END ),0)) sv, " +
+				" round(COALESCE(SUM(CASE WHEN lc.id = 7 OR lc.id = 206 THEN round(ld.cantidad*ld.importe,2) ELSE 0 END ),0)) ss, " +
+				" round(COALESCE(SUM(CASE WHEN lc.id = 548 OR lc.id = 591 OR lc.id = 562 OR lc.id = 584 THEN round(ld.cantidad*ld.importe,2) ELSE 0 END ),0)) ig, " +
+				" round(COALESCE(SUM(CASE WHEN lc.id = 20 OR lc.id = 427 OR lc.id = 466 OR lc.id = 488 OR lc.id = 508 OR lc.id = 509 THEN round(ld.cantidad*ld.importe,2) ELSE 0 END ),0)) oi, " +
 				" round(COALESCE(SUM(CASE WHEN lc.liquidacion_concepto_tipo_id = 3  THEN round(ld.cantidad*ld.importe,2) ELSE 0 END ),0)) totalret, " +
-				" round(COALESCE(SUM(CASE WHEN lc.liquidacion_concepto_tipo_id = 4 OR lc.liquidacion_concepto_tipo_id = 1 THEN round(ld.cantidad*ld.importe,2) ELSE 0 END ),0) " + 
+				" round(COALESCE(SUM(CASE WHEN lc.liquidacion_concepto_tipo_id = 4 OR lc.liquidacion_concepto_tipo_id = 1 THEN round(ld.cantidad*ld.importe,2) ELSE 0 END ),0) " +
 				" +   " +
-				" COALESCE(SUM(CASE WHEN lc.liquidacion_concepto_tipo_id = 2 THEN round(ld.cantidad*ld.importe,2) ELSE 0 END ),0) " + 
+				" COALESCE(SUM(CASE WHEN lc.liquidacion_concepto_tipo_id = 2 THEN round(ld.cantidad*ld.importe,2) ELSE 0 END ),0) " +
 				" -   " +
 				" COALESCE(SUM(CASE WHEN lc.liquidacion_concepto_tipo_id = 3 THEN round(ld.cantidad*ld.importe,2) ELSE 0 END ),0)) neto,  " +
-				" round(COALESCE(SUM(CASE WHEN ((lc.liquidacion_concepto_tipo_id = 4 OR lc.liquidacion_concepto_tipo_id = 1) AND  lm.liquidacion_tipo_id in(1,4,2))THEN round(ld.cantidad*ld.importe,2) ELSE 0 END ),0) * (p.patronal_jubilacion_porcentaje/100)) hpjub, " +  
-				" round(COALESCE(SUM(CASE WHEN ((lc.liquidacion_concepto_tipo_id = 4 OR lc.liquidacion_concepto_tipo_id = 1) AND  lm.liquidacion_tipo_id in(1,4)) THEN round(ld.cantidad*ld.importe,2) ELSE 0 END ),0) * (p.patronal_obrasocial_porcentaje/100)) hpos, " +  
+				" round(COALESCE(SUM(CASE WHEN ((lc.liquidacion_concepto_tipo_id = 4 OR lc.liquidacion_concepto_tipo_id = 1) AND  lm.liquidacion_tipo_id in(1,4,2))THEN round(ld.cantidad*ld.importe,2) ELSE 0 END ),0) * (p.patronal_jubilacion_porcentaje/100)) hpjub, " +
+				" round(COALESCE(SUM(CASE WHEN ((lc.liquidacion_concepto_tipo_id = 4 OR lc.liquidacion_concepto_tipo_id = 1) AND  lm.liquidacion_tipo_id in(1,4)) THEN round(ld.cantidad*ld.importe,2) ELSE 0 END ),0) * (p.patronal_obrasocial_porcentaje/100)) hpos, " +
 				" round(round(COALESCE(SUM(CASE WHEN lc.liquidacion_concepto_tipo_id = 4 OR lc.liquidacion_concepto_tipo_id = 1 THEN round(ld.cantidad*ld.importe,2) ELSE 0 END ),0),2)  " +
 				" +  " +
-				" round(COALESCE(SUM(CASE WHEN lc.liquidacion_concepto_tipo_id = 2 THEN round(ld.cantidad*ld.importe,2) ELSE 0 END ),0))  " + 
+				" round(COALESCE(SUM(CASE WHEN lc.liquidacion_concepto_tipo_id = 2 THEN round(ld.cantidad*ld.importe,2) ELSE 0 END ),0))  " +
 				" +   " +
 				" round(COALESCE(SUM(CASE WHEN (lc.liquidacion_concepto_tipo_id = 4 OR lc.liquidacion_concepto_tipo_id = 1) AND  lm.liquidacion_tipo_id in(1,4,2) THEN round(ld.cantidad*ld.importe,2) ELSE 0 END ),0) * 0.1) " +
 				" +  " +
@@ -1278,7 +1291,7 @@ public class HonorariosNewController extends Controller {
 				" )  " +
 				" bruto, " +
 				" el.nombre nombre  " +
-				" FROM puestos_laborales pl  " +   
+				" FROM puestos_laborales pl  " +
 				" INNER JOIN escalas_laborales el on el.id = pl.escala_laboral_id  " +
 				" INNER JOIN liquidacion_puestos lp on pl.id = lp.puesto_laboral_id  " +
 				" INNER JOIN liquidacion_detalles ld on lp.id = ld.liquidacion_puesto_id  " +
@@ -1290,48 +1303,214 @@ public class HonorariosNewController extends Controller {
 				" lm.convenio_ministerio = :cm ";
 				if(sinsac){
 					sql += " AND lm.liquidacion_tipo_id in(1,4)";
-				} 
-				 
+				}
+
 				sql += " GROUP BY lm.convenio_ministerio,el.nombre,p.patronal_jubilacion_porcentaje,p.patronal_obrasocial_porcentaje ";
-		
+
 		SqlQuery sqlQuery = Ebean.createSqlQuery(sql);
-		
+
 		sqlQuery.setParameter("periodo_id",p.id);
 		sqlQuery.setParameter("cm",cm);
 		List<SqlRow>  row = sqlQuery.findList();
 		return row;
 	}
-	
-	
+
+	public static List<SqlRow> getTotalAgrupadoPorEscalaParquePeriodo(Long idPeriodo){
+
+		Periodo p = Periodo.find.byId(idPeriodo);
+
+		Periodo pAgente = Periodo.find.byId(idPeriodo+1);
+
+
+		String sql = "SELECT x.nombre, " +
+	       "x.id, " +
+			"x.escala,x.abreviatura,"+
+	       "x.cantidadEmpleados, " +
+	       "x.t, " +
+	       "SUM(x.cantidadEmpleados) OVER () AS total_empleados, "+
+	       "SUM(x.t) OVER () AS total_t, " +
+	       "ROUND(100.0 * x.t / NULLIF(SUM(x.t) OVER (), 0), 1) AS porcentaje, " +
+	       "ROUND(x.t / NULLIF(x.cantidadEmpleados, 0), 2) AS promedio_t "+
+			"FROM ( " +
+			    "SELECT tr.nombre, " +
+			           "tr.id, " +
+			           "el.nombre as escala,el.abreviatura, "+
+			           "COUNT(DISTINCT a.id) AS cantidadEmpleados, " +
+			           "( " +
+			            " (  round(COALESCE(SUM(CASE WHEN lc.liquidacion_concepto_tipo_id IN (4,1) THEN cantidad * importe ELSE 0 END),0)) " +
+			              "+ round(COALESCE(SUM(CASE WHEN lc.liquidacion_concepto_tipo_id = 2 THEN cantidad * importe ELSE 0 END),0)) " +
+			             ") " +
+			             "- round(COALESCE(SUM(CASE WHEN lc.liquidacion_concepto_tipo_id = 3 THEN cantidad * importe ELSE 0 END),0)) " +
+			           ") " +
+			           "+ " +
+			           "(  round(COALESCE(SUM(CASE WHEN lc.liquidacion_concepto_clasificacion_id IN (9,13) THEN cantidad * importe ELSE 0 END),0)) " +
+			           "+ round(COALESCE(SUM(CASE WHEN lc.liquidacion_concepto_clasificacion_id = 11 THEN cantidad * importe ELSE 0 END),0)) " +
+			           "+ round(COALESCE(SUM(CASE WHEN lc.id IN (870,509,427,508,20) THEN cantidad * importe ELSE 0 END),0)) " +
+			            "+ round(COALESCE(SUM(CASE WHEN lc.id IN (7,205,206,6) THEN cantidad * importe ELSE 0 END),0)) " +
+			           ") AS t " +
+			    "FROM liquidacion_puestos lp  " +
+			    "INNER JOIN liquidacion_meses lm ON lm.id = lp.liquidacion_mes_id  " +
+			    "INNER JOIN liquidacion_detalles ld ON lp.id = ld.liquidacion_puesto_id  " +
+			    "INNER JOIN liquidacion_conceptos lc ON lc.id = ld.liquidacion_concepto_id  " +
+			    "INNER JOIN puestos_laborales pl ON pl.id = lp.puesto_laboral_id  " +
+			    "INNER JOIN legajos l ON l.id = pl.legajo_id  " +
+			    "INNER JOIN agentes_historial a ON a.agente_id = l.agente_id  " +
+			    "INNER JOIN escalas_laborales el ON el.id = pl.escala_laboral_id " +
+			    "INNER JOIN tipo_relacion_laborales tr ON tr.id = CAST(a.tipo_relacion_laboral AS INTEGER) " +
+			    "WHERE lm.periodo_id = :periodo_id  " +
+			      "AND a.fecha = :afecha and tr.id = 1 " +
+			    "GROUP BY tr.nombre, tr.id,el.nombre,el.abreviatura  " +
+			") x  " +
+			"ORDER BY x.abreviatura asc ";
+
+		SqlQuery sqlQuery = Ebean.createSqlQuery(sql);
+		sqlQuery.setParameter("periodo_id",p.id);
+		sqlQuery.setParameter("afecha",pAgente.date_start);
+
+		List<SqlRow>  row = sqlQuery.findList();
+		return row;
+	}
+
+
+	public static List<SqlRow> getTotalAgrupadoPorTipoRelacionPeriodo(Long idPeriodo){
+
+		Periodo p = Periodo.find.byId(idPeriodo);
+
+		Periodo pAgente = Periodo.find.byId(idPeriodo+1);
+
+
+		String sql = "SELECT x.nombre, " +
+	       "x.id, " +
+	       "x.cantidadEmpleados, " +
+	       "x.t, " +
+	       "SUM(x.cantidadEmpleados) OVER () AS total_empleados, "+
+	       "SUM(x.t) OVER () AS total_t, " +
+	       "ROUND(100.0 * x.t / NULLIF(SUM(x.t) OVER (), 0), 1) AS porcentaje " +
+			"FROM ( " +
+			    "SELECT tr.nombre, " +
+			           "tr.id, " +
+			           "COUNT(DISTINCT a.id) AS cantidadEmpleados, " +
+			           "( " +
+			            " (  round(COALESCE(SUM(CASE WHEN lc.liquidacion_concepto_tipo_id IN (4,1) THEN cantidad * importe ELSE 0 END),0)) " +
+			              "+ round(COALESCE(SUM(CASE WHEN lc.liquidacion_concepto_tipo_id = 2 THEN cantidad * importe ELSE 0 END),0)) " +
+			             ") " +
+			             "- round(COALESCE(SUM(CASE WHEN lc.liquidacion_concepto_tipo_id = 3 THEN cantidad * importe ELSE 0 END),0)) " +
+			           ") " +
+			           "+ " +
+			           "(  round(COALESCE(SUM(CASE WHEN lc.liquidacion_concepto_clasificacion_id IN (9,13) THEN cantidad * importe ELSE 0 END),0)) " +
+			           "+ round(COALESCE(SUM(CASE WHEN lc.liquidacion_concepto_clasificacion_id = 11 THEN cantidad * importe ELSE 0 END),0)) " +
+			           "+ round(COALESCE(SUM(CASE WHEN lc.id IN (870,509,427,508,20) THEN cantidad * importe ELSE 0 END),0)) " +
+			            "+ round(COALESCE(SUM(CASE WHEN lc.id IN (7,205,206,6) THEN cantidad * importe ELSE 0 END),0)) " +
+			           ") AS t " +
+			    "FROM liquidacion_puestos lp  " +
+			    "INNER JOIN liquidacion_meses lm ON lm.id = lp.liquidacion_mes_id  " +
+			    "INNER JOIN liquidacion_detalles ld ON lp.id = ld.liquidacion_puesto_id  " +
+			    "INNER JOIN liquidacion_conceptos lc ON lc.id = ld.liquidacion_concepto_id  " +
+			    "INNER JOIN puestos_laborales pl ON pl.id = lp.puesto_laboral_id  " +
+			    "INNER JOIN legajos l ON l.id = pl.legajo_id  " +
+			    "INNER JOIN agentes_historial a ON a.agente_id = l.agente_id  " +
+			    "INNER JOIN organigramas o ON o.id = lp.organigrama_id  " +
+			    "INNER JOIN tipo_relacion_laborales tr ON tr.id = CAST(a.tipo_relacion_laboral AS INTEGER) " +
+			    "WHERE lm.periodo_id = :periodo_id  " +
+			      "AND a.fecha = :afecha " +
+			    "GROUP BY tr.nombre, tr.id  " +
+			") x  " +
+			"ORDER BY x.cantidadEmpleados DESC ";
+
+		SqlQuery sqlQuery = Ebean.createSqlQuery(sql);
+		sqlQuery.setParameter("periodo_id",p.id);
+		sqlQuery.setParameter("afecha",pAgente.date_start);
+
+		List<SqlRow>  row = sqlQuery.findList();
+		return row;
+	}
+
+
+	public static List<SqlRow> getTotalAdscritos(Long idPeriodo){
+		Periodo p = Periodo.find.byId(idPeriodo);
+
+		Periodo pAgente = Periodo.find.byId(idPeriodo+1);
+
+		String sql = "SELECT x.nombre, "+
+	       "x.id, "+
+		   "x.organigrama, "+
+	       "x.cantidadEmpleados, "+
+	       "SUM(x.cantidadEmpleados) OVER () AS total_empleados, "+
+	       "ROUND(100.0 * x.cantidadEmpleados / NULLIF(SUM(x.cantidadEmpleados) OVER (), 0), 2) AS porcentaje_empleados, "+
+	       "x.t, "+
+	       "SUM(x.t) OVER () AS total_t, "+
+	       "ROUND(100.0 * x.t / NULLIF(SUM(x.t) OVER (), 0), 2) AS porcentaje_t "+
+	"FROM ( "+
+	    "SELECT tr.nombre, "+
+	           "tr.id, "+
+	           "o.nombre as organigrama, "+
+	           "COUNT(DISTINCT a.id) AS cantidadEmpleados, "+
+	           "( "+
+	             "(  round(COALESCE(SUM(CASE WHEN lc.liquidacion_concepto_tipo_id IN (4,1) THEN cantidad * importe ELSE 0 END),0)) "+
+	              "+ round(COALESCE(SUM(CASE WHEN lc.liquidacion_concepto_tipo_id = 2 THEN cantidad * importe ELSE 0 END),0)) "+
+	             ") "+
+	             "- round(COALESCE(SUM(CASE WHEN lc.liquidacion_concepto_tipo_id = 3 THEN cantidad * importe ELSE 0 END),0)) "+
+	           ") "+
+	           "+ "+
+	           "(  round(COALESCE(SUM(CASE WHEN lc.liquidacion_concepto_clasificacion_id IN (9,13) THEN cantidad * importe ELSE 0 END),0)) "+
+	            "+ round(COALESCE(SUM(CASE WHEN lc.liquidacion_concepto_clasificacion_id = 11 THEN cantidad * importe ELSE 0 END),0)) "+
+	            "+ round(COALESCE(SUM(CASE WHEN lc.id IN (870,509,427,508,20) THEN cantidad * importe ELSE 0 END),0)) "+
+	            "+ round(COALESCE(SUM(CASE WHEN lc.id IN (7,205,206,6) THEN cantidad * importe ELSE 0 END),0)) "+
+	           ") AS t "+
+	    "FROM liquidacion_puestos lp "+
+	    "INNER JOIN liquidacion_meses lm ON lm.id = lp.liquidacion_mes_id "+
+	    "INNER JOIN liquidacion_detalles ld ON lp.id = ld.liquidacion_puesto_id "+
+	    "INNER JOIN liquidacion_conceptos lc ON lc.id = ld.liquidacion_concepto_id "+
+	    "INNER JOIN puestos_laborales pl ON pl.id = lp.puesto_laboral_id "+
+	    "INNER JOIN legajos l ON l.id = pl.legajo_id "+
+	    "INNER JOIN agentes_historial a ON a.agente_id = l.agente_id "+
+	    "INNER JOIN organigramas o ON o.id = a.organigrama_h "+
+	    "INNER JOIN tipo_relacion_laborales tr ON tr.id = CAST(a.tipo_relacion_laboral AS INTEGER) "+
+	    "WHERE lm.periodo_id =  :periodo_id  "+
+	    "  AND a.fecha = :afecha and tr.id = 6 "+
+	    "GROUP BY tr.nombre, tr.id,o.nombre "+
+	") x "+
+	"ORDER BY x.cantidadEmpleados DESC ";
+
+
+		SqlQuery sqlQuery = Ebean.createSqlQuery(sql);
+		sqlQuery.setParameter("periodo_id",p.id);
+		sqlQuery.setParameter("afecha",pAgente.date_start);
+
+		List<SqlRow>  row = sqlQuery.findList();
+		return row;
+	}
+
+
 	/**********QUERY SALDOS POR SERVICIOS*********************
-	WITH RECURSIVE recursetree(id, padre_id) AS (  
-   SELECT id, padre_id FROM organigramas 
+	WITH RECURSIVE recursetree(id, padre_id) AS (
+   SELECT id, padre_id FROM organigramas
    --WHERE id = 2
- UNION  
-   SELECT t.id, t.padre_id  
-   FROM organigramas t  
-   JOIN recursetree rt ON rt.id = t.padre_id  
- )  
-select o.id,o.padre_id, o.nombre,  
+ UNION
+   SELECT t.id, t.padre_id
+   FROM organigramas t
+   JOIN recursetree rt ON rt.id = t.padre_id
+ )
+select o.id,o.padre_id, o.nombre,
 COUNT(DISTINCT a.id) cantidadEmpleados ,
-round(COALESCE(SUM(CASE WHEN lc.liquidacion_concepto_tipo_id = 4 OR lc.liquidacion_concepto_tipo_id = 1 THEN cantidad * importe ELSE 0 END ),0)) totalConAporte,  
-round(COALESCE(SUM(CASE WHEN lc.liquidacion_concepto_tipo_id = 2 THEN cantidad * importe ELSE 0 END ),0)) totalSinAporte, 
+round(COALESCE(SUM(CASE WHEN lc.liquidacion_concepto_tipo_id = 4 OR lc.liquidacion_concepto_tipo_id = 1 THEN cantidad * importe ELSE 0 END ),0)) totalConAporte,
+round(COALESCE(SUM(CASE WHEN lc.liquidacion_concepto_tipo_id = 2 THEN cantidad * importe ELSE 0 END ),0)) totalSinAporte,
 round(COALESCE(SUM(CASE WHEN lc.liquidacion_concepto_tipo_id = 3 THEN cantidad * importe ELSE 0 END ),0)) totalRetenciones
-from liquidacion_puestos lp  
-inner join liquidacion_meses lm on  lm.id = lp.liquidacion_mes_id 
-inner join liquidacion_detalles ld on lp.id = ld.liquidacion_puesto_id  
-inner join liquidacion_conceptos lc on lc.id = ld.liquidacion_concepto_id  
-inner join puestos_laborales pl on pl.id = lp.puesto_laboral_id  
-inner join legajos l on l.id = pl.legajo_id  
-inner join agentes a on a.id = l.agente_id  
+from liquidacion_puestos lp
+inner join liquidacion_meses lm on  lm.id = lp.liquidacion_mes_id
+inner join liquidacion_detalles ld on lp.id = ld.liquidacion_puesto_id
+inner join liquidacion_conceptos lc on lc.id = ld.liquidacion_concepto_id
+inner join puestos_laborales pl on pl.id = lp.puesto_laboral_id
+inner join legajos l on l.id = pl.legajo_id
+inner join agentes a on a.id = l.agente_id
 inner join organigramas o on o.id = lp.organigrama_id
-where (lp.organigrama_id in (SELECT id FROM recursetree)) 
+where (lp.organigrama_id in (SELECT id FROM recursetree))
 and lm.periodo_id =73
 and pl.convenio_ministerio = true
 and lm.liquidacion_tipo_id in(1,4)
 group by o.id ORDER BY o.padre_id,cantidadEmpleados desc
 *///////////////////////////////////////
-	
+
 /*********************************************************
 select el.nombre,round(sum(cl.cantidad*cl.precio)) from certificaciones c
 inner join certificaciones_lineas cl on cl.certificacion_id = c.id
@@ -1339,13 +1518,13 @@ inner join proveedores p on p.id = c.proveedor_id
 inner join agentes a on a.id = p.agente_id
 inner join legajos l on l.agente_id = a.id
 inner join puestos_laborales pl on l.id = pl.legajo_id
-INNER JOIN escalas_laborales el on el.id = pl.escala_laboral_id 
+INNER JOIN escalas_laborales el on el.id = pl.escala_laboral_id
 where c.expediente_id = 13433
 and pl.convenio_ministerio = false
-and pl.activo = true 
+and pl.activo = true
 and periodo_id = 67
 GROUP BY  el.nombre order by el.nombre
-	
+
 select pr.categoria_id,ca.nombre,round(sum(cl.cantidad*cl.precio)) from certificaciones c
 inner join certificaciones_lineas cl on cl.certificacion_id = c.id
 inner join proveedores p on p.id = c.proveedor_id
@@ -1353,30 +1532,30 @@ inner join agentes a on a.id = p.agente_id
 inner join legajos l on l.agente_id = a.id
 inner join puestos_laborales pl on l.id = pl.legajo_id
 INNER JOIN escalas_laborales el on el.id = pl.escala_laboral_id
-inner join productos pr on pr.id = cl.producto_id 
+inner join productos pr on pr.id = cl.producto_id
 inner join categorias ca on ca.id = pr.categoria_id
-where c.expediente_id = 13433 
+where c.expediente_id = 13433
 and pl.convenio_ministerio = true
-and pl.activo = true 
+and pl.activo = true
 and periodo_id = 67
-GROUP BY  pr.categoria_id,ca.nombre order by pr.categoria_id	
+GROUP BY  pr.categoria_id,ca.nombre order by pr.categoria_id
 
-select el.nombre,round(sum(cl.cantidad*cl.precio)) 
+select el.nombre,round(sum(cl.cantidad*cl.precio))
 from certificaciones c
 inner join certificaciones_lineas cl on cl.certificacion_id = c.id
 inner join proveedores p on p.id = c.proveedor_id
 inner join agentes a on a.id = p.agente_id
 inner join legajos l on l.agente_id = a.id
 inner join puestos_laborales pl on l.id = pl.legajo_id
-INNER JOIN organigramas el on el.id = a.organigrama_id 
-where c.expediente_id = 13433 
+INNER JOIN organigramas el on el.id = a.organigrama_id
+where c.expediente_id = 13433
 and pl.convenio_ministerio = true
-and pl.activo = true 
+and pl.activo = true
 and periodo_id = 67
 GROUP BY  el.nombre order by el.nombre
-	
-	
-	
-*/ 
-	
+
+
+
+*/
+
 }
