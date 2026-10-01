@@ -191,7 +191,10 @@ listTotalAgrupadoPorEscalaParquePeriodo:List[com.avaje.ebean.SqlRow])
 
 
 						        </tr>
-
+								@{
+								 	totalCantidad = datax.getInteger("total_empleados")
+						        	totalMonto = datax.getBigDecimal("total_t")
+						        }
 
 				       }
 
