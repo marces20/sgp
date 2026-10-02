@@ -1409,7 +1409,6 @@ public class HonorariosNewController extends Controller {
 			    "INNER JOIN puestos_laborales pl ON pl.id = lp.puesto_laboral_id  " +
 			    "INNER JOIN legajos l ON l.id = pl.legajo_id  " +
 			    "INNER JOIN agentes_historial a ON a.agente_id = l.agente_id  " +
-			    "INNER JOIN organigramas o ON o.id = lp.organigrama_id  " +
 			    "INNER JOIN tipo_relacion_laborales tr ON tr.id = CAST(a.tipo_relacion_laboral AS INTEGER) " +
 			    "WHERE lm.periodo_id = :periodo_id  " +
 			      "AND a.fecha = :afecha " +
