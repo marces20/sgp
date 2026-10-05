@@ -13,7 +13,7 @@
 		<td>@if(linea.carga_horaria != null){@linea.carga_horaria horas semanales}</td>
 		<td>@linea.situacion</td>
 		<td>@linea.observaciones</td>
-		<td>@if(linea.organigrama_id != null){@linea.organigrama.nombre} </td>
+		<td>@if(linea.organigrama != null){@linea.organigrama.nombre}</td>
 	@if(editable && Permiso.check("eliminarAgenteNovedad")){
 
 
