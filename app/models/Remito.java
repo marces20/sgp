@@ -200,7 +200,24 @@ public class Remito extends Model {
 
 		if(!Permiso.check("verTodoOrdenProvision")){
     		if(Usuario.getUsurioSesion().organigrama != null && Usuario.getUsurioSesion().organigrama.deposito != null){
-    			e.eq("recepcion.ordenProvision.ordenCompra.deposito_id", Usuario.getUsurioSesion().organigrama.deposito_id.intValue());
+
+
+    			if(Permiso.check("verBisiones")){
+    				if(!proveedor_id.isEmpty()) {
+        				if(proveedor_id.compareTo("14733") == 0) {
+
+        				}else {
+        					e.eq("recepcion.ordenProvision.ordenCompra.deposito_id", Usuario.getUsurioSesion().organigrama.deposito_id.intValue());
+        				}
+        			}
+    			}else {
+    				e.eq("recepcion.ordenProvision.ordenCompra.deposito_id", Usuario.getUsurioSesion().organigrama.deposito_id.intValue());
+    			}
+
+
+
+
+
     		}else{
     			e.isNull("recepcion.ordenProvision.ordenCompra.deposito_id");
     		}
