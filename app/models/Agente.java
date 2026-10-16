@@ -551,14 +551,23 @@ public class Agente extends Model{
 
 		try {
 			conn = play.db.DB.getConnection();
-			stmt = conn.prepareStatement("select  organigrama_id,agente_id from agente_novedades where agente_id in(select id from agentes) and activo= true and organigrama_id is not null ");
+			stmt = conn.prepareStatement("select  organigrama_id,agente_id from agente_novedades where agente_id in(select id from agentes) and activo= true ");
 			rs = stmt.executeQuery();
 			while (rs.next()) {
 
+				long valor = rs.getLong(1);
+				if (rs.wasNull()) {
+					valor = 6;
+				}
+
+
+
+
 				stmt2 = conn.prepareStatement("update agentes_historial set organigrama_h = ? where agente_id = ?");
 
-				stmt2.setInt(1,rs.getInt(1));
-		        stmt2.setInt(2, rs.getInt(2));
+				stmt2.setLong(1, valor);
+				stmt2.setInt(2,rs.getInt(2));
+
 
 				stmt2.executeUpdate();
 
