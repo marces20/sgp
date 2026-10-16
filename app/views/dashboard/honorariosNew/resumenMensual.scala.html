@@ -1,6 +1,10 @@
 @(listTotalAgrupadoPorTipoRelacion:List[com.avaje.ebean.SqlRow],
 listTotalAdscritos:List[com.avaje.ebean.SqlRow],
-listTotalAgrupadoPorEscalaParquePeriodo:List[com.avaje.ebean.SqlRow])
+listTotalAgrupadoPorEscalaParquePeriodo:List[com.avaje.ebean.SqlRow],
+listTotalInstitucuinPorTipoRelacionPeriodoParque:List[com.avaje.ebean.SqlRow],
+listTotalInstitucuinPorTipoRelacionPeriodoMinisterio:List[com.avaje.ebean.SqlRow],
+listTotalInstitucuinPorTipoRelacionPeriodoOtro:List[com.avaje.ebean.SqlRow]
+)
 @import helper._
 @import java.lang.String;var color1 ="";var color2 ="";var color3 ="";var tipo ="";
 @import java.lang.Integer;var totalCantidad = 0;
@@ -28,7 +32,9 @@ listTotalAgrupadoPorEscalaParquePeriodo:List[com.avaje.ebean.SqlRow])
 
 
 
-    	<div class="page-title">Parque de la Salud - HABERES <!-- <button id="btnExportarPDF" onclick="exportarPDF()" class="btn btn-primary"> <i class="fas fa-file-pdf"></i> Exportar PDF </button></div> -->
+    	<div class="page-title">Parque de la Salud - HABERES - SEPTIEMBRE
+
+    		<button id="btnExportarPDF" onclick="exportarHaberesPDF()" class="btn btn-primary"> <i class="fas fa-file-pdf"></i> Exportar PDF </button></div>
 	    	<div class="page-breadcrumb">Inicio / <span>Informes Haberes</span> / Parque de la Salud
 	    	</div>
 
@@ -130,7 +136,16 @@ listTotalAgrupadoPorEscalaParquePeriodo:List[com.avaje.ebean.SqlRow])
 								}
 
 							 	<tr>
-						          <td style="text-align:left;"><span class="badge" style="background:@color1;color:@color2;">@datax.getString("escala")</span></td>
+						          <td style="text-align:left;">
+						          	<span class="badge" style="background:@color1;color:@color2;">
+
+						          		@if(datax.getString("escala").compareTo("III - PROFESIONAL UNIVERSITARIO O TERCIARIO MENOR A 4 AÑOS") == 0){
+						          			III - PROFE. UNIVERSITARIO MENOR A 4 AÑOS
+						          		}else{
+						          			@datax.getString("escala")
+						          		}
+						          	</span>
+						          </td>
 						          <td>@datax.getInteger("cantidadEmpleados")</td>
 								  <td style="font-family:'Fira Mono',monospace;">@(utils.NumberUtils.moneda(datax.getBigDecimal("t"),0))</td>
 								  <td style="font-family:'Fira Mono',monospace;">@(utils.NumberUtils.moneda(datax.getBigDecimal("promedio_t"),0))</td>
@@ -214,9 +229,332 @@ listTotalAgrupadoPorEscalaParquePeriodo:List[com.avaje.ebean.SqlRow])
 				</div>
 			</div>
 
+			</br>
+
+	    	<div style="display: grid; grid-template-columns: repeat(1, 1fr); gap: 18px; align-items: start;">
+
+		    	<div class="card">
+				  <div class="card-header">
+				    <span class="card-title">TIPO DE RELACIÓN LABORAL - Instituciones PARQUE</span>
+				  </div>
+				  <div class="table-wrap" style="padding:10px;">
+				    <table class="dept-summary-table" style="font-size:15px;">
+				      <thead>
+				        <tr>
+				          <th style="text-align:left; width:110px;">Contrato</th>
+				          <th style="">Q</th>
+				          <th style="">$</th>
+				          <th style="">%</th>
+						  <th style="">Tipo</th>
+				        </tr>
+				      </thead>
+				      <tbody>
+
+						 @for(data <- listTotalInstitucuinPorTipoRelacionPeriodoParque){
+
+								 @data.getString("nombre") match {
+								    case "Contrato Relacion Parque de la salud" => { @{color1 ="#dbeafe"} @{color2 ="#374151"} @{color3 ="#9ca3af"} @{tipo ="PARQUE"} }
+									case "Contrato Relacion Convenio Ministerio Salud" => { @{color1 ="#d1fae5"} @{color2 ="#065f46"} @{color3 ="#10b981"} @{tipo ="MINISTERIO"} }
+								    case "Adscripto Otras Entidades" => { @{color1 ="#fef3c7"}   @{color2 ="#92400e"} @{color3 ="#f59e0b"}  @{tipo ="ADSCRIPTOS"}}
+								    case "Contrato Relacion - Otras Entidades" => { @{color1 ="#ede9fe"}     @{color2 ="#5b21b6"} @{color3 ="#8b5cf6"} @{tipo ="RESIDENTES MINISTERIO"} }
+								    case "Contrato Convenio Nacion" => { @{color1 ="#fee2e2"} @{color2 ="#991b1b"}   @{color3 ="#ef4444"}  @{tipo ="RESIDENTES NACION"} }
+								    case "Otro" => { @{color1 ="#fee2e2"} @{color2 ="#991b1b"}   @{color3 ="#ef4444"}  @{tipo ="SIN DATOS"} }
+									case _ => { @{color1 ="#d1fae5"} @{color2 ="#065f46"} @{color3 ="#10b981"}  }
+								}
+
+
+
+							 	<tr>
+						          <td style="text-align:left;"><span class="badge" style="background:@color1;color:@color2;">@data.getString("nombre")</span></td>
+						          <td>@data.getInteger("cantidadEmpleados")</td>
+								  <td style="font-family:'Fira Mono',monospace;">@(utils.NumberUtils.moneda(data.getBigDecimal("t"),0))</td>
+						          <td>
+						            <div class="mini-bar-wrap">
+						              <div class="mini-bar"><div class="mini-bar-fill" style="width:@data.getInteger("porcentaje")%;background:@color3;"></div></div>
+						              <span class="mini-bar-num">@data.getInteger("porcentaje") %</span>
+						            </div>
+						          </td>
+						          <td>@tipo</td>
+						        </tr>
+							    @{
+								 	totalCantidad = data.getInteger("total_empleados")
+						        	totalMonto = data.getBigDecimal("total_t")
+						        }
+
+						}
+
+
+
+
+				      </tbody>
+				      <tfoot>
+				        <tr style="background:var(--body-bg); font-weight:800; font-size:20px;">
+				          <td style="text-align:left; padding:10px 14px;">Total</td>
+				          <td style="text-align:center; padding:10px 14px;">@totalCantidad</td>
+				          <td style="text-align:center; padding:10px 14px;">@(utils.NumberUtils.moneda(totalMonto,0))</td>
+				          <td style="text-align:center; padding:10px 14px; font-family:'Fira Mono',monospace;"></td>
+
+				          <td></td>
+				        </tr>
+				      </tfoot>
+				    </table>
+				  </div>
+				</div>
+			</div>
+
+			</br>
+
+	    	<div style="display: grid; grid-template-columns: repeat(1, 1fr); gap: 18px; align-items: start;">
+
+		    	<div class="card">
+				  <div class="card-header">
+				    <span class="card-title">TIPO DE RELACIÓN LABORAL - Instituciones MINISTERIO</span>
+				  </div>
+				  <div class="table-wrap" style="padding:10px;">
+				    <table class="dept-summary-table" style="font-size:15px;">
+				      <thead>
+				        <tr>
+				          <th style="text-align:left; width:110px;">Contrato</th>
+				          <th style="">Q</th>
+				          <th style="">$</th>
+				          <th style="">%</th>
+						  <th style="">Tipo</th>
+				        </tr>
+				      </thead>
+				      <tbody>
+
+						 @for(data <- listTotalInstitucuinPorTipoRelacionPeriodoMinisterio){
+
+								 @data.getString("nombre") match {
+								    case "Contrato Relacion Parque de la salud" => { @{color1 ="#dbeafe"} @{color2 ="#374151"} @{color3 ="#9ca3af"} @{tipo ="PARQUE"} }
+									case "Contrato Relacion Convenio Ministerio Salud" => { @{color1 ="#d1fae5"} @{color2 ="#065f46"} @{color3 ="#10b981"} @{tipo ="MINISTERIO"} }
+								    case "Adscripto Otras Entidades" => { @{color1 ="#fef3c7"}   @{color2 ="#92400e"} @{color3 ="#f59e0b"}  @{tipo ="ADSCRIPTOS"}}
+								    case "Contrato Relacion - Otras Entidades" => { @{color1 ="#ede9fe"}     @{color2 ="#5b21b6"} @{color3 ="#8b5cf6"} @{tipo ="RESIDENTES MINISTERIO"} }
+								    case "Contrato Convenio Nacion" => { @{color1 ="#fee2e2"} @{color2 ="#991b1b"}   @{color3 ="#ef4444"}  @{tipo ="RESIDENTES NACION"} }
+								    case "Otro" => { @{color1 ="#fee2e2"} @{color2 ="#991b1b"}   @{color3 ="#ef4444"}  @{tipo ="SIN DATOS"} }
+									case _ => { @{color1 ="#d1fae5"} @{color2 ="#065f46"} @{color3 ="#10b981"}  }
+								}
+
+
+
+							 	<tr>
+						          <td style="text-align:left;"><span class="badge" style="background:@color1;color:@color2;">@data.getString("nombre")</span></td>
+						          <td>@data.getInteger("cantidadEmpleados")</td>
+								  <td style="font-family:'Fira Mono',monospace;">@(utils.NumberUtils.moneda(data.getBigDecimal("t"),0))</td>
+						          <td>
+						            <div class="mini-bar-wrap">
+						              <div class="mini-bar"><div class="mini-bar-fill" style="width:@data.getInteger("porcentaje")%;background:@color3;"></div></div>
+						              <span class="mini-bar-num">@data.getInteger("porcentaje") %</span>
+						            </div>
+						          </td>
+						          <td>@tipo</td>
+						        </tr>
+							    @{
+								 	totalCantidad = data.getInteger("total_empleados")
+						        	totalMonto = data.getBigDecimal("total_t")
+						        }
+
+						}
+
+
+
+
+				      </tbody>
+				      <tfoot>
+				        <tr style="background:var(--body-bg); font-weight:800; font-size:20px;">
+				          <td style="text-align:left; padding:10px 14px;">Total</td>
+				          <td style="text-align:center; padding:10px 14px;">@totalCantidad</td>
+				          <td style="text-align:center; padding:10px 14px;">@(utils.NumberUtils.moneda(totalMonto,0))</td>
+				          <td style="text-align:center; padding:10px 14px; font-family:'Fira Mono',monospace;"></td>
+
+				          <td></td>
+				        </tr>
+				      </tfoot>
+				    </table>
+				  </div>
+				</div>
+			</div>
+
+			</br>
+
+	    	<div style="display: grid; grid-template-columns: repeat(1, 1fr); gap: 18px; align-items: start;">
+
+		    	<div class="card">
+				  <div class="card-header">
+				    <span class="card-title">TIPO DE RELACIÓN LABORAL - Instituciones OTRO</span>
+				  </div>
+				  <div class="table-wrap" style="padding:10px;">
+				    <table class="dept-summary-table" style="font-size:15px;">
+				      <thead>
+				        <tr>
+				          <th style="text-align:left; width:110px;">Contrato</th>
+				          <th style="">Q</th>
+				          <th style="">$</th>
+				          <th style="">%</th>
+						  <th style="">Tipo</th>
+				        </tr>
+				      </thead>
+				      <tbody>
+
+						 @for(data <- listTotalInstitucuinPorTipoRelacionPeriodoOtro){
+
+								 @data.getString("nombre") match {
+								    case "Contrato Relacion Parque de la salud" => { @{color1 ="#dbeafe"} @{color2 ="#374151"} @{color3 ="#9ca3af"} @{tipo ="PARQUE"} }
+									case "Contrato Relacion Convenio Ministerio Salud" => { @{color1 ="#d1fae5"} @{color2 ="#065f46"} @{color3 ="#10b981"} @{tipo ="MINISTERIO"} }
+								    case "Adscripto Otras Entidades" => { @{color1 ="#fef3c7"}   @{color2 ="#92400e"} @{color3 ="#f59e0b"}  @{tipo ="ADSCRIPTOS"}}
+								    case "Contrato Relacion - Otras Entidades" => { @{color1 ="#ede9fe"}     @{color2 ="#5b21b6"} @{color3 ="#8b5cf6"} @{tipo ="RESIDENTES MINISTERIO"} }
+								    case "Contrato Convenio Nacion" => { @{color1 ="#fee2e2"} @{color2 ="#991b1b"}   @{color3 ="#ef4444"}  @{tipo ="RESIDENTES NACION"} }
+								    case "Otro" => { @{color1 ="#fee2e2"} @{color2 ="#991b1b"}   @{color3 ="#ef4444"}  @{tipo ="SIN DATOS"} }
+									case _ => { @{color1 ="#d1fae5"} @{color2 ="#065f46"} @{color3 ="#10b981"}  }
+								}
+
+
+
+							 	<tr>
+						          <td style="text-align:left;"><span class="badge" style="background:@color1;color:@color2;">@data.getString("nombre")</span></td>
+						          <td>@data.getInteger("cantidadEmpleados")</td>
+								  <td style="font-family:'Fira Mono',monospace;">@(utils.NumberUtils.moneda(data.getBigDecimal("t"),0))</td>
+						          <td>
+						            <div class="mini-bar-wrap">
+						              <div class="mini-bar"><div class="mini-bar-fill" style="width:@data.getInteger("porcentaje")%;background:@color3;"></div></div>
+						              <span class="mini-bar-num">@data.getInteger("porcentaje") %</span>
+						            </div>
+						          </td>
+						          <td>@tipo</td>
+						        </tr>
+							    @{
+								 	totalCantidad = data.getInteger("total_empleados")
+						        	totalMonto = data.getBigDecimal("total_t")
+						        }
+
+						}
+
+
+
+
+				      </tbody>
+				      <tfoot>
+				        <tr style="background:var(--body-bg); font-weight:800; font-size:20px;">
+				          <td style="text-align:left; padding:10px 14px;">Total</td>
+				          <td style="text-align:center; padding:10px 14px;">@totalCantidad</td>
+				          <td style="text-align:center; padding:10px 14px;">@(utils.NumberUtils.moneda(totalMonto,0))</td>
+				          <td style="text-align:center; padding:10px 14px; font-family:'Fira Mono',monospace;"></td>
+
+				          <td></td>
+				        </tr>
+				      </tfoot>
+				    </table>
+				  </div>
+				</div>
+			</div>
+
 
  		</div>
  </div>
 </div>
+<script type="text/javascript">
+async function exportarHaberesPDF() {
+  var btn = document.getElementById('btnExportarPDF');
+  var jsPDFCtor = window.jspdf && window.jspdf.jsPDF;
+  if (!window.html2canvas || !jsPDFCtor) { window.print(); return; }   // respaldo: imprimir -> guardar como PDF
 
+  var textoOriginal = btn.innerHTML;
+  btn.disabled = true;
+  btn.innerHTML = 'Generando PDF...';
+
+  try {
+    // ===== AJUSTES DE TAMAÑO =====
+   // var ANCHO_CAPTURA = 800;   // ancho (px) con el que se "fotografía" el contenido. Menor = letra MÁS GRANDE en el PDF (ej: 700, 800, 900, 1000)
+    var ZOOM_FUENTE   = 1.0;   // multiplicador extra de letra (ej: 1.15 = 15% más grande)
+    //var ORIENTACION   = 'portrait'; // 'portrait' (vertical) o 'landscape' (horizontal)
+
+    var ANCHO_CAPTURA = 1000;
+    var ORIENTACION   = 'landscape';
+    // ==============================
+
+    var content = document.querySelector('div.content');
+    var scale = 2;
+    var cortes = [];
+
+    // Captura de TODO el div.content con sus estilos (el botón se quita del clon)
+    var canvas = await html2canvas(content, {
+      scale: scale,
+      backgroundColor: '#ffffff',
+      useCORS: true,
+      scrollX: 0,
+      scrollY: 0,
+      windowWidth: ANCHO_CAPTURA + 60,
+      onclone: function (doc) {
+        var b = doc.getElementById('btnExportarPDF');
+        if (b) b.parentNode.removeChild(b);
+        var c = doc.querySelector('div.content');
+        c.style.width = ANCHO_CAPTURA + 'px';
+        c.style.maxWidth = ANCHO_CAPTURA + 'px';
+        c.style.margin = '0';
+        if (ZOOM_FUENTE !== 1) c.style.zoom = ZOOM_FUENTE;
+        // límites donde conviene cortar página (justo antes de cada tarjeta)
+        var base = c.getBoundingClientRect().top;
+        cortes = Array.prototype.map.call(c.querySelectorAll('.card'), function (card) {
+          return Math.round((card.getBoundingClientRect().top - base) * scale);
+        });
+      }
+    });
+
+    var pdf = new jsPDFCtor({ orientation: ORIENTACION, unit: 'mm', format: 'a4' });
+    var pageW = pdf.internal.pageSize.getWidth();
+    var pageH = pdf.internal.pageSize.getHeight();
+    var margin = 10;
+    var usableW = pageW - margin * 2;
+    var usableH = pageH - margin * 2 - 4;                       // 4 mm para el número de página
+    var pxPorPagina = Math.floor(usableH * canvas.width / usableW);
+
+    var inicio = 0, pagina = 0;
+    while (inicio < canvas.height - 2) {
+      var fin = inicio + pxPorPagina;
+      if (fin >= canvas.height) {
+        fin = canvas.height;
+      } else {
+        // cortar en el último límite de tarjeta que entre en la página
+        var mejor = 0;
+        for (var i = 0; i < cortes.length; i++) {
+          if (cortes[i] > inicio + 20 && cortes[i] <= fin) mejor = cortes[i];
+        }
+        if (mejor) fin = mejor;
+      }
+
+      var altoPx = fin - inicio;
+      var trozo = document.createElement('canvas');
+      trozo.width = canvas.width;
+      trozo.height = altoPx;
+      var ctx = trozo.getContext('2d');
+      ctx.fillStyle = '#ffffff';
+      ctx.fillRect(0, 0, trozo.width, trozo.height);
+      ctx.drawImage(canvas, 0, inicio, canvas.width, altoPx, 0, 0, canvas.width, altoPx);
+
+      if (pagina > 0) pdf.addPage();
+      pdf.addImage(trozo.toDataURL('image/jpeg', 0.95), 'JPEG', margin, margin, usableW, altoPx * usableW / canvas.width);
+
+      inicio = fin;
+      pagina++;
+    }
+
+    // Numeración de páginas
+    var total = pdf.internal.getNumberOfPages();
+    pdf.setFontSize(8);
+    for (var p = 1; p <= total; p++) {
+      pdf.setPage(p);
+      pdf.text('Página ' + p + ' de ' + total, pageW / 2, pageH - 5, { align: 'center' });
+    }
+
+    pdf.save('HABERES_' + new Date().toISOString().slice(0, 10) + '.pdf');
+  } catch (e) {
+    console.error(e);
+    alert('No se pudo generar el PDF. Se abrirá el diálogo de impresión como alternativa.');
+    window.print();
+  } finally {
+    btn.disabled = false;
+    btn.innerHTML = textoOriginal;
+  }
+}
+</script>
 }
