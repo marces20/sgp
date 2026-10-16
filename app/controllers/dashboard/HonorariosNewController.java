@@ -37,10 +37,19 @@ public class HonorariosNewController extends Controller {
 
 		List<SqlRow> listTotalAgrupadoPorEscalaParquePeriodo = getTotalAgrupadoPorEscalaParquePeriodo(new Long(183));
 
+		List<SqlRow> listTotalInstitucuinPorTipoRelacionPeriodoParque =  getTotalInstitucuinPorTipoRelacionPeriodo(new Long(183),new Long(1));
+
+		List<SqlRow> listTotalInstitucuinPorTipoRelacionPeriodoMinisterio =  getTotalInstitucuinPorTipoRelacionPeriodo(new Long(183),new Long(109));
+
+		List<SqlRow> listTotalInstitucuinPorTipoRelacionPeriodoOtro =  getTotalInstitucuinPorTipoRelacionPeriodo(new Long(183),new Long(206));
 
 
-
-		return ok(resumenMensual.render(listTotalAgrupadoPorTipoRelacion,listTotalAdscritos,listTotalAgrupadoPorEscalaParquePeriodo));
+		return ok(resumenMensual.render(listTotalAgrupadoPorTipoRelacion,
+				listTotalAdscritos,
+				listTotalAgrupadoPorEscalaParquePeriodo,
+				listTotalInstitucuinPorTipoRelacionPeriodoParque,
+				listTotalInstitucuinPorTipoRelacionPeriodoMinisterio,
+				listTotalInstitucuinPorTipoRelacionPeriodoOtro));
 	}
 
 
@@ -1313,6 +1322,69 @@ public class HonorariosNewController extends Controller {
 		sqlQuery.setParameter("cm",cm);
 		List<SqlRow>  row = sqlQuery.findList();
 		return row;
+	}
+
+	public static List<SqlRow> getTotalInstitucuinPorTipoRelacionPeriodo(Long idPeriodo,Long idpadre){
+
+		Periodo p = Periodo.find.byId(idPeriodo);
+
+		String sql = "WITH RECURSIVE recursetree(id, padre_id) AS ( " +
+				"   SELECT id, padre_id " +
+				"   FROM organigramas " +
+				"   WHERE id = :idpadre " +
+				"   UNION ALL " +
+				"   SELECT t.id, t.padre_id " +
+				"   FROM organigramas t " +
+				"   JOIN recursetree rt ON t.padre_id = rt.id " +
+				") " +
+				"SELECT x.id, " +
+				"       x.nombre, " +
+				"       x.cantidadEmpleados, " +
+				"       x.t, " +
+				"       SUM(x.cantidadEmpleados) OVER () AS total_empleados, " +
+				"       SUM(x.t) OVER () AS total_t, " +
+				"       ROUND(100.0 * x.t / NULLIF(SUM(x.t) OVER (), 0), 1) AS porcentaje, " +
+				"       ROUND(x.t / NULLIF(x.cantidadEmpleados, 0), 2) AS promedio_t " +
+				"FROM ( " +
+				"    SELECT tr.id, " +
+				"           tr.nombre, " +
+				"           COUNT(DISTINCT a.id) AS cantidadEmpleados, " +
+				"           ( " +
+				"             (  round(COALESCE(SUM(CASE WHEN lc.liquidacion_concepto_tipo_id IN (4,1) THEN cantidad * importe ELSE 0 END),0)) " +
+				"              + round(COALESCE(SUM(CASE WHEN lc.liquidacion_concepto_tipo_id = 2 THEN cantidad * importe ELSE 0 END),0)) " +
+				"             ) " +
+				"             - round(COALESCE(SUM(CASE WHEN lc.liquidacion_concepto_tipo_id = 3 THEN cantidad * importe ELSE 0 END),0)) " +
+				"           ) " +
+				"           + " +
+				"           (  round(COALESCE(SUM(CASE WHEN lc.liquidacion_concepto_clasificacion_id IN (9,13) THEN cantidad * importe ELSE 0 END),0)) " +
+				"            + round(COALESCE(SUM(CASE WHEN lc.liquidacion_concepto_clasificacion_id = 11 THEN cantidad * importe ELSE 0 END),0))      " +
+				"            + round(COALESCE(SUM(CASE WHEN lc.id IN (870,509,427,508,20) THEN cantidad * importe ELSE 0 END),0))                      " +
+				"            + round(COALESCE(SUM(CASE WHEN lc.id IN (7,205,206,6) THEN cantidad * importe ELSE 0 END),0))                             " +
+				"           ) AS t " +
+				"    FROM liquidacion_puestos lp " +
+				"    INNER JOIN liquidacion_meses lm ON lm.id = lp.liquidacion_mes_id " +
+				"    INNER JOIN liquidacion_detalles ld ON lp.id = ld.liquidacion_puesto_id " +
+				"    INNER JOIN liquidacion_conceptos lc ON lc.id = ld.liquidacion_concepto_id " +
+				"    INNER JOIN puestos_laborales pl ON pl.id = lp.puesto_laboral_id " +
+				"    INNER JOIN legajos l ON l.id = pl.legajo_id " +
+				"    INNER JOIN agentes_historial a ON a.agente_id = l.agente_id " +
+				"    INNER JOIN organigramas o ON o.id = lp.organigrama_id " +
+				"    INNER JOIN tipo_relacion_laborales tr ON tr.id = CAST(a.tipo_relacion_laboral AS INTEGER) " +
+				"    WHERE lp.organigrama_id IN (SELECT id FROM recursetree) " +
+				"      AND lm.periodo_id = :periodo_id " +
+				"	   AND a.fecha = :afecha  "+
+				"    GROUP BY tr.id, tr.nombre " +
+				") x " +
+				"ORDER BY x.id";
+
+		SqlQuery sqlQuery = Ebean.createSqlQuery(sql);
+		sqlQuery.setParameter("idpadre",idpadre);
+		sqlQuery.setParameter("periodo_id",p.id);
+		sqlQuery.setParameter("afecha",p.date_stop);
+
+		List<SqlRow>  row = sqlQuery.findList();
+		return row;
+
 	}
 
 	public static List<SqlRow> getTotalAgrupadoPorEscalaParquePeriodo(Long idPeriodo){
