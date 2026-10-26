@@ -11,6 +11,7 @@ import javax.persistence.PersistenceException;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
 import controllers.auth.CheckPermiso;
+import models.Estado;
 import models.haberes.LiquidacionEmbargo;
 import models.haberes.LiquidacionEmbargoBeneficiario;
 import play.data.Form;
@@ -65,7 +66,11 @@ public class LiquidacionEmbargosBeneficiariosController extends Controller {
 			} else {
 				LiquidacionEmbargoBeneficiario f = detalleForm.get();
 
-				List<LiquidacionEmbargoBeneficiario> controlBeneficiario = LiquidacionEmbargoBeneficiario.find.where().eq("agente_familia_id", detalleForm.get().agente_familia_id).findList();
+				List<LiquidacionEmbargoBeneficiario> controlBeneficiario = LiquidacionEmbargoBeneficiario.find.where()
+						.eq("agente_familia_id", detalleForm.get().agente_familia_id)
+						.eq("liquidacionEmbargo.estado_id",Estado.LIQUIDACION_EMBARGO_APROBADO)
+						.findList();
+
 				if(controlBeneficiario.size() > 0) {
 					flash("error", "Este beneficiario ya se encuentra cargado.");
 					return ok(crearLiquidacionEmbargoBeneficiario.render(detalleForm,le.agente_id));
