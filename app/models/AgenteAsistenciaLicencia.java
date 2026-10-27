@@ -649,6 +649,10 @@ public class AgenteAsistenciaLicencia extends Model{
 													   ){
 		Date fdesde = DateUtils.formatDate(desde, "dd/MM/yyyy");
 		Date fhasta = DateUtils.formatDate(hasta, "dd/MM/yyyy");
+
+		String fd = DateUtils.formatDate(fdesde, "yyyy-MM-dd");
+		String fa = DateUtils.formatDate(fhasta, "yyyy-MM-dd");
+
 		String where = "";
 
 		if(!activo.isEmpty()){
@@ -682,7 +686,8 @@ public class AgenteAsistenciaLicencia extends Model{
     	}
 
 		if(!desde.isEmpty() &&!hasta.isEmpty()){
-			where += "and al.finicio >='"+fdesde+"'  and al.ffin <= '"+fhasta+"' ";
+			//where += "and al.finicio >='"+fdesde+"'  and al.ffin <= '"+fhasta+"' ";
+			where += " and ((al.finicio between ('"+fd+"') and ('"+fa+"') or al.ffin between ('"+fd+"') and ('"+fa+"'))) ";
     	}
 
 		if(!cuit.isEmpty()){
@@ -706,8 +711,10 @@ public class AgenteAsistenciaLicencia extends Model{
 					 "inner join estados e on e.id = al.estado_id "+
 					 "left join (select agente_id,carga_horaria,el.nombre escala from agente_novedades an inner join escalas_laborales el on el.id = an.escala_laboral_id where activo is true ) n on n.agente_id = a.id "+
 					 //"where :fecha between (al.finicio) and (al.ffin) order by a.apellido ";
-					 //"where ((al.finicio between (:fechadesde) and (:fechahasta) and al.ffin between (:fechadesde) and (:fechahasta)) "+
-					 //" 		OR (al.finicio <= :fechadesde AND al.ffin >= :fechahasta)) "+where+
+
+					 //"where ((al.finicio between (:fechadesde) and (:fechahasta) and al.ffin between (:fechadesde) and (:fechahasta))) "+
+					 //" 	OR (al.finicio <= :fechadesde AND al.ffin >= :fechahasta)) "+
+
 					// "where (((al.finicio between (:fechadesde) and (:fechahasta)) OR (al.ffin between (:fechadesde) and (:fechahasta))) "+
 					 //" OR (al.finicio <= :fechadesde AND al.ffin >= :fechahasta)) "+
 					 "where 1=1 "+
