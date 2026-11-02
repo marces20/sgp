@@ -3,7 +3,9 @@ listTotalAdscritos:List[com.avaje.ebean.SqlRow],
 listTotalAgrupadoPorEscalaParquePeriodo:List[com.avaje.ebean.SqlRow],
 listTotalInstitucuinPorTipoRelacionPeriodoParque:List[com.avaje.ebean.SqlRow],
 listTotalInstitucuinPorTipoRelacionPeriodoMinisterio:List[com.avaje.ebean.SqlRow],
-listTotalInstitucuinPorTipoRelacionPeriodoOtro:List[com.avaje.ebean.SqlRow]
+listTotalInstitucuinPorTipoRelacionPeriodoOtro:List[com.avaje.ebean.SqlRow],
+periodoBotones:java.util.Map[Long,String],
+periodoBuscado:Periodo
 )
 @import helper._
 @import java.lang.String;var color1 ="";var color2 ="";var color3 ="";var tipo ="";
@@ -31,12 +33,35 @@ listTotalInstitucuinPorTipoRelacionPeriodoOtro:List[com.avaje.ebean.SqlRow]
  <div class="content">
 
 
+    	<div class="page-title">Parque de la Salud - HABERES - @periodoBuscado.mes
 
-    	<div class="page-title">Parque de la Salud - HABERES - SEPTIEMBRE
+			<div class="title-actions">
+		    <div class="mes-nav">
+		     		@for((key,value) <- periodoBotones){
 
-    		<button id="btnExportarPDF" onclick="exportarHaberesPDF()" class="btn btn-primary"> <i class="fas fa-file-pdf"></i> Exportar PDF </button></div>
-	    	<div class="page-breadcrumb">Inicio / <span>Informes Haberes</span> / Parque de la Salud
-	    	</div>
+						 <a href="/dashboard/dashboard/honorariosResumenMensual?periodoId=@key"
+						 class="@if(periodoBuscado.id.compareTo(key) == 0){mes-btn activo}else{mes-btn}">@value</a>
+					}
+
+
+
+
+
+
+		    </div>
+
+		    <button id="btnExportarPDF" onclick="exportarHaberesPDF()" class="btn btn-primary">
+		      <i class="fas fa-file-pdf"></i> Exportar PDF
+		    </button>
+		  </div>
+    		<!-- <div class="title-actions">
+
+
+    		<!-- <button id="btnExportarPDF" onclick="exportarHaberesPDF()" class="btn btn-primary"> <i class="fas fa-file-pdf"></i> Exportar PDF </button></div> -->
+	    	<div class="page-breadcrumb">Inicio / <span>Informes Haberes</span> / Parque de la Salud</div>
+
+
+
 
 	    	<div style="display: grid; grid-template-columns: repeat(1, 1fr); gap: 18px; align-items: start;">
 
