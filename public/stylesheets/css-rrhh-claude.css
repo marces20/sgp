@@ -779,7 +779,37 @@
   padding: 8px 10px;
 }
 
+.title-actions {
+  float: right;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
 
+.mes-nav {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  padding: 3px;
+  background: #f3f4f6;
+  border: 1px solid #e5e7eb;
+  border-radius: 10px;
+}
 
+.mes-btn {
+  display: inline-block;
+  padding: 7px 14px;
+  border-radius: 8px;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: .04em;
+  color: #6b7280;
+  text-decoration: none;
+  cursor: pointer;
+  transition: background .15s, color .15s;
+}
+.mes-btn:hover { color: #111827; background: #e5e7eb; }
+.mes-btn.activo { background: #2563eb; color: #fff; }
+.mes-btn.activo:hover { background: #1d4ed8; }
 
-
+.title-actions .btn { white-space: nowrap; }
