@@ -29,27 +29,52 @@ public class HonorariosNewController extends Controller {
 
 	//@CheckPermiso(key = "dashboardHonorariosNuevo")
 
-	public static Result honorariosResumenMensual() {
+	public static Result honorariosResumenMensual(Long periodoId) {
 
-		List<SqlRow> listTotalAgrupadoPorTipoRelacion = getTotalAgrupadoPorTipoRelacionPeriodo(new Long(183));
+		Periodo pActual = Periodo.getPeriodoByDate(new Date());
 
-		List<SqlRow> listTotalAdscritos = getTotalAdscritos(new Long(183));
+		if(periodoId == null || periodoId.compareTo(new Long(0)) == 0) {
 
-		List<SqlRow> listTotalAgrupadoPorEscalaParquePeriodo = getTotalAgrupadoPorEscalaParquePeriodo(new Long(183));
+			periodoId = pActual.id-1;
+		}
 
-		List<SqlRow> listTotalInstitucuinPorTipoRelacionPeriodoParque =  getTotalInstitucuinPorTipoRelacionPeriodo(new Long(183),new Long(1));
+		Map<Long, String> botonesPeriodos = new HashMap<>();
 
-		List<SqlRow> listTotalInstitucuinPorTipoRelacionPeriodoMinisterio =  getTotalInstitucuinPorTipoRelacionPeriodo(new Long(183),new Long(109));
 
-		List<SqlRow> listTotalInstitucuinPorTipoRelacionPeriodoOtro =  getTotalInstitucuinPorTipoRelacionPeriodo(new Long(183),new Long(206));
+		Long pToday = pActual.id;
+		for(int x =4;x != 0;x--) {
 
+			pToday = pToday-1;
+
+
+			Periodo ptmp = Periodo.find.byId(pToday);
+			if(pToday.compareTo(new Long(182)) > 0) {
+				botonesPeriodos.put(ptmp.id, ptmp.mes);
+			}
+		}
+
+
+		List<SqlRow> listTotalAgrupadoPorTipoRelacion = getTotalAgrupadoPorTipoRelacionPeriodo(periodoId);
+
+		List<SqlRow> listTotalAdscritos = getTotalAdscritos(periodoId);
+
+		List<SqlRow> listTotalAgrupadoPorEscalaParquePeriodo = getTotalAgrupadoPorEscalaParquePeriodo(periodoId);
+
+		List<SqlRow> listTotalInstitucuinPorTipoRelacionPeriodoParque =  getTotalInstitucuinPorTipoRelacionPeriodo(periodoId,new Long(1));
+
+		List<SqlRow> listTotalInstitucuinPorTipoRelacionPeriodoMinisterio =  getTotalInstitucuinPorTipoRelacionPeriodo(periodoId,new Long(109));
+
+		List<SqlRow> listTotalInstitucuinPorTipoRelacionPeriodoOtro =  getTotalInstitucuinPorTipoRelacionPeriodo(periodoId,new Long(206));
+
+		Periodo pBuscado = Periodo.find.byId(periodoId);
 
 		return ok(resumenMensual.render(listTotalAgrupadoPorTipoRelacion,
 				listTotalAdscritos,
 				listTotalAgrupadoPorEscalaParquePeriodo,
 				listTotalInstitucuinPorTipoRelacionPeriodoParque,
 				listTotalInstitucuinPorTipoRelacionPeriodoMinisterio,
-				listTotalInstitucuinPorTipoRelacionPeriodoOtro));
+				listTotalInstitucuinPorTipoRelacionPeriodoOtro,
+				botonesPeriodos,pBuscado));
 	}
 
 
