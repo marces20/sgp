@@ -551,7 +551,7 @@ public class Agente extends Model{
 
 		try {
 			conn = play.db.DB.getConnection();
-			stmt = conn.prepareStatement("select  organigrama_id,agente_id from agente_novedades where agente_id in(select id from agentes) and activo= true ");
+			stmt = conn.prepareStatement("select  organigrama_id,agente_id from agente_novedades where agente_id in(select id from agentes where tipo_relacion_laboral = '6') and activo= true ");
 			rs = stmt.executeQuery();
 			while (rs.next()) {
 
