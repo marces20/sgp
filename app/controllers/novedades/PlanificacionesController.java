@@ -555,6 +555,13 @@ public class PlanificacionesController extends Controller {
 
 				PuestoLaboral pl = PuestoLaboral.find.fetch("legajo").where().eq("activo",true).eq("legajo.agente.id",sx.getLong("agente_id") ).findUnique();
 
+				if(pl == null) {
+					Ebean.rollbackTransaction();
+					flash("error", "No se encuentra el puesto laboral de :"+sx.getString("apellido"));
+					redirect(controllers.novedades.routes.PlanificacionesController.ver(p.id)+ UriTrack.get("&"));
+
+				}
+
 				//Long liquidacion_concepto_id = models.haberes.Novedad.getLiquidacionConceptoGuardiaByHoraHabilesFestivaOrg(sx.getBigDecimal("horas"),new Boolean(false),new Boolean(false),null);
 
 				models.haberes.Novedad n = new models.haberes.Novedad();
@@ -630,6 +637,13 @@ public class PlanificacionesController extends Controller {
 				OrganigramaGuardiaDato ogd = OrganigramaGuardiaDato.find.where().eq("organigrama_id", p.organigrama_id).eq("activo", true).findUnique();
 
 				PuestoLaboral pl = PuestoLaboral.find.fetch("legajo").where().eq("activo",true).eq("legajo.agente.id",sx.getLong("agente_id") ).findUnique();
+
+				if(pl == null) {
+					Ebean.rollbackTransaction();
+					flash("error", "No se encuentra el puesto laboral de :"+sx.getString("apellido"));
+					redirect(controllers.novedades.routes.PlanificacionesController.ver(p.id)+ UriTrack.get("&"));
+
+				}
 
 				Long liquidacion_concepto_id = models.haberes.Novedad.getLiquidacionConceptoGuardiaByHoraHabilesFestivaOrg(sx.getBigDecimal("horas"),new Boolean(false),new Boolean(false),ogd);
 
@@ -710,6 +724,14 @@ public class PlanificacionesController extends Controller {
 
 				OrganigramaGuardiaDato ogd = OrganigramaGuardiaDato.find.where().eq("organigrama_id", p.organigrama_id).eq("activo", true).findUnique();
 				PuestoLaboral pl = PuestoLaboral.find.fetch("legajo").where().eq("activo",true).eq("legajo.agente.id",sx.getLong("agente_id") ).findUnique();
+
+				if(pl == null) {
+					Ebean.rollbackTransaction();
+					flash("error", "No se encuentra el puesto laboral de :"+sx.getString("apellido"));
+					redirect(controllers.novedades.routes.PlanificacionesController.ver(p.id)+ UriTrack.get("&"));
+
+				}
+
 				Long liquidacion_concepto_id = models.haberes.Novedad.getLiquidacionConceptoGuardiaByHoraHabilesFestivaOrg(sx.getBigDecimal("horas"),sx.getBoolean("habiles"),sx.getBoolean("festivas"),ogd);
 
 				BigDecimal hh = new BigDecimal(ogd.horasxdia_habiles);
@@ -795,6 +817,13 @@ public class PlanificacionesController extends Controller {
 
 				OrganigramaGuardiaDato ogd = OrganigramaGuardiaDato.find.where().eq("organigrama_id", p.organigrama_id).eq("activo", true).findUnique();
 				PuestoLaboral pl = PuestoLaboral.find.fetch("legajo").where().eq("activo",true).eq("legajo.agente.id",sx.getLong("agente_id") ).findUnique();
+
+				if(pl == null) {
+					Ebean.rollbackTransaction();
+					flash("error", "No se encuentra el puesto laboral de :"+sx.getString("apellido"));
+					redirect(controllers.novedades.routes.PlanificacionesController.ver(p.id)+ UriTrack.get("&"));
+
+				}
 
 				Long liquidacion_concepto_id = null;
 
