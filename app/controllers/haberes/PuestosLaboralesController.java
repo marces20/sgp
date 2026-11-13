@@ -134,6 +134,10 @@ inner join provincias prov on prov.id = loc.provincia_id
 					return badRequest(crearPuestoLaboral.render(puestoLaboralForm));
 				}
 
+				if(lc.activo == false && lc.fecha_baja == null) {
+					flash("error", "Si el puesto es inactivo debe ingresar una fecha de baja. ");
+					return badRequest(editarPuestoLaboral.render(puestoLaboralForm));
+				}
 
 				lc.estado_id = (long) Estado.PUESTO_LABORAL_BORRADOR;
 				//b.create_date = new Date();
@@ -172,6 +176,11 @@ inner join provincias prov on prov.id = loc.provincia_id
 
 				if(pll.size() > 0){
 					flash("error", "Ya existe un puesto laboral ACTIVO para el mismo legajo.");
+					return badRequest(editarPuestoLaboral.render(puestoLaboralForm));
+				}
+
+				if(lc.activo == false && lc.fecha_baja == null) {
+					flash("error", "Si el puesto es inactivo debe ingresar una fecha de baja. ");
 					return badRequest(editarPuestoLaboral.render(puestoLaboralForm));
 				}
 
