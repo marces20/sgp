@@ -143,6 +143,7 @@ public class Pago extends Model {
 	public String medio_pago;//Para Pago Cliente
 	public String nota;//Para Pago Cliente
 	public Boolean agente_pago_externo;
+	public Boolean regimen_gcias_especial = false;
 
 	@ManyToOne
 	@JoinColumn(name="cuenta_impuesto_id", referencedColumnName="id", insertable=false, updatable=false)
@@ -250,7 +251,8 @@ public class Pago extends Model {
 										String rp,
 										String tipo_cuenta_id,
 										String emergencia,
-										String arevisar
+										String arevisar,
+										String regimen_gcias_especial
 										){
 		Pagination<Pago> p = new Pagination<Pago>();
     	p.setOrderDefault("ASC");
@@ -361,6 +363,14 @@ public class Pago extends Model {
 				e.eq("tipo", "impuestos");
 			}else{
 				e.eq("tipo", "payment");
+			}
+    	}
+
+		if(!regimen_gcias_especial.isEmpty()){
+			if(regimen_gcias_especial.compareToIgnoreCase("si") == 0){
+				e.eq("regimen_gcias_especial", "true");
+			}else{
+				e.eq("regimen_gcias_especial", "false");
 			}
     	}
 
