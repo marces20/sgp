@@ -356,6 +356,7 @@ public class PlanificacionesController extends Controller {
 														.eq("periodo_id", rf.periodo_id)
 														.eq("organigrama_id", rf.organigrama_id)
 														.ne("estado_id", Estado.PLANIFICIACION_CANCELADO)
+														.ne("estado_id", Estado.PLANIFICIACION_CERRADA)
 														.ne("id",rf.id)
 														.findList();
 
