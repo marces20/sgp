@@ -408,13 +408,20 @@
 						TipoCuenta.find.all().map { p => p.id.toString -> p.nombre}, 'class -> "form-control select", '_default -> "Seleccionar")
 					</label>
 				</div>
-
 				<div class="col-sm-2">
-					<div class="checkbox">
-						<label for="inputGuardia" class="control-label">
-							Guardia
-							@checkbox(formBuscador("guardia"))
-						</label><br>
+					<div class="col-sm-6">
+						<div class="checkbox">
+							<label for="inputGuardia" class="control-label">
+								Guardia
+								@checkbox(formBuscador("guardia"))
+							</label><br>
+						</div>
+					</div>
+					<div class="col-sm-6">
+						<label class="control-label">
+							Reg Gcias
+							@select(formBuscador("regimen_gcias_especial"),options(""->"","SI"->"SI","NO"->"NO"), 'class -> "form-control select")
+						</label>
 					</div>
 				</div>
 				<div class="col-sm-2 input-group">
