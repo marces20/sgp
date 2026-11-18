@@ -368,9 +368,9 @@ public class Pago extends Model {
 
 		if(!regimen_gcias_especial.isEmpty()){
 			if(regimen_gcias_especial.compareToIgnoreCase("si") == 0){
-				e.eq("regimen_gcias_especial", "true");
+				e.eq("regimen_gcias_especial", true);
 			}else{
-				e.eq("regimen_gcias_especial", "false");
+				e.eq("regimen_gcias_especial", false);
 			}
     	}
 
