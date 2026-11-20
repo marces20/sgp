@@ -142,6 +142,7 @@ public class Factura extends Model {
 	public Boolean produccion = false;
 	public Boolean debito_automatico = false;
 	public Boolean fondo_cerrado = false;
+	public Boolean regimen_gcias_especial = false;
 
 	@Formats .DateTime(pattern="dd/MM/yyyy")
 	public Date fecha_recepcion;//Fecha Recepcion X de Factura
@@ -324,7 +325,8 @@ public class Factura extends Model {
 											String acta,
 											String tipo_cuenta_id,
 											String deposito_id,
-											String emergencia
+											String emergencia,
+											String regimen_gcias_especial
 											){
 
     	Pagination<Factura> p = new Pagination<Factura>();
@@ -410,6 +412,14 @@ public class Factura extends Model {
 
     	if(!create_usuario.isEmpty()){
 			e.eq("create_usuario.id", Integer.parseInt(create_usuario));
+    	}
+
+    	if(!regimen_gcias_especial.isEmpty()){
+			if(regimen_gcias_especial.compareToIgnoreCase("si") == 0){
+				e.eq("regimen_gcias_especial", true);
+			}else{
+				e.eq("regimen_gcias_especial", false);
+			}
     	}
 
     	if(!expediente.isEmpty()){
