@@ -326,7 +326,9 @@ public class Factura extends Model {
 											String tipo_cuenta_id,
 											String deposito_id,
 											String emergencia,
-											String regimen_gcias_especial
+											String regimen_gcias_especial,
+											String op_desde,
+											String op_hasta
 											){
 
     	Pagination<Factura> p = new Pagination<Factura>();
@@ -482,6 +484,17 @@ public class Factura extends Model {
     		Date fah = DateUtils.formatDate(fecha_aprobacion_hasta, "dd/MM/yyyy");
     		e.le("fecha_aprobacion", fah);
     	}
+
+		if(!op_desde.isEmpty()){
+
+    		e.ge("ordenPago.numero", Integer.parseInt(op_desde));
+    	}
+
+		if(!op_hasta.isEmpty()){
+
+    		e.le("ordenPago.numero", Integer.parseInt(op_hasta));
+    	}
+
 
 		/*if(!profe.isEmpty()){
 			e.eq("profe",Boolean.parseBoolean(profe));

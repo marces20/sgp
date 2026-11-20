@@ -129,7 +129,9 @@ public class FacturasController extends Controller {
 								 RequestVar.get("tipo_cuenta_id"),
 								 RequestVar.get("deposito_id"),
 								 RequestVar.get("emergencia"),
-								 RequestVar.get("regimen_gcias_especial")
+								 RequestVar.get("regimen_gcias_especial"),
+								 RequestVar.get("op_desde"),
+								 RequestVar.get("op_hasta")
 								 ),
 								 d, pf));
 	}
